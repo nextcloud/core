@@ -707,6 +707,12 @@ OC.Uploader.prototype = _.extend({
 				// no list to check against
 				return true;
 			}
+
+			// We cannot detect conflicts in other folders
+			if (fileList.getCurrentDirectory() !== upload.getTargetFolder()) {
+				return true;
+			}
+
 			var fileInfo = fileList.findFile(file.name);
 			if (fileInfo) {
 				conflicts.push([
