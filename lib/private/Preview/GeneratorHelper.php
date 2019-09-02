@@ -32,6 +32,11 @@ use OCP\Image as OCPImage;
 use OCP\Preview\IProvider;
 use OCP\Preview\IProviderV2;
 
+// TODO use autoloader
+require_once 'JPEG.php';
+use OC\Preview\OC_Image_JPEG as OCPImage_JPEG;
+
+
 /**
  * Very small wrapper class to make the generator fully unit testable
  */
@@ -63,8 +68,20 @@ class GeneratorHelper {
 	 * @param ISimpleFile $maxPreview
 	 * @return IImage
 	 */
-	public function getImage(ISimpleFile $maxPreview) {
-		$image = new OCPImage();
+	public function getImage($maxPreview) {
+		$mimeType = $maxPreview->getMimeType();
+		$imagick_mode = (bool)$this->config->getSystemValue('preview_use_imagick', false);
+		if ($imagick_mode && $mimeType !== null && extension_loaded('imagick')) {
+			switch ($mimeType) {
+				case 'image/jpeg':
+					$image = new OCPImage_JPEG();
+					break;
+				default:
+					$image = new OCPImage();
+			}
+		} else {
+			$image = new OCPImage();
+		}
 		$image->loadFromData($maxPreview->getContent());
 		return $image;
 	}

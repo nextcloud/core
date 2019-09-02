@@ -59,5 +59,4 @@ abstract class Image extends ProviderV2 {
 		}
 		return null;
 	}
-
 }

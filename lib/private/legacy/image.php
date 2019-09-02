@@ -56,9 +56,9 @@ class OC_Image implements \OCP\IImage {
 	/** @var finfo */
 	private $fileInfo;
 	/** @var \OCP\ILogger */
-	private $logger;
+	protected $logger;
 	/** @var \OCP\IConfig */
-	private $config;
+	protected $config;
 	/** @var array */
 	private $exif;
 
@@ -892,7 +892,12 @@ class OC_Image implements \OCP\IImage {
 			imagesavealpha($process, true);
 		}
 
-		imagecopyresampled($process, $this->resource, 0, 0, 0, 0, $width, $height, $widthOrig, $heightOrig);
+		$interpolate = (bool)$this->config->getSystemValue('preview_interpolate', false);
+		if ($interpolate) {
+			imagecopyresampled($process, $this->resource, 0, 0, 0, 0, $width, $height, $widthOrig, $heightOrig);
+		} else {
+			imagecopyresized($process, $this->resource, 0, 0, 0, 0, $width, $height, $widthOrig, $heightOrig);
+		}
 		if ($process == false) {
 			$this->logger->error(__METHOD__ . '(): Error re-sampling process image', array('app' => 'core'));
 			imagedestroy($process);
@@ -950,7 +955,12 @@ class OC_Image implements \OCP\IImage {
 			imagesavealpha($process, true);
 		}
 
-		imagecopyresampled($process, $this->resource, 0, 0, $x, $y, $targetWidth, $targetHeight, $width, $height);
+		$interpolate = (bool)$this->config->getSystemValue('preview_interpolate', false);
+		if ($interpolate) {
+			imagecopyresampled($process, $this->resource, 0, 0, $x, $y, $targetWidth, $targetHeight, $width, $height);
+		} else {
+			imagecopyresized($process, $this->resource, 0, 0, $x, $y, $targetWidth, $targetHeight, $width, $height);
+		}
 		if ($process == false) {
 			$this->logger->error('OC_Image->centerCrop, Error re-sampling process image ' . $width . 'x' . $height, array('app' => 'core'));
 			imagedestroy($process);
