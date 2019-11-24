@@ -100,13 +100,12 @@ class DIContainer extends SimpleContainer implements IAppContainer {
 		// aliases
 		$this->registerAlias('appName', 'AppName');
 		$this->registerAlias('webRoot', 'WebRoot');
-		$this->registerAlias('userId', 'UserId');
 
 		/**
 		 * Core services
 		 */
 		$this->registerService(IOutput::class, function(){
-			return new Output($this->getServer()->getWebRoot());
+			return $this->getServer()->query(IOutput::class);
 		});
 
 		$this->registerService(Folder::class, function() {
@@ -139,11 +138,6 @@ class DIContainer extends SimpleContainer implements IAppContainer {
 			return $c;
 		});
 
-		// commonly used attributes
-		$this->registerService('UserId', function ($c) {
-			return $c->query(IUserSession::class)->getSession()->get('user_id');
-		});
-
 		$this->registerService('WebRoot', function ($c) {
 			return $c->query('ServerContainer')->getWebRoot();
 		});
@@ -167,8 +161,7 @@ class DIContainer extends SimpleContainer implements IAppContainer {
 			return new Dispatcher(
 				$c['Protocol'],
 				$c['MiddlewareDispatcher'],
-				$c->query(IControllerMethodReflector::class),
-				$c['Request']
+				$c->query(IControllerMethodReflector::class)
 			);
 		});
 
@@ -192,7 +185,6 @@ class DIContainer extends SimpleContainer implements IAppContainer {
 
 			$dispatcher->registerMiddleware(
 				new OC\AppFramework\Middleware\Security\SameSiteCookieMiddleware(
-					$c->query(IRequest::class),
 					$c->query(IControllerMethodReflector::class)
 				)
 			);

@@ -42,7 +42,17 @@ use OCP\AppFramework\Http\Response;
  * @since 6.0.0
  */
 abstract class Middleware {
+/** @var HttpContext */
+	protected $context;
 
+	/**
+	 * This method is called before processing request
+	 * @param HttpContext $context the context of the currently processed request
+	 * @since 17.0.0
+	 */
+	public function setContext(HttpContext $context) {
+		$this->context = $context;
+	}
 
 	/**
 	 * This is being run in normal order before the controller is being

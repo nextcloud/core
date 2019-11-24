@@ -37,6 +37,7 @@ use \OC\AppFramework\Utility\ControllerMethodReflector;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\HttpContext;
 use OCP\IRequest;
 
 
@@ -54,25 +55,19 @@ class Dispatcher {
 	/** @var ControllerMethodReflector */
 	private $reflector;
 
-	/** @var IRequest */
-	private $request;
-
 	/**
 	 * @param Http $protocol the http protocol with contains all status headers
 	 * @param MiddlewareDispatcher $middlewareDispatcher the dispatcher which
 	 * runs the middleware
 	 * @param ControllerMethodReflector $reflector the reflector that is used to inject
 	 * the arguments for the controller
-	 * @param IRequest $request the incoming request
 	 */
 	public function __construct(Http $protocol,
 								MiddlewareDispatcher $middlewareDispatcher,
-								ControllerMethodReflector $reflector,
-								IRequest $request) {
+								ControllerMethodReflector $reflector) {
 		$this->protocol = $protocol;
 		$this->middlewareDispatcher = $middlewareDispatcher;
 		$this->reflector = $reflector;
-		$this->request = $request;
 	}
 
 
@@ -86,7 +81,7 @@ class Dispatcher {
 	 * the response output
 	 * @throws \Exception
 	 */
-	public function dispatch(Controller $controller, string $methodName): array {
+	public function dispatch(Controller $controller, string $methodName, IRequest $request): array {
 		$out = [null, [], null];
 
 		try {
@@ -94,9 +89,10 @@ class Dispatcher {
 			// middlewares
 			$this->reflector->reflect($controller, $methodName);
 
+			$this->middlewareDispatcher->setContext(new HttpContext($request));
 			$this->middlewareDispatcher->beforeController($controller,
 				$methodName);
-			$response = $this->executeController($controller, $methodName);
+			$response = $this->executeController($controller, $methodName, $request);
 
 			// if an exception appears, the middleware checks if it can handle the
 			// exception and creates a response. If no response is created, it is
@@ -135,7 +131,7 @@ class Dispatcher {
 	 * @param string $methodName the method on the controller that should be executed
 	 * @return Response
 	 */
-	private function executeController(Controller $controller, string $methodName): Response {
+	private function executeController(Controller $controller, string $methodName, IRequest $request): Response {
 		$arguments = [];
 
 		// valid types that will be casted
@@ -145,7 +141,7 @@ class Dispatcher {
 
 			// try to get the parameter from the request object and cast
 			// it to the type annotated in the @param annotation
-			$value = $this->request->getParam($param, $default);
+			$value = $request->getParam($param, $default);
 			$type = $this->reflector->getType($param);
 
 			// if this is submitted using GET or a POST form, 'false' should be
@@ -153,8 +149,8 @@ class Dispatcher {
 			if(($type === 'bool' || $type === 'boolean') &&
 				$value === 'false' &&
 				(
-					$this->request->method === 'GET' ||
-					strpos($this->request->getHeader('Content-Type'),
+					$request->method === 'GET' ||
+					strpos($request->getHeader('Content-Type'),
 						'application/x-www-form-urlencoded') !== false
 				)
 			) {
@@ -173,11 +169,11 @@ class Dispatcher {
 		if($response instanceof DataResponse || !($response instanceof Response)) {
 
 			// get format from the url format or request format parameter
-			$format = $this->request->getParam('format');
+			$format = $request->getParam('format');
 
 			// if none is given try the first Accept header
 			if($format === null) {
-				$headers = $this->request->getHeader('Accept');
+				$headers = $request->getHeader('Accept');
 				$format = $controller->getResponderByHTTPHeader($headers, null);
 			}
 

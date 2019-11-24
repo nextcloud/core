@@ -29,6 +29,7 @@ use OC\AppFramework\Middleware\Security\SameSiteCookieMiddleware;
 use OC\AppFramework\Utility\ControllerMethodReflector;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\HttpContext;
 use Test\TestCase;
 
 class SameSiteCookieMiddlewareTest extends TestCase {
@@ -47,7 +48,8 @@ class SameSiteCookieMiddlewareTest extends TestCase {
 
 		$this->request = $this->createMock(Request::class);
 		$this->reflector = $this->createMock(ControllerMethodReflector::class);
-		$this->middleware = new SameSiteCookieMiddleware($this->request, $this->reflector);
+		$this->middleware = new SameSiteCookieMiddleware($this->reflector);
+		$this->middleware->setContext(new HttpContext($this->request));
 	}
 
 	public function testBeforeControllerNoIndex() {
@@ -119,9 +121,10 @@ class SameSiteCookieMiddlewareTest extends TestCase {
 			->willReturn('/myrequri');
 
 		$middleware = $this->getMockBuilder(SameSiteCookieMiddleware::class)
-			->setConstructorArgs([$this->request, $this->reflector])
+			->setConstructorArgs([$this->reflector])
 			->setMethods(['setSameSiteCookie'])
 			->getMock();
+		$middleware->setContext(new HttpContext($this->request));
 
 		$middleware->expects($this->once())
 			->method('setSameSiteCookie');

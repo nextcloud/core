@@ -24,27 +24,23 @@ namespace OC\AppFramework\Middleware\Security;
 
 use OC\AppFramework\Http\Request;
 use OC\AppFramework\Middleware\Security\Exceptions\LaxSameSiteCookieFailedException;
-use OC\AppFramework\Utility\ControllerMethodReflector;
+use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
+use OCP\IRequest;
 
 class SameSiteCookieMiddleware extends Middleware {
 
-	/** @var Request */
-	private $request;
-
-	/** @var ControllerMethodReflector */
+	/** @var IControllerMethodReflector */
 	private $reflector;
 
-	public function __construct(Request $request,
-								ControllerMethodReflector $reflector) {
-		$this->request = $request;
+	public function __construct(IControllerMethodReflector $reflector) {
 		$this->reflector = $reflector;
 	}
 
 	public function beforeController($controller, $methodName) {
-		$requestUri = $this->request->getScriptName();
+		$requestUri = $this->context->request->getScriptName();
 		$processingScript = explode('/', $requestUri);
 		$processingScript = $processingScript[count($processingScript)-1];
 
@@ -57,7 +53,7 @@ class SameSiteCookieMiddleware extends Middleware {
 			return;
 		}
 
-		if (!$this->request->passesLaxCookieCheck()) {
+		if (!$this->context->request->passesLaxCookieCheck()) {
 			throw new LaxSameSiteCookieFailedException();
 		}
 	}
@@ -66,7 +62,7 @@ class SameSiteCookieMiddleware extends Middleware {
 		if ($exception instanceof LaxSameSiteCookieFailedException) {
 			$respone = new Response();
 			$respone->setStatus(Http::STATUS_FOUND);
-			$respone->addHeader('Location', $this->request->getRequestUri());
+			$respone->addHeader('Location', $this->context->request->getRequestUri());
 
 			$this->setSameSiteCookie();
 
@@ -77,7 +73,7 @@ class SameSiteCookieMiddleware extends Middleware {
 	}
 
 	protected function setSameSiteCookie() {
-		$cookieParams = $this->request->getCookieParams();
+		$cookieParams = $this->context->request->getCookieParams();
 		$secureCookie = ($cookieParams['secure'] === true) ? 'secure; ' : '';
 		$policies = [
 			'lax',

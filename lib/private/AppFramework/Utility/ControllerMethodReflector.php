@@ -44,6 +44,10 @@ class ControllerMethodReflector implements IControllerMethodReflector {
 	 * @param string $method the method which we want to inspect
 	 */
 	public function reflect($object, string $method){
+		$this->annotations = [];
+		$this->types = [];
+		$this->parameters = [];
+
 		$reflection = new \ReflectionMethod($object, $method);
 		$docs = $reflection->getDocComment();
 

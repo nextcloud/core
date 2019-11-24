@@ -213,6 +213,14 @@ class Filesystem {
 	/** @var bool */
 	private static $logWarningWhenAddingStorageWrapper = true;
 
+	public static function reset() {
+		self::$loaded = false;
+		self::$defaultInstance = null;
+		self::$usersSetup = array();
+		self::$normalizedPathCache = null;
+		self::$listeningForProviders = false;
+	}
+
 	/**
 	 * @param bool $shouldLog
 	 * @return bool previous value

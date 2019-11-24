@@ -126,8 +126,7 @@ class DispatcherTest extends \Test\TestCase {
 		$this->dispatcher = new Dispatcher(
 			$this->http,
 			$this->middlewareDispatcher,
-			$this->reflector,
-			$this->request
+			$this->reflector
 		);
 
 		$this->response = $this->createMock(Response::class);
@@ -226,7 +225,7 @@ class DispatcherTest extends \Test\TestCase {
 	public function testDispatcherReturnsArrayWith2Entries() {
 		$this->setMiddlewareExpectations('');
 
-		$response = $this->dispatcher->dispatch($this->controller, $this->controllerMethod);
+		$response = $this->dispatcher->dispatch($this->controller, $this->controllerMethod, $this->request);
 		$this->assertNull($response[0]);
 		$this->assertEquals(array(), $response[1]);
 		$this->assertNull($response[2]);
@@ -240,7 +239,7 @@ class DispatcherTest extends \Test\TestCase {
 		$this->setMiddlewareExpectations($out, $httpHeaders, $responseHeaders);
 
 		$response = $this->dispatcher->dispatch($this->controller,
-			$this->controllerMethod);
+			$this->controllerMethod, $this->request);
 
 		$this->assertEquals($httpHeaders, $response[0]);
 		$this->assertEquals($responseHeaders, $response[1]);
@@ -255,7 +254,7 @@ class DispatcherTest extends \Test\TestCase {
 		$this->setMiddlewareExpectations($out, $httpHeaders, $responseHeaders, true);
 
 		$response = $this->dispatcher->dispatch($this->controller,
-			$this->controllerMethod);
+			$this->controllerMethod, $this->request);
 
 		$this->assertEquals($httpHeaders, $response[0]);
 		$this->assertEquals($responseHeaders, $response[1]);
@@ -272,7 +271,8 @@ class DispatcherTest extends \Test\TestCase {
 		$this->expectException(\Exception::class);
 		$this->dispatcher->dispatch(
 			$this->controller,
-			$this->controllerMethod
+			$this->controllerMethod,
+			$this->request
 		);
 
 	}
@@ -311,14 +311,13 @@ class DispatcherTest extends \Test\TestCase {
 				->getMock()
 		);
 		$this->dispatcher = new Dispatcher(
-			$this->http, $this->middlewareDispatcher, $this->reflector,
-			$this->request
+			$this->http, $this->middlewareDispatcher, $this->reflector
 		);
 		$controller = new TestController('app', $this->request);
 
 		// reflector is supposed to be called once
 		$this->dispatcherPassthrough();
-		$response = $this->dispatcher->dispatch($controller, 'exec');
+		$response = $this->dispatcher->dispatch($controller, 'exec', $this->request);
 
 		$this->assertEquals('[3,true,4,1]', $response[3]);
 	}
@@ -342,14 +341,13 @@ class DispatcherTest extends \Test\TestCase {
 				->getMock()
 		);
 		$this->dispatcher = new Dispatcher(
-			$this->http, $this->middlewareDispatcher, $this->reflector,
-			$this->request
+			$this->http, $this->middlewareDispatcher, $this->reflector
 		);
 		$controller = new TestController('app', $this->request);
 
 		// reflector is supposed to be called once
 		$this->dispatcherPassthrough();
-		$response = $this->dispatcher->dispatch($controller, 'exec');
+		$response = $this->dispatcher->dispatch($controller, 'exec', $this->request);
 
 		$this->assertEquals('[3,true,4,7]', $response[3]);
 	}
@@ -376,14 +374,13 @@ class DispatcherTest extends \Test\TestCase {
 				->getMock()
 		);
 		$this->dispatcher = new Dispatcher(
-			$this->http, $this->middlewareDispatcher, $this->reflector,
-			$this->request
+			$this->http, $this->middlewareDispatcher, $this->reflector
 		);
 		$controller = new TestController('app', $this->request);
 
 		// reflector is supposed to be called once
 		$this->dispatcherPassthrough();
-		$response = $this->dispatcher->dispatch($controller, 'exec');
+		$response = $this->dispatcher->dispatch($controller, 'exec', $this->request);
 
 		$this->assertEquals('{"text":[3,false,4,1]}', $response[3]);
 	}
@@ -409,14 +406,13 @@ class DispatcherTest extends \Test\TestCase {
 				->getMock()
 		);
 		$this->dispatcher = new Dispatcher(
-			$this->http, $this->middlewareDispatcher, $this->reflector,
-			$this->request
+			$this->http, $this->middlewareDispatcher, $this->reflector
 		);
 		$controller = new TestController('app', $this->request);
 
 		// reflector is supposed to be called once
 		$this->dispatcherPassthrough();
-		$response = $this->dispatcher->dispatch($controller, 'execDataResponse');
+		$response = $this->dispatcher->dispatch($controller, 'execDataResponse', $this->request);
 
 		$this->assertEquals('{"text":[3,false,4,1]}', $response[3]);
 	}
@@ -443,14 +439,13 @@ class DispatcherTest extends \Test\TestCase {
 				->getMock()
 		);
 		$this->dispatcher = new Dispatcher(
-			$this->http, $this->middlewareDispatcher, $this->reflector,
-			$this->request
+			$this->http, $this->middlewareDispatcher, $this->reflector
 		);
 		$controller = new TestController('app', $this->request);
 
 		// reflector is supposed to be called once
 		$this->dispatcherPassthrough();
-		$response = $this->dispatcher->dispatch($controller, 'exec');
+		$response = $this->dispatcher->dispatch($controller, 'exec', $this->request);
 
 		$this->assertEquals('{"text":[3,false,4,1]}', $response[3]);
 	}
@@ -479,14 +474,13 @@ class DispatcherTest extends \Test\TestCase {
 				->getMock()
 		);
 		$this->dispatcher = new Dispatcher(
-			$this->http, $this->middlewareDispatcher, $this->reflector,
-			$this->request
+			$this->http, $this->middlewareDispatcher, $this->reflector
 		);
 		$controller = new TestController('app', $this->request);
 
 		// reflector is supposed to be called once
 		$this->dispatcherPassthrough();
-		$response = $this->dispatcher->dispatch($controller, 'exec');
+		$response = $this->dispatcher->dispatch($controller, 'exec', $this->request);
 
 		$this->assertEquals('{"text":[3,true,4,1]}', $response[3]);
 	}

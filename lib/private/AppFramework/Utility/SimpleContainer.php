@@ -112,12 +112,22 @@ class SimpleContainer extends Container implements IContainer {
 			return $this->offsetGet($name);
 		} else if ($autoload) {
 			$object = $this->resolve($name);
-			$this->registerService($name, function () use ($object) {
-				return $object;
-			});
+			if (!$this->endsWith($name, 'Controller')) {
+				$this->registerService($name, function () use ($object) {
+					return $object;
+				});
+			}
 			return $object;
 		}
 		throw new QueryException('Could not resolve ' . $name . '!');
+	}
+
+	private function endsWith($haystack, $needle) {
+		$length = strlen($needle);
+		if ($length == 0) {
+			return true;
+		}
+		return (substr($haystack, -$length) === $needle);
 	}
 
 	/**

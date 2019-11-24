@@ -54,7 +54,7 @@ class Application extends App {
 			);
 		});
 		$container->registerService('ProvisioningApiMiddleware', function(SimpleContainer $c) use ($server) {
-			$user = $server->getUserManager()->get($c['UserId']);
+			$user = $server->getUserManager()->get($server['UserId']);
 			$isAdmin = $user !== null ? $server->getGroupManager()->isAdmin($user->getUID()) : false;
 			$isSubAdmin = $user !== null ? $server->getGroupManager()->getSubAdmin()->isSubAdmin($user) : false;
 			return new ProvisioningApiMiddleware(

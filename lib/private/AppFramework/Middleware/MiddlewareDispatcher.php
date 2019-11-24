@@ -32,6 +32,7 @@ namespace OC\AppFramework\Middleware;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
+use OCP\AppFramework\HttpContext;
 
 /**
  * This class is used to store and run all the middleware in correct order
@@ -76,6 +77,13 @@ class MiddlewareDispatcher {
 		return $this->middlewares;
 	}
 
+	public function setContext(HttpContext $context){
+		$middlewareCount = \count($this->middlewares);
+		for($i = 0; $i < $middlewareCount; $i++){
+			$middleware = $this->middlewares[$i];
+			$middleware->setContext($context);
+		}
+	}
 
 	/**
 	 * This is being run in normal order before the controller is being

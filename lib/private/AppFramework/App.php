@@ -121,8 +121,7 @@ class App {
 			$responseCookies,
 			$output,
 			$response
-		) = $dispatcher->dispatch($controller, $methodName);
-
+		) = $dispatcher->dispatch($controller, $methodName, $container->query(IRequest::class));
 		$io = $container[IOutput::class];
 
 		if(!is_null($httpHeaders)) {

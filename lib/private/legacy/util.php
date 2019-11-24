@@ -184,13 +184,7 @@ class OC_Util {
 		}
 
 		\OC::$server->getEventLogger()->start('setup_fs', 'Setup filesystem');
-
-		// If we are not forced to load a specific user we load the one that is logged in
-		if ($user === null) {
-			$user = '';
-		} else if ($user == "" && \OC::$server->getUserSession()->isLoggedIn()) {
-			$user = OC_User::getUser();
-		}
+		$user = OC_Util::getUser($user);
 
 		// load all filesystem apps before, so no setup-hook gets lost
 		OC_App::loadApps(array('filesystem'));
@@ -299,7 +293,13 @@ class OC_Util {
 			\OC::$server->getEventLogger()->end('setup_fs');
 			return false;
 		}
+		OC_Util::initFs($user);
+		\OC::$server->getEventLogger()->end('setup_fs');
+		return true;
+	}
 
+	public static function initFs($user = '') {
+		$user = OC_Util::getUser($user);
 		//if we aren't logged in, there is no use to set up the filesystem
 		if ($user != "") {
 
@@ -310,8 +310,16 @@ class OC_Util {
 
 			OC_Hook::emit('OC_Filesystem', 'setup', array('user' => $user, 'user_dir' => $userDir));
 		}
-		\OC::$server->getEventLogger()->end('setup_fs');
-		return true;
+	}
+
+	private static function getUser($user) {
+		// If we are not forced to load a specific user we load the one that is logged in
+		if ($user === null) {
+			$user = '';
+		} else if ($user === '' && \OC::$server->getUserSession()->isLoggedIn()) {
+			$user = OC_User::getUser();
+		}
+		return $user;
 	}
 
 	/**
