@@ -43,6 +43,7 @@ namespace OC\Files\Storage;
 
 use OC\Files\Filesystem;
 use OC\Files\Storage\Wrapper\Jail;
+use OC\Files\Storage\Local\DirectoryRenamer;
 use OCP\Files\ForbiddenException;
 use OCP\Files\Storage\IStorage;
 use OCP\ILogger;
@@ -276,11 +277,7 @@ class Local extends \OC\Files\Storage\Common {
 			$stat1 = stat(dirname($this->getSourcePath($path1)));
 			$stat2 = stat(dirname($this->getSourcePath($path2)));
 			if ($stat1['dev'] !== $stat2['dev']) {
-				$result = $this->copy($path1, $path2);
-				if ($result) {
-					$result &= $this->rmdir($path1);
-				}
-				return $result;
+				return $this->copyAndUnlink($path1, $path2);
 			}
 
 			if ($this->treeContainsBlacklistedFile($this->getSourcePath($path1))) {
@@ -288,7 +285,11 @@ class Local extends \OC\Files\Storage\Common {
 			}
 		}
 
-		return rename($this->getSourcePath($path1), $this->getSourcePath($path2));
+		$renamer = new DirectoryRenamer(function () use ($path1, $path2) {
+			return $this->copyAndUnlink($path1, $path2);
+		});
+
+		return $renamer->rename($this->getSourcePath($path1), $this->getSourcePath($path2));
 	}
 
 	public function copy($path1, $path2) {
@@ -502,5 +503,13 @@ class Local extends \OC\Files\Storage\Common {
 
 	public function writeStream(string $path, $stream, int $size = null): int {
 		return (int)file_put_contents($this->getSourcePath($path), $stream);
+	}
+
+	private function copyAndUnlink($path1, $path2) {
+		$result = $this->copy($path1, $path2);
+		if ($result) {
+			$result &= $this->rmdir($path1);
+		}
+		return $result;
 	}
 }
