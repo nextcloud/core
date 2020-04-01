@@ -271,7 +271,7 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 				if($this->method !== strtoupper($name)) {
 					throw new \LogicException(sprintf('%s cannot be accessed in a %s request.', $name, $this->method));
 				}
-				return $this->getContent();
+				return $this->getContent(false);
 			case 'files':
 			case 'server':
 			case 'env':
@@ -283,7 +283,7 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 					: null;
 			case 'parameters':
 			case 'params':
-				return $this->getContent();
+				return $this->getContent(true);
 			default;
 				return isset($this[$name])
 					? $this[$name]
@@ -405,25 +405,28 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 	/**
 	 * Returns the request body content.
 	 *
-	 * If the HTTP request method is PUT and the body
-	 * not application/x-www-form-urlencoded or application/json a stream
-	 * resource is returned, otherwise an array.
+	 * If the HTTP request method is PUT or POST and the body
+	 * not application/x-www-form-urlencoded or application/json
+	 * and $onlyParameters is false
+	 * a stream resource is returned, otherwise an array.
 	 *
+	 * @param bool $onlyParameters true if only parsed parameters array needed
 	 * @return array|string|resource The request body content or a resource to read the body stream.
 	 *
 	 * @throws \LogicException
 	 */
-	protected function getContent() {
+	protected function getContent(bool $onlyParameters) {
 		// If the content can't be parsed into an array then return a stream resource.
-		if ($this->method === 'PUT'
+		if (($this->method === 'PUT' || $this->method === 'POST')
 			&& $this->getHeader('Content-Length') !== '0'
 			&& $this->getHeader('Content-Length') !== ''
 			&& strpos($this->getHeader('Content-Type'), 'application/x-www-form-urlencoded') === false
 			&& strpos($this->getHeader('Content-Type'), 'application/json') === false
+			&& !$onlyParameters
 		) {
 			if ($this->content === false) {
 				throw new \LogicException(
-					'"put" can only be accessed once if not '
+					'"' . strtolower($this->method) . '" can only be accessed once if not '
 					. 'application/x-www-form-urlencoded or application/json.'
 				);
 			}
