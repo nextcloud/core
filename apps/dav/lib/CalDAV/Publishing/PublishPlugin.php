@@ -41,6 +41,7 @@ use Sabre\HTTP\ResponseInterface;
 
 class PublishPlugin extends ServerPlugin {
 	const NS_CALENDARSERVER = 'http://calendarserver.org/ns/';
+	const NS_NEXTCLOUD = 'http://nextcloud.com/ns/';
 
 	/**
 	 * Reference to SabreDAV server object.
@@ -121,10 +122,22 @@ class PublishPlugin extends ServerPlugin {
 			$propFind->handle('{'.self::NS_CALENDARSERVER.'}publish-url', function () use ($node) {
 				if ($node->getPublishStatus()) {
 					// We return the publish-url only if the calendar is published.
-					$token = $node->getPublishStatus();
+					$token = reset($node->getPublicURIs());
 					$publishUrl = $this->urlGenerator->getAbsoluteURL($this->server->getBaseUri().'public-calendars/').$token;
 
-					return new Publisher($publishUrl, true);
+					return new Publisher([$publishUrl => true]);
+				}
+			});
+
+			$propFind->handle('{'.self::NS_NEXTCLOUD.'}publish-urls', function () use ($node) {
+				if ($node->getPublishStatus()) {
+					// We return the publish-url only if the calendar is published.
+					$tokens = $node->getPublicURIs();
+					$publishUrls = array_map(function ($token) {
+						return [$this->urlGenerator->getAbsoluteURL($this->server->getBaseUri().'public-calendars/').$token => true];
+					}, $tokens);
+
+					return new Publisher($publishUrls);
 				}
 			});
 
@@ -172,65 +185,90 @@ class PublishPlugin extends ServerPlugin {
 		// re-populated the request body with the existing data.
 		$request->setBody($requestBody);
 
-		$this->server->xml->parse($requestBody, $request->getUrl(), $documentType);
+		$message = $this->server->xml->parse($requestBody, $request->getUrl(), $documentType);
 
 		switch ($documentType) {
 
 			case '{'.self::NS_CALENDARSERVER.'}publish-calendar':
 
-			// We can only deal with IShareableCalendar objects
-			if (!$node instanceof Calendar) {
-				return;
-			}
-			$this->server->transactionType = 'post-publish-calendar';
+				// We can only deal with IShareableCalendar objects
+				if (!$node instanceof Calendar) {
+					return;
+				}
+				$this->server->transactionType = 'post-publish-calendar';
 
-			// Getting ACL info
-			$acl = $this->server->getPlugin('acl');
+				// Getting ACL info
+				$acl = $this->server->getPlugin('acl');
 
-			// If there's no ACL support, we allow everything
-			if ($acl) {
-				$acl->checkPrivileges($path, '{DAV:}write');
-			}
+				// If there's no ACL support, we allow everything
+				if ($acl) {
+					$acl->checkPrivileges($path, '{DAV:}write');
+				}
 
-			$node->setPublishStatus(true);
+				$node->addPublicLink();
 
-			// iCloud sends back the 202, so we will too.
-			$response->setStatus(202);
+				// iCloud sends back the 202, so we will too.
+				$response->setStatus(202);
 
-			// Adding this because sending a response body may cause issues,
-			// and I wanted some type of indicator the response was handled.
-			$response->setHeader('X-Sabre-Status', 'everything-went-well');
+				// Adding this because sending a response body may cause issues,
+				// and I wanted some type of indicator the response was handled.
+				$response->setHeader('X-Sabre-Status', 'everything-went-well');
 
-			// Breaking the event chain
-			return false;
+				// Breaking the event chain
+				return false;
 
 			case '{'.self::NS_CALENDARSERVER.'}unpublish-calendar':
 
-			// We can only deal with IShareableCalendar objects
-			if (!$node instanceof Calendar) {
-				return;
-			}
-			$this->server->transactionType = 'post-unpublish-calendar';
+				// We can only deal with IShareableCalendar objects
+				if (!$node instanceof Calendar) {
+					return;
+				}
+				$this->server->transactionType = 'post-unpublish-all-calendars';
 
-			// Getting ACL info
-			$acl = $this->server->getPlugin('acl');
+				// Getting ACL info
+				$acl = $this->server->getPlugin('acl');
 
-			// If there's no ACL support, we allow everything
-			if ($acl) {
-				$acl->checkPrivileges($path, '{DAV:}write');
-			}
+				// If there's no ACL support, we allow everything
+				if ($acl) {
+					$acl->checkPrivileges($path, '{DAV:}write');
+				}
 
-			$node->setPublishStatus(false);
+				$node->removeAllPublicLinks();
 
-			$response->setStatus(200);
+				$response->setStatus(200);
 
-			// Adding this because sending a response body may cause issues,
-			// and I wanted some type of indicator the response was handled.
-			$response->setHeader('X-Sabre-Status', 'everything-went-well');
+				// Adding this because sending a response body may cause issues,
+				// and I wanted some type of indicator the response was handled.
+				$response->setHeader('X-Sabre-Status', 'everything-went-well');
 
-			// Breaking the event chain
-			return false;
+				// Breaking the event chain
+				return false;
 
+			case '{'.self::NS_NEXTCLOUD.'}unpublish-calendar' :
+				// We can only deal with IShareableCalendar objects
+				if (!$node instanceof Calendar) {
+					return;
+				}
+				$this->server->transactionType = 'post-unpublish-calendar';
+
+				// Getting ACL info
+				$acl = $this->server->getPlugin('acl');
+
+				// If there's no ACL support, we allow everything
+				if ($acl) {
+					$acl->checkPrivileges($path, '{DAV:}write');
+				}
+
+				$node->removePublicLink($message);
+
+				$response->setStatus(200);
+
+				// Adding this because sending a response body may cause issues,
+				// and I wanted some type of indicator the response was handled.
+				$response->setHeader('X-Sabre-Status', 'everything-went-well');
+
+				// Breaking the event chain
+				return false;
 		}
 	}
 }

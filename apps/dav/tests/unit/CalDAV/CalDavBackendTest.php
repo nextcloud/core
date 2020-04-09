@@ -36,6 +36,7 @@ use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\DAV\CalDAV\Calendar;
 use OCP\IConfig;
 use OCP\IL10N;
+use PHPUnit\Framework\MockObject\MockObject;
 use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\PropPatch;
 use Sabre\DAV\Xml\Property\Href;
@@ -282,7 +283,7 @@ EOD;
 		$this->assertCount(0, $calendarObjects);
 	}
 
-	
+
 	public function testMultipleCalendarObjectsWithSameUID() {
 		$this->expectException(\Sabre\DAV\Exception\BadRequest::class);
 		$this->expectExceptionMessage('Calendar object with uid already exists in this calendar collection.');
@@ -510,12 +511,12 @@ EOD;
 
 		$calendarInfo = $this->backend->getCalendarsForUser(self::UNIT_TEST_USER)[0];
 
-		/** @var IL10N|\PHPUnit_Framework_MockObject_MockObject $l10n */
+		/** @var IL10N|MockObject $l10n */
 		$l10n = $this->createMock(IL10N::class);
 		$config = $this->createMock(IConfig::class);
 
 		$calendar = new Calendar($this->backend, $calendarInfo, $l10n, $config);
-		$calendar->setPublishStatus(true);
+		$calendar->addPublicLink();
 		$this->assertNotEquals(false, $calendar->getPublishStatus());
 
 		$publicCalendars = $this->backend->getPublicCalendars();
@@ -527,11 +528,24 @@ EOD;
 		$publicCalendar = $this->backend->getPublicCalendar($publicCalendarURI);
 		$this->assertEquals(true, $publicCalendar['{http://owncloud.org/ns}public']);
 
-		$calendar->setPublishStatus(false);
+		$calendar->addPublicLink();
+		$publicCalendarURIs = $this->backend->getPublicURIs($calendar);
+		$this->assertCount(2, $publicCalendarURIs);
+		$publicCalendarURI2 = $publicCalendarURIs[1]['publicuri'];
+		$publicCalendar2 = $this->backend->getPublicCalendar($publicCalendarURI2);
+		$this->assertEquals(true, $publicCalendar2['{http://owncloud.org/ns}public']);
+		$calendar->removePublicLink($publicCalendarURI2);
+
+		$publicCalendarURIs = $this->backend->getPublicURIs($calendar);
+		$this->assertCount(1, $publicCalendarURIs);
+		$calendar->removeAllPublicLinks();
 		$this->assertEquals(false, $calendar->getPublishStatus());
 
 		$this->expectException(NotFound::class);
 		$this->backend->getPublicCalendar($publicCalendarURI);
+
+		$this->expectException(NotFound::class);
+		$this->backend->getPublicCalendar($publicCalendarURI2);
 	}
 
 	public function testSubscriptions() {
@@ -609,21 +623,21 @@ DTSTART;TZID=Europe/Warsaw:20170325T150000
 DTEND;TZID=Europe/Warsaw:20170325T160000
 TRANSP:OPAQUE
 DESCRIPTION:Magiczna treść uzyskana za pomocą magicznego proszku.\n\nę
- żźćńłóÓŻŹĆŁĘ€śśśŚŚ\n               \,\,))))))))\;\,\n  
+ żźćńłóÓŻŹĆŁĘ€śśśŚŚ\n               \,\,))))))))\;\,\n
            __))))))))))))))\,\n \\|/       -\\(((((''''((((((((.\n -*-==///
- ///((''  .     `))))))\,\n /|\\      ))| o    \;-.    '(((((              
-                     \,(\,\n          ( `|    /  )    \;))))'              
+ ///((''  .     `))))))\,\n /|\\      ))| o    \;-.    '(((((
+                     \,(\,\n          ( `|    /  )    \;))))'
                   \,_))^\;(~\n             |   |   |   \,))((((_     _____-
  -----~~~-.        %\,\;(\;(>'\;'~\n             o_)\;   \;    )))(((` ~---
  ~  `::           \\      %%~~)(v\;(`('~\n                   \;    ''''````
-          `:       `:::|\\\,__\,%%    )\;`'\; ~\n                  |   _   
-              )     /      `:|`----'     `-'\n            ______/\\/~    | 
+          `:       `:::|\\\,__\,%%    )\;`'\; ~\n                  |   _
+              )     /      `:|`----'     `-'\n            ______/\\/~    |
                  /        /\n          /~\;\;.____/\;\;'  /          ___--\
- ,-(   `\;\;\;/\n         / //  _\;______\;'------~~~~~    /\;\;/\\    /\n 
-        //  | |                        / \;   \\\;\;\,\\\n       (<_  | \; 
-                      /'\,/-----'  _>\n        \\_| ||_                    
-  //~\;~~~~~~~~~\n            `\\_|                   (\,~~  -Tua Xiong\n  
-                                   \\~\\\n                                 
+ ,-(   `\;\;\;/\n         / //  _\;______\;'------~~~~~    /\;\;/\\    /\n
+        //  | |                        / \;   \\\;\;\,\\\n       (<_  | \;
+                      /'\,/-----'  _>\n        \\_| ||_
+  //~\;~~~~~~~~~\n            `\\_|                   (\,~~  -Tua Xiong\n
+                                   \\~\\\n
      ~~\n\n
 SEQUENCE:1
 X-MOZ-GENERATION:1

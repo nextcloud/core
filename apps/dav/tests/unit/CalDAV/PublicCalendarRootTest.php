@@ -41,6 +41,9 @@ use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IUserManager;
 use OCP\Security\ISecureRandom;
+use PHPUnit\Framework\MockObject\MockObject;
+use Sabre\DAV\Exception;
+use Sabre\DAV\Exception\NotFound;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Test\TestCase;
 
@@ -60,11 +63,11 @@ class PublicCalendarRootTest extends TestCase {
 	private $publicCalendarRoot;
 	/** @var IL10N */
 	private $l10n;
-	/** @var Principal|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var Principal| MockObject */
 	private $principal;
-	/** @var IUserManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IUserManager| MockObject */
 	protected $userManager;
-	/** @var IGroupManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IGroupManager| MockObject */
 	protected $groupManager;
 	/** @var IConfig */
 	protected $config;
@@ -157,13 +160,15 @@ class PublicCalendarRootTest extends TestCase {
 
 	/**
 	 * @return Calendar
+	 * @throws Exception
+	 * @throws NotFound
 	 */
 	protected function createPublicCalendar() {
 		$this->backend->createCalendar(self::UNIT_TEST_USER, 'Example', []);
 
 		$calendarInfo = $this->backend->getCalendarsForUser(self::UNIT_TEST_USER)[0];
 		$calendar = new PublicCalendar($this->backend, $calendarInfo, $this->l10n, $this->config);
-		$publicUri = $calendar->setPublishStatus(true);
+		$publicUri = $calendar->addPublicLink();
 
 		$calendarInfo = $this->backend->getPublicCalendar($publicUri);
 		$calendar = new PublicCalendar($this->backend, $calendarInfo, $this->l10n, $this->config);

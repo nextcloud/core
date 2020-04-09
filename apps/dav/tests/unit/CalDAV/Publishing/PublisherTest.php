@@ -33,15 +33,16 @@ use Test\TestCase;
 class PublisherTest extends TestCase {
 
 	const NS_CALENDARSERVER = 'http://calendarserver.org/ns/';
+	const NS_NEXTCLOUD = 'http://nextcloud.com/ns/';
 
 	public function testSerializePublished() {
-		$publish = new Publisher('urltopublish', true);
+		$publish = new Publisher(['urltopublish' => true]);
 
 		$xml = $this->write([
 			'{' . self::NS_CALENDARSERVER . '}publish-url' => $publish,
 		]);
 
-		$this->assertEquals('urltopublish', $publish->getValue());
+		$this->assertEquals(['urltopublish'], $publish->getValue());
 
 		$this->assertXmlStringEqualsXmlString(
 			'<?xml version="1.0"?>
@@ -50,14 +51,31 @@ class PublisherTest extends TestCase {
 			</x1:publish-url>', $xml);
 	}
 
+	public function testSerializeMultiplePublished() {
+		$publish = new Publisher(['urltopublish' => true, 'secondurltopublish' => true]);
+
+		$xml = $this->write([
+			'{' . self::NS_NEXTCLOUD . '}publish-urls' => $publish,
+		]);
+
+		$this->assertEquals(['urltopublish', 'secondurltopublish'], $publish->getValue());
+
+		$this->assertXmlStringEqualsXmlString(
+			'<?xml version="1.0"?>
+			<x1:publish-urls xmlns:d="DAV:" xmlns:x1="' . self::NS_NEXTCLOUD . '">
+			<d:href>urltopublish</d:href>
+			<d:href>secondurltopublish</d:href>
+			</x1:publish-urls>', $xml);
+	}
+
 	public function testSerializeNotPublished() {
-		$publish = new Publisher('urltopublish', false);
+		$publish = new Publisher(['urltopublish' => false]);
 
 		$xml = $this->write([
 			'{' . self::NS_CALENDARSERVER . '}pre-publish-url' => $publish,
 		]);
 
-		$this->assertEquals('urltopublish', $publish->getValue());
+		$this->assertEquals(['urltopublish'], $publish->getValue());
 
 		$this->assertXmlStringEqualsXmlString(
 			'<?xml version="1.0"?>

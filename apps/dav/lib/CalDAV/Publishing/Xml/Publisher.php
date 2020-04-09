@@ -30,33 +30,26 @@ use Sabre\Xml\XmlSerializable;
 class Publisher implements XmlSerializable {
 
 	/**
-	 * @var string $publishUrl
+	 * @var string $publishUrls
 	 */
-	protected $publishUrl;
+	protected $publishUrls;
 
 	/**
-	 * @var boolean $isPublished
+	 * @param array $publishUrls
 	 */
-	protected $isPublished;
-
-	/**
-	 * @param string $publishUrl
-	 * @param boolean $isPublished
-	 */
-	function __construct($publishUrl, $isPublished) {
-		$this->publishUrl = $publishUrl;
-		$this->isPublished = $isPublished;
+	function __construct(array $publishUrls) {
+		$this->publishUrls = $publishUrls;
 	}
 
 	/**
-	 * @return string
+	 * @return array
 	 */
-	function getValue() {
-		return $this->publishUrl;
+	function getValue(): array {
+		return array_keys($this->publishUrls);
 	}
 
 	/**
-	 * The xmlSerialize metod is called during xml writing.
+	 * The xmlSerialize method is called during xml writing.
 	 *
 	 * Use the $writer argument to write its own xml serialization.
 	 *
@@ -75,12 +68,13 @@ class Publisher implements XmlSerializable {
 	 * @return void
 	 */
 	function xmlSerialize(Writer $writer) {
-		if (!$this->isPublished) {
+		foreach ($this->publishUrls as $publishUrl => $isPublished)
+		if (!$isPublished) {
 			// for pre-publish-url
-			$writer->write($this->publishUrl);
+			$writer->write($publishUrl);
 		} else {
 			// for publish-url
-			$writer->writeElement('{DAV:}href', $this->publishUrl);
+			$writer->writeElement('{DAV:}href', $publishUrl);
 		}
 	}
 }

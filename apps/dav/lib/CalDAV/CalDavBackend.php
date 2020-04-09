@@ -2341,47 +2341,82 @@ class CalDavBackend extends AbstractBackend implements SyncSupport, Subscription
 	}
 
 	/**
-	 * @param boolean $value
-	 * @param \OCA\DAV\CalDAV\Calendar $calendar
-	 * @return string|null
+	 * @param Calendar $calendar
+	 * @return string
 	 */
-	public function setPublishStatus($value, $calendar) {
-
+	public function addPublicLink(Calendar $calendar): string {
 		$calendarId = $calendar->getResourceId();
+		$publicUri = $this->random->generate(16, ISecureRandom::CHAR_HUMAN_READABLE);
+
 		$this->dispatcher->dispatch('\OCA\DAV\CalDAV\CalDavBackend::publishCalendar', new GenericEvent(
-			'\OCA\DAV\CalDAV\CalDavBackend::updateShares',
+			'\OCA\DAV\CalDAV\CalDavBackend::addPublicLink',
 			[
 				'calendarId' => $calendarId,
 				'calendarData' => $this->getCalendarById($calendarId),
-				'public' => $value,
+				'publicuri' => $publicUri,
 			]));
 
 		$query = $this->db->getQueryBuilder();
-		if ($value) {
-			$publicUri = $this->random->generate(16, ISecureRandom::CHAR_HUMAN_READABLE);
-			$query->insert('dav_shares')
-				->values([
-					'principaluri' => $query->createNamedParameter($calendar->getPrincipalURI()),
-					'type' => $query->createNamedParameter('calendar'),
-					'access' => $query->createNamedParameter(self::ACCESS_PUBLIC),
-					'resourceid' => $query->createNamedParameter($calendar->getResourceId()),
-					'publicuri' => $query->createNamedParameter($publicUri)
-				]);
-			$query->execute();
-			return $publicUri;
-		}
-		$query->delete('dav_shares')
-			->where($query->expr()->eq('resourceid', $query->createNamedParameter($calendar->getResourceId())))
-			->andWhere($query->expr()->eq('access', $query->createNamedParameter(self::ACCESS_PUBLIC)));
+		$query->insert('dav_shares')
+			->values([
+				'principaluri' => $query->createNamedParameter($calendar->getPrincipalURI()),
+				'type' => $query->createNamedParameter('calendar'),
+				'access' => $query->createNamedParameter(self::ACCESS_PUBLIC),
+				'resourceid' => $query->createNamedParameter($calendar->getResourceId()),
+				'publicuri' => $query->createNamedParameter($publicUri)
+			]);
 		$query->execute();
-		return null;
+		return $publicUri;
 	}
 
 	/**
-	 * @param \OCA\DAV\CalDAV\Calendar $calendar
-	 * @return mixed
+	 * @param Calendar $calendar
+	 * @param string $publicUri
 	 */
-	public function getPublishStatus($calendar) {
+	public function removePublicLink(Calendar $calendar, string $publicUri) {
+		$calendarId = $calendar->getResourceId();
+
+		$this->dispatcher->dispatch('\OCA\DAV\CalDAV\CalDavBackend::publishCalendar', new GenericEvent(
+			'\OCA\DAV\CalDAV\CalDavBackend::removePublicLinks',
+			[
+				'calendarId' => $calendarId,
+				'calendarData' => $this->getCalendarById($calendarId),
+				'publicuri' => $publicUri
+			]));
+
+		$query = $this->db->getQueryBuilder();
+		$query->delete('dav_shares')
+			->where($query->expr()->eq('publicuri', $query->createNamedParameter($publicUri)))
+			->andWhere($query->expr()->eq('resourceid', $query->createNamedParameter($calendarId)))
+			->andWhere($query->expr()->eq('access', $query->createNamedParameter(self::ACCESS_PUBLIC)));
+		$query->execute();
+	}
+
+	/**
+	 * @param Calendar $calendar
+	 */
+	public function removeAllPublicLinks(Calendar $calendar) {
+		$calendarId = $calendar->getResourceId();
+
+		$this->dispatcher->dispatch('\OCA\DAV\CalDAV\CalDavBackend::publishCalendar', new GenericEvent(
+			'\OCA\DAV\CalDAV\CalDavBackend::removeAllPublicLinks',
+			[
+				'calendarId' => $calendarId,
+				'calendarData' => $this->getCalendarById($calendarId),
+			]));
+
+		$query = $this->db->getQueryBuilder();
+		$query->delete('dav_shares')
+			->where($query->expr()->eq('resourceid', $query->createNamedParameter($calendarId)))
+			->andWhere($query->expr()->eq('access', $query->createNamedParameter(self::ACCESS_PUBLIC)));
+		$query->execute();
+	}
+
+	/**
+	 * @param Calendar $calendar
+	 * @return array
+	 */
+	public function getPublicURIs($calendar): array {
 		$query = $this->db->getQueryBuilder();
 		$result = $query->select('publicuri')
 			->from('dav_shares')
@@ -2389,9 +2424,7 @@ class CalDavBackend extends AbstractBackend implements SyncSupport, Subscription
 			->andWhere($query->expr()->eq('access', $query->createNamedParameter(self::ACCESS_PUBLIC)))
 			->execute();
 
-		$row = $result->fetch();
-		$result->closeCursor();
-		return $row ? reset($row) : false;
+		return $result->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
 	/**
