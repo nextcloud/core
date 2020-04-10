@@ -2,10 +2,14 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Maxence Lange <maxence@artificial-owl.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -23,30 +27,30 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\FederatedFileSharing;
 
+use OC\Share20\Exception\InvalidShare;
 use OC\Share20\Share;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\Federation\ICloudFederationProviderManager;
 use OCP\Federation\ICloudIdManager;
-use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
+use OCP\Files\Node;
+use OCP\Files\NotFoundException;
 use OCP\IConfig;
+use OCP\IDBConnection;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IUserManager;
 use OCP\Share\Exceptions\GenericShareException;
+use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IShare;
 use OCP\Share\IShareProvider;
-use OC\Share20\Exception\InvalidShare;
-use OCP\Share\Exceptions\ShareNotFound;
-use OCP\Files\NotFoundException;
-use OCP\IDBConnection;
-use OCP\Files\Node;
 
 /**
  * Class FederatedShareProvider
@@ -97,7 +101,7 @@ class FederatedShareProvider implements IShareProvider {
 	private $cloudFederationProviderManager;
 
 	/** @var array list of supported share types */
-	private $supportedShareType = [\OCP\Share::SHARE_TYPE_REMOTE_GROUP, \OCP\Share::SHARE_TYPE_REMOTE];
+	private $supportedShareType = [IShare::TYPE_REMOTE_GROUP, IShare::TYPE_REMOTE, IShare::TYPE_CIRCLE];
 
 	/**
 	 * DefaultShareProvider constructor.
@@ -185,7 +189,7 @@ class FederatedShareProvider implements IShareProvider {
 		$alreadySharedGroup = $this->getSharedWith($shareWith, \OCP\Share::SHARE_TYPE_REMOTE_GROUP, $share->getNode(), 1, 0);
 		if (!empty($alreadyShared) || !empty($alreadySharedGroup)) {
 			$message = 'Sharing %1$s failed, because this item is already shared with %2$s';
-			$message_t = $this->l->t('Sharing %1$s failed, because this item is already shared with %2$s', array($share->getNode()->getName(), $shareWith));
+			$message_t = $this->l->t('Sharing %1$s failed, because this item is already shared with %2$s', [$share->getNode()->getName(), $shareWith]);
 			$this->logger->debug(sprintf($message, $share->getNode()->getName(), $shareWith), ['app' => 'Federated File Sharing']);
 			throw new \Exception($message_t);
 		}
@@ -563,6 +567,11 @@ class FederatedShareProvider implements IShareProvider {
 	 * @throws \OC\HintException
 	 */
 	protected function revokeShare($share, $isOwner) {
+		if ($this->userManager->userExists($share->getShareOwner() && $this->userManager->userExists($share->getSharedBy()))) {
+			// If both the owner and the initiator of the share are local users we don't have to notify anybody else
+			return;
+		}
+
 		// also send a unShare request to the initiator, if this is a different user than the owner
 		if ($share->getShareOwner() !== $share->getSharedBy()) {
 			if ($isOwner) {
@@ -592,7 +601,8 @@ class FederatedShareProvider implements IShareProvider {
 	private function removeShareFromTableById($shareId) {
 		$qb = $this->dbConnection->getQueryBuilder();
 		$qb->delete('share')
-			->where($qb->expr()->eq('id', $qb->createNamedParameter($shareId)));
+			->where($qb->expr()->eq('id', $qb->createNamedParameter($shareId)))
+			->andWhere($qb->expr()->neq('share_type', $qb->createNamedParameter(IShare::TYPE_CIRCLE)));
 		$qb->execute();
 
 		$qb->delete('federated_reshares')
@@ -1038,7 +1048,7 @@ class FederatedShareProvider implements IShareProvider {
 		if ($this->gsConfig->isGlobalScaleEnabled()) {
 			return true;
 		}
-		$result = $this->config->getAppValue('files_sharing', 'lookupServerEnabled', 'no');
+		$result = $this->config->getAppValue('files_sharing', 'lookupServerEnabled', 'yes');
 		return ($result === 'yes');
 	}
 
@@ -1094,5 +1104,32 @@ class FederatedShareProvider implements IShareProvider {
 		$cursor->closeCursor();
 
 		return ['remote' => $remote];
+	}
+
+	public function getAllShares(): iterable {
+		$qb = $this->dbConnection->getQueryBuilder();
+
+		$qb->select('*')
+			->from('share')
+			->where(
+				$qb->expr()->orX(
+					$qb->expr()->eq('share_type', $qb->createNamedParameter(\OCP\Share\IShare::TYPE_REMOTE)),
+					$qb->expr()->eq('share_type', $qb->createNamedParameter(\OCP\Share\IShare::TYPE_REMOTE_GROUP))
+				)
+			);
+
+		$cursor = $qb->execute();
+		while($data = $cursor->fetch()) {
+			try {
+				$share = $this->createShareObject($data);
+			} catch (InvalidShare $e) {
+				continue;
+			} catch (ShareNotFound $e) {
+				continue;
+			}
+
+			yield $share;
+		}
+		$cursor->closeCursor();
 	}
 }

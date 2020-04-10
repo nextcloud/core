@@ -33,13 +33,13 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 */
 	public static function sections() {
 		return [ "All files" => "files",
-				 "Recent" => "recent",
-				 "Favorites" => "favorites",
-				 "Shared with you" => "sharingin",
-				 "Shared with others" => "sharingout",
-				 "Shared by link" => "sharinglinks",
-				 "Tags" => "systemtagsfilter",
-				 "Deleted files" => "trashbin" ];
+			"Recent" => "recent",
+			"Favorites" => "favorites",
+			"Shared with you" => "sharingin",
+			"Shared with others" => "sharingout",
+			"Shared by link" => "sharinglinks",
+			"Tags" => "systemtagsfilter",
+			"Deleted files" => "trashbin" ];
 	}
 
 	/**
@@ -98,7 +98,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function fileNameInDetailsView() {
-		return Locator::forThe()->css(".fileName")->
+		return Locator::forThe()->css(".app-sidebar-header__title")->
 				descendantOf(self::detailsView())->
 				describedAs("File name in details view in Files app");
 	}
@@ -107,7 +107,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function favoriteActionInFileDetailsInDetailsView() {
-		return Locator::forThe()->css(".action-favorite")->
+		return Locator::forThe()->css(".app-sidebar-header__star")->
 				descendantOf(self::fileDetailsInDetailsView())->
 				describedAs("Favorite action in file details in details view in Files app");
 	}
@@ -143,7 +143,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	private static function fileDetailsInDetailsView() {
-		return Locator::forThe()->css(".file-details")->
+		return Locator::forThe()->css(".app-sidebar-header__desc")->
 				descendantOf(self::detailsView())->
 				describedAs("File details in details view in Files app");
 	}
@@ -205,7 +205,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	private static function tabHeadersInDetailsView() {
-		return Locator::forThe()->css(".tabHeaders")->
+		return Locator::forThe()->css(".app-sidebar-tabs__nav")->
 				descendantOf(self::detailsView())->
 				describedAs("Tab headers in details view in Files app");
 	}
@@ -214,7 +214,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function tabInDetailsViewNamed($tabName) {
-		return Locator::forThe()->xpath("//div[@id=//*[contains(concat(' ', normalize-space(@class), ' '), ' tabHeader ') and normalize-space() = '$tabName']/@data-tabid]")->
+		return Locator::forThe()->xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' app-sidebar-tabs__content ')]/section[@aria-labelledby = '$tabName' and @role = 'tabpanel']")->
 				descendantOf(self::detailsView())->
 				describedAs("Tab named $tabName in details view in Files app");
 	}
@@ -223,7 +223,7 @@ class FilesAppContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function loadingIconForTabInDetailsViewNamed($tabName) {
-		return Locator::forThe()->css(".loading")->
+		return Locator::forThe()->css(".icon-loading")->
 				descendantOf(self::tabInDetailsViewNamed($tabName))->
 				describedAs("Loading icon for tab named $tabName in details view in Files app");
 	}

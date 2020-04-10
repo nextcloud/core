@@ -23,6 +23,7 @@
  */
 
 namespace Test;
+
 use OC\App\AppStore\Fetcher\AppFetcher;
 use OC\App\AppStore\Fetcher\CategoryFetcher;
 
@@ -38,7 +39,7 @@ class ServerTest extends \Test\TestCase {
 	protected $server;
 
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$config = new \OC\Config(\OC::$configDir);
 		$this->server = new \OC\Server('', $config);

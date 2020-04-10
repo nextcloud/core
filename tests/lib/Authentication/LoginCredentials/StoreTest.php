@@ -51,7 +51,7 @@ class StoreTest extends TestCase {
 	/** @var Store */
 	private $store;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->session = $this->createMock(ISession::class);

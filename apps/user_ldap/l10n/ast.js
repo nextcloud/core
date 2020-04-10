@@ -146,7 +146,6 @@ OC.L10N.register(
     "Quota Default" : "Cuota por defeutu",
     "Email Field" : "E-mail",
     "User Home Folder Naming Rule" : "Regla pa la carpeta Home d'usuariu",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Baleru pal nome d'usuariu (por defeutu). N'otru casu, especifica un atributu LDAP/AD.",
     "Internal Username" : "Nome d'usuariu internu",
     "Internal Username Attribute:" : "Atributu Nome d'usuariu Internu:",
     "Override UUID detection" : "Sobrescribir la deteición UUID",
@@ -155,6 +154,7 @@ OC.L10N.register(
     "UUID Attribute for Groups:" : "Atributu UUID pa Grupos:",
     "Username-LDAP User Mapping" : "Asignación del Nome d'usuariu LDAP",
     "Clear Username-LDAP User Mapping" : "Llimpiar l'asignación de los Nomes d'usuariu de los usuarios LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Llimpiar l'asignación de los Nomes de grupu de los grupos de LDAP"
+    "Clear Groupname-LDAP Group Mapping" : "Llimpiar l'asignación de los Nomes de grupu de los grupos de LDAP",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Baleru pal nome d'usuariu (por defeutu). N'otru casu, especifica un atributu LDAP/AD."
 },
 "nplurals=2; plural=(n != 1);");

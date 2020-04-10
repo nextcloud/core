@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2019 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Julius Härtl <jus@bitgrid.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,19 +26,11 @@ namespace OCA\User_LDAP\Handler;
 
 use OCA\Files_External\Config\IConfigHandler;
 use OCA\Files_External\Config\SimpleSubstitutionTrait;
+use OCA\Files_External\Config\UserContext;
 use OCA\User_LDAP\User_Proxy;
-use OCP\IUserSession;
 
-class ExtStorageConfigHandler implements IConfigHandler {
+class ExtStorageConfigHandler extends UserContext implements IConfigHandler {
 	use SimpleSubstitutionTrait;
-
-	/** @var IUserSession */
-	private $session;
-
-	public function __construct(IUserSession $session) {
-		$this->placeholder = 'home';
-		$this->session = $session;
-	}
 
 	/**
 	 * @param mixed $optionValue
@@ -46,7 +39,9 @@ class ExtStorageConfigHandler implements IConfigHandler {
 	 * @throws \Exception
 	 */
 	public function handle($optionValue) {
-		$user = $this->session->getUser();
+		$this->placeholder = 'home';
+		$user = $this->getUser();
+
 		if($user === null) {
 			return $optionValue;
 		}

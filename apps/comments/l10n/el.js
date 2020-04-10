@@ -28,8 +28,6 @@ OC.L10N.register(
     "Error occurred while posting comment" : "Ένα σφάλμα προέκυψε κατά την δημοσίευση σχολίου",
     "_%n unread comment_::_%n unread comments_" : ["%n αδιάβαστο σχόλιο","%n αδιάβαστα σχόλια"],
     "_1 new comment_::_{unread} new comments_" : ["1 νέο σχόλιο","{unread} νέα σχόλια"],
-    "Comment" : "Σχόλιο",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "Το όνομά σας αναφέρθηκε στο \"%s\", σε σχόλιο ενός χρήστη ο οποίος έχει πλέον διαγραφεί",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s σας ανέφερε σε σχόλιο στο “%2$s”"
+    "Comment" : "Σχόλιο"
 },
 "nplurals=2; plural=(n != 1);");

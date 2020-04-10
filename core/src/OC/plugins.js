@@ -33,14 +33,14 @@ export default {
 	 * Register plugin
 	 *
 	 * @param {String} targetName app name / class name to hook into
-	 * @param {OC.Plugin} plugin
+	 * @param {OC.Plugin} plugin plugin
 	 */
-	register: function (targetName, plugin) {
-		var plugins = this._plugins[targetName];
+	register: function(targetName, plugin) {
+		let plugins = this._plugins[targetName]
 		if (!plugins) {
-			plugins = this._plugins[targetName] = [];
+			plugins = this._plugins[targetName] = []
 		}
-		plugins.push(plugin);
+		plugins.push(plugin)
 	},
 
 	/**
@@ -48,24 +48,24 @@ export default {
 	 * name / app name / class name.
 	 *
 	 * @param {String} targetName app name / class name to hook into
-	 * @return {Array.<OC.Plugin>} array of plugins
+	 * @returns {Array.<OC.Plugin>} array of plugins
 	 */
-	getPlugins: function (targetName) {
-		return this._plugins[targetName] || [];
+	getPlugins: function(targetName) {
+		return this._plugins[targetName] || []
 	},
 
 	/**
 	 * Call attach() on all plugins registered to the given target name.
 	 *
 	 * @param {String} targetName app name / class name
-	 * @param {Object} object to be extended
+	 * @param {Object} targetObject to be extended
 	 * @param {Object} [options] options
 	 */
-	attach: function (targetName, targetObject, options) {
-		var plugins = this.getPlugins(targetName);
-		for (var i = 0; i < plugins.length; i++) {
+	attach: function(targetName, targetObject, options) {
+		const plugins = this.getPlugins(targetName)
+		for (let i = 0; i < plugins.length; i++) {
 			if (plugins[i].attach) {
-				plugins[i].attach(targetObject, options);
+				plugins[i].attach(targetObject, options)
 			}
 		}
 	},
@@ -74,16 +74,16 @@ export default {
 	 * Call detach() on all plugins registered to the given target name.
 	 *
 	 * @param {String} targetName app name / class name
-	 * @param {Object} object to be extended
+	 * @param {Object} targetObject to be extended
 	 * @param {Object} [options] options
 	 */
-	detach: function (targetName, targetObject, options) {
-		var plugins = this.getPlugins(targetName);
-		for (var i = 0; i < plugins.length; i++) {
+	detach: function(targetName, targetObject, options) {
+		const plugins = this.getPlugins(targetName)
+		for (let i = 0; i < plugins.length; i++) {
 			if (plugins[i].detach) {
-				plugins[i].detach(targetObject, options);
+				plugins[i].detach(targetObject, options)
 			}
 		}
-	}
+	},
 
 }

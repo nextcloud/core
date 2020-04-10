@@ -20,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -32,11 +32,12 @@
 
 // use OCP namespace for all classes that are considered public.
 // This means that they should be used by apps instead of the internal ownCloud classes
+
 namespace OCP;
 
 use OCP\Files\File;
-use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\NotFoundException;
+use OCP\Files\SimpleFS\ISimpleFile;
 
 /**
  * This class provides functions to render and show thumbnails and previews of files
@@ -78,18 +79,6 @@ interface IPreview {
 	 * @since 8.1.0
 	 */
 	public function hasProviders();
-
-	/**
-	 * Return a preview of a file
-	 * @param string $file The path to the file where you want a thumbnail from
-	 * @param int $maxX The maximum X size of the thumbnail. It can be smaller depending on the shape of the image
-	 * @param int $maxY The maximum Y size of the thumbnail. It can be smaller depending on the shape of the image
-	 * @param boolean $scaleUp Scale smaller images up to the thumbnail size or not. Might look ugly
-	 * @return \OCP\IImage
-	 * @since 6.0.0
-	 * @deprecated 11 Use getPreview
-	 */
-	public function createPreview($file, $maxX = 100, $maxY = 75, $scaleUp = false);
 
 	/**
 	 * Returns a preview of a file

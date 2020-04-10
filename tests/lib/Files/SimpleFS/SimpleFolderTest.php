@@ -20,119 +20,94 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\File\SimpleFS;
 
 use OC\Files\SimpleFS\SimpleFolder;
-use OCP\Files\File;
+use OC\Files\Storage\Temporary;
 use OCP\Files\Folder;
-use OCP\Files\Node;
 use OCP\Files\NotFoundException;
 use OCP\Files\SimpleFS\ISimpleFile;
+use Test\Traits\MountProviderTrait;
+use Test\Traits\UserTrait;
 
-class SimpleFolderTest extends \Test\TestCase  {
-	/** @var Folder|\PHPUnit_Framework_MockObject_MockObject */
+/**
+ * @group DB
+ */
+class SimpleFolderTest extends \Test\TestCase {
+	use MountProviderTrait;
+	use UserTrait;
+
+	/** @var Folder */
 	private $folder;
+
+	/** @var Folder */
+	private $parentFolder;
 
 	/** @var SimpleFolder */
 	private $simpleFolder;
 
-	public function setUp() {
+	private $storage;
+
+	protected function setUp(): void {
 		parent::setUp();
 
-		$this->folder = $this->createMock(Folder::class);
+		$this->storage = new Temporary([]);
+		$this->createUser('simple', 'simple');
+		$this->registerMount('simple', $this->storage, '/simple/files');
+		$this->loginAsUser('simple');
+
+		$this->parentFolder = \OC::$server->getUserFolder('simple');
+
+		$this->folder = $this->parentFolder->newFolder('test');
 		$this->simpleFolder = new SimpleFolder($this->folder);
 	}
 
 	public function testGetName() {
-		$this->folder->expects($this->once())
-			->method('getName')
-			->willReturn('myname');
-
-		$this->assertEquals('myname', $this->simpleFolder->getName());
+		$this->assertEquals('test', $this->simpleFolder->getName());
 	}
 
 	public function testDelete() {
-		$this->folder->expects($this->once())
-			->method('delete');
-
+		$this->assertTrue($this->parentFolder->nodeExists('test'));
 		$this->simpleFolder->delete();
+		$this->assertFalse($this->parentFolder->nodeExists('test'));
 	}
 
-	public function dataFileExists() {
-		return [
-			[true],
-			[false],
-		];
+	public function testFileExists() {
+		$this->folder->newFile('exists');
+
+		$this->assertFalse($this->simpleFolder->fileExists('not-exists'));
+		$this->assertTrue($this->simpleFolder->fileExists('exists'));
 	}
 
-	/**
-	 * @dataProvider dataFileExists
-	 * @param bool $exists
-	 */
-	public function testFileExists($exists) {
-		$this->folder->expects($this->once())
-			->method('nodeExists')
-			->with($this->equalTo('file'))
-			->willReturn($exists);
+	public function testGetFile() {
+		$this->folder->newFile('exists');
 
-		$this->assertEquals($exists, $this->simpleFolder->fileExists('file'));
-	}
+		$result = $this->simpleFolder->getFile('exists');
+		$this->assertInstanceOf(ISimpleFile::class, $result);
 
-	public function dataGetFile() {
-		return [
-			[File::class, false],
-			[Folder::class, true],
-			[Node::class, true],
-		];
-	}
-
-	/**
-	 * @dataProvider dataGetFile
-	 * @param string $class
-	 * @param bool $exception
-	 */
-	public function testGetFile($class, $exception) {
-		$node = $this->createMock($class);
-
-		$this->folder->expects($this->once())
-			->method('get')
-			->with($this->equalTo('file'))
-			->willReturn($node);
-
-		try {
-			$result = $this->simpleFolder->getFile('file');
-			$this->assertFalse($exception);
-			$this->assertInstanceOf(ISimpleFile::class, $result);
-		} catch (NotFoundException $e) {
-			$this->assertTrue($exception);
-		}
+		$this->expectException(NotFoundException::class);
+		$this->simpleFolder->getFile('not-exists');
 	}
 
 	public function testNewFile() {
-		$file = $this->createMock(File::class);
-
-		$this->folder->expects($this->once())
-			->method('newFile')
-			->with($this->equalTo('file'))
-			->willReturn($file);
-
 		$result = $this->simpleFolder->newFile('file');
 		$this->assertInstanceOf(ISimpleFile::class, $result);
+		$this->assertFalse($this->folder->nodeExists('file'));
+		$result->putContent('bar');
+
+		$this->assertTrue($this->folder->nodeExists('file'));
+		$this->assertEquals('bar', $result->getContent());
 	}
 
 	public function testGetDirectoryListing() {
-		$file = $this->createMock(File::class);
-		$folder = $this->createMock(Folder::class);
-		$node = $this->createMock(Node::class);
-
-		$this->folder->expects($this->once())
-			->method('getDirectoryListing')
-			->willReturn([$file, $folder, $node]);
+		$this->folder->newFile('file1');
+		$this->folder->newFile('file2');
 
 		$result = $this->simpleFolder->getDirectoryListing();
-
-		$this->assertCount(1, $result);
+		$this->assertCount(2, $result);
 		$this->assertInstanceOf(ISimpleFile::class, $result[0]);
+		$this->assertInstanceOf(ISimpleFile::class, $result[1]);
 	}
 
 }

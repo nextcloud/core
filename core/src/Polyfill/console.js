@@ -1,4 +1,5 @@
-/*
+/* eslint-disable no-console */
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -19,13 +20,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (typeof console === "undefined" || typeof console.log === "undefined") {
+if (typeof console === 'undefined' || typeof console.log === 'undefined') {
 	if (!window.console) {
-		window.console = {};
+		window.console = {}
 	}
-	const noOp = () => {};
-	const methods = ['log', 'debug', 'warn', 'info', 'error', 'assert', 'time', 'timeEnd'];
-	for (var i = 0; i < methods.length; i++) {
-		console[methods[i]] = noOp;
+	const noOp = () => {}
+	const methods = ['log', 'debug', 'warn', 'info', 'error', 'assert', 'time', 'timeEnd']
+	for (let i = 0; i < methods.length; i++) {
+		console[methods[i]] = noOp
 	}
 }

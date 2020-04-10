@@ -29,7 +29,7 @@ class VersionParserTest extends TestCase  {
 	/** @var VersionParser */
 	private $versionParser;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->versionParser = new VersionParser();
 	}
@@ -81,19 +81,19 @@ class VersionParserTest extends TestCase  {
 		$this->assertEquals($expected, $this->versionParser->getVersion($input));
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Version cannot be parsed: BogusVersion
-	 */
+	
 	public function testGetVersionException() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Version cannot be parsed: BogusVersion');
+
 		$this->versionParser->getVersion('BogusVersion');
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Version cannot be parsed: >=8.2 <=9.1a
-	 */
+	
 	public function testGetVersionExceptionWithMultiple() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Version cannot be parsed: >=8.2 <=9.1a');
+
 		$this->versionParser->getVersion('>=8.2 <=9.1a');
 	}
 }

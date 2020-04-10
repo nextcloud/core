@@ -21,8 +21,6 @@
 
 namespace OCA\WorkflowEngine\Check;
 
-
-use OCP\Files\Storage\IStorage;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\WorkflowEngine\ICheck;
@@ -42,14 +40,6 @@ class RequestRemoteAddress implements ICheck {
 	public function __construct(IL10N $l, IRequest $request) {
 		$this->l = $l;
 		$this->request = $request;
-	}
-
-	/**
-	 * @param IStorage $storage
-	 * @param string $path
-	 */
-	public function setFileInfo(IStorage $storage, $path) {
-		// A different path doesn't change time, so nothing to do here.
 	}
 
 	/**
@@ -150,5 +140,33 @@ class RequestRemoteAddress implements ICheck {
 			$binaryIp .= str_pad(decbin(ord($char)), 8, '0', STR_PAD_LEFT);
 		}
 		return str_pad($binaryIp, 128, '0', STR_PAD_RIGHT);
+	}
+
+	/**
+	 * returns a list of Entities the checker supports. The values must match
+	 * the class name of the entity.
+	 *
+	 * An empty result means the check is universally available.
+	 *
+	 * @since 18.0.0
+	 */
+	public function supportedEntities(): array {
+		return [];
+	}
+
+	/**
+	 * returns whether the operation can be used in the requested scope.
+	 *
+	 * Scope IDs are defined as constants in OCP\WorkflowEngine\IManager. At
+	 * time of writing these are SCOPE_ADMIN and SCOPE_USER.
+	 *
+	 * For possibly unknown future scopes the recommended behaviour is: if
+	 * user scope is permitted, the default behaviour should return `true`,
+	 * otherwise `false`.
+	 *
+	 * @since 18.0.0
+	 */
+	public function isAvailableForScope(int $scope): bool {
+		return true;
 	}
 }

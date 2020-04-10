@@ -2,8 +2,11 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Sebastian Wessalowski <sebastian@wessalowski.org>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -21,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -191,11 +194,11 @@ class File implements ICache {
 						}
 					} catch (\OCP\Lock\LockedException $e) {
 						// ignore locked chunks
-						\OC::$server->getLogger()->debug('Could not cleanup locked chunk "' . $file . '"', array('app' => 'core'));
+						\OC::$server->getLogger()->debug('Could not cleanup locked chunk "' . $file . '"', ['app' => 'core']);
 					} catch (\OCP\Files\ForbiddenException $e) {
-						\OC::$server->getLogger()->debug('Could not cleanup forbidden chunk "' . $file . '"', array('app' => 'core'));
+						\OC::$server->getLogger()->debug('Could not cleanup forbidden chunk "' . $file . '"', ['app' => 'core']);
 					} catch (\OCP\Files\LockNotAcquiredException $e) {
-						\OC::$server->getLogger()->debug('Could not cleanup locked chunk "' . $file . '"', array('app' => 'core'));
+						\OC::$server->getLogger()->debug('Could not cleanup locked chunk "' . $file . '"', ['app' => 'core']);
 					}
 				}
 			}

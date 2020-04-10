@@ -1,7 +1,7 @@
 OC.L10N.register(
     "theming",
     {
-    "Loading preview…" : "Ön izleme yükleniyor...",
+    "Loading preview…" : "Ön izleme yükleniyor …",
     "Saved" : "Kaydedildi",
     "Admin" : "Yönetici",
     "a safe home for all your data" : "verileriniz için güvenli bir barınak",
@@ -30,6 +30,7 @@ OC.L10N.register(
     "Legal notice" : "Yasal bildirim",
     "Privacy policy" : "Kişisel gizliliğin korunması ilkesi",
     "Adjust the Nextcloud theme" : "Nextcloud temasını ayarla",
+    "Open documentation" : "Belgeleri aç",
     "Theming makes it possible to easily customize the look and feel of your instance and supported clients. This will be visible for all users." : "Temalar kullandığınız kopyanın ve desteklenen istemcilerin genel görünümün kolayca değiştirilmesini sağlar. Tüm kullanıcılara görüntülenir.",
     "Name" : "Ad",
     "Reset to default" : "Varsayılana Sıfırla",

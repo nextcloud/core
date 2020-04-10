@@ -5,7 +5,7 @@
 	<name>WebDAV</name>
 	<summary>WebDAV endpoint</summary>
 	<description>WebDAV endpoint</description>
-	<version>1.10.0</version>
+	<version>1.15.0</version>
 	<licence>agpl</licence>
 	<author>owncloud.org</author>
 	<namespace>DAV</namespace>
@@ -16,13 +16,14 @@
 	<category>integration</category>
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 	<dependencies>
-		<nextcloud min-version="17" max-version="17"/>
+		<nextcloud min-version="19" max-version="19"/>
 	</dependencies>
 
 	<background-jobs>
 		<job>OCA\DAV\BackgroundJob\CleanupDirectLinksJob</job>
 		<job>OCA\DAV\BackgroundJob\UpdateCalendarResourcesRoomsBackgroundJob</job>
 		<job>OCA\DAV\BackgroundJob\CleanupInvitationTokenJob</job>
+		<job>OCA\DAV\BackgroundJob\EventReminderJob</job>
 	</background-jobs>
 
 	<repair-steps>
@@ -32,6 +33,7 @@
 			<step>OCA\DAV\Migration\CalDAVRemoveEmptyValue</step>
 			<step>OCA\DAV\Migration\BuildCalendarSearchIndex</step>
 			<step>OCA\DAV\Migration\RefreshWebcalJobRegistrar</step>
+			<step>OCA\DAV\Migration\RegisterBuildReminderIndexBackgroundJob</step>
 			<step>OCA\DAV\Migration\RemoveOrphanEventsAndContacts</step>
 			<step>OCA\DAV\Migration\RemoveClassifiedEventActivity</step>
 		</post-migration>
@@ -45,6 +47,7 @@
 		<command>OCA\DAV\Command\CreateCalendar</command>
 		<command>OCA\DAV\Command\MoveCalendar</command>
 		<command>OCA\DAV\Command\ListCalendars</command>
+		<command>OCA\DAV\Command\SendEventReminders</command>
 		<command>OCA\DAV\Command\SyncBirthdayCalendar</command>
 		<command>OCA\DAV\Command\SyncSystemAddressBook</command>
 		<command>OCA\DAV\Command\RemoveInvalidShares</command>

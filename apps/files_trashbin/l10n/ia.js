@@ -12,10 +12,8 @@ OC.L10N.register(
     "No entries found in this folder" : "Nulle entratas trovate in iste dossier",
     "Select all" : "Selectionar toto",
     "Name" : "Nomine",
+    "Actions" : "Actiones",
     "Deleted" : "Delite",
-    "Delete" : "Deler",
-    "Couldn't delete %s permanently" : "Impossibile deler %s permanentemente",
-    "Couldn't restore %s" : "Impossibile restaurar %s",
-    "Error" : "Error"
+    "Delete" : "Deler"
 },
 "nplurals=2; plural=(n != 1);");

@@ -12,6 +12,7 @@ Feature: external-storage
     And User "user0" moved file "/textfile0.txt" to "/local_storage/foo/textfile0.txt"
     And folder "/local_storage/foo" of user "user0" is shared with user "user1"
     And As an "user1"
+    And accepting last share
     When creating a share with
       | path | foo |
       | shareType | 3 |

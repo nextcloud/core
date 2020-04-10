@@ -21,7 +21,7 @@
 
 /**
  * Protocol that is used to access this Nextcloud instance
- * @return {string} Used protocol
+ * @returns {string} Used protocol
  * @deprecated 17.0.0 use window.location.protocol directly
  */
 export const getProtocol = () => window.location.protocol.split(':')[0]
@@ -35,7 +35,7 @@ export const getProtocol = () => window.location.protocol.split(':')[0]
  * https://example.com => example.com
  * http://example.com:8080 => example.com:8080
  *
- * @return {string} host
+ * @returns {string} host
  *
  * @since 8.2
  * @deprecated 17.0.0 use window.location.host directly
@@ -46,7 +46,7 @@ export const getHost = () => window.location.host
  * Returns the hostname used to access this Nextcloud instance
  * The hostname is always stripped of the port
  *
- * @return {string} hostname
+ * @returns {string} hostname
  * @since 9.0
  * @deprecated 17.0.0 use window.location.hostname directly
  */
@@ -55,7 +55,7 @@ export const getHostName = () => window.location.hostname
 /**
  * Returns the port number used to access this Nextcloud instance
  *
- * @return {int} port number
+ * @returns {int} port number
  *
  * @since 8.2
  * @deprecated 17.0.0 use window.location.port directly

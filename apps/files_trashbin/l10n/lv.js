@@ -12,10 +12,8 @@ OC.L10N.register(
     "No entries found in this folder" : "Šajā mapē nekas nav atrasts",
     "Select all" : "Atzīmēt visu",
     "Name" : "Nosaukums",
+    "Actions" : "Darbības",
     "Deleted" : "Dzēsts",
-    "Delete" : "Dzēst",
-    "Couldn't delete %s permanently" : "Nevarēja pilnībā izdzēst %s",
-    "Couldn't restore %s" : "Nevarēja atjaunot %s",
-    "Error" : "Kļūda"
+    "Delete" : "Dzēst"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

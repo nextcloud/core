@@ -81,17 +81,17 @@
 }
 
 /* Css replaced elements don't have ::after nor ::before */
-img, object, video, button, textarea, input, select, div[contenteditable='true'] {
-	.icon-loading {
+audio, canvas, embed, iframe, img, input, object, video {
+	&.icon-loading {
 		background-image: url('../img/loading.gif');
 	}
-	.icon-loading-dark {
+	&.icon-loading-dark {
 		background-image: url('../img/loading-dark.gif');
 	}
-	.icon-loading-small {
+	&.icon-loading-small {
 		background-image: url('../img/loading-small.gif');
 	}
-	.icon-loading-small-dark {
+	&.icon-loading-small-dark {
 		background-image: url('../img/loading-small-dark.gif');
 	}
 }
@@ -165,7 +165,8 @@ img, object, video, button, textarea, input, select, div[contenteditable='true']
 
 .icon-delete {
 	@include icon-color('delete', 'actions', $color-black, 1, true);
-	&.no-permission {
+	&.no-permission,
+	&.no-hover {
 		&:hover,
 		&:focus {
 			@include icon-color('delete', 'actions', $color-black, 1, true);
@@ -294,7 +295,7 @@ img, object, video, button, textarea, input, select, div[contenteditable='true']
 	}
 }
 
-@include icon-black-white('tag', 'actions', 1, true);
+@include icon-black-white('tag', 'actions', 2, true);
 @include icon-black-white('timezone', 'actions', 1, true);
 @include icon-black-white('toggle', 'actions', 1, true);
 @include icon-black-white('toggle-background', 'actions', 1, true);
@@ -483,6 +484,10 @@ img, object, video, button, textarea, input, select, div[contenteditable='true']
 
 .icon-category-search {
 	@include icon-color('search', 'actions', $color-black, 1, true);
+}
+
+.icon-category-workflow {
+	@include icon-color('workflow', 'categories', $color-black, 1, true);
 }
 
 .icon-talk {

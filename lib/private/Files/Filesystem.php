@@ -5,6 +5,7 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Christopher Schäpers <kondou@ts.unde.re>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Florin Peter <github@florin-peter.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
@@ -30,7 +31,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -61,7 +62,6 @@ namespace OC\Files;
 use OC\Cache\CappedMemoryCache;
 use OC\Files\Config\MountProviderCollection;
 use OC\Files\Mount\MountPoint;
-use OC\Files\Storage\StorageFactory;
 use OC\Lockdown\Filesystem\NullStorage;
 use OCP\Files\Config\IMountProvider;
 use OCP\Files\NotFoundException;
@@ -82,7 +82,7 @@ class Filesystem {
 	 */
 	static private $defaultInstance;
 
-	static private $usersSetup = array();
+	static private $usersSetup = [];
 
 	static private $normalizedPathCache = null;
 
@@ -299,7 +299,7 @@ class Filesystem {
 		if (!self::$mounts) {
 			\OC_Util::setupFS();
 		}
-		$result = array();
+		$result = [];
 		$mounts = self::$mounts->findIn($path);
 		foreach ($mounts as $mount) {
 			$result[] = $mount->getMountPoint();
@@ -355,9 +355,9 @@ class Filesystem {
 		}
 		$mount = self::$mounts->find($path);
 		if ($mount) {
-			return array($mount->getStorage(), rtrim($mount->getInternalPath($path), '/'));
+			return [$mount->getStorage(), rtrim($mount->getInternalPath($path), '/')];
 		} else {
-			return array(null, null);
+			return [null, null];
 		}
 	}
 
@@ -460,7 +460,7 @@ class Filesystem {
 				'/' . $user . '/files'
 			));
 		}
-		\OC_Hook::emit('OC_Filesystem', 'post_initMountPoints', array('user' => $user));
+		\OC_Hook::emit('OC_Filesystem', 'post_initMountPoints', ['user' => $user]);
 	}
 
 	/**
@@ -477,7 +477,7 @@ class Filesystem {
 					$userObject = $userManager->get($user);
 					if ($userObject) {
 						$mounts = $provider->getMountsForUser($userObject, Filesystem::getLoader());
-						array_walk($mounts, array(self::$mounts, 'addMount'));
+						array_walk($mounts, [self::$mounts, 'addMount']);
 					}
 				}
 			});
@@ -520,7 +520,7 @@ class Filesystem {
 	 */
 	public static function clearMounts() {
 		if (self::$mounts) {
-			self::$usersSetup = array();
+			self::$usersSetup = [];
 			self::$mounts->clear();
 		}
 	}
@@ -618,7 +618,7 @@ class Filesystem {
 	static public function isFileBlacklisted($filename) {
 		$filename = self::normalizePath($filename);
 
-		$blacklist = \OC::$server->getConfig()->getSystemValue('blacklisted_files', array('.htaccess'));
+		$blacklist = \OC::$server->getConfig()->getSystemValue('blacklisted_files', ['.htaccess']);
 		$filename = strtolower(basename($filename));
 		return in_array($filename, $blacklist);
 	}
@@ -828,7 +828,7 @@ class Filesystem {
 		$patterns = [
 			'/\\\\/s',          // no windows style slashes
 			'/\/\.(\/\.)?\//s', // remove '/./'
-			'/\/{2,}/s',        // remove squence of slashes
+			'/\/{2,}/s',        // remove sequence of slashes
 			'/\/\.$/s',         // remove trailing /.
 		];
 

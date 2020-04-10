@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -23,10 +23,11 @@
  * Get the value of a URL parameter
  * @link http://stackoverflow.com/questions/1403888/get-url-parameter-with-jquery
  * @param {string} name URL parameter
- * @return {string}
+ * @returns {string}
  */
-export default function getURLParameter (name) {
+export default function getURLParameter(name) {
 	return decodeURIComponent(
+		// eslint-disable-next-line no-sparse-arrays
 		(new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ''])[1].replace(/\+/g, '%20')
-	) || '';
+	) || ''
 }

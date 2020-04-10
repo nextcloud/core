@@ -19,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -56,7 +56,7 @@ class Result {
 
 	/**
 	 * The type of search result returned; for consistency, name this the same
-	 * as the class name (e.g. \OC\Search\File -> 'file') in lowercase. 
+	 * as the class name (e.g. \OC\Search\File -> 'file') in lowercase.
 	 * @var string
 	 * @since 7.0.0
 	 */

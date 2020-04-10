@@ -2,13 +2,21 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author fnuesse <felix.nuesse@t-online.de>
+ * @author fnuesse <fnuesse@techfak.uni-bielefeld.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Max Kovalenko <mxss1998@yandex.ru>
+ * @author Michael Weimann <mail@michael-weimann.eu>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Vincent Petry <pvince81@owncloud.com>
- * @author Felix Nüsse <felix.nuesse@t-online.de>
  *
  * @license AGPL-3.0
  *
@@ -22,20 +30,23 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files\Controller;
 
 use OCA\Files\Activity\Helper;
+use OCA\Files\Event\LoadAdditionalScriptsEvent;
+use OCA\Files\Event\LoadSidebar;
+use OCA\Viewer\Event\LoadViewer;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
-use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\App\IAppManager;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
@@ -44,8 +55,6 @@ use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * Class ViewController
@@ -63,7 +72,7 @@ class ViewController extends Controller {
 	protected $l10n;
 	/** @var IConfig */
 	protected $config;
-	/** @var EventDispatcherInterface */
+	/** @var IEventDispatcher */
 	protected $eventDispatcher;
 	/** @var IUserSession */
 	protected $userSession;
@@ -79,7 +88,7 @@ class ViewController extends Controller {
 		IURLGenerator $urlGenerator,
 		IL10N $l10n,
 		IConfig $config,
-		EventDispatcherInterface $eventDispatcherInterface,
+		IEventDispatcher $eventDispatcher,
 		IUserSession $userSession,
 		IAppManager $appManager,
 		IRootFolder $rootFolder,
@@ -91,7 +100,7 @@ class ViewController extends Controller {
 		$this->urlGenerator    = $urlGenerator;
 		$this->l10n            = $l10n;
 		$this->config          = $config;
-		$this->eventDispatcher = $eventDispatcherInterface;
+		$this->eventDispatcher = $eventDispatcher;
 		$this->userSession     = $userSession;
 		$this->appManager      = $appManager;
 		$this->rootFolder      = $rootFolder;
@@ -191,7 +200,7 @@ class ViewController extends Controller {
 			$collapseClasses = 'collapsible';
 		}
 
-		$favoritesSublistArray = Array();
+		$favoritesSublistArray = [];
 
 		$navBarPositionPosition = 6;
 		$currentCount           = 0;
@@ -240,6 +249,8 @@ class ViewController extends Controller {
 		$nav->assign('quota', $storageInfo['quota']);
 		$nav->assign('usage_relative', $storageInfo['relative']);
 
+		$nav->assign('webdav_url', \OCP\Util::linkToRemote('dav/files/' . $user));
+
 		$contentItems = [];
 
 		// render the container content for every navigation item
@@ -267,13 +278,19 @@ class ViewController extends Controller {
 			];
 		}
 
-		$event = new GenericEvent(null, ['hiddenFields' => []]);
-		$this->eventDispatcher->dispatch('OCA\Files::loadAdditionalScripts', $event);
+		$event = new LoadAdditionalScriptsEvent();
+		$this->eventDispatcher->dispatch(LoadAdditionalScriptsEvent::class, $event);
+
+		$this->eventDispatcher->dispatch(LoadSidebar::class, new LoadSidebar());
+		// Load Viewer scripts
+		if (class_exists(LoadViewer::class)) {
+			$this->eventDispatcher->dispatchTyped(new LoadViewer());
+		}
 
 		$params                                = [];
 		$params['usedSpacePercent']            = (int) $storageInfo['relative'];
-		$params['owner']                       = $storageInfo['owner'];
-		$params['ownerDisplayName']            = $storageInfo['ownerDisplayName'];
+		$params['owner']                       = $storageInfo['owner'] ?? '';
+		$params['ownerDisplayName']            = $storageInfo['ownerDisplayName'] ?? '';
 		$params['isPublic']                    = false;
 		$params['allowShareWithLink']          = $this->config->getAppValue('core', 'shareapi_allow_links', 'yes');
 		$params['defaultFileSorting']          = $this->config->getUserValue($user, 'files', 'file_sorting', 'name');
@@ -285,7 +302,7 @@ class ViewController extends Controller {
 		$params['fileNotFound']                = $fileNotFound ? 1 : 0;
 		$params['appNavigation']               = $nav;
 		$params['appContents']                 = $contentItems;
-		$params['hiddenFields']                = $event->getArgument('hiddenFields');
+		$params['hiddenFields']                = $event->getHiddenFields();
 
 		$response = new TemplateResponse(
 			$this->appName,

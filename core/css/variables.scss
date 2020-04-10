@@ -35,11 +35,13 @@ $color-main-text: #222 !default; // Not #000 for better readability
 $color-main-background: #fff !default;
 $color-main-background-translucent: rgba($color-main-background, .97) !default;
 
-// used for different active/disabled states
+// used for different active/hover/focus/disabled states
+$color-background-hover: nc-darken($color-main-background, 4%) !default;
 $color-background-dark: nc-darken($color-main-background, 7%) !default;
 $color-background-darker: nc-darken($color-main-background, 14%) !default;
 
 $color-primary: #0082c9 !default;
+$color-primary-light: mix($color-primary, $color-main-background, 10%) !default;
 $color-primary-text: #ffffff !default;
 // do not use nc-darken/lighten in case of overriding because
 // primary-text is independent of color-main-text
@@ -64,11 +66,13 @@ $color-text-lighter: nc-lighten($color-main-text, 30%) !default;
 
 $image-logo: url('../img/logo/logo.svg?v=1') !default;
 $image-login-background: url('../img/background.png?v=2') !default;
+$image-logoheader: url('../img/logo/logo.svg?v=1') !default;
+$image-favicon: url('../img/logo/logo.svg?v=1') !default;
 
 $color-loading-light: #ccc !default;
 $color-loading-dark: #444 !default;
 
-$color-box-shadow: rgba(nc-darken($color-main-background, 70%), 0.5) !default;
+$color-box-shadow: transparentize(nc-darken($color-main-background, 70%), 0.5) !default;
 
 // light border like file table or app-content list
 $color-border: nc-darken($color-main-background, 7%) !default;

@@ -5,6 +5,7 @@
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -18,13 +19,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Encryption\Tests\Crypto;
-
 
 use OCA\Encryption\Crypto\Crypt;
 use OCA\Encryption\Crypto\DecryptAll;
@@ -54,7 +53,7 @@ class DecryptAllTest extends TestCase {
 	/** @var QuestionHelper | \PHPUnit_Framework_MockObject_MockObject  */
 	protected $questionHelper;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->util = $this->getMockBuilder(Util::class)

@@ -3,9 +3,10 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Pavel Krasikov <klonishe@gmail.com>
  * @author Pierre Rudloff <contact@rudloff.pro>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Thomas Citharel <tcit@tcit.fr>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license AGPL-3.0
  *
@@ -19,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -95,6 +96,7 @@ class EmptyContentSecurityPolicy {
 
 	/**
 	 * Use the according JS nonce
+	 * This method is only for CSPMiddleware, custom values are ignored in mergePolicies of ContentSecurityPolicyManager
 	 *
 	 * @param string $nonce
 	 * @return $this
@@ -110,6 +112,7 @@ class EmptyContentSecurityPolicy {
 	 * @param bool $state
 	 * @return $this
 	 * @since 8.1.0
+	 * @deprecated Eval should not be used anymore. Please update your scripts. This function will stop functioning in a future version of Nextcloud.
 	 */
 	public function allowEvalScript($state = true) {
 		$this->evalScriptAllowed = $state;
@@ -494,9 +497,6 @@ class EmptyContentSecurityPolicy {
 
 		if(!empty($this->allowedFrameDomains)) {
 			$policy .= 'frame-src ';
-			if(is_string($this->useJsNonce)) {
-				$policy .= '\'nonce-' . base64_encode($this->useJsNonce) . '\' ';
-			}
 			$policy .= implode(' ', $this->allowedFrameDomains);
 			$policy .= ';';
 		}

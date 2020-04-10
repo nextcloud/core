@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Kim Brose <kim.brose@rwth-aachen.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -16,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -27,10 +29,10 @@ use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\IUser;
 use OCP\IUserManager;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 
 class Setting extends Base {
 	/** @var IUserManager */
@@ -124,7 +126,7 @@ class Setting extends Base {
 	protected function checkInput(InputInterface $input) {
 		$uid = $input->getArgument('uid');
 		if (!$input->getOption('ignore-missing-user') && !$this->userManager->userExists($uid)) {
-			throw new \InvalidArgumentException('The user "' . $uid . '" does not exists.');
+			throw new \InvalidArgumentException('The user "' . $uid . '" does not exist.');
 		}
 
 		if ($input->getArgument('key') === '' && $input->hasParameterOption('--default-value')) {

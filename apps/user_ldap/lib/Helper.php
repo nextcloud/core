@@ -4,6 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Brice Maron <brice@bmaron.net>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -27,7 +28,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -83,6 +84,7 @@ class Helper {
 			$len = strlen($key) - strlen($referenceConfigkey);
 			$prefixes[] = substr($key, 0, $len);
 		}
+		asort($prefixes);
 
 		return $prefixes;
 	}
@@ -98,7 +100,7 @@ class Helper {
 
 		$keys = $this->getServersConfig($referenceConfigkey);
 
-		$result = array();
+		$result = [];
 		foreach($keys as $key) {
 			$len = strlen($key) - strlen($referenceConfigkey);
 			$prefix = substr($key, 0, $len);
@@ -163,7 +165,7 @@ class Helper {
 				AND `appid` = \'user_ldap\'
 				AND `configkey` NOT IN (\'enabled\', \'installed_version\', \'types\', \'bgjUpdateGroupsLastRun\')
 		');
-		$delRows = $query->execute(array($prefix.'%'));
+		$delRows = $query->execute([$prefix.'%']);
 
 		if($delRows === null) {
 			return false;
@@ -212,7 +214,7 @@ class Helper {
 
 		return $domain;
 	}
-	
+
 	/**
 	 *
 	 * Set the LDAPProvider in the config
@@ -224,7 +226,7 @@ class Helper {
 			\OC::$server->getConfig()->setSystemValue('ldapProviderFactory', LDAPProviderFactory::class);
 		}
 	}
-	
+
 	/**
 	 * sanitizes a DN received from the LDAP server
 	 * @param array $dn the DN in question
@@ -233,7 +235,7 @@ class Helper {
 	public function sanitizeDN($dn) {
 		//treating multiple base DNs
 		if(is_array($dn)) {
-			$result = array();
+			$result = [];
 			foreach($dn as $singleDN) {
 				$result[] = $this->sanitizeDN($singleDN);
 			}
@@ -250,7 +252,7 @@ class Helper {
 		//escape DN values according to RFC 2253 – this is already done by ldap_explode_dn
 		//to use the DN in search filters, \ needs to be escaped to \5c additionally
 		//to use them in bases, we convert them back to simple backslashes in readAttribute()
-		$replacements = array(
+		$replacements = [
 			'\,' => '\5c2C',
 			'\=' => '\5c3D',
 			'\+' => '\5c2B',
@@ -262,12 +264,12 @@ class Helper {
 			'('  => '\28',
 			')'  => '\29',
 			'*'  => '\2A',
-		);
+		];
 		$dn = str_replace(array_keys($replacements), array_values($replacements), $dn);
 
 		return $dn;
 	}
-	
+
 	/**
 	 * converts a stored DN so it can be used as base parameter for LDAP queries, internally we store them for usage in LDAP filters
 	 * @param string $dn the DN
@@ -303,7 +305,7 @@ class Helper {
 		$userBackend  = new User_Proxy(
 			$configPrefixes, $ldapWrapper, $ocConfig, $notificationManager, $userSession, $userPluginManager
 		);
-		$uid = $userBackend->loginName2UserName($param['uid'] );
+		$uid = $userBackend->loginName2UserName($param['uid']);
 		if($uid !== false) {
 			$param['uid'] = $uid;
 		}

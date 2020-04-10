@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2019, Roeland Jago Douma <roeland@famdouma.nl>
@@ -48,7 +49,7 @@ class CSPMiddlewareTest extends \Test\TestCase {
 	/** @var ContentSecurityPolicyNonceManager|MockObject */
 	private $cspNonceManager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->controller = $this->createMock(Controller::class);

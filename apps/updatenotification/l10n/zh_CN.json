@@ -40,11 +40,6 @@
     "Beta" : "Beta测试版",
     "A pre-release version only for testing new features, not for production environments." : "预发布版本仅作测试新功能用，不可用于生产环境。",
     "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong>应用没有适用这个版本的更新"],
-    "You can always update to a newer version / experimental channel. But you can never downgrade to a more stable channel." : "您可以随时更新到新版本或实验通道。但您永远不能降级到更稳定的通道。",
-    "<strong>production</strong> will always provide the latest patch level, but not update to the next major release immediately. That update usually happens with the second minor release (x.0.2)." : "<strong>production</strong> 将会提供最新的补丁，但不会很快的更新到下一个主版本。更新一般会跟随着第二个小版本（x.0.2）发布。",
-    "<strong>stable</strong> is the most recent stable version. It is suited for regular use and will always update to the latest major version." : "<strong>stable</strong> 是最近的稳定版本。适合正常使用，并总是会更新到最新的主版本。",
-    "<strong>beta</strong> is a pre-release version only for testing new features, not for production environments." : "<strong>beta</strong> 版本只是用于新功能测试的预发布版，请勿用于生产环境。",
-    "Could not start updater, please try the manual update" : "无法启动自动更新，请尝试手动更新",
     "Production" : "生产版",
     "Will always provide the latest patch level, but not update to the next major release immediately. That update usually happens with the second minor release (x.0.2) and only if the instance is already on the latest minor version." : "将总是提供最新补丁级别，但不会立即更新到下一主发布版本。该更新通常发生在下次小版本发布(x.0.2) 且仅发生于已安装版本为最新小版本的情况下。"
 },"pluralForm" :"nplurals=1; plural=0;"

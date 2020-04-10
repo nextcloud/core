@@ -4,10 +4,12 @@
  *
  * @author Alexander Bergolth <leo@strike.wu.ac.at>
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Peter Kubica <peter@kubica.ch>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roger Szabo <roger.szabo@web.de>
  *
@@ -23,7 +25,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -34,7 +36,7 @@ use OCA\User_LDAP\Exceptions\ConstraintViolationException;
 
 class LDAP implements ILDAPWrapper {
 	protected $curFunc = '';
-	protected $curArgs = array();
+	protected $curArgs = [];
 
 	/**
 	 * @param resource $link
@@ -70,7 +72,7 @@ class LDAP implements ILDAPWrapper {
 	 */
 	public function controlPagedResultResponse($link, $result, &$cookie) {
 		$this->preFunctionCall('ldap_control_paged_result_response',
-			array($link, $result, $cookie));
+			[$link, $result, $cookie]);
 		$result = ldap_control_paged_result_response($link, $result, $cookie);
 		$this->postFunctionCall();
 
@@ -192,7 +194,7 @@ class LDAP implements ILDAPWrapper {
 	 * @throws \Exception
 	 */
 	public function search($link, $baseDN, $filter, $attr, $attrsOnly = 0, $limit = 0) {
-		$oldHandler = set_error_handler(function($no, $message, $file, $line) use (&$oldHandler) {
+		$oldHandler = set_error_handler(function ($no, $message, $file, $line) use (&$oldHandler) {
 			if(strpos($message, 'Partial search results returned: Sizelimit exceeded') !== false) {
 				return true;
 			}
@@ -216,7 +218,7 @@ class LDAP implements ILDAPWrapper {
 	 * @return bool
 	 */
 	public function modReplace($link, $userDN, $password) {
-		return $this->invokeLDAPMethod('mod_replace', $link, $userDN, array('userPassword' => $password));
+		return $this->invokeLDAPMethod('mod_replace', $link, $userDN, ['userPassword' => $password]);
 	}
 
 	/**

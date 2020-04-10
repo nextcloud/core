@@ -2,6 +2,11 @@
 /**
  * @copyright Copyright (c) 2017 Lukas Reschke <lukas@statuscode.ch>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author rakekniven <mark.ziegler@rakekniven.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ *
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -47,7 +52,7 @@ class SettingsControllerTest extends TestCase {
 	/** @var SettingsController */
 	private $settingsController;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->createMock(IRequest::class);
@@ -96,10 +101,10 @@ class SettingsControllerTest extends TestCase {
 					$c->getRedirectUri() === 'https://example.com/' &&
 					$c->getSecret() === 'MySecret' &&
 					$c->getClientIdentifier() === 'MyClientIdentifier';
-			}))->will($this->returnCallback(function (Client $c) {
+			}))->willReturnCallback(function (Client $c) {
 				$c->setId(42);
 				return $c;
-			}));
+			});
 
 		$result = $this->settingsController->addClient('My Client Name', 'https://example.com/');
 		$this->assertInstanceOf(JSONResponse::class, $result);
@@ -142,47 +147,6 @@ class SettingsControllerTest extends TestCase {
 		$result = $this->settingsController->deleteClient(123);
 		$this->assertInstanceOf(JSONResponse::class, $result);
 		$this->assertEquals([], $result->getData());
-	}
-
-	public function testGetClients() {
-		$client1 = new Client();
-		$client1->setId(123);
-		$client1->setName('My Client Name');
-		$client1->setRedirectUri('https://example.com/');
-		$client1->setSecret('MySecret');
-		$client1->setClientIdentifier('MyClientIdentifier');
-
-		$client2 = new Client();
-		$client2->setId(42);
-		$client2->setName('My Client Name2');
-		$client2->setRedirectUri('https://example.com/2');
-		$client2->setSecret('MySecret2');
-		$client2->setClientIdentifier('MyClientIdentifier2');
-
-		$this->clientMapper->method('getClients')
-			->willReturn([$client1, $client2]);
-
-		$result = $this->settingsController->getClients();
-		$this->assertInstanceOf(JSONResponse::class, $result);
-
-		$data = $result->getData();
-
-		$this->assertSame([
-			[
-				'id' => 123,
-				'name' => 'My Client Name',
-				'redirectUri' => 'https://example.com/',
-				'clientId' => 'MyClientIdentifier',
-				'clientSecret' => 'MySecret',
-			],
-			[
-				'id' => 42,
-				'name' => 'My Client Name2',
-				'redirectUri' => 'https://example.com/2',
-				'clientId' => 'MyClientIdentifier2',
-				'clientSecret' => 'MySecret2',
-			],
-		], $data);
 	}
 
 	public function testInvalidRedirectUri() {

@@ -19,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -86,7 +86,23 @@ class CryptoWrapper {
 				if($webRoot === '') {
 					$webRoot = '/';
 				}
-				setcookie(self::COOKIE_NAME, $this->passphrase, 0, $webRoot, '', $secureCookie, true);
+
+				if (PHP_VERSION_ID < 70300) {
+					setcookie(self::COOKIE_NAME, $this->passphrase, 0, $webRoot, '', $secureCookie, true);
+				} else {
+					setcookie(
+						self::COOKIE_NAME,
+						$this->passphrase,
+						[
+							'expires' => 0,
+							'path' => $webRoot,
+							'domain' => '',
+							'secure' => $secureCookie,
+							'httponly' => true,
+							'samesite' => 'Lax',
+						]
+					);
+				}
 			}
 		}
 	}

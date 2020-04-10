@@ -2,21 +2,24 @@
 /**
  * @copyright Copyright (c) 2018, Georg Ehrke
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
- * @license AGPL-3.0
+ * @license GNU AGPL version 3 or any later version
  *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -41,7 +44,7 @@ class RefreshWebcalJobRegistrarTest extends TestCase {
 	/** @var RefreshWebcalJobRegistrar */
 	private $migration;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->db = $this->createMock(IDBConnection::class);
@@ -62,45 +65,45 @@ class RefreshWebcalJobRegistrarTest extends TestCase {
 
 		$this->db->expects($this->once())
 			->method('getQueryBuilder')
-			->will($this->returnValue($queryBuilder));
+			->willReturn($queryBuilder);
 
 		$queryBuilder->expects($this->at(0))
 			->method('select')
 			->with(['principaluri', 'uri'])
-			->will($this->returnValue($queryBuilder));
+			->willReturn($queryBuilder);
 		$queryBuilder->expects($this->at(1))
 			->method('from')
 			->with('calendarsubscriptions')
-			->will($this->returnValue($queryBuilder));
+			->willReturn($queryBuilder);
 		$queryBuilder->expects($this->at(2))
 			->method('execute')
-			->will($this->returnValue($statement));
+			->willReturn($statement);
 
 		$statement->expects($this->at(0))
 			->method('fetch')
 			->with(\PDO::FETCH_ASSOC)
-			->will($this->returnValue([
+			->willReturn([
 				'principaluri' => 'foo1',
 				'uri' => 'bar1',
-			]));
+			]);
 		$statement->expects($this->at(1))
 			->method('fetch')
 			->with(\PDO::FETCH_ASSOC)
-			->will($this->returnValue([
+			->willReturn([
 				'principaluri' => 'foo2',
 				'uri' => 'bar2',
-			]));
+			]);
 		$statement->expects($this->at(2))
 			->method('fetch')
 			->with(\PDO::FETCH_ASSOC)
-			->will($this->returnValue([
+			->willReturn([
 				'principaluri' => 'foo3',
 				'uri' => 'bar3',
-			]));
+			]);
 		$statement->expects($this->at(0))
 			->method('fetch')
 			->with(\PDO::FETCH_ASSOC)
-			->will($this->returnValue(null));
+			->willReturn(null);
 
 		$this->jobList->expects($this->at(0))
 			->method('has')
@@ -108,7 +111,7 @@ class RefreshWebcalJobRegistrarTest extends TestCase {
 				'principaluri' => 'foo1',
 				'uri' => 'bar1',
 			])
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->jobList->expects($this->at(1))
 			->method('add')
 			->with(RefreshWebcalJob::class, [
@@ -121,14 +124,14 @@ class RefreshWebcalJobRegistrarTest extends TestCase {
 				'principaluri' => 'foo2',
 				'uri' => 'bar2',
 			])
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->jobList->expects($this->at(3))
 			->method('has')
 			->with(RefreshWebcalJob::class, [
 				'principaluri' => 'foo3',
 				'uri' => 'bar3',
 			])
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->jobList->expects($this->at(4))
 			->method('add')
 			->with(RefreshWebcalJob::class, [

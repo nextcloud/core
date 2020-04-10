@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Joas Schilling <coding@schilljs.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -19,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -50,7 +50,7 @@ class CachingRouter extends Router {
 	 * @param bool $absolute
 	 * @return string
 	 */
-	public function generate($name, $parameters = array(), $absolute = false) {
+	public function generate($name, $parameters = [], $absolute = false) {
 		asort($parameters);
 		$key = $this->context->getHost() . '#' . $this->context->getBaseUrl() . $name . sha1(json_encode($parameters)) . (int)$absolute;
 		$cachedKey = $this->cache->get($key);
@@ -58,7 +58,9 @@ class CachingRouter extends Router {
 			return $cachedKey;
 		} else {
 			$url = parent::generate($name, $parameters, $absolute);
-			$this->cache->set($key, $url, 3600);
+			if ($url) {
+				$this->cache->set($key, $url, 3600);
+			}
 			return $url;
 		}
 	}

@@ -4,14 +4,15 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Brandon Kirsch <brandonkirsch@github.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
- * @author Leon Klingele <leon@struktur.de>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Thomas Citharel <tcit@tcit.fr>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
@@ -27,17 +28,20 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\DAV;
 
+use OCA\DAV\AppInfo\PluginManager;
 use OCA\DAV\CalDAV\BirthdayService;
+use OCA\DAV\CardDAV\HasPhotoPlugin;
 use OCA\DAV\CardDAV\ImageExportPlugin;
 use OCA\DAV\CardDAV\MultiGetExportPlugin;
-use OCA\DAV\CardDAV\HasPhotoPlugin;
 use OCA\DAV\CardDAV\PhotoCache;
 use OCA\DAV\Comments\CommentsPlugin;
+use OCA\DAV\Connector\Sabre\AnonymousOptionsPlugin;
 use OCA\DAV\Connector\Sabre\Auth;
 use OCA\DAV\Connector\Sabre\BearerAuth;
 use OCA\DAV\Connector\Sabre\BlockLegacyClientPlugin;
@@ -49,12 +53,12 @@ use OCA\DAV\Connector\Sabre\DummyGetResponsePlugin;
 use OCA\DAV\Connector\Sabre\FakeLockerPlugin;
 use OCA\DAV\Connector\Sabre\FilesPlugin;
 use OCA\DAV\Connector\Sabre\FilesReportPlugin;
-use OCA\DAV\Connector\Sabre\SharesPlugin;
-use OCA\DAV\DAV\PublicAuth;
-use OCA\DAV\DAV\CustomPropertiesBackend;
 use OCA\DAV\Connector\Sabre\QuotaPlugin;
+use OCA\DAV\Connector\Sabre\SharesPlugin;
+use OCA\DAV\Connector\Sabre\TagsPlugin;
+use OCA\DAV\DAV\CustomPropertiesBackend;
+use OCA\DAV\DAV\PublicAuth;
 use OCA\DAV\Files\BrowserErrorPagePlugin;
-use OCA\DAV\Connector\Sabre\AnonymousOptionsPlugin;
 use OCA\DAV\Files\LazySearchBackend;
 use OCA\DAV\Provisioning\Apple\AppleProvisioningPlugin;
 use OCA\DAV\SystemTag\SystemTagPlugin;
@@ -63,10 +67,8 @@ use OCP\IRequest;
 use OCP\SabrePluginEvent;
 use Sabre\CardDAV\VCFExportPlugin;
 use Sabre\DAV\Auth\Plugin;
-use OCA\DAV\Connector\Sabre\TagsPlugin;
 use Sabre\DAV\UUIDUtil;
 use SearchDAV\DAV\SearchPlugin;
-use OCA\DAV\AppInfo\PluginManager;
 
 class Server {
 
@@ -137,7 +139,8 @@ class Server {
 		// acl
 		$acl = new DavAclPlugin();
 		$acl->principalCollectionSet = [
-			'principals/users', 'principals/groups',
+			'principals/users',
+			'principals/groups',
 			'principals/calendar-resources',
 			'principals/calendar-rooms',
 		];
@@ -147,7 +150,7 @@ class Server {
 		// calendar plugins
 		if ($this->requestIsForSubtree(['calendars', 'public-calendars', 'system-calendars', 'principals'])) {
 			$this->server->addPlugin(new \OCA\DAV\CalDAV\Plugin());
-			$this->server->addPlugin(new \Sabre\CalDAV\ICSExportPlugin());
+			$this->server->addPlugin(new \OCA\DAV\CalDAV\ICSExportPlugin\ICSExportPlugin(\OC::$server->getConfig(), \OC::$server->getLogger()));
 			$this->server->addPlugin(new \OCA\DAV\CalDAV\Schedule\Plugin());
 			if (\OC::$server->getConfig()->getAppValue('dav', 'sendInvitations', 'yes') === 'yes') {
 				$this->server->addPlugin(\OC::$server->query(\OCA\DAV\CalDAV\Schedule\IMipPlugin::class));
@@ -214,7 +217,7 @@ class Server {
 		$this->server->addPlugin(new SearchPlugin($lazySearchBackend));
 
 		// wait with registering these until auth is handled and the filesystem is setup
-		$this->server->on('beforeMethod', function () use ($root, $lazySearchBackend) {
+		$this->server->on('beforeMethod:*', function () use ($root, $lazySearchBackend) {
 			// custom properties plugin must be the last one
 			$userSession = \OC::$server->getUserSession();
 			$user = $userSession->getUser();
@@ -292,7 +295,7 @@ class Server {
 					\OC::$server->getThemingDefaults(),
 					\OC::$server->getRequest(),
 					\OC::$server->getL10N('dav'),
-					function() {
+					function () {
 						return UUIDUtil::getUUID();
 					}
 				));

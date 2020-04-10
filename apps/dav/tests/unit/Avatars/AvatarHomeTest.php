@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2017, ownCloud GmbH
  *
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -17,13 +18,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\DAV\Tests\Unit\Avatars;
-
 
 use OCA\DAV\Avatars\AvatarHome;
 use OCA\DAV\Avatars\AvatarNode;
@@ -41,17 +40,18 @@ class AvatarHomeTest extends TestCase {
 	/** @var IAvatarManager | \PHPUnit_Framework_MockObject_MockObject */
 	private $avatarManager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->avatarManager = $this->createMock(IAvatarManager::class);
 		$this->home = new AvatarHome(['uri' => 'principals/users/admin'], $this->avatarManager);
 	}
 
 	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
 	 * @dataProvider providesForbiddenMethods
 	 */
 	public function testForbiddenMethods($method) {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$this->home->$method('');
 	}
 

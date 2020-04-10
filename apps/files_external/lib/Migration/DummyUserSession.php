@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Greta Doci <gretadoci@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -50,4 +51,24 @@ class DummyUserSession implements IUserSession {
 	public function isLoggedIn() {
 		return !is_null($this->user);
 	}
+
+	/**
+	 * get getImpersonatingUserID
+	 *
+	 * @return string|null
+	 * @since 17.0.0
+	 */
+	public function getImpersonatingUserID() : ?string {
+		return null;
+	}
+
+	/**
+	 * set setImpersonatingUserID
+	 *
+	 * @since 17.0.0
+	 */
+	public function setImpersonatingUserID(bool $useCurrentUser = true): void {
+		//no OP
+	}
+
 }

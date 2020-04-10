@@ -23,12 +23,10 @@
  *
  */
 
-
 namespace Test\AppFramework\Http;
 
-
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\JSONResponse;
 
 class JSONResponseTest extends \Test\TestCase {
 
@@ -37,7 +35,7 @@ class JSONResponseTest extends \Test\TestCase {
 	 */
 	private $json;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->json = new JSONResponse();
 	}
@@ -50,15 +48,15 @@ class JSONResponseTest extends \Test\TestCase {
 
 
 	public function testSetData() {
-		$params = array('hi', 'yo');
+		$params = ['hi', 'yo'];
 		$this->json->setData($params);
 
-		$this->assertEquals(array('hi', 'yo'), $this->json->getData());
+		$this->assertEquals(['hi', 'yo'], $this->json->getData());
 	}
 
 
 	public function testSetRender() {
-		$params = array('test' => 'hi');
+		$params = ['test' => 'hi'];
 		$this->json->setData($params);
 
 		$expected = '{"test":"hi"}';
@@ -90,18 +88,18 @@ class JSONResponseTest extends \Test\TestCase {
 		$this->assertEquals($expected, $this->json->render());
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Could not json_encode due to invalid non UTF-8 characters in the array: array (
-	 */
+	
 	public function testRenderWithNonUtf8Encoding() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Could not json_encode due to invalid non UTF-8 characters in the array: array (');
+
 		$params = ['test' => hex2bin('e9')];
 		$this->json->setData($params);
 		$this->json->render();
 	}
 
 	public function testConstructorAllowsToSetData() {
-		$data = array('hi');
+		$data = ['hi'];
 		$code = 300;
 		$response = new JSONResponse($data, $code);
 
@@ -111,12 +109,12 @@ class JSONResponseTest extends \Test\TestCase {
 	}
 
 	public function testChainability() {
-		$params = array('hi', 'yo');
+		$params = ['hi', 'yo'];
 		$this->json->setData($params)
 			->setStatus(Http::STATUS_NOT_FOUND);
 
 		$this->assertEquals(Http::STATUS_NOT_FOUND, $this->json->getStatus());
-		$this->assertEquals(array('hi', 'yo'), $this->json->getData());
+		$this->assertEquals(['hi', 'yo'], $this->json->getData());
 	}
 
 }

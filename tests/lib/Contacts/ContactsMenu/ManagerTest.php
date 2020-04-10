@@ -52,7 +52,7 @@ class ManagerTest extends TestCase {
 	/** @var Manager */
 	private $manager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->contactsStore = $this->createMock(ContactsStore::class);

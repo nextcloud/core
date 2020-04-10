@@ -21,7 +21,6 @@
 
 namespace Tests\Core\Command\Log;
 
-
 use OC\Core\Command\Log\File;
 use OCP\IConfig;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,7 +38,7 @@ class FileTest extends TestCase {
 	/** @var \Symfony\Component\Console\Command\Command */
 	protected $command;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$config = $this->config = $this->getMockBuilder(IConfig::class)
@@ -53,9 +52,9 @@ class FileTest extends TestCase {
 
 	public function testEnable() {
 		$this->consoleInput->method('getOption')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['enable', 'true']
-			]));
+			]);
 		$this->config->expects($this->once())
 			->method('setSystemValue')
 			->with('log_type', 'file');
@@ -65,9 +64,9 @@ class FileTest extends TestCase {
 
 	public function testChangeFile() {
 		$this->consoleInput->method('getOption')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['file', '/foo/bar/file.log']
-			]));
+			]);
 		$this->config->expects($this->once())
 			->method('setSystemValue')
 			->with('logfile', '/foo/bar/file.log');
@@ -89,9 +88,9 @@ class FileTest extends TestCase {
 	 */
 	public function testChangeRotateSize($optionValue, $configValue) {
 		$this->consoleInput->method('getOption')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['rotate-size', $optionValue]
-			]));
+			]);
 		$this->config->expects($this->once())
 			->method('setSystemValue')
 			->with('log_rotate_size', $configValue);
@@ -101,12 +100,12 @@ class FileTest extends TestCase {
 
 	public function testGetConfiguration() {
 		$this->config->method('getSystemValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['log_type', 'file', 'log_type_value'],
 				['datadirectory', \OC::$SERVERROOT.'/data', '/data/directory/'],
 				['logfile', '/data/directory/nextcloud.log', '/var/log/nextcloud.log'],
 				['log_rotate_size', 100 * 1024 * 1024, 5 * 1024 * 1024],
-			]));
+			]);
 
 		$this->consoleOutput->expects($this->at(0))
 			->method('writeln')

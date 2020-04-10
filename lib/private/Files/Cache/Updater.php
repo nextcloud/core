@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Jagszent <daniel@jagszent.de>
  * @author Michael Gapczynski <GapczynskiM@gmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -21,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -224,12 +225,15 @@ class Updater implements IUpdater {
 	private function updateStorageMTimeOnly($internalPath) {
 		$fileId = $this->cache->getId($internalPath);
 		if ($fileId !== -1) {
-			$this->cache->update(
-				$fileId, [
-					'mtime' => null, // this magic tells it to not overwrite mtime
-					'storage_mtime' => $this->storage->filemtime($internalPath)
-				]
-			);
+			$mtime = $this->storage->filemtime($internalPath);
+			if ($mtime !== false) {
+				$this->cache->update(
+					$fileId, [
+						'mtime' => null, // this magic tells it to not overwrite mtime
+						'storage_mtime' => $mtime
+					]
+				);
+			}
 		}
 	}
 
@@ -244,7 +248,7 @@ class Updater implements IUpdater {
 		if ($parentId != -1) {
 			$mtime = $this->storage->filemtime($parent);
 			if ($mtime !== false) {
-				$this->cache->update($parentId, array('storage_mtime' => $mtime));
+				$this->cache->update($parentId, ['storage_mtime' => $mtime]);
 			}
 		}
 	}

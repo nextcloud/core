@@ -19,10 +19,10 @@
     "More comments …" : "Më shumë komente ...",
     "Save" : "Ruaje",
     "Allowed characters {count} of {max}" : "Shenja të lejuara {count} nga {max}",
+    "Error occurred while retrieving comment with ID {id}" : "Ndodhi një gabim gjatë rimarrjes së komentit me ID {id}",
     "Error occurred while updating comment with id {id}" : "Ndodhi një gabim teksa përditësohej komenti me id {id}",
     "Error occurred while posting comment" : "Ndodhi një gabim teksa postohej komenti",
     "_%n unread comment_::_%n unread comments_" : ["%n komente të palexuara","%n komente të palexuara "],
-    "Comment" : "Koment",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s ju ka përmendur në një koment në “%2$s”"
+    "Comment" : "Koment"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

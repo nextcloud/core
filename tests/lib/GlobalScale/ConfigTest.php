@@ -19,9 +19,7 @@
  *
  */
 
-
 namespace Test\GlobalScale;
-
 
 use OC\GlobalScale\Config;
 use OCP\IConfig;
@@ -32,7 +30,7 @@ class ConfigTest extends TestCase {
 	/** @var  IConfig|\PHPUnit_Framework_MockObject_MockObject */
 	private $config;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);

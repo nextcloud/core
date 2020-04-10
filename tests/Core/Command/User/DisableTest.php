@@ -20,8 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace Tests\Core\Command\User;
 
+namespace Tests\Core\Command\User;
 
 use OC\Core\Command\User\Disable;
 use OCP\IUser;
@@ -41,7 +41,7 @@ class DisableTest extends TestCase {
 	/** @var Disable */
 	protected $command;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userManager = $this->createMock(IUserManager::class);

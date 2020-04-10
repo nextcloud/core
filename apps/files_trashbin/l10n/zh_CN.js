@@ -21,9 +21,6 @@ OC.L10N.register(
     "Name" : "名称",
     "Actions" : "操作",
     "Deleted" : "已删除",
-    "Delete" : "删除",
-    "Couldn't delete %s permanently" : "无法彻底删除文件 %s",
-    "Couldn't restore %s" : "无法恢复 %s",
-    "Error" : "错误"
+    "Delete" : "删除"
 },
 "nplurals=1; plural=0;");

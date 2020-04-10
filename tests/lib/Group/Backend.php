@@ -108,15 +108,15 @@ abstract class Backend extends \Test\TestCase {
 
 		$this->assertFalse($this->backend->addToGroup($user1, $group1));
 
-		$this->assertEquals(array($user1), $this->backend->usersInGroup($group1));
-		$this->assertEquals(array(), $this->backend->usersInGroup($group2));
+		$this->assertEquals([$user1], $this->backend->usersInGroup($group1));
+		$this->assertEquals([], $this->backend->usersInGroup($group2));
 
-		$this->assertEquals(array($group1), $this->backend->getUserGroups($user1));
-		$this->assertEquals(array(), $this->backend->getUserGroups($user2));
+		$this->assertEquals([$group1], $this->backend->getUserGroups($user1));
+		$this->assertEquals([], $this->backend->getUserGroups($user2));
 
 		$this->backend->deleteGroup($group1);
-		$this->assertEquals(array(), $this->backend->getUserGroups($user1));
-		$this->assertEquals(array(), $this->backend->usersInGroup($group1));
+		$this->assertEquals([], $this->backend->getUserGroups($user1));
+		$this->assertEquals([], $this->backend->usersInGroup($group1));
 		$this->assertFalse($this->backend->inGroup($user1, $group1));
 	}
 

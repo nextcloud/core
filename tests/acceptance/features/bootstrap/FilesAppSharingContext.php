@@ -31,7 +31,7 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function sharedByLabel() {
-		return Locator::forThe()->css(".reshare")->
+		return Locator::forThe()->css(".sharing-entry__reshare")->
 				descendantOf(FilesAppContext::detailsView())->
 				describedAs("Shared by label in the details view in Files app");
 	}
@@ -40,7 +40,7 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function shareWithInput() {
-		return Locator::forThe()->css(".shareWithField")->
+		return Locator::forThe()->css(".sharing-input .multiselect__input")->
 				descendantOf(FilesAppContext::detailsView())->
 				describedAs("Share with input in the details view in Files app");
 	}
@@ -48,8 +48,26 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	/**
 	 * @return Locator
 	 */
+	public static function shareWithInputResults() {
+		return Locator::forThe()->css(".sharing-input .multiselect__content-wrapper")->
+				descendantOf(FilesAppContext::detailsView())->
+				describedAs("Share with input results list in the details view in Files app");
+	}
+
+	/**
+	 * @return Locator
+	 */
+	public static function shareWithInputResult($result) {
+		return Locator::forThe()->xpath("//li[contains(concat(' ', normalize-space(@class), ' '), ' multiselect__element ')]//span[normalize-space() = '$result']/ancestor::li")->
+				descendantOf(self::shareWithInputResults())->
+				describedAs("Share with input result from the results list in the details view in Files app");
+	}
+
+	/**
+	 * @return Locator
+	 */
 	public static function shareeList() {
-		return Locator::forThe()->css(".shareeListView")->
+		return Locator::forThe()->css(".sharing-sharee-list")->
 				descendantOf(FilesAppContext::detailsView())->
 				describedAs("Sharee list in the details view in Files app");
 	}
@@ -60,7 +78,7 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	public static function sharedWithRow($sharedWithName) {
 		// "username" class is used for any type of share, not only for shares
 		// with users.
-		return Locator::forThe()->xpath("//span[contains(concat(' ', normalize-space(@class), ' '), ' username ') and normalize-space() = '$sharedWithName']/ancestor::li")->
+		return Locator::forThe()->xpath("//li[contains(concat(' ', normalize-space(@class), ' '), ' sharing-entry ')]//h5[normalize-space() = '$sharedWithName']/ancestor::li")->
 				descendantOf(self::shareeList())->
 				describedAs("Shared with $sharedWithName row in the details view in Files app");
 	}
@@ -69,7 +87,7 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function shareWithMenuButton($sharedWithName) {
-		return Locator::forThe()->css(".share-menu > .icon")->
+		return Locator::forThe()->css(".sharing-entry__actions > .action-item__menutoggle")->
 				descendantOf(self::sharedWithRow($sharedWithName))->
 				describedAs("Share with $sharedWithName menu button in the details view in Files app");
 	}
@@ -78,7 +96,7 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function shareWithMenu($sharedWithName) {
-		return Locator::forThe()->css(".share-menu > .menu")->
+		return Locator::forThe()->css(".sharing-entry__actions > .action-item__menu")->
 				descendantOf(self::sharedWithRow($sharedWithName))->
 				describedAs("Share with $sharedWithName menu in the details view in Files app");
 	}
@@ -90,25 +108,25 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 		// forThe()->checkbox("Can reshare") can not be used here; that would
 		// return the checkbox itself, but the element that the user interacts
 		// with is the label.
-		return Locator::forThe()->xpath("//label[normalize-space() = 'Can reshare']")->
+		return Locator::forThe()->xpath("//label[normalize-space() = 'Allow resharing']")->
 				descendantOf(self::shareWithMenu($sharedWithName))->
-				describedAs("Can reshare checkbox in the share with $sharedWithName menu in the details view in Files app");
+				describedAs("Allow resharing checkbox in the share with $sharedWithName menu in the details view in Files app");
 	}
 
 	/**
 	 * @return Locator
 	 */
 	public static function canReshareCheckboxInput($sharedWithName) {
-		return Locator::forThe()->checkbox("Can reshare")->
+		return Locator::forThe()->checkbox("Allow resharing")->
 				descendantOf(self::shareWithMenu($sharedWithName))->
-				describedAs("Can reshare checkbox input in the share with $sharedWithName menu in the details view in Files app");
+				describedAs("Allow resharing checkbox input in the share with $sharedWithName menu in the details view in Files app");
 	}
 
 	/**
 	 * @return Locator
 	 */
 	public static function shareLinkRow() {
-		return Locator::forThe()->css(".linkShareView .shareWithList:first-child")->
+		return Locator::forThe()->css(".sharing-link-list .sharing-entry__link:first-child")->
 				descendantOf(FilesAppContext::detailsView())->
 				describedAs("Share link row in the details view in Files app");
 	}
@@ -119,7 +137,7 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	public static function shareLinkAddNewButton() {
 		// When there is no link share the "Add new share" item is shown instead
 		// of the menu button as a direct child of ".share-menu".
-		return Locator::forThe()->css(".share-menu > .new-share")->
+		return Locator::forThe()->css(".action-item.icon-add")->
 				descendantOf(self::shareLinkRow())->
 				describedAs("Add new share link button in the details view in Files app");
 	}
@@ -128,7 +146,7 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function copyLinkButton() {
-		return Locator::forThe()->css("a.clipboard-button")->
+		return Locator::forThe()->css("a.sharing-entry__copy")->
 				descendantOf(self::shareLinkRow())->
 				describedAs("Copy link button in the details view in Files app");
 	}
@@ -137,7 +155,7 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function shareLinkMenuButton() {
-		return Locator::forThe()->css(".share-menu > .icon")->
+		return Locator::forThe()->css(".sharing-entry__actions .action-item__menutoggle")->
 				descendantOf(self::shareLinkRow())->
 				describedAs("Share link menu button in the details view in Files app");
 	}
@@ -146,7 +164,7 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function shareLinkMenu() {
-		return Locator::forThe()->css(".share-menu > .menu")->
+		return Locator::forThe()->css(".sharing-entry__actions .action-item__menu")->
 				descendantOf(self::shareLinkRow())->
 				describedAs("Share link menu in the details view in Files app");
 	}
@@ -209,16 +227,16 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	public static function passwordProtectField() {
-		return Locator::forThe()->css(".linkPassText")->descendantOf(self::shareLinkMenu())->
+		return Locator::forThe()->css(".share-link-password input.action-input__input")->descendantOf(self::shareLinkMenu())->
 				describedAs("Password protect field in the details view in Files app");
 	}
 
 	/**
 	 * @return Locator
 	 */
-	public static function passwordProtectWorkingIcon() {
-		return Locator::forThe()->css(".linkPassMenu .icon-loading-small")->descendantOf(self::shareLinkMenu())->
-				describedAs("Password protect working icon in the details view in Files app");
+	public static function disabledPasswordProtectField() {
+		return Locator::forThe()->css(".share-link-password input.action-input__input[disabled]")->descendantOf(self::shareLinkMenu())->
+				describedAs("Disabled password protect field in the details view in Files app");
 	}
 
 	/**
@@ -249,14 +267,6 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 		$this->actor->find(FileListContext::shareActionForFile(FilesAppContext::currentSectionMainView(), $fileName), 10)->click();
 
 		$this->actor->find(self::shareLinkAddNewButton(), 5)->click();
-
-		// Wait until the menu was opened after the share creation to continue.
-		if (!WaitFor::elementToBeEventuallyShown(
-				$this->actor,
-				self::shareLinkMenu(),
-				$timeout = 5 * $this->actor->getFindTimeoutMultiplier())) {
-			PHPUnit_Framework_Assert::fail("The share link menu is not open yet after $timeout seconds");
-		}
 	}
 
 	/**
@@ -265,7 +275,12 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	public function iShareWith($fileName, $shareWithName) {
 		$this->actor->find(FileListContext::shareActionForFile(FilesAppContext::currentSectionMainView(), $fileName), 10)->click();
 
-		$this->actor->find(self::shareWithInput(), 5)->setValue($shareWithName . "\r");
+		$this->actor->find(self::shareWithInput(), 5)->setValue($shareWithName);
+		// "setValue()" ends sending a tab, which unfocuses the input and causes
+		// the results to be hidden, so the input needs to be clicked to show
+		// the results again.
+		$this->actor->find(self::shareWithInput())->click();
+		$this->actor->find(self::shareWithInputResult($shareWithName), 5)->click();
 	}
 
 	/**
@@ -277,7 +292,7 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 		// Clicking on the menu item copies the link to the clipboard, but it is
 		// not possible to access that value from the acceptance tests. Due to
 		// this the value of the attribute that holds the URL is used instead.
-		$this->actor->getSharedNotebook()["shared link"] = $this->actor->find(self::copyLinkButton(), 2)->getWrappedElement()->getAttribute("data-clipboard-text");
+		$this->actor->getSharedNotebook()["shared link"] = $this->actor->find(self::copyLinkButton(), 2)->getWrappedElement()->getAttribute("href");
 	}
 
 	/**
@@ -420,21 +435,16 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	}
 
 	/**
-	 * @Then I see that the working icon for password protect is shown
+	 * @Then I see that the password protect is disabled while loading
 	 */
-	public function iSeeThatTheWorkingIconForPasswordProtectIsShown() {
-		PHPUnit_Framework_Assert::assertNotNull($this->actor->find(self::passwordProtectWorkingIcon(), 10));
-	}
+	public function iSeeThatThePasswordProtectIsDisabledWhileLoading() {
+		PHPUnit_Framework_Assert::assertNotNull($this->actor->find(self::disabledPasswordProtectField(), 10));
 
-	/**
-	 * @Then I see that the working icon for password protect is eventually not shown
-	 */
-	public function iSeeThatTheWorkingIconForPasswordProtectIsEventuallyNotShown() {
 		if (!WaitFor::elementToBeEventuallyNotShown(
 				$this->actor,
-				self::passwordProtectWorkingIcon(),
+				self::disabledPasswordProtectField(),
 				$timeout = 10 * $this->actor->getFindTimeoutMultiplier())) {
-			PHPUnit_Framework_Assert::fail("The working icon for password protect is still shown after $timeout seconds");
+			PHPUnit_Framework_Assert::fail("The password protect field is still disabled after $timeout seconds");
 		}
 	}
 
@@ -485,8 +495,7 @@ class FilesAppSharingContext implements Context, ActorAwareInterface {
 	public function iShareTheLinkForProtectedByThePassword($fileName, $password) {
 		$this->iShareTheLinkFor($fileName);
 		$this->iProtectTheSharedLinkWithThePassword($password);
-		$this->iSeeThatTheWorkingIconForPasswordProtectIsShown();
-		$this->iSeeThatTheWorkingIconForPasswordProtectIsEventuallyNotShown();
+		$this->iSeeThatThePasswordProtectIsDisabledWhileLoading();
 	}
 
 	private function showShareLinkMenuIfNeeded() {

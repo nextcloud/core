@@ -2,8 +2,6 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nextcloud/server/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nextcloud/server/?branch=master)
 [![codecov](https://codecov.io/gh/nextcloud/server/branch/master/graph/badge.svg)](https://codecov.io/gh/nextcloud/server)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/209/badge)](https://bestpractices.coreinfrastructure.org/projects/209)
-[![irc](https://img.shields.io/badge/IRC-%23nextcloud%20on%20freenode-orange.svg)](https://webchat.freenode.net/?channels=nextcloud)
-[![irc](https://img.shields.io/badge/IRC-%23nextcloud--dev%20on%20freenode-blue.svg)](https://webchat.freenode.net/?channels=nextcloud-dev)
 
 **A safe home for all your data.**
 
@@ -14,19 +12,19 @@
 * 📁 **Access your Data** You can store your files, contacts, calendars and more on a server of your choosing.
 * 🔄 **Sync your Data** You keep your files, contacts, calendars and more synchronized amongst your devices.
 * 🙌 **Share your Data** …by giving others access to the stuff you want them to see or to collaborate with.
-* 🚀 **Expandable with dozens of Apps** ...like [Calendar](https://github.com/nextcloud/calendar), [Contacts](https://github.com/nextcloud/contacts), [Mail](https://github.com/nextcloud/mail) and all those you can discover in our [App Store](https://apps.nextcloud.com)
+* 🚀 **Expandable with hundreds of Apps** ...like [Calendar](https://github.com/nextcloud/calendar), [Contacts](https://github.com/nextcloud/contacts), [Mail](https://github.com/nextcloud/mail), [Video Chat](https://github.com/nextcloud/spreed) and all those you can discover in our [App Store](https://apps.nextcloud.com)
 * 🔒 **Security** with our encryption mechanisms, [HackerOne bounty program](https://hackerone.com/nextcloud) and two-factor authentication.
 
-You want to learn more about how you can use Nextcloud to access, share and protect your files, calendars, contacts, communication & more at home and at your Enterprise? [**Learn about all our Features**](https://nextcloud.com/features).
+You want to learn more about how you can use Nextcloud to access, share and protect your files, calendars, contacts, communication & more at home and at your organization? [**Learn about all our Features**](https://nextcloud.com/athome/).
 
 ## Get your Nextcloud 🚚
 
-- ☑️ [**Simply sign up**](https://nextcloud.com/signup/) either through our website or through the apps directly.
+- ☑️ [**Simply sign up**](https://nextcloud.com/signup/) at one of our providers either through our website or through the apps directly.
 - 🖥 [**Install** a server by yourself](https://nextcloud.com/install/#instructions-server) on your own hardware or by using one of our ready to use **appliances**
 - 📦 Buy one of the [awesome **devices** coming with a preinstalled Nextcloud](https://nextcloud.com/devices/)
 - 🏢 Find a [service **provider**](https://nextcloud.com/providers/) who hosts Nextcloud for you or your company
 
-Enterprise? Public Sector or Education user? You may want to have a look into the [**Enterprise Subscription**](https://nextcloud.com/enterprise/) provided by Nextcloud GmbH.
+Enterprise? Public Sector or Education user? You may want to have a look into [**Nextcloud Enterprise**](https://nextcloud.com/enterprise/) provided by Nextcloud GmbH.
 
 ## Get in touch 💬
 
@@ -61,7 +59,7 @@ Otherwise, git checkouts can be handled the same as release archives, by using t
 
 ### Building front-end code 🏗
 
-We move more and more towards using Vue.js in the frontend, starting with Settings. For building the code on changes, use these terminal commands in the root folder:
+We are moving more and more towards using Vue.js in the frontend, starting with Settings. For building the code on changes, use these terminal commands in the root folder:
 
 ``` bash
 # install dependencies

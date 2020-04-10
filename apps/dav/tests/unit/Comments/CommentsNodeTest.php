@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -20,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -47,7 +48,7 @@ class CommentsNodeTest extends \Test\TestCase {
 	protected $logger;
 	protected $userSession;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->commentsManager = $this->getMockBuilder(ICommentsManager::class)
@@ -82,23 +83,23 @@ class CommentsNodeTest extends \Test\TestCase {
 
 		$user->expects($this->once())
 			->method('getUID')
-			->will($this->returnValue('alice'));
+			->willReturn('alice');
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 
 		$this->comment->expects($this->once())
 			->method('getId')
-			->will($this->returnValue('19'));
+			->willReturn('19');
 
 		$this->comment->expects($this->any())
 			->method('getActorType')
-			->will($this->returnValue('users'));
+			->willReturn('users');
 
 		$this->comment->expects($this->any())
 			->method('getActorId')
-			->will($this->returnValue('alice'));
+			->willReturn('alice');
 
 		$this->commentsManager->expects($this->once())
 			->method('delete')
@@ -107,32 +108,32 @@ class CommentsNodeTest extends \Test\TestCase {
 		$this->node->delete();
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+
 	public function testDeleteForbidden() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$user = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
 
 		$user->expects($this->once())
 			->method('getUID')
-			->will($this->returnValue('mallory'));
+			->willReturn('mallory');
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 
 		$this->comment->expects($this->never())
 			->method('getId');
 
 		$this->comment->expects($this->any())
 			->method('getActorType')
-			->will($this->returnValue('users'));
+			->willReturn('users');
 
 		$this->comment->expects($this->any())
 			->method('getActorId')
-			->will($this->returnValue('alice'));
+			->willReturn('alice');
 
 		$this->commentsManager->expects($this->never())
 			->method('delete');
@@ -144,15 +145,15 @@ class CommentsNodeTest extends \Test\TestCase {
 		$id = '19';
 		$this->comment->expects($this->once())
 			->method('getId')
-			->will($this->returnValue($id));
+			->willReturn($id);
 
 		$this->assertSame($this->node->getName(), $id);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\MethodNotAllowed
-	 */
+
 	public function testSetName() {
+		$this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
+
 		$this->node->setName('666');
 	}
 
@@ -169,11 +170,11 @@ class CommentsNodeTest extends \Test\TestCase {
 
 		$user->expects($this->once())
 			->method('getUID')
-			->will($this->returnValue('alice'));
+			->willReturn('alice');
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 
 		$this->comment->expects($this->once())
 			->method('setMessage')
@@ -181,11 +182,11 @@ class CommentsNodeTest extends \Test\TestCase {
 
 		$this->comment->expects($this->any())
 			->method('getActorType')
-			->will($this->returnValue('users'));
+			->willReturn('users');
 
 		$this->comment->expects($this->any())
 			->method('getActorId')
-			->will($this->returnValue('alice'));
+			->willReturn('alice');
 
 		$this->commentsManager->expects($this->once())
 			->method('save')
@@ -194,11 +195,11 @@ class CommentsNodeTest extends \Test\TestCase {
 		$this->assertTrue($this->node->updateComment($msg));
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage buh!
-	 */
+
 	public function testUpdateCommentLogException() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('buh!');
+
 		$msg = null;
 
 		$user = $this->getMockBuilder(IUser::class)
@@ -207,11 +208,11 @@ class CommentsNodeTest extends \Test\TestCase {
 
 		$user->expects($this->once())
 			->method('getUID')
-			->will($this->returnValue('alice'));
+			->willReturn('alice');
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 
 		$this->comment->expects($this->once())
 			->method('setMessage')
@@ -220,11 +221,11 @@ class CommentsNodeTest extends \Test\TestCase {
 
 		$this->comment->expects($this->any())
 			->method('getActorType')
-			->will($this->returnValue('users'));
+			->willReturn('users');
 
 		$this->comment->expects($this->any())
 			->method('getActorId')
-			->will($this->returnValue('alice'));
+			->willReturn('alice');
 
 		$this->commentsManager->expects($this->never())
 			->method('save');
@@ -235,22 +236,22 @@ class CommentsNodeTest extends \Test\TestCase {
 		$this->node->updateComment($msg);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\BadRequest
-	 * @expectedExceptionMessage Message exceeds allowed character limit of
-	 */
+
 	public function testUpdateCommentMessageTooLongException() {
+		$this->expectException(\Sabre\DAV\Exception\BadRequest::class);
+		$this->expectExceptionMessage('Message exceeds allowed character limit of');
+
 		$user = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
 
 		$user->expects($this->once())
 			->method('getUID')
-			->will($this->returnValue('alice'));
+			->willReturn('alice');
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 
 		$this->comment->expects($this->once())
 			->method('setMessage')
@@ -258,11 +259,11 @@ class CommentsNodeTest extends \Test\TestCase {
 
 		$this->comment->expects($this->any())
 			->method('getActorType')
-			->will($this->returnValue('users'));
+			->willReturn('users');
 
 		$this->comment->expects($this->any())
 			->method('getActorId')
-			->will($this->returnValue('alice'));
+			->willReturn('alice');
 
 		$this->commentsManager->expects($this->never())
 			->method('save');
@@ -274,10 +275,10 @@ class CommentsNodeTest extends \Test\TestCase {
 		$this->node->updateComment('foo');
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+
 	public function testUpdateForbiddenByUser() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$msg = 'HaXX0r';
 
 		$user = $this->getMockBuilder(IUser::class)
@@ -286,22 +287,22 @@ class CommentsNodeTest extends \Test\TestCase {
 
 		$user->expects($this->once())
 			->method('getUID')
-			->will($this->returnValue('mallory'));
+			->willReturn('mallory');
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 
 		$this->comment->expects($this->never())
 			->method('setMessage');
 
 		$this->comment->expects($this->any())
 			->method('getActorType')
-			->will($this->returnValue('users'));
+			->willReturn('users');
 
 		$this->comment->expects($this->any())
 			->method('getActorId')
-			->will($this->returnValue('alice'));
+			->willReturn('alice');
 
 		$this->commentsManager->expects($this->never())
 			->method('save');
@@ -309,10 +310,10 @@ class CommentsNodeTest extends \Test\TestCase {
 		$this->node->updateComment($msg);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+
 	public function testUpdateForbiddenByType() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$msg = 'HaXX0r';
 
 		$user = $this->getMockBuilder(IUser::class)
@@ -324,14 +325,14 @@ class CommentsNodeTest extends \Test\TestCase {
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 
 		$this->comment->expects($this->never())
 			->method('setMessage');
 
 		$this->comment->expects($this->any())
 			->method('getActorType')
-			->will($this->returnValue('bots'));
+			->willReturn('bots');
 
 		$this->commentsManager->expects($this->never())
 			->method('save');
@@ -339,22 +340,22 @@ class CommentsNodeTest extends \Test\TestCase {
 		$this->node->updateComment($msg);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+
 	public function testUpdateForbiddenByNotLoggedIn() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$msg = 'HaXX0r';
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue(null));
+			->willReturn(null);
 
 		$this->comment->expects($this->never())
 			->method('setMessage');
 
 		$this->comment->expects($this->any())
 			->method('getActorType')
-			->will($this->returnValue('users'));
+			->willReturn('users');
 
 		$this->commentsManager->expects($this->never())
 			->method('save');
@@ -402,6 +403,7 @@ class CommentsNodeTest extends \Test\TestCase {
 			$ns . 'latestChildDateTime' => new \DateTime('2016-01-12 18:48:00'),
 			$ns . 'objectType' => 'files',
 			$ns . 'objectId' => '1848',
+			$ns . 'referenceId' => 'ref',
 			$ns . 'isUnread' => null,
 		];
 
@@ -415,23 +417,23 @@ class CommentsNodeTest extends \Test\TestCase {
 
 		$this->comment->expects($this->once())
 			->method('getId')
-			->will($this->returnValue($expected[$ns . 'id']));
+			->willReturn($expected[$ns . 'id']);
 
 		$this->comment->expects($this->once())
 			->method('getParentId')
-			->will($this->returnValue($expected[$ns . 'parentId']));
+			->willReturn($expected[$ns . 'parentId']);
 
 		$this->comment->expects($this->once())
 			->method('getTopmostParentId')
-			->will($this->returnValue($expected[$ns . 'topmostParentId']));
+			->willReturn($expected[$ns . 'topmostParentId']);
 
 		$this->comment->expects($this->once())
 			->method('getChildrenCount')
-			->will($this->returnValue($expected[$ns . 'childrenCount']));
+			->willReturn($expected[$ns . 'childrenCount']);
 
 		$this->comment->expects($this->once())
 			->method('getMessage')
-			->will($this->returnValue($expected[$ns . 'message']));
+			->willReturn($expected[$ns . 'message']);
 
 		$this->comment->expects($this->once())
 			->method('getMentions')
@@ -442,48 +444,52 @@ class CommentsNodeTest extends \Test\TestCase {
 
 		$this->comment->expects($this->once())
 			->method('getVerb')
-			->will($this->returnValue($expected[$ns . 'verb']));
+			->willReturn($expected[$ns . 'verb']);
 
 		$this->comment->expects($this->exactly(2))
 			->method('getActorType')
-			->will($this->returnValue($expected[$ns . 'actorType']));
+			->willReturn($expected[$ns . 'actorType']);
 
 		$this->comment->expects($this->exactly(2))
 			->method('getActorId')
-			->will($this->returnValue($expected[$ns . 'actorId']));
+			->willReturn($expected[$ns . 'actorId']);
 
 		$this->comment->expects($this->once())
 			->method('getCreationDateTime')
-			->will($this->returnValue($expected[$ns . 'creationDateTime']));
+			->willReturn($expected[$ns . 'creationDateTime']);
 
 		$this->comment->expects($this->once())
 			->method('getLatestChildDateTime')
-			->will($this->returnValue($expected[$ns . 'latestChildDateTime']));
+			->willReturn($expected[$ns . 'latestChildDateTime']);
 
 		$this->comment->expects($this->once())
 			->method('getObjectType')
-			->will($this->returnValue($expected[$ns . 'objectType']));
+			->willReturn($expected[$ns . 'objectType']);
 
 		$this->comment->expects($this->once())
 			->method('getObjectId')
-			->will($this->returnValue($expected[$ns . 'objectId']));
+			->willReturn($expected[$ns . 'objectId']);
+
+		$this->comment->expects($this->once())
+			->method('getReferenceId')
+			->willReturn($expected[$ns . 'referenceId']);
 
 		$user = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$user->expects($this->once())
 			->method('getDisplayName')
-			->will($this->returnValue($expected[$ns . 'actorDisplayName']));
+			->willReturn($expected[$ns . 'actorDisplayName']);
 
 		$this->userManager->expects($this->once())
 			->method('get')
 			->with('alice')
-			->will($this->returnValue($user));
+			->willReturn($user);
 
 		$properties = $this->node->getProperties(null);
 
 		foreach($properties as $name => $value) {
-			$this->assertTrue(array_key_exists($name, $expected));
+			$this->assertArrayHasKey($name, $expected);
 			$this->assertSame($expected[$name], $value);
 			unset($expected[$name]);
 		}
@@ -509,7 +515,7 @@ class CommentsNodeTest extends \Test\TestCase {
 	public function testGetPropertiesUnreadProperty($creationDT, $readDT, $expected) {
 		$this->comment->expects($this->any())
 			->method('getCreationDateTime')
-			->will($this->returnValue($creationDT));
+			->willReturn($creationDT);
 
 		$this->comment->expects($this->any())
 			->method('getMentions')
@@ -517,15 +523,15 @@ class CommentsNodeTest extends \Test\TestCase {
 
 		$this->commentsManager->expects($this->once())
 			->method('getReadMark')
-			->will($this->returnValue($readDT));
+			->willReturn($readDT);
 
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue(
+			->willReturn(
 				$this->getMockBuilder(IUser::class)
 					->disableOriginalConstructor()
 					->getMock()
-			));
+			);
 
 		$properties = $this->node->getProperties(null);
 

@@ -31,7 +31,7 @@ namespace Test\Group;
  * @group DB
  */
 class DatabaseTest extends Backend {
-	private $groups = array();
+	private $groups = [];
 
 	/**
 	 * get a new unique group name
@@ -45,12 +45,12 @@ class DatabaseTest extends Backend {
 		return $name;
 	}
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->backend = new \OC\Group\Database();
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		foreach ($this->groups as $group) {
 			$this->backend->deleteGroup($group);
 		}

@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Christian Berendt <berendt@b1-systems.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author hkjolhede <hkjolhede@gmail.com>
  * @author Michael Gapczynski <GapczynskiM@gmail.com>
  * @author Robin Appelman <robin@icewind.nl>
@@ -22,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 // in case there are private configurations in the users home -> use them
@@ -33,15 +34,15 @@ if (file_exists($privateConfigFile)) {
 }
 
 // this is now more a template now for your private configurations
-return array(
-	'ftp'=>array(
+return [
+	'ftp'=>[
 		'run'=>false,
 		'host'=>'localhost',
 		'user'=>'test',
 		'password'=>'test',
 		'root'=>'/test',
-	),
-	'webdav'=>array(
+	],
+	'webdav'=>[
 		'run'=>false,
 		'host'=>'localhost',
 		'user'=>'test',
@@ -51,15 +52,15 @@ return array(
 		// (only in tests)
 		// set to higher value for lighttpd webdav
 		'wait'=> 0
-	),
-	'owncloud'=>array(
+	],
+	'owncloud'=>[
 		'run'=>false,
 		'host'=>'localhost/owncloud',
 		'user'=>'test',
 		'password'=>'test',
 		'root'=>'',
-	),
-	'swift' => array(
+	],
+	'swift' => [
 		'run' => false,
 		'user' => 'test',
 		'bucket' => 'test',
@@ -70,16 +71,16 @@ return array(
 		//'service_name' => 'swift', //should be 'swift' for OpenStack Object Storage and 'cloudFiles' for Rackspace Cloud Files (default value)
 		//'url' => 'https://identity.api.rackspacecloud.com/v2.0/', //to be used with Rackspace Cloud Files and OpenStack Object Storage
 		//'timeout' => 5 // timeout of HTTP requests in seconds
-	),
-	'smb'=>array(
+	],
+	'smb'=>[
 		'run'=>false,
 		'user'=>'test',
 		'password'=>'test',
 		'host'=>'localhost',
 		'share'=>'/test',
 		'root'=>'/test/',
-	),
-	'amazons3'=>array(
+	],
+	'amazons3'=>[
 		'run'=>false,
 		'key'=>'test',
 		'secret'=>'test',
@@ -90,20 +91,20 @@ return array(
 		//'region' => 'eu-west-1',
 		//'test'=>'true',
 		//'timeout'=>20
-	),
-	'sftp' => array (
+	],
+	'sftp' =>  [
 		'run'=>false,
 		'host'=>'localhost',
 		'user'=>'test',
 		'password'=>'test',
 		'root'=>'/test'
-	),
-	'sftp_key' => array (
-                'run'=>false,
-                'host'=>'localhost',
-                'user'=>'test',
-                'public_key'=>'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDJPTvz3OLonF2KSGEKP/nd4CPmRYvemG2T4rIiNYjDj0U5y+2sKEWbjiUlQl2bsqYuVoJ+/UNJlGQbbZ08kQirFeo1GoWBzqioaTjUJfbLN6TzVVKXxR9YIVmH7Ajg2iEeGCndGgbmnPfj+kF9TR9IH8vMVvtubQwf7uEwB0ALhw== phpseclib-generated-key',
+	],
+	'sftp_key' =>  [
+		'run'=>false,
+		'host'=>'localhost',
+		'user'=>'test',
+		'public_key'=>'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDJPTvz3OLonF2KSGEKP/nd4CPmRYvemG2T4rIiNYjDj0U5y+2sKEWbjiUlQl2bsqYuVoJ+/UNJlGQbbZ08kQirFeo1GoWBzqioaTjUJfbLN6TzVVKXxR9YIVmH7Ajg2iEeGCndGgbmnPfj+kF9TR9IH8vMVvtubQwf7uEwB0ALhw== phpseclib-generated-key',
 		'private_key'=>'test',
-                'root'=>'/test'
-        ),
-);
+		'root'=>'/test'
+	],
+];

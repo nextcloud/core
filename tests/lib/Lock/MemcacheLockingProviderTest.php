@@ -38,7 +38,7 @@ class MemcacheLockingProviderTest extends LockingProvider {
 		return new \OC\Lock\MemcacheLockingProvider($this->memcache);
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		$this->memcache->clear();
 		parent::tearDown();
 	}

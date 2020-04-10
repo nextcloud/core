@@ -11,22 +11,26 @@ namespace Test\Files\Mount;
 use OC\Files\Storage\StorageFactory;
 use OCP\Files\Storage;
 
+class DummyStorage {
+
+}
+
 class MountPointTest extends \Test\TestCase {
 
 	public function testGetStorage() {
 		$storage = $this->createMock(Storage::class);
 		$storage->expects($this->once())
 			->method('getId')
-			->will($this->returnValue(123));
+			->willReturn(123);
 
 		$loader = $this->createMock(StorageFactory::class);
 		$loader->expects($this->once())
 			->method('wrap')
-			->will($this->returnValue($storage));
+			->willReturn($storage);
 
 		$mountPoint = new \OC\Files\Mount\MountPoint(
 			// just use this because a real class is needed
-			'\Test\Files\Mount\MountPointTest',
+			'\Test\Files\Mount\DummyStorage',
 			'/mountpoint',
 			null,
 			$loader
@@ -47,13 +51,13 @@ class MountPointTest extends \Test\TestCase {
 			->will($this->throwException(new \Exception('Test storage init exception')));
 
 		$called = false;
-		$wrapper = function($mountPoint, $storage) use ($called) {
+		$wrapper = function ($mountPoint, $storage) use ($called) {
 			$called = true;
 		};
 
 		$mountPoint = new \OC\Files\Mount\MountPoint(
 			// just use this because a real class is needed
-			'\Test\Files\Mount\MountPointTest',
+			'\Test\Files\Mount\DummyStorage',
 			'/mountpoint',
 			null,
 			$loader

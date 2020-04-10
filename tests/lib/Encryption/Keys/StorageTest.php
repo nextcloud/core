@@ -42,7 +42,7 @@ class StorageTest extends TestCase {
 	/** @var \PHPUnit_Framework_MockObject_MockObject */
 	protected $config;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->util = $this->getMockBuilder('OC\Encryption\Util')
@@ -63,7 +63,7 @@ class StorageTest extends TestCase {
 	public function testSetFileKey() {
 		$this->util->expects($this->any())
 			->method('getUidAndFilename')
-			->willReturn(array('user1', '/files/foo.txt'));
+			->willReturn(['user1', '/files/foo.txt']);
 		$this->util->expects($this->any())
 			->method('stripPartialFileExtension')
 			->willReturnArgument(0);
@@ -143,7 +143,7 @@ class StorageTest extends TestCase {
 	public function testSetFileKeySystemWide() {
 		$this->util->expects($this->any())
 			->method('getUidAndFilename')
-			->willReturn(array('user1', '/files/foo.txt'));
+			->willReturn(['user1', '/files/foo.txt']);
 		$this->util->expects($this->any())
 			->method('isSystemWideMountPoint')
 			->willReturn(true);
@@ -164,7 +164,7 @@ class StorageTest extends TestCase {
 	public function testGetFileKeySystemWide() {
 		$this->util->expects($this->any())
 			->method('getUidAndFilename')
-			->willReturn(array('user1', '/files/foo.txt'));
+			->willReturn(['user1', '/files/foo.txt']);
 		$this->util->expects($this->any())
 			->method('stripPartialFileExtension')
 			->willReturnArgument(0);
@@ -272,7 +272,7 @@ class StorageTest extends TestCase {
 	public function testDeleteFileKeySystemWide() {
 		$this->util->expects($this->any())
 			->method('getUidAndFilename')
-			->willReturn(array('user1', '/files/foo.txt'));
+			->willReturn(['user1', '/files/foo.txt']);
 		$this->util->expects($this->any())
 			->method('stripPartialFileExtension')
 			->willReturnArgument(0);
@@ -296,7 +296,7 @@ class StorageTest extends TestCase {
 	public function testDeleteFileKey() {
 		$this->util->expects($this->any())
 			->method('getUidAndFilename')
-			->willReturn(array('user1', '/files/foo.txt'));
+			->willReturn(['user1', '/files/foo.txt']);
 		$this->util->expects($this->any())
 			->method('stripPartialFileExtension')
 			->willReturnArgument(0);
@@ -335,10 +335,10 @@ class StorageTest extends TestCase {
 			->willReturn(true);
 		$this->util->expects($this->any())
 			->method('getUidAndFilename')
-			->will($this->returnCallback(array($this, 'getUidAndFilenameCallback')));
+			->willReturnCallback([$this, 'getUidAndFilenameCallback']);
 		$this->util->expects($this->any())
 			->method('isSystemWideMountPoint')
-			->willReturnCallback(function($path, $owner) use ($systemWideMountSource, $systemWideMountTarget) {
+			->willReturnCallback(function ($path, $owner) use ($systemWideMountSource, $systemWideMountTarget) {
 				if(strpos($path, 'source.txt') !== false) {
 					return $systemWideMountSource;
 				}
@@ -366,10 +366,10 @@ class StorageTest extends TestCase {
 			->willReturn(true);
 		$this->util->expects($this->any())
 			->method('getUidAndFilename')
-			->will($this->returnCallback(array($this, 'getUidAndFilenameCallback')));
+			->willReturnCallback([$this, 'getUidAndFilenameCallback']);
 		$this->util->expects($this->any())
 			->method('isSystemWideMountPoint')
-			->willReturnCallback(function($path, $owner) use ($systemWideMountSource, $systemWideMountTarget) {
+			->willReturnCallback(function ($path, $owner) use ($systemWideMountSource, $systemWideMountTarget) {
 				if(strpos($path, 'source.txt') !== false) {
 					return $systemWideMountSource;
 				}
@@ -385,37 +385,37 @@ class StorageTest extends TestCase {
 		$path = $args[0];
 		$parts = explode('/', $path);
 
-		return array($parts[1], '/' . implode('/', array_slice($parts, 2)));
+		return [$parts[1], '/' . implode('/', array_slice($parts, 2))];
 	}
 
 	public function dataProviderCopyRename() {
-		return array(
-			array('/user1/files/source.txt', '/user1/files/target.txt', false, false,
-				'/user1/files_encryption/keys/files/source.txt/', '/user1/files_encryption/keys/files/target.txt/'),
-			array('/user1/files/foo/source.txt', '/user1/files/target.txt', false, false,
-				'/user1/files_encryption/keys/files/foo/source.txt/', '/user1/files_encryption/keys/files/target.txt/'),
-			array('/user1/files/source.txt', '/user1/files/foo/target.txt', false, false,
-				'/user1/files_encryption/keys/files/source.txt/', '/user1/files_encryption/keys/files/foo/target.txt/'),
-			array('/user1/files/source.txt', '/user1/files/foo/target.txt', true, true,
-				'/files_encryption/keys/files/source.txt/', '/files_encryption/keys/files/foo/target.txt/'),
-			array('/user1/files/source.txt', '/user1/files/target.txt', false, true,
-				'/user1/files_encryption/keys/files/source.txt/', '/files_encryption/keys/files/target.txt/'),
-			array('/user1/files/source.txt', '/user1/files/target.txt', true, false,
-				'/files_encryption/keys/files/source.txt/', '/user1/files_encryption/keys/files/target.txt/'),
+		return [
+			['/user1/files/source.txt', '/user1/files/target.txt', false, false,
+				'/user1/files_encryption/keys/files/source.txt/', '/user1/files_encryption/keys/files/target.txt/'],
+			['/user1/files/foo/source.txt', '/user1/files/target.txt', false, false,
+				'/user1/files_encryption/keys/files/foo/source.txt/', '/user1/files_encryption/keys/files/target.txt/'],
+			['/user1/files/source.txt', '/user1/files/foo/target.txt', false, false,
+				'/user1/files_encryption/keys/files/source.txt/', '/user1/files_encryption/keys/files/foo/target.txt/'],
+			['/user1/files/source.txt', '/user1/files/foo/target.txt', true, true,
+				'/files_encryption/keys/files/source.txt/', '/files_encryption/keys/files/foo/target.txt/'],
+			['/user1/files/source.txt', '/user1/files/target.txt', false, true,
+				'/user1/files_encryption/keys/files/source.txt/', '/files_encryption/keys/files/target.txt/'],
+			['/user1/files/source.txt', '/user1/files/target.txt', true, false,
+				'/files_encryption/keys/files/source.txt/', '/user1/files_encryption/keys/files/target.txt/'],
 
-			array('/user2/files/source.txt', '/user1/files/target.txt', false, false,
-				'/user2/files_encryption/keys/files/source.txt/', '/user1/files_encryption/keys/files/target.txt/'),
-			array('/user2/files/foo/source.txt', '/user1/files/target.txt', false, false,
-				'/user2/files_encryption/keys/files/foo/source.txt/', '/user1/files_encryption/keys/files/target.txt/'),
-			array('/user2/files/source.txt', '/user1/files/foo/target.txt', false, false,
-				'/user2/files_encryption/keys/files/source.txt/', '/user1/files_encryption/keys/files/foo/target.txt/'),
-			array('/user2/files/source.txt', '/user1/files/foo/target.txt', true, true,
-				'/files_encryption/keys/files/source.txt/', '/files_encryption/keys/files/foo/target.txt/'),
-			array('/user2/files/source.txt', '/user1/files/target.txt', false, true,
-				'/user2/files_encryption/keys/files/source.txt/', '/files_encryption/keys/files/target.txt/'),
-			array('/user2/files/source.txt', '/user1/files/target.txt', true, false,
-				'/files_encryption/keys/files/source.txt/', '/user1/files_encryption/keys/files/target.txt/'),
-		);
+			['/user2/files/source.txt', '/user1/files/target.txt', false, false,
+				'/user2/files_encryption/keys/files/source.txt/', '/user1/files_encryption/keys/files/target.txt/'],
+			['/user2/files/foo/source.txt', '/user1/files/target.txt', false, false,
+				'/user2/files_encryption/keys/files/foo/source.txt/', '/user1/files_encryption/keys/files/target.txt/'],
+			['/user2/files/source.txt', '/user1/files/foo/target.txt', false, false,
+				'/user2/files_encryption/keys/files/source.txt/', '/user1/files_encryption/keys/files/foo/target.txt/'],
+			['/user2/files/source.txt', '/user1/files/foo/target.txt', true, true,
+				'/files_encryption/keys/files/source.txt/', '/files_encryption/keys/files/foo/target.txt/'],
+			['/user2/files/source.txt', '/user1/files/target.txt', false, true,
+				'/user2/files_encryption/keys/files/source.txt/', '/files_encryption/keys/files/target.txt/'],
+			['/user2/files/source.txt', '/user1/files/target.txt', true, false,
+				'/files_encryption/keys/files/source.txt/', '/user1/files_encryption/keys/files/target.txt/'],
+		];
 	}
 
 	/**
@@ -432,7 +432,7 @@ class StorageTest extends TestCase {
 
 		$this->util->expects($this->any())
 			->method('getUidAndFilename')
-			->will($this->returnCallback(array($this, 'getUidAndFilenameCallback')));
+			->willReturnCallback([$this, 'getUidAndFilenameCallback']);
 		$this->util->expects($this->any())
 			->method('isSystemWideMountPoint')
 			->willReturn($systemWideMountPoint);
@@ -460,15 +460,15 @@ class StorageTest extends TestCase {
 			->willReturn(false);
 		$this->view->expects($this->any())
 			->method('mkdir')
-			->will($this->returnCallback(array($this, 'mkdirCallback')));
+			->willReturnCallback([$this, 'mkdirCallback']);
 
-		$this->mkdirStack = array(
+		$this->mkdirStack = [
 			'/user1/files_encryption/keys/foo',
 			'/user1/files_encryption/keys',
 			'/user1/files_encryption',
-			'/user1');
+			'/user1'];
 
-		self::invokePrivate($this->storage, 'keySetPreparation', array('/user1/files_encryption/keys/foo'));
+		self::invokePrivate($this->storage, 'keySetPreparation', ['/user1/files_encryption/keys/foo']);
 	}
 
 	public function mkdirCallback() {

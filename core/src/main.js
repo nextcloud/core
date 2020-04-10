@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -20,19 +20,27 @@
  */
 
 import $ from 'jquery'
-import '@babel/polyfill'
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 import './Polyfill/index'
 
 // If you remove the line below, tests won't pass
+// eslint-disable-next-line no-unused-vars
 import OC from './OC/index'
 
 import './globals'
 import './jquery/index'
-import {initCore} from './init'
-import {registerAppsSlideToggle} from './OC/apps'
+import { initCore } from './init'
+import { registerAppsSlideToggle } from './OC/apps'
 
-$(document).ready(function () {
-	initCore();
+$(document).ready(function() {
+	initCore()
+	registerAppsSlideToggle()
 
-	registerAppsSlideToggle();
-});
+	// fallback to hashchange when no history support
+	if (window.history.pushState) {
+		window.onpopstate = _.bind(OC.Util.History._onPopState, OC.Util.History)
+	} else {
+		$(window).on('hashchange', _.bind(OC.Util.History._onPopState, OC.Util.History))
+	}
+})

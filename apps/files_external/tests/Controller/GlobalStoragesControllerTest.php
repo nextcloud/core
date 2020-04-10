@@ -20,20 +20,20 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Files_External\Tests\Controller;
 
 use OCA\Files_External\Controller\GlobalStoragesController;
-use \OCP\AppFramework\Http;
-use \OCA\Files_External\Service\BackendService;
+use OCA\Files_External\Service\BackendService;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
 
 class GlobalStoragesControllerTest extends StoragesControllerTest {
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->service = $this->getMockBuilder('\OCA\Files_External\Service\GlobalStoragesService')
 			->disableOriginalConstructor()

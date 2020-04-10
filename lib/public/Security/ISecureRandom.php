@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
@@ -20,7 +22,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -49,7 +51,7 @@ interface ISecureRandom {
 
 	/**
 	 * Characters that can be used for <code>generate($length, $characters)</code>, to
-	 * generate human readable random strings. Lower- and upper-case characters and digits 
+	 * generate human readable random strings. Lower- and upper-case characters and digits
 	 * are included. Characters which are ambiguous are excluded, such as I, l, and 1 and so on.
 	 */
 	const CHAR_HUMAN_READABLE = 'abcdefgijkmnopqrstwxyzABCDEFGHJKLMNPQRSTWXYZ23456789';

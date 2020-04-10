@@ -2,9 +2,11 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Morris Jobke <hey@morrisjobke.de>
- * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -18,19 +20,20 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_External\Service;
 
 use OCA\Files_External\Config\IConfigHandler;
-use \OCP\IConfig;
+use OCA\Files_External\Lib\Auth\AuthMechanism;
 
-use \OCA\Files_External\Lib\Backend\Backend;
-use \OCA\Files_External\Lib\Auth\AuthMechanism;
-use \OCA\Files_External\Lib\Config\IBackendProvider;
-use \OCA\Files_External\Lib\Config\IAuthMechanismProvider;
+use OCA\Files_External\Lib\Backend\Backend;
+use OCA\Files_External\Lib\Config\IAuthMechanismProvider;
+use OCA\Files_External\Lib\Config\IBackendProvider;
+use OCP\EventDispatcher\GenericEvent;
+use OCP\IConfig;
 
 /**
  * Service class to manage backend definitions
@@ -106,7 +109,19 @@ class BackendService {
 		$this->backendProviders[] = $provider;
 	}
 
+	private function callForRegistrations() {
+		static $eventSent = false;
+		if(!$eventSent) {
+			\OC::$server->getEventDispatcher()->dispatch(
+				'OCA\\Files_External::loadAdditionalBackends',
+				new GenericEvent()
+			);
+			$eventSent = true;
+		}
+	}
+
 	private function loadBackendProviders() {
+		$this->callForRegistrations();
 		foreach ($this->backendProviders as $provider) {
 			$this->registerBackends($provider->getBackends());
 		}
@@ -124,6 +139,7 @@ class BackendService {
 	}
 
 	private function loadAuthMechanismProviders() {
+		$this->callForRegistrations();
 		foreach ($this->authMechanismProviders as $provider) {
 			$this->registerAuthMechanisms($provider->getAuthMechanisms());
 		}
@@ -200,7 +216,7 @@ class BackendService {
 	 * @return Backend[]
 	 */
 	public function getAvailableBackends() {
-		return array_filter($this->getBackends(), function($backend) {
+		return array_filter($this->getBackends(), function ($backend) {
 			return !$backend->checkDependencies();
 		});
 	}
@@ -239,7 +255,7 @@ class BackendService {
 	 * @return AuthMechanism[]
 	 */
 	public function getAuthMechanismsByScheme(array $schemes) {
-		return array_filter($this->getAuthMechanisms(), function($authMech) use ($schemes) {
+		return array_filter($this->getAuthMechanisms(), function ($authMech) use ($schemes) {
 			return in_array($authMech->getScheme(), $schemes, true);
 		});
 	}
@@ -321,6 +337,7 @@ class BackendService {
 	}
 
 	protected function loadConfigHandlers():void {
+		$this->callForRegistrations();
 		$newLoaded = false;
 		foreach ($this->configHandlerLoaders as $placeholder => $loader) {
 			$handler = $loader();

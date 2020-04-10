@@ -17,7 +17,7 @@ class NullLogger extends Log {
 		//disable original constructor
 	}
 
-	public function log(int $level, string $message, array $context = array()) {
+	public function log(int $level, string $message, array $context = []) {
 		//noop
 	}
 }
@@ -26,7 +26,7 @@ class TempManagerTest extends \Test\TestCase {
 
 	protected $baseDir = null;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->baseDir = $this->getManager()->getTempBaseDir() . $this->getUniqueID('/oc_tmp_test');
@@ -35,7 +35,7 @@ class TempManagerTest extends \Test\TestCase {
 		}
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		\OC_Helper::rmdirr($this->baseDir);
 		$this->baseDir = null;
 		parent::tearDown();

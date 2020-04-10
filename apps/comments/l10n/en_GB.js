@@ -12,6 +12,7 @@ OC.L10N.register(
     "<strong>Comments</strong> for files" : "<strong>Comments</strong> for files",
     "You were mentioned on “{file}”, in a comment by a user that has since been deleted" : "You were mentioned on “{file}”, in a comment by a user that has since been deleted",
     "{user} mentioned you in a comment on “{file}”" : "{user} mentioned you in a comment on “{file}”",
+    "Files app plugin to add comments to files" : "Files app plugin to add comments to files",
     "Edit comment" : "Edit comment",
     "Delete comment" : "Delete comment",
     "New comment …" : "New comment …",
@@ -26,8 +27,7 @@ OC.L10N.register(
     "Error occurred while updating comment with id {id}" : "Error occurred while updating comment with id {id}",
     "Error occurred while posting comment" : "Error occurred while posting comment",
     "_%n unread comment_::_%n unread comments_" : ["%n unread comment","%n unread comments"],
-    "Comment" : "Comment",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "You were mentioned on “%s”, in a comment by a user that has since been deleted",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s mentioned you in a comment on “%2$s”"
+    "_1 new comment_::_{unread} new comments_" : ["1 new comment","{unread} new comments"],
+    "Comment" : "Comment"
 },
 "nplurals=2; plural=(n != 1);");

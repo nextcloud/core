@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2019 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,15 +19,19 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\files_external\tests\Config;
 
 use OCA\Files_External\Config\UserPlaceholderHandler;
+use OCP\IRequest;
 use OCP\IUser;
+use OCP\IUserManager;
 use OCP\IUserSession;
+use OCP\Share\Exceptions\ShareNotFound;
+use OCP\Share\IManager;
 
 class UserPlaceholderHandlerTest extends \Test\TestCase {
 	/** @var IUser|\PHPUnit_Framework_MockObject_MockObject */
@@ -34,10 +40,19 @@ class UserPlaceholderHandlerTest extends \Test\TestCase {
 	/** @var IUserSession|\PHPUnit_Framework_MockObject_MockObject */
 	protected $session;
 
+	/** @var IManager|\PHPUnit_Framework_MockObject_MockObject */
+	private $shareManager;
+
+	/** @var IRequest|\PHPUnit_Framework_MockObject_MockObject */
+	private $request;
+
+	/** @var IUserManager|\PHPUnit_Framework_MockObject_MockObject */
+	private $userManager;
+
 	/** @var UserPlaceholderHandler */
 	protected $handler;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->user = $this->createMock(IUser::class);
@@ -45,8 +60,11 @@ class UserPlaceholderHandlerTest extends \Test\TestCase {
 			->method('getUid')
 			->willReturn('alice');
 		$this->session = $this->createMock(IUserSession::class);
+		$this->shareManager = $this->createMock(IManager::class);
+		$this->request = $this->createMock(IRequest::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 
-		$this->handler = new UserPlaceholderHandler($this->session);
+		$this->handler = new UserPlaceholderHandler($this->session, $this->shareManager, $this->request, $this->userManager);
 	}
 
 	protected function setUser() {
@@ -75,6 +93,9 @@ class UserPlaceholderHandlerTest extends \Test\TestCase {
 	 * @dataProvider optionProvider
 	 */
 	public function testHandleNoUser($option) {
+		$this->shareManager->expects($this->once())
+			->method('getShareByToken')
+			->willThrowException(new ShareNotFound());
 		$this->assertSame($option, $this->handler->handle($option));
 	}
 

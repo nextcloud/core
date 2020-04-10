@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016 Morris Jobke <hey@morrisjobke.de>
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Morris Jobke <hey@morrisjobke.de>
  *
  * @license GNU AGPL version 3 or any later version
@@ -17,14 +18,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCP\WorkflowEngine;
-
-
-use OCP\Files\Storage\IStorage;
 
 /**
  * Interface ICheck
@@ -33,13 +31,6 @@ use OCP\Files\Storage\IStorage;
  * @since 9.1
  */
 interface ICheck {
-	/**
-	 * @param IStorage $storage
-	 * @param string $path
-	 * @since 9.1
-	 */
-	public function setFileInfo(IStorage $storage, $path);
-
 	/**
 	 * @param string $operator
 	 * @param string $value
@@ -55,4 +46,28 @@ interface ICheck {
 	 * @since 9.1
 	 */
 	public function validateCheck($operator, $value);
+
+	/**
+	 * returns a list of Entities the checker supports. The values must match
+	 * the class name of the entity.
+	 *
+	 * An empty result means the check is universally available.
+	 *
+	 * @since 18.0.0
+	 */
+	public function supportedEntities(): array;
+
+	/**
+	 * returns whether the operation can be used in the requested scope.
+	 *
+	 * Scope IDs are defined as constants in OCP\WorkflowEngine\IManager. At
+	 * time of writing these are SCOPE_ADMIN and SCOPE_USER.
+	 *
+	 * For possibly unknown future scopes the recommended behaviour is: if
+	 * user scope is permitted, the default behaviour should return `true`,
+	 * otherwise `false`.
+	 *
+	 * @since 18.0.0
+	 */
+	public function isAvailableForScope(int $scope): bool;
 }

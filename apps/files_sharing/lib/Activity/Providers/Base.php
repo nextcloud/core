@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -26,6 +26,8 @@ namespace OCA\Files_Sharing\Activity\Providers;
 use OCP\Activity\IEvent;
 use OCP\Activity\IManager;
 use OCP\Activity\IProvider;
+use OCP\Contacts\IManager as IContactsManager;
+use OCP\Federation\ICloudIdManager;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\IUser;
@@ -49,20 +51,27 @@ abstract class Base implements IProvider {
 	/** @var IUserManager */
 	protected $userManager;
 
+	/** @var IContactsManager */
+	protected $contactsManager;
+
+	/** @var ICloudIdManager */
+	protected $cloudIdManager;
+
 	/** @var array */
 	protected $displayNames = [];
 
-	/**
-	 * @param IFactory $languageFactory
-	 * @param IURLGenerator $url
-	 * @param IManager $activityManager
-	 * @param IUserManager $userManager
-	 */
-	public function __construct(IFactory $languageFactory, IURLGenerator $url, IManager $activityManager, IUserManager $userManager) {
+	public function __construct(IFactory $languageFactory,
+								IURLGenerator $url,
+								IManager $activityManager,
+								IUserManager $userManager,
+								ICloudIdManager $cloudIdManager,
+								IContactsManager $contactsManager) {
 		$this->languageFactory = $languageFactory;
 		$this->url = $url;
 		$this->activityManager = $activityManager;
 		$this->userManager = $userManager;
+		$this->cloudIdManager = $cloudIdManager;
+		$this->contactsManager = $contactsManager;
 	}
 
 	/**
@@ -160,27 +169,62 @@ abstract class Base implements IProvider {
 	 * @return array
 	 */
 	protected function getUser($uid) {
-		if (!isset($this->displayNames[$uid])) {
-			$this->displayNames[$uid] = $this->getDisplayName($uid);
+		// First try local user
+		$user = $this->userManager->get($uid);
+		if ($user instanceof IUser) {
+			return [
+				'type' => 'user',
+				'id' => $user->getUID(),
+				'name' => $user->getDisplayName(),
+			];
 		}
 
+		// Then a contact from the addressbook
+		if ($this->cloudIdManager->isValidCloudId($uid)) {
+			$cloudId = $this->cloudIdManager->resolveCloudId($uid);
+			return [
+				'type' => 'user',
+				'id' => $cloudId->getUser(),
+				'name' => $this->getDisplayNameFromAddressBook($cloudId->getDisplayId()),
+				'server' => $cloudId->getRemote(),
+			];
+		}
+
+		// Fallback to empty dummy data
 		return [
 			'type' => 'user',
 			'id' => $uid,
-			'name' => $this->displayNames[$uid],
+			'name' => $uid,
 		];
 	}
 
-	/**
-	 * @param string $uid
-	 * @return string
-	 */
-	protected function getDisplayName($uid) {
-		$user = $this->userManager->get($uid);
-		if ($user instanceof IUser) {
-			return $user->getDisplayName();
-		} else {
-			return $uid;
+	protected function getDisplayNameFromAddressBook(string $search): string {
+		if (isset($this->displayNames[$search])) {
+			return $this->displayNames[$search];
 		}
+
+		$addressBookContacts = $this->contactsManager->search($search, ['CLOUD']);
+		foreach ($addressBookContacts as $contact) {
+			if (isset($contact['isLocalSystemBook'])) {
+				continue;
+			}
+
+			if (isset($contact['CLOUD'])) {
+				$cloudIds = $contact['CLOUD'];
+				if (is_string($cloudIds)) {
+					$cloudIds = [$cloudIds];
+				}
+
+				$lowerSearch = strtolower($search);
+				foreach ($cloudIds as $cloudId) {
+					if (strtolower($cloudId) === $lowerSearch) {
+						$this->displayNames[$search] = $contact['FN'] . " ($cloudId)";
+						return $this->displayNames[$search];
+					}
+				}
+			}
+		}
+
+		return $search;
 	}
 }

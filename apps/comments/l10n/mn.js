@@ -23,7 +23,6 @@ OC.L10N.register(
     "Allowed characters {count} of {max}" : "{max} боломжойгоос {count} тэмдэгт орсон байна",
     "Error occurred while updating comment with id {id}" : "{id} дугаартай сэтгэгдлийг шинэчилэхэд алдаа гарлаа",
     "Error occurred while posting comment" : "Сэтгэгдлийг хадгалахад алдаа гарлаа",
-    "Comment" : "Сэтгэгдэл",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s нь таныг “%2$s”-ы сэтгэгдэлд дурдсан"
+    "Comment" : "Сэтгэгдэл"
 },
 "nplurals=2; plural=(n != 1);");

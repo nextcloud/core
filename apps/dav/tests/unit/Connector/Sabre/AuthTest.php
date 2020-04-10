@@ -3,7 +3,8 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -23,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -60,7 +61,7 @@ class AuthTest extends TestCase {
 	/** @var Throttler */
 	private $throttler;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->session = $this->getMockBuilder(ISession::class)
 			->disableOriginalConstructor()->getMock();
@@ -88,7 +89,7 @@ class AuthTest extends TestCase {
 			->expects($this->once())
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue(null));
+			->willReturn(null);
 
 		$this->assertFalse($this->invokePrivate($this->auth, 'isDavAuthenticated', ['MyTestUser']));
 	}
@@ -98,7 +99,7 @@ class AuthTest extends TestCase {
 			->expects($this->exactly(2))
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue('AnotherUser'));
+			->willReturn('AnotherUser');
 
 		$this->assertFalse($this->invokePrivate($this->auth, 'isDavAuthenticated', ['MyTestUser']));
 	}
@@ -108,7 +109,7 @@ class AuthTest extends TestCase {
 			->expects($this->exactly(2))
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue('MyTestUser'));
+			->willReturn('MyTestUser');
 
 		$this->assertTrue($this->invokePrivate($this->auth, 'isDavAuthenticated', ['MyTestUser']));
 	}
@@ -119,20 +120,20 @@ class AuthTest extends TestCase {
 			->getMock();
 		$user->expects($this->exactly(2))
 			->method('getUID')
-			->will($this->returnValue('MyTestUser'));
+			->willReturn('MyTestUser');
 		$this->userSession
 			->expects($this->once())
 			->method('isLoggedIn')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->userSession
 			->expects($this->exactly(2))
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->session
 			->expects($this->exactly(2))
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue('MyTestUser'));
+			->willReturn('MyTestUser');
 		$this->session
 			->expects($this->once())
 			->method('close');
@@ -146,20 +147,20 @@ class AuthTest extends TestCase {
 			->getMock();
 		$user->expects($this->once())
 			->method('getUID')
-			->will($this->returnValue('MyTestUser'));
+			->willReturn('MyTestUser');
 		$this->userSession
 			->expects($this->once())
 			->method('isLoggedIn')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->userSession
 			->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->session
 			->expects($this->exactly(2))
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue('AnotherUser'));
+			->willReturn('AnotherUser');
 		$this->session
 			->expects($this->once())
 			->method('close');
@@ -173,25 +174,25 @@ class AuthTest extends TestCase {
 			->getMock();
 		$user->expects($this->exactly(3))
 			->method('getUID')
-			->will($this->returnValue('MyTestUser'));
+			->willReturn('MyTestUser');
 		$this->userSession
 			->expects($this->once())
 			->method('isLoggedIn')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->userSession
 			->expects($this->exactly(3))
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->session
 			->expects($this->exactly(2))
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue('AnotherUser'));
+			->willReturn('AnotherUser');
 		$this->userSession
 			->expects($this->once())
 			->method('logClientIn')
 			->with('MyTestUser', 'MyTestPassword', $this->request)
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->session
 			->expects($this->once())
 			->method('set')
@@ -207,12 +208,12 @@ class AuthTest extends TestCase {
 		$this->userSession
 			->expects($this->once())
 			->method('isLoggedIn')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->userSession
 			->expects($this->once())
 			->method('logClientIn')
 			->with('MyTestUser', 'MyTestPassword')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->session
 			->expects($this->once())
 			->method('close');
@@ -220,14 +221,14 @@ class AuthTest extends TestCase {
 		$this->assertFalse($this->invokePrivate($this->auth, 'validateUserPass', ['MyTestUser', 'MyTestPassword']));
 	}
 
-	/**
-	 * @expectedException \OCA\DAV\Connector\Sabre\Exception\PasswordLoginForbidden
-	 */
+	
 	public function testValidateUserPassWithPasswordLoginForbidden() {
+		$this->expectException(\OCA\DAV\Connector\Sabre\Exception\PasswordLoginForbidden::class);
+
 		$this->userSession
 			->expects($this->once())
 			->method('isLoggedIn')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->userSession
 			->expects($this->once())
 			->method('logClientIn')
@@ -250,7 +251,7 @@ class AuthTest extends TestCase {
 		$this->userSession
 			->expects($this->any())
 			->method('isLoggedIn')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->request
 			->expects($this->any())
 			->method('getMethod')
@@ -259,17 +260,17 @@ class AuthTest extends TestCase {
 			->expects($this->any())
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue(null));
+			->willReturn(null);
 		$user = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('MyWrongDavUser'));
+			->willReturn('MyWrongDavUser');
 		$this->userSession
 			->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->request
 			->expects($this->once())
 			->method('passesCSRFCheck')
@@ -311,17 +312,17 @@ class AuthTest extends TestCase {
 			->expects($this->any())
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue('LoggedInUser'));
+			->willReturn('LoggedInUser');
 		$user = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('LoggedInUser'));
+			->willReturn('LoggedInUser');
 		$this->userSession
 			->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->request
 			->expects($this->once())
 			->method('passesCSRFCheck')
@@ -329,11 +330,11 @@ class AuthTest extends TestCase {
 		$this->auth->check($request, $response);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotAuthenticated
-	 * @expectedExceptionMessage 2FA challenge not passed.
-	 */
+	
 	public function testAuthenticateAlreadyLoggedInWithoutTwoFactorChallengePassed() {
+		$this->expectException(\Sabre\DAV\Exception\NotAuthenticated::class);
+		$this->expectExceptionMessage('2FA challenge not passed.');
+
 		$request = $this->getMockBuilder(RequestInterface::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -361,17 +362,17 @@ class AuthTest extends TestCase {
 			->expects($this->any())
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue('LoggedInUser'));
+			->willReturn('LoggedInUser');
 		$user = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('LoggedInUser'));
+			->willReturn('LoggedInUser');
 		$this->userSession
 			->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->request
 			->expects($this->once())
 			->method('passesCSRFCheck')
@@ -379,15 +380,15 @@ class AuthTest extends TestCase {
 		$this->twoFactorManager->expects($this->once())
 			->method('needsSecondFactor')
 			->with($user)
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->auth->check($request, $response);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotAuthenticated
-	 * @expectedExceptionMessage CSRF check not passed.
-	 */
+	
 	public function testAuthenticateAlreadyLoggedInWithoutCsrfTokenAndIncorrectlyDavAuthenticated() {
+		$this->expectException(\Sabre\DAV\Exception\NotAuthenticated::class);
+		$this->expectExceptionMessage('CSRF check not passed.');
+
 		$request = $this->getMockBuilder(RequestInterface::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -415,17 +416,17 @@ class AuthTest extends TestCase {
 			->expects($this->any())
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue('AnotherUser'));
+			->willReturn('AnotherUser');
 		$user = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('LoggedInUser'));
+			->willReturn('LoggedInUser');
 		$this->userSession
 			->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->request
 			->expects($this->once())
 			->method('passesCSRFCheck')
@@ -443,7 +444,7 @@ class AuthTest extends TestCase {
 		$this->userSession
 			->expects($this->any())
 			->method('isLoggedIn')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->request
 			->expects($this->any())
 			->method('getMethod')
@@ -461,17 +462,17 @@ class AuthTest extends TestCase {
 			->expects($this->any())
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue(null));
+			->willReturn(null);
 		$user = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('MyWrongDavUser'));
+			->willReturn('MyWrongDavUser');
 		$this->userSession
 			->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->request
 			->expects($this->once())
 			->method('passesCSRFCheck')
@@ -490,22 +491,22 @@ class AuthTest extends TestCase {
 		$this->userSession
 			->expects($this->any())
 			->method('isLoggedIn')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->session
 			->expects($this->any())
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue(null));
+			->willReturn(null);
 		$user = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('MyWrongDavUser'));
+			->willReturn('MyWrongDavUser');
 		$this->userSession
 			->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->request
 			->expects($this->any())
 			->method('getMethod')
@@ -525,22 +526,22 @@ class AuthTest extends TestCase {
 		$this->userSession
 			->expects($this->any())
 			->method('isLoggedIn')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->session
 			->expects($this->any())
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue(null));
+			->willReturn(null);
 		$user = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('MyWrongDavUser'));
+			->willReturn('MyWrongDavUser');
 		$this->userSession
 			->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->request
 			->expects($this->once())
 			->method('passesCSRFCheck')
@@ -564,11 +565,11 @@ class AuthTest extends TestCase {
 		$this->assertEquals([false, 'No \'Authorization: Basic\' header found. Either the client didn\'t send one, or the server is misconfigured'], $response);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotAuthenticated
-	 * @expectedExceptionMessage Cannot authenticate over ajax calls
-	 */
+	
 	public function testAuthenticateNoBasicAuthenticateHeadersProvidedWithAjax() {
+		$this->expectException(\Sabre\DAV\Exception\NotAuthenticated::class);
+		$this->expectExceptionMessage('Cannot authenticate over ajax calls');
+
 		/** @var \Sabre\HTTP\RequestInterface $httpRequest */
 		$httpRequest = $this->getMockBuilder(RequestInterface::class)
 			->disableOriginalConstructor()
@@ -580,12 +581,12 @@ class AuthTest extends TestCase {
 		$this->userSession
 			->expects($this->any())
 			->method('isLoggedIn')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$httpRequest
 			->expects($this->once())
 			->method('getHeader')
 			->with('X-Requested-With')
-			->will($this->returnValue('XMLHttpRequest'));
+			->willReturn('XMLHttpRequest');
 		$this->auth->check($httpRequest, $httpResponse);
 	}
 
@@ -606,7 +607,7 @@ class AuthTest extends TestCase {
 		$this->userSession
 			->expects($this->any())
 			->method('isLoggedIn')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->userSession
 			->expects($this->any())
 			->method('getUser')
@@ -615,7 +616,7 @@ class AuthTest extends TestCase {
 			->expects($this->atLeastOnce())
 			->method('get')
 			->with('AUTHENTICATED_TO_DAV_BACKEND')
-			->will($this->returnValue('MyTestUser'));
+			->willReturn('MyTestUser');
 		$this->request
 			->expects($this->once())
 			->method('getMethod')
@@ -624,7 +625,7 @@ class AuthTest extends TestCase {
 			->expects($this->atLeastOnce())
 			->method('getHeader')
 			->with('Authorization')
-			->will($this->returnValue(null));
+			->willReturn(null);
 		$this->assertEquals(
 			[true, 'principals/users/MyTestUser'],
 			$this->auth->check($httpRequest, $httpResponse)
@@ -642,12 +643,12 @@ class AuthTest extends TestCase {
 			->expects($this->at(0))
 			->method('getHeader')
 			->with('X-Requested-With')
-			->will($this->returnValue(null));
+			->willReturn(null);
 		$server->httpRequest
 			->expects($this->at(1))
 			->method('getHeader')
 			->with('Authorization')
-			->will($this->returnValue('basic dXNlcm5hbWU6cGFzc3dvcmQ='));
+			->willReturn('basic dXNlcm5hbWU6cGFzc3dvcmQ=');
 		$server->httpResponse = $this->getMockBuilder(ResponseInterface::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -655,17 +656,17 @@ class AuthTest extends TestCase {
 			->expects($this->once())
 			->method('logClientIn')
 			->with('username', 'password')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$user = $this->getMockBuilder(IUser::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$user->expects($this->exactly(3))
 			->method('getUID')
-			->will($this->returnValue('MyTestUser'));
+			->willReturn('MyTestUser');
 		$this->userSession
 			->expects($this->exactly(4))
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$response = $this->auth->check($server->httpRequest, $server->httpResponse);
 		$this->assertEquals([true, 'principals/users/MyTestUser'], $response);
 	}
@@ -681,12 +682,12 @@ class AuthTest extends TestCase {
 			->expects($this->at(0))
 			->method('getHeader')
 			->with('X-Requested-With')
-			->will($this->returnValue(null));
+			->willReturn(null);
 		$server->httpRequest
 			->expects($this->at(1))
 			->method('getHeader')
 			->with('Authorization')
-			->will($this->returnValue('basic dXNlcm5hbWU6cGFzc3dvcmQ='));
+			->willReturn('basic dXNlcm5hbWU6cGFzc3dvcmQ=');
 		$server->httpResponse = $this->getMockBuilder(ResponseInterface::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -694,7 +695,7 @@ class AuthTest extends TestCase {
 			->expects($this->once())
 			->method('logClientIn')
 			->with('username', 'password')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$response = $this->auth->check($server->httpRequest, $server->httpResponse);
 		$this->assertEquals([false, 'Username or password was incorrect'], $response);
 	}

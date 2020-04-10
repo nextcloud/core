@@ -39,4 +39,3 @@ class Errorlog implements IWriter {
 		error_log('[owncloud]['.$app.']['.$level.'] '.$message);
 	}
 }
-

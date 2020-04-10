@@ -52,7 +52,7 @@ div[contenteditable=true],
 	padding: 7px 6px;
 	font-size: 13px;
 	background-color: var(--color-main-background);
-	color: var(--color-text-lighter);
+	color: var(--color-main-text);
 	border: 1px solid var(--color-border-dark);
 	outline: none;
 	border-radius: var(--border-radius);
@@ -126,7 +126,6 @@ div[contenteditable=false] {
 	border: 1px solid var(--color-background-darker);
 	outline: none;
 	border-radius: var(--border-radius);
-	cursor: text;
 
 	background-color: var(--color-background-dark);
 	color: var(--color-text-lighter);
@@ -179,6 +178,22 @@ input[type='reset'] {
 	cursor: pointer;
 	box-sizing: border-box;
 	background-color: var(--color-background-dark);
+
+	&:disabled {
+		cursor: default;
+	}
+}
+select,
+button, .button {
+	* {
+		cursor: pointer;
+	}
+
+	&:disabled {
+		* {
+			cursor: default;
+		}
+	}
 }
 
 /* Buttons */
@@ -192,6 +207,12 @@ input[type='reset'] {
 	/* Get rid of the inside dotted line in Firefox */
 	&::-moz-focus-inner {
 		border: 0;
+	}
+
+	&.error {
+		background-color: var(--color-error) !important;
+		border-color: var(--color-error) !important;
+		color: #fff !important;
 	}
 }
 button, .button {
@@ -223,7 +244,6 @@ textarea, div[contenteditable=true] {
 
 div[contenteditable=false] {
 	color: var(--color-text-lighter);
-	cursor: text;
 	font-family: inherit;
 	height: auto;
 }
@@ -933,4 +953,10 @@ label.infield {
 	width: 1px;
 	height: 1px;
 	overflow: hidden;
+}
+
+::placeholder,
+::-ms-input-placeholder,
+::-webkit-input-placeholder {
+	color: var(--color-text-maxcontrast);
 }

@@ -74,7 +74,7 @@ describe('OCA.Comments.FilesPlugin tests', function() {
 
 			expect(sidebarStub.calledOnce).toEqual(true);
 			expect(sidebarStub.lastCall.args[0]).toEqual('One.txt');
-			expect(sidebarStub.lastCall.args[1]).toEqual('commentsTabView');
+			expect(sidebarStub.lastCall.args[1]).toEqual('comments');
 		});
 	});
 	describe('elementToFile', function() {

@@ -12,6 +12,7 @@ use OC\Files\Filesystem;
 use OC\Files\Mount\MountPoint;
 use OC\Files\Storage\Temporary;
 use OCA\Files_Sharing\SharedStorage;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Config\IMountProvider;
 use OCP\Files\Storage\IStorageFactory;
 use OCP\IUser;
@@ -20,7 +21,7 @@ class TestScanner extends \OC\Files\Utils\Scanner {
 	/**
 	 * @var \OC\Files\Mount\MountPoint[] $mounts
 	 */
-	private $mounts = array();
+	private $mounts = [];
 
 	/**
 	 * @param \OC\Files\Mount\MountPoint $mount
@@ -47,7 +48,7 @@ class ScannerTest extends \Test\TestCase {
 	 */
 	private $userBackend;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userBackend = new \Test\Util\User\Dummy();
@@ -55,14 +56,14 @@ class ScannerTest extends \Test\TestCase {
 		$this->loginAsUser();
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$this->logout();
 		\OC::$server->getUserManager()->removeBackend($this->userBackend);
 		parent::tearDown();
 	}
 
 	public function testReuseExistingRoot() {
-		$storage = new Temporary(array());
+		$storage = new Temporary([]);
 		$mount = new MountPoint($storage, '');
 		Filesystem::getMountManager()->addMount($mount);
 		$cache = $storage->getCache();
@@ -71,7 +72,7 @@ class ScannerTest extends \Test\TestCase {
 		$storage->file_put_contents('foo.txt', 'qwerty');
 		$storage->file_put_contents('folder/bar.txt', 'qwerty');
 
-		$scanner = new TestScanner('', \OC::$server->getDatabaseConnection(), \OC::$server->getLogger());
+		$scanner = new TestScanner('', \OC::$server->getDatabaseConnection(), $this->createMock(IEventDispatcher::class), \OC::$server->getLogger());
 		$scanner->addMount($mount);
 
 		$scanner->scan('');
@@ -84,7 +85,7 @@ class ScannerTest extends \Test\TestCase {
 	}
 
 	public function testReuseExistingFile() {
-		$storage = new Temporary(array());
+		$storage = new Temporary([]);
 		$mount = new MountPoint($storage, '');
 		Filesystem::getMountManager()->addMount($mount);
 		$cache = $storage->getCache();
@@ -93,7 +94,7 @@ class ScannerTest extends \Test\TestCase {
 		$storage->file_put_contents('foo.txt', 'qwerty');
 		$storage->file_put_contents('folder/bar.txt', 'qwerty');
 
-		$scanner = new TestScanner('', \OC::$server->getDatabaseConnection(), \OC::$server->getLogger());
+		$scanner = new TestScanner('', \OC::$server->getDatabaseConnection(), $this->createMock(IEventDispatcher::class), \OC::$server->getLogger());
 		$scanner->addMount($mount);
 
 		$scanner->scan('');
@@ -111,18 +112,18 @@ class ScannerTest extends \Test\TestCase {
 
 		$mountProvider = $this->createMock(IMountProvider::class);
 
-		$storage = new Temporary(array());
+		$storage = new Temporary([]);
 		$mount = new MountPoint($storage, '/' . $uid . '/files/foo');
 
 		$mountProvider->expects($this->any())
 			->method('getMountsForUser')
-			->will($this->returnCallback(function (IUser $user, IStorageFactory $storageFactory) use ($mount, $uid) {
+			->willReturnCallback(function (IUser $user, IStorageFactory $storageFactory) use ($mount, $uid) {
 				if ($user->getUID() === $uid) {
 					return [$mount];
 				} else {
 					return [];
 				}
-			}));
+			});
 
 		\OC::$server->getMountProviderCollection()->registerProvider($mountProvider);
 		$cache = $storage->getCache();
@@ -131,7 +132,7 @@ class ScannerTest extends \Test\TestCase {
 		$storage->file_put_contents('foo.txt', 'qwerty');
 		$storage->file_put_contents('folder/bar.txt', 'qwerty');
 
-		$scanner = new \OC\Files\Utils\Scanner($uid, \OC::$server->getDatabaseConnection(), \OC::$server->getLogger());
+		$scanner = new \OC\Files\Utils\Scanner($uid, \OC::$server->getDatabaseConnection(), \OC::$server->query(IEventDispatcher::class), \OC::$server->getLogger());
 
 		$this->assertFalse($cache->inCache('folder/bar.txt'));
 		$scanner->scan('/' . $uid . '/files/foo');
@@ -157,17 +158,18 @@ class ScannerTest extends \Test\TestCase {
 
 	/**
 	 * @dataProvider invalidPathProvider
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Invalid path to scan
 	 * @param string $invalidPath
 	 */
 	public function testInvalidPathScanning($invalidPath) {
-		$scanner = new TestScanner('', \OC::$server->getDatabaseConnection(), \OC::$server->getLogger());
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid path to scan');
+
+		$scanner = new TestScanner('', \OC::$server->getDatabaseConnection(), $this->createMock(IEventDispatcher::class), \OC::$server->getLogger());
 		$scanner->scan($invalidPath);
 	}
 
 	public function testPropagateEtag() {
-		$storage = new Temporary(array());
+		$storage = new Temporary([]);
 		$mount = new MountPoint($storage, '');
 		Filesystem::getMountManager()->addMount($mount);
 		$cache = $storage->getCache();
@@ -176,7 +178,7 @@ class ScannerTest extends \Test\TestCase {
 		$storage->file_put_contents('folder/bar.txt', 'qwerty');
 		$storage->touch('folder/bar.txt', time() - 200);
 
-		$scanner = new TestScanner('', \OC::$server->getDatabaseConnection(), \OC::$server->getLogger());
+		$scanner = new TestScanner('', \OC::$server->getDatabaseConnection(), $this->createMock(IEventDispatcher::class), \OC::$server->getLogger());
 		$scanner->addMount($mount);
 
 		$scanner->scan('');
@@ -197,13 +199,13 @@ class ScannerTest extends \Test\TestCase {
 
 		$sharedStorage->expects($this->any())
 			->method('instanceOfStorage')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				[SharedStorage::class, true],
-			]));
+			]);
 		$sharedStorage->expects($this->never())
 			->method('getScanner');
 
-		$scanner = new TestScanner('', \OC::$server->getDatabaseConnection(), \OC::$server->getLogger());
+		$scanner = new TestScanner('', \OC::$server->getDatabaseConnection(), $this->createMock(IEventDispatcher::class), \OC::$server->getLogger());
 		$scanner->addMount($sharedMount);
 		$scanner->scan('');
 
@@ -211,7 +213,7 @@ class ScannerTest extends \Test\TestCase {
 	}
 
 	public function testShallow() {
-		$storage = new Temporary(array());
+		$storage = new Temporary([]);
 		$mount = new MountPoint($storage, '');
 		Filesystem::getMountManager()->addMount($mount);
 		$cache = $storage->getCache();
@@ -222,7 +224,7 @@ class ScannerTest extends \Test\TestCase {
 		$storage->file_put_contents('folder/bar.txt', 'qwerty');
 		$storage->file_put_contents('folder/subfolder/foobar.txt', 'qwerty');
 
-		$scanner = new TestScanner('', \OC::$server->getDatabaseConnection(), \OC::$server->getLogger());
+		$scanner = new TestScanner('', \OC::$server->getDatabaseConnection(), $this->createMock(IEventDispatcher::class), \OC::$server->getLogger());
 		$scanner->addMount($mount);
 
 		$scanner->scan('', $recusive = false);

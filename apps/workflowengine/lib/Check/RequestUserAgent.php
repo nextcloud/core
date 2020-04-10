@@ -21,7 +21,6 @@
 
 namespace OCA\WorkflowEngine\Check;
 
-
 use OCP\IL10N;
 use OCP\IRequest;
 
@@ -79,4 +78,9 @@ class RequestUserAgent extends AbstractStringCheck {
 	protected function getActualValue() {
 		return (string) $this->request->getHeader('User-Agent');
 	}
+
+	public function isAvailableForScope(int $scope): bool {
+		return true;
+	}
+
 }

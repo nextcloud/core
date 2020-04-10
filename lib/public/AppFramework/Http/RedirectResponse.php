@@ -4,6 +4,7 @@
  *
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author v1r0x <vinzenz.rosenkranz@gmail.com>
  *
@@ -19,15 +20,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
-
 
 namespace OCP\AppFramework\Http;
 
 use OCP\AppFramework\Http;
-
 
 /**
  * Redirects to a different URL

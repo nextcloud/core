@@ -4,8 +4,6 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
- * @author Joas Schilling <coding@schilljs.com>
- * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -23,16 +21,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\FederatedFileSharing\Tests;
 
-use OC\AppFramework\Http;
-use OC\Federation\CloudIdManager;
-use OC\Files\Filesystem;
-use OCA\FederatedFileSharing\FederatedShareProvider;
 use OCA\FederatedFileSharing\Controller\RequestHandlerController;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\Federation\ICloudFederationFactory;
@@ -40,17 +34,12 @@ use OCP\Federation\ICloudFederationProvider;
 use OCP\Federation\ICloudFederationProviderManager;
 use OCP\Federation\ICloudFederationShare;
 use OCP\Federation\ICloudIdManager;
-use OCP\Http\Client\IClient;
-use OCP\Http\Client\IClientService;
-use OCP\Http\Client\IResponse;
-use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\Share;
 use OCP\Share\IShare;
-use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
 
 /**
  * Class RequestHandlerTest
@@ -112,7 +101,7 @@ class RequestHandlerControllerTest extends \Test\TestCase {
 	/** @var ICloudFederationShare|\PHPUnit_Framework_MockObject_MockObject */
 	private $cloudFederationShare;
 
-	protected function setUp() {
+	protected function setUp(): void {
 
 		$this->share = $this->getMockBuilder(IShare::class)->getMock();
 		$this->federatedShareProvider = $this->getMockBuilder('OCA\FederatedFileSharing\FederatedShareProvider')

@@ -2,8 +2,7 @@
 /**
  * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
  *
- * @author Joas Schilling <coding@schilljs.com>
- * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -18,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -37,7 +36,7 @@ class SectionTest extends TestCase {
 	/** @var Section */
 	private $section;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->url = $this->createMock(IURLGenerator::class);
 		$this->l = $this->createMock(IL10N::class);

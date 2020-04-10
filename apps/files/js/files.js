@@ -130,6 +130,8 @@
 		 * @return true if the file name is valid.
 		 * Throws a string exception with an error message if
 		 * the file name is not valid
+		 *
+		 * NOTE: This function is duplicated in the filepicker inside core/src/OC/dialogs.js
 		 */
 		isFileNameValid: function (name) {
 			var trimmedName = name.trim();
@@ -289,7 +291,7 @@
 			setTimeout(Files.displayStorageWarnings, 100);
 
 			// only possible at the moment if user is logged in or the files app is loaded
-			if (OC.currentUser && OCA.Files.App) {
+			if (OC.currentUser && OCA.Files.App && OC.config.session_keepalive) {
 				// start on load - we ask the server every 5 minutes
 				var func = _.bind(OCA.Files.App.fileList.updateStorageStatistics, OCA.Files.App.fileList);
 				var updateStorageStatisticsInterval = 5*60*1000;
@@ -336,7 +338,7 @@
 		 * - JS periodically checks for this cookie and then knows when the download has started to call the callback
 		 *
 		 * @param {string} url download URL
-		 * @param {function} callback function to call once the download has started
+		 * @param {Function} callback function to call once the download has started
 		 */
 		handleDownload: function(url, callback) {
 			var randomToken = Math.random().toString(36).substring(2),

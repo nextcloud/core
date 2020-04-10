@@ -5,11 +5,15 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Leon Klingele <leon@struktur.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
@@ -25,7 +29,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -36,12 +40,12 @@ use OC\Files\Cache\Storage;
 use OC\Hooks\Emitter;
 use OC_Helper;
 use OCP\IAvatarManager;
+use OCP\IConfig;
 use OCP\IImage;
 use OCP\IURLGenerator;
 use OCP\IUser;
-use OCP\IConfig;
+use OCP\IUserBackend;
 use OCP\UserInterface;
-use \OCP\IUserBackend;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -199,7 +203,7 @@ class User implements IUser {
 	public function delete() {
 		$this->dispatcher->dispatch(IUser::class . '::preDelete', new GenericEvent($this));
 		if ($this->emitter) {
-			$this->emitter->emit('\OC\User', 'preDelete', array($this));
+			$this->emitter->emit('\OC\User', 'preDelete', [$this]);
 		}
 		// get the home now because it won't return it after user deletion
 		$homePath = $this->getHome();
@@ -244,7 +248,7 @@ class User implements IUser {
 
 			$this->dispatcher->dispatch(IUser::class . '::postDelete', new GenericEvent($this));
 			if ($this->emitter) {
-				$this->emitter->emit('\OC\User', 'postDelete', array($this));
+				$this->emitter->emit('\OC\User', 'postDelete', [$this]);
 			}
 		}
 		return !($result === false);
@@ -263,7 +267,7 @@ class User implements IUser {
 			'recoveryPassword' => $recoveryPassword,
 		]));
 		if ($this->emitter) {
-			$this->emitter->emit('\OC\User', 'preSetPassword', array($this, $password, $recoveryPassword));
+			$this->emitter->emit('\OC\User', 'preSetPassword', [$this, $password, $recoveryPassword]);
 		}
 		if ($this->backend->implementsActions(Backend::SET_PASSWORD)) {
 			$result = $this->backend->setPassword($this->uid, $password);
@@ -272,7 +276,7 @@ class User implements IUser {
 				'recoveryPassword' => $recoveryPassword,
 			]));
 			if ($this->emitter) {
-				$this->emitter->emit('\OC\User', 'postSetPassword', array($this, $password, $recoveryPassword));
+				$this->emitter->emit('\OC\User', 'postSetPassword', [$this, $password, $recoveryPassword]);
 			}
 			return !($result === false);
 		} else {
@@ -445,7 +449,7 @@ class User implements IUser {
 	public function getCloudId() {
 		$uid = $this->getUID();
 		$server = $this->urlGenerator->getAbsoluteURL('/');
-		$server =  rtrim( $this->removeProtocolFromUrl($server), '/');
+		$server =  rtrim($this->removeProtocolFromUrl($server), '/');
 		return \OC::$server->getCloudIdManager()->getCloudId($uid, $server)->getId();
 	}
 
@@ -470,7 +474,7 @@ class User implements IUser {
 			'oldValue' => $oldValue,
 		]));
 		if ($this->emitter) {
-			$this->emitter->emit('\OC\User', 'changeUser', array($this, $feature, $value, $oldValue));
+			$this->emitter->emit('\OC\User', 'changeUser', [$this, $feature, $value, $oldValue]);
 		}
 	}
 }

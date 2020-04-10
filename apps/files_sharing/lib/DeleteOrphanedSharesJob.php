@@ -18,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -41,7 +41,7 @@ class DeleteOrphanedSharesJob extends TimedJob {
 	/**
 	 * sets the correct interval for this timed job
 	 */
-	public function __construct(){
+	public function __construct() {
 		$this->interval = $this->defaultIntervalMin * 60;
 	}
 

@@ -8,8 +8,7 @@
 
 namespace Test\Files\Cache;
 
-use \OC\Files\Filesystem as Filesystem;
-use OC\Files\Storage\Temporary;
+use OC\Files\Filesystem as Filesystem;
 use OC\Files\View;
 
 /**
@@ -37,10 +36,10 @@ class UpdaterLegacyTest extends \Test\TestCase {
 
 	private static $user;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
-		$this->storage = new \OC\Files\Storage\Temporary(array());
+		$this->storage = new \OC\Files\Storage\Temporary([]);
 		$textData = "dummy file data\n";
 		$imgData = file_get_contents(\OC::$SERVERROOT . '/core/img/logo/logo.png');
 		$this->storage->mkdir('folder');
@@ -63,12 +62,12 @@ class UpdaterLegacyTest extends \Test\TestCase {
 		Filesystem::init(self::$user, '/' . self::$user . '/files');
 
 		Filesystem::clearMounts();
-		Filesystem::mount($this->storage, array(), '/' . self::$user . '/files');
+		Filesystem::mount($this->storage, [], '/' . self::$user . '/files');
 
 		\OC_Hook::clear('OC_Filesystem');
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		if ($this->cache) {
 			$this->cache->clear();
 		}
@@ -85,7 +84,7 @@ class UpdaterLegacyTest extends \Test\TestCase {
 	public function testWrite() {
 		$textSize = strlen("dummy file data\n");
 		$imageSize = filesize(\OC::$SERVERROOT . '/core/img/logo/logo.png');
-		$this->cache->put('foo.txt', array('mtime' => 100, 'storage_mtime' => 150));
+		$this->cache->put('foo.txt', ['mtime' => 100, 'storage_mtime' => 150]);
 		$rootCachedData = $this->cache->get('');
 		$this->assertEquals(3 * $textSize + $imageSize, $rootCachedData['size']);
 
@@ -93,13 +92,13 @@ class UpdaterLegacyTest extends \Test\TestCase {
 		Filesystem::file_put_contents('foo.txt', 'asd');
 		$cachedData = $this->cache->get('foo.txt');
 		$this->assertEquals(3, $cachedData['size']);
-		$this->assertInternalType('string', $fooCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($fooCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($fooCachedData['etag'], $cachedData['etag']);
 		$cachedData = $this->cache->get('');
 		$this->assertEquals(2 * $textSize + $imageSize + 3, $cachedData['size']);
-		$this->assertInternalType('string', $rootCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($rootCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($rootCachedData['etag'], $cachedData['etag']);
 		$rootCachedData = $cachedData;
 
@@ -111,17 +110,17 @@ class UpdaterLegacyTest extends \Test\TestCase {
 		$mtime = $cachedData['mtime'];
 		$cachedData = $this->cache->get('');
 		$this->assertEquals(2 * $textSize + $imageSize + 2 * 3, $cachedData['size']);
-		$this->assertInternalType('string', $rootCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($rootCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($rootCachedData['etag'], $cachedData['etag']);
 		$this->assertGreaterThanOrEqual($rootCachedData['mtime'], $mtime);
 	}
 
 	public function testWriteWithMountPoints() {
-		$storage2 = new \OC\Files\Storage\Temporary(array());
+		$storage2 = new \OC\Files\Storage\Temporary([]);
 		$storage2->getScanner()->scan(''); //initialize etags
 		$cache2 = $storage2->getCache();
-		Filesystem::mount($storage2, array(), '/' . self::$user . '/files/folder/substorage');
+		Filesystem::mount($storage2, [], '/' . self::$user . '/files/folder/substorage');
 		$view = new View('/' . self::$user . '/files');
 		$folderCachedData = $view->getFileInfo('folder');
 		$substorageCachedData = $cache2->get('');
@@ -133,13 +132,13 @@ class UpdaterLegacyTest extends \Test\TestCase {
 		$mtime = $cachedData['mtime'];
 
 		$cachedData = $cache2->get('');
-		$this->assertInternalType('string', $substorageCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($substorageCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($oldEtag, $cachedData['etag']);
 
 		$cachedData = $view->getFileInfo('folder');
-		$this->assertInternalType('string', $folderCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($folderCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($oldEtag, $cachedData['etag']);
 	}
 
@@ -155,8 +154,8 @@ class UpdaterLegacyTest extends \Test\TestCase {
 		$this->assertFalse($this->cache->inCache('foo.txt'));
 		$cachedData = $this->cache->get('');
 		$this->assertEquals(2 * $textSize + $imageSize, $cachedData['size']);
-		$this->assertInternalType('string', $rootCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($rootCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($oldEtag, $cachedData['etag']);
 		$this->assertGreaterThanOrEqual($rootCachedData['mtime'], $cachedData['mtime']);
 		$rootCachedData = $cachedData;
@@ -164,24 +163,24 @@ class UpdaterLegacyTest extends \Test\TestCase {
 		Filesystem::mkdir('bar_folder');
 		$this->assertTrue($this->cache->inCache('bar_folder'));
 		$cachedData = $this->cache->get('');
-		$this->assertInternalType('string', $rootCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($rootCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($oldEtag, $cachedData['etag']);
 		$rootCachedData = $cachedData;
 		$oldEtag = $rootCachedData['etag'];
 		Filesystem::rmdir('bar_folder');
 		$this->assertFalse($this->cache->inCache('bar_folder'));
 		$cachedData = $this->cache->get('');
-		$this->assertInternalType('string', $rootCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($rootCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($oldEtag, $cachedData['etag']);
 		$this->assertGreaterThanOrEqual($rootCachedData['mtime'], $cachedData['mtime']);
 	}
 
 	public function testDeleteWithMountPoints() {
-		$storage2 = new \OC\Files\Storage\Temporary(array());
+		$storage2 = new \OC\Files\Storage\Temporary([]);
 		$cache2 = $storage2->getCache();
-		Filesystem::mount($storage2, array(), '/' . self::$user . '/files/folder/substorage');
+		Filesystem::mount($storage2, [], '/' . self::$user . '/files/folder/substorage');
 		Filesystem::file_put_contents('folder/substorage/foo.txt', 'asd');
 		$view = new View('/' . self::$user . '/files');
 		$this->assertTrue($cache2->inCache('foo.txt'));
@@ -192,14 +191,14 @@ class UpdaterLegacyTest extends \Test\TestCase {
 		$this->assertFalse($cache2->inCache('foo.txt'));
 
 		$cachedData = $cache2->get('');
-		$this->assertInternalType('string', $substorageCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($substorageCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($substorageCachedData, $cachedData['etag']);
 		$this->assertGreaterThanOrEqual($substorageCachedData['mtime'], $cachedData['mtime']);
 
 		$cachedData = $view->getFileInfo('folder');
-		$this->assertInternalType('string', $folderCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($folderCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($oldEtag, $cachedData['etag']);
 		$this->assertGreaterThanOrEqual($folderCachedData['mtime'], $cachedData['mtime']);
 	}
@@ -221,8 +220,8 @@ class UpdaterLegacyTest extends \Test\TestCase {
 		$mtime = $cachedData['mtime'];
 		$cachedData = $this->cache->get('');
 		$this->assertEquals(3 * $textSize + $imageSize, $cachedData['size']);
-		$this->assertInternalType('string', $rootCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($rootCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($rootCachedData['etag'], $cachedData['etag']);
 	}
 
@@ -235,9 +234,9 @@ class UpdaterLegacyTest extends \Test\TestCase {
 	}
 
 	public function testRenameWithMountPoints() {
-		$storage2 = new \OC\Files\Storage\Temporary(array());
+		$storage2 = new \OC\Files\Storage\Temporary([]);
 		$cache2 = $storage2->getCache();
-		Filesystem::mount($storage2, array(), '/' . self::$user . '/files/folder/substorage');
+		Filesystem::mount($storage2, [], '/' . self::$user . '/files/folder/substorage');
 		Filesystem::file_put_contents('folder/substorage/foo.txt', 'asd');
 		$view = new View('/' . self::$user . '/files');
 		$this->assertTrue($cache2->inCache('foo.txt'));
@@ -253,15 +252,15 @@ class UpdaterLegacyTest extends \Test\TestCase {
 		$mtime = $cachedData['mtime'];
 
 		$cachedData = $cache2->get('');
-		$this->assertInternalType('string', $substorageCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($substorageCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($oldEtag, $cachedData['etag']);
 		// rename can cause mtime change - invalid assert
 //		$this->assertEquals($mtime, $cachedData['mtime']);
 
 		$cachedData = $view->getFileInfo('folder');
-		$this->assertInternalType('string', $folderCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($folderCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($oldEtag, $cachedData['etag']);
 		// rename can cause mtime change - invalid assert
 //		$this->assertEquals($mtime, $cachedData['mtime']);
@@ -272,13 +271,13 @@ class UpdaterLegacyTest extends \Test\TestCase {
 		$fooCachedData = $this->cache->get('foo.txt');
 		Filesystem::touch('foo.txt');
 		$cachedData = $this->cache->get('foo.txt');
-		$this->assertInternalType('string', $fooCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($fooCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertGreaterThanOrEqual($fooCachedData['mtime'], $cachedData['mtime']);
 
 		$cachedData = $this->cache->get('');
-		$this->assertInternalType('string', $rootCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($rootCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($rootCachedData['etag'], $cachedData['etag']);
 		$this->assertGreaterThanOrEqual($rootCachedData['mtime'], $cachedData['mtime']);
 		$rootCachedData = $cachedData;
@@ -289,19 +288,19 @@ class UpdaterLegacyTest extends \Test\TestCase {
 		$this->cache->put('', ['mtime' => $time - 100]);
 		Filesystem::touch('folder/bar.txt', $time);
 		$cachedData = $this->cache->get('folder/bar.txt');
-		$this->assertInternalType('string', $barCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($barCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($barCachedData['etag'], $cachedData['etag']);
 		$this->assertEquals($time, $cachedData['mtime']);
 
 		$cachedData = $this->cache->get('folder');
-		$this->assertInternalType('string', $folderCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($folderCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($folderCachedData['etag'], $cachedData['etag']);
 
 		$cachedData = $this->cache->get('');
-		$this->assertInternalType('string', $rootCachedData['etag']);
-		$this->assertInternalType('string', $cachedData['etag']);
+		$this->assertIsString($rootCachedData['etag']);
+		$this->assertIsString($cachedData['etag']);
 		$this->assertNotSame($rootCachedData['etag'], $cachedData['etag']);
 		$this->assertEquals($time, $cachedData['mtime']);
 	}

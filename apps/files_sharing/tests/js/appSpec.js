@@ -57,16 +57,6 @@ describe('OCA.Sharing.App tests', function() {
 		});
 	});
 	describe('file actions', function() {
-		var oldLegacyFileActions;
-
-		beforeEach(function() {
-			oldLegacyFileActions = window.FileActions;
-			window.FileActions = new OCA.Files.FileActions();
-		});
-
-		afterEach(function() {
-			window.FileActions = oldLegacyFileActions;
-		});
 		it('provides default file actions', function() {
 			_.each([fileListIn, fileListOut], function(fileList) {
 				var fileActions = fileList.fileActions;
@@ -94,22 +84,6 @@ describe('OCA.Sharing.App tests', function() {
 			fileListIn = App.initSharingIn($('#app-content-sharingin'));
 
 			expect(fileListIn.fileActions.actions.all.RegularTest).toBeDefined();
-		});
-		it('does not provide legacy file actions', function() {
-			var actionStub = sinon.stub();
-			// legacy file action
-			window.FileActions.register(
-					'all',
-					'LegacyTest',
-					OC.PERMISSION_READ,
-					OC.imagePath('core', 'actions/shared'),
-					actionStub
-			);
-
-			App._inFileList = null;
-			fileListIn = App.initSharingIn($('#app-content-sharingin'));
-
-			expect(fileListIn.fileActions.actions.all.LegacyTest).not.toBeDefined();
 		});
 		it('redirects to files app when opening a directory', function() {
 			var oldList = OCA.Files.App.fileList;

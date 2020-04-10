@@ -4,10 +4,12 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -21,15 +23,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\User_LDAP;
 
 class WizardResult {
-	protected $changes = array();
-	protected $options = array();
+	protected $changes = [];
+	protected $options = [];
 	protected $markedChange = false;
 
 	/**
@@ -40,9 +42,7 @@ class WizardResult {
 		$this->changes[$key] = $value;
 	}
 
-	/**
-	 *
-	 */
+	
 	public function markChange() {
 		$this->markedChange = true;
 	}
@@ -53,7 +53,7 @@ class WizardResult {
 	 */
 	public function addOptions($key, $values) {
 		if(!is_array($values)) {
-			$values = array($values);
+			$values = [$values];
 		}
 		$this->options[$key] = $values;
 	}
@@ -69,7 +69,7 @@ class WizardResult {
 	 * @return array
 	 */
 	public function getResultArray() {
-		$result = array();
+		$result = [];
 		$result['changes'] = $this->changes;
 		if(count($this->options) > 0) {
 			$result['options'] = $this->options;

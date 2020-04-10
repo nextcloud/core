@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2018, Joas Schilling <coding@schilljs.com>
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Robin Appelman <robin@icewind.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,9 +19,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-$app = new \OCA\UpdateNotification\AppInfo\Application();
+use \OCA\UpdateNotification\AppInfo\Application;
+
+/** @var Application $app */
+$app = \OC::$server->query(Application::class);
 $app->register();

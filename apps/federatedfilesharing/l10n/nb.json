@@ -18,9 +18,7 @@
     "File is already shared with %s" : "Filen er allerede delt med %s",
     "Could not find share" : "Kunne ikke finne ressurs",
     "Federated sharing" : "Sammenknyttet deling",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Du har mottatt \"%3$s\" som en ekstern deling fra %1$s (på vegne av %2$s)",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "Du har mottatt {share} som en ekstern deling fra {user} (på vegne av {behalf})",
-    "You received \"%3$s\" as a remote share from %1$s" : "Du har mottatt \"%3$s\" som en ekstern deling fra %1$s",
     "You received {share} as a remote share from {user}" : "Du mottok {share} som en fjerndeling fra {user}",
     "Accept" : "Aksepter",
     "Decline" : "Avslå",
@@ -41,7 +39,7 @@
     "Add to your website" : "Legg på nettsiden din",
     "Share with me via Nextcloud" : "Del med meg via Nextcloud",
     "HTML Code:" : "HTML-kode:",
-    "Sharing %s failed, because this item is already shared with %s" : "Deling av %s mislyktes, fordi dette elementet allerede er delt med %s",
-    "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate." : "Deling av %s mislyktes, kunne ikke finne %s, kanskje serveren for øyeblikket er utilgjengelig eller bruker selv-signert sertifikat."
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Du har mottatt \"%3$s\" som en ekstern deling fra %1$s (på vegne av %2$s)",
+    "You received \"%3$s\" as a remote share from %1$s" : "Du har mottatt \"%3$s\" som en ekstern deling fra %1$s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

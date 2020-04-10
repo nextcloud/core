@@ -1,4 +1,5 @@
-/*
+/* globals Snap */
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -22,16 +23,17 @@
 import _ from 'underscore'
 import $ from 'jquery'
 import moment from 'moment'
+import cssVars from 'css-vars-ponyfill'
 
-import {initSessionHeartBeat} from './session-heartbeat'
+import { initSessionHeartBeat } from './session-heartbeat'
 import OC from './OC/index'
-import {setUp as setUpContactsMenu} from './components/ContactsMenu'
-import {setUp as setUpMainMenu} from './components/MainMenu'
-import {setUp as setUpUserMenu} from './components/UserMenu'
+import { setUp as setUpContactsMenu } from './components/ContactsMenu'
+import { setUp as setUpMainMenu } from './components/MainMenu'
+import { setUp as setUpUserMenu } from './components/UserMenu'
 import PasswordConfirmation from './OC/password-confirmation'
 
 // keep in sync with core/css/variables.scss
-const breakpoint_mobile_width = 1024;
+const breakpointMobileWidth = 1024
 
 const resizeMenu = () => {
 	const appList = $('#appmenu li')
@@ -40,7 +42,7 @@ const resizeMenu = () => {
 	const usePercentualAppMenuLimit = 0.33
 	const minAppsDesktop = 8
 	let availableWidth = headerWidth - $('#nextcloud').outerWidth() - (rightHeaderWidth > 210 ? rightHeaderWidth : 210)
-	const isMobile = $(window).width() < breakpoint_mobile_width
+	const isMobile = $(window).width() < breakpointMobileWidth
 	if (!isMobile) {
 		availableWidth = availableWidth * usePercentualAppMenuLimit
 	}
@@ -90,7 +92,7 @@ const resizeMenu = () => {
 const initLiveTimestamps = () => {
 	// Update live timestamps every 30 seconds
 	setInterval(() => {
-		$('.live-relative-timestamp').each(function () {
+		$('.live-relative-timestamp').each(function() {
 			$(this).text(OC.Util.relativeModifiedDate(parseInt($(this).attr('data-timestamp'), 10)))
 		})
 	}, 30 * 1000)
@@ -125,11 +127,11 @@ export const initCore = () => {
 			watch: true,
 			//  set edge < 16 as incompatible
 			onlyLegacy: !(/Edge\/([0-9]{2})\./i.test(navigator.userAgent)
-				&& parseInt(/Edge\/([0-9]{2})\./i.exec(navigator.userAgent)[1]) < 16)
+				&& parseInt(/Edge\/([0-9]{2})\./i.exec(navigator.userAgent)[1]) < 16),
 		})
 	}
 
-	$(window).on('unload.main', () => OC._unloadCalled = true)
+	$(window).on('unload.main', () => { OC._unloadCalled = true })
 	$(window).on('beforeunload.main', () => {
 		// super-trick thanks to http://stackoverflow.com/a/4651049
 		// in case another handler displays a confirmation dialog (ex: navigating away
@@ -150,14 +152,14 @@ export const initCore = () => {
 			}, 10000)
 		}, 1)
 	})
-	$(document).on('ajaxError.main', function (event, request, settings) {
+	$(document).on('ajaxError.main', function(event, request, settings) {
 		if (settings && settings.allowAuthErrors) {
 			return
 		}
 		OC._processAjaxError(request)
 	})
 
-	initSessionHeartBeat();
+	initSessionHeartBeat()
 
 	OC.registerMenu($('#expand'), $('#expanddiv'), false, true)
 
@@ -184,7 +186,7 @@ export const initCore = () => {
 			const caretPosition = $('.header-appname + .icon-caret').offset().left - 2
 			if (caretPosition > 255) {
 				// if the app name is longer than the menu, just put the triangle in the middle
-				return
+
 			} else {
 				$('head').append('<style id="menu-css-helper">#navigation:after { left: ' + caretPosition + 'px }</style>')
 			}
@@ -210,7 +212,7 @@ export const initCore = () => {
 			element: document.getElementById('app-content'),
 			disable: 'right',
 			maxPosition: 300, // $navigation-width
-			minDragDistance: 100
+			minDragDistance: 100,
 		})
 
 		$('#app-content').prepend('<div id="app-navigation-toggle" class="icon-menu" style="display:none" tabindex="0"></div>')
@@ -235,20 +237,20 @@ export const initCore = () => {
 		$appNavigation.delegate('a, :button', 'click', event => {
 			const $target = $(event.target)
 			// don't hide navigation when changing settings or adding things
-			if ($target.is('.app-navigation-noclose') ||
-				$target.closest('.app-navigation-noclose').length) {
+			if ($target.is('.app-navigation-noclose')
+				|| $target.closest('.app-navigation-noclose').length) {
 				return
 			}
-			if ($target.is('.app-navigation-entry-utils-menu-button') ||
-				$target.closest('.app-navigation-entry-utils-menu-button').length) {
+			if ($target.is('.app-navigation-entry-utils-menu-button')
+				|| $target.closest('.app-navigation-entry-utils-menu-button').length) {
 				return
 			}
-			if ($target.is('.add-new') ||
-				$target.closest('.add-new').length) {
+			if ($target.is('.add-new')
+				|| $target.closest('.add-new').length) {
 				return
 			}
-			if ($target.is('#app-settings') ||
-				$target.closest('#app-settings').length) {
+			if ($target.is('#app-settings')
+				|| $target.closest('#app-settings').length) {
 				return
 			}
 			snapper.close()
@@ -282,7 +284,7 @@ export const initCore = () => {
 		}
 
 		const toggleSnapperOnSize = () => {
-			if ($(window).width() > breakpoint_mobile_width) {
+			if ($(window).width() > breakpointMobileWidth) {
 				snapper.close()
 				snapper.disable()
 

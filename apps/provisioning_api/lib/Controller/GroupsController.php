@@ -1,14 +1,18 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Tom Needham <tom@owncloud.com>
- * @author John Molakvoæ <skjnldsv@protonmail.com>
  *
  * @license AGPL-3.0
  *
@@ -22,7 +26,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -31,16 +35,16 @@ namespace OCA\Provisioning_API\Controller;
 use OC\Accounts\AccountManager;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCS\OCSException;
-use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCS\OCSForbiddenException;
+use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IConfig;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IRequest;
+use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
-use OCP\IUser;
 
 class GroupsController extends AUserData {
 
@@ -89,7 +93,7 @@ class GroupsController extends AUserData {
 	 */
 	public function getGroups(string $search = '', int $limit = null, int $offset = 0): DataResponse {
 		$groups = $this->groupManager->search($search, $limit, $offset);
-		$groups = array_map(function($group) {
+		$groups = array_map(function ($group) {
 			/** @var IGroup $group */
 			return $group->getGID();
 		}, $groups);
@@ -109,7 +113,7 @@ class GroupsController extends AUserData {
 	 */
 	public function getGroupsDetails(string $search = '', int $limit = null, int $offset = 0): DataResponse {
 		$groups = $this->groupManager->search($search, $limit, $offset);
-		$groups = array_map(function($group) {
+		$groups = array_map(function ($group) {
 			/** @var IGroup $group */
 			return [
 				'id' => $group->getGID(),
@@ -129,7 +133,7 @@ class GroupsController extends AUserData {
 	 *
 	 * @param string $groupId
 	 * @return DataResponse
-	 * @throws OCSException	
+	 * @throws OCSException
 	 *
 	 * @deprecated 14 Use getGroupUsers
 	 */
@@ -162,7 +166,7 @@ class GroupsController extends AUserData {
 		if($this->groupManager->isAdmin($user->getUID())
 		   || $isSubadminOfGroup) {
 			$users = $this->groupManager->get($groupId)->getUsers();
-			$users =  array_map(function($user) {
+			$users =  array_map(function ($user) {
 				/** @var IUser $user */
 				return $user->getUID();
 			}, $users);
@@ -246,6 +250,28 @@ class GroupsController extends AUserData {
 		}
 		$this->groupManager->createGroup($groupid);
 		return new DataResponse();
+	}
+
+	/**
+	 * @PasswordConfirmationRequired
+	 *
+	 * @param string $groupId
+	 * @param string $key
+	 * @param string $value
+	 * @return DataResponse
+	 * @throws OCSException
+	 */
+	public function updateGroup(string $groupId, string $key, string $value): DataResponse {
+		if ($key === 'displayname') {
+			$group = $this->groupManager->get($groupId);
+			if ($group->setDisplayName($value)) {
+				return new DataResponse();
+			}
+
+			throw new OCSException('Not supported by backend', 101);
+		} else {
+			throw new OCSException('', \OCP\API::RESPOND_UNAUTHORISED);
+		}
 	}
 
 	/**

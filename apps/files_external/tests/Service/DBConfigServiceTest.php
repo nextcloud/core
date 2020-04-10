@@ -4,6 +4,7 @@
  *
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,12 +18,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_External\Tests\Service;
-
 
 use OCA\Files_External\Service\DBConfigService;
 use OCP\IDBConnection;
@@ -44,13 +44,13 @@ class DBConfigServiceTest extends TestCase {
 
 	private $mounts = [];
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->connection = \OC::$server->getDatabaseConnection();
 		$this->dbConfig = new DBConfigService($this->connection, \OC::$server->getCrypto());
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		foreach ($this->mounts as $mount) {
 			$this->dbConfig->removeMount($mount);
 		}

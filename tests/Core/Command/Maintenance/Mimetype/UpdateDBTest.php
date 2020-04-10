@@ -24,11 +24,11 @@ namespace Tests\Core\Command\Maintenance\Mimetype;
 use OC\Core\Command\Maintenance\Mimetype\UpdateDB;
 use OC\Files\Type\Detection;
 use OC\Files\Type\Loader;
+use OCP\Files\IMimeTypeDetector;
+use OCP\Files\IMimeTypeLoader;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Test\TestCase;
-use OCP\Files\IMimeTypeDetector;
-use OCP\Files\IMimeTypeLoader;
 
 class UpdateDBTest extends TestCase {
 	/** @var IMimeTypeDetector */
@@ -44,7 +44,7 @@ class UpdateDBTest extends TestCase {
 	/** @var \Symfony\Component\Console\Command\Command */
 	protected $command;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->detector = $this->getMockBuilder(Detection::class)
@@ -101,16 +101,16 @@ class UpdateDBTest extends TestCase {
 			]);
 		$this->loader->expects($this->exactly(2))
 			->method('exists')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['testing/existingmimetype', true],
 				['testing/newmimetype', false],
-			]));
+			]);
 		$this->loader->expects($this->exactly(2))
 			->method('getId')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['testing/existingmimetype', 1],
 				['testing/newmimetype', 2],
-			]));
+			]);
 
 		$this->loader->expects($this->once())
 			->method('updateFilecache')
@@ -158,14 +158,14 @@ class UpdateDBTest extends TestCase {
 			]);
 		$this->loader->expects($this->exactly(1))
 			->method('exists')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['testing/existingmimetype', true],
-			]));
+			]);
 		$this->loader->expects($this->exactly(1))
 			->method('getId')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['testing/existingmimetype', 1],
-			]));
+			]);
 
 		$this->loader->expects($this->once())
 			->method('updateFilecache')

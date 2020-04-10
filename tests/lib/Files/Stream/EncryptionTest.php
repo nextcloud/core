@@ -5,6 +5,7 @@ namespace Test\Files\Stream;
 use OC\Files\Cache\CacheEntry;
 use OC\Files\View;
 use OC\Memcache\ArrayCache;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Cache\ICache;
 use OCP\IConfig;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -48,7 +49,7 @@ class EncryptionTest extends \Test\TestCase {
 		$file->expects($this->any())->method('getAccessList')->willReturn([]);
 		$util = $this->getMockBuilder('\OC\Encryption\Util')
 			->setMethods(['getUidAndFilename'])
-			->setConstructorArgs([new View(), new \OC\User\Manager($config, $this->createMock(EventDispatcherInterface::class)), $groupManager, $config, $arrayCache])
+			->setConstructorArgs([new View(), new \OC\User\Manager($config, $this->createMock(EventDispatcherInterface::class), $this->createMock(IEventDispatcher::class)), $groupManager, $config, $arrayCache])
 			->getMock();
 		$util->expects($this->any())
 			->method('getUidAndFilename')
@@ -58,7 +59,7 @@ class EncryptionTest extends \Test\TestCase {
 			'fileid' => 5,
 			'encryptedVersion' => 2,
 		]);
-		$cache->expects($this->any())->method('get')->willReturn($entry	);
+		$cache->expects($this->any())->method('get')->willReturn($entry);
 		$cache->expects($this->any())->method('update')->with(5, ['encrypted' => 3, 'encryptedVersion' => 3]);
 
 
@@ -98,10 +99,10 @@ class EncryptionTest extends \Test\TestCase {
 			$fileMock->expects($this->never())->method('getAccessList');
 		} else {
 			$fileMock->expects($this->once())->method('getAccessList')
-				->will($this->returnCallback(function ($sharePath) use ($expectedSharePath) {
+				->willReturnCallback(function ($sharePath) use ($expectedSharePath) {
 					$this->assertSame($expectedSharePath, $sharePath);
-					return array();
-				}));
+					return [];
+				});
 		}
 		$utilMock = $this->getMockBuilder('\OC\Encryption\Util')
 			->disableOriginalConstructor()->getMock();
@@ -137,7 +138,7 @@ class EncryptionTest extends \Test\TestCase {
 		$fullPathP->setAccessible(false);
 		$header = $stream->getProperty('header');
 		$header->setAccessible(true);
-		$header->setValue($streamWrapper, array());
+		$header->setValue($streamWrapper, []);
 		$header->setAccessible(false);
 		$this->invokePrivate($streamWrapper, 'signed', [true]);
 
@@ -204,9 +205,9 @@ class EncryptionTest extends \Test\TestCase {
 		$fileName = tempnam("/tmp", "FOO");
 		$stream = $this->getStream($fileName, 'w+', 0);
 		$this->assertEquals(6, fwrite($stream, 'foobar'));
-		$this->assertEquals(TRUE, rewind($stream));
+		$this->assertEquals(true, rewind($stream));
 		$this->assertEquals('foobar', fread($stream, 100));
-		$this->assertEquals(TRUE, rewind($stream));
+		$this->assertEquals(true, rewind($stream));
 		$this->assertEquals(3, fwrite($stream, 'bar'));
 		fclose($stream);
 
@@ -341,7 +342,7 @@ class EncryptionTest extends \Test\TestCase {
 		$encryptionModule->expects($this->any())->method('end')->willReturn('');
 		$encryptionModule->expects($this->any())->method('isReadable')->willReturn(true);
 		$encryptionModule->expects($this->any())->method('needDetailedAccessList')->willReturn(false);
-		$encryptionModule->expects($this->any())->method('encrypt')->willReturnCallback(function($data) {
+		$encryptionModule->expects($this->any())->method('encrypt')->willReturnCallback(function ($data) {
 			// simulate different block size by adding some padding to the data
 			if (isset($data[6125])) {
 				return str_pad($data, 8192, 'X');
@@ -349,7 +350,7 @@ class EncryptionTest extends \Test\TestCase {
 			// last block
 			return $data;
 		});
-		$encryptionModule->expects($this->any())->method('decrypt')->willReturnCallback(function($data) {
+		$encryptionModule->expects($this->any())->method('decrypt')->willReturnCallback(function ($data) {
 			if (isset($data[8191])) {
 				return substr($data, 0, 6126);
 			}

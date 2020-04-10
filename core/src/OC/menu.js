@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -22,33 +22,32 @@
 import _ from 'underscore'
 import $ from 'jquery'
 
-import {menuSpeed} from './constants'
+import { menuSpeed } from './constants'
 
-let currentMenu = null
-let currentMenuToggle = null
+export let currentMenu = null
+export let currentMenuToggle = null
 
 /**
  * For menu toggling
  *
- * @param {jQuery} $toggle
- * @param {jQuery} $menuEl
+ * @param {jQuery} $toggle the toggle element
+ * @param {jQuery} $menuEl the menu container element
  * @param {function|undefined} toggle callback invoked everytime the menu is opened
  * @param {boolean} headerMenu is this a top right header menu?
  * @returns {undefined}
  */
-export const registerMenu = ($toggle, $menuEl, toggle, headerMenu) => {
+export const registerMenu = function($toggle, $menuEl, toggle, headerMenu) {
 	$menuEl.addClass('menu')
+	const isClickableElement = $toggle.prop('tagName') === 'A' || $toggle.prop('tagName') === 'BUTTON'
 
-	// On link, the enter key trigger a click event
+	// On link and button, the enter key trigger a click event
 	// Only use the click to avoid two fired events
-	$toggle.on($toggle.prop('tagName') === 'A'
-		? 'click.menu'
-		: 'click.menu keyup.menu', function (event) {
+	$toggle.on(isClickableElement ? 'click.menu' : 'click.menu keyup.menu', function(event) {
 		// prevent the link event (append anchor to URL)
 		event.preventDefault()
 
 		// allow enter key as a trigger
-		if (event.key && event.key !== "Enter") {
+		if (event.key && event.key !== 'Enter') {
 			return
 		}
 
@@ -75,7 +74,10 @@ export const registerMenu = ($toggle, $menuEl, toggle, headerMenu) => {
 }
 
 /**
- *  @todo Write documentation
+ * Unregister a previously registered menu
+ *
+ * @param {jQuery} $toggle the toggle element
+ * @param {jQuery} $menuEl the menu container element
  */
 export const unregisterMenu = ($toggle, $menuEl) => {
 	// close menu if opened
@@ -95,7 +97,7 @@ export const hideMenus = function(complete) {
 	if (currentMenu) {
 		const lastMenu = currentMenu
 		currentMenu.trigger(new $.Event('beforeHide'))
-		currentMenu.slideUp(menuSpeed, function () {
+		currentMenu.slideUp(menuSpeed, function() {
 			lastMenu.trigger(new $.Event('afterHide'))
 			if (complete) {
 				complete.apply(this, arguments)

@@ -49,18 +49,6 @@ OC.L10N.register(
     "Share provider which allows you to share files by mail" : "Fornitore di condivisione che ti consente di condividere file tramite posta",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Consente agli utenti di condividere un collegamento personalizzato a un file o a una cartella inserendo un indirizzo di posta elettronica.",
     "Send password by mail" : "Invia password tramite posta",
-    "Enforce password protection" : "Imponi la protezione con password",
-    "Sharing %s failed, this item is already shared with %s" : "Condivisione %s non riuscita, questo elemento è già condiviso con %s",
-    "%s shared »%s« with you" : "%s ha condiviso »%s« con te",
-    "%s shared »%s« with you." : "%s ha condiviso «%s» con te.",
-    "%s via %s" : "%s tramite %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s ha condiviso «%s» con te.\nDovresti aver ricevuto un messaggio separato con un collegamento per accedervi.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s ha condiviso «%s» con te. Dovresti aver ricevuto un messaggio separato con un collegamento per accedervi.",
-    "Password to access »%s« shared to you by %s" : "Password per accedere a «%s» condivisa con te da %s",
-    "It is protected with the following password: %s" : "È protetta con la password seguente: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Hai appena condiviso «%s» con %s. La condivisione è stata già inviata al destinatario. A causa dei criteri di sicurezza definiti dall'amministratore di %s, ogni condivisione deve essere protetta da password e non è consentito l'invio diretto della password al destinatario. Perciò, devi inoltrare manualmente la password al destinatario.",
-    "Password to access »%s« shared with %s" : "Password per accedere a «%s» condivisa con %s",
-    "This is the password: %s" : "Questa è la password: %s",
-    "Password to access »%1$s« shared with %2$s" : "Password per accedere a «%1$s» condivisa con %2$s"
+    "Enforce password protection" : "Imponi la protezione con password"
 },
 "nplurals=2; plural=(n != 1);");

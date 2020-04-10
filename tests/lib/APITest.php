@@ -79,7 +79,7 @@ class APITest extends \Test\TestCase {
 		$request
 			->expects($this->once())
 			->method('getScriptName')
-			->will($this->returnValue($scriptName));
+			->willReturn($scriptName);
 
 		$this->assertEquals($expected, $this->invokePrivate(new \OC_API, 'isV2', [$request]));
 	}

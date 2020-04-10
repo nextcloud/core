@@ -2,7 +2,10 @@
 /**
  * @copyright 2017, Georg Ehrke <oc.list@georgehrke.com>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -45,7 +48,7 @@ class CalendarManagerTest extends \Test\TestCase {
 	/** @var CalendarManager */
 	private $manager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->backend = $this->createMock(CalDavBackend::class);
 		$this->l10n = $this->createMock(IL10N::class);
@@ -58,28 +61,28 @@ class CalendarManagerTest extends \Test\TestCase {
 		$this->backend->expects($this->once())
 			->method('getCalendarsForUser')
 			->with('principals/users/user123')
-			->will($this->returnValue([
+			->willReturn([
 				['id' => 123, 'uri' => 'blablub1'],
 				['id' => 456, 'uri' => 'blablub2'],
-			]));
+			]);
 
 		/** @var IManager | \PHPUnit_Framework_MockObject_MockObject $calendarManager */
 		$calendarManager = $this->createMock(Manager::class);
 		$calendarManager->expects($this->at(0))
 			->method('registerCalendar')
-			->will($this->returnCallback(function() {
+			->willReturnCallback(function () {
 				$parameter = func_get_arg(0);
 				$this->assertInstanceOf(CalendarImpl::class, $parameter);
 				$this->assertEquals(123, $parameter->getKey());
-			}));
+			});
 
 		$calendarManager->expects($this->at(1))
 			->method('registerCalendar')
-			->will($this->returnCallback(function() {
+			->willReturnCallback(function () {
 				$parameter = func_get_arg(0);
 				$this->assertInstanceOf(CalendarImpl::class, $parameter);
 				$this->assertEquals(456, $parameter->getKey());
-			}));
+			});
 
 		$this->manager->setupCalendarProvider($calendarManager, 'user123');
 	}

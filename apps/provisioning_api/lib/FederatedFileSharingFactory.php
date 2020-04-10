@@ -2,6 +2,7 @@
 /**
  * @copyright 2018, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 declare(strict_types=1);
@@ -25,9 +26,19 @@ declare(strict_types=1);
 namespace OCA\Provisioning_API;
 
 use OCA\FederatedFileSharing\AppInfo\Application;
+use OCP\IServerContainer;
 
 class FederatedFileSharingFactory {
-	public function get(): Application {
-		return new Application();
+
+	/** @var IServerContainer */
+	private $serverContainer;
+
+	public function __construct(IServerContainer $serverContainer) {
+		$this->serverContainer = $serverContainer;
 	}
+
+	public function get(): Application {
+		return $this->serverContainer->query(Application::class);
+	}
+
 }

@@ -37,7 +37,7 @@ class MemoryCacheTest extends TestCase {
 	/** @var MemoryCache */
 	private $memoryCache;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->cacheFactory = $this->createMock(ICacheFactory::class);

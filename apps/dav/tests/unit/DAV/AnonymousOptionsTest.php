@@ -2,6 +2,10 @@
 /**
  * @copyright Copyright (c) 2018 Robin Appelman <robin@icewind.nl>
  *
+ * @author Bastien Durel <bastien@durel.org>
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Robin Appelman <robin@icewind.nl>
+ *
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -30,15 +34,16 @@ use Sabre\HTTP\Sapi;
 use Test\TestCase;
 
 class AnonymousOptionsTest extends TestCase {
-	private function sendRequest($method, $path) {
+	private function sendRequest($method, $path, $userAgent = '') {
 		$server = new Server();
 		$server->addPlugin(new AnonymousOptionsPlugin());
-		$server->addPlugin(new Plugin(new BasicCallBack(function() {
+		$server->addPlugin(new Plugin(new BasicCallBack(function () {
 			return false;
 		})));
 
 		$server->httpRequest->setMethod($method);
 		$server->httpRequest->setUrl($path);
+		$server->httpRequest->setHeader('User-Agent', $userAgent);
 
 		$server->sapi = new SapiMock();
 		$server->exec();
@@ -60,7 +65,19 @@ class AnonymousOptionsTest extends TestCase {
 	public function testAnonymousOptionsNonRootSubDir() {
 		$response = $this->sendRequest('OPTIONS', 'foo/bar');
 
-		$this->assertEquals(401, $response->getStatus());
+		$this->assertEquals(200, $response->getStatus());
+	}
+
+	public function testAnonymousHead() {
+		$response = $this->sendRequest('HEAD', '', 'Microsoft Office does strange things');
+
+		$this->assertEquals(200, $response->getStatus());
+	}
+
+	public function testAnonymousHeadNoOffice() {
+		$response = $this->sendRequest('HEAD', '');
+
+		$this->assertEquals(401, $response->getStatus(), 'curl');
 	}
 }
 

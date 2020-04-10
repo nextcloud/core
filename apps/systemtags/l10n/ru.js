@@ -2,6 +2,7 @@ OC.L10N.register(
     "systemtags",
     {
     "Tags" : "Метки",
+    "Tag name is empty" : "Имя метки пусто",
     "Update" : "Обновить",
     "Create" : "Создать",
     "Select tag…" : "Выберите метку…",

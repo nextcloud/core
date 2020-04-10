@@ -19,12 +19,13 @@ default:
         - FilesAppContext
         - FilesAppSharingContext
         - LoginPageContext
-        - NotificationContext
+        - NotificationsContext
         - PublicShareContext
         - SearchContext
         - SettingsContext
         - SettingsMenuContext
         - ThemingAppContext
+        - ToastContext
         - UsersSettingsContext
       filters:
         tags: "~@apache"
@@ -48,12 +49,13 @@ default:
         - FilesAppContext
         - FilesAppSharingContext
         - LoginPageContext
-        - NotificationContext
+        - NotificationsContext
         - PublicShareContext
         - SearchContext
         - SettingsContext
         - SettingsMenuContext
         - ThemingAppContext
+        - ToastContext
         - UsersSettingsContext
       filters:
         tags: "@apache"

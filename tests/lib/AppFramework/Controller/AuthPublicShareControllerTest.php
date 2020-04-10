@@ -20,18 +20,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\AppFramework\Controller;
 
-use OC\AppFramework\Middleware\PublicShare\Exceptions\NeedAuthenticationException;
-use OC\AppFramework\Middleware\PublicShare\PublicShareMiddleware;
 use OCP\AppFramework\AuthPublicShareController;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\AppFramework\PublicShareController;
-use OCP\Files\NotFoundException;
-use OCP\IConfig;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
@@ -49,7 +43,7 @@ class AuthPublicShareControllerTest extends \Test\TestCase {
 	private $controller;
 
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->createMock(IRequest::class);
@@ -135,7 +129,7 @@ class AuthPublicShareControllerTest extends \Test\TestCase {
 		$hashSet = false;
 		$this->session
 			->method('set')
-			->will($this->returnCallback(function($key, $value) use (&$tokenSet, &$hashSet) {
+			->willReturnCallback(function ($key, $value) use (&$tokenSet, &$hashSet) {
 				if ($key === 'public_link_authenticated_token' && $value === 'token') {
 					$tokenSet = true;
 					return true;
@@ -145,7 +139,7 @@ class AuthPublicShareControllerTest extends \Test\TestCase {
 					return true;
 				}
 				return false;
-			}));
+			});
 
 		$this->urlGenerator->method('linkToRoute')
 			->willReturn('myLink!');

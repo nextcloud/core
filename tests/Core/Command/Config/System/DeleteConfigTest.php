@@ -21,7 +21,6 @@
 
 namespace Tests\Core\Command\Config\System;
 
-
 use OC\Core\Command\Config\System\DeleteConfig;
 use OC\SystemConfig;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,7 +39,7 @@ class DeleteConfigTest extends TestCase {
 	/** @var \Symfony\Component\Console\Command\Command */
 	protected $command;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$systemConfig = $this->systemConfig = $this->getMockBuilder(SystemConfig::class)

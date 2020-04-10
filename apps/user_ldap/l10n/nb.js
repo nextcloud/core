@@ -172,7 +172,6 @@ OC.L10N.register(
     "Email Field" : "Felt med e-post adresse",
     "Set the user's email from their LDAP attribute. Leave it empty for default behaviour." : "Sett brukerens e-post fra deres LDAP attributt. La stå tom for forvalgt oppførsel.",
     "User Home Folder Naming Rule" : "Navneregel for brukers hjemmemappe",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "La stå tom for brukernavn (forvalg). Ellers, spesifiser en LDAP/AD attributt.",
     "Internal Username" : "Internt brukernavn",
     "By default the internal username will be created from the UUID attribute. It makes sure that the username is unique and characters do not need to be converted. The internal username has the restriction that only these characters are allowed: [ a-zA-Z0-9_.@- ].  Other characters are replaced with their ASCII correspondence or simply omitted. On collisions a number will be added/increased. The internal username is used to identify a user internally. It is also the default name for the user home folder. It is also a part of remote URLs, for instance for all *DAV services. With this setting, the default behavior can be overridden. Leave it empty for default behavior. Changes will have effect only on newly mapped (added) LDAP users." : "Som forvalg vil det interne brukernavnet opprettes fra UUID-attributten. Det sørger for at brukernavnet er unikt og at tegnene ikke må konverteres. Det interne brukernavnet har en begrensning i at bare disse tegnene tillates: [ a-zA-Z0-9_.@- ]. Andre tegn erstattes av deres motsatser i ASCII, eller blir sett bort fra. Ved kollisjoner vil et nummer bli lagt til/økt. Det interne brukernavnet brukes til å identifisere en bruker internt. Det er også forvalgt navn for brukerens hjemmemappe. Det er også en del av URL-er eksternt, for eksempel alle *DAV-tjenester. Med denne innstillingen, kan forvalgt oppførsel overstyres. La stå tom for forvalgt oppførsel. Endringer vil bare ha effekt på nylig knyttede (tillagte) LDAP brukere.",
     "Internal Username Attribute:" : "Attributt for internt brukernavn:",
@@ -182,6 +181,7 @@ OC.L10N.register(
     "UUID Attribute for Groups:" : "UUID-attributt for grupper:",
     "Username-LDAP User Mapping" : "Tilknytning av brukernavn til LDAP bruker",
     "Clear Username-LDAP User Mapping" : "Nullstill tilknytning av brukernavn til LDAP bruker",
-    "Clear Groupname-LDAP Group Mapping" : "Nullstill tilknytning av gruppenavn til LDAP gruppe"
+    "Clear Groupname-LDAP Group Mapping" : "Nullstill tilknytning av gruppenavn til LDAP gruppe",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "La stå tom for brukernavn (forvalg). Ellers, spesifiser en LDAP/AD attributt."
 },
 "nplurals=2; plural=(n != 1);");

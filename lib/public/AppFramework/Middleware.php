@@ -20,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -32,7 +32,6 @@
 namespace OCP\AppFramework;
 
 use OCP\AppFramework\Http\Response;
-
 
 /**
  * Middleware is used to provide hooks before or after controller methods and
@@ -53,7 +52,7 @@ abstract class Middleware {
 	 *                           the controller
 	 * @since 6.0.0
 	 */
-	public function beforeController($controller, $methodName){
+	public function beforeController($controller, $methodName) {
 
 	}
 
@@ -73,7 +72,7 @@ abstract class Middleware {
 	 * @return Response a Response object in case that the exception was handled
 	 * @since 6.0.0
 	 */
-	public function afterException($controller, $methodName, \Exception $exception){
+	public function afterException($controller, $methodName, \Exception $exception) {
 		throw $exception;
 	}
 
@@ -89,7 +88,7 @@ abstract class Middleware {
 	 * @return Response a Response object
 	 * @since 6.0.0
 	 */
-	public function afterController($controller, $methodName, Response $response){
+	public function afterController($controller, $methodName, Response $response) {
 		return $response;
 	}
 
@@ -105,7 +104,7 @@ abstract class Middleware {
 	 * @return string the output that should be printed
 	 * @since 6.0.0
 	 */
-	public function beforeOutput($controller, $methodName, $output){
+	public function beforeOutput($controller, $methodName, $output) {
 		return $output;
 	}
 

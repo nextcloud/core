@@ -18,39 +18,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace Test\Share20;
 
 use OC\Files\Mount\MoveableMount;
 use OC\HintException;
 use OC\Share20\DefaultShareProvider;
+use OC\Share20\Exception;
+use OC\Share20\Manager;
+use OC\Share20\Share;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
+use OCP\Files\Mount\IMountManager;
 use OCP\Files\Mount\IMountPoint;
 use OCP\Files\Node;
 use OCP\Files\Storage;
+use OCP\IConfig;
 use OCP\IGroup;
+use OCP\IGroupManager;
+use OCP\IL10N;
+use OCP\ILogger;
 use OCP\IServerContainer;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\L10N\IFactory;
 use OCP\Mail\IMailer;
+use OCP\Security\Events\ValidatePasswordPolicyEvent;
+use OCP\Security\IHasher;
+use OCP\Security\ISecureRandom;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IProviderFactory;
 use OCP\Share\IShare;
-use OC\Share20\Manager;
-use OC\Share20\Exception;
-
-use OC\Share20\Share;
-use OCP\IL10N;
-use OCP\ILogger;
-use OCP\IConfig;
 use OCP\Share\IShareProvider;
-use OCP\Security\ISecureRandom;
-use OCP\Security\IHasher;
-use OCP\Files\Mount\IMountManager;
-use OCP\IGroupManager;
+use PHPUnit\Framework\MockObject\MockBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -64,40 +69,42 @@ class ManagerTest extends \Test\TestCase {
 
 	/** @var Manager */
 	protected $manager;
-	/** @var ILogger|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var ILogger|MockObject */
 	protected $logger;
-	/** @var IConfig|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IConfig|MockObject */
 	protected $config;
-	/** @var ISecureRandom|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var ISecureRandom|MockObject */
 	protected $secureRandom;
-	/** @var IHasher|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IHasher|MockObject */
 	protected $hasher;
-	/** @var IShareProvider|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IShareProvider|MockObject */
 	protected $defaultProvider;
-	/** @var  IMountManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var  IMountManager|MockObject */
 	protected $mountManager;
-	/** @var  IGroupManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var  IGroupManager|MockObject */
 	protected $groupManager;
-	/** @var IL10N|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IL10N|MockObject */
 	protected $l;
-	/** @var IFactory|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IFactory|MockObject */
 	protected $l10nFactory;
 	/** @var DummyFactory */
 	protected $factory;
-	/** @var IUserManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IUserManager|MockObject */
 	protected $userManager;
-	/** @var IRootFolder | \PHPUnit_Framework_MockObject_MockObject */
+	/** @var IRootFolder | MockObject */
 	protected $rootFolder;
-	/** @var  EventDispatcherInterface | \PHPUnit_Framework_MockObject_MockObject */
+	/** @var  EventDispatcherInterface | MockObject */
 	protected $eventDispatcher;
-	/** @var  IMailer|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IEventDispatcher|MockObject */
+	protected $dispatcher;
+	/** @var  IMailer|MockObject */
 	protected $mailer;
-	/** @var  IURLGenerator|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var  IURLGenerator|MockObject */
 	protected $urlGenerator;
-	/** @var  \OC_Defaults|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var  \OC_Defaults|MockObject */
 	protected $defaults;
 
-	public function setUp() {
+	protected function setUp(): void {
 
 		$this->logger = $this->createMock(ILogger::class);
 		$this->config = $this->createMock(IConfig::class);
@@ -111,13 +118,14 @@ class ManagerTest extends \Test\TestCase {
 		$this->mailer = $this->createMock(IMailer::class);
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->defaults = $this->createMock(\OC_Defaults::class);
+		$this->dispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->l10nFactory = $this->createMock(IFactory::class);
 		$this->l = $this->createMock(IL10N::class);
 		$this->l->method('t')
-			->will($this->returnCallback(function($text, $parameters = []) {
- 				return vsprintf($text, $parameters);
- 			}));
+			->willReturnCallback(function ($text, $parameters = []) {
+				return vsprintf($text, $parameters);
+			});
 
 		$this->factory = new DummyFactory(\OC::$server);
 
@@ -136,7 +144,8 @@ class ManagerTest extends \Test\TestCase {
 			$this->eventDispatcher,
 			$this->mailer,
 			$this->urlGenerator,
-			$this->defaults
+			$this->defaults,
+			$this->dispatcher
 		);
 
 		$this->defaultProvider = $this->createMock(DefaultShareProvider::class);
@@ -145,7 +154,7 @@ class ManagerTest extends \Test\TestCase {
 	}
 
 	/**
-	 * @return \PHPUnit_Framework_MockObject_MockBuilder
+	 * @return MockBuilder
 	 */
 	private function createManagerMock() {
 		return 	$this->getMockBuilder('\OC\Share20\Manager')
@@ -164,14 +173,15 @@ class ManagerTest extends \Test\TestCase {
 				$this->eventDispatcher,
 				$this->mailer,
 				$this->urlGenerator,
-				$this->defaults
+				$this->defaults,
+				$this->dispatcher
 			]);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 */
+
 	public function testDeleteNoShareId() {
+		$this->expectException(\InvalidArgumentException::class);
+
 		$share = $this->manager->newShare();
 
 		$this->manager->deleteShare($share);
@@ -223,7 +233,7 @@ class ManagerTest extends \Test\TestCase {
 			->method('dispatch')
 			->with(
 				'OCP\Share::preUnshare',
-				$this->callBack(function(GenericEvent $e) use ($share) {
+				$this->callBack(function (GenericEvent $e) use ($share) {
 					return $e->getSubject() === $share;
 				})
 			);
@@ -231,7 +241,7 @@ class ManagerTest extends \Test\TestCase {
 			->method('dispatch')
 			->with(
 				'OCP\Share::postUnshare',
-				$this->callBack(function(GenericEvent $e) use ($share) {
+				$this->callBack(function (GenericEvent $e) use ($share) {
 					return $e->getSubject() === $share &&
 						$e->getArgument('deletedShares') === [$share];
 				})
@@ -269,7 +279,7 @@ class ManagerTest extends \Test\TestCase {
 			->method('dispatch')
 			->with(
 				'OCP\Share::preUnshare',
-				$this->callBack(function(GenericEvent $e) use ($share) {
+				$this->callBack(function (GenericEvent $e) use ($share) {
 					return $e->getSubject() === $share;
 				})
 			);
@@ -277,7 +287,7 @@ class ManagerTest extends \Test\TestCase {
 			->method('dispatch')
 			->with(
 				'OCP\Share::postUnshare',
-				$this->callBack(function(GenericEvent $e) use ($share) {
+				$this->callBack(function (GenericEvent $e) use ($share) {
 					return $e->getSubject() === $share &&
 						$e->getArgument('deletedShares') === [$share];
 				})
@@ -324,21 +334,21 @@ class ManagerTest extends \Test\TestCase {
 
 		$this->defaultProvider
 			->method('getChildren')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				[$share1, [$share2]],
 				[$share2, [$share3]],
 				[$share3, []],
-			]));
+			]);
 
 		$this->defaultProvider
 			->method('delete')
-			->withConsecutive($share3, $share2, $share1);
+			->withConsecutive([$share3], [$share2], [$share1]);
 
 		$this->eventDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with(
 				'OCP\Share::preUnshare',
-				$this->callBack(function(GenericEvent $e) use ($share1) {
+				$this->callBack(function (GenericEvent $e) use ($share1) {
 					return $e->getSubject() === $share1;
 				})
 			);
@@ -346,7 +356,7 @@ class ManagerTest extends \Test\TestCase {
 			->method('dispatch')
 			->with(
 				'OCP\Share::postUnshare',
-				$this->callBack(function(GenericEvent $e) use ($share1, $share2, $share3) {
+				$this->callBack(function (GenericEvent $e) use ($share1, $share2, $share3) {
 					return $e->getSubject() === $share1 &&
 						$e->getArgument('deletedShares') === [$share3, $share2, $share1];
 				})
@@ -381,7 +391,7 @@ class ManagerTest extends \Test\TestCase {
 			->method('dispatch')
 			->with(
 				'OCP\Share::postUnshareFromSelf',
-				$this->callBack(function(GenericEvent $e) use ($share) {
+				$this->callBack(function (GenericEvent $e) use ($share) {
 					return $e->getSubject() === $share;
 				})
 			);
@@ -413,17 +423,17 @@ class ManagerTest extends \Test\TestCase {
 		$this->defaultProvider
 			->expects($this->exactly(4))
 			->method('getChildren')
-			->will($this->returnCallback(function($_share) use ($share, $shares) {
+			->willReturnCallback(function ($_share) use ($share, $shares) {
 				if ($_share === $share) {
 					return $shares;
 				}
 				return [];
-			}));
+			});
 
 		$this->defaultProvider
 			->expects($this->exactly(3))
 			->method('delete')
-			->withConsecutive($child1, $child2, $child3);
+			->withConsecutive([$child1], [$child2], [$child3]);
 
 		$result = self::invokePrivate($manager, 'deleteChildren', [$share]);
 		$this->assertSame($shares, $result);
@@ -441,10 +451,10 @@ class ManagerTest extends \Test\TestCase {
 		$this->assertEquals($share, $this->manager->getShareById('default:42'));
 	}
 
-	/**
-	 * @expectedException \OCP\Share\Exceptions\ShareNotFound
-	 */
+
 	public function testGetExpiredShareById() {
+		$this->expectException(\OCP\Share\Exceptions\ShareNotFound::class);
+
 		$manager = $this->createManagerMock()
 			->setMethods(['deleteShare'])
 			->getMock();
@@ -468,59 +478,61 @@ class ManagerTest extends \Test\TestCase {
 		$manager->getShareById('default:42');
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Passwords are enforced for link shares
-	 */
+
 	public function testVerifyPasswordNullButEnforced() {
-		$this->config->method('getAppValue')->will($this->returnValueMap([
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Passwords are enforced for link shares');
+
+		$this->config->method('getAppValue')->willReturnMap([
 			['core', 'shareapi_enforce_links_password', 'no', 'yes'],
-		]));
+		]);
 
 		self::invokePrivate($this->manager, 'verifyPassword', [null]);
 	}
 
 	public function testVerifyPasswordNull() {
-		$this->config->method('getAppValue')->will($this->returnValueMap([
-				['core', 'shareapi_enforce_links_password', 'no', 'no'],
-		]));
+		$this->config->method('getAppValue')->willReturnMap([
+			['core', 'shareapi_enforce_links_password', 'no', 'no'],
+		]);
 
 		$result = self::invokePrivate($this->manager, 'verifyPassword', [null]);
 		$this->assertNull($result);
 	}
 
 	public function testVerifyPasswordHook() {
-		$this->config->method('getAppValue')->will($this->returnValueMap([
-				['core', 'shareapi_enforce_links_password', 'no', 'no'],
-		]));
+		$this->config->method('getAppValue')->willReturnMap([
+			['core', 'shareapi_enforce_links_password', 'no', 'no'],
+		]);
 
 		$this->eventDispatcher->expects($this->once())->method('dispatch')
-			->willReturnCallback(function($eventName, GenericEvent $event) {
-				$this->assertSame('OCP\PasswordPolicy::validate', $eventName);
-				$this->assertSame('password', $event->getSubject());
+			->willReturnCallback(function (Event $event) {
+				$this->assertInstanceOf(ValidatePasswordPolicyEvent::class, $event);
+				/** @var ValidatePasswordPolicyEvent $event */
+				$this->assertSame('password', $event->getPassword());
 			}
-			);
+		);
 
 		$result = self::invokePrivate($this->manager, 'verifyPassword', ['password']);
 		$this->assertNull($result);
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage password not accepted
-	 */
+
 	public function testVerifyPasswordHookFails() {
-		$this->config->method('getAppValue')->will($this->returnValueMap([
-				['core', 'shareapi_enforce_links_password', 'no', 'no'],
-		]));
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('password not accepted');
+
+		$this->config->method('getAppValue')->willReturnMap([
+			['core', 'shareapi_enforce_links_password', 'no', 'no'],
+		]);
 
 		$this->eventDispatcher->expects($this->once())->method('dispatch')
-			->willReturnCallback(function($eventName, GenericEvent $event) {
-				$this->assertSame('OCP\PasswordPolicy::validate', $eventName);
-				$this->assertSame('password', $event->getSubject());
+			->willReturnCallback(function (Event $event) {
+				$this->assertInstanceOf(ValidatePasswordPolicyEvent::class, $event);
+				/** @var ValidatePasswordPolicyEvent $event */
+				$this->assertSame('password', $event->getPassword());
 				throw new HintException('message', 'password not accepted');
 			}
-			);
+		);
 
 		self::invokePrivate($this->manager, 'verifyPassword', ['password']);
 	}
@@ -685,17 +697,20 @@ class ManagerTest extends \Test\TestCase {
 	public function testGeneralChecks($share, $exceptionMessage, $exception) {
 		$thrown = null;
 
-		$this->userManager->method('userExists')->will($this->returnValueMap([
+		$this->userManager->method('userExists')->willReturnMap([
 			['user0', true],
 			['user1', true],
-		]));
+		]);
 
-		$this->groupManager->method('groupExists')->will($this->returnValueMap([
+		$this->groupManager->method('groupExists')->willReturnMap([
 			['group0', true],
-		]));
+		]);
 
 		$userFolder = $this->createMock(Folder::class);
 		$userFolder->method('getPath')->willReturn('myrootfolder');
+		$userFolder->expects($this->any())
+			->method('getRelativePath')
+			->willReturnArgument(0);
 		$this->rootFolder->method('getUserFolder')->willReturn($userFolder);
 
 
@@ -713,17 +728,17 @@ class ManagerTest extends \Test\TestCase {
 		$this->assertSame($exception, $thrown);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage You can’t share your root folder
-	 */
+
 	public function testGeneralCheckShareRoot() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('You can’t share your root folder');
+
 		$thrown = null;
 
-		$this->userManager->method('userExists')->will($this->returnValueMap([
+		$this->userManager->method('userExists')->willReturnMap([
 			['user0', true],
 			['user1', true],
-		]));
+		]);
 
 		$userFolder = $this->createMock(Folder::class);
 		$userFolder->method('isSubNode')->with($userFolder)->willReturn(false);
@@ -739,11 +754,11 @@ class ManagerTest extends \Test\TestCase {
 		self::invokePrivate($this->manager, 'generalCreateChecks', [$share]);
 	}
 
-	/**
-	 * @expectedException \OCP\Share\Exceptions\GenericShareException
-	 * @expectedExceptionMessage Expiration date is in the past
-	 */
+
 	public function testvalidateExpirationDateInPast() {
+		$this->expectException(\OCP\Share\Exceptions\GenericShareException::class);
+		$this->expectExceptionMessage('Expiration date is in the past');
+
 
 		// Expire date in the past
 		$past = new \DateTime();
@@ -755,19 +770,19 @@ class ManagerTest extends \Test\TestCase {
 		self::invokePrivate($this->manager, 'validateExpirationDate', [$share]);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Expiration date is enforced
-	 */
+
 	public function testvalidateExpirationDateEnforceButNotSet() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Expiration date is enforced');
+
 		$share = $this->manager->newShare();
 		$share->setProviderId('foo')->setId('bar');
 
 		$this->config->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_default_expire_date', 'no', 'yes'],
 				['core', 'shareapi_enforce_expire_date', 'no', 'yes'],
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'validateExpirationDate', [$share]);
 	}
@@ -777,9 +792,9 @@ class ManagerTest extends \Test\TestCase {
 		$share->setProviderId('foo')->setId('bar');
 
 		$this->config->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_enforce_expire_date', 'no', 'yes'],
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'validateExpirationDate', [$share]);
 
@@ -790,11 +805,11 @@ class ManagerTest extends \Test\TestCase {
 		$share = $this->manager->newShare();
 
 		$this->config->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_enforce_expire_date', 'no', 'yes'],
 				['core', 'shareapi_expire_after_n_days', '7', '3'],
 				['core', 'shareapi_default_expire_date', 'no', 'yes'],
-			]));
+			]);
 
 		$expected = new \DateTime();
 		$expected->setTime(0,0,0);
@@ -815,10 +830,10 @@ class ManagerTest extends \Test\TestCase {
 		$share->setExpirationDate($future);
 
 		$this->config->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_enforce_expire_date', 'no', 'yes'],
 				['core', 'shareapi_expire_after_n_days', '7', '3'],
-			]));
+			]);
 
 		try {
 			self::invokePrivate($this->manager, 'validateExpirationDate', [$share]);
@@ -843,10 +858,10 @@ class ManagerTest extends \Test\TestCase {
 		$share->setExpirationDate($future);
 
 		$this->config->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_enforce_expire_date', 'no', 'yes'],
 				['core', 'shareapi_expire_after_n_days', '7', '3'],
-			]));
+			]);
 
 		$hookListner = $this->getMockBuilder('Dummy')->setMethods(['listener'])->getMock();
 		\OCP\Util::connectHook('\OC\Share', 'verifyExpirationDate',  $hookListner, 'listener');
@@ -906,10 +921,10 @@ class ManagerTest extends \Test\TestCase {
 		$share->setExpirationDate($future);
 
 		$this->config->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_default_expire_date', 'no', 'yes'],
 				['core', 'shareapi_expire_after_n_days', '7', '3'],
-			]));
+			]);
 
 		$hookListner = $this->getMockBuilder('Dummy')->setMethods(['listener'])->getMock();
 		\OCP\Util::connectHook('\OC\Share', 'verifyExpirationDate',  $hookListner, 'listener');
@@ -931,9 +946,9 @@ class ManagerTest extends \Test\TestCase {
 
 		$hookListner = $this->getMockBuilder('Dummy')->setMethods(['listener'])->getMock();
 		\OCP\Util::connectHook('\OC\Share', 'verifyExpirationDate',  $hookListner, 'listener');
-		$hookListner->expects($this->once())->method('listener')->will($this->returnCallback(function ($data) {
+		$hookListner->expects($this->once())->method('listener')->willReturnCallback(function ($data) {
 			$data['expirationDate']->sub(new \DateInterval('P2D'));
-		}));
+		});
 
 		$share = $this->manager->newShare();
 		$share->setExpirationDate($nextWeek);
@@ -944,11 +959,11 @@ class ManagerTest extends \Test\TestCase {
 		$this->assertEquals($save, $share->getExpirationDate());
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Invalid date!
-	 */
+
 	public function testValidateExpirationDateHookException() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Invalid date!');
+
 		$nextWeek = new \DateTime();
 		$nextWeek->add(new \DateInterval('P7D'));
 		$nextWeek->setTime(0,0,0);
@@ -958,10 +973,10 @@ class ManagerTest extends \Test\TestCase {
 
 		$hookListner = $this->getMockBuilder('Dummy')->setMethods(['listener'])->getMock();
 		\OCP\Util::connectHook('\OC\Share', 'verifyExpirationDate',  $hookListner, 'listener');
-		$hookListner->expects($this->once())->method('listener')->will($this->returnCallback(function ($data) {
+		$hookListner->expects($this->once())->method('listener')->willReturnCallback(function ($data) {
 			$data['accepted'] = false;
 			$data['message'] = 'Invalid date!';
-		}));
+		});
 
 		self::invokePrivate($this->manager, 'validateExpirationDate', [$share]);
 	}
@@ -972,21 +987,21 @@ class ManagerTest extends \Test\TestCase {
 		$share->setId('42')->setProviderId('foo');
 
 		$this->config->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_default_expire_date', 'no', 'yes'],
 				['core', 'shareapi_expire_after_n_days', '7', '6'],
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'validateExpirationDate', [$share]);
 
 		$this->assertEquals(null, $share->getExpirationDate());
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Sharing is only allowed with group members
-	 */
+
 	public function testUserCreateChecksShareWithGroupMembersOnlyDifferentGroups() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Sharing is only allowed with group members');
+
 		$share = $this->manager->newShare();
 
 		$sharedBy = $this->createMock(IUser::class);
@@ -995,23 +1010,23 @@ class ManagerTest extends \Test\TestCase {
 
 		$this->groupManager
 			->method('getUserGroupIds')
-			->will(
-				$this->returnValueMap([
+			->willReturnMap(
+				[
 					[$sharedBy, ['group1']],
 					[$sharedWith, ['group2']],
-				])
+				]
 			);
 
-		$this->userManager->method('get')->will($this->returnValueMap([
+		$this->userManager->method('get')->willReturnMap([
 			['sharedBy', $sharedBy],
 			['sharedWith', $sharedWith],
-		]));
+		]);
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_only_share_with_group_members', 'no', 'yes'],
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'userCreateChecks', [$share]);
 	}
@@ -1028,23 +1043,23 @@ class ManagerTest extends \Test\TestCase {
 
 		$this->groupManager
 			->method('getUserGroupIds')
-			->will(
-				$this->returnValueMap([
+			->willReturnMap(
+				[
 					[$sharedBy, ['group1', 'group3']],
 					[$sharedWith, ['group2', 'group3']],
-				])
+				]
 			);
 
-		$this->userManager->method('get')->will($this->returnValueMap([
+		$this->userManager->method('get')->willReturnMap([
 			['sharedBy', $sharedBy],
 			['sharedWith', $sharedWith],
-		]));
+		]);
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_only_share_with_group_members', 'no', 'yes'],
-			]));
+			]);
 
 		$this->defaultProvider
 			->method('getSharesByPath')
@@ -1055,11 +1070,11 @@ class ManagerTest extends \Test\TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage  Path is already shared with this user
-	 */
+
 	public function testUserCreateChecksIdenticalShareExists() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Path is already shared with this user');
+
 		$share  = $this->manager->newShare();
 		$share2 = $this->manager->newShare();
 
@@ -1080,11 +1095,11 @@ class ManagerTest extends \Test\TestCase {
 		self::invokePrivate($this->manager, 'userCreateChecks', [$share]);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage  Path is already shared with this user
-	 */
- 	public function testUserCreateChecksIdenticalPathSharedViaGroup() {
+
+	public function testUserCreateChecksIdenticalPathSharedViaGroup() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Path is already shared with this user');
+
 		$share  = $this->manager->newShare();
 
 		$sharedWith = $this->createMock(IUser::class);
@@ -1122,7 +1137,7 @@ class ManagerTest extends \Test\TestCase {
 		self::invokePrivate($this->manager, 'userCreateChecks', [$share]);
 	}
 
- 	public function testUserCreateChecksIdenticalPathSharedViaDeletedGroup() {
+	public function testUserCreateChecksIdenticalPathSharedViaDeletedGroup() {
 		$share  = $this->manager->newShare();
 
 		$sharedWith = $this->createMock(IUser::class);
@@ -1191,27 +1206,27 @@ class ManagerTest extends \Test\TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Group sharing is now allowed
-	 */
+
 	public function testGroupCreateChecksShareWithGroupMembersGroupSharingNotAllowed() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Group sharing is now allowed');
+
 		$share = $this->manager->newShare();
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_allow_group_sharing', 'yes', 'no'],
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'groupCreateChecks', [$share]);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Sharing is only allowed within your own groups
-	 */
+
 	public function testGroupCreateChecksShareWithGroupMembersOnlyNotInGroup() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Sharing is only allowed within your own groups');
+
 		$share = $this->manager->newShare();
 
 		$user = $this->createMock(IUser::class);
@@ -1225,19 +1240,19 @@ class ManagerTest extends \Test\TestCase {
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_only_share_with_group_members', 'no', 'yes'],
 				['core', 'shareapi_allow_group_sharing', 'yes', 'yes'],
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'groupCreateChecks', [$share]);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Sharing is only allowed within your own groups
-	 */
+
 	public function testGroupCreateChecksShareWithGroupMembersOnlyNullGroup() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Sharing is only allowed within your own groups');
+
 		$share = $this->manager->newShare();
 
 		$user = $this->createMock(IUser::class);
@@ -1248,10 +1263,10 @@ class ManagerTest extends \Test\TestCase {
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_only_share_with_group_members', 'no', 'yes'],
 				['core', 'shareapi_allow_group_sharing', 'yes', 'yes'],
-			]));
+			]);
 
 		$this->assertNull($this->invokePrivate($this->manager, 'groupCreateChecks', [$share]));
 	}
@@ -1277,20 +1292,20 @@ class ManagerTest extends \Test\TestCase {
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_only_share_with_group_members', 'no', 'yes'],
 				['core', 'shareapi_allow_group_sharing', 'yes', 'yes'],
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'groupCreateChecks', [$share]);
 		$this->addToAssertionCount(1);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Path is already shared with this group
-	 */
+
 	public function testGroupCreateChecksPathAlreadySharedWithSameGroup() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Path is already shared with this group');
+
 		$share = $this->manager->newShare();
 
 		$path = $this->createMock(Node::class);
@@ -1310,9 +1325,9 @@ class ManagerTest extends \Test\TestCase {
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_allow_group_sharing', 'yes', 'yes'],
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'groupCreateChecks', [$share]);
 	}
@@ -1334,63 +1349,63 @@ class ManagerTest extends \Test\TestCase {
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_allow_group_sharing', 'yes', 'yes'],
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'groupCreateChecks', [$share]);
 		$this->addToAssertionCount(1);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Link sharing is not allowed
-	 */
+
 	public function testLinkCreateChecksNoLinkSharesAllowed() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Link sharing is not allowed');
+
 		$share = $this->manager->newShare();
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_allow_links', 'yes', 'no'],
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'linkCreateChecks', [$share]);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Link shares can’t have reshare permissions
-	 */
+
 	public function testLinkCreateChecksSharePermissions() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Link shares can’t have reshare permissions');
+
 		$share = $this->manager->newShare();
 
 		$share->setPermissions(\OCP\Constants::PERMISSION_SHARE);
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_allow_links', 'yes', 'yes'],
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'linkCreateChecks', [$share]);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Public upload is not allowed
-	 */
+
 	public function testLinkCreateChecksNoPublicUpload() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Public upload is not allowed');
+
 		$share = $this->manager->newShare();
 
 		$share->setPermissions(\OCP\Constants::PERMISSION_CREATE | \OCP\Constants::PERMISSION_UPDATE);
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_allow_links', 'yes', 'yes'],
 				['core', 'shareapi_allow_public_upload', 'yes', 'no']
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'linkCreateChecks', [$share]);
 	}
@@ -1402,10 +1417,10 @@ class ManagerTest extends \Test\TestCase {
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_allow_links', 'yes', 'yes'],
 				['core', 'shareapi_allow_public_upload', 'yes', 'yes']
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'linkCreateChecks', [$share]);
 		$this->addToAssertionCount(1);
@@ -1418,20 +1433,20 @@ class ManagerTest extends \Test\TestCase {
 
 		$this->config
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_allow_links', 'yes', 'yes'],
 				['core', 'shareapi_allow_public_upload', 'yes', 'no']
-			]));
+			]);
 
 		self::invokePrivate($this->manager, 'linkCreateChecks', [$share]);
 		$this->addToAssertionCount(1);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Path contains files shared with you
-	 */
+
 	public function testPathCreateChecksContainsSharedMount() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Path contains files shared with you');
+
 		$path = $this->createMock(Folder::class);
 		$path->method('getPath')->willReturn('path');
 
@@ -1510,10 +1525,10 @@ class ManagerTest extends \Test\TestCase {
 		$user = $this->createMock(IUser::class);
 
 		$this->config->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_exclude_groups', 'no', $excludeGroups],
 				['core', 'shareapi_exclude_groups_list', '', $groupList],
-			]));
+			]);
 
 		if ($setList !== null) {
 			$this->config->expects($this->once())
@@ -1558,9 +1573,9 @@ class ManagerTest extends \Test\TestCase {
 	 */
 	public function testCanShare($expected, $sharingEnabled, $disabledForUser) {
 		$this->config->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['core', 'shareapi_enabled', 'yes', $sharingEnabled],
-			]));
+			]);
 
 		$manager = $this->createManagerMock()
 			->setMethods(['sharingDisabledForUser'])
@@ -1624,7 +1639,7 @@ class ManagerTest extends \Test\TestCase {
 			->expects($this->once())
 			->method('create')
 			->with($share)
-			->will($this->returnArgument(0));
+			->willReturnArgument(0);
 
 		$share->expects($this->once())
 			->method('setShareOwner')
@@ -1677,7 +1692,7 @@ class ManagerTest extends \Test\TestCase {
 			->expects($this->once())
 			->method('create')
 			->with($share)
-			->will($this->returnArgument(0));
+			->willReturnArgument(0);
 
 		$share->expects($this->once())
 			->method('setShareOwner')
@@ -1737,7 +1752,8 @@ class ManagerTest extends \Test\TestCase {
 			->with($path);
 		$manager->expects($this->once())
 			->method('validateExpirationDate')
-			->with($share);
+			->with($share)
+			->willReturn($share);
 		$manager->expects($this->once())
 			->method('verifyPassword')
 			->with('password');
@@ -1757,16 +1773,16 @@ class ManagerTest extends \Test\TestCase {
 			->expects($this->once())
 			->method('create')
 			->with($share)
-			->will($this->returnCallback(function(Share $share) {
+			->willReturnCallback(function (Share $share) {
 				return $share->setId(42);
-			}));
+			});
 
 		// Pre share
 		$this->eventDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with(
 				$this->equalTo('OCP\Share::preShare'),
-				$this->callback(function(GenericEvent $e) use ($path, $date) {
+				$this->callback(function (GenericEvent $e) use ($path, $date) {
 					/** @var IShare $share */
 					$share = $e->getSubject();
 
@@ -1785,7 +1801,7 @@ class ManagerTest extends \Test\TestCase {
 			->method('dispatch')
 			->with(
 				$this->equalTo('OCP\Share::postShare'),
-				$this->callback(function(GenericEvent $e) use ($path, $date) {
+				$this->callback(function (GenericEvent $e) use ($path, $date) {
 					/** @var IShare $share */
 					$share = $e->getSubject();
 
@@ -1866,16 +1882,16 @@ class ManagerTest extends \Test\TestCase {
 			->expects($this->once())
 			->method('create')
 			->with($share)
-			->will($this->returnCallback(function(Share $share) {
+			->willReturnCallback(function (Share $share) {
 				return $share->setId(42);
-			}));
+			});
 
 		// Pre share
 		$this->eventDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with(
 				$this->equalTo('OCP\Share::preShare'),
-				$this->callback(function(GenericEvent $e) use ($path) {
+				$this->callback(function (GenericEvent $e) use ($path) {
 					/** @var IShare $share */
 					$share = $e->getSubject();
 
@@ -1894,7 +1910,7 @@ class ManagerTest extends \Test\TestCase {
 			->method('dispatch')
 			->with(
 				$this->equalTo('OCP\Share::postShare'),
-				$this->callback(function(GenericEvent $e) use ($path) {
+				$this->callback(function (GenericEvent $e) use ($path) {
 					/** @var IShare $share */
 					$share = $e->getSubject();
 
@@ -1918,11 +1934,11 @@ class ManagerTest extends \Test\TestCase {
 		$this->assertEquals('token', $share->getToken());
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage I won't let you share
-	 */
+
 	public function testCreateShareHookError() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('I won\'t let you share');
+
 		$manager = $this->createManagerMock()
 			->setMethods([
 				'canShare',
@@ -1977,10 +1993,10 @@ class ManagerTest extends \Test\TestCase {
 			->with(
 				$this->equalTo('OCP\Share::preShare'),
 				$this->isInstanceOf(GenericEvent::class)
-			)->will($this->returnCallback(function($name, GenericEvent $e) {
+			)->willReturnCallback(function ($name, GenericEvent $e) {
 					$e->setArgument('error', 'I won\'t let you share!');
 					$e->stopPropagation();
-				})
+				}
 			);
 
 		$manager->createShare($share);
@@ -2046,7 +2062,7 @@ class ManagerTest extends \Test\TestCase {
 			->expects($this->once())
 			->method('create')
 			->with($share)
-			->will($this->returnArgument(0));
+			->willReturnArgument(0);
 
 		$share->expects($this->once())
 			->method('setShareOwner')
@@ -2129,22 +2145,22 @@ class ManagerTest extends \Test\TestCase {
 		 */
 		$this->defaultProvider
 			->method('getSharesBy')
-			->will($this->returnCallback(function($uid, $type, $node, $reshares, $limit, $offset) use (&$shares2) {
+			->willReturnCallback(function ($uid, $type, $node, $reshares, $limit, $offset) use (&$shares2) {
 				return array_slice($shares2, $offset, $limit);
-			}));
+			});
 
 		/*
 		 * Simulate the deleteShare call.
 		 */
 		$manager->method('deleteShare')
-			->will($this->returnCallback(function($share) use (&$shares2) {
+			->willReturnCallback(function ($share) use (&$shares2) {
 				for($i = 0; $i < count($shares2); $i++) {
 					if ($shares2[$i]->getId() === $share->getId()) {
 						array_splice($shares2, $i, 1);
 						break;
 					}
 				}
-			}));
+			});
 
 		$res = $manager->getSharesBy('user', \OCP\Share::SHARE_TYPE_LINK, $node, true, 3, 0);
 
@@ -2185,7 +2201,8 @@ class ManagerTest extends \Test\TestCase {
 			$this->eventDispatcher,
 			$this->mailer,
 			$this->urlGenerator,
-			$this->defaults
+			$this->defaults,
+			$this->dispatcher
 		);
 
 		$share = $this->createMock(IShare::class);
@@ -2228,7 +2245,8 @@ class ManagerTest extends \Test\TestCase {
 			$this->eventDispatcher,
 			$this->mailer,
 			$this->urlGenerator,
-			$this->defaults
+			$this->defaults,
+			$this->dispatcher
 		);
 
 		$share = $this->createMock(IShare::class);
@@ -2237,13 +2255,13 @@ class ManagerTest extends \Test\TestCase {
 
 		$factory->expects($this->any())
 			->method('getProviderForType')
-			->will($this->returnCallback(function($shareType) use ($roomShareProvider) {
+			->willReturnCallback(function ($shareType) use ($roomShareProvider) {
 				if ($shareType !== \OCP\Share::SHARE_TYPE_ROOM) {
 					throw new Exception\ProviderException();
 				}
 
 				return $roomShareProvider;
-			}));
+			});
 
 		$roomShareProvider->expects($this->once())
 			->method('getShareByToken')
@@ -2278,7 +2296,8 @@ class ManagerTest extends \Test\TestCase {
 			$this->eventDispatcher,
 			$this->mailer,
 			$this->urlGenerator,
-			$this->defaults
+			$this->defaults,
+			$this->dispatcher
 		);
 
 		$share = $this->createMock(IShare::class);
@@ -2305,11 +2324,11 @@ class ManagerTest extends \Test\TestCase {
 		$this->assertSame($share, $ret);
 	}
 
-	/**
-	 * @expectedException \OCP\Share\Exceptions\ShareNotFound
-	 * @expectedExceptionMessage The requested share does not exist anymore
-	 */
+
 	public function testGetShareByTokenExpired() {
+		$this->expectException(\OCP\Share\Exceptions\ShareNotFound::class);
+		$this->expectExceptionMessage('The requested share does not exist anymore');
+
 		$this->config
 			->expects($this->once())
 			->method('getAppValue')
@@ -2364,10 +2383,10 @@ class ManagerTest extends \Test\TestCase {
 		$this->assertSame($share, $res);
 	}
 
-	/**
-	 * @expectedException \OCP\Share\Exceptions\ShareNotFound
-	 */
+
 	public function testGetShareByTokenWithPublicLinksDisabled() {
+		$this->expectException(\OCP\Share\Exceptions\ShareNotFound::class);
+
 		$this->config
 			->expects($this->once())
 			->method('getAppValue')
@@ -2390,9 +2409,9 @@ class ManagerTest extends \Test\TestCase {
 		$this->config
 			->expects($this->at(1))
 			->method('getAppValue')
-			->will($this->returnValueMap([
-			['core', 'shareapi_allow_public_upload', 'yes', 'no'],
-		]));
+			->willReturnMap([
+				['core', 'shareapi_allow_public_upload', 'yes', 'no'],
+			]);
 
 		$this->defaultProvider->expects($this->once())
 			->method('getShareByToken')
@@ -2445,11 +2464,11 @@ class ManagerTest extends \Test\TestCase {
 			->setPassword('passwordHash');
 
 		$this->hasher->method('verify')->with('password', 'passwordHash', '')
-			->will($this->returnCallback(function($pass, $hash, &$newHash) {
+			->willReturnCallback(function ($pass, $hash, &$newHash) {
 				$newHash = 'newHash';
 
 				return true;
-			}));
+			});
 
 		$this->defaultProvider->expects($this->once())
 			->method('update')
@@ -2460,11 +2479,11 @@ class ManagerTest extends \Test\TestCase {
 		$this->assertTrue($this->manager->checkPassword($share, 'password'));
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Can’t change share type
-	 */
+
 	public function testUpdateShareCantChangeShareType() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Can’t change share type');
+
 		$manager = $this->createManagerMock()
 			->setMethods([
 				'canShare',
@@ -2486,11 +2505,11 @@ class ManagerTest extends \Test\TestCase {
 		$manager->updateShare($share);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Can only update recipient on user shares
-	 */
+
 	public function testUpdateShareCantChangeRecipientForGroupShare() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Can only update recipient on user shares');
+
 		$manager = $this->createManagerMock()
 			->setMethods([
 				'canShare',
@@ -2514,11 +2533,11 @@ class ManagerTest extends \Test\TestCase {
 		$manager->updateShare($share);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Can’t share with the share owner
-	 */
+
 	public function testUpdateShareCantShareWithOwner() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Can’t share with the share owner');
+
 		$manager = $this->createManagerMock()
 			->setMethods([
 				'canShare',
@@ -2588,7 +2607,7 @@ class ManagerTest extends \Test\TestCase {
 		\OCP\Util::connectHook('OCP\Share', 'post_set_expiration_date', $hookListner, 'post');
 		$hookListner->expects($this->never())->method('post');
 
-		$this->rootFolder->method('getUserFolder')->with('newUser')->will($this->returnSelf());
+		$this->rootFolder->method('getUserFolder')->with('newUser')->willReturnSelf();
 		$this->rootFolder->method('getRelativePath')->with('/newUser/files/myPath')->willReturn('/myPath');
 
 		$hookListner2 = $this->getMockBuilder('Dummy')->setMethods(['post'])->getMock();
@@ -2883,11 +2902,11 @@ class ManagerTest extends \Test\TestCase {
 		$manager->updateShare($share);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Can’t enable sending the password by Talk without setting a new password
-	 */
+
 	public function testUpdateShareMailEnableSendPasswordByTalkWithNoPassword() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Can’t enable sending the password by Talk without setting a new password');
+
 		$manager = $this->createManagerMock()
 			->setMethods([
 				'canShare',
@@ -2955,11 +2974,11 @@ class ManagerTest extends \Test\TestCase {
 		$manager->updateShare($share);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Can’t enable sending the password by Talk without setting a new password
-	 */
+
 	public function testUpdateShareMailEnableSendPasswordByTalkRemovingPassword() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Can’t enable sending the password by Talk without setting a new password');
+
 		$manager = $this->createManagerMock()
 			->setMethods([
 				'canShare',
@@ -3027,11 +3046,11 @@ class ManagerTest extends \Test\TestCase {
 		$manager->updateShare($share);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Can’t enable sending the password by Talk without setting a new password
-	 */
+
 	public function testUpdateShareMailEnableSendPasswordByTalkRemovingPasswordWithEmptyString() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Can’t enable sending the password by Talk without setting a new password');
+
 		$manager = $this->createManagerMock()
 			->setMethods([
 				'canShare',
@@ -3099,11 +3118,11 @@ class ManagerTest extends \Test\TestCase {
 		$manager->updateShare($share);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Can’t enable sending the password by Talk without setting a new password
-	 */
+
 	public function testUpdateShareMailEnableSendPasswordByTalkWithPreviousPassword() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Can’t enable sending the password by Talk without setting a new password');
+
 		$manager = $this->createManagerMock()
 			->setMethods([
 				'canShare',
@@ -3241,11 +3260,11 @@ class ManagerTest extends \Test\TestCase {
 		$manager->updateShare($share);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Can’t change target of link share
-	 */
+
 	public function testMoveShareLink() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Can’t change target of link share');
+
 		$share = $this->manager->newShare();
 		$share->setShareType(\OCP\Share::SHARE_TYPE_LINK);
 
@@ -3254,11 +3273,11 @@ class ManagerTest extends \Test\TestCase {
 		$this->manager->moveShare($share, $recipient);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Invalid recipient
-	 */
+
 	public function testMoveShareUserNotRecipient() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid recipient');
+
 		$share = $this->manager->newShare();
 		$share->setShareType(\OCP\Share::SHARE_TYPE_USER);
 
@@ -3275,17 +3294,17 @@ class ManagerTest extends \Test\TestCase {
 
 		$share->setSharedWith('recipient');
 
-		$this->defaultProvider->method('move')->with($share, 'recipient')->will($this->returnArgument(0));
+		$this->defaultProvider->method('move')->with($share, 'recipient')->willReturnArgument(0);
 
 		$this->manager->moveShare($share, 'recipient');
 		$this->addToAssertionCount(1);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Invalid recipient
-	 */
+
 	public function testMoveShareGroupNotRecipient() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid recipient');
+
 		$share = $this->manager->newShare();
 		$share->setShareType(\OCP\Share::SHARE_TYPE_GROUP);
 
@@ -3301,11 +3320,11 @@ class ManagerTest extends \Test\TestCase {
 		$this->manager->moveShare($share, 'recipient');
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Group "shareWith" does not exist
-	 */
+
 	public function testMoveShareGroupNull() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Group "shareWith" does not exist');
+
 		$share = $this->manager->newShare();
 		$share->setShareType(\OCP\Share::SHARE_TYPE_GROUP);
 		$share->setSharedWith('shareWith');
@@ -3333,7 +3352,7 @@ class ManagerTest extends \Test\TestCase {
 		$this->groupManager->method('get')->with('group')->willReturn($group);
 		$this->userManager->method('get')->with('recipient')->willReturn($recipient);
 
-		$this->defaultProvider->method('move')->with($share, 'recipient')->will($this->returnArgument(0));
+		$this->defaultProvider->method('move')->with($share, 'recipient')->willReturnArgument(0);
 
 		$this->manager->moveShare($share, 'recipient');
 		$this->addToAssertionCount(1);
@@ -3368,7 +3387,8 @@ class ManagerTest extends \Test\TestCase {
 			$this->eventDispatcher,
 			$this->mailer,
 			$this->urlGenerator,
-			$this->defaults
+			$this->defaults,
+			$this->dispatcher
 		);
 		$this->assertSame($expected,
 			$manager->shareProviderExists($shareType)
@@ -3400,7 +3420,8 @@ class ManagerTest extends \Test\TestCase {
 			$this->eventDispatcher,
 			$this->mailer,
 			$this->urlGenerator,
-			$this->defaults
+			$this->defaults,
+			$this->dispatcher
 		);
 
 		$factory->setProvider($this->defaultProvider);
@@ -3463,7 +3484,8 @@ class ManagerTest extends \Test\TestCase {
 			$this->eventDispatcher,
 			$this->mailer,
 			$this->urlGenerator,
-			$this->defaults
+			$this->defaults,
+			$this->dispatcher
 		);
 
 		$factory->setProvider($this->defaultProvider);
@@ -3579,7 +3601,8 @@ class ManagerTest extends \Test\TestCase {
 			$this->eventDispatcher,
 			$this->mailer,
 			$this->urlGenerator,
-			$this->defaults
+			$this->defaults,
+			$this->dispatcher
 		);
 
 		$factory->setProvider($this->defaultProvider);
@@ -3684,6 +3707,58 @@ class ManagerTest extends \Test\TestCase {
 		$this->assertSame($expected['remote'], $result['remote']);
 		$this->assertSame($expected['users'], $result['users']);
 
+	}
+
+	public function testGetAllShares() {
+		$factory = new DummyFactory2($this->createMock(IServerContainer::class));
+
+		$manager = new Manager(
+			$this->logger,
+			$this->config,
+			$this->secureRandom,
+			$this->hasher,
+			$this->mountManager,
+			$this->groupManager,
+			$this->l,
+			$this->l10nFactory,
+			$factory,
+			$this->userManager,
+			$this->rootFolder,
+			$this->eventDispatcher,
+			$this->mailer,
+			$this->urlGenerator,
+			$this->defaults,
+			$this->dispatcher
+		);
+
+		$factory->setProvider($this->defaultProvider);
+		$extraProvider = $this->createMock(IShareProvider::class);
+		$factory->setSecondProvider($extraProvider);
+
+		$share1 = $this->createMock(IShare::class);
+		$share2 = $this->createMock(IShare::class);
+		$share3 = $this->createMock(IShare::class);
+		$share4 = $this->createMock(IShare::class);
+
+		$this->defaultProvider->method('getAllShares')
+			->willReturnCallback(function () use ($share1, $share2) {
+				yield $share1;
+				yield $share2;
+			});
+		$extraProvider->method('getAllShares')
+			->willReturnCallback(function () use ($share3, $share4) {
+				yield $share3;
+				yield $share4;
+			});
+
+		// "yield from", used in "getAllShares()", does not reset the keys, so
+		// "use_keys" has to be disabled to collect all the values while
+		// ignoring the keys returned by the generator.
+		$result = iterator_to_array($manager->getAllShares(), $use_keys = false);
+
+		$expects = [$share1, $share2, $share3, $share4];
+
+		$this->assertSame($expects, $result);
 	}
 }
 

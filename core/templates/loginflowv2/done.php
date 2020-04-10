@@ -25,14 +25,13 @@ declare(strict_types=1);
 style('core', 'login/authpicker');
 
 /** @var array $_ */
-/** @var \OCP\IURLGenerator $urlGenerator */
-$urlGenerator = $_['urlGenerator'];
 ?>
 
 <div class="picker-window">
 	<h2><?php p($l->t('Account connected')) ?></h2>
 	<p class="info">
-		<?php print_unescaped($l->t('Your client should now be connected! You can close this window.')) ?>
+		<?php p($l->t('Your client should now be connected!')) ?><br/>
+		<?php p($l->t('You can close this window.')) ?>
 	</p>
 
 	<br/>

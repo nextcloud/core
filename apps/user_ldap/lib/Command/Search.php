@@ -21,23 +21,23 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\User_LDAP\Command;
+
+use OCA\User_LDAP\Group_Proxy;
+use OCA\User_LDAP\Helper;
+use OCA\User_LDAP\LDAP;
+use OCA\User_LDAP\User_Proxy;
+use OCP\IConfig;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use OCA\User_LDAP\User_Proxy;
-use OCA\User_LDAP\Group_Proxy;
-use OCA\User_LDAP\Helper;
-use OCA\User_LDAP\LDAP;
-use OCP\IConfig;
 
 class Search extends Command {
 	/** @var \OCP\IConfig */
@@ -59,27 +59,27 @@ class Search extends Command {
 					'search',
 					InputArgument::REQUIRED,
 					'the search string (can be empty)'
-				     )
+					 )
 			->addOption(
 					'group',
 					null,
 					InputOption::VALUE_NONE,
 					'searches groups instead of users'
-				     )
+					 )
 			->addOption(
 					'offset',
 					null,
 					InputOption::VALUE_REQUIRED,
 					'The offset of the result set. Needs to be a multiple of limit. defaults to 0.',
 					0
-				     )
+					 )
 			->addOption(
 					'limit',
 					null,
 					InputOption::VALUE_REQUIRED,
 					'limit the results. 0 means no limit, defaults to 15',
 					15
-				     )
+					 )
 		;
 	}
 

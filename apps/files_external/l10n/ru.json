@@ -23,7 +23,7 @@
     "Are you sure you want to delete this external storage?" : "Действительно удалить это внешнее хранилище?",
     "Delete storage?" : "Удалить хранилище?",
     "Saved" : "Сохранено",
-    "Saving..." : "Сохранение…",
+    "Saving …" : "Сохранение ...",
     "Save" : "Сохранить",
     "Empty response from the server" : "Получен пустой ответ сервера",
     "Couldn't access. Please log out and in again to activate this mount point" : "Не удалось получить доступ. Для активации этой точки подключения выйдите и снова войдите в систему",
@@ -72,11 +72,12 @@
     "Log-in credentials, save in database" : "Учётные данные, хранить в базе данных",
     "Username and password" : "Имя пользователя и пароль",
     "Log-in credentials, save in session" : "Учётные данные, хранить в сессии",
+    "Global credentials, user entered" : "Глобальные учетные данные, введенные пользователем",
     "User entered, store in database" : "Указанные пользователем, хранить в базе данных",
     "RSA public key" : "Открытый ключ RSA",
     "Public key" : "Открытый ключ",
-    "RSA private key" : "RSA частный ключ",
-    "Private key" : "Частный ключ",
+    "RSA private key" : "Закрытый ключ RSA",
+    "Private key" : "Закрытый ключ",
     "Kerberos ticket" : "Kerberos тикет",
     "Amazon S3" : "Amazon S3",
     "Bucket" : "Корзина",
@@ -102,6 +103,7 @@
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Общий ресурс",
     "Show hidden files" : "Показать скрытые файлы",
+    "Timeout" : "Тайм-аут",
     "SMB / CIFS using OC login" : "SMB / CIFS с использованием логина OC",
     "Username as share" : "Имя пользователя в качестве имени общего ресурса",
     "OpenStack Object Storage" : "Хранилище объектов OpenStack",
@@ -117,6 +119,7 @@
     "Name" : "Имя",
     "Storage type" : "Тип хранилища",
     "Scope" : "Область",
+    "Open documentation" : "Открыть документацию",
     "External storage enables you to mount external storage services and devices as secondary Nextcloud storage devices. You may also allow users to mount their own external storage services." : "Внешнее хранилище позволяет подключать внешние устройства хранения и устройства в качестве вторичных устройств хранения Nextcloud. Вы также можете разрешить пользователям устанавливать собственные внешние службы хранения.",
     "Folder name" : "Имя папки",
     "External storage" : "Внешнее хранилище",
@@ -128,7 +131,6 @@
     "Advanced settings" : "Расширенные настройки",
     "Allow users to mount external storage" : "Разрешить пользователями подключать внешние хранилища",
     "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Глобальные учетные данные могут использоваться для аутентификации с несколькими внешними хранилищами, которые имеют одинаковые учетные данные.",
-    "Some of the configured external mount points are not connected. Please click on the red row(s) for more information" : "Некоторые из настроенных внешних точек монтирования не подключены. Для получения дополнительной информации нажмите на красную строку(и)",
-    "\"%s\" is not installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "«%s» не установлен, монтирование %s невозможно. Обратитесь к вашему системному администратору."
+    "Saving..." : "Сохранение…"
 },"pluralForm" :"nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);"
 }

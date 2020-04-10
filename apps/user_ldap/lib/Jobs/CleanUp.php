@@ -21,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -31,9 +31,9 @@ use OC\BackgroundJob\TimedJob;
 use OCA\User_LDAP\Helper;
 use OCA\User_LDAP\LDAP;
 use OCA\User_LDAP\Mapping\UserMapping;
+use OCA\User_LDAP\User\DeletedUsersIndex;
 use OCA\User_LDAP\User_LDAP;
 use OCA\User_LDAP\User_Proxy;
-use OCA\User_LDAP\User\DeletedUsersIndex;
 
 /**
  * Class CleanUp
@@ -44,7 +44,7 @@ use OCA\User_LDAP\User\DeletedUsersIndex;
  */
 class CleanUp extends TimedJob {
 	/** @var int $limit amount of users that should be checked per run */
-	protected $limit = 50;
+	protected $limit;
 
 	/** @var int $defaultIntervalMin default interval in minutes */
 	protected $defaultIntervalMin = 51;
@@ -61,10 +61,10 @@ class CleanUp extends TimedJob {
 	/** @var Helper $ldapHelper */
 	protected $ldapHelper;
 
-	/** @var \OCA\User_LDAP\Mapping\UserMapping */
+	/** @var UserMapping */
 	protected $mapping;
 
-	/** @var \OCA\User_LDAP\User\DeletedUsersIndex */
+	/** @var DeletedUsersIndex */
 	protected $dui;
 
 	public function __construct() {
@@ -138,7 +138,7 @@ class CleanUp extends TimedJob {
 		if(!$this->isCleanUpAllowed()) {
 			return;
 		}
-		$users = $this->mapping->getList($this->getOffset(), $this->limit);
+		$users = $this->mapping->getList($this->getOffset(), $this->getChunkSize());
 		if(!is_array($users)) {
 			//something wrong? Let's start from the beginning next time and
 			//abort
@@ -156,7 +156,7 @@ class CleanUp extends TimedJob {
 	 * @return bool
 	 */
 	public function isOffsetResetNecessary($resultCount) {
-		return $resultCount < $this->limit;
+		return $resultCount < $this->getChunkSize();
 	}
 
 	/**
@@ -222,7 +222,7 @@ class CleanUp extends TimedJob {
 	 */
 	public function setOffset($reset = false) {
 		$newOffset = $reset ? 0 :
-			$this->getOffset() + $this->limit;
+			$this->getOffset() + $this->getChunkSize();
 		$this->ocConfig->setAppValue('user_ldap', 'cleanUpJobOffset', $newOffset);
 	}
 
@@ -231,6 +231,9 @@ class CleanUp extends TimedJob {
 	 * @return int
 	 */
 	public function getChunkSize() {
+		if($this->limit === null) {
+			$this->limit = (int)$this->ocConfig->getAppValue('user_ldap', 'cleanUpJobChunkSize', 50);
+		}
 		return $this->limit;
 	}
 

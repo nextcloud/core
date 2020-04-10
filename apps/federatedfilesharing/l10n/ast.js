@@ -21,11 +21,12 @@ OC.L10N.register(
     "Federated sharing" : "Compartición federada",
     "Accept" : "Aceutar",
     "Decline" : "Refugar",
+    "Sharing" : "Compartiendo",
+    "Federated file sharing" : "Compartición federada de ficheros",
     "Federated Cloud Sharing" : "Compartición de ñube federada",
     "Open documentation" : "Abrir documentación",
     "Federated Cloud" : "Ñube federada",
     "Your Federated Cloud ID:" : "La to ID de ñube federada:",
-    "HTML Code:" : "Códigu HTML:",
-    "Sharing %s failed, because this item is already shared with %s" : "Falló la compartición de %s porque esti elementu yá ta compartíu con %s"
+    "HTML Code:" : "Códigu HTML:"
 },
 "nplurals=2; plural=(n != 1);");

@@ -1,9 +1,16 @@
 <?php
-declare (strict_types = 1);
+
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2018, John Molakvoæ (skjnldsv@protonmail.com)
  *
+ * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Michael Weimann <mail@michael-weimann.eu>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -18,20 +25,20 @@ declare (strict_types = 1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OC\Core\Controller;
 
+use OC\Template\IconsCacher;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\App\IAppManager;
 use OCP\IRequest;
-use OC\Template\IconsCacher;
 
 class SvgController extends Controller {
 
@@ -90,12 +97,6 @@ class SvgController extends Controller {
 	 * @return DataDisplayResponse|NotFoundResponse
 	 */
 	public function getSvgFromApp(string $app, string $fileName, string $color = 'ffffff') {
-
-		if ($app === 'settings') {
-			$path = $this->serverRoot . "/settings/img/$fileName.svg";
-			return $this->getSvg($path, $color, $fileName);
-		}
-
 		$appRootPath = $this->appManager->getAppPath($app);
 		$appPath = substr($appRootPath, strlen($this->serverRoot));
 

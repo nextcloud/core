@@ -11,6 +11,7 @@ OC.L10N.register(
     "Generate keys" : "Generar claves",
     "Error generating key pair" : "Error durante creation de par de claves",
     "All users. Type to select user or group." : "Tote usatores. Scribe pro selectionar usator o gruppo.",
+    "(group)" : "(gruppo)",
     "Enable encryption" : "Activar cryptographia",
     "Enable previews" : "Activar previsualisationes",
     "Enable sharing" : "Activar compartimento",
@@ -19,7 +20,6 @@ OC.L10N.register(
     "Once every direct access" : "A cata accesso directe",
     "Delete" : "Deler",
     "Saved" : "Salveguardate",
-    "Saving..." : "Salveguardante...",
     "Save" : "Salveguardar",
     "External mount error" : "Error del montage externe",
     "external-storage" : "immagazinage-externe",
@@ -63,9 +63,12 @@ OC.L10N.register(
     "SFTP" : "SFTP",
     "Root" : "Root",
     "SMB / CIFS" : "SMB / CIFS",
+    "Share" : "Compartir",
+    "Show hidden files" : "Monstrar files occultate",
     "Service name" : "Nomine del servicio",
     "Name" : "Nomine",
     "Storage type" : "Typo de immagazinage",
+    "Open documentation" : "Aperir documentation",
     "Folder name" : "Nomine de dossier",
     "External storage" : "Immagazinage externe",
     "Authentication" : "Authentication",
@@ -73,6 +76,7 @@ OC.L10N.register(
     "Available for" : "Disponibile a",
     "Add storage" : "Adder immagazinage",
     "Advanced settings" : "Configurationes avantiate",
-    "Allow users to mount external storage" : "Permitter usatores montar immagazinage externe"
+    "Allow users to mount external storage" : "Permitter usatores montar immagazinage externe",
+    "Saving..." : "Salveguardante..."
 },
 "nplurals=2; plural=(n != 1);");

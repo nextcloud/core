@@ -4,6 +4,7 @@
  *
  * @author Bernhard Reiter <ockham@raz.or.at>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,13 +18,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Tagging;
 
-use \OCP\AppFramework\Db\Entity;
+use OCP\AppFramework\Db\Entity;
 
 /**
  * Class to represent a tag.
@@ -42,12 +43,12 @@ class Tag extends Entity {
 	protected $name;
 
 	/**
-	* Constructor.
-	*
-	* @param string $owner The tag's owner
-	* @param string $type The type of item this tag is used for
-	* @param string $name The tag's name
-	*/
+	 * Constructor.
+	 *
+	 * @param string $owner The tag's owner
+	 * @param string $type The type of item this tag is used for
+	 * @param string $name The tag's name
+	 */
 	public function __construct($owner = null, $type = null, $name = null) {
 		$this->setOwner($owner);
 		$this->setType($type);
@@ -62,13 +63,13 @@ class Tag extends Entity {
 	 * @todo migrate existing database columns to the correct names
 	 * to be able to drop this direct mapping
 	 */
-	public function columnToProperty($columnName){
+	public function columnToProperty($columnName) {
 		if ($columnName === 'category') {
-		    return 'name';
+			return 'name';
 		} elseif ($columnName === 'uid') {
-		    return 'owner';
+			return 'owner';
 		} else {
-		    return parent::columnToProperty($columnName);
+			return parent::columnToProperty($columnName);
 		}
 	}
 
@@ -78,13 +79,13 @@ class Tag extends Entity {
 	 * @param string $property the name of the property
 	 * @return string the column name
 	 */
-	public function propertyToColumn($property){
+	public function propertyToColumn($property) {
 		if ($property === 'name') {
-		    return 'category';
+			return 'category';
 		} elseif ($property === 'owner') {
-		    return 'uid';
+			return 'uid';
 		} else {
-		    return parent::propertyToColumn($property);
+			return parent::propertyToColumn($property);
 		}
 	}
 }

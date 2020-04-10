@@ -20,9 +20,7 @@ OC.L10N.register(
     "File is already shared with %s" : "Fail on juba jagatud kasutajaga %s",
     "Could not find share" : "Jagamist ei leitud",
     "Federated sharing" : "Liit-jagamine",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Sa said kaugjagatud faili \"%3$s\" kasutajalt %1$s (%2$s nimel)",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "Sa said kaugjagatud faili  {share} kasjutajalt  {user} ({behalf} nimel)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Sa said kaugjagatud faili \"%3$s\" kasutajalt %1$s",
     "You received {share} as a remote share from {user}" : "Sa said kaugjagatud faili {file} kasutajalt {user}",
     "Accept" : "Nõustu",
     "Decline" : "Keeldu",
@@ -42,7 +40,7 @@ OC.L10N.register(
     "Add to your website" : "Lisa oma veebisaidile",
     "Share with me via Nextcloud" : "Jaga minuga läbi Nextcloudi",
     "HTML Code:" : "HTML kood:",
-    "Sharing %s failed, because this item is already shared with %s" : "%s jagamine ebaõnnestus, kuna see üksus on juba jagatud %s",
-    "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate." : "%s jagamine ebaõnnestus, ei suutnud %s leida, ehk ei ole server kättesaadav või kasutab ise allkirjastatud sertifikaati."
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Sa said kaugjagatud faili \"%3$s\" kasutajalt %1$s (%2$s nimel)",
+    "You received \"%3$s\" as a remote share from %1$s" : "Sa said kaugjagatud faili \"%3$s\" kasutajalt %1$s"
 },
 "nplurals=2; plural=(n != 1);");

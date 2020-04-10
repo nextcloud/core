@@ -3,7 +3,10 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Maxence Lange <maxence@artificial-owl.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
@@ -18,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -37,11 +40,20 @@ return [
 			'url' => '/publicpreview/{token}',
 			'verb' => 'GET',
 		],
-
 		[
 			'name' => 'ShareInfo#info',
 			'url' => '/shareinfo',
 			'verb' => 'POST',
+		],
+		[
+			'name' => 'Settings#setDefaultAccept',
+			'url' => '/settings/defaultAccept',
+			'verb' => 'PUT',
+		],
+		[
+			'name' => 'Accept#accept',
+			'url' => '/accept/{shareId}',
+			'verb' => 'GET',
 		],
 	],
 	'ocs' => [
@@ -54,9 +66,19 @@ return [
 			'verb' => 'GET',
 		],
 		[
+			'name' => 'ShareAPI#getInheritedShares',
+			'url'  => '/api/v1/shares/inherited',
+			'verb' => 'GET',
+		],
+		[
 			'name' => 'ShareAPI#createShare',
 			'url'  => '/api/v1/shares',
 			'verb' => 'POST',
+		],
+		[
+			'name' => 'ShareAPI#pendingShares',
+			'url'  => '/api/v1/shares/pending',
+			'verb' => 'GET',
 		],
 		[
 			'name' => 'ShareAPI#getShare',
@@ -72,6 +94,11 @@ return [
 			'name' => 'ShareAPI#deleteShare',
 			'url'  => '/api/v1/shares/{id}',
 			'verb' => 'DELETE',
+		],
+		[
+			'name' => 'ShareAPI#acceptShare',
+			'url'  => '/api/v1/shares/pending/{id}',
+			'verb' => 'POST',
 		],
 		/*
 		 * Deleted Shares

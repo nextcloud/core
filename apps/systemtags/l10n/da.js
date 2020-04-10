@@ -43,6 +43,7 @@ OC.L10N.register(
     "Please select tags to filter by" : "Vælg de mærker, der skal filtreres efter",
     "No files found for the selected tags" : "Der blev ikke fundet filer, som matcher de valgte mærker",
     "Select tag …" : "Vælg tag...",
+    "Create a new tag" : "Opret et nyt mærkat",
     "Name" : "Navn",
     "Public" : "Offentlig",
     "Restricted" : "Begrænset",

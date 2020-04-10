@@ -18,13 +18,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\DAV\Tests\unit\CardDAV;
-
 
 use OCA\DAV\CardDAV\AddressBook;
 use OCA\DAV\CardDAV\ImageExportPlugin;
@@ -54,7 +52,7 @@ class ImageExportPluginTest extends TestCase {
 	/** @var PhotoCache|\PHPUnit_Framework_MockObject_MockObject */
 	private $cache;
 
-	function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->createMock(RequestInterface::class);
@@ -142,7 +140,7 @@ class ImageExportPluginTest extends TestCase {
 			->willReturn(1);
 
 		$this->tree->method('getNodeForPath')
-			->willReturnCallback(function($path) use ($card, $book) {
+			->willReturnCallback(function ($path) use ($card, $book) {
 				if ($path === 'user/book/card') {
 					return $card;
 				} else if ($path === 'user/book') {

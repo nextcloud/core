@@ -21,92 +21,108 @@
 
 namespace Test\Files\Storage\Wrapper;
 
+use OC\Files\Cache\Storage as StorageCache;
+use OC\Files\Storage\Temporary;
+use OC\Files\Storage\Wrapper\Availability;
+use OCP\Files\StorageNotAvailableException;
+
 class AvailabilityTest extends \Test\TestCase {
-	protected function getWrapperInstance() {
-		$storage = $this->getMockBuilder('\OC\Files\Storage\Temporary')
-			->disableOriginalConstructor()
-			->getMock();
-		$wrapper = new \OC\Files\Storage\Wrapper\Availability(['storage' => $storage]);
-		return [$storage, $wrapper];
+
+	/** @var \PHPUnit\Framework\MockObject\MockObject|StorageCache */
+	protected $storageCache;
+	/** @var \PHPUnit\Framework\MockObject\MockObject|Temporary */
+	protected $storage;
+	/** @var Availability  */
+	protected $wrapper;
+
+	protected function setUp(): void {
+		parent::setUp();
+
+		$this->storageCache = $this->createMock(StorageCache::class);
+
+		$this->storage = $this->createMock(Temporary::class);
+		$this->storage->expects($this->any())
+			->method('getStorageCache')
+			->willReturn($this->storageCache);
+
+		$this->wrapper = new Availability(['storage' => $this->storage]);
 	}
 
 	/**
 	 * Storage is available
 	 */
 	public function testAvailable() {
-		list($storage, $wrapper) = $this->getWrapperInstance();
-		$storage->expects($this->once())
+		$this->storage->expects($this->once())
 			->method('getAvailability')
 			->willReturn(['available' => true, 'last_checked' => 0]);
-		$storage->expects($this->never())
+		$this->storage->expects($this->never())
 			->method('test');
-		$storage->expects($this->once())
+		$this->storage->expects($this->once())
 			->method('mkdir');
 
-		$wrapper->mkdir('foobar');
+		$this->wrapper->mkdir('foobar');
 	}
 
 	/**
 	 * Storage marked unavailable, TTL not expired
 	 *
-	 * @expectedException \OCP\Files\StorageNotAvailableException
 	 */
 	public function testUnavailable() {
-		list($storage, $wrapper) = $this->getWrapperInstance();
-		$storage->expects($this->once())
+		$this->expectException(\OCP\Files\StorageNotAvailableException::class);
+
+		$this->storage->expects($this->once())
 			->method('getAvailability')
 			->willReturn(['available' => false, 'last_checked' => time()]);
-		$storage->expects($this->never())
+		$this->storage->expects($this->never())
 			->method('test');
-		$storage->expects($this->never())
+		$this->storage->expects($this->never())
 			->method('mkdir');
 
-		$wrapper->mkdir('foobar');
+		$this->wrapper->mkdir('foobar');
 	}
 
 	/**
 	 * Storage marked unavailable, TTL expired
 	 */
 	public function testUnavailableRecheck() {
-		list($storage, $wrapper) = $this->getWrapperInstance();
-		$storage->expects($this->once())
+		$this->storage->expects($this->once())
 			->method('getAvailability')
 			->willReturn(['available' => false, 'last_checked' => 0]);
-		$storage->expects($this->once())
+		$this->storage->expects($this->once())
 			->method('test')
 			->willReturn(true);
-		$storage->expects($this->exactly(2))
+		$this->storage->expects($this->exactly(2))
 			->method('setAvailability')
 			->withConsecutive(
 				[$this->equalTo(false)], // prevents concurrent rechecks
 				[$this->equalTo(true)] // sets correct availability
 			);
-		$storage->expects($this->once())
+		$this->storage->expects($this->once())
 			->method('mkdir');
 
-		$wrapper->mkdir('foobar');
+		$this->wrapper->mkdir('foobar');
 	}
 
 	/**
 	 * Storage marked available, but throws StorageNotAvailableException
 	 *
-	 * @expectedException \OCP\Files\StorageNotAvailableException
 	 */
 	public function testAvailableThrowStorageNotAvailable() {
-		list($storage, $wrapper) = $this->getWrapperInstance();
-		$storage->expects($this->once())
+		$this->expectException(\OCP\Files\StorageNotAvailableException::class);
+
+		$this->storage->expects($this->once())
 			->method('getAvailability')
 			->willReturn(['available' => true, 'last_checked' => 0]);
-		$storage->expects($this->never())
+		$this->storage->expects($this->never())
 			->method('test');
-		$storage->expects($this->once())
+		$this->storage->expects($this->once())
 			->method('mkdir')
-			->will($this->throwException(new \OCP\Files\StorageNotAvailableException()));
-		$storage->expects($this->once())
+			->will($this->throwException(new StorageNotAvailableException()));
+		$this->storageCache->expects($this->once())
 			->method('setAvailability')
 			->with($this->equalTo(false));
 
-		$wrapper->mkdir('foobar');
+		$this->wrapper->mkdir('foobar');
 	}
 
 	/**
@@ -114,40 +130,39 @@ class AvailabilityTest extends \Test\TestCase {
 	 * Method failure does not indicate storage unavailability
 	 */
 	public function testAvailableFailure() {
-		list($storage, $wrapper) = $this->getWrapperInstance();
-		$storage->expects($this->once())
+		$this->storage->expects($this->once())
 			->method('getAvailability')
 			->willReturn(['available' => true, 'last_checked' => 0]);
-		$storage->expects($this->never())
+		$this->storage->expects($this->never())
 			->method('test');
-		$storage->expects($this->once())
+		$this->storage->expects($this->once())
 			->method('mkdir')
 			->willReturn(false);
-		$storage->expects($this->never())
+		$this->storage->expects($this->never())
 			->method('setAvailability');
 
-		$wrapper->mkdir('foobar');
+		$this->wrapper->mkdir('foobar');
 	}
 
 	/**
 	 * Storage available, but throws exception
 	 * Standard exception does not indicate storage unavailability
 	 *
-	 * @expectedException \Exception
 	 */
 	public function testAvailableThrow() {
-		list($storage, $wrapper) = $this->getWrapperInstance();
-		$storage->expects($this->once())
+		$this->expectException(\Exception::class);
+
+		$this->storage->expects($this->once())
 			->method('getAvailability')
 			->willReturn(['available' => true, 'last_checked' => 0]);
-		$storage->expects($this->never())
+		$this->storage->expects($this->never())
 			->method('test');
-		$storage->expects($this->once())
+		$this->storage->expects($this->once())
 			->method('mkdir')
 			->will($this->throwException(new \Exception()));
-		$storage->expects($this->never())
+		$this->storage->expects($this->never())
 			->method('setAvailability');
 
-		$wrapper->mkdir('foobar');
+		$this->wrapper->mkdir('foobar');
 	}
 }

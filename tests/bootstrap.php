@@ -1,4 +1,5 @@
 <?php
+
 define('PHPUNIT_RUN', 1);
 
 $configDir = getenv('CONFIG_DIR');

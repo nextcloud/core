@@ -24,7 +24,6 @@ OC.L10N.register(
     "Error occurred while updating comment with id {id}" : "Có lỗi xảy ra khi cập nhật bình luận có id {id}",
     "Error occurred while posting comment" : "Có lỗi xảy ra khi đăng bình luận",
     "_%n unread comment_::_%n unread comments_" : ["%n bình luận chưa đọc"],
-    "Comment" : "Bình luận",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s đề cập tới bạn trong một bình luận về “%2$s”"
+    "Comment" : "Bình luận"
 },
 "nplurals=1; plural=0;");

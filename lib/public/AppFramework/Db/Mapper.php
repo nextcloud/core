@@ -6,6 +6,7 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -20,15 +21,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
-
 
 namespace OCP\AppFramework\Db;
 
 use OCP\IDBConnection;
-
 
 /**
  * Simple parent class for inheriting your data access layer from. This class
@@ -50,7 +49,7 @@ abstract class Mapper {
 	 * @since 7.0.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	public function __construct(IDBConnection $db, $tableName, $entityClass=null){
+	public function __construct(IDBConnection $db, $tableName, $entityClass=null) {
 		$this->db = $db;
 		$this->tableName = '*PREFIX*' . $tableName;
 
@@ -69,7 +68,7 @@ abstract class Mapper {
 	 * @since 7.0.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	public function getTableName(){
+	public function getTableName() {
 		return $this->tableName;
 	}
 
@@ -81,7 +80,7 @@ abstract class Mapper {
 	 * @since 7.0.0 - return value added in 8.1.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	public function delete(Entity $entity){
+	public function delete(Entity $entity) {
 		$sql = 'DELETE FROM `' . $this->tableName . '` WHERE `id` = ?';
 		$stmt = $this->execute($sql, [$entity->getId()]);
 		$stmt->closeCursor();
@@ -96,7 +95,7 @@ abstract class Mapper {
 	 * @since 7.0.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	public function insert(Entity $entity){
+	public function insert(Entity $entity) {
 		// get updated fields to save, fields have to be set using a setter to
 		// be saved
 		$properties = $entity->getUpdatedFields();
@@ -146,7 +145,7 @@ abstract class Mapper {
 	 * @since 7.0.0 - return value was added in 8.0.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	public function update(Entity $entity){
+	public function update(Entity $entity) {
 		// if entity wasn't changed it makes no sense to run a db query
 		$properties = $entity->getUpdatedFields();
 		if(count($properties) === 0) {
@@ -236,7 +235,7 @@ abstract class Mapper {
 	 * @since 7.0.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	protected function execute($sql, array $params=[], $limit=null, $offset=null){
+	protected function execute($sql, array $params=[], $limit=null, $offset=null) {
 		$query = $this->db->prepare($sql, $limit, $offset);
 
 		if ($this->isAssocArray($params)) {
@@ -272,7 +271,7 @@ abstract class Mapper {
 	 * @since 7.0.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	protected function findOneQuery($sql, array $params=[], $limit=null, $offset=null){
+	protected function findOneQuery($sql, array $params=[], $limit=null, $offset=null) {
 		$stmt = $this->execute($sql, $params, $limit, $offset);
 		$row = $stmt->fetch();
 
@@ -286,7 +285,7 @@ abstract class Mapper {
 		$row2 = $stmt->fetch();
 		$stmt->closeCursor();
 		//MDB2 returns null, PDO and doctrine false when no row is available
-		if( ! ($row2 === false || $row2 === null )) {
+		if(! ($row2 === false || $row2 === null)) {
 			$msg = $this->buildDebugMessage(
 				'Did not expect more than one result when executing', $sql, $params, $limit, $offset
 			);
@@ -368,7 +367,7 @@ abstract class Mapper {
 	 * @since 7.0.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	protected function findEntity($sql, array $params=[], $limit=null, $offset=null){
+	protected function findEntity($sql, array $params=[], $limit=null, $offset=null) {
 		return $this->mapRowToEntity($this->findOneQuery($sql, $params, $limit, $offset));
 	}
 

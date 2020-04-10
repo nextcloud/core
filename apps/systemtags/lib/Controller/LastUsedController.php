@@ -17,12 +17,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\SystemTags\Controller;
-
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
@@ -56,6 +55,6 @@ class LastUsedController extends Controller {
 	public function getLastUsedTagIds() {
 		$lastUsed = $this->config->getUserValue($this->userSession->getUser()->getUID(), 'systemtags', 'last_used', '[]');
 		$tagIds = json_decode($lastUsed, true);
-		return new DataResponse(array_map(function($id) { return (string) $id; }, $tagIds));
+		return new DataResponse(array_map(function ($id) { return (string) $id; }, $tagIds));
 	}
 }

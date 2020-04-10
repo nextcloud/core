@@ -24,10 +24,10 @@ OC.L10N.register(
     "Sharing %1$s failed, could not find %2$s, maybe the server is currently unreachable or uses a self-signed certificate." : "Freigabe von %1$s fehlgeschlagen, da %2$s nicht gefunden wurde. Möglicherweise ist der Server nicht erreichbar oder nutzt ein selbst zertifiziertes Zertifikat.",
     "Could not find share" : "Freigabe konnte nicht gefunden werden",
     "Federated sharing" : "Federated-Sharing",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Du hast \"%3$s\" als eine externe Freigabe von \"%1$s\" empfangen (im Auftrag von %2$s)",
-    "You received {share} as a remote share from {user} (on behalf of {behalf})" : "Du hast {share} als eine externe Freigabe von {user} empfangen (im Auftrag von {behalf})",
-    "You received \"%3$s\" as a remote share from %1$s" : "Du hast \"%3$s\" als eine externe Freigabe von \"%1$s\" empfangen",
-    "You received {share} as a remote share from {user}" : "Du hast {share} als eine externe Freigabe von {user} empfangen",
+    "You received \"%3$s\" as a remote share from %4$s (%1$s) (on behalf of %5$s (%2$s))" : "Du hast \"%3$s\" als externe Freigabe von %4$s (%1$s) empfangen (im Auftrag von %5$s (%2$s))",
+    "You received {share} as a remote share from {user} (on behalf of {behalf})" : "Du hast {share} als externe Freigabe von {user} empfangen (im Auftrag von {behalf})",
+    "You received \"%3$s\" as a remote share from %4$s (%1$s)" : "Du hast  \"%3$s\" als externe Freigabe von %4$s (%1$s) erhalten",
+    "You received {share} as a remote share from {user}" : "Du hast {share} als externe Freigabe von {user} empfangen",
     "Accept" : "Ok",
     "Decline" : "Abgelehnt",
     "Share with me through my #Nextcloud Federated Cloud ID, see %s" : "Über meine #Nextcloud Federated-Cloud-ID teilen, siehe %s",
@@ -51,7 +51,7 @@ OC.L10N.register(
     "Add to your website" : "Zu Deiner Webseite hinzufügen",
     "Share with me via Nextcloud" : "Teile mit mir über Nextcloud",
     "HTML Code:" : "HTML-Code:",
-    "Sharing %s failed, because this item is already shared with %s" : "Freigabe von %s fehlgeschlagen, da dieses Objekt schon mit %s geteilt wird",
-    "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate." : "Freigabe von %s fehlgeschlagen, da %s nicht gefunden wurde. Möglicherweise ist der Server nicht erreichbar oder nutzt ein selbst zertifiziertes Zertifikat."
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Du hast \"%3$s\" als externe Freigabe von \"%1$s\" empfangen (im Auftrag von %2$s)",
+    "You received \"%3$s\" as a remote share from %1$s" : "Du hast \"%3$s\" als externe Freigabe von \"%1$s\" empfangen"
 },
 "nplurals=2; plural=(n != 1);");

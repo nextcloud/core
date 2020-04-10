@@ -25,8 +25,6 @@ OC.L10N.register(
     "Error occurred while updating comment with id {id}" : "კომენტარის id-იდ {id}-ის ცვლილებისას წარმოიშვა შეცდომა",
     "Error occurred while posting comment" : "კომენტარის გამოქვეყნებისას წარმოიშვა შეცდომა",
     "_%n unread comment_::_%n unread comments_" : ["%n წაუკუთხავი კომენტარი","%n წაუკუთხავი კომენტარი"],
-    "Comment" : "კომენტარის დამატება",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "თქვენ მოგიხსენიეს “%s”-ში, ახლა უკვე გაუქმებული მომხმარებლის კომენტარში",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s გახსენათ  “%2$s”-ზე გაკეთებულ კომენტარში"
+    "Comment" : "კომენტარის დამატება"
 },
 "nplurals=2; plural=(n!=1);");

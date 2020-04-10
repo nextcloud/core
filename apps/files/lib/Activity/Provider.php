@@ -18,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -28,6 +28,8 @@ use OCP\Activity\IEvent;
 use OCP\Activity\IEventMerger;
 use OCP\Activity\IManager;
 use OCP\Activity\IProvider;
+use OCP\Contacts\IManager as IContactsManager;
+use OCP\Federation\ICloudIdManager;
 use OCP\Files\Folder;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
@@ -64,25 +66,32 @@ class Provider implements IProvider {
 	/** @var IEventMerger */
 	protected $eventMerger;
 
-	/** @var string[] cached displayNames - key is the UID and value the displayname */
+	/** @var ICloudIdManager */
+	protected $cloudIdManager;
+
+	/** @var IContactsManager */
+	protected $contactsManager;
+
+	/** @var string[] cached displayNames - key is the cloud id and value the displayname */
 	protected $displayNames = [];
 
 	protected $fileIsEncrypted = false;
 
-	/**
-	 * @param IFactory $languageFactory
-	 * @param IURLGenerator $url
-	 * @param IManager $activityManager
-	 * @param IUserManager $userManager
-	 * @param IRootFolder $rootFolder
-	 * @param IEventMerger $eventMerger
-	 */
-	public function __construct(IFactory $languageFactory, IURLGenerator $url, IManager $activityManager, IUserManager $userManager, IRootFolder $rootFolder, IEventMerger $eventMerger) {
+	public function __construct(IFactory $languageFactory,
+								IURLGenerator $url,
+								IManager $activityManager,
+								IUserManager $userManager,
+								IRootFolder $rootFolder,
+								ICloudIdManager $cloudIdManager,
+								IContactsManager $contactsManager,
+								IEventMerger $eventMerger) {
 		$this->languageFactory = $languageFactory;
 		$this->url = $url;
 		$this->activityManager = $activityManager;
 		$this->userManager = $userManager;
 		$this->rootFolder = $rootFolder;
+		$this->cloudIdManager = $cloudIdManager;
+		$this->contactsManager = $contactsManager;
 		$this->eventMerger = $eventMerger;
 	}
 
@@ -246,7 +255,11 @@ class Provider implements IProvider {
 
 		$this->setSubjects($event, $subject, $parsedParameters);
 
-		$event = $this->eventMerger->mergeEvents('file', $event, $previousEvent);
+		if ($event->getSubject() === 'moved_self' || $event->getSubject() === 'moved_by') {
+			$event = $this->eventMerger->mergeEvents('oldfile', $event, $previousEvent);
+		} else {
+			$event = $this->eventMerger->mergeEvents('file', $event, $previousEvent);
+		}
 
 		if ($event->getChildEvent() === null) {
 			// Couldn't group by file, maybe we can group by user
@@ -476,27 +489,62 @@ class Provider implements IProvider {
 	 * @return array
 	 */
 	protected function getUser($uid) {
-		if (!isset($this->displayNames[$uid])) {
-			$this->displayNames[$uid] = $this->getDisplayName($uid);
+		// First try local user
+		$user = $this->userManager->get($uid);
+		if ($user instanceof IUser) {
+			return [
+				'type' => 'user',
+				'id' => $user->getUID(),
+				'name' => $user->getDisplayName(),
+			];
 		}
 
+		// Then a contact from the addressbook
+		if ($this->cloudIdManager->isValidCloudId($uid)) {
+			$cloudId = $this->cloudIdManager->resolveCloudId($uid);
+			return [
+				'type' => 'user',
+				'id' => $cloudId->getUser(),
+				'name' => $this->getDisplayNameFromAddressBook($cloudId->getDisplayId()),
+				'server' => $cloudId->getRemote(),
+			];
+		}
+
+		// Fallback to empty dummy data
 		return [
 			'type' => 'user',
 			'id' => $uid,
-			'name' => $this->displayNames[$uid],
+			'name' => $uid,
 		];
 	}
 
-	/**
-	 * @param string $uid
-	 * @return string
-	 */
-	protected function getDisplayName($uid) {
-		$user = $this->userManager->get($uid);
-		if ($user instanceof IUser) {
-			return $user->getDisplayName();
-		} else {
-			return $uid;
+	protected function getDisplayNameFromAddressBook(string $search): string {
+		if (isset($this->displayNames[$search])) {
+			return $this->displayNames[$search];
 		}
+
+		$addressBookContacts = $this->contactsManager->search($search, ['CLOUD']);
+		foreach ($addressBookContacts as $contact) {
+			if (isset($contact['isLocalSystemBook'])) {
+				continue;
+			}
+
+			if (isset($contact['CLOUD'])) {
+				$cloudIds = $contact['CLOUD'];
+				if (is_string($cloudIds)) {
+					$cloudIds = [$cloudIds];
+				}
+
+				$lowerSearch = strtolower($search);
+				foreach ($cloudIds as $cloudId) {
+					if (strtolower($cloudId) === $lowerSearch) {
+						$this->displayNames[$search] = $contact['FN'] . " ($cloudId)";
+						return $this->displayNames[$search];
+					}
+				}
+			}
+		}
+
+		return $search;
 	}
 }

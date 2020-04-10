@@ -7,6 +7,25 @@
 	@return (0.2126 * $-local-red  + 0.7152 * $-local-green + 0.0722 * $-local-blue) / 255;
 }
 
+@mixin faded-background {
+	background-image: linear-gradient(40deg, $color-primary 0%, lighten($color-primary, 20%) 100%);
+}
+
+@mixin faded-background-image {
+	@if ($color-primary == #0082C9) or ($has-custom-background == true) {
+		background-image: $image-login-background, linear-gradient(40deg, $color-primary 0%, lighten($color-primary, 20%) 100%);
+
+		@if($has-custom-background == true) {
+			background-size: cover;
+			background-repeat: no-repeat;
+		}
+	} @else {
+		@include faded-background;
+		background-size: contain;
+	}
+}
+
+$has-custom-background: variable_exists('theming-background-mime') and $theming-background-mime != '';
 $has-custom-logo: variable_exists('theming-logo-mime') and $theming-logo-mime != '';
 $invert: luma($color-primary) > 0.6;
 
@@ -31,6 +50,9 @@ $invert: luma($color-primary) > 0.6;
 }
 
 @if ($invert) {
+	// too bright, use dark text to mix the primary
+	$color-primary-light: mix($color-primary, $color-main-text, 10%);
+
 	#appmenu:not(.inverted) svg {
 		filter: invert(1);
 	}
@@ -112,6 +134,10 @@ $invert: luma($color-primary) > 0.6;
 	background-image: $image-logo;
 }
 
+#body-user #header, #body-settings #header, #body-public #header {
+	@include faded-background;
+}
+
 /* override styles for login screen in guest.css */
 @if ($has-custom-logo) {
 	// custom logo
@@ -139,18 +165,20 @@ $invert: luma($color-primary) > 0.6;
 	#theming-preview {
 		background-image: $image-login-background;
 		background-color: $color-primary;
+		@include faded-background-image;
 	}
 } @else {
-	  #theming-preview {
-		  background-image: $image-login-background;
-		  background-color: $color-primary;
-	  }
+	#theming-preview {
+		background-image: $image-login-background;
+		background-color: $color-primary;
+		@include faded-background-image;
+	}
 }
 
 @if variable_exists('theming-logoheader-mime') and $theming-logoheader-mime != '' {
 	#theming .advanced-option-logoheader .image-preview,
 	body:not(#body-login) #header .logo {
-		background-image: url(#{$image-logoheader});
+		background-image: $image-logoheader;
 	}
 } @else {
 	#theming .advanced-option-favicon .image-preview {
@@ -160,7 +188,7 @@ $invert: luma($color-primary) > 0.6;
 
 @if variable_exists('theming-favicon-mime') and $theming-favicon-mime != '' {
 	#theming .advanced-option-favicon .image-preview {
-		background-image: url(#{$image-favicon});
+		background-image: $image-favicon;
 	}
 } @else {
 	#theming .advanced-option-favicon .image-preview {
@@ -214,7 +242,7 @@ input.primary,
 	}
 } @else {
 	#body-login {
-		background-color: $color-primary;
+		@include faded-background-image;
 	}
 }
 

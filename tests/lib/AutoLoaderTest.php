@@ -14,14 +14,14 @@ class AutoLoaderTest extends TestCase {
 	 */
 	private $loader;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->loader = new \OC\AutoLoader([]);
 	}
 
 	public function testLegacyPath() {
 		$this->assertEquals([
-			\OC::$SERVERROOT . '/lib/private/legacy/files.php', 
+			\OC::$SERVERROOT . '/lib/private/legacy/files.php',
 		], $this->loader->findClass('OC_Files'));
 	}
 
@@ -33,7 +33,7 @@ class AutoLoaderTest extends TestCase {
 
 	public function testLoadCore() {
 		$this->assertEquals([
-			\OC::$SERVERROOT . '/lib/private/legacy/foo/bar.php', 
+			\OC::$SERVERROOT . '/lib/private/legacy/foo/bar.php',
 		], $this->loader->findClass('OC_Foo_Bar'));
 	}
 

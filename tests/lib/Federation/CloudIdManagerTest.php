@@ -28,7 +28,7 @@ class CloudIdManagerTest extends TestCase {
 	/** @var CloudIdManager */
 	private $cloudIdManager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->cloudIdManager = new CloudIdManager();
 	}
@@ -71,9 +71,10 @@ class CloudIdManagerTest extends TestCase {
 	 *
 	 * @param string $cloudId
 	 *
-	 * @expectedException \InvalidArgumentException
 	 */
 	public function testInvalidCloudId($cloudId) {
+		$this->expectException(\InvalidArgumentException::class);
+
 		$this->cloudIdManager->resolveCloudId($cloudId);
 	}
 

@@ -13,9 +13,7 @@ use OC\Files\FileInfo;
 use OC\Files\Mount\Manager;
 use OC\Files\Node\Folder;
 use OC\Files\View;
-use OCP\IConfig;
 use OCP\ILogger;
-use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
 
@@ -36,7 +34,7 @@ class RootTest extends \Test\TestCase {
 	/** @var IUserManager|\PHPUnit_Framework_MockObject_MockObject */
 	private $userManager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->user = $this->createMock(IUser::class);
@@ -79,7 +77,7 @@ class RootTest extends \Test\TestCase {
 		$view->expects($this->once())
 			->method('getFileInfo')
 			->with('/bar/foo')
-			->will($this->returnValue($this->getFileInfo(array('fileid' => 10, 'path' => 'bar/foo', 'name', 'mimetype' => 'text/plain'))));
+			->willReturn($this->getFileInfo(['fileid' => 10, 'path' => 'bar/foo', 'name', 'mimetype' => 'text/plain']));
 
 		$root->mount($storage, '');
 		$node = $root->get('/bar/foo');
@@ -87,10 +85,10 @@ class RootTest extends \Test\TestCase {
 		$this->assertInstanceOf('\OC\Files\Node\File', $node);
 	}
 
-	/**
-	 * @expectedException \OCP\Files\NotFoundException
-	 */
+	
 	public function testGetNotFound() {
+		$this->expectException(\OCP\Files\NotFoundException::class);
+
 		/**
 		 * @var \OC\Files\Storage\Storage $storage
 		 */
@@ -115,16 +113,16 @@ class RootTest extends \Test\TestCase {
 		$view->expects($this->once())
 			->method('getFileInfo')
 			->with('/bar/foo')
-			->will($this->returnValue(false));
+			->willReturn(false);
 
 		$root->mount($storage, '');
 		$root->get('/bar/foo');
 	}
 
-	/**
-	 * @expectedException \OCP\Files\NotPermittedException
-	 */
+	
 	public function testGetInvalidPath() {
+		$this->expectException(\OCP\Files\NotPermittedException::class);
+
 		/**
 		 * @var \OC\Files\View | \PHPUnit_Framework_MockObject_MockObject $view
 		 */
@@ -143,10 +141,10 @@ class RootTest extends \Test\TestCase {
 		$root->get('/../foo');
 	}
 
-	/**
-	 * @expectedException \OCP\Files\NotFoundException
-	 */
+	
 	public function testGetNoStorages() {
+		$this->expectException(\OCP\Files\NotFoundException::class);
+
 		/**
 		 * @var \OC\Files\View | \PHPUnit_Framework_MockObject_MockObject $view
 		 */
@@ -201,11 +199,11 @@ class RootTest extends \Test\TestCase {
 		$this->assertEquals($folder, $root->getUserFolder('MyUserId'));
 	}
 
-	/**
-	 * @expectedException \OC\User\NoUserException
-	 * @expectedExceptionMessage Backends provided no user object
-	 */
+	
 	public function testGetUserFolderWithNoUserObj() {
+		$this->expectException(\OC\User\NoUserException::class);
+		$this->expectExceptionMessage('Backends provided no user object');
+
 		$root = new \OC\Files\Node\Root(
 			$this->createMock(Manager::class),
 			$this->createMock(View::class),

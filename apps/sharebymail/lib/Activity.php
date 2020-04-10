@@ -2,6 +2,10 @@
 /**
  * @copyright Copyright (c) 2016 Joas Schilling <coding@schilljs.com>
  *
+ * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ *
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -115,8 +119,8 @@ class Activity implements IProvider {
 
 		if ($event->getSubject() === self::SUBJECT_SHARED_EMAIL_SELF) {
 			$event->setParsedSubject($this->l->t('Shared with %1$s', [
-					$parsedParameters['email']['name'],
-				]))
+				$parsedParameters['email']['name'],
+			]))
 				->setRichSubject($this->l->t('Shared with {email}'), [
 					'email' => $parsedParameters['email'],
 				]);
@@ -141,8 +145,8 @@ class Activity implements IProvider {
 			}
 		} else if ($event->getSubject() === self::SUBJECT_UNSHARED_EMAIL_SELF) {
 			$event->setParsedSubject($this->l->t('Unshared from %1$s', [
-					$parsedParameters['email']['name'],
-				]))
+				$parsedParameters['email']['name'],
+			]))
 				->setRichSubject($this->l->t('Unshared from {email}'), [
 					'email' => $parsedParameters['email'],
 				]);
@@ -203,9 +207,9 @@ class Activity implements IProvider {
 
 		if ($event->getSubject() === self::SUBJECT_SHARED_EMAIL_SELF) {
 			$event->setParsedSubject($this->l->t('You shared %1$s with %2$s by mail', [
-					$parsedParameters['file']['path'],
-					$parsedParameters['email']['name'],
-				]))
+				$parsedParameters['file']['path'],
+				$parsedParameters['email']['name'],
+			]))
 				->setRichSubject($this->l->t('You shared {file} with {email} by mail'), $parsedParameters);
 			if ($this->activityManager->getRequirePNG()) {
 				$event->setIcon($this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/share.png')));
@@ -226,9 +230,9 @@ class Activity implements IProvider {
 			}
 		} else if ($event->getSubject() === self::SUBJECT_UNSHARED_EMAIL_SELF) {
 			$event->setParsedSubject($this->l->t('You unshared %1$s from %2$s by mail', [
-					$parsedParameters['file']['path'],
-					$parsedParameters['email']['name'],
-				]))
+				$parsedParameters['file']['path'],
+				$parsedParameters['email']['name'],
+			]))
 				->setRichSubject($this->l->t('You unshared {file} from {email} by mail'), $parsedParameters);
 			if ($this->activityManager->getRequirePNG()) {
 				$event->setIcon($this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/share.png')));

@@ -64,46 +64,46 @@ import OC from '../OC'
  *
  */
 
-$.fn.avatar = function (user, size, ie8fix, hidedefault, callback, displayname) {
-	var setAvatarForUnknownUser = function (target) {
-		target.imageplaceholder('?');
-		target.css('background-color', '#b9b9b9');
-	};
+$.fn.avatar = function(user, size, ie8fix, hidedefault, callback, displayname) {
+	const setAvatarForUnknownUser = function(target) {
+		target.imageplaceholder('?')
+		target.css('background-color', '#b9b9b9')
+	}
 
 	if (typeof (user) !== 'undefined') {
-		user = String(user);
+		user = String(user)
 	}
 	if (typeof (displayname) !== 'undefined') {
-		displayname = String(displayname);
+		displayname = String(displayname)
 	}
 
 	if (typeof (size) === 'undefined') {
 		if (this.height() > 0) {
-			size = this.height();
+			size = this.height()
 		} else if (this.data('size') > 0) {
-			size = this.data('size');
+			size = this.data('size')
 		} else {
-			size = 64;
+			size = 64
 		}
 	}
 
-	this.height(size);
-	this.width(size);
+	this.height(size)
+	this.width(size)
 
 	if (typeof (user) === 'undefined') {
 		if (typeof (this.data('user')) !== 'undefined') {
-			user = this.data('user');
+			user = this.data('user')
 		} else {
-			setAvatarForUnknownUser(this);
-			return;
+			setAvatarForUnknownUser(this)
+			return
 		}
 	}
 
 	// sanitize
-	user = String(user).replace(/\//g, '');
+	user = String(user).replace(/\//g, '')
 
-	var $div = this;
-	var url;
+	const $div = this
+	let url
 
 	// If this is our own avatar we have to use the version attribute
 	if (user === OC.getCurrentUser().uid) {
@@ -112,51 +112,51 @@ $.fn.avatar = function (user, size, ie8fix, hidedefault, callback, displayname) 
 			{
 				user: user,
 				size: Math.ceil(size * window.devicePixelRatio),
-				version: oc_userconfig.avatar.version
-			});
+				version: oc_userconfig.avatar.version,
+			})
 	} else {
 		url = OC.generateUrl(
 			'/avatar/{user}/{size}',
 			{
 				user: user,
-				size: Math.ceil(size * window.devicePixelRatio)
-			});
+				size: Math.ceil(size * window.devicePixelRatio),
+			})
 	}
 
-	var img = new Image();
+	const img = new Image()
 
 	// If the new image loads successfully set it.
-	img.onload = function () {
-		$div.clearimageplaceholder();
-		$div.append(img);
+	img.onload = function() {
+		$div.clearimageplaceholder()
+		$div.append(img)
 
 		if (typeof callback === 'function') {
-			callback();
+			callback()
 		}
-	};
+	}
 	// Fallback when avatar loading fails:
 	// Use old placeholder when a displayname attribute is defined,
 	// otherwise show the unknown user placeholder.
-	img.onerror = function () {
-		$div.clearimageplaceholder();
+	img.onerror = function() {
+		$div.clearimageplaceholder()
 		if (typeof (displayname) !== 'undefined') {
-			$div.imageplaceholder(user, displayname);
+			$div.imageplaceholder(user, displayname)
 		} else {
-			setAvatarForUnknownUser($div);
+			setAvatarForUnknownUser($div)
 		}
 
 		if (typeof callback === 'function') {
-			callback();
+			callback()
 		}
-	};
+	}
 
 	if (size < 32) {
-		$div.addClass('icon-loading-small');
+		$div.addClass('icon-loading-small')
 	} else {
-		$div.addClass('icon-loading');
+		$div.addClass('icon-loading')
 	}
-	img.width = size;
-	img.height = size;
-	img.src = url;
-	img.alt = '';
-};
+	img.width = size
+	img.height = size
+	img.src = url
+	img.alt = ''
+}

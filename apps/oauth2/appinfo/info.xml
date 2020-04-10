@@ -5,7 +5,7 @@
 	<name>OAuth 2.0</name>
 	<summary>Allows OAuth2 compatible authentication from other web applications.</summary>
 	<description>The OAuth2 app allows administrators to configure the built-in authentication workflow to also allow OAuth2 compatible authentication from other web applications.</description>
-	<version>1.5.0</version>
+	<version>1.7.0</version>
 	<licence>agpl</licence>
 	<author>Lukas Reschke</author>
 	<namespace>OAuth2</namespace>
@@ -17,7 +17,7 @@
 	<category>integration</category>
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 	<dependencies>
-		<nextcloud min-version="17" max-version="17"/>
+		<nextcloud min-version="19" max-version="19"/>
 	</dependencies>
 
 	<repair-steps>

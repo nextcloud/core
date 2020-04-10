@@ -25,7 +25,7 @@ OC.L10N.register(
     "Are you sure you want to delete this external storage?" : "この外部ストレージを本当に削除しますか?",
     "Delete storage?" : "ストレージを削除しますか?",
     "Saved" : "保存しました",
-    "Saving..." : "保存中...",
+    "Saving …" : "保存中...",
     "Save" : "保存",
     "Empty response from the server" : "サーバーから空の応答がありました",
     "Couldn't access. Please log out and in again to activate this mount point" : "アクセスできません。ログアウトして、再度このマウントポイントをアクティベートしてください。",
@@ -74,6 +74,7 @@ OC.L10N.register(
     "Log-in credentials, save in database" : "ログイン認証情報は、データベースに保存されます。",
     "Username and password" : "ユーザー名とパスワード",
     "Log-in credentials, save in session" : "ログイン認証情報は、セッションに保存されます。",
+    "Global credentials, user entered" : "ユーザー入力のグローバル資格情報",
     "User entered, store in database" : "入力されたユーザーデータは、データベースに保管します",
     "RSA public key" : "RSA公開鍵",
     "Public key" : "公開鍵",
@@ -104,6 +105,7 @@ OC.L10N.register(
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "共有",
     "Show hidden files" : "隠しファイルを表示",
+    "Timeout" : "タイムアウト",
     "SMB / CIFS using OC login" : "Nextcloud ログインを利用したSMB / CIFS",
     "Username as share" : "共有名",
     "OpenStack Object Storage" : "OpenStack ObjectStorage",
@@ -119,6 +121,7 @@ OC.L10N.register(
     "Name" : "名前",
     "Storage type" : "ストレージ種別",
     "Scope" : "スコープ",
+    "Open documentation" : "ドキュメントを開く",
     "External storage enables you to mount external storage services and devices as secondary Nextcloud storage devices. You may also allow users to mount their own external storage services." : "外部ストレージを使用すると、外部ストレージサービスおよびデバイスをセカンダリのNextcloudストレージデバイスとしてマウントできます。 また、ユーザーが独自の外部ストレージサービスをマウントできるようにすることもできます。",
     "Folder name" : "フォルダー名",
     "External storage" : "外部ストレージ",
@@ -130,7 +133,6 @@ OC.L10N.register(
     "Advanced settings" : "詳細設定",
     "Allow users to mount external storage" : "ユーザーに外部ストレージの接続を許可する",
     "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "グローバル資格情報を使用して、同じ資格情報を持つ複数の外部記憶装置で認証することができます。",
-    "Some of the configured external mount points are not connected. Please click on the red row(s) for more information" : "いくつかの設定済み外部マウントポイントに接続できませんでした。詳細情報は赤い行をクリックしてください",
-    "\"%s\" is not installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "\"%s\"はインストールされていません。 %s のマウントは不可能です。システム管理者にインストールを依頼してください。"
+    "Saving..." : "保存中..."
 },
 "nplurals=1; plural=0;");

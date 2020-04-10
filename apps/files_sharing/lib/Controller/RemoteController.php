@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -116,6 +117,10 @@ class RemoteController extends OCSController {
 	private static function extendShareInfo($share) {
 		$view = new \OC\Files\View('/' . \OC_User::getUser() . '/files/');
 		$info = $view->getFileInfo($share['mountpoint']);
+
+		if ($info === false) {
+			return $share;
+		}
 
 		$share['mimetype'] = $info->getMimetype();
 		$share['mtime'] = $info->getMTime();

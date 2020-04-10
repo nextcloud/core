@@ -17,12 +17,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\Files_Sharing\Collaboration;
-
 
 use OCP\Collaboration\AutoComplete\ISorter;
 use OCP\Files\Folder;
@@ -75,7 +74,7 @@ class ShareRecipientSorter implements ISorter {
 			// at least on PHP 5.6 usort turned out to be not stable. So we add
 			// the current index to the value and compare it on a draw
 			$i = 0;
-			$workArray = array_map(function($element) use (&$i) {
+			$workArray = array_map(function ($element) use (&$i) {
 				return [$i++, $element];
 			}, $byType);
 

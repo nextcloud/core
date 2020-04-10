@@ -2,21 +2,24 @@
 /**
  * @copyright Copyright (c) 2018 Georg Ehrke
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
- * @license AGPL-3.0
+ * @license GNU AGPL version 3 or any later version
  *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -140,11 +143,11 @@ class CachedSubscriptionTest extends \Test\TestCase {
 		$calendar->propPatch($propPatch);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotFound
-	 * @expectedExceptionMessage Calendar object not found
-	 */
+	
 	public function testGetChild() {
+		$this->expectException(\Sabre\DAV\Exception\NotFound::class);
+		$this->expectExceptionMessage('Calendar object not found');
+
 		$backend = $this->createMock(CalDavBackend::class);
 		$calendarInfo = [
 			'{http://owncloud.org/ns}owner-principal' => 'user1',
@@ -156,14 +159,14 @@ class CachedSubscriptionTest extends \Test\TestCase {
 		$backend->expects($this->at(0))
 			->method('getCalendarObject')
 			->with(666, 'foo1', 1)
-			->will($this->returnValue([
+			->willReturn([
 				'id' => 99,
 				'uri' => 'foo1'
-			]));
+			]);
 		$backend->expects($this->at(1))
 			->method('getCalendarObject')
 			->with(666, 'foo2', 1)
-			->will($this->returnValue(null));
+			->willReturn(null);
 
 		$calendar = new CachedSubscription($backend, $calendarInfo);
 
@@ -185,7 +188,7 @@ class CachedSubscriptionTest extends \Test\TestCase {
 		$backend->expects($this->at(0))
 			->method('getCalendarObjects')
 			->with(666, 1)
-			->will($this->returnValue([
+			->willReturn([
 				[
 					'id' => 99,
 					'uri' => 'foo1'
@@ -194,7 +197,7 @@ class CachedSubscriptionTest extends \Test\TestCase {
 					'id' => 100,
 					'uri' => 'foo2'
 				],
-			]));
+			]);
 
 		$calendar = new CachedSubscription($backend, $calendarInfo);
 
@@ -216,7 +219,7 @@ class CachedSubscriptionTest extends \Test\TestCase {
 		$backend->expects($this->at(0))
 			->method('getMultipleCalendarObjects')
 			->with(666, ['foo1', 'foo2'], 1)
-			->will($this->returnValue([
+			->willReturn([
 				[
 					'id' => 99,
 					'uri' => 'foo1'
@@ -225,7 +228,7 @@ class CachedSubscriptionTest extends \Test\TestCase {
 					'id' => 100,
 					'uri' => 'foo2'
 				],
-			]));
+			]);
 
 		$calendar = new CachedSubscription($backend, $calendarInfo);
 
@@ -235,11 +238,11 @@ class CachedSubscriptionTest extends \Test\TestCase {
 		$this->assertInstanceOf(CachedSubscriptionObject::class, $res[1]);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\MethodNotAllowed
-	 * @expectedExceptionMessage Creating objects in cached subscription is not allowed
-	 */
+	
 	public function testCreateFile() {
+		$this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
+		$this->expectExceptionMessage('Creating objects in cached subscription is not allowed');
+
 		$backend = $this->createMock(CalDavBackend::class);
 		$calendarInfo = [
 			'{http://owncloud.org/ns}owner-principal' => 'user1',
@@ -264,14 +267,14 @@ class CachedSubscriptionTest extends \Test\TestCase {
 		$backend->expects($this->at(0))
 			->method('getCalendarObject')
 			->with(666, 'foo1', 1)
-			->will($this->returnValue([
+			->willReturn([
 				'id' => 99,
 				'uri' => 'foo1'
-			]));
+			]);
 		$backend->expects($this->at(1))
 			->method('getCalendarObject')
 			->with(666, 'foo2', 1)
-			->will($this->returnValue(null));
+			->willReturn(null);
 
 		$calendar = new CachedSubscription($backend, $calendarInfo);
 
@@ -291,7 +294,7 @@ class CachedSubscriptionTest extends \Test\TestCase {
 		$backend->expects($this->once())
 			->method('calendarQuery')
 			->with(666, ['foo'], 1)
-			->will($this->returnValue([99]));
+			->willReturn([99]);
 
 		$calendar = new CachedSubscription($backend, $calendarInfo);
 

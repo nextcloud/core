@@ -54,7 +54,7 @@ $maxUploadFilesize = min($upload_max_filesize, $post_max_size);
 		<label id="view-toggle" for="showgridview" class="button <?php p($_['showgridview'] ? 'icon-toggle-filelist' : 'icon-toggle-pictures') ?>"
 			title="<?php p($l->t('Toggle grid view'))?>"></label>
 	<?php } ?>
-	
+
 	<!-- files listing -->
 	<div id="files-public-content">
 		<div id="preview">
@@ -75,7 +75,7 @@ $maxUploadFilesize = min($upload_max_filesize, $post_max_size);
 					<div class="directDownload">
 						<a href="<?php p($_['downloadURL']); ?>" id="downloadFile" class="button">
 							<span class="icon icon-download"></span>
-							<?php p($l->t('Download %s', array($_['filename'])))?> (<?php p($_['fileSize']) ?>)
+							<?php p($l->t('Download %s', [$_['filename']]))?> (<?php p($_['fileSize']) ?>)
 						</a>
 					</div>
 				<?php endif; ?>
@@ -88,9 +88,14 @@ $maxUploadFilesize = min($upload_max_filesize, $post_max_size);
 		<div
 				id="emptycontent"
 				class="<?php if (!empty($_['note'])) { ?>has-note<?php } ?>">
-			<div id="displayavatar"><div class="avatardiv"></div></div>
-			<h2><?php p($l->t('Upload files to %s', [$_['shareOwner']])) ?></h2>
-			<p><span class="icon-folder"></span> <?php p($_['filename']) ?></p>
+			<?php if ($_['shareOwner']) { ?>
+				<div id="displayavatar"><div class="avatardiv"></div></div>
+				<h2><?php p($l->t('Upload files to %s', [$_['shareOwner']])) ?></h2>
+				<p><span class="icon-folder"></span> <?php p($_['filename']) ?></p>
+			<?php } else { ?>
+				<div id="displayavatar"><span class="icon-folder"></span></div>
+				<h2><?php p($l->t('Upload files to %s', [$_['filename']])) ?></h2>
+			<?php } ?>
 
 			<?php if (empty($_['note']) === false) { ?>
 				<h3><?php p($l->t('Note')); ?></h3>
@@ -98,9 +103,8 @@ $maxUploadFilesize = min($upload_max_filesize, $post_max_size);
 			<?php } ?>
 
 			<input type="file" name="files[]" class="hidden" multiple>
-
 			<a href="#" class="button icon-upload"><?php p($l->t('Select or drop files')) ?></a>
-			<div id="drop-upload-progress-indicator" style="padding-top: 25px;" class="hidden"><?php p($l->t('Uploading files…')) ?></div>
+			<div id="drop-upload-progress-indicator" style="padding-top: 25px;" class="hidden"><span class="icon-loading-small"></span><?php p($l->t('Uploading files')) ?></div>
 			<div id="drop-upload-done-indicator" style="padding-top: 25px;" class="hidden"><?php p($l->t('Uploaded files:')) ?></div>
 			<ul id="drop-uploaded-files"></ul>
 
@@ -108,7 +112,7 @@ $maxUploadFilesize = min($upload_max_filesize, $post_max_size);
 				<div>
 					<?php
 						echo $l->t('By uploading files, you agree to the %1$sterms of service%2$s.', [
-								'<span id="show-terms-dialog">', '</span>'
+							'<span id="show-terms-dialog">', '</span>'
 						]);
 					?>
 				</div>

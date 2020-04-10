@@ -3,6 +3,7 @@
  * @copyright 2017, Georg Ehrke <oc.list@georgehrke.com>
  *
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,11 +26,11 @@ namespace OCA\DAV\CalDAV\BirthdayCalendar;
 
 use OCA\DAV\CalDAV\BirthdayService;
 use OCA\DAV\CalDAV\CalendarHome;
+use OCP\IConfig;
 use Sabre\DAV\Server;
 use Sabre\DAV\ServerPlugin;
 use Sabre\HTTP\RequestInterface;
 use Sabre\HTTP\ResponseInterface;
-use OCP\IConfig;
 
 /**
  * Class EnablePlugin
@@ -86,7 +87,7 @@ class EnablePlugin extends ServerPlugin {
 	 *
 	 * @return string
 	 */
-	public function getPluginName()	{
+	public function getPluginName() {
 		return 'nc-enable-birthday-calendar';
 	}
 

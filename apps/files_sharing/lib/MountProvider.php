@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Maxence Lange <maxence@nextcloud.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -21,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -35,6 +36,7 @@ use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IUser;
 use OCP\Share\IManager;
+use OCP\Share\IShare;
 
 class MountProvider implements IMountProvider {
 	/**
@@ -94,6 +96,14 @@ class MountProvider implements IMountProvider {
 			try {
 				/** @var \OCP\Share\IShare $parentShare */
 				$parentShare = $share[0];
+
+				if ($parentShare->getStatus() !== IShare::STATUS_ACCEPTED &&
+					($parentShare->getShareType() === IShare::TYPE_GROUP ||
+						$parentShare->getShareType() === IShare::TYPE_USERGROUP ||
+						$parentShare->getShareType() === IShare::TYPE_USER)) {
+					continue;
+				}
+
 				$owner = $parentShare->getShareOwner();
 				if (!isset($ownerViews[$owner])) {
 					$ownerViews[$owner] = new View('/' . $parentShare->getShareOwner() . '/files');
@@ -145,7 +155,7 @@ class MountProvider implements IMountProvider {
 		$result = [];
 		// sort by stime, the super share will be based on the least recent share
 		foreach ($tmp as &$tmp2) {
-			@usort($tmp2, function($a, $b) {
+			@usort($tmp2, function ($a, $b) {
 				if ($a->getShareTime() <= $b->getShareTime()) {
 					return -1;
 				}
@@ -184,12 +194,16 @@ class MountProvider implements IMountProvider {
 			$superShare->setId($shares[0]->getId())
 				->setShareOwner($shares[0]->getShareOwner())
 				->setNodeId($shares[0]->getNodeId())
+				->setShareType($shares[0]->getShareType())
 				->setTarget($shares[0]->getTarget());
 
 			// use most permissive permissions
 			$permissions = 0;
+			$status = IShare::STATUS_PENDING;
 			foreach ($shares as $share) {
 				$permissions |= $share->getPermissions();
+				$status = max($status, $share->getStatus());
+
 				if ($share->getTarget() !== $superShare->getTarget()) {
 					// adjust target, for database consistency
 					$share->setTarget($superShare->getTarget());
@@ -216,7 +230,8 @@ class MountProvider implements IMountProvider {
 				}
 			}
 
-			$superShare->setPermissions($permissions);
+			$superShare->setPermissions($permissions)
+				->setStatus($status);
 
 			$result[] = [$superShare, $shares];
 		}

@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -21,27 +21,27 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files\Controller;
 
+use OCA\Files\Service\TagService;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\NotFoundException;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\StorageNotAvailableException;
 use OCP\IConfig;
+use OCP\IPreview;
+use OCP\IRequest;
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\Share\IManager;
 use Test\TestCase;
-use OCP\IRequest;
-use OCA\Files\Service\TagService;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\IPreview;
 
 /**
  * Class ApiController
@@ -68,7 +68,7 @@ class ApiControllerTest extends TestCase {
 	/** @var Folder|\PHPUnit_Framework_MockObject_MockObject */
 	private $userFolder;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->getMockBuilder(IRequest::class)
@@ -77,11 +77,11 @@ class ApiControllerTest extends TestCase {
 		$this->user = $this->createMock(IUser::class);
 		$this->user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('user1'));
+			->willReturn('user1');
 		$userSession = $this->createMock(IUserSession::class);
 		$userSession->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($this->user));
+			->willReturn($this->user);
 		$this->tagService = $this->getMockBuilder(TagService::class)
 			->disableOriginalConstructor()
 			->getMock();

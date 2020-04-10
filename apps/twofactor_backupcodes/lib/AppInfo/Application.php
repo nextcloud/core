@@ -1,10 +1,10 @@
 <?php
-
 /**
  * @copyright Copyright (c) 2017 Joas Schilling <coding@schilljs.com>
  *
- * @author Joas Schilling <coding@schilljs.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -36,7 +36,6 @@ use OCA\TwoFactorBackupCodes\Notifications\Notifier;
 use OCP\AppFramework\App;
 use OCP\Authentication\TwoFactorAuth\IRegistry;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\IL10N;
 use OCP\Notification\IManager;
 use OCP\Util;
 

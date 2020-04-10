@@ -4,10 +4,12 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
@@ -23,9 +25,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Files_Trashbin;
 
 use OC\Files\FileInfo;
@@ -44,7 +47,7 @@ class Helper {
 	 * @return \OCP\Files\FileInfo[]
 	 */
 	public static function getTrashFiles($dir, $user, $sortAttribute = '', $sortDescending = false) {
-		$result = array();
+		$result = [];
 		$timestamp = null;
 
 		$view = new \OC\Files\View('/' . $user . '/files_trashbin/files');
@@ -82,7 +85,7 @@ class Helper {
 				}
 			}
 			$type = $entry->getMimeType() === ICacheEntry::DIRECTORY_MIMETYPE ? 'dir' : 'file';
-			$i = array(
+			$i = [
 				'name' => $name,
 				'mtime' => $timestamp,
 				'mimetype' => $type === 'dir' ? 'httpd/unix-directory' : \OC::$server->getMimeTypeDetector()->detectPath($name),
@@ -92,7 +95,7 @@ class Helper {
 				'etag' => '',
 				'permissions' => Constants::PERMISSION_ALL - Constants::PERMISSION_SHARE,
 				'fileid' => $entry->getId(),
-			);
+			];
 			if ($originalPath) {
 				if ($originalPath !== '.') {
 					$i['extraData'] = $originalPath . '/' . $originalName;
@@ -115,7 +118,7 @@ class Helper {
 	 * @param \OCP\Files\FileInfo[] $fileInfos file infos
 	 */
 	public static function formatFileInfos($fileInfos) {
-		$files = array();
+		$files = [];
 		foreach ($fileInfos as $i) {
 			$entry = \OCA\Files\Helper::formatFileInfo($i);
 			$entry['id'] = $i->getId();

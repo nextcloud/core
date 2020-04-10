@@ -5,7 +5,9 @@
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Clark Tomlinson <fallen013@gmail.com>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -20,26 +22,25 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Encryption\Hooks;
 
-
 use OC\Files\Filesystem;
-use OCP\Encryption\Exceptions\GenericEncryptionException;
-use OCP\IUserManager;
-use OCP\Util as OCUtil;
+use OCA\Encryption\Crypto\Crypt;
 use OCA\Encryption\Hooks\Contracts\IHook;
 use OCA\Encryption\KeyManager;
-use OCA\Encryption\Crypto\Crypt;
-use OCA\Encryption\Users\Setup;
-use OCP\ILogger;
-use OCP\IUserSession;
-use OCA\Encryption\Util;
-use OCA\Encryption\Session;
 use OCA\Encryption\Recovery;
+use OCA\Encryption\Session;
+use OCA\Encryption\Users\Setup;
+use OCA\Encryption\Util;
+use OCP\Encryption\Exceptions\GenericEncryptionException;
+use OCP\ILogger;
+use OCP\IUserManager;
+use OCP\IUserSession;
+use OCP\Util as OCUtil;
 
 class UserHooks implements IHook {
 
@@ -68,7 +69,7 @@ class UserHooks implements IHook {
 	/**
 	 * @var IUserSession
 	 */
-	private $user;
+	private $userSession;
 	/**
 	 * @var Util
 	 */
@@ -93,7 +94,7 @@ class UserHooks implements IHook {
 	 * @param IUserManager $userManager
 	 * @param ILogger $logger
 	 * @param Setup $userSetup
-	 * @param IUserSession $user
+	 * @param IUserSession $userSession
 	 * @param Util $util
 	 * @param Session $session
 	 * @param Crypt $crypt
@@ -103,7 +104,7 @@ class UserHooks implements IHook {
 								IUserManager $userManager,
 								ILogger $logger,
 								Setup $userSetup,
-								IUserSession $user,
+								IUserSession $userSession,
 								Util $util,
 								Session $session,
 								Crypt $crypt,
@@ -113,7 +114,7 @@ class UserHooks implements IHook {
 		$this->userManager = $userManager;
 		$this->logger = $logger;
 		$this->userSetup = $userSetup;
-		$this->user = $user;
+		$this->userSession = $userSession;
 		$this->util = $util;
 		$this->session = $session;
 		$this->recovery = $recovery;
@@ -253,7 +254,7 @@ class UserHooks implements IHook {
 		}
 
 		// Get existing decrypted private key
-		$user = $this->user->getUser();
+		$user = $this->userSession->getUser();
 
 		// current logged in user changes his own password
 		if ($user && $params['uid'] === $user->getUID()) {
@@ -265,7 +266,7 @@ class UserHooks implements IHook {
 
 			// Save private key
 			if ($encryptedPrivateKey) {
-				$this->keyManager->setPrivateKey($this->user->getUser()->getUID(),
+				$this->keyManager->setPrivateKey($user->getUID(),
 					$this->crypt->generateHeader() . $encryptedPrivateKey);
 			} else {
 				$this->logger->error('Encryption could not update users encryption password');
@@ -275,8 +276,8 @@ class UserHooks implements IHook {
 			// private key has not changed, only the passphrase
 			// used to decrypt it has changed
 		} else { // admin changed the password for a different user, create new keys and re-encrypt file keys
-			$user = $params['uid'];
-			$this->initMountPoints($user);
+			$userId = $params['uid'];
+			$this->initMountPoints($userId);
 			$recoveryPassword = isset($params['recoveryPassword']) ? $params['recoveryPassword'] : null;
 
 			$recoveryKeyId = $this->keyManager->getRecoveryKeyId();
@@ -296,9 +297,9 @@ class UserHooks implements IHook {
 			// ...encryption was activated for the first time (no keys exists)
 			// ...the user doesn't have any files
 			if (
-				($this->recovery->isRecoveryEnabledForUser($user) && $recoveryPassword)
-				|| !$this->keyManager->userHasKeys($user)
-				|| !$this->util->userHasFiles($user)
+				($this->recovery->isRecoveryEnabledForUser($userId) && $recoveryPassword)
+				|| !$this->keyManager->userHasKeys($userId)
+				|| !$this->util->userHasFiles($userId)
 			) {
 
 				// backup old keys
@@ -309,16 +310,16 @@ class UserHooks implements IHook {
 				$keyPair = $this->crypt->createKeyPair();
 
 				// Save public key
-				$this->keyManager->setPublicKey($user, $keyPair['publicKey']);
+				$this->keyManager->setPublicKey($userId, $keyPair['publicKey']);
 
 				// Encrypt private key with new password
-				$encryptedKey = $this->crypt->encryptPrivateKey($keyPair['privateKey'], $newUserPassword, $user);
+				$encryptedKey = $this->crypt->encryptPrivateKey($keyPair['privateKey'], $newUserPassword, $userId);
 
 				if ($encryptedKey) {
-					$this->keyManager->setPrivateKey($user, $this->crypt->generateHeader() . $encryptedKey);
+					$this->keyManager->setPrivateKey($userId, $this->crypt->generateHeader() . $encryptedKey);
 
 					if ($recoveryPassword) { // if recovery key is set we can re-encrypt the key files
-						$this->recovery->recoverUsersFiles($recoveryPassword, $user);
+						$this->recovery->recoverUsersFiles($recoveryPassword, $userId);
 					}
 				} else {
 					$this->logger->error('Encryption Could not update users encryption password');

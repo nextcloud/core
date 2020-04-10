@@ -1,6 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2019 Robin Appelman <robin@icewind.nl>
+ *
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -15,15 +22,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OC\Files\Cache;
 
+use OCP\EventDispatcher\Event;
 use OCP\Files\Cache\ICacheEvent;
 use OCP\Files\Storage\IStorage;
-use Symfony\Component\EventDispatcher\Event;
 
 class AbstractCacheEvent extends Event implements ICacheEvent {
 	protected $storage;
@@ -56,6 +63,14 @@ class AbstractCacheEvent extends Event implements ICacheEvent {
 	 */
 	public function getPath(): string {
 		return $this->path;
+	}
+
+	/**
+	 * @param string $path
+	 * @since 19.0.0
+	 */
+	public function setPath(string $path): void {
+		$this->path = $path;
 	}
 
 	/**

@@ -1,8 +1,12 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2018, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -18,7 +22,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -43,13 +47,13 @@ class NotifierTest extends TestCase {
 	/** @var IL10N|MockObject */
 	protected $l;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->l = $this->createMock(IL10N::class);
 		$this->l->expects($this->any())
 			->method('t')
-			->willReturnCallback(function($string, $args) {
+			->willReturnCallback(function ($string, $args) {
 				return vsprintf($string, $args);
 			});
 		$this->factory = $this->createMock(IFactory::class);
@@ -64,10 +68,10 @@ class NotifierTest extends TestCase {
 		);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 */
+	
 	public function testPrepareWrongApp() {
+		$this->expectException(\InvalidArgumentException::class);
+
 		/** @var INotification|\PHPUnit_Framework_MockObject_MockObject $notification */
 		$notification = $this->createMock(INotification::class);
 		$notification->expects($this->once())
@@ -79,10 +83,10 @@ class NotifierTest extends TestCase {
 		$this->notifier->prepare($notification, 'en');
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 */
+	
 	public function testPrepareWrongSubject() {
+		$this->expectException(\InvalidArgumentException::class);
+
 		/** @var INotification|\PHPUnit_Framework_MockObject_MockObject $notification */
 		$notification = $this->createMock(INotification::class);
 		$notification->expects($this->once())

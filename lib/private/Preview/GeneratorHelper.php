@@ -2,6 +2,9 @@
 /**
  * @copyright Copyright (c) 2016, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -17,12 +20,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OC\Preview;
 
-use OC\Files\View;
 use OCP\Files\File;
 use OCP\Files\IRootFolder;
 use OCP\Files\SimpleFS\ISimpleFile;
@@ -49,10 +52,11 @@ class GeneratorHelper {
 	}
 
 	/**
-	 * @param IProvider $provider
+	 * @param IProviderV2 $provider
 	 * @param File $file
 	 * @param int $maxWidth
 	 * @param int $maxHeight
+	 *
 	 * @return bool|IImage
 	 */
 	public function getThumbnail(IProviderV2 $provider, File $file, $maxWidth, $maxHeight) {

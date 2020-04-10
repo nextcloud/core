@@ -4,11 +4,13 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Clark Tomlinson <fallen013@gmail.com>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -23,21 +25,20 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Encryption\Crypto;
 
-
 use OC\Encryption\Exceptions\DecryptionFailedException;
 use OC\Files\Cache\Scanner;
 use OC\Files\View;
 use OCA\Encryption\Exceptions\PublicKeyMissingException;
+use OCA\Encryption\KeyManager;
 use OCA\Encryption\Session;
 use OCA\Encryption\Util;
 use OCP\Encryption\IEncryptionModule;
-use OCA\Encryption\KeyManager;
 use OCP\IL10N;
 use OCP\ILogger;
 use Symfony\Component\Console\Input\InputInterface;
@@ -235,7 +236,7 @@ class Encryption implements IEncryptionModule {
 			$this->cipher = $this->crypt->getLegacyCipher();
 		}
 
-		return array('cipher' => $this->cipher, 'signed' => 'true');
+		return ['cipher' => $this->cipher, 'signed' => 'true'];
 	}
 
 	/**
@@ -265,7 +266,7 @@ class Encryption implements IEncryptionModule {
 				$result = $this->crypt->symmetricEncryptFileContent($this->writeCache, $this->fileKey, $this->version + 1, $position);
 				$this->writeCache = '';
 			}
-			$publicKeys = array();
+			$publicKeys = [];
 			if ($this->useMasterPassword === true) {
 				$publicKeys[$this->keyManager->getMasterKeyId()] = $this->keyManager->getPublicMasterKey();
 			} else {
@@ -401,7 +402,7 @@ class Encryption implements IEncryptionModule {
 
 		if (!empty($fileKey)) {
 
-			$publicKeys = array();
+			$publicKeys = [];
 			if ($this->useMasterPassword === true) {
 				$publicKeys[$this->keyManager->getMasterKeyId()] = $this->keyManager->getPublicMasterKey();
 			} else {
@@ -424,7 +425,7 @@ class Encryption implements IEncryptionModule {
 
 		} else {
 			$this->logger->debug('no file key found, we assume that the file "{file}" is not encrypted',
-				array('file' => $path, 'app' => 'encryption'));
+				['file' => $path, 'app' => 'encryption']);
 
 			return false;
 		}

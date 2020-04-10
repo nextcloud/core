@@ -26,17 +26,6 @@ OC.L10N.register(
     "Share by mail" : "Shpërnda me mail",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Lejo përdoruesit të ndajnë një lidhje të personalizuar me një skedar ose dosje duke e vendosur në një adresë e-mail.",
     "Send password by mail" : "Dërgo fjalëkalimin me mail",
-    "Enforce password protection" : "Forco mbrojtjen e fjalëkalimit",
-    "Sharing %s failed, this item is already shared with %s" : "Shpërndarja %s dështoi, ky  artikull është aktualisht i shpërndarë me %s",
-    "%s shared »%s« with you" : "%s ndarë »%s« me ju",
-    "%s shared »%s« with you." : "%s ndarë »%s« me ju.",
-    "%s via %s" : "%s përmes %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%sndau »%s« me ju. \nJu duhet të keni marrë tashmë një mail të veçantë me një lidhje për të aksesuar atë.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s ndau »%s« me ju. Ju duhet të keni marrë tashmë një mail të veçantë me një lidhje për të aksesuar atë.",
-    "Password to access »%s« shared to you by %s" : "Fjalëkalimi për të hyrë »%s« ndarë me ju nda %s",
-    "It is protected with the following password: %s" : "Është i mbrojtur me fjalëkalimin e mëposhtëm: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Ju sapo ndatë »« me %s%s. Pjesa ishte dërguar tashmë tek marrësi. Për shkak të politikave të sigurisë të përcaktuara nga administratori %s secila ndarje duhet të mbrohet me fjalëkalim dhe nuk lejohet të dërgojë fjalëkalimin drejtpërdrejt te marrësi. Prandaj ju duhet ta kaloni fjalëkalimin manualisht tek marrësi.",
-    "Password to access »%s« shared with %s" : "Fjalëkalimi për të hyrë »%s« ndarë me %s",
-    "This is the password: %s" : "Ky është fjalëkalimi: %s"
+    "Enforce password protection" : "Forco mbrojtjen e fjalëkalimit"
 },
 "nplurals=2; plural=(n != 1);");

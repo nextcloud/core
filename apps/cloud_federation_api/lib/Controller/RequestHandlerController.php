@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2018 Bjoern Schiessle <bjoern@schiessle.org>
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -31,9 +33,9 @@ use OCP\Federation\Exceptions\ActionNotSupportedException;
 use OCP\Federation\Exceptions\AuthenticationFailedException;
 use OCP\Federation\Exceptions\BadRequestException;
 use OCP\Federation\Exceptions\ProviderCouldNotAddShareException;
+use OCP\Federation\Exceptions\ProviderDoesNotExistsException;
 use OCP\Federation\ICloudFederationFactory;
 use OCP\Federation\ICloudFederationProviderManager;
-use OCP\Federation\Exceptions\ProviderDoesNotExistsException;
 use OCP\Federation\ICloudIdManager;
 use OCP\IGroupManager;
 use OCP\ILogger;
@@ -41,7 +43,6 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\Share\Exceptions\ShareNotFound;
-
 
 /**
  * Class RequestHandlerController
@@ -132,7 +133,7 @@ class RequestHandlerController extends Controller {
 			$shareType === null ||
 			!is_array($protocol) ||
 			!isset($protocol['name']) ||
-			!isset ($protocol['options']) ||
+			!isset($protocol['options']) ||
 			!is_array($protocol['options']) ||
 			!isset($protocol['options']['sharedSecret'])
 		) {
@@ -290,7 +291,7 @@ class RequestHandlerController extends Controller {
 		\OCP\Util::emitHook(
 			'\OCA\Files_Sharing\API\Server2Server',
 			'preLoginNameUsedAsUserName',
-			array('uid' => &$uid)
+			['uid' => &$uid]
 		);
 		$this->logger->debug('shareWith after, ' . $uid, ['app' => $this->appName]);
 

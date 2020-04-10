@@ -2,8 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -91,7 +93,7 @@ class Propagator implements IPropagator {
 		}, $parentHashes);
 
 		$builder->update('filecache')
-			->set('mtime', $builder->createFunction('GREATEST(' . $builder->getColumnName('mtime') . ', ' . $builder->createNamedParameter((int)$time, IQueryBuilder::PARAM_INT) . ')'))
+			->set('mtime', $builder->func()->greatest('mtime', $builder->createNamedParameter((int)$time, IQueryBuilder::PARAM_INT)))
 			->set('etag', $builder->createNamedParameter($etag, IQueryBuilder::PARAM_STR))
 			->where($builder->expr()->eq('storage', $builder->createNamedParameter($storageId, IQueryBuilder::PARAM_INT)))
 			->andWhere($builder->expr()->in('path_hash', $hashParams));
@@ -102,7 +104,10 @@ class Propagator implements IPropagator {
 			// we need to do size separably so we can ignore entries with uncalculated size
 			$builder = $this->connection->getQueryBuilder();
 			$builder->update('filecache')
-				->set('size', $builder->func()->add('size', $builder->createNamedParameter($sizeDifference)))
+				->set('size', $builder->func()->greatest(
+					$builder->createNamedParameter(-1, IQueryBuilder::PARAM_INT),
+					$builder->func()->add('size', $builder->createNamedParameter($sizeDifference)))
+				)
 				->where($builder->expr()->eq('storage', $builder->createNamedParameter($storageId, IQueryBuilder::PARAM_INT)))
 				->andWhere($builder->expr()->in('path_hash', $hashParams))
 				->andWhere($builder->expr()->gt('size', $builder->expr()->literal(-1, IQueryBuilder::PARAM_INT)));

@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2017 Joas Schilling <coding@schilljs.com>
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,22 +18,25 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\Files\Tests\Activity;
 
-
 use OCA\Files\Activity\Provider;
 use OCP\Activity\IEvent;
 use OCP\Activity\IEventMerger;
 use OCP\Activity\IManager;
+use OCP\Contacts\IManager as IContactsManager;
+use OCP\Federation\ICloudId;
+use OCP\Federation\ICloudIdManager;
 use OCP\Files\IRootFolder;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\L10N\IFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
 
 /**
@@ -42,20 +46,24 @@ use Test\TestCase;
  */
 class ProviderTest extends TestCase {
 
-	/** @var IFactory|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IFactory|MockObject */
 	protected $l10nFactory;
-	/** @var IURLGenerator|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IURLGenerator|MockObject */
 	protected $url;
-	/** @var IManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IManager|MockObject */
 	protected $activityManager;
-	/** @var IUserManager|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IUserManager|MockObject */
 	protected $userManager;
-	/** @var IRootFolder|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var IRootFolder|MockObject */
 	protected $rootFolder;
-	/** @var IEventMerger|\PHPUnit_Framework_MockObject_MockObject */
+	/** @var ICloudIdManager|MockObject */
+	protected $cloudIdManager;
+	/** @var IContactsManager|MockObject */
+	protected $contactsManager;
+	/** @var IEventMerger|MockObject */
 	protected $eventMerger;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->l10nFactory = $this->createMock(IFactory::class);
@@ -63,12 +71,14 @@ class ProviderTest extends TestCase {
 		$this->activityManager = $this->createMock(IManager::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->rootFolder = $this->createMock(IRootFolder::class);
+		$this->cloudIdManager = $this->createMock(ICloudIdManager::class);
+		$this->contactsManager = $this->createMock(IContactsManager::class);
 		$this->eventMerger = $this->createMock(IEventMerger::class);
 	}
 
 	/**
 	 * @param string[] $methods
-	 * @return Provider|\PHPUnit_Framework_MockObject_MockObject
+	 * @return Provider|MockObject
 	 */
 	protected function getProvider(array $methods = []) {
 		if (!empty($methods)) {
@@ -79,6 +89,8 @@ class ProviderTest extends TestCase {
 					$this->activityManager,
 					$this->userManager,
 					$this->rootFolder,
+					$this->cloudIdManager,
+					$this->contactsManager,
 					$this->eventMerger,
 				])
 				->setMethods($methods)
@@ -90,6 +102,8 @@ class ProviderTest extends TestCase {
 			$this->activityManager,
 			$this->userManager,
 			$this->rootFolder,
+			$this->cloudIdManager,
+			$this->contactsManager,
 			$this->eventMerger
 		);
 	}
@@ -98,7 +112,7 @@ class ProviderTest extends TestCase {
 		return [
 			[[42 => '/FortyTwo.txt'], null, '42', 'FortyTwo.txt', 'FortyTwo.txt'],
 			[['23' => '/Twenty/Three.txt'], null, '23', 'Three.txt', 'Twenty/Three.txt'],
-			['/Foo/Bar.txt', '128', 128, 'Bar.txt', 'Foo/Bar.txt'], // Legacy from ownCloud 8.2 and before
+			['/Foo/Bar.txt', 128, 128, 'Bar.txt', 'Foo/Bar.txt'], // Legacy from ownCloud 8.2 and before
 		];
 	}
 
@@ -136,81 +150,86 @@ class ProviderTest extends TestCase {
 		$this->assertSame('link-' . $id, $result['link']);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 */
+
 	public function testGetFileThrows() {
+		$this->expectException(\InvalidArgumentException::class);
+
 		$provider = $this->getProvider();
 		self::invokePrivate($provider, 'getFile', ['/Foo/Bar.txt', null]);
 	}
 
 	public function dataGetUser() {
 		return [
-			['test', [], false, 'Test'],
-			['foo', ['admin' => 'Admin'], false, 'Bar'],
-			['admin', ['admin' => 'Administrator'], true, 'Administrator'],
+			['test', 'Test user', null, ['type' => 'user', 'id' => 'test', 'name' => 'Test user']],
+			['test@http://localhost', null, ['user' => 'test', 'displayId' => 'test@localhost', 'remote' => 'localhost', 'name' => null], ['type' => 'user', 'id' => 'test', 'name' => 'test@localhost', 'server' => 'localhost']],
+			['test@http://localhost', null, ['user' => 'test', 'displayId' => 'test@localhost', 'remote' => 'localhost', 'name' => 'Remote user'], ['type' => 'user', 'id' => 'test', 'name' => 'Remote user (test@localhost)', 'server' => 'localhost']],
+			['test', null, null, ['type' => 'user', 'id' => 'test', 'name' => 'test']],
 		];
 	}
 
 	/**
 	 * @dataProvider dataGetUser
 	 * @param string $uid
-	 * @param array $cache
-	 * @param bool $cacheHit
-	 * @param string $name
+	 * @param string|null $userDisplayName
+	 * @param array|null $cloudIdData
+	 * @param array $expected
 	 */
-	public function testGetUser($uid, $cache, $cacheHit, $name) {
-		$provider = $this->getProvider(['getDisplayName']);
-
-		self::invokePrivate($provider, 'displayNames', [$cache]);
-
-		if (!$cacheHit) {
-			$provider->expects($this->once())
-				->method('getDisplayName')
-				->with($uid)
-				->willReturn($name);
-		} else {
-			$provider->expects($this->never())
-				->method('getDisplayName');
-		}
-
-		$result = self::invokePrivate($provider, 'getUser', [$uid]);
-		$this->assertSame('user', $result['type']);
-		$this->assertSame($uid, $result['id']);
-		$this->assertSame($name, $result['name']);
-	}
-
-	public function dataGetDisplayName() {
-		return [
-			['test', true, 'Test'],
-			['foo', false, 'foo'],
-		];
-	}
-
-	/**
-	 * @dataProvider dataGetDisplayName
-	 * @param string $uid
-	 * @param string $name
-	 */
-	public function testGetDisplayNamer($uid, $validUser, $name) {
+	public function testGetUser(string $uid, ?string $userDisplayName, ?array $cloudIdData, array $expected): void {
 		$provider = $this->getProvider();
 
-		if ($validUser) {
+		if ($userDisplayName !== null) {
 			$user = $this->createMock(IUser::class);
 			$user->expects($this->once())
+				->method('getUID')
+				->willReturn($uid);
+			$user->expects($this->once())
 				->method('getDisplayName')
-				->willReturn($name);
+				->willReturn($userDisplayName);
 			$this->userManager->expects($this->once())
 				->method('get')
 				->with($uid)
 				->willReturn($user);
-		} else {
-			$this->userManager->expects($this->once())
-				->method('get')
+		}
+		if ($cloudIdData !== null) {
+			$this->cloudIdManager->expects($this->once())
+				->method('isValidCloudId')
+				->willReturn(true);
+
+			$cloudId = $this->createMock(ICloudId::class);
+			$cloudId->expects($this->once())
+				->method('getUser')
+				->willReturn($cloudIdData['user']);
+			$cloudId->expects($this->once())
+				->method('getDisplayId')
+				->willReturn($cloudIdData['displayId']);
+			$cloudId->expects($this->once())
+				->method('getRemote')
+				->willReturn($cloudIdData['remote']);
+
+			$this->cloudIdManager->expects($this->once())
+				->method('resolveCloudId')
 				->with($uid)
-				->willReturn(null);
+				->willReturn($cloudId);
+
+			if ($cloudIdData['name'] !== null) {
+				$this->contactsManager->expects($this->once())
+					->method('search')
+					->with($cloudIdData['displayId'], ['CLOUD'])
+					->willReturn([
+						[
+							'CLOUD' => $cloudIdData['displayId'],
+							'FN' => $cloudIdData['name'],
+						]
+					]);
+			} else {
+				$this->contactsManager->expects($this->once())
+					->method('search')
+					->with($cloudIdData['displayId'], ['CLOUD'])
+					->willReturn([]);
+			}
 		}
 
-		$this->assertSame($name, self::invokePrivate($provider, 'getDisplayName', [$uid]));
+		$result = self::invokePrivate($provider, 'getUser', [$uid]);
+		$this->assertEquals($expected, $result);
 	}
 }

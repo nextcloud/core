@@ -3,7 +3,9 @@
  * @copyright Copyright (c) 2016 Julius Härtl <jus@bitgrid.net>
  *
  * @author Julius Haertl <jus@bitgrid.net>
- * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Michael Weimann <mail@michael-weimann.eu>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -18,22 +20,22 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OCA\Theming\Tests;
 
 use OCA\Theming\ImageManager;
-use OCA\Theming\ThemingDefaults;
+use OCP\Files\IAppData;
+use OCP\Files\NotFoundException;
 use OCP\Files\SimpleFS\ISimpleFile;
+use OCP\Files\SimpleFS\ISimpleFolder;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IURLGenerator;
 use Test\TestCase;
-use OCP\Files\SimpleFS\ISimpleFolder;
-use OCP\Files\IAppData;
-use OCP\Files\NotFoundException;
 
 class ImageManagerTest extends TestCase {
 
@@ -50,7 +52,7 @@ class ImageManagerTest extends TestCase {
 	/** @var ILogger|\PHPUnit_Framework_MockObject_MockObject */
 	private $logger;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->config = $this->createMock(IConfig::class);
 		$this->appData = $this->createMock(IAppData::class);
@@ -183,10 +185,10 @@ class ImageManagerTest extends TestCase {
 		$this->assertEquals($file, $this->imageManager->getImage('logo', false));
 	}
 
-	/**
-	 * @expectedException OCP\Files\NotFoundException
-	 */
+	
 	public function testGetImageUnset() {
+		$this->expectException(\OCP\Files\NotFoundException::class);
+
 		$this->config->expects($this->once())
 			->method('getAppValue')->with('theming', 'logoMime', false)
 			->willReturn(false);
@@ -238,10 +240,10 @@ class ImageManagerTest extends TestCase {
 		$this->assertEquals($expected, $this->imageManager->getCachedImage('filename'));
 	}
 
-	/**
-	 * @expectedException \OCP\Files\NotFoundException
-	 */
+	
 	public function testGetCachedImageNotFound() {
+		$this->expectException(\OCP\Files\NotFoundException::class);
+
 		$folder = $this->setupCacheFolder();
 		$folder->expects($this->once())
 			->method('getFile')
@@ -302,7 +304,7 @@ class ImageManagerTest extends TestCase {
 			$this->createMock(ISimpleFolder::class),
 			$this->createMock(ISimpleFolder::class),
 			$this->createMock(ISimpleFolder::class)
-			];
+		];
 		foreach ($folders as $index=>$folder) {
 			$folder->expects($this->any())
 				->method('getName')

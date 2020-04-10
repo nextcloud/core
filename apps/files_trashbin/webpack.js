@@ -5,6 +5,7 @@ module.exports = {
 	output: {
 		path: path.resolve(__dirname, './js'),
 		publicPath: '/js/',
-		filename: 'files_trashbin.js'
+		filename: 'files_trashbin.js',
+		jsonpFunction: 'webpackJsonpFilesTrashbin'
 	}
 }

@@ -23,10 +23,10 @@
 
 namespace Test\Repair;
 
-use OCP\IConfig;
-use OCP\Migration\IOutput;
 use OC\Avatar\AvatarManager;
 use OC\Repair\ClearGeneratedAvatarCache;
+use OCP\IConfig;
+use OCP\Migration\IOutput;
 
 class ClearGeneratedAvatarCacheTest extends \Test\TestCase {
 
@@ -42,7 +42,7 @@ class ClearGeneratedAvatarCacheTest extends \Test\TestCase {
 	/** @var ClearGeneratedAvatarCache */
 	protected $repair;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->outputMock    = $this->createMock(IOutput::class);
@@ -73,9 +73,9 @@ class ClearGeneratedAvatarCacheTest extends \Test\TestCase {
 	 */
 	public function testShouldRun($from, $expected) {
 		$this->config->expects($this->any())
-		       ->method('getSystemValue')
-		       ->with('version', '0.0.0.0')
-		       ->willReturn($from);
+			   ->method('getSystemValue')
+			   ->with('version', '0.0.0.0')
+			   ->willReturn($from);
 
 		$this->assertEquals($expected, $this->invokePrivate($this->repair, 'shouldRun'));
 	}

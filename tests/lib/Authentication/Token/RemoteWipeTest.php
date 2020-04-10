@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -26,8 +28,8 @@ namespace Test\Authentication\Token;
 use OC\Authentication\Events\RemoteWipeFinished;
 use OC\Authentication\Events\RemoteWipeStarted;
 use OC\Authentication\Exceptions\WipeTokenException;
-use OC\Authentication\Token\IProvider as ITokenProvider;
 use OC\Authentication\Token\IProvider;
+use OC\Authentication\Token\IProvider as ITokenProvider;
 use OC\Authentication\Token\IToken;
 use OC\Authentication\Token\IWipeableToken;
 use OC\Authentication\Token\RemoteWipe;
@@ -51,7 +53,7 @@ class RemoteWipeTest extends TestCase {
 	/** @var RemoteWipe */
 	private $remoteWipe;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->tokenProvider = $this->createMock(IProvider::class);
@@ -67,30 +69,20 @@ class RemoteWipeTest extends TestCase {
 
 	public function testMarkNonWipableTokenForWipe(): void {
 		$token = $this->createMock(IToken::class);
-		$this->tokenProvider->expects($this->once())
-			->method('getTokenById')
-			->with(123)
-			->willReturn($token);
-
-		$result = $this->remoteWipe->markTokenForWipe(123);
-
+		$result = $this->remoteWipe->markTokenForWipe($token);
 		$this->assertFalse($result);
 	}
 
 	public function testMarkTokenForWipe(): void {
 		$token = $this->createMock(IWipeableToken::class);
-		$this->tokenProvider->expects($this->once())
-			->method('getTokenById')
-			->with(123)
-			->willReturn($token);
 		$token->expects($this->once())
 			->method('wipe');
+
 		$this->tokenProvider->expects($this->once())
 			->method('updateToken')
 			->with($token);
 
-		$result = $this->remoteWipe->markTokenForWipe(123);
-
+		$result = $this->remoteWipe->markTokenForWipe($token);
 		$this->assertTrue($result);
 	}
 

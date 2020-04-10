@@ -5,11 +5,14 @@
  * @author Artem Sidorenko <artem@posteo.de>
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
  * @author Christopher Schäpers <kondou@ts.unde.re>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Damjan Georgievski <gdamjan@gmail.com>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Jakob Sack <mail@jakobsack.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Ko- <k.stoffelen@cs.ru.nl>
+ * @author Michael Kuhn <michael@ikkoku.de>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Oliver Kohl D.Sc. <oliver@kohl.bz>
  * @author Robin Appelman <robin@icewind.nl>
@@ -30,7 +33,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -76,7 +79,7 @@ try {
 		if (OC::$CLI) {
 			echo 'Background Jobs are disabled!' . PHP_EOL;
 		} else {
-			OC_JSON::error(array('data' => array('message' => 'Background jobs disabled!')));
+			OC_JSON::error(['data' => ['message' => 'Background jobs disabled!']]);
 		}
 		exit(1);
 	}
@@ -92,12 +95,13 @@ try {
 			echo "The posix extensions are required - see http://php.net/manual/en/book.posix.php" . PHP_EOL;
 			exit(1);
 		}
+
 		$user = posix_getpwuid(posix_getuid());
 		$configUser = posix_getpwuid(fileowner(OC::$configDir . 'config.php'));
 		if ($user['name'] !== $configUser['name']) {
-			echo "Console has to be executed with the same user as the web server is operated" . PHP_EOL;
+			echo "Console has to be executed with the user that owns the file config/config.php" . PHP_EOL;
 			echo "Current user: " . $user['name'] . PHP_EOL;
-			echo "Web server user: " . $configUser['name'] . PHP_EOL;
+			echo "Owner of config.php: " . $configUser['name'] . PHP_EOL;
 			exit(1);
 		}
 
@@ -109,8 +113,9 @@ try {
 		// Work
 		$jobList = \OC::$server->getJobList();
 
-		// We only ask for jobs for 14 minutes, because after 15 minutes the next
-		// system cron task should spawn.
+		// We only ask for jobs for 14 minutes, because after 5 minutes the next
+		// system cron task should spawn and we want to have at most three
+		// cron jobs running in parallel.
 		$endTime = time() + 14 * 60;
 
 		$executedJobs = [];
@@ -137,7 +142,7 @@ try {
 		// We call cron.php from some website
 		if ($appMode === 'cron') {
 			// Cron is cron :-P
-			OC_JSON::error(array('data' => array('message' => 'Backgroundjobs are using system cron!')));
+			OC_JSON::error(['data' => ['message' => 'Backgroundjobs are using system cron!']]);
 		} else {
 			// Work and success :-)
 			$jobList = \OC::$server->getJobList();

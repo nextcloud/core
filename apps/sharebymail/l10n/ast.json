@@ -23,11 +23,6 @@
     "Could not find share" : "Nun pudo alcontrase la compartición",
     "Share by mail" : "Unviar per corréu",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Permite a los usuarios compartir un enllaz personalizáu a un ficheru o carpeta poniendo una direición de corréu.",
-    "Sharing %s failed, this item is already shared with %s" : "Falló la compartición de %s, esti elementu yá se compartió con %s",
-    "%s shared »%s« with you" : "%s compartió «%s» contigo",
-    "%s shared »%s« with you." : "%s compartió «%s» contigo.",
-    "%s via %s" : "%s per %s",
-    "It is protected with the following password: %s" : "Protexóse cola contraseña de darréu: %s",
-    "This is the password: %s" : "Esta ye la contraseña: %s"
+    "Enforce password protection" : "Ameyora la proteición por contraseña."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

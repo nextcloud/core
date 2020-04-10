@@ -134,7 +134,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function id($value) {
-		return $this->customSelector("named_exact", array("id", $value));
+		return $this->customSelector("named_exact", ["id", $value]);
 	}
 
 	/**
@@ -142,7 +142,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function idOrName($value) {
-		return $this->customSelector("named_exact", array("id_or_name", $value));
+		return $this->customSelector("named_exact", ["id_or_name", $value]);
 	}
 
 	/**
@@ -150,7 +150,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function link($value) {
-		return $this->customSelector("named_exact", array("link", $value));
+		return $this->customSelector("named_exact", ["link", $value]);
 	}
 
 	/**
@@ -158,7 +158,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function button($value) {
-		return $this->customSelector("named_exact", array("button", $value));
+		return $this->customSelector("named_exact", ["button", $value]);
 	}
 
 	/**
@@ -166,7 +166,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function linkOrButton($value) {
-		return $this->customSelector("named_exact", array("link_or_button", $value));
+		return $this->customSelector("named_exact", ["link_or_button", $value]);
 	}
 
 	/**
@@ -174,7 +174,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function field($value) {
-		return $this->customSelector("named_exact", array("field", $value));
+		return $this->customSelector("named_exact", ["field", $value]);
 	}
 
 	/**
@@ -182,7 +182,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function selectField($value) {
-		return $this->customSelector("named_exact", array("select", $value));
+		return $this->customSelector("named_exact", ["select", $value]);
 	}
 
 	/**
@@ -190,7 +190,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function checkbox($value) {
-		return $this->customSelector("named_exact", array("checkbox", $value));
+		return $this->customSelector("named_exact", ["checkbox", $value]);
 	}
 
 	/**
@@ -198,7 +198,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function radioButton($value) {
-		return $this->customSelector("named_exact", array("radio", $value));
+		return $this->customSelector("named_exact", ["radio", $value]);
 	}
 
 	/**
@@ -206,7 +206,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function fileInput($value) {
-		return $this->customSelector("named_exact", array("file", $value));
+		return $this->customSelector("named_exact", ["file", $value]);
 	}
 
 	/**
@@ -214,7 +214,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function optionGroup($value) {
-		return $this->customSelector("named_exact", array("optgroup", $value));
+		return $this->customSelector("named_exact", ["optgroup", $value]);
 	}
 
 	/**
@@ -222,7 +222,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function option($value) {
-		return $this->customSelector("named_exact", array("option", $value));
+		return $this->customSelector("named_exact", ["option", $value]);
 	}
 
 	/**
@@ -230,7 +230,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function fieldSet($value) {
-		return $this->customSelector("named_exact", array("fieldset", $value));
+		return $this->customSelector("named_exact", ["fieldset", $value]);
 	}
 
 	/**
@@ -238,7 +238,7 @@ class LocatorBuilder {
 	 * @return LocatorBuilderSecondStep
 	 */
 	public function table($value) {
-		return $this->customSelector("named_exact", array("table", $value));
+		return $this->customSelector("named_exact", ["table", $value]);
 	}
 
 }

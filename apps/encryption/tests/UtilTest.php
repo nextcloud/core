@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Clark Tomlinson <fallen013@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -21,13 +22,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Encryption\Tests;
-
 
 use OC\Files\View;
 use OCA\Encryption\Crypto\Crypt;
@@ -36,8 +35,10 @@ use OCP\Files\Mount\IMountPoint;
 use OCP\Files\Storage;
 use OCP\IConfig;
 use OCP\ILogger;
+use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
+use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
 
 class UtilTest extends TestCase {
@@ -74,12 +75,12 @@ class UtilTest extends TestCase {
 	public function testUserHasFiles() {
 		$this->filesMock->expects($this->once())
 			->method('file_exists')
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$this->assertTrue($this->instance->userHasFiles('admin'));
 	}
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->mountMock = $this->createMock(IMountPoint::class);
 		$this->filesMock = $this->createMock(View::class);
@@ -91,37 +92,30 @@ class UtilTest extends TestCase {
 			->getMock();
 		/** @var \OCP\ILogger $loggerMock */
 		$loggerMock = $this->createMock(ILogger::class);
-		/** @var \OCP\IUserSession|\PHPUnit_Framework_MockObject_MockObject $userSessionMock */
-		$userSessionMock = $this->getMockBuilder(IUserSession::class)
-			->disableOriginalConstructor()
-			->setMethods([
-				'isLoggedIn',
-				'getUID',
-				'login',
-				'logout',
-				'setUser',
-				'getUser'
-			])
-			->getMock();
 
-		$userSessionMock->method('isLoggedIn')->will($this->returnValue(true));
+		$user = $this->createMock(IUser::class);
+		$user->expects($this->any())
+			->method('getUID')
+			->willReturn('admin');
 
-		$userSessionMock->method('getUID')->will($this->returnValue('admin'));
-
+		/** @var IUserSession|MockObject $userSessionMock */
+		$userSessionMock = $this->createMock(IUserSession::class);
 		$userSessionMock->expects($this->any())
-			->method($this->anything())
-			->will($this->returnSelf());
-
+			->method('getUser')
+			->willReturn($user);
+		$userSessionMock->expects($this->any())
+			->method('isLoggedIn')
+			->willReturn(true);
 
 		$this->configMock = $this->createMock(IConfig::class);
 
 		$this->configMock->expects($this->any())
 			->method('getUserValue')
-			->will($this->returnCallback([$this, 'getValueTester']));
+			->willReturnCallback([$this, 'getValueTester']);
 
 		$this->configMock->expects($this->any())
 			->method('setUserValue')
-			->will($this->returnCallback([$this, 'setValueTester']));
+			->willReturnCallback([$this, 'setValueTester']);
 
 		$this->instance = new Util($this->filesMock, $cryptMock, $loggerMock, $userSessionMock, $this->configMock, $this->userManagerMock);
 	}

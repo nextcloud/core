@@ -23,10 +23,10 @@
 namespace Test;
 
 use OC\Installer;
+use OC\IntegrityCheck\Checker;
 use OC\Updater;
 use OCP\IConfig;
 use OCP\ILogger;
-use OC\IntegrityCheck\Checker;
 
 class UpdaterTest extends TestCase {
 	/** @var IConfig | \PHPUnit_Framework_MockObject_MockObject */
@@ -40,7 +40,7 @@ class UpdaterTest extends TestCase {
 	/** @var Installer|\PHPUnit_Framework_MockObject_MockObject */
 	private $installer;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->config = $this->getMockBuilder(IConfig::class)
 			->disableOriginalConstructor()

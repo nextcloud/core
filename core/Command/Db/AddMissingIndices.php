@@ -1,7 +1,16 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2017 Bjoern Schiessle <bjoern@schiessle.org>
+ *
+ * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,10 +25,9 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 
 namespace OC\Core\Command\Db;
 
@@ -35,7 +43,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  * Class AddMissingIndices
  *
  * if you added any new indices to the database, this is the right place to add
- * it your update routine for existing instances
+ * your update routine for existing instances
  *
  * @package OC\Core\Command\Db
  */
@@ -218,6 +226,32 @@ class AddMissingIndices extends Command {
 				$this->connection->migrateToSchema($schema->getWrappedSchema());
 				$updated = true;
 				$output->writeln('<info>cards_properties table updated successfully.</info>');
+			}
+		}
+
+		$output->writeln('<info>Check indices of the calendarobjects_props table.</info>');
+		if ($schema->hasTable('calendarobjects_props')) {
+			$table = $schema->getTable('calendarobjects_props');
+			if (!$table->hasIndex('calendarobject_calid_index')) {
+				$output->writeln('<info>Adding calendarobject_calid_index index to the calendarobjects_props table, this can take some time...</info>');
+
+				$table->addIndex(['calendarid', 'calendartype'], 'calendarobject_calid_index');
+				$this->connection->migrateToSchema($schema->getWrappedSchema());
+				$updated = true;
+				$output->writeln('<info>calendarobjects_props table updated successfully.</info>');
+			}
+		}
+
+		$output->writeln('<info>Check indices of the schedulingobjects table.</info>');
+		if ($schema->hasTable('schedulingobjects')) {
+			$table = $schema->getTable('schedulingobjects');
+			if (!$table->hasIndex('schedulobj_principuri_index')) {
+				$output->writeln('<info>Adding schedulobj_principuri_index index to the schedulingobjects table, this can take some time...</info>');
+
+				$table->addIndex(['principaluri'], 'schedulobj_principuri_index');
+				$this->connection->migrateToSchema($schema->getWrappedSchema());
+				$updated = true;
+				$output->writeln('<info>schedulingobjects table updated successfully.</info>');
 			}
 		}
 

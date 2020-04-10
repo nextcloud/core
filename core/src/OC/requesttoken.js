@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -19,25 +19,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-let token = document.getElementsByTagName('head')[0].getAttribute('data-requesttoken');
-const observers = []
+import { emit } from '@nextcloud/event-bus'
 
 /**
- * @return {string}
+ * @private
+ * @param {Document} global the document to read the initial value from
+ * @param {Function} emit the function to invoke for every new token
+ * @returns {Object}
  */
-export const getToken = () => token
+export const manageToken = (global, emit) => {
+	let token = global.getElementsByTagName('head')[0].getAttribute('data-requesttoken')
 
-/**
- * @param {Function} observer
- * @return {number}
- */
-export const subscribe = observer => observers.push(observer)
+	return {
+		getToken: () => token,
+		setToken: newToken => {
+			token = newToken
 
-/**
- * @param {String} newToken
- */
-export const setToken = newToken => {
-	token = newToken
-
-	observers.forEach(o => o(token))
+			emit('csrf-token-update', {
+				token,
+			})
+		},
+	}
 }
+
+const manageFromDocument = manageToken(document, emit)
+
+/**
+ * @returns {string}
+ */
+export const getToken = manageFromDocument.getToken
+
+/**
+ * @param {String} newToken new token
+ */
+export const setToken = manageFromDocument.setToken

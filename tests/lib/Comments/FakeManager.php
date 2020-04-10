@@ -1,6 +1,7 @@
 <?php
 
 namespace Test\Comments;
+
 use OCP\Comments\IComment;
 use OCP\Comments\ICommentsManager;
 use OCP\IUser;

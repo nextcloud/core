@@ -1,4 +1,5 @@
-/*
+/* eslint-disable */
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -18,9 +19,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import $ from 'jquery'
-import {filePath} from './routing'
+import { filePath } from './routing'
 
 /**
  * Opens a popup with the setting for an app.
@@ -42,7 +42,7 @@ export const appSettings = args => {
 			message: 'The parameter appid is missing'
 		}
 	}
-	var props = {scriptName: 'settings.php', cache: true}
+	var props = { scriptName: 'settings.php', cache: true }
 	$.extend(props, args)
 	var settings = $('#appsettings')
 	if (settings.length === 0) {
@@ -61,10 +61,10 @@ export const appSettings = args => {
 		popup.hide().remove()
 	} else {
 		const arrowclass = settings.hasClass('topright') ? 'up' : 'left'
-		$.get(filePath(props.appid, '', props.scriptName), function (data) {
-			popup.html(data).ready(function () {
+		$.get(filePath(props.appid, '', props.scriptName), function(data) {
+			popup.html(data).ready(function() {
 				popup.prepend('<span class="arrow ' + arrowclass + '"></span><h2>' + t('core', 'Settings') + '</h2><a class="close"></a>').show()
-				popup.find('.close').bind('click', function () {
+				popup.find('.close').bind('click', function() {
 					popup.remove()
 				})
 				if (typeof props.loadJS !== 'undefined') {
@@ -80,10 +80,10 @@ export const appSettings = args => {
 						}
 					}
 					if (props.cache) {
-						$.ajaxSetup({cache: true})
+						$.ajaxSetup({ cache: true })
 					}
 					$.getScript(filePath(props.appid, 'js', scriptname))
-						.fail(function (jqxhr, settings, e) {
+						.fail(function(jqxhr, settings, e) {
 							throw e
 						})
 				}

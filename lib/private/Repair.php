@@ -2,10 +2,14 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Michael Weimann <mail@michael-weimann.eu>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -24,7 +28,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -42,9 +46,10 @@ use OC\Repair\NC13\AddLogRotateJob;
 use OC\Repair\NC14\AddPreviewBackgroundCleanupJob;
 use OC\Repair\NC16\AddClenupLoginFlowV2BackgroundJob;
 use OC\Repair\NC16\CleanupCardDAVPhotoCache;
-use OC\Repair\NC16\RemoveCypressFiles;
+use OC\Repair\NC16\ClearCollectionsAccessCache;
 use OC\Repair\NC17\SetEnterpriseLogo;
 use OC\Repair\NC17\SwitchUpdateChannel;
+use OC\Repair\NC18\ResetGeneratedAvatarFlag;
 use OC\Repair\OldGroupMembershipShares;
 use OC\Repair\Owncloud\DropAccountTermsTable;
 use OC\Repair\Owncloud\SaveAccountsTableData;
@@ -56,6 +61,7 @@ use OC\Template\JSCombiner;
 use OC\Template\SCSSCacher;
 use OCP\AppFramework\QueryException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\Collaboration\Resources\IManager;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -88,7 +94,7 @@ class Repair implements IOutput {
 	 */
 	public function run() {
 		if (count($this->repairSteps) === 0) {
-			$this->emit('\OC\Repair', 'info', array('No repair steps available'));
+			$this->emit('\OC\Repair', 'info', ['No repair steps available']);
 
 			return;
 		}
@@ -150,9 +156,10 @@ class Repair implements IOutput {
 			new CleanupCardDAVPhotoCache(\OC::$server->getConfig(), \OC::$server->getAppDataDir('dav-photocache'), \OC::$server->getLogger()),
 			new AddClenupLoginFlowV2BackgroundJob(\OC::$server->getJobList()),
 			new RemoveLinkShares(\OC::$server->getDatabaseConnection(), \OC::$server->getConfig(), \OC::$server->getGroupManager(), \OC::$server->getNotificationManager(), \OC::$server->query(ITimeFactory::class)),
-			\OC::$server->query(RemoveCypressFiles::class),
+			new ClearCollectionsAccessCache(\OC::$server->getConfig(), \OC::$server->query(IManager::class)),
 			\OC::$server->query(SwitchUpdateChannel::class),
 			\OC::$server->query(SetEnterpriseLogo::class),
+			\OC::$server->query(ResetGeneratedAvatarFlag::class),
 		];
 	}
 
@@ -201,7 +208,7 @@ class Repair implements IOutput {
 
 	public function info($string) {
 		// for now just emit as we did in the past
-		$this->emit('\OC\Repair', 'info', array($string));
+		$this->emit('\OC\Repair', 'info', [$string]);
 	}
 
 	/**

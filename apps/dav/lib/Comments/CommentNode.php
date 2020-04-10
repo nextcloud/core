@@ -17,12 +17,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\DAV\Comments;
-
 
 use OCP\Comments\IComment;
 use OCP\Comments\ICommentsManager;
@@ -86,7 +85,7 @@ class CommentNode implements \Sabre\DAV\INode, \Sabre\DAV\IProperties {
 		$this->logger = $logger;
 
 		$methods = get_class_methods($this->comment);
-		$methods = array_filter($methods, function($name){
+		$methods = array_filter($methods, function ($name) {
 			return strpos($name, 'get') === 0;
 		});
 		foreach($methods as $getter) {
@@ -132,7 +131,7 @@ class CommentNode implements \Sabre\DAV\INode, \Sabre\DAV\IProperties {
 
 	protected function checkWriteAccessOnComment() {
 		$user = $this->userSession->getUser();
-		if(    $this->comment->getActorType() !== 'users'
+		if($this->comment->getActorType() !== 'users'
 			|| is_null($user)
 			|| $this->comment->getActorId() !== $user->getUID()
 		) {
@@ -284,7 +283,7 @@ class CommentNode implements \Sabre\DAV\INode, \Sabre\DAV\IProperties {
 	 * @return array
 	 */
 	protected function composeMentionsPropertyValue() {
-		return array_map(function($mention) {
+		return array_map(function ($mention) {
 			try {
 				$displayName = $this->commentsManager->resolveDisplayName($mention['type'], $mention['id']);
 			} catch (\OutOfBoundsException $e) {

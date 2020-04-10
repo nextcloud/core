@@ -60,7 +60,7 @@ class Account implements IAccount {
 	}
 
 	public function getFilteredProperties(string $scope = null, string $verified = null): array {
-		return \array_filter($this->properties, function(IAccountProperty $obj) use ($scope, $verified){
+		return \array_filter($this->properties, function (IAccountProperty $obj) use ($scope, $verified) {
 			if ($scope !== null && $scope !== $obj->getScope()) {
 				return false;
 			}

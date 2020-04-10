@@ -23,4 +23,4 @@
  * Namespace for apps
  * @namespace OCA
  */
-export default {};
+export default {}

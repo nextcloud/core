@@ -19,9 +19,7 @@
  *
  */
 
-
 namespace Test\Encryption;
-
 
 use OC\Encryption\EncryptionWrapper;
 use OC\Encryption\Manager;
@@ -44,7 +42,7 @@ class EncryptionWrapperTest extends TestCase {
 	/** @var  \PHPUnit_Framework_MockObject_MockObject | \OC\Memcache\ArrayCache */
 	private $arrayCache;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->arrayCache = $this->createMock(ArrayCache::class);

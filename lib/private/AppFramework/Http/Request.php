@@ -1,18 +1,24 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author b108@volgograd "b108@volgograd"
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author coderkun <olli@coderkun.de>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
- * @author Juan Pablo Villafáñez <jvillafanez@solidgear.es>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Juan Pablo Villafáñez <jvillafanez@solidgear.es>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Mitar <mitar.git@tnode.com>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Oliver Wegner <void1976@gmail.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -32,7 +38,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -65,7 +71,7 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 	// Firefox User Agent from https://developer.mozilla.org/en-US/docs/Web/HTTP/Gecko_user_agent_string_reference
 	const USER_AGENT_FIREFOX = '/^Mozilla\/5\.0 \([^)]+\) Gecko\/[0-9.]+ Firefox\/[0-9.]+$/';
 	// Chrome User Agent from https://developer.chrome.com/multidevice/user-agent
-	const USER_AGENT_CHROME = '/^Mozilla\/5\.0 \([^)]+\) AppleWebKit\/[0-9.]+ \(KHTML, like Gecko\)( Ubuntu Chromium\/[0-9.]+|) Chrome\/[0-9.]+ (Mobile Safari|Safari)\/[0-9.]+$/';
+	const USER_AGENT_CHROME = '/^Mozilla\/5\.0 \([^)]+\) AppleWebKit\/[0-9.]+ \(KHTML, like Gecko\)( Ubuntu Chromium\/[0-9.]+|) Chrome\/[0-9.]+ (Mobile Safari|Safari)\/[0-9.]+( (Vivaldi|Brave|OPR)\/[0-9.]+|)$/';
 	// Safari User Agent from http://www.useragentstring.com/pages/Safari/
 	const USER_AGENT_SAFARI = '/^Mozilla\/5\.0 \([^)]+\) AppleWebKit\/[0-9.]+ \(KHTML, like Gecko\) Version\/[0-9.]+ Safari\/[0-9.A-Z]+$/';
 	// Android Chrome user agent: https://developers.google.com/chrome/mobile/docs/user-agent
@@ -181,25 +187,25 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 	}
 
 	/**
-	* ArrayAccess methods
-	*
-	* Gives access to the combined GET, POST and urlParams arrays
-	*
-	* Examples:
-	*
-	* $var = $request['myvar'];
-	*
-	* or
-	*
-	* if(!isset($request['myvar']) {
-	* 	// Do something
-	* }
-	*
-	* $request['myvar'] = 'something'; // This throws an exception.
-	*
-	* @param string $offset The key to lookup
-	* @return boolean
-	*/
+	 * ArrayAccess methods
+	 *
+	 * Gives access to the combined GET, POST and urlParams arrays
+	 *
+	 * Examples:
+	 *
+	 * $var = $request['myvar'];
+	 *
+	 * or
+	 *
+	 * if(!isset($request['myvar']) {
+	 * 	// Do something
+	 * }
+	 *
+	 * $request['myvar'] = 'something'; // This throws an exception.
+	 *
+	 * @param string $offset The key to lookup
+	 * @return boolean
+	 */
 	public function offsetExists($offset): bool {
 		return isset($this->items['parameters'][$offset]);
 	}
@@ -242,20 +248,20 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 	}
 
 	/**
-	* Access request variables by method and name.
-	* Examples:
-	*
-	* $request->post['myvar']; // Only look for POST variables
-	* $request->myvar; or $request->{'myvar'}; or $request->{$myvar}
-	* Looks in the combined GET, POST and urlParams array.
-	*
-	* If you access e.g. ->post but the current HTTP request method
-	* is GET a \LogicException will be thrown.
-	*
-	* @param string $name The key to look for.
-	* @throws \LogicException
-	* @return mixed|null
-	*/
+	 * Access request variables by method and name.
+	 * Examples:
+	 *
+	 * $request->post['myvar']; // Only look for POST variables
+	 * $request->myvar; or $request->{'myvar'}; or $request->{$myvar}
+	 * Looks in the combined GET, POST and urlParams array.
+	 *
+	 * If you access e.g. ->post but the current HTTP request method
+	 * is GET a \LogicException will be thrown.
+	 *
+	 * @param string $name The key to look for.
+	 * @throws \LogicException
+	 * @return mixed|null
+	 */
 	public function __get($name) {
 		switch($name) {
 			case 'put':
@@ -321,13 +327,9 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 		// There's a few headers that seem to end up in the top-level
 		// server array.
 		switch ($name) {
-			case 'CONTENT_TYPE' :
-			case 'CONTENT_LENGTH' :
-				if (isset($this->server[$name])) {
-					return $this->server[$name];
-				}
-				break;
-			case 'REMOTE_ADDR' :
+			case 'CONTENT_TYPE':
+			case 'CONTENT_LENGTH':
+			case 'REMOTE_ADDR':
 				if (isset($this->server[$name])) {
 					return $this->server[$name];
 				}
@@ -809,7 +811,7 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 		$encoding = mb_detect_encoding($pathInfo, ['UTF-8', 'ISO-8859-1']);
 
 		switch($encoding) {
-			case 'ISO-8859-1' :
+			case 'ISO-8859-1':
 				$pathInfo = utf8_encode($pathInfo);
 		}
 		// end copy
@@ -857,6 +859,10 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 	 * @return string Server host
 	 */
 	public function getInsecureServerHost(): string {
+		if ($this->fromTrustedProxy() && $this->getOverwriteHost() !== null) {
+			return $this->getOverwriteHost();
+		}
+
 		$host = 'localhost';
 		if ($this->fromTrustedProxy() && isset($this->server['HTTP_X_FORWARDED_HOST'])) {
 			if (strpos($this->server['HTTP_X_FORWARDED_HOST'], ',') !== false) {
@@ -872,6 +878,7 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 				$host = $this->server['SERVER_NAME'];
 			}
 		}
+
 		return $host;
 	}
 
@@ -897,14 +904,14 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 		$trustedDomainHelper = new TrustedDomainHelper($this->config);
 		if ($trustedDomainHelper->isTrustedDomain($host)) {
 			return $host;
-		} else {
-			$trustedList = $this->config->getSystemValue('trusted_domains', []);
-			if(!empty($trustedList)) {
-				return $trustedList[0];
-			} else {
-				return '';
-			}
 		}
+
+		$trustedList = (array)$this->config->getSystemValue('trusted_domains', []);
+		if (count($trustedList) > 0) {
+			return reset($trustedList);
+		}
+
+		return '';
 	}
 
 	/**

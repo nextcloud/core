@@ -4,6 +4,7 @@
  * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
@@ -23,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -62,25 +63,24 @@ return ['routes' => [
 		'name' => 'Theming#getManifest',
 		'url' => '/manifest/{app}',
 		'verb' => 'GET',
-		'defaults' => array('app' => 'core')
+		'defaults' => ['app' => 'core']
 	],
 	[
 		'name'	=> 'Icon#getFavicon',
 		'url' => '/favicon/{app}',
 		'verb' => 'GET',
-		'defaults' => array('app' => 'core'),
+		'defaults' => ['app' => 'core'],
 	],
 	[
 		'name'	=> 'Icon#getTouchIcon',
 		'url' => '/icon/{app}',
 		'verb' => 'GET',
-		'defaults' => array('app' => 'core'),
+		'defaults' => ['app' => 'core'],
 	],
 	[
 		'name'	=> 'Icon#getThemedIcon',
 		'url' => '/img/{app}/{image}',
 		'verb' => 'GET',
-		'requirements' => array('image' => '.+')
+		'requirements' => ['image' => '.+']
 	],
 ]];
-

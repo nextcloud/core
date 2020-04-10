@@ -17,13 +17,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Federation\Tests\Controller;
-
 
 use OCA\Federation\Controller\SettingsController;
 use OCA\Federation\TrustedServers;
@@ -46,7 +44,7 @@ class SettingsControllerTest extends TestCase {
 	/** @var \PHPUnit_Framework_MockObject_MockObject | \OCA\Federation\TrustedServers */
 	private $trustedServers;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->getMockBuilder(IRequest::class)->getMock();
@@ -85,12 +83,13 @@ class SettingsControllerTest extends TestCase {
 
 	/**
 	 * @dataProvider checkServerFails
-	 * @expectedException \OC\HintException
 	 *
 	 * @param bool $isTrustedServer
 	 * @param bool $isOwnCloud
 	 */
 	public function testAddServerFail($isTrustedServer, $isOwnCloud) {
+		$this->expectException(\OC\HintException::class);
+
 		$this->trustedServers
 			->expects($this->any())
 			->method('isTrustedServer')
@@ -133,12 +132,13 @@ class SettingsControllerTest extends TestCase {
 
 	/**
 	 * @dataProvider checkServerFails
-	 * @expectedException \OC\HintException
 	 *
 	 * @param bool $isTrustedServer
 	 * @param bool $isOwnCloud
 	 */
 	public function testCheckServerFail($isTrustedServer, $isOwnCloud) {
+		$this->expectException(\OC\HintException::class);
+
 		$this->trustedServers
 			->expects($this->any())
 			->method('isTrustedServer')

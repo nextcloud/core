@@ -11,7 +11,7 @@ namespace Test;
 class LargeFileHelperTest extends TestCase {
 	protected $helper;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->helper = new \OC\LargeFileHelper;
 	}
@@ -37,10 +37,10 @@ class LargeFileHelperTest extends TestCase {
 		);
 	}
 
-	/**
-	* @expectedException \UnexpectedValueException
-	*/
+	
 	public function testFormatUnsignedIntegerStringException() {
+		$this->expectException(\UnexpectedValueException::class);
+
 		$this->helper->formatUnsignedInteger('900ABCD254740993');
 	}
 }

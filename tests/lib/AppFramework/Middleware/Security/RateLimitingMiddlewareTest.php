@@ -45,7 +45,7 @@ class RateLimitingMiddlewareTest extends TestCase {
 	/** @var RateLimitingMiddleware */
 	private $rateLimitingMiddleware;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->createMock(IRequest::class);
@@ -229,11 +229,11 @@ class RateLimitingMiddlewareTest extends TestCase {
 		$this->rateLimitingMiddleware->beforeController($controller, 'testMethod');
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage My test exception
-	 */
+	
 	public function testAfterExceptionWithOtherException() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('My test exception');
+
 		/** @var Controller|\PHPUnit_Framework_MockObject_MockObject $controller */
 		$controller = $this->createMock(Controller::class);
 

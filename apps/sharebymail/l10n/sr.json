@@ -45,20 +45,8 @@
     "Could not find share" : "Не могу да пронађем дељење",
     "Share by mail" : "Подели е-поштом",
     "Share provider which allows you to share files by mail" : "Добављач дељења који Вам дозвољава дељење е-поштом",
-    "Allows users to share a personalized link to a file or folder by putting in an email address." : "Дозвољава корисницима да поделе персонализовану везу до фајла или фасцикле преко е-поште.",
+    "Allows users to share a personalized link to a file or folder by putting in an email address." : "Дозволи корисницима да поделе персонализовану везу до фајла или фасцикле уносом е-адресе.",
     "Send password by mail" : "Пошаљи лозинку е-поштом",
-    "Enforce password protection" : "Захтевај заштиту лозинком",
-    "Sharing %s failed, this item is already shared with %s" : "Дељење %s није успело, ова ставка је већ подељена са %s",
-    "%s shared »%s« with you" : "%s је поделио „%s“ са Вама",
-    "%s shared »%s« with you." : "%s је поделио „%s“ са Вама.",
-    "%s via %s" : "%s преко %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s је поделио „%s“ са Вама.\nТреба да сте до сад добили посебни мејл са везом како да му приступите.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s је поделио „%s“ са Вама. Треба да сте до сад добили посебни мејл са везом како да му приступите.",
-    "Password to access »%s« shared to you by %s" : "%s Вам је поделио лозинку за приступ „%s“",
-    "It is protected with the following password: %s" : "Заштићена је следећом лозинком: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Управо сте поделили „%s“ са корисником %s. Дељење је већ послато примаоцу. Због безбедоносне политике коју је дефинисао администратор инстанце %s , свако дељење мора бити заштићено лозинком и није дозвољено да пошаљете лозинку директно кориснику. Због тога морате ручно послати лозинку примаоцу.",
-    "Password to access »%s« shared with %s" : "Лозинка за приступ „%s“ подељена са корисником %s",
-    "This is the password: %s" : "Ово је лозинка: %s",
-    "Password to access »%1$s« shared with %2$s" : "Лозинка за приступ „%1$s“ подељена са корисником %2$s"
+    "Enforce password protection" : "Захтевај заштиту лозинком"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

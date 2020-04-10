@@ -3,12 +3,15 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Stephan Peijnik <speijnik@anexia-it.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author John Molakvoæ <skjnldsv@protonmail.com>
  *
  * @license AGPL-3.0
  *
@@ -22,14 +25,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Group;
 
-use OCP\IUserSession;
 use OCP\IGroupManager;
+use OCP\IUserSession;
 
 class MetaData {
 	const SORT_NONE = 0;
@@ -41,7 +44,7 @@ class MetaData {
 	/** @var bool */
 	protected $isAdmin;
 	/** @var array */
-	protected $metaData = array();
+	protected $metaData = [];
 	/** @var IGroupManager */
 	protected $groupManager;
 	/** @var bool */
@@ -84,12 +87,12 @@ class MetaData {
 			return $this->metaData[$key];
 		}
 
-		$adminGroups = array();
-		$groups = array();
+		$adminGroups = [];
+		$groups = [];
 		$sortGroupsIndex = 0;
-		$sortGroupsKeys = array();
+		$sortGroupsKeys = [];
 		$sortAdminGroupsIndex = 0;
-		$sortAdminGroupsKeys = array();
+		$sortAdminGroupsKeys = [];
 
 		foreach($this->getGroups($groupSearch) as $group) {
 			$groupMetaData = $this->generateGroupMetaData($group, $userSearch);
@@ -115,7 +118,7 @@ class MetaData {
 		$this->sort($groups, $sortGroupsKeys);
 		$this->sort($adminGroups, $sortAdminGroupsKeys);
 
-		$this->metaData[$key] = array($adminGroups, $groups);
+		$this->metaData[$key] = [$adminGroups, $groups];
 		return $this->metaData[$key];
 	}
 
@@ -161,14 +164,14 @@ class MetaData {
 	 * @return array with the keys 'id', 'name', 'usercount' and 'disabled'
 	 */
 	private function generateGroupMetaData(\OCP\IGroup $group, $userSearch) {
-		return array(
-				'id' => $group->getGID(),
-				'name' => $group->getDisplayName(),
-				'usercount' => $this->sorting === self::SORT_USERCOUNT ? $group->count($userSearch) : 0,
-				'disabled' => $group->countDisabled(),
-				'canAdd' => $group->canAddUser(),
-				'canRemove' => $group->canRemoveUser(),
-			);
+		return [
+			'id' => $group->getGID(),
+			'name' => $group->getDisplayName(),
+			'usercount' => $this->sorting === self::SORT_USERCOUNT ? $group->count($userSearch) : 0,
+			'disabled' => $group->countDisabled(),
+			'canAdd' => $group->canAddUser(),
+			'canRemove' => $group->canRemoveUser(),
+		];
 	}
 
 	/**

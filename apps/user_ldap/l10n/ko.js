@@ -174,7 +174,6 @@ OC.L10N.register(
     "Email Field" : "이메일 필드",
     "Set the user's email from their LDAP attribute. Leave it empty for default behaviour." : "LDAP 속성에서 사용자의 이메일을 설정합니다. 기본 행동을 사용하려면 비워 두십시오.",
     "User Home Folder Naming Rule" : "사용자 홈 폴더 이름 규칙",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "사용자 이름을 사용하려면 비워 두십시오(기본값). 기타 경우 LDAP/AD 속성을 지정하십시오.",
     "\"$home\" Placeholder Field" : "\"$home\" 자리 비움자 필드",
     "Internal Username" : "내부 사용자 이름",
     "By default the internal username will be created from the UUID attribute. It makes sure that the username is unique and characters do not need to be converted. The internal username has the restriction that only these characters are allowed: [ a-zA-Z0-9_.@- ].  Other characters are replaced with their ASCII correspondence or simply omitted. On collisions a number will be added/increased. The internal username is used to identify a user internally. It is also the default name for the user home folder. It is also a part of remote URLs, for instance for all *DAV services. With this setting, the default behavior can be overridden. Leave it empty for default behavior. Changes will have effect only on newly mapped (added) LDAP users." : "기본적으로 내부 사용자 이름은 UUID 속성에서 생성됩니다. 이를 통해서 사용자 이름이 유일하며 문자를 변환할 필요가 없도록 합니다. 내부 사용자 이름에는 다음 글자만 사용할 수 있습니다: [a-zA-Z0-9_.@-] 다른 모든 글자는 ASCII에 해당하는 글자로 대체되거나 생략됩니다. 충돌이 발생할 경우 숫자가 추가로 붙거나 증가합니다. 내부 사용자 이름은 사용자를 내부에서 식별하는 데에도 사용되며, 사용자 홈 폴더의 기본 이름입니다. 모든 *DAV 서비스 등에 사용되는 URL의 일부이기도 합니다. 이 설정을 사용하면 기본 행동을 사용자 정의할 수 있으며, 비워 두면 기본값을 사용합니다. 변경 사항은 새로 매핑 및 추가된 LDAP 사용자에게만 적용됩니다.",
@@ -185,6 +184,7 @@ OC.L10N.register(
     "UUID Attribute for Groups:" : "그룹 UUID 속성:",
     "Username-LDAP User Mapping" : "사용자 이름-LDAP 사용자 매핑",
     "Clear Username-LDAP User Mapping" : "사용자 이름-LDAP 사용자 매핑 비우기",
-    "Clear Groupname-LDAP Group Mapping" : "그룹 이름-LDAP 그룹 매핑 비우기"
+    "Clear Groupname-LDAP Group Mapping" : "그룹 이름-LDAP 그룹 매핑 비우기",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "사용자 이름을 사용하려면 비워 두십시오(기본값). 기타 경우 LDAP/AD 속성을 지정하십시오."
 },
 "nplurals=1; plural=0;");

@@ -18,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -42,14 +42,14 @@ class CommandLineContext implements \Behat\Behat\Context\Context {
 	/**
 	 * @Given Maintenance mode is enabled
 	 */
-	public function maintenanceModeIsEnabled()  {
+	public function maintenanceModeIsEnabled() {
 		$this->runOcc(['maintenance:mode', '--on']);
 	}
 
 	/**
 	 * @Then Maintenance mode is disabled
 	 */
-	public function maintenanceModeIsDisabled()  {
+	public function maintenanceModeIsDisabled() {
 		$this->runOcc(['maintenance:mode', '--off']);
 	}
 
@@ -82,7 +82,7 @@ class CommandLineContext implements \Behat\Behat\Context\Context {
 			return null;
 		}
 
-		usort($foundPaths, function($a, $b) {
+		usort($foundPaths, function ($a, $b) {
 			return $a['date'] - $b['date'];
 		});
 

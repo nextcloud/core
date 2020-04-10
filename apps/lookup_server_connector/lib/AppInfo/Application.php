@@ -1,7 +1,12 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2019 Joas Schilling <coding@schilljs.com>
+ *
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,9 +21,10 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OCA\LookupServerConnector\AppInfo;
 
 use OCA\LookupServerConnector\UpdateLookupServer;
@@ -27,7 +33,7 @@ use OCP\IUser;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Application extends App {
-	public function __construct () {
+	public function __construct() {
 		parent::__construct('lookup_server_connector');
 	}
 
@@ -43,7 +49,7 @@ class Application extends App {
 	 */
 	public function registerHooksAndEvents(): void {
 		$dispatcher = $this->getContainer()->getServer()->getEventDispatcher();
-		$dispatcher->addListener('OC\AccountManager::userUpdated', static function(GenericEvent $event) {
+		$dispatcher->addListener('OC\AccountManager::userUpdated', static function (GenericEvent $event) {
 			/** @var IUser $user */
 			$user = $event->getSubject();
 

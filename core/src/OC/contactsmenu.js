@@ -1,4 +1,4 @@
-/* global Backbone, Handlebars, Promise, _ */
+/* eslint-disable */
 
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -22,10 +22,10 @@
  *
  */
 
-import $ from 'jquery';
-import {Collection, Model, View} from 'backbone';
+import $ from 'jquery'
+import { Collection, Model, View } from 'backbone'
 
-import OC from './index';
+import OC from './index'
 
 /**
  * @class Contact
@@ -43,18 +43,18 @@ const Contact = Model.extend({
 	/**
 	 * @returns {undefined}
 	 */
-	initialize: function () {
+	initialize: function() {
 		// Add needed property for easier template rendering
 		if (this.get('actions').length === 0) {
-			this.set('hasOneAction', true);
+			this.set('hasOneAction', true)
 		} else if (this.get('actions').length === 1) {
-			this.set('hasTwoActions', true);
-			this.set('secondAction', this.get('actions')[0]);
+			this.set('hasTwoActions', true)
+			this.set('secondAction', this.get('actions')[0])
 		} else {
-			this.set('hasManyActions', true);
+			this.set('hasManyActions', true)
 		}
 	}
-});
+})
 
 /**
  * @class ContactCollection
@@ -62,7 +62,7 @@ const Contact = Model.extend({
  */
 const ContactCollection = Collection.extend({
 	model: Contact
-});
+})
 
 /**
  * @class ContactsListView
@@ -80,29 +80,29 @@ const ContactsListView = View.extend({
 	 * @param {object} options
 	 * @returns {undefined}
 	 */
-	initialize: function (options) {
-		this._collection = options.collection;
+	initialize: function(options) {
+		this._collection = options.collection
 	},
 
 	/**
 	 * @returns {self}
 	 */
-	render: function () {
-		var self = this;
-		self.$el.html('');
-		self._subViews = [];
+	render: function() {
+		var self = this
+		self.$el.html('')
+		self._subViews = []
 
-		self._collection.forEach(function (contact) {
+		self._collection.forEach(function(contact) {
 			var item = new ContactsListItemView({
 				model: contact
-			});
-			item.render();
-			self.$el.append(item.$el);
-			item.on('toggle:actionmenu', self._onChildActionMenuToggle, self);
-			self._subViews.push(item);
-		});
+			})
+			item.render()
+			self.$el.append(item.$el)
+			item.on('toggle:actionmenu', self._onChildActionMenuToggle, self)
+			self._subViews.push(item)
+		})
 
-		return self;
+		return self
 	},
 
 	/**
@@ -111,12 +111,12 @@ const ContactsListView = View.extend({
 	 * @param {type} $src
 	 * @returns {undefined}
 	 */
-	_onChildActionMenuToggle: function ($src) {
-		this._subViews.forEach(function (view) {
-			view.trigger('parent:toggle:actionmenu', $src);
-		});
+	_onChildActionMenuToggle: function($src) {
+		this._subViews.forEach(function(view) {
+			view.trigger('parent:toggle:actionmenu', $src)
+		})
 	}
-});
+})
 
 /**
  * @class ContactsListItemView
@@ -146,37 +146,37 @@ const ContactsListItemView = View.extend({
 	 * @param {object} data
 	 * @returns {undefined}
 	 */
-	template: function (data) {
-		return this.contactTemplate(data);
+	template: function(data) {
+		return this.contactTemplate(data)
 	},
 
 	/**
 	 * @param {object} options
 	 * @returns {undefined}
 	 */
-	initialize: function (options) {
-		this._model = options.model;
-		this.on('parent:toggle:actionmenu', this._onOtherActionMenuOpened, this);
+	initialize: function(options) {
+		this._model = options.model
+		this.on('parent:toggle:actionmenu', this._onOtherActionMenuOpened, this)
 	},
 
 	/**
 	 * @returns {self}
 	 */
-	render: function () {
+	render: function() {
 		this.$el.html(this.template({
 			contact: this._model.toJSON()
-		}));
-		this.delegateEvents();
+		}))
+		this.delegateEvents()
 
 		// Show placeholder if no avatar is available (avatar is rendered as img, not div)
-		this.$('div.avatar').imageplaceholder(this._model.get('fullName'));
+		this.$('div.avatar').imageplaceholder(this._model.get('fullName'))
 
 		// Show tooltip for top action
-		this.$('.top-action').tooltip({placement: 'left'});
+		this.$('.top-action').tooltip({ placement: 'left' })
 		// Show tooltip for second action
-		this.$('.second-action').tooltip({placement: 'left'});
+		this.$('.second-action').tooltip({ placement: 'left' })
 
-		return this;
+		return this
 	},
 
 	/**
@@ -185,14 +185,14 @@ const ContactsListItemView = View.extend({
 	 * @private
 	 * @returns {undefined}
 	 */
-	_onToggleActionsMenu: function () {
-		this._actionMenuShown = !this._actionMenuShown;
+	_onToggleActionsMenu: function() {
+		this._actionMenuShown = !this._actionMenuShown
 		if (this._actionMenuShown) {
-			this.$('.menu').show();
+			this.$('.menu').show()
 		} else {
-			this.$('.menu').hide();
+			this.$('.menu').hide()
 		}
-		this.trigger('toggle:actionmenu', this.$el);
+		this.trigger('toggle:actionmenu', this.$el)
 	},
 
 	/**
@@ -200,15 +200,15 @@ const ContactsListItemView = View.extend({
 	 * @argument {jQuery} $src
 	 * @returns {undefined}
 	 */
-	_onOtherActionMenuOpened: function ($src) {
+	_onOtherActionMenuOpened: function($src) {
 		if (this.$el.is($src)) {
 			// Ignore
-			return;
+			return
 		}
-		this._actionMenuShown = false;
-		this.$('.menu').hide();
+		this._actionMenuShown = false
+		this.$('.menu').hide()
 	}
-});
+})
 
 /**
  * @class ContactsMenuView
@@ -248,15 +248,15 @@ const ContactsMenuView = View.extend({
 	/**
 	 * @returns {undefined}
 	 */
-	_onSearch: _.debounce(function (e) {
-		var searchTerm = this.$('#contactsmenu-search').val();
+	_onSearch: _.debounce(function(e) {
+		var searchTerm = this.$('#contactsmenu-search').val()
 		// IE11 triggers an 'input' event after the view has been rendered
 		// resulting in an endless loading loop. To prevent this, we remember
 		// the last search term to savely ignore some events
 		// See https://github.com/nextcloud/server/issues/5281
 		if (searchTerm !== this._searchTerm) {
-			this.trigger('search', this.$('#contactsmenu-search').val());
-			this._searchTerm = searchTerm;
+			this.trigger('search', this.$('#contactsmenu-search').val())
+			this._searchTerm = searchTerm
 		}
 	}, 700),
 
@@ -264,75 +264,75 @@ const ContactsMenuView = View.extend({
 	 * @param {object} data
 	 * @returns {string}
 	 */
-	loadingTemplate: function (data) {
-		return this.templates.loading(data);
+	loadingTemplate: function(data) {
+		return this.templates.loading(data)
 	},
 
 	/**
 	 * @param {object} data
 	 * @returns {string}
 	 */
-	errorTemplate: function (data) {
+	errorTemplate: function(data) {
 		return this.templates.error(
 			_.extend({
 				couldNotLoadText: t('core', 'Could not load your contacts')
 			}, data)
-		);
+		)
 	},
 
 	/**
 	 * @param {object} data
 	 * @returns {string}
 	 */
-	contentTemplate: function (data) {
+	contentTemplate: function(data) {
 		return this.templates.menu(
 			_.extend({
 				searchContactsText: t('core', 'Search contacts …')
 			}, data)
-		);
+		)
 	},
 
 	/**
 	 * @param {object} data
 	 * @returns {string}
 	 */
-	contactsTemplate: function (data) {
+	contactsTemplate: function(data) {
 		return this.templates.list(
 			_.extend({
 				noContactsFoundText: t('core', 'No contacts found'),
 				showAllContactsText: t('core', 'Show all contacts …'),
 				contactsAppMgmtText: t('core', 'Install the Contacts app')
 			}, data)
-		);
+		)
 	},
 
 	/**
 	 * @param {object} options
 	 * @returns {undefined}
 	 */
-	initialize: function (options) {
-		this.options = options;
+	initialize: function(options) {
+		this.options = options
 	},
 
 	/**
 	 * @param {string} text
 	 * @returns {undefined}
 	 */
-	showLoading: function (text) {
-		this.render();
-		this._contacts = undefined;
+	showLoading: function(text) {
+		this.render()
+		this._contacts = undefined
 		this.$('.content').html(this.loadingTemplate({
 			loadingText: text
-		}));
+		}))
 	},
 
 	/**
 	 * @returns {undefined}
 	 */
-	showError: function () {
-		this.render();
-		this._contacts = undefined;
-		this.$('.content').html(this.errorTemplate());
+	showError: function() {
+		this.render()
+		this._contacts = undefined
+		this.$('.content').html(this.errorTemplate())
 	},
 
 	/**
@@ -340,16 +340,16 @@ const ContactsMenuView = View.extend({
 	 * @param {string} searchTerm
 	 * @returns {undefined}
 	 */
-	showContacts: function (viewData, searchTerm) {
-		this._contacts = viewData.contacts;
+	showContacts: function(viewData, searchTerm) {
+		this._contacts = viewData.contacts
 		this.render({
 			contacts: viewData.contacts
-		});
+		})
 
 		var list = new ContactsListView({
 			collection: viewData.contacts
-		});
-		list.render();
+		})
+		list.render()
 		this.$('.content').html(this.contactsTemplate({
 			contacts: viewData.contacts,
 			searchTerm: searchTerm,
@@ -357,25 +357,25 @@ const ContactsMenuView = View.extend({
 			contactsAppURL: OC.generateUrl('/apps/contacts'),
 			canInstallApp: OC.isUserAdmin(),
 			contactsAppMgmtURL: OC.generateUrl('/settings/apps/social/contacts')
-		}));
-		this.$('#contactsmenu-contacts').html(list.$el);
+		}))
+		this.$('#contactsmenu-contacts').html(list.$el)
 	},
 
 	/**
 	 * @param {object} data
 	 * @returns {self}
 	 */
-	render: function (data) {
-		var searchVal = this.$('#contactsmenu-search').val();
-		this.$el.html(this.contentTemplate(data));
+	render: function(data) {
+		var searchVal = this.$('#contactsmenu-search').val()
+		this.$el.html(this.contentTemplate(data))
 
 		// Focus search
-		this.$('#contactsmenu-search').val(searchVal);
-		this.$('#contactsmenu-search').focus();
-		return this;
+		this.$('#contactsmenu-search').val(searchVal)
+		this.$('#contactsmenu-search').focus()
+		return this
 	}
 
-});
+})
 
 /**
  * @param {Object} options
@@ -384,9 +384,9 @@ const ContactsMenuView = View.extend({
  * @class ContactsMenu
  * @memberOf OC
  */
-const ContactsMenu = function (options) {
-	this.initialize(options);
-};
+const ContactsMenu = function(options) {
+	this.initialize(options)
+}
 
 ContactsMenu.prototype = {
 	/** @type {jQuery} */
@@ -407,23 +407,23 @@ ContactsMenu.prototype = {
 	 * @param {jQuery} options.trigger - the element to click on to open the menu
 	 * @returns {undefined}
 	 */
-	initialize: function (options) {
-		this.$el = options.el;
-		this._$trigger = options.trigger;
+	initialize: function(options) {
+		this.$el = options.el
+		this._$trigger = options.trigger
 
 		this._view = new ContactsMenuView({
 			el: this.$el
-		});
-		this._view.on('search', function (searchTerm) {
-			this._loadContacts(searchTerm);
-		}, this);
+		})
+		this._view.on('search', function(searchTerm) {
+			this._loadContacts(searchTerm)
+		}, this)
 
-		OC.registerMenu(this._$trigger, this.$el, function () {
-			this._toggleVisibility(true);
-		}.bind(this), true);
-		this.$el.on('beforeHide', function () {
-			this._toggleVisibility(false);
-		}.bind(this));
+		OC.registerMenu(this._$trigger, this.$el, function() {
+			this._toggleVisibility(true)
+		}.bind(this), true)
+		this.$el.on('beforeHide', function() {
+			this._toggleVisibility(false)
+		}.bind(this))
 	},
 
 	/**
@@ -431,12 +431,12 @@ ContactsMenu.prototype = {
 	 * @param {boolean} show
 	 * @returns {Promise}
 	 */
-	_toggleVisibility: function (show) {
+	_toggleVisibility: function(show) {
 		if (show) {
-			return this._loadContacts();
+			return this._loadContacts()
 		} else {
-			this.$el.html('');
-			return Promise.resolve();
+			this.$el.html('')
+			return Promise.resolve()
 		}
 	},
 
@@ -445,48 +445,48 @@ ContactsMenu.prototype = {
 	 * @param {string|undefined} searchTerm
 	 * @returns {Promise}
 	 */
-	_getContacts: function (searchTerm) {
-		var url = OC.generateUrl('/contactsmenu/contacts');
+	_getContacts: function(searchTerm) {
+		var url = OC.generateUrl('/contactsmenu/contacts')
 		return Promise.resolve($.ajax(url, {
 			method: 'POST',
 			data: {
 				filter: searchTerm
 			}
-		}));
+		}))
 	},
 
 	/**
 	 * @param {string|undefined} searchTerm
 	 * @returns {undefined}
 	 */
-	_loadContacts: function (searchTerm) {
-		var self = this;
+	_loadContacts: function(searchTerm) {
+		var self = this
 
 		if (!self._contactsPromise) {
-			self._contactsPromise = self._getContacts(searchTerm);
+			self._contactsPromise = self._getContacts(searchTerm)
 		}
 
 		if (_.isUndefined(searchTerm) || searchTerm === '') {
-			self._view.showLoading(t('core', 'Loading your contacts …'));
+			self._view.showLoading(t('core', 'Loading your contacts …'))
 		} else {
 			self._view.showLoading(t('core', 'Looking for {term} …', {
 				term: searchTerm
-			}));
+			}))
 		}
-		return self._contactsPromise.then(function (data) {
+		return self._contactsPromise.then(function(data) {
 			// Convert contact entries to Backbone collection
-			data.contacts = new ContactCollection(data.contacts);
+			data.contacts = new ContactCollection(data.contacts)
 
-			self._view.showContacts(data, searchTerm);
-		}, function (e) {
-			self._view.showError();
-			console.error('There was an error loading your contacts', e);
-		}).then(function () {
+			self._view.showContacts(data, searchTerm)
+		}, function(e) {
+			self._view.showError()
+			console.error('There was an error loading your contacts', e)
+		}).then(function() {
 			// Delete promise, so that contacts are fetched again when the
 			// menu is opened the next time.
-			delete self._contactsPromise;
-		}).catch(console.error.bind(this));
+			delete self._contactsPromise
+		}).catch(console.error.bind(this))
 	}
-};
+}
 
-export default ContactsMenu;
+export default ContactsMenu

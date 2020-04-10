@@ -1,6 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2018 Robin Appelman <robin@icewind.nl>
+ *
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -15,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -91,7 +97,7 @@ class LegacyVersionsBackend implements IVersionBackend {
 	}
 
 	public function rollback(IVersion $version) {
-		return Storage::rollback($version->getVersionPath(), $version->getRevisionId());
+		return Storage::rollback($version->getVersionPath(), $version->getRevisionId(), $version->getUser());
 	}
 
 	private function getVersionFolder(IUser $user): Folder {

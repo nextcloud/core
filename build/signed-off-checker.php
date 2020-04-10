@@ -127,4 +127,3 @@ if($notSignedCommits !== []) {
 } else {
 	exit(0);
 }
-

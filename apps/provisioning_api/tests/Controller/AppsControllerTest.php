@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -21,12 +22,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Provisioning_API\Tests\Controller;
-
 
 use OCA\Provisioning_API\Controller\AppsController;
 use OCP\App\IAppManager;
@@ -48,7 +48,7 @@ class AppsControllerTest extends \OCA\Provisioning_API\Tests\TestCase {
 	/** @var IUserSession */
 	private $userSession;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->appManager = \OC::$server->getAppManager();
@@ -72,11 +72,11 @@ class AppsControllerTest extends \OCA\Provisioning_API\Tests\TestCase {
 		$this->assertEquals($expected, $result->getData());
 	}
 
-	/**
-	 * @expectedException \OCP\AppFramework\OCS\OCSException
-	 * @expectedExceptionCode 998
-	 */
+	
 	public function testGetAppInfoOnBadAppID() {
+		$this->expectException(\OCP\AppFramework\OCS\OCSException::class);
+		$this->expectExceptionCode(998);
+
 		$this->api->getAppInfo('not_provisioning_api');
 	}
 
@@ -101,7 +101,7 @@ class AppsControllerTest extends \OCA\Provisioning_API\Tests\TestCase {
 		$result = $this->api->getApps('disabled');
 		$data = $result->getData();
 		$apps = (new \OC_App)->listAllApps();
-		$list =  array();
+		$list =  [];
 		foreach($apps as $app) {
 			$list[] = $app['id'];
 		}
@@ -109,11 +109,11 @@ class AppsControllerTest extends \OCA\Provisioning_API\Tests\TestCase {
 		$this->assertEquals(count($disabled), count($data['apps']));
 	}
 
-	/**
-	 * @expectedException \OCP\AppFramework\OCS\OCSException
-	 * @expectedExceptionCode 101
-	 */
+	
 	public function testGetAppsInvalidFilter() {
+		$this->expectException(\OCP\AppFramework\OCS\OCSException::class);
+		$this->expectExceptionCode(101);
+
 		$this->api->getApps('foo');
 	}
 }

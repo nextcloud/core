@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -19,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -62,10 +63,18 @@ class Jail extends Wrapper {
 		}
 	}
 
+	/**
+	 * This is separate from Wrapper::getWrapperStorage so we can get the jailed storage consistently even if the jail is inside another wrapper
+	 */
+	public function getUnjailedStorage() {
+		return $this->storage;
+	}
+
+
 	public function getJailedPath($path) {
 		$root = rtrim($this->rootPath, '/') . '/';
 
-		if (strpos($path, $root) !== 0) {
+		if ($path !== $this->rootPath && strpos($path, $root) !== 0) {
 			return null;
 		} else {
 			$path = substr($path, strlen($this->rootPath));

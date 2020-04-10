@@ -2,8 +2,11 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arne Hamann <kontakt+github@arne.email>
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -21,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -39,12 +42,12 @@ namespace OC {
 		 * 	- 'escape_like_param' - If set to false wildcards _ and % are not escaped
 		 * @return array an array of contacts which are arrays of key-value-pairs
 		 */
-		public function search($pattern, $searchProperties = array(), $options = array()) {
+		public function search($pattern, $searchProperties = [], $options = []) {
 			$this->loadAddressBooks();
-			$result = array();
+			$result = [];
 			foreach($this->addressBooks as $addressBook) {
 				$r = $addressBook->search($pattern, $searchProperties, $options);
-				$contacts = array();
+				$contacts = [];
 				foreach($r as $c){
 					$c['addressbook-key'] = $addressBook->getKey();
 					$contacts[] = $c;
@@ -122,14 +125,14 @@ namespace OC {
 		/**
 		 * Return a list of the user's addressbooks display names
 		 * ! The addressBook displayName are not unique, please use getUserAddressBooks
-		 * 
+		 *
 		 * @return array
 		 * @since 6.0.0
 		 * @deprecated 16.0.0 - Use `$this->getUserAddressBooks()` instead
 		 */
 		public function getAddressBooks() {
 			$this->loadAddressBooks();
-			$result = array();
+			$result = [];
 			foreach($this->addressBooks as $addressBook) {
 				$result[$addressBook->getKey()] = $addressBook->getDisplayName();
 			}
@@ -139,11 +142,11 @@ namespace OC {
 
 		/**
 		 * Return a list of the user's addressbooks
-		 * 
+		 *
 		 * @return IAddressBook[]
 		 * @since 16.0.0
 		 */
-		public function getUserAddressBooks(): Array {
+		public function getUserAddressBooks(): array {
 			$this->loadAddressBooks();
 			return $this->addressBooks;
 		}
@@ -152,19 +155,19 @@ namespace OC {
 		 * removes all registered address book instances
 		 */
 		public function clear() {
-			$this->addressBooks = array();
-			$this->addressBookLoaders = array();
+			$this->addressBooks = [];
+			$this->addressBookLoaders = [];
 		}
 
 		/**
 		 * @var \OCP\IAddressBook[] which holds all registered address books
 		 */
-		private $addressBooks = array();
+		private $addressBooks = [];
 
 		/**
 		 * @var \Closure[] to call to load/register address books
 		 */
-		private $addressBookLoaders = array();
+		private $addressBookLoaders = [];
 
 		/**
 		 * In order to improve lazy loading a closure can be registered which will be called in case
@@ -201,7 +204,7 @@ namespace OC {
 			foreach($this->addressBookLoaders as $callable) {
 				$callable($this);
 			}
-			$this->addressBookLoaders = array();
+			$this->addressBookLoaders = [];
 		}
 	}
 }

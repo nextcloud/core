@@ -1,8 +1,15 @@
 { "translations": {
     "Deleted files" : "Видалені файли",
     "restored" : "відновлено",
+    "This application enables users to restore files that were deleted from the system." : "Цей застосунок дозволяє користувачам відновлювати файли, що були видалені з системи.",
+    "This application enables users to restore files that were deleted from the system. It displays a list of deleted files in the web interface, and has options to restore those deleted files back to the users file directories or remove them permanently from the system. Restoring a file also restores related file versions, if the versions application is enabled. When a file is deleted from a share, it can be restored in the same manner, though it is no longer shared. By default, these files remain in the trash bin for 30 days.\nTo prevent a user from running out of disk space, the Deleted files app will not utilize more than 50% of the currently available free quota for deleted files. If the deleted files exceed this limit, the app deletes the oldest files until it gets below this limit. More information is available in the Deleted Files documentation." : "Цей застосунок дозволяє користувачам відновлювати файли, що були видалені з системи. Він показує список видалених у веб-інтерфейсі і має опцію для відновлення цих видалених файлів у теки користувача, звідки файл було видалено, або перманетно видаляти файли з системи. Відновлення файла також відновлює віповідні версії файла, якщо підтримка версій увімкнена у системі. Якщо файл було видалено з поширення, то його також можна відновити, але він буде відновлений без поширення. Стандартно видалені файли зберігаються у смітнику протягом 30 днів.\nДля запобігання перевикористання дискового простору, Видалені файли не будуть займати більше 50% поточного доступного простору за ковтою для видалених файлів. Якщо об'єм видалених файлів перевищує вказане обмеження, застосунок перманентно видаляє найстаріші файли до досягнення ліміту. Додаткову інформацію можна знайти у документації до Видалених файлів.",
     "Restore" : "Відновити",
     "Delete permanently" : "Видалити назавжди",
+    "Error while restoring file from trashbin" : "Сталася помилка під час відновлення файла зі смітника",
+    "Error while removing file from trashbin" : "Сталася помилка під час видалення файла зі смітника",
+    "Error while restoring files from trashbin" : "Сталася помилка підчас відновлення файлів зі смітника",
+    "Error while emptying trashbin" : "Сталася помилка під час спорожнення смітника",
+    "Error while removing files from trashbin" : "Сталася помилка під час видалення файлів зі смітника",
     "This operation is forbidden" : "Ця операція заборонена",
     "This directory is unavailable, please check the logs or contact the administrator" : "Директорія недоступна, будь ласка, перевірте файл журналу або зверніться до адміністратора  ",
     "No deleted files" : "Немає видалених файлів",
@@ -10,10 +17,8 @@
     "No entries found in this folder" : "Записів не знайдено в цій папці",
     "Select all" : "Вибрати всі",
     "Name" : "Ім'я",
+    "Actions" : "Дії",
     "Deleted" : "Видалено",
-    "Delete" : "Видалити",
-    "Couldn't delete %s permanently" : "Неможливо видалити %s назавжди",
-    "Couldn't restore %s" : "Неможливо відновити %s",
-    "Error" : "Помилка"
+    "Delete" : "Видалити"
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);"
 }

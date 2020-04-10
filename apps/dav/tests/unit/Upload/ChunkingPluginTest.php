@@ -1,8 +1,11 @@
 <?php
 /**
+ * @copyright Copyright (c) 2017, ownCloud GmbH
+ *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
- * @copyright Copyright (c) 2017, ownCloud GmbH
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -15,20 +18,18 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\DAV\Tests\unit\Upload;
 
-
+use OCA\DAV\Connector\Sabre\Directory;
 use OCA\DAV\Upload\ChunkingPlugin;
+use OCA\DAV\Upload\FutureFile;
 use Sabre\HTTP\RequestInterface;
 use Sabre\HTTP\ResponseInterface;
 use Test\TestCase;
-use OCA\DAV\Upload\FutureFile;
-use OCA\DAV\Connector\Sabre\Directory;
 
 class ChunkingPluginTest extends TestCase {
 
@@ -52,7 +53,7 @@ class ChunkingPluginTest extends TestCase {
 	/** @var ResponseInterface | \PHPUnit_Framework_MockObject_MockObject */
 	private $response;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->server = $this->getMockBuilder('\Sabre\DAV\Server')
@@ -79,7 +80,7 @@ class ChunkingPluginTest extends TestCase {
 		$this->tree->expects($this->any())
 			->method('getNodeForPath')
 			->with('source')
-			->will($this->returnValue($node));
+			->willReturn($node);
 		$this->response->expects($this->never())
 			->method('setStatus');
 
@@ -95,11 +96,11 @@ class ChunkingPluginTest extends TestCase {
 		$this->tree->expects($this->any())
 			->method('getNodeForPath')
 			->with('source')
-			->will($this->returnValue($sourceNode));
+			->willReturn($sourceNode);
 		$this->tree->expects($this->any())
 			->method('nodeExists')
 			->with('target')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->response->expects($this->never())
 			->method('setStatus');
 		$this->request->expects($this->once())
@@ -119,11 +120,11 @@ class ChunkingPluginTest extends TestCase {
 		$this->tree->expects($this->any())
 			->method('getNodeForPath')
 			->with('source')
-			->will($this->returnValue($sourceNode));
+			->willReturn($sourceNode);
 		$this->tree->expects($this->any())
 			->method('nodeExists')
 			->with('target')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->tree->expects($this->once())
 			->method('move')
 			->with('source', 'target');
@@ -142,11 +143,11 @@ class ChunkingPluginTest extends TestCase {
 		$this->assertFalse($this->plugin->beforeMove('source', 'target'));
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\BadRequest
-	 * @expectedExceptionMessage Chunks on server do not sum up to 4 but to 3 bytes
-	 */
+	
 	public function testBeforeMoveSizeIsWrong() {
+		$this->expectException(\Sabre\DAV\Exception\BadRequest::class);
+		$this->expectExceptionMessage('Chunks on server do not sum up to 4 but to 3 bytes');
+
 		$sourceNode = $this->createMock(FutureFile::class);
 		$sourceNode->expects($this->once())
 			->method('getSize')
@@ -155,7 +156,7 @@ class ChunkingPluginTest extends TestCase {
 		$this->tree->expects($this->any())
 			->method('getNodeForPath')
 			->with('source')
-			->will($this->returnValue($sourceNode));
+			->willReturn($sourceNode);
 		$this->request->expects($this->once())
 			->method('getHeader')
 			->with('OC-Total-Length')

@@ -30,10 +30,7 @@ class HasherTest extends \Test\TestCase {
 		];
 	}
 
-	/**
-	 * @return array
-	 */
-	public function hashProviders70_71()
+	public function hashProviders70_71(): array
 	{
 		return [
 			// Valid SHA1 strings
@@ -70,11 +67,7 @@ class HasherTest extends \Test\TestCase {
 		];
 	}
 
-
-	/**
-	 * @return array
-	 */
-	public function hashProviders72() {
+	public function hashProviders72(): array {
 		return [
 			// Valid ARGON2 hashes
 			['password', '2|$argon2i$v=19$m=1024,t=2,p=2$T3JGcEkxVFNOVktNSjZUcg$4/hyLtSejxNgAuzSFFV/HLM3qRQKBwEtKw61qPN4zWA', true],
@@ -91,13 +84,33 @@ class HasherTest extends \Test\TestCase {
 		];
 	}
 
+	public function hashProviders73(): array {
+		return [
+			// Valid ARGON2ID hashes
+			['password', '2|$argon2id$v=19$m=65536,t=4,p=1$TEtIMnhUczliQzI0Y01WeA$BpMUDrApy25iagIogUAnlc0rNTPJmGs8lOEeVHujJ9Q', true],
+			['password', '2|$argon2id$v=19$m=65536,t=4,p=1$RzdUdDNvbHhZalVQa2VIcQ$Wo8CGasVCBcSe69ldPdoVKTWEDQkET2cgQJSUiKcIzs', true],
+			['password', '2|$argon2id$v=19$m=65536,t=4,p=1$djlDMTVkL3VnMlNZNWZPeg$PCMpdAjB+OtwGpM75IGWmYHh1h2I7l5P8YabYtKubWg', true],
+			['nextcloud.com', '2|$argon2id$v=19$m=65536,t=4,p=1$VGhGL05rcUI3d3k3WVhibQ$CSy0ShUnamZQhu8oeZfUTTd/S3z966zuQ/uz1Y80Rss', true],
+			['nextcloud.com', '2|$argon2id$v=19$m=65536,t=4,p=1$ZVlZTVlCaTZhRlZHOGFpYQ$xd1TtMz1Mi0SuZrP+VWB3v/hwoC7HfSVsUYmzOo2DUU', true],
+			['nextcloud.com', '2|$argon2id$v=19$m=65536,t=4,p=1$OG1wZUtzZ0tnLjF2MUZVMA$CBluq8W8ISmZ9QumeWsVhaVREP0Zcq8rwk2NrA9d4YE', true],
+
+			//Invalid ARGON2ID hashes
+			['password', '2|$argon2id$v=19$m=65536,t=4,p=1$V3ovTHlvc0Eyb24xenVRNQ$iY/A0Yf24c2DToedj2rj9+KeoJBGsJYQOlJMoa0SFXk', false],
+			['password', '2|$argon2id$v=19$m=65536,t=4,p=1$NlYuMlQ0ODIudTRkZDhYUw$/Z71ckOIuydujedUGK73iXC9vbLzlH/iXkG9+gGgn+c', false],
+			['password', '2|$argon2id$v=19$m=65536,t=4,p=1$b09kNFZTZWFjS05aTkl6ZA$llE4TnIYYrC0H7wkTL1JsIwAAgoMJERlqtFcHHQcXTs', false],
+
+		];
+	}
+
+
+
 	/** @var Hasher */
 	protected $hasher;
 
 	/** @var IConfig */
 	protected $config;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);
@@ -126,8 +139,12 @@ class HasherTest extends \Test\TestCase {
 		$this->config
 			->expects($this->any())
 			->method('getSystemValue')
-			->with('passwordsalt', null)
-			->will($this->returnValue('6Wow67q1wZQZpUUeI6G2LsWUu4XKx'));
+			->willReturnCallback(function ($key, $default) {
+				if($key === 'passwordsalt') {
+					return '6Wow67q1wZQZpUUeI6G2LsWUu4XKx';
+				}
+				return $default;
+			});
 
 		$result = $this->hasher->verify($password, $hash);
 		$this->assertSame($expected, $result);
@@ -145,7 +162,19 @@ class HasherTest extends \Test\TestCase {
 		$this->assertSame($expected, $result);
 	}
 
-	public function testUpgradeHashBlowFishToArgon2i() {
+	/**
+	 * @dataProvider hashProviders73
+	 */
+	public function testVerifyArgon2id(string $password, string $hash, bool $expected) {
+		if (!\defined('PASSWORD_ARGON2ID')) {
+			$this->markTestSkipped('Need ARGON2ID support to test ARGON2ID hashes');
+		}
+
+		$result = $this->hasher->verify($password, $hash);
+		$this->assertSame($expected, $result);
+	}
+
+	public function testUpgradeHashBlowFishToArgon2() {
 		if (!\defined('PASSWORD_ARGON2I')) {
 			$this->markTestSkipped('Need ARGON2 support to test ARGON2 hashes');
 		}
@@ -153,13 +182,83 @@ class HasherTest extends \Test\TestCase {
 		$message = 'mysecret';
 
 		$blowfish = 1 . '|' . password_hash($message, PASSWORD_BCRYPT, []);
-		$argon2i  = 2 . '|' . password_hash($message, PASSWORD_ARGON2I, []);
+		$argon2  = 2 . '|' . password_hash($message, PASSWORD_ARGON2I, []);
+
+		$newAlg = PASSWORD_ARGON2I;
+		if (\defined('PASSWORD_ARGON2ID')) {
+			$newAlg = PASSWORD_ARGON2ID;
+			$argon2  = 2 . '|' . password_hash($message, PASSWORD_ARGON2ID, []);
+		}
+
 
 		$this->assertTrue($this->hasher->verify($message, $blowfish,$newHash));
-		$this->assertTrue($this->hasher->verify($message, $argon2i));
+		$this->assertTrue($this->hasher->verify($message, $argon2));
 
 		$relativePath = self::invokePrivate($this->hasher, 'splitHash', [$newHash]);
 
-		$this->assertFalse(password_needs_rehash($relativePath['hash'], PASSWORD_ARGON2I, []));
+		$this->assertFalse(password_needs_rehash($relativePath['hash'], $newAlg, []));
+	}
+
+	public function testUsePasswordDefaultArgon2iVerify() {
+		if (!\defined('PASSWORD_ARGON2I')) {
+			$this->markTestSkipped('Need ARGON2 support to test ARGON2 hashes');
+		}
+
+		$this->config->method('getSystemValue')
+			->with('hashing_default_password')
+			->willReturn(true);
+
+		$message = 'mysecret';
+
+		$argon2i  = 2 . '|' . password_hash($message, PASSWORD_ARGON2I, []);
+
+		$newHash = null;
+		$this->assertTrue($this->hasher->verify($message, $argon2i, $newHash));
+		$this->assertNotNull($newHash);
+
+		$relativePath = self::invokePrivate($this->hasher, 'splitHash', [$newHash]);
+		$this->assertEquals(1, $relativePath['version']);
+		$this->assertEquals(PASSWORD_BCRYPT, password_get_info($relativePath['hash'])['algo']);
+		$this->assertFalse(password_needs_rehash($relativePath['hash'], PASSWORD_BCRYPT));
+		$this->assertTrue(password_verify($message, $relativePath['hash']));
+	}
+
+	public function testDoNotUsePasswordDefaultArgon2idVerify() {
+		if (!\defined('PASSWORD_ARGON2ID')) {
+			$this->markTestSkipped('Need ARGON2ID support to test ARGON2ID hashes');
+		}
+
+		$this->config->method('getSystemValue')
+			->with('hashing_default_password')
+			->willReturn(false);
+
+		$message = 'mysecret';
+
+		$argon2id  = 3 . '|' . password_hash($message, PASSWORD_ARGON2ID, []);
+
+		$newHash = null;
+		$this->assertTrue($this->hasher->verify($message, $argon2id, $newHash));
+		$this->assertNull($newHash);
+	}
+
+	public function testHashUsePasswordDefault() {
+		if (!\defined('PASSWORD_ARGON2I')) {
+			$this->markTestSkipped('Need ARGON2 support to test ARGON2 hashes');
+		}
+
+		$this->config->method('getSystemValue')
+			->with('hashing_default_password')
+			->willReturn(true);
+
+		$message = 'mysecret';
+
+		$hash = $this->hasher->hash($message);
+		$relativePath = self::invokePrivate($this->hasher, 'splitHash', [$hash]);
+
+		$this->assertSame(1, $relativePath['version']);
+
+		$info = password_get_info($relativePath['hash']);
+		$this->assertEquals(PASSWORD_BCRYPT, $info['algo']);
+
 	}
 }

@@ -22,9 +22,9 @@
     "Sharing %1$s failed, could not find %2$s, maybe the server is currently unreachable or uses a self-signed certificate." : "共享 %1$s 失败，无法找到 %2$s，可能该服务器当前无法访问或者使用了自签名证书。",
     "Could not find share" : "没有发现共享",
     "Federated sharing" : "联合云共享",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "您收到“%3$s\"做为远程共享从”%1$s（代表\"%2$s）",
+    "You received \"%3$s\" as a remote share from %4$s (%1$s) (on behalf of %5$s (%2$s))" : "您收到了来自%4$s（%1$s）的作为远程共享的\"%3$s\"（代表%5$s（%2$s））",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "您得到 {share} 是从 {user} 做为远程共享（代替 {behalf} ）",
-    "You received \"%3$s\" as a remote share from %1$s" : "您从“%1$s\"得到\"%3$s\"做为远程共享",
+    "You received \"%3$s\" as a remote share from %4$s (%1$s)" : "您收到了来自%4$s（%1$s）的作为远程共享的\"%3$s\"",
     "You received {share} as a remote share from {user}" : "您从 {user} 收到了 {share} 作为远程共享",
     "Accept" : "接受",
     "Decline" : "拒绝",
@@ -43,13 +43,13 @@
     "Search global and public address book for users" : "在全局和公开地址簿中寻找用户",
     "Allow users to publish their data to a global and public address book" : "允许用户将其数据发布到全球和公共通讯录",
     "Federated Cloud" : "联合云",
-    "You can share with anyone who uses a Nextcloud server or other Open Cloud Mesh (OCM) compatible servers and services! Just put their Federated Cloud ID in the share dialog. It looks like person@cloud.example.com" : "您可以和使用了Nextcloud服务器或其他兼容Open Cloud Mesh（OCM）的服务器和服务的任何人共享！只需将他们的联合云 ID 放在共享对话框中。联合云 ID 看起来像 person@cloud.example.com",
+    "You can share with anyone who uses a Nextcloud server or other Open Cloud Mesh (OCM) compatible servers and services! Just put their Federated Cloud ID in the share dialog. It looks like person@cloud.example.com" : "您可以和使用了 Nextcloud 服务器或其他兼容 Open Cloud Mesh（OCM）的服务器和服务的任何人共享！只需将他们的联合云 ID 放在共享对话框中。联合云 ID 看起来像 person@cloud.example.com",
     "Your Federated Cloud ID:" : "您的联合云 ID：",
     "Share it so your friends can share files with you:" : "使用共享，以便您的朋友可以与您共享文件：",
     "Add to your website" : "添加到您的网站",
     "Share with me via Nextcloud" : "通过联合云与我共享",
     "HTML Code:" : "HTML 代码：",
-    "Sharing %s failed, because this item is already shared with %s" : "共享 %s 失败，因为它已经共享给 %s",
-    "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate." : "共享 %s 失败，无法找到 %s，可能该服务器当前无法访问或者使用自签名证书。"
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "您收到“%3$s\"做为远程共享从”%1$s（代表\"%2$s）",
+    "You received \"%3$s\" as a remote share from %1$s" : "您从“%1$s\"得到\"%3$s\"做为远程共享"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

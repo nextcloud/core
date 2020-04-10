@@ -10,10 +10,8 @@
     "No entries found in this folder" : "Bu qovluqda heç bir verilən tapılmadı",
     "Select all" : "Hamısıı seç",
     "Name" : "Ad",
+    "Actions" : "İşlər",
     "Deleted" : "Silinib",
-    "Delete" : "Sil",
-    "Couldn't delete %s permanently" : "Həmişəlik silmək olmaz %s-i",
-    "Couldn't restore %s" : "Geri qaytarila bilmədi  %s",
-    "Error" : "Səhv"
+    "Delete" : "Sil"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

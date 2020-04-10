@@ -36,3 +36,18 @@ $('#caldavGenerateBirthdayCalendar').change(function() {
 		$.post(OC.generateUrl('/apps/dav/disableBirthdayCalendar'));
 	}
 });
+
+$('#caldavSendRemindersNotifications').change(function() {
+	var val = $(this)[0].checked;
+
+	OCP.AppConfig.setValue('dav', 'sendEventReminders', val ? 'yes' : 'no');
+
+	$('#caldavSendRemindersNotificationsPush').prop('disabled', !val)
+});
+
+$('#caldavSendRemindersNotificationsPush').change(function() {
+	var val = $(this)[0].checked;
+
+	OCP.AppConfig.setValue('dav', 'sendEventRemindersPush', val ? 'yes' : 'no');
+});
+

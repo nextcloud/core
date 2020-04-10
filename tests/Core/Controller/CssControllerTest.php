@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Tests\Core\Controller;
 
 use OC\Core\Controller\CssController;
@@ -47,7 +48,7 @@ class CssControllerTest extends TestCase {
 	/** @var CssController */
 	private $controller;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		/** @var Factory|\PHPUnit_Framework_MockObject_MockObject $factory */
@@ -157,13 +158,13 @@ class CssControllerTest extends TestCase {
 			->willReturn($folder);
 
 		$folder->method('getFile')
-			->will($this->returnCallback(
-				function($fileName) use ($file) {
+			->willReturnCallback(
+				function ($fileName) use ($file) {
 					if ($fileName === 'file.css') {
 						return $file;
 					}
 					throw new NotFoundException();
-				})
+				}
 			);
 
 		$this->request->method('getHeader')

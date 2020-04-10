@@ -1,7 +1,10 @@
 <?php
-
 /**
+ *
+ *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -44,7 +47,7 @@ class SettingsControllerTest extends TestCase {
 	/** @var SettingsController */
 	private $controller;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->getMockBuilder(IRequest::class)->getMock();
@@ -56,35 +59,21 @@ class SettingsControllerTest extends TestCase {
 		$this->controller = new SettingsController('twofactor_backupcodes', $this->request, $this->storage, $this->userSession);
 	}
 
-	public function testState() {
-		$user = $this->getMockBuilder(IUser::class)->getMock();
-
-		$this->userSession->expects($this->once())
-			->method('getUser')
-			->will($this->returnValue($user));
-		$this->storage->expects($this->once())
-			->method('getBackupCodesState')
-			->with($user)
-			->will($this->returnValue('state'));
-
-		$this->assertEquals('state', $this->controller->state());
-	}
-
 	public function testCreateCodes() {
 		$user = $this->getMockBuilder(IUser::class)->getMock();
 
 		$codes = ['a', 'b'];
 		$this->userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$this->storage->expects($this->once())
 			->method('createCodes')
 			->with($user)
-			->will($this->returnValue($codes));
+			->willReturn($codes);
 		$this->storage->expects($this->once())
 			->method('getBackupCodesState')
 			->with($user)
-			->will($this->returnValue('state'));
+			->willReturn('state');
 
 		$expected = [
 			'codes' => $codes,

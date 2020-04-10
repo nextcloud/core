@@ -20,70 +20,63 @@
  *
  */
 
-import Toastify from 'toastify-js'
+import {
+	showError,
+	showInfo, showMessage,
+	showSuccess,
+	showWarning,
+} from '@nextcloud/dialogs'
 
-const TOAST_TYPE_CLASES = {
-	error: 'toast-error',
-	info: 'toast-info',
-	warning: 'toast-warning',
-	success: 'toast-success',
-	permanent: 'permanent'
-}
-
-const Toast = {
-
-	success(text, options = {}) {
-		options.type = 'success';
-		return this.message(text, options)
+export default {
+	/**
+	 * @deprecated 19.0.0 use `showSuccess` from the `@nextcloud/dialogs` package instead
+	 *
+	 * @param {string} text the toast text
+	 * @param {object} options options
+	 * @returns {Toast}
+	 */
+	success(text, options) {
+		return showSuccess(text, options)
 	},
-
-	warning(text, options = {}) {
-		options.type = 'warning';
-		return this.message(text, options)
+	/**
+	 * @deprecated 19.0.0 use `showWarning` from the `@nextcloud/dialogs` package instead
+	 *
+	 * @param {string} text the toast text
+	 * @param {object} options options
+	 * @returns {Toast}
+	 */
+	warning(text, options) {
+		return showWarning(text, options)
 	},
-
-	error(text, options = {}) {
-		options.type = 'error';
-		return this.message(text, options)
+	/**
+	 * @deprecated 19.0.0 use `showError` from the `@nextcloud/dialogs` package instead
+	 *
+	 * @param {string} text the toast text
+	 * @param {object} options options
+	 * @returns {Toast}
+	 */
+	error(text, options) {
+		return showError(text, options)
 	},
-
-	info(text, options = {}) {
-		options.type = 'info';
-		return this.message(text, options)
+	/**
+	 * @deprecated 19.0.0 use `showInfo` from the `@nextcloud/dialogs` package instead
+	 *
+	 * @param {string} text the toast text
+	 * @param {object} options options
+	 * @returns {Toast}
+	 */
+	info(text, options) {
+		return showInfo(text, options)
 	},
-
+	/**
+	 * @deprecated 19.0.0 use `showMessage` from the `@nextcloud/dialogs` package instead
+	 *
+	 * @param {string} text the toast text
+	 * @param {object} options options
+	 * @returns {Toast}
+	 */
 	message(text, options) {
-		options = options || {};
-		_.defaults(options, {
-			timeout: 7,
-			isHTML: false,
-			type: undefined,
-			close: true,
-			callback: () => {}
-		});
-		if (!options.isHTML) {
-			text = $('<div/>').text(text).html()
-		}
-		let classes = ''
-		if (options.type) {
-			classes = TOAST_TYPE_CLASES[options.type]
-		}
+		return showMessage(text, options)
+	},
 
-		const toast = Toastify({
-			text: text,
-			duration: options.timeout ? options.timeout*1000 : null,
-			callback: options.callback,
-			close: options.close,
-			gravity: 'top',
-			selector: !window.TESTING ? 'content' : 'testArea',
-			positionLeft: false,
-			backgroundColor: '',
-			className: 'toast ' + classes
-		})
-		toast.showToast()
-		// add toastify object to the element for reference in legacy OC.Notification
-		toast.toastElement.toastify = toast;
-		return toast
-	}
 }
-export default Toast

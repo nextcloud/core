@@ -34,7 +34,7 @@ class FinishRememberedLoginCommandTest extends ALoginCommandTest {
 	/** @var Session|MockObject */
 	private $userSession;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userSession = $this->createMock(Session::class);

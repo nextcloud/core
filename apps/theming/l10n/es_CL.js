@@ -24,6 +24,7 @@ OC.L10N.register(
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "Ya te encuentras usando un tema personalizado. La aplicación de Temas puede estar siendo sobreescrita por él.",
     "Theming" : "Tematizar",
     "Legal notice" : "Aviso legal",
+    "Open documentation" : "Abrir la documentación",
     "Theming makes it possible to easily customize the look and feel of your instance and supported clients. This will be visible for all users." : "El tematizar hace posible personalizar facilmente la manera en que se ve tu instancia y clientes soportados. Esto será visible para todos los usuarios. ",
     "Name" : "Nombre",
     "Reset to default" : "Restablecer al predeterminado",

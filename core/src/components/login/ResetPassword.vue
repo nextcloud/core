@@ -21,126 +21,126 @@
 
 <template>
 	<form @submit.prevent="submit">
-		<p>
-			<input type="text"
-				   name="user"
-				   id="user"
-				   :placeholder="t('core', 'Username or email')"
-				   :aria-label="t('core', 'Username or email')"
-				   v-model="user"
-				   @change="updateUsername"
-				   required>
-			<!--<?php p($_['user_autofocus'] ? 'autofocus' : ''); ?>
-			autocomplete="<?php p($_['login_form_autocomplete']); ?>" autocapitalize="none" autocorrect="off"-->
-			<label for="user" class="infield">{{ t('core', 'Username or	email') }}</label>
-		</p>
-		<div id="reset-password-wrapper">
-			<input type="submit"
-				   id="reset-password-submit"
-				   class="login primary"
-				   title=""
-				   :value="t('core', 'Reset password')"/>
-			<div class="submit-icon"
-				 :class="{
-								'icon-confirm-white': !loading,
-								'icon-loading-small': loading && invertedColors,
-								'icon-loading-small-dark': loading && !invertedColors,
-							}"></div>
-		</div>
-		<p v-if="message === 'send-success'"
-		   class="update">
-			{{ t('core', 'A password reset message has been sent to the e-mail address of this account. If you do not receive it, check your spam/junk folders or ask your local administrator for help.') }}
-			<br>
-			{{ t('core', 'If it is not there ask your local administrator.') }}
-		</p>
-		<p v-else-if="message === 'send-error'"
-		   class="update warning">
-			{{ t('core', 'Couldn\'t send reset email. Please contact your administrator.') }}
-		</p>
-		<p v-else-if="message === 'reset-error'"
-		   class="update warning">
-			{{ t('core', 'Password can not be changed. Please contact your administrator.') }}
-		</p>
-		<p v-else-if="message"
-		   class="update"
-		   :class="{warning: error}">
+		<fieldset>
+			<p>
+				<input id="user"
+					v-model="user"
+					type="text"
+					name="user"
+					:placeholder="t('core', 'Username or email')"
+					:aria-label="t('core', 'Username or email')"
+					required
+					@change="updateUsername">
+				<!--<?php p($_['user_autofocus'] ? 'autofocus' : ''); ?>
+				autocomplete="<?php p($_['login_form_autocomplete']); ?>" autocapitalize="none" autocorrect="off"-->
+				<label for="user" class="infield">{{ t('core', 'Username or email') }}</label>
+			</p>
+			<div id="reset-password-wrapper">
+				<input id="reset-password-submit"
+					type="submit"
+					class="login primary"
+					title=""
+					:value="t('core', 'Reset password')">
+				<div class="submit-icon"
+					:class="{
+						'icon-confirm-white': !loading,
+						'icon-loading-small': loading && invertedColors,
+						'icon-loading-small-dark': loading && !invertedColors,
+					}" />
+			</div>
+			<p v-if="message === 'send-success'"
+				class="update">
+				{{ t('core', 'A password reset message has been sent to the e-mail address of this account. If you do not receive it, check your spam/junk folders or ask your local administrator for help.') }}
+				<br>
+				{{ t('core', 'If it is not there ask your local administrator.') }}
+			</p>
+			<p v-else-if="message === 'send-error'"
+				class="update warning">
+				{{ t('core', 'Couldn\'t send reset email. Please contact your administrator.') }}
+			</p>
+			<p v-else-if="message === 'reset-error'"
+				class="update warning">
+				{{ t('core', 'Password can not be changed. Please contact your administrator.') }}
+			</p>
+			<p v-else-if="message"
+				class="update"
+				:class="{warning: error}" />
 
-		</p>
-
-		<a href="#"
-		   @click.prevent="$emit('abort')">
-			{{ t('core', 'Back to login') }}
-		</a>
+			<a href="#"
+				@click.prevent="$emit('abort')">
+				{{ t('core', 'Back to login') }}
+			</a>
+		</fieldset>
 	</form>
 </template>
 
 <script>
-	import Axios from 'nextcloud-axios'
+import axios from '@nextcloud/axios'
 
-	import {generateUrl} from '../../OC/routing'
+import { generateUrl } from '../../OC/routing'
 
-	export default {
-		name: 'ResetPassword',
-		props: {
-			username: {
-				type: String,
-				required: true,
-			},
-			resetPasswordLink: {
-				type: String,
-				required: true,
-			},
-			invertedColors: {
-				type: Boolean,
-				default: false,
-			}
+export default {
+	name: 'ResetPassword',
+	props: {
+		username: {
+			type: String,
+			required: true,
 		},
-		data() {
-			return {
-				error: false,
-				loading: false,
-				message: undefined,
-				user: this.username,
-			}
+		resetPasswordLink: {
+			type: String,
+			required: true,
 		},
-		watch: {
-			username (value) {
-				this.user = value
-			}
+		invertedColors: {
+			type: Boolean,
+			default: false,
 		},
-		methods: {
-			updateUsername () {
-				this.$emit('update:username', this.user)
-			},
-			submit () {
-				this.loading = true
-				this.error = false
-				this.message = ''
-				const url = generateUrl('/lostpassword/email');
-
-				const data = {
-					user: this.user,
-				}
-
-				return Axios.post(url, data)
-					.then(resp => resp.data)
-					.then(data => {
-						if (data.status !== 'success') {
-							throw new Error(`got status ${data.status}`)
-						}
-
-						this.message = 'send-success'
-					})
-					.catch(e => {
-						console.error('could not send reset e-mail request', e)
-
-						this.error = true
-						this.message = 'send-error'
-					})
-					.then(() => this.loading = false)
-			}
+	},
+	data() {
+		return {
+			error: false,
+			loading: false,
+			message: undefined,
+			user: this.username,
+		}
+	},
+	watch: {
+		username(value) {
+			this.user = value
 		},
-	}
+	},
+	methods: {
+		updateUsername() {
+			this.$emit('update:username', this.user)
+		},
+		submit() {
+			this.loading = true
+			this.error = false
+			this.message = ''
+			const url = generateUrl('/lostpassword/email')
+
+			const data = {
+				user: this.user,
+			}
+
+			return axios.post(url, data)
+				.then(resp => resp.data)
+				.then(data => {
+					if (data.status !== 'success') {
+						throw new Error(`got status ${data.status}`)
+					}
+
+					this.message = 'send-success'
+				})
+				.catch(e => {
+					console.error('could not send reset e-mail request', e)
+
+					this.error = true
+					this.message = 'send-error'
+				})
+				.then(() => { this.loading = false })
+		},
+	},
+}
 </script>
 
 <style scoped>

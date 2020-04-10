@@ -1,11 +1,14 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,7 +23,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -29,6 +32,7 @@ namespace OC\Security\IdentityProof;
 use OC\Files\AppData\Factory;
 use OCP\Files\IAppData;
 use OCP\IConfig;
+use OCP\ILogger;
 use OCP\IUser;
 use OCP\Security\ICrypto;
 
@@ -39,19 +43,18 @@ class Manager {
 	private $crypto;
 	/** @var IConfig */
 	private $config;
+	/** @var ILogger */
+	private $logger;
 
-	/**
-	 * @param Factory $appDataFactory
-	 * @param ICrypto $crypto
-	 * @param IConfig $config
-	 */
 	public function __construct(Factory $appDataFactory,
 								ICrypto $crypto,
-								IConfig $config
+								IConfig $config,
+								ILogger $logger
 	) {
 		$this->appData = $appDataFactory->get('identityproof');
 		$this->crypto = $crypto;
 		$this->config = $config;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -59,6 +62,7 @@ class Manager {
 	 * In a separate function for unit testing purposes.
 	 *
 	 * @return array [$publicKey, $privateKey]
+	 * @throws \RuntimeException
 	 */
 	protected function generateKeyPair(): array {
 		$config = [
@@ -68,7 +72,16 @@ class Manager {
 
 		// Generate new key
 		$res = openssl_pkey_new($config);
-		openssl_pkey_export($res, $privateKey);
+
+		if ($res === false) {
+			$this->logOpensslError();
+			throw new \RuntimeException('OpenSSL reported a problem');
+		}
+
+		if (openssl_pkey_export($res, $privateKey, null, $config) === false) {
+			$this->logOpensslError();
+			throw new \RuntimeException('OpenSSL reported a problem');
+		}
 
 		// Extract the public key from $res to $pubKey
 		$publicKey = openssl_pkey_get_details($res);
@@ -83,6 +96,7 @@ class Manager {
 	 *
 	 * @param string $id key id
 	 * @return Key
+	 * @throws \RuntimeException
 	 */
 	protected function generateKey(string $id): Key {
 		list($publicKey, $privateKey) = $this->generateKeyPair();
@@ -105,6 +119,7 @@ class Manager {
 	 *
 	 * @param string $id
 	 * @return Key
+	 * @throws \RuntimeException
 	 */
 	protected function retrieveKey(string $id): Key {
 		try {
@@ -124,6 +139,7 @@ class Manager {
 	 *
 	 * @param IUser $user
 	 * @return Key
+	 * @throws \RuntimeException
 	 */
 	public function getKey(IUser $user): Key {
 		$uid = $user->getUID();
@@ -142,6 +158,14 @@ class Manager {
 			throw new \RuntimeException('no instance id!');
 		}
 		return $this->retrieveKey('system-' . $instanceId);
+	}
+
+	private function logOpensslError(): void {
+		$errors = [];
+		while ($error = openssl_error_string()) {
+			$errors[] = $error;
+		}
+		$this->logger->critical('Something is wrong with your openssl setup: ' . implode(', ', $errors));
 	}
 
 

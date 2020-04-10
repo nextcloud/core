@@ -4,9 +4,11 @@
  *
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author davitol <dtoledo@solidgear.es>
+ * @author Evgeny Golyshev <eugulixes@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Marius Blüm <marius@lineone.io>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Ruben Homs <ruben@homs.codes>
  * @author Sergio Bertolín <sbertolin@solidgear.es>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
@@ -22,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -123,7 +125,7 @@ class DecryptAll extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		if ( !$input->isInteractive() ) {
+		if (!$input->isInteractive()) {
 			$output->writeln('Invalid TTY.');
 			$output->writeln('If you are trying to execute the command in a Docker ');
 			$output->writeln("container, do not forget to execute 'docker exec' with");

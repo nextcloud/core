@@ -25,8 +25,6 @@ OC.L10N.register(
     "Error occurred while updating comment with id {id}" : "Възникна грешка по време на обновяване на коментар с код {id}",
     "Error occurred while posting comment" : "Възникна грешка по време на изпращане на коментар",
     "_%n unread comment_::_%n unread comments_" : ["%n непрочетен коментар","%n непрочетени коментари"],
-    "Comment" : "Коментар",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "Бяхте споменат/а на “%s”, в коментар от потребител, който вече е изтрит",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s те спомена в коментар за “%2$s”"
+    "Comment" : "Коментар"
 },
 "nplurals=2; plural=(n != 1);");

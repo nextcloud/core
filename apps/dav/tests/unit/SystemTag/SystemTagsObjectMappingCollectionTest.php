@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -19,12 +20,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\DAV\Tests\unit\SystemTag;
-
 
 use OC\SystemTag\SystemTag;
 use OCP\IUser;
@@ -49,7 +49,7 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 	 */
 	private $user;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->tagManager = $this->getMockBuilder(ISystemTagManager::class)
@@ -62,7 +62,7 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 	}
 
 	public function getNode() {
-		return new \OCA\DAV\SystemTag\SystemTagsObjectMappingCollection (
+		return new \OCA\DAV\SystemTag\SystemTagsObjectMappingCollection(
 			111,
 			'files',
 			$this->user,
@@ -76,16 +76,16 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->tagManager->expects($this->once())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->tagManager->expects($this->once())
 			->method('canUserAssignTag')
 			->with($tag)
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['555'])
-			->will($this->returnValue([$tag]));
+			->willReturn([$tag]);
 		$this->tagMapper->expects($this->once())
 			->method('assignTags')
 			->with(111, 'files', '555');
@@ -110,16 +110,16 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->tagManager->expects($this->once())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue($userVisible));
+			->willReturn($userVisible);
 		$this->tagManager->expects($this->any())
 			->method('canUserAssignTag')
 			->with($tag)
-			->will($this->returnValue($userAssignable));
+			->willReturn($userAssignable);
 
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['555'])
-			->will($this->returnValue([$tag]));
+			->willReturn([$tag]);
 		$this->tagMapper->expects($this->never())
 			->method('assignTags');
 
@@ -133,10 +133,10 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->assertInstanceOf($expectedException, $thrown);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\PreconditionFailed
-	 */
+	
 	public function testAssignTagNotFound() {
+		$this->expectException(\Sabre\DAV\Exception\PreconditionFailed::class);
+
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['555'])
@@ -145,10 +145,10 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->getNode()->createFile('555');
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+	
 	public function testForbiddenCreateDirectory() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$this->getNode()->createDirectory('789');
 	}
 
@@ -157,17 +157,17 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->tagManager->expects($this->once())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$this->tagMapper->expects($this->once())
 			->method('haveTag')
 			->with([111], 'files', '555', true)
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['555'])
-			->will($this->returnValue(['555' => $tag]));
+			->willReturn(['555' => $tag]);
 
 		$childNode = $this->getNode()->getChild('555');
 
@@ -175,45 +175,45 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->assertEquals('555', $childNode->getName());
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotFound
-	 */
+	
 	public function testGetChildNonVisible() {
+		$this->expectException(\Sabre\DAV\Exception\NotFound::class);
+
 		$tag = new SystemTag(555, 'TheTag', false, false);
 		$this->tagManager->expects($this->once())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue(false));
+			->willReturn(false);
 
 		$this->tagMapper->expects($this->once())
 			->method('haveTag')
 			->with([111], 'files', '555', true)
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['555'])
-			->will($this->returnValue(['555' => $tag]));
+			->willReturn(['555' => $tag]);
 
 		$this->getNode()->getChild('555');
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotFound
-	 */
+	
 	public function testGetChildRelationNotFound() {
+		$this->expectException(\Sabre\DAV\Exception\NotFound::class);
+
 		$this->tagMapper->expects($this->once())
 			->method('haveTag')
 			->with([111], 'files', '777')
-			->will($this->returnValue(false));
+			->willReturn(false);
 
 		$this->getNode()->getChild('777');
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\BadRequest
-	 */
+	
 	public function testGetChildInvalidId() {
+		$this->expectException(\Sabre\DAV\Exception\BadRequest::class);
+
 		$this->tagMapper->expects($this->once())
 			->method('haveTag')
 			->with([111], 'files', 'badid')
@@ -222,10 +222,10 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->getNode()->getChild('badid');
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotFound
-	 */
+	
 	public function testGetChildTagDoesNotExist() {
+		$this->expectException(\Sabre\DAV\Exception\NotFound::class);
+
 		$this->tagMapper->expects($this->once())
 			->method('haveTag')
 			->with([111], 'files', '777')
@@ -242,18 +242,18 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->tagMapper->expects($this->once())
 			->method('getTagIdsForObjects')
 			->with([111], 'files')
-			->will($this->returnValue(['111' => ['555', '556', '557']]));
+			->willReturn(['111' => ['555', '556', '557']]);
 
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['555', '556', '557'])
-			->will($this->returnValue(['555' => $tag1, '556' => $tag2, '557' => $tag3]));
+			->willReturn(['555' => $tag1, '556' => $tag2, '557' => $tag3]);
 
 		$this->tagManager->expects($this->exactly(3))
 			->method('canUserSeeTag')
-			->will($this->returnCallback(function($tag) {
+			->willReturnCallback(function ($tag) {
 				return $tag->isUserVisible();
-			}));
+			});
 
 		$children = $this->getNode()->getChildren();
 
@@ -277,17 +277,17 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->tagMapper->expects($this->once())
 			->method('haveTag')
 			->with([111], 'files', '555')
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$this->tagManager->expects($this->once())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['555'])
-			->will($this->returnValue([$tag]));
+			->willReturn([$tag]);
 
 		$this->assertTrue($this->getNode()->childExists('555'));
 	}
@@ -298,12 +298,12 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->tagMapper->expects($this->once())
 			->method('haveTag')
 			->with([111], 'files', '555')
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['555'])
-			->will($this->returnValue([$tag]));
+			->willReturn([$tag]);
 
 		$this->assertFalse($this->getNode()->childExists('555'));
 	}
@@ -312,7 +312,7 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->tagMapper->expects($this->once())
 			->method('haveTag')
 			->with([111], 'files', '555')
-			->will($this->returnValue(false));
+			->willReturn(false);
 
 		$this->assertFalse($this->getNode()->childExists('555'));
 	}
@@ -326,10 +326,10 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->assertFalse($this->getNode()->childExists('555'));
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\BadRequest
-	 */
+	
 	public function testChildExistsInvalidId() {
+		$this->expectException(\Sabre\DAV\Exception\BadRequest::class);
+
 		$this->tagMapper->expects($this->once())
 			->method('haveTag')
 			->with([111], 'files', '555')
@@ -338,17 +338,17 @@ class SystemTagsObjectMappingCollectionTest extends \Test\TestCase {
 		$this->getNode()->childExists('555');
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+	
 	public function testDelete() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$this->getNode()->delete();
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+	
 	public function testSetName() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$this->getNode()->setName('somethingelse');
 	}
 

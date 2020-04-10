@@ -4,16 +4,17 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
- * @author Brent Bloxam <brent.bloxam@gmail.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jarkko Lehtoranta <devel@jlranta.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
- * @author Lyonel Vincent <lyonel@ezix.org>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Roger Szabo <roger.szabo@web.de>
  * @author root <root@localhost.localdomain>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  * @author Xuanwo <xuanwo@yunify.com>
@@ -30,7 +31,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -298,7 +299,7 @@ class Connection extends LDAPUtility {
 	 */
 	public function setConfiguration($config, &$setParameters = null) {
 		if(is_null($setParameters)) {
-			$setParameters = array();
+			$setParameters = [];
 		}
 		$this->doNotValidate = false;
 		$this->configuration->setConfiguration($config, $setParameters);
@@ -328,7 +329,7 @@ class Connection extends LDAPUtility {
 		$this->readConfiguration();
 		$config = $this->configuration->getConfiguration();
 		$cta = $this->configuration->getConfigTranslationArray();
-		$result = array();
+		$result = [];
 		foreach($cta as $dbkey => $configkey) {
 			switch($configkey) {
 				case 'homeFolderNamingRule':
@@ -356,15 +357,15 @@ class Connection extends LDAPUtility {
 
 	private function doSoftValidation() {
 		//if User or Group Base are not set, take over Base DN setting
-		foreach(array('ldapBaseUsers', 'ldapBaseGroups') as $keyBase) {
+		foreach(['ldapBaseUsers', 'ldapBaseGroups'] as $keyBase) {
 			$val = $this->configuration->$keyBase;
 			if(empty($val)) {
 				$this->configuration->$keyBase = $this->configuration->ldapBase;
 			}
 		}
 
-		foreach(array('ldapExpertUUIDUserAttr'  => 'ldapUuidUserAttribute',
-					  'ldapExpertUUIDGroupAttr' => 'ldapUuidGroupAttribute')
+		foreach(['ldapExpertUUIDUserAttr'  => 'ldapUuidUserAttribute',
+			'ldapExpertUUIDGroupAttr' => 'ldapUuidGroupAttribute']
 				as $expertSetting => $effectiveSetting) {
 			$uuidOverride = $this->configuration->$expertSetting;
 			if(!empty($uuidOverride)) {
@@ -392,12 +393,12 @@ class Connection extends LDAPUtility {
 		}
 
 		//make sure empty search attributes are saved as simple, empty array
-		$saKeys = array('ldapAttributesForUserSearch',
-						'ldapAttributesForGroupSearch');
+		$saKeys = ['ldapAttributesForUserSearch',
+			'ldapAttributesForGroupSearch'];
 		foreach($saKeys as $key) {
 			$val = $this->configuration->$key;
 			if(is_array($val) && count($val) === 1 && empty($val[0])) {
-				$this->configuration->$key = array();
+				$this->configuration->$key = [];
 			}
 		}
 
@@ -421,8 +422,8 @@ class Connection extends LDAPUtility {
 			(string)$this->configPrefix .'): ';
 
 		//options that shall not be empty
-		$options = array('ldapHost', 'ldapPort', 'ldapUserDisplayName',
-						 'ldapGroupDisplayName', 'ldapLoginFilter');
+		$options = ['ldapHost', 'ldapPort', 'ldapUserDisplayName',
+			'ldapGroupDisplayName', 'ldapLoginFilter'];
 		foreach($options as $key) {
 			$val = $this->configuration->$key;
 			if(empty($val)) {
@@ -675,7 +676,8 @@ class Connection extends LDAPUtility {
 				ILogger::WARN);
 
 			// Set to failure mode, if LDAP error code is not LDAP_SUCCESS or LDAP_INVALID_CREDENTIALS
-			if($errno !== 0x00 && $errno !== 0x31) {
+			// or (needed for Apple Open Directory:) LDAP_INSUFFICIENT_ACCESS
+			if($errno !== 0 && $errno !== 49 && $errno !== 50) {
 				$this->ldapConnectionRes = null;
 			}
 

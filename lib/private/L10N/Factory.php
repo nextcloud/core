@@ -4,13 +4,19 @@
  * @copyright 2016 Roeland Jago Douma <roeland@famdouma.nl>
  * @copyright 2016 Lukas Reschke <lukas@statuscode.ch>
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license AGPL-3.0
  *
@@ -24,7 +30,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -108,11 +114,11 @@ class Factory implements IFactory {
 	 * @return \OCP\IL10N
 	 */
 	public function get($app, $lang = null, $locale = null) {
-		return new LazyL10N(function() use ($app, $lang, $locale) {
+		return new LazyL10N(function () use ($app, $lang, $locale) {
 
 			$app = \OC_App::cleanAppId($app);
 			if ($lang !== null) {
-				$lang = str_replace(array('\0', '/', '\\', '..'), '', (string)$lang);
+				$lang = str_replace(['\0', '/', '\\', '..'], '', (string)$lang);
 			}
 
 			$forceLang = $this->config->getSystemValue('force_language', false);
@@ -363,7 +369,7 @@ class Factory implements IFactory {
 		}
 
 		$locales = $this->findAvailableLocales();
-		$userLocale = array_filter($locales, function($value) use ($locale) {
+		$userLocale = array_filter($locales, function ($value) use ($locale) {
 			return $locale === $value['code'];
 		});
 
@@ -469,7 +475,6 @@ class Factory implements IFactory {
 
 		if (($this->isSubDirectory($transFile, $this->serverRoot . '/core/l10n/')
 				|| $this->isSubDirectory($transFile, $this->serverRoot . '/lib/l10n/')
-				|| $this->isSubDirectory($transFile, $this->serverRoot . '/settings/l10n/')
 				|| $this->isSubDirectory($transFile, \OC_App::getAppPath($app) . '/l10n/')
 			)
 			&& file_exists($transFile)) {
@@ -496,7 +501,7 @@ class Factory implements IFactory {
 	 * @return string directory
 	 */
 	protected function findL10nDir($app = null) {
-		if (in_array($app, ['core', 'lib', 'settings'])) {
+		if (in_array($app, ['core', 'lib'])) {
 			if (file_exists($this->serverRoot . '/' . $app . '/l10n/')) {
 				return $this->serverRoot . '/' . $app . '/l10n/';
 			}
@@ -521,14 +526,14 @@ class Factory implements IFactory {
 			return $this->pluralFunctions[$string];
 		}
 
-		if (preg_match( '/^\s*nplurals\s*=\s*(\d+)\s*;\s*plural=(.*)$/u', $string, $matches)) {
+		if (preg_match('/^\s*nplurals\s*=\s*(\d+)\s*;\s*plural=(.*)$/u', $string, $matches)) {
 			// sanitize
-			$nplurals = preg_replace( '/[^0-9]/', '', $matches[1] );
-			$plural = preg_replace( '#[^n0-9:\(\)\?\|\&=!<>+*/\%-]#', '', $matches[2] );
+			$nplurals = preg_replace('/[^0-9]/', '', $matches[1]);
+			$plural = preg_replace('#[^n0-9:\(\)\?\|\&=!<>+*/\%-]#', '', $matches[2]);
 
 			$body = str_replace(
-				array( 'plural', 'n', '$n$plurals', ),
-				array( '$plural', '$n', '$nplurals', ),
+				[ 'plural', 'n', '$n$plurals', ],
+				[ '$plural', '$n', '$nplurals', ],
 				'nplurals='. $nplurals . '; plural=' . $plural
 			);
 
@@ -540,7 +545,7 @@ class Factory implements IFactory {
 			$length = strlen($body);
 			for($i = 0; $i < $length; $i++) {
 				$ch = $body[$i];
-				switch ( $ch ) {
+				switch ($ch) {
 					case '?':
 						$res .= ' ? (';
 						$p++;
@@ -549,7 +554,7 @@ class Factory implements IFactory {
 						$res .= ') : (';
 						break;
 					case ';':
-						$res .= str_repeat( ')', $p ) . ';';
+						$res .= str_repeat(')', $p) . ';';
 						$p = 0;
 						break;
 					default:
@@ -594,20 +599,20 @@ class Factory implements IFactory {
 			// TRANSLATORS this is the language name for the language switcher in the personal settings and should be the localized version
 			$potentialName = (string) $l->t('__language_name__');
 			if ($l->getLanguageCode() === $lang && $potentialName[0] !== '_') {//first check if the language name is in the translation file
-				$ln = array(
+				$ln = [
 					'code' => $lang,
 					'name' => $potentialName
-				);
+				];
 			} else if ($lang === 'en') {
-				$ln = array(
+				$ln = [
 					'code' => $lang,
 					'name' => 'English (US)'
-				);
+				];
 			} else {//fallback to language code
-				$ln = array(
+				$ln = [
 					'code' => $lang,
 					'name' => $lang
-				);
+				];
 			}
 
 			// put appropriate languages into appropriate arrays, to print them sorted
@@ -622,7 +627,7 @@ class Factory implements IFactory {
 		ksort($commonLanguages);
 
 		// sort now by displayed language not the iso-code
-		usort( $languages, function ($a, $b) {
+		usort($languages, function ($a, $b) {
 			if ($a['code'] === $a['name'] && $b['code'] !== $b['name']) {
 				// If a doesn't have a name, but b does, list b before a
 				return 1;

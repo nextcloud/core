@@ -49,14 +49,14 @@ class DBLockingProviderTest extends LockingProvider {
 
 	protected $currentTime;
 
-	public function setUp() {
+	protected function setUp(): void {
 		$this->currentTime = time();
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->timeFactory->expects($this->any())
 			->method('getTime')
-			->will($this->returnCallback(function () {
+			->willReturnCallback(function () {
 				return $this->currentTime;
-			}));
+			});
 		parent::setUp();
 	}
 
@@ -68,7 +68,7 @@ class DBLockingProviderTest extends LockingProvider {
 		return new \OC\Lock\DBLockingProvider($this->connection, \OC::$server->getLogger(), $this->timeFactory, 3600);
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		$this->connection->executeQuery('DELETE FROM `*PREFIX*file_locks`');
 		parent::tearDown();
 	}

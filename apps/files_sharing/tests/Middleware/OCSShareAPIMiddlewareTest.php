@@ -2,6 +2,8 @@
 /**
  *
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -18,9 +20,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OCA\Files_Sharing\Tests\Middleware;
 
 use OCA\Files_Sharing\Controller\ShareAPIController;
@@ -43,13 +46,13 @@ class OCSShareAPIMiddlewareTest extends \Test\TestCase {
 	/** @var OCSShareAPIMiddleware */
 	private $middleware;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->shareManager = $this->createMock(IManager::class);
 		$this->l = $this->createMock(IL10N::class);
 
-		$this->l->method('t')->will($this->returnArgument(0));
+		$this->l->method('t')->willReturnArgument(0);
 
 		$this->middleware = new OCSShareAPIMiddleware($this->shareManager, $this->l);
 	}

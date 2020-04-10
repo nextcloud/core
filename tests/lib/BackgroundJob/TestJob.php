@@ -8,7 +8,6 @@
 
 namespace Test\BackgroundJob;
 
-
 class TestJob extends \OC\BackgroundJob\Job {
 	private $testCase;
 

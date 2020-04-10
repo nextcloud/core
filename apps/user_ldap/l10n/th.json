@@ -6,6 +6,11 @@
     "No data specified" : "ไม่มีข้อมูลที่ระบุ",
     " Could not set configuration %s" : "ไม่สามารถตั้งค่า %s",
     "Action does not exist" : "ไม่มีการดำเนินการ",
+    "Very weak password" : "รหัสผ่านระดับต่ำมาก",
+    "Weak password" : "รหัสผ่านระดับต่ำ",
+    "So-so password" : "รหัสผ่านระดับปกติ",
+    "Good password" : "รหัสผ่านระดับดี",
+    "Strong password" : "รหัสผ่านระดับดีมาก",
     "The Base DN appears to be wrong" : "Base DN ดูเหมือนจะไม่ถูกต้อง",
     "Testing configuration…" : "กำลังทดสอบการตั้งค่า ...",
     "Configuration incorrect" : "การกำหนดค่าไม่ถูกต้อง",
@@ -79,6 +84,11 @@
     "Saving" : "บันทึก",
     "Back" : "ย้อนกลับ",
     "Continue" : "ดำเนินการต่อ",
+    "Please try again or contact your administrator." : "โปรดลองอีกครั้งหรือติดต่อผู้ดูแลระบบ",
+    "Current password" : "รหัสผ่านปัจจุบัน",
+    "New password" : "รหัสผ่านใหม่",
+    "Wrong password." : "รหัสผ่านผิดพลาด",
+    "Cancel" : "ยกเลิก",
     "Server" : "เซิร์ฟเวอร์",
     "Users" : "ผู้ใช้งาน",
     "Login Attributes" : "คุณลักษณะการเข้าสู่ระบบ",
@@ -121,7 +131,6 @@
     "Quota Default" : "โควต้าเริ่มต้น",
     "Email Field" : "ช่องอีเมล",
     "User Home Folder Naming Rule" : "กฎการตั้งชื่อโฟลเดอร์แรกของผู้ใช้",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "เว้นว่างไว้สำหรับ ชื่อผู้ใช้ (ค่าเริ่มต้น) หรือไม่กรุณาระบุคุณลักษณะของ LDAP/AD",
     "Internal Username" : "ชื่อผู้ใช้ภายใน",
     "Internal Username Attribute:" : "ชื่อผู้ใช้ภายในคุณสมบัติ:",
     "Override UUID detection" : "แทนที่การตรวจสอบ UUID",
@@ -130,6 +139,7 @@
     "UUID Attribute for Groups:" : "แอตทริบิวต์ UUID สำหรับกลุ่ม:",
     "Username-LDAP User Mapping" : "Username-LDAP ผู้ใช้ Mapping",
     "Clear Username-LDAP User Mapping" : "ล้าง Username-LDAP ผู้ใช้ Mapping",
-    "Clear Groupname-LDAP Group Mapping" : "ล้าง Groupname-LDAP กลุ่ม Mapping"
+    "Clear Groupname-LDAP Group Mapping" : "ล้าง Groupname-LDAP กลุ่ม Mapping",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "เว้นว่างไว้สำหรับ ชื่อผู้ใช้ (ค่าเริ่มต้น) หรือไม่กรุณาระบุคุณลักษณะของ LDAP/AD"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

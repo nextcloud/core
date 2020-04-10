@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -20,15 +20,15 @@
  */
 
 import $ from 'jquery'
-
 import OC from '../OC'
 
 /**
  * @todo move to contacts menu code https://github.com/orgs/nextcloud/projects/31#card-21213129
  */
 export const setUp = () => {
+	// eslint-disable-next-line no-new
 	new OC.ContactsMenu({
 		el: $('#contactsmenu .menu'),
-		trigger: $('#contactsmenu .menutoggle')
+		trigger: $('#contactsmenu .menutoggle'),
 	})
 }

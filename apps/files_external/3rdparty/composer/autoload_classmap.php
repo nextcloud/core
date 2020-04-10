@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = $vendorDir;
 
 return array(
+    'Icewind\\SMB\\ACL' => $vendorDir . '/icewind/smb/src/ACL.php',
     'Icewind\\SMB\\AbstractServer' => $vendorDir . '/icewind/smb/src/AbstractServer.php',
     'Icewind\\SMB\\AbstractShare' => $vendorDir . '/icewind/smb/src/AbstractShare.php',
     'Icewind\\SMB\\AnonymousAuth' => $vendorDir . '/icewind/smb/src/AnonymousAuth.php',
@@ -15,8 +16,10 @@ return array(
     'Icewind\\SMB\\Exception\\AlreadyExistsException' => $vendorDir . '/icewind/smb/src/Exception/AlreadyExistsException.php',
     'Icewind\\SMB\\Exception\\AuthenticationException' => $vendorDir . '/icewind/smb/src/Exception/AuthenticationException.php',
     'Icewind\\SMB\\Exception\\ConnectException' => $vendorDir . '/icewind/smb/src/Exception/ConnectException.php',
+    'Icewind\\SMB\\Exception\\ConnectionAbortedException' => $vendorDir . '/icewind/smb/src/Exception/ConnectionAbortedException.php',
     'Icewind\\SMB\\Exception\\ConnectionException' => $vendorDir . '/icewind/smb/src/Exception/ConnectionException.php',
     'Icewind\\SMB\\Exception\\ConnectionRefusedException' => $vendorDir . '/icewind/smb/src/Exception/ConnectionRefusedException.php',
+    'Icewind\\SMB\\Exception\\ConnectionResetException' => $vendorDir . '/icewind/smb/src/Exception/ConnectionResetException.php',
     'Icewind\\SMB\\Exception\\DependencyException' => $vendorDir . '/icewind/smb/src/Exception/DependencyException.php',
     'Icewind\\SMB\\Exception\\Exception' => $vendorDir . '/icewind/smb/src/Exception/Exception.php',
     'Icewind\\SMB\\Exception\\FileInUseException' => $vendorDir . '/icewind/smb/src/Exception/FileInUseException.php',

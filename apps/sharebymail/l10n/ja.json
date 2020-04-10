@@ -47,18 +47,6 @@
     "Share provider which allows you to share files by mail" : "メールでファイルを共有できる共有プロバイダ",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "ユーザーがメールアドレスを使ってファイルやフォルダーへの個人リンクを共有することを許可します。",
     "Send password by mail" : "メールでパスワード送信",
-    "Enforce password protection" : "常にパスワード保護を有効にする",
-    "Sharing %s failed, this item is already shared with %s" : "%s の共有に失敗しました。 このアイテムはすでに %s と共有しています",
-    "%s shared »%s« with you" : "%s があなたと »%s« を共有しました",
-    "%s shared »%s« with you." : "%sが あなたと »%s«を共有しました",
-    "%s via %s" : "%s に %s から",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s により »%s« が共有されました\nアクセスするためのリンクは別途メールで受信してください。\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s により »%s« が共有されました。アクセスするためのリンクは別途メールで受信してください。",
-    "Password to access »%s« shared to you by %s" : "%sへの共有アクセスのパスワードが %s から共有されました",
-    "It is protected with the following password: %s" : "次のパスワードで保護されています: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "%sを%sと共有しました。共有は受信者に送信されています。セキュリティポリシーにより%sの管理者が共有はパスワードで保護されるべきで、直接受信者に送信するべきではないと定めている場合、手動で受信者にメールを転送する必要があります。",
-    "Password to access »%s« shared with %s" : "»%s« にアクセスするパスワードが %s から共有されました",
-    "This is the password: %s" : "パスワード: %s",
-    "Password to access »%1$s« shared with %2$s" : "»%1$s«に共有アクセスのパスワードが %2$s から共有されました"
+    "Enforce password protection" : "常にパスワード保護を有効にする"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

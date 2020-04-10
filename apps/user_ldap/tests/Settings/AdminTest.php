@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -19,14 +20,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\User_LDAP\Tests\Settings;
 
 use OCA\User_LDAP\Configuration;
-use OCA\User_LDAP\Helper;
 use OCA\User_LDAP\Settings\Admin;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IL10N;
@@ -43,7 +43,7 @@ class AdminTest extends TestCase {
 	/** @var IL10N */
 	private $l10n;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->l10n = $this->getMockBuilder(IL10N::class)->getMock();
 

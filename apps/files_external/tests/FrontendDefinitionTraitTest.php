@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
@@ -18,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -101,10 +102,10 @@ class FrontendDefinitionTraitTest extends \Test\TestCase {
 			->willReturn('param');
 		$param->expects($this->once())
 			->method('validateValue')
-			->will($this->returnCallback(function(&$value) {
+			->willReturnCallback(function (&$value) {
 				$value = 'foobar';
 				return true;
-			}));
+			});
 
 		$storageConfig = $this->getMockBuilder(StorageConfig::class)
 			->disableOriginalConstructor()

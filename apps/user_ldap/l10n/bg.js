@@ -60,6 +60,7 @@ OC.L10N.register(
     "Back" : "Назад",
     "Continue" : "Продължи",
     "An internal error occurred." : "Възникна вътрешно сървърна грешка.",
+    "Please try again or contact your administrator." : "Опитайте отново или се свържете с администраотра.",
     "Current password" : "Текуща парола",
     "New password" : "Нова парола",
     "Wrong password." : "Грешна парола.",
@@ -98,12 +99,12 @@ OC.L10N.register(
     "Quota Field" : "Поле за Квота",
     "Quota Default" : "Детайли на квотата",
     "Email Field" : "Поле за имейл",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Оставете празно за потребителско име (стандартно). Или посочете LDAP/AD атрибут.",
     "Internal Username" : "Вътрешно потребителско име",
     "Internal Username Attribute:" : "Атрибут на вътрешното потребителско име:",
     "Override UUID detection" : "Промени UUID откриването",
     "By default, the UUID attribute is automatically detected. The UUID attribute is used to doubtlessly identify LDAP users and groups. Also, the internal username will be created based on the UUID, if not specified otherwise above. You can override the setting and pass an attribute of your choice. You must make sure that the attribute of your choice can be fetched for both users and groups and it is unique. Leave it empty for default behavior. Changes will have effect only on newly mapped (added) LDAP users and groups." : "Обикновено UUID атрибутът ще бъде намерен автоматично. UUID атрибута се използва, за да се идентифицират еднозначно LDAP потребители и групи. Освен това ще бъде генерирано вътрешното име базирано на UUID-то, ако такова не е посочено по-горе. Можете да промените настройката и да използвате атрибут по свой избор. Наложително е атрибутът да бъде уникален както за потребителите така и за групите. Промените ще се отразят само за новодобавени (map-нати) LDAP потребители.",
     "UUID Attribute for Users:" : "UUID атрибут за потребителите:",
-    "UUID Attribute for Groups:" : "UUID атрибут за групите:"
+    "UUID Attribute for Groups:" : "UUID атрибут за групите:",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Оставете празно за потребителско име (стандартно). Или посочете LDAP/AD атрибут."
 },
 "nplurals=2; plural=(n != 1);");

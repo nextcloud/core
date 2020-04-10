@@ -19,17 +19,15 @@ OC.L10N.register(
     "Post" : "Објави",
     "Cancel" : "Откажи",
     "[Deleted user]" : "[Обрисан корисник]",
-    "No comments yet, start the conversation!" : "Тренутно нема коментара. Започните дискусију",
+    "No comments yet, start the conversation!" : "Још нема коментара. Започните дискусију!",
     "More comments …" : "Преостали коментари …",
     "Save" : "Сачувај",
     "Allowed characters {count} of {max}" : "Дозвољених {count} знакова од {max}",
     "Error occurred while retrieving comment with ID {id}" : "Дошло је до грешке при прегледу коментара са идентификацијом {id}",
-    "Error occurred while updating comment with id {id}" : "Дошло је до грешке при преправци коментара ознаке {id}",
+    "Error occurred while updating comment with id {id}" : "Дошло је до грешке при ажурирању коментара са ознаком {id}",
     "Error occurred while posting comment" : "Дошло је до грешке при објави коментара",
     "_%n unread comment_::_%n unread comments_" : ["%nнепрочитани коментар","%nнепрочитана коментара ","%n непрочитаних коментара"],
     "_1 new comment_::_{unread} new comments_" : ["1 нови коментар","{unread} нова коментара","{unread} нова коментара"],
-    "Comment" : "Коментар",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "Поменути сте у \"%s\", у коментару који је оставио корисник који је од тада избрисан",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s Вас је поменуо у коментару на \"%2$s\""
+    "Comment" : "Коментар"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

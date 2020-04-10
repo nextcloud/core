@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -107,6 +107,18 @@ class CacheEntry implements ICacheEntry, \ArrayAccess {
 
 	public function isEncrypted() {
 		return isset($this->data['encrypted']) && $this->data['encrypted'];
+	}
+
+	public function getMetadataEtag(): ?string {
+		return $this->data['metadata_etag'];
+	}
+
+	public function getCreationTime(): ?int {
+		return $this->data['creation_time'];
+	}
+
+	public function getUploadTime(): ?int {
+		return $this->data['upload_time'];
 	}
 
 	public function getData() {

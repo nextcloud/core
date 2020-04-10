@@ -19,15 +19,15 @@
  *
  */
 
-
 namespace Test\Accounts;
-
 
 use OC\Accounts\Account;
 use OC\Accounts\AccountManager;
 use OCP\Accounts\IAccountManager;
 use OCP\BackgroundJob\IJobList;
+use OCP\ILogger;
 use OCP\IUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Test\TestCase;
@@ -43,24 +43,27 @@ class AccountsManagerTest extends TestCase {
 	/** @var  \OCP\IDBConnection */
 	private $connection;
 
-	/** @var  EventDispatcherInterface | \PHPUnit_Framework_MockObject_MockObject */
+	/** @var  EventDispatcherInterface|MockObject */
 	private $eventDispatcher;
 
-	/** @var  IJobList | \PHPUnit_Framework_MockObject_MockObject */
+	/** @var  IJobList|MockObject */
 	private $jobList;
 
 	/** @var string accounts table name */
 	private $table = 'accounts';
 
-	public function setUp() {
+	/** @var ILogger|MockObject */
+	private $logger;
+
+	protected function setUp(): void {
 		parent::setUp();
-		$this->eventDispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')
-			->disableOriginalConstructor()->getMock();
+		$this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
 		$this->connection = \OC::$server->getDatabaseConnection();
-		$this->jobList = $this->getMockBuilder(IJobList::class)->getMock();
+		$this->jobList = $this->createMock(IJobList::class);
+		$this->logger = $this->createMock(ILogger::class);
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		parent::tearDown();
 		$query = $this->connection->getQueryBuilder();
 		$query->delete($this->table)->execute();
@@ -70,11 +73,11 @@ class AccountsManagerTest extends TestCase {
 	 * get a instance of the accountManager
 	 *
 	 * @param array $mockedMethods list of methods which should be mocked
-	 * @return \PHPUnit_Framework_MockObject_MockObject | AccountManager
+	 * @return MockObject | AccountManager
 	 */
 	public function getInstance($mockedMethods = null) {
 		return $this->getMockBuilder(AccountManager::class)
-			->setConstructorArgs([$this->connection, $this->eventDispatcher, $this->jobList])
+			->setConstructorArgs([$this->connection, $this->eventDispatcher, $this->jobList, $this->logger])
 			->setMethods($mockedMethods)
 			->getMock();
 
@@ -162,7 +165,7 @@ class AccountsManagerTest extends TestCase {
 		if(empty($expectedData)) {
 			$accountManager->expects($this->never())->method('addMissingDefaultValues');
 
- 		} else {
+		} else {
 			$accountManager->expects($this->once())->method('addMissingDefaultValues')->with($expectedData)
 				->willReturn($expectedData);
 		}

@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -19,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -54,7 +55,7 @@ class SystemTagsObjectTypeCollectionTest extends \Test\TestCase {
 	 */
 	private $userFolder;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->tagManager = $this->getMockBuilder(ISystemTagManager::class)
@@ -66,24 +67,24 @@ class SystemTagsObjectTypeCollectionTest extends \Test\TestCase {
 			->getMock();
 		$user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('testuser'));
+			->willReturn('testuser');
 		$userSession = $this->getMockBuilder(IUserSession::class)
 			->getMock();
 		$userSession->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($user));
+			->willReturn($user);
 		$groupManager = $this->getMockBuilder(IGroupManager::class)
 			->getMock();
 		$groupManager->expects($this->any())
 			->method('isAdmin')
 			->with('testuser')
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$this->userFolder = $this->getMockBuilder(Folder::class)
 			->getMock();
 		$userFolder = $this->userFolder;
 
-		$closure = function($name) use ($userFolder) {
+		$closure = function ($name) use ($userFolder) {
 			$nodes = $userFolder->getById(intval($name));
 			return !empty($nodes);
 		};
@@ -98,17 +99,17 @@ class SystemTagsObjectTypeCollectionTest extends \Test\TestCase {
 		);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+	
 	public function testForbiddenCreateFile() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$this->node->createFile('555');
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+	
 	public function testForbiddenCreateDirectory() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$this->node->createDirectory('789');
 	}
 
@@ -116,28 +117,28 @@ class SystemTagsObjectTypeCollectionTest extends \Test\TestCase {
 		$this->userFolder->expects($this->once())
 			->method('getById')
 			->with('555')
-			->will($this->returnValue([true]));
+			->willReturn([true]);
 		$childNode = $this->node->getChild('555');
 
 		$this->assertInstanceOf('\OCA\DAV\SystemTag\SystemTagsObjectMappingCollection', $childNode);
 		$this->assertEquals('555', $childNode->getName());
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotFound
-	 */
+	
 	public function testGetChildWithoutAccess() {
+		$this->expectException(\Sabre\DAV\Exception\NotFound::class);
+
 		$this->userFolder->expects($this->once())
 			->method('getById')
 			->with('555')
-			->will($this->returnValue([]));
+			->willReturn([]);
 		$this->node->getChild('555');
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\MethodNotAllowed
-	 */
+	
 	public function testGetChildren() {
+		$this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
+
 		$this->node->getChildren();
 	}
 
@@ -145,7 +146,7 @@ class SystemTagsObjectTypeCollectionTest extends \Test\TestCase {
 		$this->userFolder->expects($this->once())
 			->method('getById')
 			->with('123')
-			->will($this->returnValue([true]));
+			->willReturn([true]);
 		$this->assertTrue($this->node->childExists('123'));
 	}
 
@@ -153,21 +154,21 @@ class SystemTagsObjectTypeCollectionTest extends \Test\TestCase {
 		$this->userFolder->expects($this->once())
 			->method('getById')
 			->with('555')
-			->will($this->returnValue([]));
+			->willReturn([]);
 		$this->assertFalse($this->node->childExists('555'));
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+	
 	public function testDelete() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$this->node->delete();
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+	
 	public function testSetName() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$this->node->setName('somethingelse');
 	}
 

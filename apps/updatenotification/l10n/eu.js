@@ -1,9 +1,27 @@
 OC.L10N.register(
     "updatenotification",
     {
-    "Updater" : "Eguneratzailea",
-    "A new version is available: %s" : "Bertsio berri bat eskuragarri dago: %s",
+    "Channel updated" : "Kanala eguneratuta",
+    "Update notifications" : "Eguneratu jakinarazpenak",
+    "Please check the Nextcloud and server log files for errors." : "Mesedez, egiaztatu Nextcloud eta zerbitzariaren erregistroko fitxategiak akatsak dauden ikusteko.",
+    "Update to %1$s is available." : "%1$s-ra eguneratzea eskuragarri dago.",
+    "Update notification" : "Eguneratu jakinarazpena",
+    "Apps missing updates" : "Eguneratzeak falta dituzten aplikazioak",
+    "View in store" : "Dendan ikusi",
+    "Apps with available updates" : "Eguneratzeak eskuragarri dituzten aplikazioak",
+    "Open updater" : "Ireki eguneratzailea",
+    "Download now" : "Deskargatu orain",
+    "What's new?" : "Zer berri?",
+    "Your version is up to date." : "Zure bertsioa eguneratuta dago.",
     "Update channel:" : "Eguneraketa kanala:",
-    "You can always update to a newer version / experimental channel. But you can never downgrade to a more stable channel." : "Bertsio berri / kanal experimetnal batera eguneratzea beti da posible. Baina inoiz ez da posible egonkorragoa den bertsio zaharragoko kanal batera itzultzea."
+    "Checked on {lastCheckedDate}" : "{lastCheckedDate}-n egiaztatuta",
+    "Checking apps for compatible updates" : "Egiaztatzen eguneratzeetarako aplikazio bateragarriak",
+    "View changelog" : "Ikusi aldaketen egunkaria",
+    "Enterprise" : "Enpresa",
+    "Stable" : "Egonkorra",
+    "Beta" : "Beta",
+    "A pre-release version only for testing new features, not for production environments." : "Argitaratu aurreko bertsioa funtzionalitate berriak probatzeko soilik da, ez ekoizpen inguruneetarako.",
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> aplikazioak ez du bertsio hau eskuragarri eguneratzeko","<strong>%n</strong> aplikazioek ez dute bertsio hau eskuragarri eguneratzeko"],
+    "Production" : "Ekoizpena"
 },
 "nplurals=2; plural=(n != 1);");

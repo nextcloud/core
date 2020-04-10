@@ -25,8 +25,8 @@ namespace Test\Template;
 
 use OC\Files\AppData\AppData;
 use OC\Files\AppData\Factory;
-use OC\Template\SCSSCacher;
 use OC\Template\IconsCacher;
+use OC\Template\SCSSCacher;
 use OCA\Theming\ThemingDefaults;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\IAppData;
@@ -38,7 +38,6 @@ use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IURLGenerator;
-use OC_App;
 
 class SCSSCacherTest extends \Test\TestCase {
 	/** @var ILogger|\PHPUnit_Framework_MockObject_MockObject */
@@ -62,7 +61,7 @@ class SCSSCacherTest extends \Test\TestCase {
 	/** @var ITimeFactory|\PHPUnit_Framework_MockObject_MockObject */
 	protected $timeFactory;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->logger = $this->createMock(ILogger::class);
 		$this->appData = $this->createMock(AppData::class);
@@ -121,7 +120,7 @@ class SCSSCacherTest extends \Test\TestCase {
 					  substr(md5('http://localhost/nextcloud/index.php'), 0, 4) . '-';
 
 		$folder->method('getFile')
-			->will($this->returnCallback(function($path) use ($file, $gzfile, $filePrefix) {
+			->willReturnCallback(function ($path) use ($file, $gzfile, $filePrefix) {
 				if ($path === $filePrefix.'styles.css') {
 					return $file;
 				} else if ($path === $filePrefix.'styles.css.deps') {
@@ -131,7 +130,7 @@ class SCSSCacherTest extends \Test\TestCase {
 				} else {
 					$this->fail();
 				}
-			}));
+			});
 		$folder->expects($this->once())
 			->method('newFile')
 			->with($filePrefix.'styles.css.deps')
@@ -161,7 +160,7 @@ class SCSSCacherTest extends \Test\TestCase {
 					  substr(md5('http://localhost/nextcloud/index.php'), 0, 4) . '-';
 
 		$folder->method('getFile')
-			->will($this->returnCallback(function($path) use ($file, $gzfile, $filePrefix) {
+			->willReturnCallback(function ($path) use ($file, $gzfile, $filePrefix) {
 				if ($path === $filePrefix.'styles.css') {
 					return $file;
 				} else if ($path === $filePrefix.'styles.css.deps') {
@@ -171,7 +170,7 @@ class SCSSCacherTest extends \Test\TestCase {
 				}else {
 					$this->fail();
 				}
-			}));
+			});
 		$folder->expects($this->once())
 			->method('newFile')
 			->with($filePrefix.'styles.css.deps')
@@ -197,7 +196,7 @@ class SCSSCacherTest extends \Test\TestCase {
 					  substr(md5('http://localhost/nextcloud/index.php'), 0, 4) . '-';
 
 		$folder->method('getFile')
-			->will($this->returnCallback(function($name) use ($file, $fileDeps, $gzFile, $filePrefix) {
+			->willReturnCallback(function ($name) use ($file, $fileDeps, $gzFile, $filePrefix) {
 				if ($name === $filePrefix.'styles.css') {
 					return $file;
 				} else if ($name === $filePrefix.'styles.css.deps') {
@@ -206,7 +205,7 @@ class SCSSCacherTest extends \Test\TestCase {
 					return $gzFile;
 				}
 				$this->fail();
-			}));
+			});
 
 		$this->iconsCacher->expects($this->any())
 			->method('setIconsCss')
@@ -235,7 +234,7 @@ class SCSSCacherTest extends \Test\TestCase {
 		$filePrefix = substr(md5(\OC_Util::getVersionString('core')), 0, 4) . '-' .
 					  substr(md5('http://localhost/nextcloud/index.php'), 0, 4) . '-';
 		$folder->method('getFile')
-			->will($this->returnCallback(function($name) use ($file, $fileDeps, $gzFile, $filePrefix) {
+			->willReturnCallback(function ($name) use ($file, $fileDeps, $gzFile, $filePrefix) {
 				if ($name === $filePrefix.'styles.css') {
 					return $file;
 				} else if ($name === $filePrefix.'styles.css.deps') {
@@ -244,7 +243,7 @@ class SCSSCacherTest extends \Test\TestCase {
 					return $gzFile;
 				}
 				$this->fail();
-			}));
+			});
 
 		$this->iconsCacher->expects($this->any())
 			->method('setIconsCss')
@@ -273,7 +272,7 @@ class SCSSCacherTest extends \Test\TestCase {
 
 		$file->expects($this->once())->method('getSize')->willReturn(1);
 		$folder->method('getFile')
-			->will($this->returnCallback(function($path) use ($file) {
+			->willReturnCallback(function ($path) use ($file) {
 				if ($path === 'styles.css') {
 					return $file;
 				} else if ($path === 'styles.css.deps') {
@@ -281,7 +280,7 @@ class SCSSCacherTest extends \Test\TestCase {
 				} else {
 					$this->fail();
 				}
-			}));
+			});
 
 		$this->appData->expects($this->any())
 			->method('getFolder')
@@ -301,7 +300,7 @@ class SCSSCacherTest extends \Test\TestCase {
 		$path = \OC::$SERVERROOT . '/core/css/';
 
 		$folder->method('getFile')->willThrowException(new NotFoundException());
-		$folder->method('newFile')->will($this->returnCallback(function($fileName) use ($file, $depsFile, $gzipFile) {
+		$folder->method('newFile')->willReturnCallback(function ($fileName) use ($file, $depsFile, $gzipFile) {
 			if ($fileName === 'styles.css') {
 				return $file;
 			} else if ($fileName === 'styles.css.deps') {
@@ -310,7 +309,7 @@ class SCSSCacherTest extends \Test\TestCase {
 				return $gzipFile;
 			}
 			throw new \Exception();
-		}));
+		});
 
 		$this->iconsCacher->expects($this->any())
 			->method('setIconsCss')
@@ -335,7 +334,7 @@ class SCSSCacherTest extends \Test\TestCase {
 		$webDir = "core/css";
 		$path = \OC::$SERVERROOT;
 
-		$folder->method('getFile')->will($this->returnCallback(function($fileName) use ($file, $depsFile, $gzipFile) {
+		$folder->method('getFile')->willReturnCallback(function ($fileName) use ($file, $depsFile, $gzipFile) {
 			if ($fileName === 'styles.css') {
 				return $file;
 			} else if ($fileName === 'styles.css.deps') {
@@ -344,7 +343,7 @@ class SCSSCacherTest extends \Test\TestCase {
 				return $gzipFile;
 			}
 			throw new \Exception();
-		}));
+		});
 
 		$file->expects($this->once())->method('putContent');
 		$depsFile->expects($this->once())->method('putContent');
@@ -369,7 +368,7 @@ class SCSSCacherTest extends \Test\TestCase {
 		$webDir = "tests/data/scss";
 		$path = \OC::$SERVERROOT . $webDir;
 
-		$folder->method('getFile')->will($this->returnCallback(function($fileName) use ($file, $depsFile, $gzipFile) {
+		$folder->method('getFile')->willReturnCallback(function ($fileName) use ($file, $depsFile, $gzipFile) {
 			if ($fileName === 'styles-success.css') {
 				return $file;
 			} else if ($fileName === 'styles-success.css.deps') {
@@ -378,14 +377,14 @@ class SCSSCacherTest extends \Test\TestCase {
 				return $gzipFile;
 			}
 			throw new \Exception();
-		}));
+		});
 
 		$this->iconsCacher->expects($this->at(0))
 			->method('setIconsCss')
 			->willReturn('body{background-color:#0082c9}');
 
 		$file->expects($this->at(0))->method('putContent')->with($this->callback(
-			function ($content){
+			function ($content) {
 				return 'body{background-color:#0082c9}' === $content;
 			}));
 		$depsFile->expects($this->at(0))->method('putContent')->with($this->callback(
@@ -471,7 +470,7 @@ class SCSSCacherTest extends \Test\TestCase {
 	}
 
 	private function rrmdir($directory) {
-		$files = array_diff(scandir($directory), array('.','..'));
+		$files = array_diff(scandir($directory), ['.','..']);
 		foreach ($files as $file) {
 			if (is_dir($directory . '/' . $file)) {
 				$this->rrmdir($directory . '/' . $file);

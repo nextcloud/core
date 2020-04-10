@@ -17,13 +17,10 @@ OC.L10N.register(
     "No deleted files" : "Brak usuniętych plików",
     "You will be able to recover deleted files from here" : "Stąd będziesz mógł odzyskać usunięte pliki",
     "No entries found in this folder" : "Brak plików w tym katalogu",
-    "Select all" : "Zaznacz wszystko",
+    "Select all" : "Wybierz wszystko",
     "Name" : "Nazwa",
     "Actions" : "Akcje",
     "Deleted" : "Usunięte",
-    "Delete" : "Usuń",
-    "Couldn't delete %s permanently" : "Nie można trwale usunąć %s",
-    "Couldn't restore %s" : "Nie można przywrócić %s",
-    "Error" : "Błąd"
+    "Delete" : "Usuń"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

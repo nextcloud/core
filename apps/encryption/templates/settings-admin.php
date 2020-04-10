@@ -13,7 +13,7 @@ style('encryption', 'settings-admin');
 			<input type="checkbox" class="checkbox" name="encrypt_home_storage" id="encryptHomeStorage"
 				   value="1" <?php if ($_['encryptHomeStorage']) print_unescaped('checked="checked"'); ?> />
 			<label for="encryptHomeStorage"><?php p($l->t('Encrypt the home storage'));?></label></br>
-			<em><?php p( $l->t( "Enabling this option encrypts all files stored on the main storage, otherwise only files on external storage will be encrypted" ) ); ?></em>
+			<em><?php p($l->t("Enabling this option encrypts all files stored on the main storage, otherwise only files on external storage will be encrypted")); ?></em>
 		</p>
 		<br />
 		<?php if($_['masterKeyEnabled'] === false): ?>

@@ -25,6 +25,7 @@ class ComposerStaticInitAccessibility
         'OCA\\Accessibility\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
         'OCA\\Accessibility\\Controller\\AccessibilityController' => __DIR__ . '/..' . '/../lib/Controller/AccessibilityController.php',
         'OCA\\Accessibility\\Controller\\ConfigController' => __DIR__ . '/..' . '/../lib/Controller/ConfigController.php',
+        'OCA\\Accessibility\\Migration\\RepairUserConfig' => __DIR__ . '/..' . '/../lib/Migration/RepairUserConfig.php',
         'OCA\\Accessibility\\Settings\\Personal' => __DIR__ . '/..' . '/../lib/Settings/Personal.php',
         'OCA\\Accessibility\\Settings\\PersonalSection' => __DIR__ . '/..' . '/../lib/Settings/PersonalSection.php',
     );

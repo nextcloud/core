@@ -28,8 +28,6 @@ OC.L10N.register(
     "Error occurred while posting comment" : "Pri odosielaní komentára nastala chyba",
     "_%n unread comment_::_%n unread comments_" : ["%n neprečítaný komentár","%n neprečítaných komentárov","%n neprečítaných komentárov","%n neprečítaných komentárov"],
     "_1 new comment_::_{unread} new comments_" : ["1 nový komentár","{unread} nové komentáre","{unread} nových komentárov","{unread} nových komentárov"],
-    "Comment" : "Komentár",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "Boli ste spomenutý v \"%s\", v komentári používateľom ktorý bol už vymazaný",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s vás spomenul v komentári k \"%2$s\""
+    "Comment" : "Komentár"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

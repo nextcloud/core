@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Tobias Kaminsky <tobias@kaminsky.me>
  *
  * @license AGPL-3.0
  *
@@ -17,14 +18,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Files_Sharing;
 
 use OCP\Capabilities\ICapability;
 use OCP\Constants;
-use \OCP\IConfig;
+use OCP\IConfig;
 
 /**
  * Class Capabilities
@@ -76,6 +78,13 @@ class Capabilities implements ICapability {
 					$public['expire_date']['enforced'] = $this->config->getAppValue('core', 'shareapi_enforce_expire_date', 'no') === 'yes';
 				}
 
+				$public['expire_date_internal'] = [];
+				$public['expire_date_internal']['enabled'] = $this->config->getAppValue('core', 'shareapi_default_internal_expire_date', 'no') === 'yes';
+				if ($public['expire_date_internal']['enabled']) {
+					$public['expire_date_internal']['days'] = $this->config->getAppValue('core', 'shareapi_internal_expire_after_n_days', '7');
+					$public['expire_date_internal']['enforced'] = $this->config->getAppValue('core', 'shareapi_enforce_internal_expire_date', 'no') === 'yes';
+				}
+
 				$public['send_mail'] = $this->config->getAppValue('core', 'shareapi_allow_public_notification', 'no') === 'yes';
 				$public['upload'] = $this->config->getAppValue('core', 'shareapi_allow_public_upload', 'yes') === 'yes';
 				$public['upload_files_drop'] = $public['upload'];
@@ -102,6 +111,11 @@ class Capabilities implements ICapability {
 			'outgoing'  => $this->config->getAppValue('files_sharing', 'outgoing_server2server_share_enabled', 'yes') === 'yes',
 			'incoming' => $this->config->getAppValue('files_sharing', 'incoming_server2server_share_enabled', 'yes') === 'yes',
 			'expire_date' => ['enabled' => true]
+		];
+
+		// Sharee searches
+		$res['sharee'] = [
+			'query_lookup_default' => $this->config->getSystemValueBool('gs.enabled', false)
 		];
 
 		return [

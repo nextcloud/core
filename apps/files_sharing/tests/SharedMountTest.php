@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -23,11 +24,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_Sharing\Tests;
+
 use OCP\IGroupManager;
 use OCP\IUserManager;
 
@@ -44,7 +46,7 @@ class SharedMountTest extends TestCase {
 	/** @var IUserManager */
 	private $userManager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->folder = '/folder_share_storage_test';
@@ -62,7 +64,7 @@ class SharedMountTest extends TestCase {
 		$this->userManager = \OC::$server->getUserManager();
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		if ($this->view) {
 			if ($this->view->file_exists($this->folder)) {
 				$this->view->unlink($this->folder);
@@ -87,6 +89,7 @@ class SharedMountTest extends TestCase {
 			self::TEST_FILES_SHARING_API_USER1,
 			self::TEST_FILES_SHARING_API_USER2,
 			\OCP\Constants::PERMISSION_ALL);
+		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER2);
 
 		$share->setTarget('/foo/bar' . $this->folder);
 		$this->shareManager->moveShare($share, self::TEST_FILES_SHARING_API_USER2);
@@ -183,7 +186,7 @@ class SharedMountTest extends TestCase {
 	 * share file with a group if a user renames the file the filename should not change
 	 * for the other users
 	 */
-	public function testMoveGroupShare () {
+	public function testMoveGroupShare() {
 		$testGroup = $this->groupManager->createGroup('testGroup');
 		$user1 = $this->userManager->get(self::TEST_FILES_SHARING_API_USER1);
 		$user2 = $this->userManager->get(self::TEST_FILES_SHARING_API_USER2);
@@ -200,6 +203,9 @@ class SharedMountTest extends TestCase {
 			'testGroup',
 			\OCP\Constants::PERMISSION_READ | \OCP\Constants::PERMISSION_UPDATE | \OCP\Constants::PERMISSION_SHARE
 		);
+		$this->shareManager->acceptShare($share, $user1->getUID());
+		$this->shareManager->acceptShare($share, $user2->getUID());
+		$this->shareManager->acceptShare($share, $user3->getUID());
 
 		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
 
@@ -247,20 +253,20 @@ class SharedMountTest extends TestCase {
 	}
 
 	public function dataProviderTestStripUserFilesPath() {
-		return array(
-			array('/user/files/foo.txt', '/foo.txt', false),
-			array('/user/files/folder/foo.txt', '/folder/foo.txt', false),
-			array('/data/user/files/foo.txt', null, true),
-			array('/data/user/files/', null, true),
-			array('/files/foo.txt', null, true),
-			array('/foo.txt', null, true),
-		);
+		return [
+			['/user/files/foo.txt', '/foo.txt', false],
+			['/user/files/folder/foo.txt', '/folder/foo.txt', false],
+			['/data/user/files/foo.txt', null, true],
+			['/data/user/files/', null, true],
+			['/files/foo.txt', null, true],
+			['/foo.txt', null, true],
+		];
 	}
 
 	public function dataPermissionMovedGroupShare() {
 		$data = [];
 
-		$powerset = function($permissions) {
+		$powerset = function ($permissions) {
 			$results = [\OCP\Constants::PERMISSION_READ];
 
 			foreach ($permissions as $permission) {
@@ -284,7 +290,7 @@ class SharedMountTest extends TestCase {
 				if ($before === $after) { continue; }
 
 				$data[] = [
-					'file', 
+					'file',
 					$before,
 					$after,
 				];
@@ -348,6 +354,9 @@ class SharedMountTest extends TestCase {
 			'testGroup',
 			$beforePerm
 		);
+		$this->shareManager->acceptShare($share, $user1->getUID());
+		$this->shareManager->acceptShare($share, $user2->getUID());
+		$this->shareManager->acceptShare($share, $user3->getUID());
 
 		// Login as user 2 and verify the item exists
 		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
@@ -386,7 +395,7 @@ class SharedMountTest extends TestCase {
 	}
 
 	/**
-	 * If the permissions on a group share are upgraded be sure to still respect 
+	 * If the permissions on a group share are upgraded be sure to still respect
 	 * removed shares by a member of that group
 	 */
 	public function testPermissionUpgradeOnUserDeletedGroupShare() {
@@ -409,6 +418,9 @@ class SharedMountTest extends TestCase {
 			'testGroup',
 			\OCP\Constants::PERMISSION_READ
 		);
+		$this->shareManager->acceptShare($share, $user1->getUID());
+		$this->shareManager->acceptShare($share, $user2->getUID());
+		$this->shareManager->acceptShare($share, $user3->getUID());
 
 		// Login as user 2 and verify the item exists
 		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
@@ -430,7 +442,7 @@ class SharedMountTest extends TestCase {
 		$share->setPermissions(\OCP\Constants::PERMISSION_ALL);
 		$share = $this->shareManager->updateShare($share);
 
-		// Login as user 2 and verify 
+		// Login as user 2 and verify
 		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
 		$this->assertFalse(\OC\Files\Filesystem::file_exists($this->folder));
 		$result = $this->shareManager->getShareById($share->getFullId(), self::TEST_FILES_SHARING_API_USER2);
@@ -448,7 +460,7 @@ class SharedMountTest extends TestCase {
 }
 
 class DummyTestClassSharedMount extends \OCA\Files_Sharing\SharedMount {
-	public function __construct($storage, $mountpoint, $arguments = null, $loader = null){
+	public function __construct($storage, $mountpoint, $arguments = null, $loader = null) {
 		// noop
 	}
 

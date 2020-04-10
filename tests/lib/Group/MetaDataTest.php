@@ -34,7 +34,7 @@ class MetaDataTest extends \Test\TestCase {
 	/** @var bool */
 	private $isAdmin = true;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->groupManager = $this->getMockBuilder('\OC\Group\Manager')
 			->disableOriginalConstructor()
@@ -83,7 +83,7 @@ class MetaDataTest extends \Test\TestCase {
 		$this->groupManager->expects($this->once())
 			->method('search')
 			->with('')
-			->will($this->returnValue($groups));
+			->willReturn($groups);
 
 		list($adminGroups, $ordinaryGroups) = $this->groupMetadata->get();
 
@@ -103,7 +103,7 @@ class MetaDataTest extends \Test\TestCase {
 		$this->groupManager->expects($this->once())
 			->method('search')
 			->with('')
-			->will($this->returnValue($groups));
+			->willReturn($groups);
 
 		list($adminGroups, $ordinaryGroups) = $this->groupMetadata->get();
 
@@ -121,7 +121,7 @@ class MetaDataTest extends \Test\TestCase {
 		$this->groupManager->expects($this->once())
 			->method('search')
 			->with('')
-			->will($this->returnValue($groups));
+			->willReturn($groups);
 
 		//two calls, if caching fails call counts for group and groupmanager
 		//are exceeded
@@ -137,7 +137,7 @@ class MetaDataTest extends \Test\TestCase {
 			->expects($this->once())
 			->method('search')
 			->with('Foo')
-			->will($this->returnValue(['DummyValue']));
+			->willReturn(['DummyValue']);
 
 		$expected = ['DummyValue'];
 		$this->assertSame($expected, $this->invokePrivate($this->groupMetadata, 'getGroups', ['Foo']));

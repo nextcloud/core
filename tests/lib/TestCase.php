@@ -108,7 +108,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 		});
 	}
 
-	protected function setUp() {
+	protected function setUp(): void {
 		// overwrite the command bus with one we can run ourselves
 		$this->commandBus = new QueueBus();
 		$this->overwriteService('AsyncCommandBus', $this->commandBus);
@@ -134,7 +134,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 		}
 	}
 
-	protected function onNotSuccessfulTest(\Throwable $t) {
+	protected function onNotSuccessfulTest(\Throwable $t): void {
 		$this->restoreAllServices();
 
 		// restore database connection
@@ -147,7 +147,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 		parent::onNotSuccessfulTest($t);
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$this->restoreAllServices();
 
 		// restore database connection
@@ -194,7 +194,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 	 * @param array $parameters
 	 * @return mixed
 	 */
-	protected static function invokePrivate($object, $methodName, array $parameters = array()) {
+	protected static function invokePrivate($object, $methodName, array $parameters = []) {
 		if (is_string($object)) {
 			$className = $object;
 		} else {
@@ -238,7 +238,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 		);
 	}
 
-	public static function tearDownAfterClass() {
+	public static function tearDownAfterClass(): void {
 		if (!self::$wasDatabaseAllowed && self::$realDatabase !== null) {
 			// in case an error is thrown in a test, PHPUnit jumps straight to tearDownAfterClass,
 			// so we need the database again
@@ -297,14 +297,14 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 	 * @param string $dataDir
 	 */
 	static protected function tearDownAfterClassCleanStrayDataFiles($dataDir) {
-		$knownEntries = array(
+		$knownEntries = [
 			'nextcloud.log' => true,
 			'audit.log' => true,
 			'owncloud.db' => true,
 			'.ocdata' => true,
 			'..' => true,
 			'.' => true,
-		);
+		];
 
 		if ($dh = opendir($dataDir)) {
 			while (($file = readdir($dh)) !== false) {
@@ -449,7 +449,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 		}
 		$annotations = $this->getAnnotations();
 		if (isset($annotations['class']['group'])) {
-			if(in_array('DB', $annotations['class']['group']) || in_array('SLOWDB', $annotations['class']['group']) ) {
+			if(in_array('DB', $annotations['class']['group']) || in_array('SLOWDB', $annotations['class']['group'])) {
 				return true;
 			}
 		}
@@ -479,9 +479,9 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 		$l10n
 			->expects($this->any())
 			->method('t')
-			->will($this->returnCallback(function($text, $parameters = array()) {
+			->willReturnCallback(function ($text, $parameters = []) {
 				return vsprintf($text, $parameters);
-			}));
+			});
 
 		$t = new Base($template, $requestToken, $l10n, $theme);
 		$buf = $t->fetchPage($vars);
@@ -516,7 +516,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 			if($node->hasChildNodes()) {
 				$this->removeWhitespaces($node);
 			} else {
-				if ($node instanceof \DOMText && $node->isWhitespaceInElementContent() ) {
+				if ($node instanceof \DOMText && $node->isWhitespaceInElementContent()) {
 					$domNode->removeChild($node);
 				}
 			}

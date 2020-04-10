@@ -26,47 +26,47 @@ class DependencyAnalyzerTest extends TestCase {
 	/** @var DependencyAnalyzer */
 	private $analyser;
 
-	public function setUp() {
+	protected function setUp(): void {
 		$this->platformMock = $this->getMockBuilder(Platform::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$this->platformMock->expects($this->any())
 			->method('getPhpVersion')
-			->will( $this->returnValue('5.4.3'));
+			->willReturn('5.4.3');
 		$this->platformMock->expects($this->any())
 			->method('getIntSize')
-			->will( $this->returnValue('4'));
+			->willReturn('4');
 		$this->platformMock->expects($this->any())
 			->method('getDatabase')
-			->will( $this->returnValue('mysql'));
+			->willReturn('mysql');
 		$this->platformMock->expects($this->any())
 			->method('getOS')
-			->will( $this->returnValue('Linux'));
+			->willReturn('Linux');
 		$this->platformMock->expects($this->any())
 			->method('isCommandKnown')
-			->will( $this->returnCallback(function($command) {
+			->willReturnCallback(function ($command) {
 				return ($command === 'grep');
-			}));
+			});
 		$this->platformMock->expects($this->any())
 			->method('getLibraryVersion')
-			->will( $this->returnCallback(function($lib) {
+			->willReturnCallback(function ($lib) {
 				if ($lib === 'curl') {
 					return "2.3.4";
 				}
 				return null;
-			}));
+			});
 		$this->platformMock->expects($this->any())
 			->method('getOcVersion')
-			->will( $this->returnValue('8.0.2'));
+			->willReturn('8.0.2');
 
 		$this->l10nMock = $this->getMockBuilder(IL10N::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$this->l10nMock->expects($this->any())
 			->method('t')
-			->will($this->returnCallback(function($text, $parameters = array()) {
+			->willReturnCallback(function ($text, $parameters = []) {
 				return vsprintf($text, $parameters);
-			}));
+			});
 
 		$this->analyser = new DependencyAnalyzer($this->platformMock, $this->l10nMock);
 	}
@@ -80,11 +80,11 @@ class DependencyAnalyzerTest extends TestCase {
 	 * @param string $intSize
 	 */
 	public function testPhpVersion($expectedMissing, $minVersion, $maxVersion, $intSize) {
-		$app = array(
-			'dependencies' => array(
-				'php' => array()
-			)
-		);
+		$app = [
+			'dependencies' => [
+				'php' => []
+			]
+		];
 		if (!is_null($minVersion)) {
 			$app['dependencies']['php']['@attributes']['min-version'] = $minVersion;
 		}
@@ -126,10 +126,10 @@ class DependencyAnalyzerTest extends TestCase {
 	 * @param string|null $commands
 	 */
 	public function testCommand($expectedMissing, $commands) {
-		$app = array(
-			'dependencies' => array(
-			)
-		);
+		$app = [
+			'dependencies' => [
+			]
+		];
 		if (!is_null($commands)) {
 			$app['dependencies']['command'] = $commands;
 		}
@@ -145,10 +145,10 @@ class DependencyAnalyzerTest extends TestCase {
 	 * @param $libs
 	 */
 	function testLibs($expectedMissing, $libs) {
-		$app = array(
-			'dependencies' => array(
-			)
-		);
+		$app = [
+			'dependencies' => [
+			]
+		];
 		if (!is_null($libs)) {
 			$app['dependencies']['lib'] = $libs;
 		}
@@ -165,9 +165,9 @@ class DependencyAnalyzerTest extends TestCase {
 	 * @param $oss
 	 */
 	function testOS($expectedMissing, $oss) {
-		$app = array(
-			'dependencies' => array()
-		);
+		$app = [
+			'dependencies' => []
+		];
 		if (!is_null($oss)) {
 			$app['dependencies']['os'] = $oss;
 		}
@@ -184,9 +184,9 @@ class DependencyAnalyzerTest extends TestCase {
 	 * @param $oc
 	 */
 	function testOC($expectedMissing, $oc) {
-		$app = array(
-			'dependencies' => array()
-		);
+		$app = [
+			'dependencies' => []
+		];
 		if (!is_null($oc)) {
 			$app['dependencies'] = $oc;
 		}
@@ -429,12 +429,12 @@ class DependencyAnalyzerTest extends TestCase {
 	 * @return array
 	 */
 	function providesOS() {
-		return array(
-			array(array(), null),
-			array(array(), array()),
-			array(array('Following platforms are supported: ANDROID'), 'ANDROID'),
-			array(array('Following platforms are supported: WINNT'), array('WINNT'))
-		);
+		return [
+			[[], null],
+			[[], []],
+			[['Following platforms are supported: ANDROID'], 'ANDROID'],
+			[['Following platforms are supported: WINNT'], ['WINNT']]
+		];
 	}
 
 	/**
@@ -489,28 +489,28 @@ class DependencyAnalyzerTest extends TestCase {
 	 * @return array
 	 */
 	function providesDatabases() {
-		return array(
+		return [
 			// non BC - in case on databases are defined -> all are supported
-			array(array(), null),
-			array(array(), array()),
-			array(array('Following databases are supported: mongodb'), 'mongodb'),
-			array(array('Following databases are supported: sqlite, postgres'), array('sqlite', array('@value' => 'postgres'))),
-		);
+			[[], null],
+			[[], []],
+			[['Following databases are supported: mongodb'], 'mongodb'],
+			[['Following databases are supported: sqlite, postgres'], ['sqlite', ['@value' => 'postgres']]],
+		];
 	}
 
 	/**
 	 * @return array
 	 */
 	function providesPhpVersion() {
-		return array(
-			array(array(), null, null, null),
-			array(array(), '5.4', null, null),
-			array(array(), null, '5.5', null),
-			array(array(), '5.4', '5.5', null),
-			array(array('PHP 5.4.4 or higher is required.'), '5.4.4', null, null),
-			array(array('PHP with a version lower than 5.4.2 is required.'), null, '5.4.2', null),
-			array(array('64bit or higher PHP required.'), null, null, 64),
-			array(array(), '5.4', '5.4', null),
-		);
+		return [
+			[[], null, null, null],
+			[[], '5.4', null, null],
+			[[], null, '5.5', null],
+			[[], '5.4', '5.5', null],
+			[['PHP 5.4.4 or higher is required.'], '5.4.4', null, null],
+			[['PHP with a version lower than 5.4.2 is required.'], null, '5.4.2', null],
+			[['64bit or higher PHP required.'], null, null, 64],
+			[[], '5.4', '5.4', null],
+		];
 	}
 }

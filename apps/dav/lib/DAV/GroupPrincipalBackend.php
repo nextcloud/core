@@ -3,9 +3,10 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @copyright Copyright (c) 2018, Georg Ehrke
  *
+ * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Georg Ehrke <oc.list@georgehrke.com>
  *
  * @license AGPL-3.0
  *
@@ -19,18 +20,19 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\DAV\DAV;
 
 use OCP\IGroup;
 use OCP\IGroupManager;
+use OCP\IUser;
 use OCP\IUserSession;
 use OCP\Share\IManager as IShareManager;
-use OCP\IUser;
 use Sabre\DAV\Exception;
-use \Sabre\DAV\PropPatch;
+use Sabre\DAV\PropPatch;
 use Sabre\DAVACL\PrincipalBackend\BackendInterface;
 
 class GroupPrincipalBackend implements BackendInterface {
@@ -132,7 +134,7 @@ class GroupPrincipalBackend implements BackendInterface {
 			return [];
 		}
 
-		return array_map(function($user) {
+		return array_map(function ($user) {
 			return $this->userToPrincipal($user);
 		}, $group->getUsers());
 	}
@@ -208,7 +210,7 @@ class GroupPrincipalBackend implements BackendInterface {
 				case '{DAV:}displayname':
 					$groups = $this->groupManager->search($value);
 
-					$results[] = array_reduce($groups, function(array $carry, IGroup $group) use ($restrictGroups) {
+					$results[] = array_reduce($groups, function (array $carry, IGroup $group) use ($restrictGroups) {
 						$gid = $group->getGID();
 						// is sharing restricted to groups only?
 						if ($restrictGroups !== false) {

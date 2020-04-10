@@ -5,6 +5,7 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jakob Sack <mail@jakobsack.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -25,29 +26,29 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\DAV\Connector\Sabre;
 
+use OC\Files\Mount\MoveableMount;
 use OC\Files\View;
+use OCA\DAV\Connector\Sabre\Exception\FileLocked;
 use OCA\DAV\Connector\Sabre\Exception\Forbidden;
 use OCA\DAV\Connector\Sabre\Exception\InvalidPath;
-use OCA\DAV\Connector\Sabre\Exception\FileLocked;
 use OCP\Files\FileInfo;
 use OCP\Files\ForbiddenException;
 use OCP\Files\InvalidPathException;
 use OCP\Files\StorageNotAvailableException;
 use OCP\Lock\ILockingProvider;
 use OCP\Lock\LockedException;
-use Sabre\DAV\Exception\Locked;
-use Sabre\DAV\Exception\ServiceUnavailable;
-use Sabre\DAV\INode;
 use Sabre\DAV\Exception\BadRequest;
-use OC\Files\Mount\MoveableMount;
-use Sabre\DAV\IFile;
+use Sabre\DAV\Exception\Locked;
 use Sabre\DAV\Exception\NotFound;
+use Sabre\DAV\Exception\ServiceUnavailable;
+use Sabre\DAV\IFile;
+use Sabre\DAV\INode;
 
 class Directory extends \OCA\DAV\Connector\Sabre\Node
 	implements \Sabre\DAV\ICollection, \Sabre\DAV\IQuota, \Sabre\DAV\IMoveTarget {
@@ -267,7 +268,7 @@ class Directory extends \OCA\DAV\Connector\Sabre\Node
 			throw new Locked();
 		}
 
-		$nodes = array();
+		$nodes = [];
 		foreach ($folderContent as $info) {
 			$node = $this->getChild($info->getName(), $info);
 			$nodes[] = $node;
@@ -336,13 +337,13 @@ class Directory extends \OCA\DAV\Connector\Sabre\Node
 			} else {
 				$free = $storageInfo['free'];
 			}
-			$this->quotaInfo = array(
+			$this->quotaInfo = [
 				$storageInfo['used'],
 				$free
-			);
+			];
 			return $this->quotaInfo;
 		} catch (\OCP\Files\StorageNotAvailableException $e) {
-			return array(0, 0);
+			return [0, 0];
 		}
 	}
 

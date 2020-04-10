@@ -25,8 +25,6 @@ OC.L10N.register(
     "Error occurred while updating comment with id {id}" : "Kommentaari {id} uuendamisel tekkis tõrge",
     "Error occurred while posting comment" : "Viga kommentaari postitamisel",
     "_%n unread comment_::_%n unread comments_" : ["%n lugemata kommentaar","%n lugemata kommentaari"],
-    "Comment" : "Kommentaar",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "Sind mainiti \"%s\", kommentaaris kasutataja poolt, mis on praeguseks kustutatud",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s mainis sind \"%2$s\" kommentaaris"
+    "Comment" : "Kommentaar"
 },
 "nplurals=2; plural=(n != 1);");

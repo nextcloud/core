@@ -2,6 +2,15 @@
 /**
  * @copyright Copyright (c) 2016 Bjoern Schiessle <bjoern@schiessle.org>
  *
+ * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Stephan Müller <mail@stephanmueller.eu>
+ *
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,13 +24,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-
 namespace OCA\ShareByMail\Tests;
-
 
 use OC\CapabilitiesManager;
 use OC\Mail\Message;
@@ -98,7 +105,7 @@ class ShareByMailProviderTest extends TestCase {
 	/** @var  CapabilitiesManager | \PHPUnit_Framework_MockObject_MockObject */
 	private $capabilitiesManager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->shareManager = \OC::$server->getShareManager();
@@ -106,9 +113,9 @@ class ShareByMailProviderTest extends TestCase {
 
 		$this->l = $this->getMockBuilder(IL10N::class)->getMock();
 		$this->l->method('t')
-			->will($this->returnCallback(function($text, $parameters = []) {
+			->willReturnCallback(function ($text, $parameters = []) {
 				return vsprintf($text, $parameters);
-			}));
+			});
 		$this->logger = $this->getMockBuilder(ILogger::class)->getMock();
 		$this->rootFolder = $this->getMockBuilder('OCP\Files\IRootFolder')->getMock();
 		$this->userManager = $this->getMockBuilder(IUserManager::class)->getMock();
@@ -175,10 +182,10 @@ class ShareByMailProviderTest extends TestCase {
 
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		$this->connection->getQueryBuilder()->delete('share')->execute();
 
-		return parent::tearDown();
+		parent::tearDown();
 	}
 
 	public function testCreate() {
@@ -306,10 +313,10 @@ class ShareByMailProviderTest extends TestCase {
 		);
 	}
 
-	/**
-	 * @expectedException \Exception
-	 */
+
 	public function testCreateFailed() {
+		$this->expectException(\Exception::class);
+
 		$this->share->expects($this->once())->method('getSharedWith')->willReturn('user1');
 		$node = $this->getMockBuilder('OCP\Files\Node')->getMock();
 		$node->expects($this->any())->method('getName')->willReturn('fileName');
@@ -349,10 +356,10 @@ class ShareByMailProviderTest extends TestCase {
 
 	}
 
-	/**
-	 * @expectedException \OC\HintException
-	 */
+
 	public function testCreateMailShareFailed() {
+		$this->expectException(\OC\HintException::class);
+
 		$this->share->expects($this->any())->method('getToken')->willReturn('token');
 		$this->share->expects($this->once())->method('setToken')->with('token');
 		$node = $this->getMockBuilder('OCP\Files\Node')->getMock();
@@ -368,7 +375,7 @@ class ShareByMailProviderTest extends TestCase {
 			->with('files_sharing.sharecontroller.showShare', ['token' => 'token']);
 		$instance->expects($this->once())->method('sendMailNotification')
 			->willReturnCallback(
-				function() {
+				function () {
 					throw new \Exception('should be converted to a hint exception');
 				}
 			);
@@ -399,6 +406,7 @@ class ShareByMailProviderTest extends TestCase {
 		$token = 'token';
 		$password = 'password';
 		$sendPasswordByTalk = true;
+		$hideDownload = true;
 
 
 		$instance = $this->getInstance();
@@ -414,7 +422,8 @@ class ShareByMailProviderTest extends TestCase {
 				$permissions,
 				$token,
 				$password,
-				$sendPasswordByTalk
+				$sendPasswordByTalk,
+				$hideDownload
 			]
 		);
 
@@ -435,6 +444,7 @@ class ShareByMailProviderTest extends TestCase {
 		$this->assertSame($token, $result[0]['token']);
 		$this->assertSame($password, $result[0]['password']);
 		$this->assertSame($sendPasswordByTalk, (bool)$result[0]['password_by_talk']);
+		$this->assertSame($hideDownload, (bool)$result[0]['hide_download']);
 
 	}
 
@@ -504,7 +514,7 @@ class ShareByMailProviderTest extends TestCase {
 	 * @param string newSendPasswordByTalk
 	 * @param bool sendMail
 	 */
-	public function testUpdateSendPassword($plainTextPassword, string $originalPassword, string $newPassword, string $originalSendPasswordByTalk, string $newSendPasswordByTalk, bool $sendMail) {
+	public function testUpdateSendPassword($plainTextPassword, string $originalPassword, string $newPassword, $originalSendPasswordByTalk, $newSendPasswordByTalk, bool $sendMail) {
 		$node = $this->getMockBuilder(File::class)->getMock();
 		$node->expects($this->any())->method('getName')->willReturn('filename');
 
@@ -573,10 +583,10 @@ class ShareByMailProviderTest extends TestCase {
 		$this->assertInstanceOf('OCP\Share\IShare', $result);
 	}
 
-	/**
-	 * @expectedException \OCP\Share\Exceptions\ShareNotFound
-	 */
+
 	public function testGetShareByIdFailed() {
+		$this->expectException(\OCP\Share\Exceptions\ShareNotFound::class);
+
 		$instance = $this->getInstance(['createShareObject']);
 
 		$itemSource = 11;
@@ -658,10 +668,10 @@ class ShareByMailProviderTest extends TestCase {
 		$this->assertInstanceOf('OCP\Share\IShare', $result);
 	}
 
-	/**
-	 * @expectedException \OCP\Share\Exceptions\ShareNotFound
-	 */
+
 	public function testGetShareByTokenFailed() {
+		$this->expectException(\OCP\Share\Exceptions\ShareNotFound::class);
+
 
 		$itemSource = 11;
 		$itemType = 'file';
@@ -775,10 +785,10 @@ class ShareByMailProviderTest extends TestCase {
 		$this->assertSame($token, $result['token']);
 	}
 
-	/**
-	 * @expectedException \OCP\Share\Exceptions\ShareNotFound
-	 */
+
 	public function testGetRawShareFailed() {
+		$this->expectException(\OCP\Share\Exceptions\ShareNotFound::class);
+
 		$itemSource = 11;
 		$itemType = 'file';
 		$shareWith = 'user@server.com';

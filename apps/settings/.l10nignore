@@ -1,0 +1,15 @@
+# compiled vue templates
+js/vue-0.js
+js/vue-1.js
+js/vue-2.js
+js/vue-3.js
+js/vue-4.js
+js/vue-5.js
+js/vue-6.js
+js/vue-7.js
+js/vue-8.js
+js/vue-settings-admin-security.js
+js/vue-settings-apps-users-management.js
+js/vue-settings-personal-security.js
+js/vue-settings-personal-webauthn.js
+js/templates.js

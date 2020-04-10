@@ -43,6 +43,7 @@ OC.L10N.register(
     "Please select tags to filter by" : "Vui lòng chọn các nhãn để lọc theo",
     "No files found for the selected tags" : "Không tìm thấy tệp cho các nhãn đã chọn",
     "Select tag …" : "Lựa chọn thẻ",
+    "Create a new tag" : "Tạo một thẻ mới",
     "Name" : "Tên",
     "Public" : "Công khai",
     "Restricted" : "Bị giới hạn",

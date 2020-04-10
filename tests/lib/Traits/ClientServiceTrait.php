@@ -21,7 +21,6 @@
 
 namespace Test\Traits;
 
-
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;

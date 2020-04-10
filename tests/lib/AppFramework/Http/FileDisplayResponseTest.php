@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\AppFramework\Http;
 
 use OCP\AppFramework\Http;
@@ -33,7 +34,7 @@ class FileDisplayResponseTest extends \Test\TestCase {
 	/** @var FileDisplayResponse */
 	private $response;
 
-	public function setup() {
+	protected function setUp(): void {
 		$this->file = $this->getMockBuilder('OCP\Files\File')
 			->getMock();
 

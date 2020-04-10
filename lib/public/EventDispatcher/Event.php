@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,12 +20,13 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace OCP\EventDispatcher;
 
-use Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Contracts\EventDispatcher\Event as SymfonyEvent;
 
 /**
  * Base event class for the event dispatcher service
@@ -35,6 +36,20 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  *
  * @since 17.0.0
  */
-class Event extends GenericEvent {
+class Event extends SymfonyEvent {
+
+	/**
+	 * Compatibility constructor
+	 *
+	 * In Nextcloud 17.0.0 this event class used a now deprecated/removed Symfony base
+	 * class that had a constructor (with default arguments). To lower the risk of
+	 * a breaking change (PHP won't allow parent constructor calls if there is none),
+	 * this empty constructor's only purpose is to hopefully not break existing sub-
+	 * classes of this class.
+	 *
+	 * @since 18.0.0
+	 */
+	public function __construct() {
+	}
 
 }

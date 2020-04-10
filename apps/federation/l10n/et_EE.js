@@ -5,6 +5,7 @@ OC.L10N.register(
     "Server is already in the list of trusted servers." : "Server on juba usaldatud serverite nimekirjas.",
     "No server to federate with found" : "Serverit millega liituda ei leitud",
     "Could not add server" : "Serveri lisamine ebaõnnestus",
+    "Federation" : "Liit",
     "Federation allows you to connect with other trusted servers to exchange the user directory. For example this will be used to auto-complete external users for federated sharing." : "Liitumine lubab sul ühenduse luua teiste usaldusväärsete serveritega, et kasutajaid jagada. Näiteks saab seda rakendada liitunud serverite väliste kasutajanimede automaatseks täitmiseks.",
     "Trusted servers" : "Usaldatud serverid",
     "Add server automatically once a federated share was created successfully" : "Lisa server automaatselt niipea kui liitjagamine õnnestus",

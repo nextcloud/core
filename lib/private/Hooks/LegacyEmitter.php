@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -18,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -32,7 +33,7 @@ abstract class LegacyEmitter extends BasicEmitter {
 	 *
 	 * @suppress PhanAccessMethodProtected
 	 */
-	protected function emit($scope, $method, array $arguments = array()) {
+	protected function emit($scope, $method, array $arguments = []) {
 		\OC_Hook::emit($scope, $method, $arguments);
 		parent::emit($scope, $method, $arguments);
 	}

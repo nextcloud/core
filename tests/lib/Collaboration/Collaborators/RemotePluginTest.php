@@ -23,7 +23,6 @@
 
 namespace Test\Collaboration\Collaborators;
 
-
 use OC\Collaboration\Collaborators\RemotePlugin;
 use OC\Collaboration\Collaborators\SearchResult;
 use OC\Federation\CloudIdManager;
@@ -57,7 +56,7 @@ class RemotePluginTest extends TestCase {
 	/** @var  SearchResult */
 	protected $searchResult;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userManager = $this->createMock(IUserManager::class);
@@ -93,8 +92,7 @@ class RemotePluginTest extends TestCase {
 		$this->config->expects($this->any())
 			->method('getAppValue')
 			->willReturnCallback(
-				function($appName, $key, $default)
-				use ($shareeEnumeration)
+				function ($appName, $key, $default) use ($shareeEnumeration)
 				{
 					if ($appName === 'core' && $key === 'shareapi_allow_share_dialog_user_enumeration') {
 						return $shareeEnumeration ? 'yes' : 'no';
@@ -137,9 +135,10 @@ class RemotePluginTest extends TestCase {
 	 * @dataProvider dataTestSplitUserRemoteError
 	 *
 	 * @param string $id
-	 * @expectedException \Exception
 	 */
 	public function testSplitUserRemoteError($id) {
+		$this->expectException(\Exception::class);
+
 		$this->instantiatePlugin();
 		$this->plugin->splitUserRemote($id);
 	}
@@ -152,7 +151,7 @@ class RemotePluginTest extends TestCase {
 				'test@remote',
 				[],
 				true,
-				['remotes' => [], 'exact' => ['remotes' => [['label' => 'test@remote', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'test@remote']]]]],
+				['remotes' => [], 'exact' => ['remotes' => [['label' => 'test (remote)', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'test@remote', 'server' => 'remote'], 'uuid' => 'test', 'name' => 'test']]]],
 				false,
 				true,
 			],
@@ -160,7 +159,7 @@ class RemotePluginTest extends TestCase {
 				'test@remote',
 				[],
 				false,
-				['remotes' => [], 'exact' => ['remotes' => [['label' => 'test@remote', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'test@remote']]]]],
+				['remotes' => [], 'exact' => ['remotes' => [['label' => 'test (remote)', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'test@remote', 'server' => 'remote'], 'uuid' => 'test', 'name' => 'test']]]],
 				false,
 				true,
 			],
@@ -238,7 +237,7 @@ class RemotePluginTest extends TestCase {
 					],
 				],
 				true,
-				['remotes' => [['name' => 'User @ Localhost', 'label' => 'User @ Localhost (username@localhost)', 'uuid' => 'uid', 'type' => '', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'username@localhost', 'server' => 'localhost']]], 'exact' => ['remotes' => [['label' => 'test@remote', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'test@remote']]]]],
+				['remotes' => [['name' => 'User @ Localhost', 'label' => 'User @ Localhost (username@localhost)', 'uuid' => 'uid', 'type' => '', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'username@localhost', 'server' => 'localhost']]], 'exact' => ['remotes' => [['label' => 'test (remote)', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'test@remote', 'server' => 'remote'], 'uuid' => 'test', 'name' => 'test']]]],
 				false,
 				true,
 			],
@@ -264,7 +263,7 @@ class RemotePluginTest extends TestCase {
 					],
 				],
 				false,
-				['remotes' => [], 'exact' => ['remotes' => [['label' => 'test@remote', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'test@remote']]]]],
+				['remotes' => [], 'exact' => ['remotes' => [['label' => 'test (remote)', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'test@remote', 'server' => 'remote'], 'uuid' => 'test', 'name' => 'test']]]],
 				false,
 				true,
 			],
@@ -370,7 +369,7 @@ class RemotePluginTest extends TestCase {
 					],
 				],
 				false,
-				['remotes' => [], 'exact' => ['remotes' => [['label' => 'user space@remote', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'user space@remote']]]]],
+				['remotes' => [], 'exact' => ['remotes' => [['label' => 'user space (remote)', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'user space@remote', 'server' => 'remote'], 'uuid' => 'user space', 'name' => 'user space']]]],
 				false,
 				true,
 			],
@@ -409,20 +408,20 @@ class RemotePluginTest extends TestCase {
 	}
 
 	public function dataTestSplitUserRemoteError() {
-		return array(
+		return [
 			// Invalid path
-			array('user@'),
+			['user@'],
 
 			// Invalid user
-			array('@server'),
-			array('us/er@server'),
-			array('us:er@server'),
+			['@server'],
+			['us/er@server'],
+			['us:er@server'],
 
 			// Invalid splitting
-			array('user'),
-			array(''),
-			array('us/erserver'),
-			array('us:erserver'),
-		);
+			['user'],
+			[''],
+			['us/erserver'],
+			['us:erserver'],
+		];
 	}
 }

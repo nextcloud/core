@@ -2,7 +2,9 @@
 /**
  * @copyright Copyright (c) 2016 Thomas Citharel <tcit@tcit.fr>
  *
- * @author Thomas Citharel <tcit@tcit.fr>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license GNU AGPL version 3 or any later version
@@ -18,23 +20,24 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OCA\DAV\CalDAV\Publishing;
 
-use Sabre\DAV\PropFind;
+use OCA\DAV\CalDAV\Calendar;
+use OCA\DAV\CalDAV\Publishing\Xml\Publisher;
+use OCP\IConfig;
+use OCP\IURLGenerator;
+use Sabre\CalDAV\Xml\Property\AllowedSharingModes;
+use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\INode;
+use Sabre\DAV\PropFind;
 use Sabre\DAV\Server;
 use Sabre\DAV\ServerPlugin;
-use Sabre\DAV\Exception\NotFound;
 use Sabre\HTTP\RequestInterface;
 use Sabre\HTTP\ResponseInterface;
-use Sabre\CalDAV\Xml\Property\AllowedSharingModes;
-use OCA\DAV\CalDAV\Publishing\Xml\Publisher;
-use OCA\DAV\CalDAV\Calendar;
-use OCP\IURLGenerator;
-use OCP\IConfig;
 
 class PublishPlugin extends ServerPlugin {
 	const NS_CALENDARSERVER = 'http://calendarserver.org/ns/';
@@ -92,7 +95,7 @@ class PublishPlugin extends ServerPlugin {
 	 *
 	 * @return string
 	 */
-	public function getPluginName()	{
+	public function getPluginName() {
 		return 'oc-calendar-publishing';
 	}
 
@@ -125,8 +128,11 @@ class PublishPlugin extends ServerPlugin {
 				}
 			});
 
-			$propFind->handle('{'.self::NS_CALENDARSERVER.'}allowed-sharing-modes', function() use ($node) {
-				return new AllowedSharingModes(!$node->isSubscription(), !$node->isSubscription());
+			$propFind->handle('{'.self::NS_CALENDARSERVER.'}allowed-sharing-modes', function () use ($node) {
+				$canShare = (!$node->isSubscription() && $node->canWrite());
+				$canPublish = (!$node->isSubscription() && $node->canWrite());
+
+				return new AllowedSharingModes($canShare, $canPublish);
 			});
 		}
 	}
@@ -170,7 +176,7 @@ class PublishPlugin extends ServerPlugin {
 
 		switch ($documentType) {
 
-			case '{'.self::NS_CALENDARSERVER.'}publish-calendar' :
+			case '{'.self::NS_CALENDARSERVER.'}publish-calendar':
 
 			// We can only deal with IShareableCalendar objects
 			if (!$node instanceof Calendar) {
@@ -198,7 +204,7 @@ class PublishPlugin extends ServerPlugin {
 			// Breaking the event chain
 			return false;
 
-			case '{'.self::NS_CALENDARSERVER.'}unpublish-calendar' :
+			case '{'.self::NS_CALENDARSERVER.'}unpublish-calendar':
 
 			// We can only deal with IShareableCalendar objects
 			if (!$node instanceof Calendar) {

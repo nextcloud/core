@@ -81,6 +81,7 @@
 	"js": ["application/javascript", "text/plain"],
 	"json": ["application/json", "text/plain"],
 	"k25": ["image/x-dcraw"],
+	"kdbx": ["application/x-kdbx"],
 	"kdc": ["image/x-dcraw"],
 	"key": ["application/x-iwork-keynote-sffkey"],
 	"keynote": ["application/x-iwork-keynote-sffkey"],

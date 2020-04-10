@@ -22,7 +22,6 @@
     "Error occurred while updating comment with id {id}" : "Asocedió un fallu entrín s'anovaba'l comentariu cola ID {id}",
     "Error occurred while posting comment" : "Asocedieron fallos entrín s'espublizaba'l comentariu",
     "_%n unread comment_::_%n unread comments_" : ["%n comentariu ensin lleer","%n comentarios ensin lleer"],
-    "Comment" : "Comentariu",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s mentóte nun comentariu de «%2$s»"
+    "Comment" : "Comentariu"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

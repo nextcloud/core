@@ -7,10 +7,11 @@
  */
 
 namespace Test\Hooks;
+
 use OC\Hooks\PublicEmitter;
 
 class DummyForwardingEmitter extends \OC\Hooks\ForwardingEmitter {
-	public function emitEvent($scope, $method, $arguments = array()) {
+	public function emitEvent($scope, $method, $arguments = []) {
 		$this->emit($scope, $method, $arguments);
 	}
 

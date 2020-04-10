@@ -33,7 +33,7 @@ class CompareVersionTest extends TestCase {
 	/** @var CompareVersion */
 	private $compare;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->compare = new CompareVersion();

@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2017 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -102,7 +103,7 @@ class Sync extends TimedJob {
 	 */
 	protected function getMinPagingSize() {
 		$configKeys = $this->config->getAppKeys('user_ldap');
-		$configKeys = array_filter($configKeys, function($key) {
+		$configKeys = array_filter($configKeys, function ($key) {
 			return strpos($key, 'ldap_paging_size') !== false;
 		});
 		$minPagingSize = null;
@@ -161,11 +162,11 @@ class Sync extends TimedJob {
 		$access = $this->accessFactory->get($connection);
 		$access->setUserMapper($this->mapper);
 
-		$filter = $access->combineFilterWithAnd(array(
+		$filter = $access->combineFilterWithAnd([
 			$access->connection->ldapUserFilter,
 			$access->connection->ldapUserDisplayName . '=*',
 			$access->getFilterPartForUserSearch('')
-		));
+		]);
 		$results = $access->fetchListOfUsers(
 			$filter,
 			$access->userManager->getAttributes(),

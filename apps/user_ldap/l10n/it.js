@@ -176,7 +176,7 @@ OC.L10N.register(
     "Email Field" : "Campo Email",
     "Set the user's email from their LDAP attribute. Leave it empty for default behaviour." : "Imposta l'indirizzo di posta degli utenti dal loro attributo LDAP. Lascialo vuoto per il comportamento predefinito.",
     "User Home Folder Naming Rule" : "Regola di assegnazione del nome della cartella utente",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Lascia vuoto per il nome utente (predefinito). Altrimenti, specifica un attributo LDAP/AD.",
+    "Leave empty for username (default). Otherwise, specify an LDAP/AD attribute." : "Lascia vuoto il nome utente (predefinito). Altrimenti, specifica un attributo LDAP/AD.",
     "\"$home\" Placeholder Field" : "Segnaposto \"$home\"",
     "$home in an external storage configuration will be replaced with the value of the specified attribute" : "$home nella configurazione di un'archiviazione esterna sarà sostituita con il valore dell'attributo specificato",
     "Internal Username" : "Nome utente interno",
@@ -189,6 +189,7 @@ OC.L10N.register(
     "Username-LDAP User Mapping" : "Associazione Nome utente-Utente LDAP",
     "Usernames are used to store and assign metadata. In order to precisely identify and recognize users, each LDAP user will have an internal username. This requires a mapping from username to LDAP user. The created username is mapped to the UUID of the LDAP user. Additionally the DN is cached as well to reduce LDAP interaction, but it is not used for identification. If the DN changes, the changes will be found. The internal username is used all over. Clearing the mappings will have leftovers everywhere. Clearing the mappings is not configuration sensitive, it affects all LDAP configurations! Never clear the mappings in a production environment, only in a testing or experimental stage." : "I nomi utente sono utilizzati per archiviare e assegnare i metadati. Per identificare con precisione e riconoscere gli utenti, ogni utente LDAP avrà un nome utente interno. Il nome utente creato. Ciò richiede un'associazione tra il nome utente e l'utente LDAP. Il nome utente creato è associato allo UUID dell'utente LDAP. In aggiunta, il DN viene memorizzato in cache per ridurre l'interazione con LDAP, ma non è utilizzato per l'identificazione. Se il DN cambia, le modifiche saranno rilevate. Il nome utente interno è utilizzato dappertutto. La cancellazione delle associazioni lascerà tracce residue ovunque e interesserà tutta la configurazione LDAP. Non cancellare mai le associazioni in un ambiente di produzione, ma solo in una fase sperimentale o di test.",
     "Clear Username-LDAP User Mapping" : "Cancella associazione Nome utente-Utente LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Cancella associazione Nome gruppo-Gruppo LDAP"
+    "Clear Groupname-LDAP Group Mapping" : "Cancella associazione Nome gruppo-Gruppo LDAP",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Lascia vuoto per il nome utente (predefinito). Altrimenti, specifica un attributo LDAP/AD."
 },
 "nplurals=2; plural=(n != 1);");

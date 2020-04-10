@@ -2,7 +2,11 @@
 /**
  * @copyright Copyright (c) 2017 Joas Schilling <coding@schilljs.com>
  *
+ * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,8 +29,8 @@ namespace OC\Core\Migrations;
 
 use Doctrine\DBAL\Types\Type;
 use OCP\DB\ISchemaWrapper;
-use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
+use OCP\Migration\SimpleMigrationStep;
 
 class Version13000Date20170718121200 extends SimpleMigrationStep {
 
@@ -90,11 +94,13 @@ class Version13000Date20170718121200 extends SimpleMigrationStep {
 				'notnull' => true,
 				'length' => 4,
 			]);
-			$table->addColumn('storage_id', 'integer', [
+			$table->addColumn('storage_id', Type::BIGINT, [
 				'notnull' => true,
+				'length' => 20,
 			]);
-			$table->addColumn('root_id', 'integer', [
+			$table->addColumn('root_id', Type::BIGINT, [
 				'notnull' => true,
+				'length' => 20,
 			]);
 			$table->addColumn('user_id', 'string', [
 				'notnull' => true,
@@ -104,8 +110,9 @@ class Version13000Date20170718121200 extends SimpleMigrationStep {
 				'notnull' => true,
 				'length' => 4000,
 			]);
-			$table->addColumn('mount_id', 'integer', [
+			$table->addColumn('mount_id', Type::BIGINT, [
 				'notnull' => false,
+				'length' => 20,
 			]);
 			$table->setPrimaryKey(['id']);
 			$table->addIndex(['user_id'], 'mounts_user_index');
@@ -764,6 +771,10 @@ class Version13000Date20170718121200 extends SimpleMigrationStep {
 				'notnull' => true,
 				'length' => 64,
 				'default' => '',
+			]);
+			$table->addColumn('reference_id', 'string', [
+				'notnull' => false,
+				'length' => 64,
 			]);
 			$table->setPrimaryKey(['id']);
 			$table->addIndex(['parent_id'], 'comments_parent_id_index');

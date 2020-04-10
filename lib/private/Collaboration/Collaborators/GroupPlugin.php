@@ -3,6 +3,9 @@
  * @copyright Copyright (c) 2017 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -50,6 +53,7 @@ class GroupPlugin implements ISearchPlugin {
 
 		$this->shareeEnumeration = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes') === 'yes';
 		$this->shareWithGroupOnly = $this->config->getAppValue('core', 'shareapi_only_share_with_group_members', 'no') === 'yes';
+		$this->shareeEnumerationInGroupOnly = $this->shareeEnumeration && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_to_group', 'no') === 'yes';
 	}
 
 	public function search($search, $limit, $offset, ISearchResult $searchResult) {
@@ -64,7 +68,7 @@ class GroupPlugin implements ISearchPlugin {
 		}
 
 		$userGroups =  [];
-		if (!empty($groups) && $this->shareWithGroupOnly) {
+		if (!empty($groups) && ($this->shareWithGroupOnly || $this->shareeEnumerationInGroupOnly)) {
 			// Intersect all the groups that match with the groups this user is a member of
 			$userGroups = $this->groupManager->getUserGroups($this->userSession->getUser());
 			$userGroups = array_map(function (IGroup $group) { return $group->getGID(); }, $userGroups);
@@ -91,6 +95,9 @@ class GroupPlugin implements ISearchPlugin {
 					],
 				];
 			} else {
+				if ($this->shareeEnumerationInGroupOnly && !in_array($group->getGID(), $userGroups, true)) {
+					continue;
+				}
 				$result['wide'][] = [
 					'label' => $group->getDisplayName(),
 					'value' => [

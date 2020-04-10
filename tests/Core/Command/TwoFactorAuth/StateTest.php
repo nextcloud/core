@@ -45,7 +45,7 @@ class StateTest extends TestCase {
 	/** @var CommandTester|MockObject */
 	private $cmd;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->registry = $this->createMock(IRegistry::class);

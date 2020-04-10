@@ -1,9 +1,11 @@
-$(document).ready(function(){
- 	$('#password').on('keyup input change', function() {
-		if ($('#password').val().length > 0) {
-			$('#password-submit').prop('disabled', false);
-		} else {
-			$('#password-submit').prop('disabled', true);
-		}
-	});
+document.addEventListener('DOMContentLoaded', function() {
+	var passwordInput = document.getElementById('password');
+	var passwordButton = document.getElementById('password-submit');
+	var eventListener = function() {
+		passwordButton.disabled = passwordInput.value.length === 0;
+	};
+
+	passwordInput.addEventListener('click', eventListener);
+	passwordInput.addEventListener('keyup', eventListener);
+	passwordInput.addEventListener('change', eventListener);
 });

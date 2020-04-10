@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,7 +21,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -27,6 +29,7 @@ namespace OC\Core\Controller;
 
 use OC\Security\CSRF\CsrfTokenManager;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
@@ -53,6 +56,10 @@ class CSRFTokenController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function index(): JSONResponse {
+		if (!$this->request->passesStrictCookieCheck()) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
 		$requestToken = $this->tokenManager->getToken();
 
 		return new JSONResponse([

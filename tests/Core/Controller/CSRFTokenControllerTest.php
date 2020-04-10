@@ -44,7 +44,7 @@ class CSRFTokenControllerTest extends TestCase {
 	/** @var CsrfTokenManager|PHPUnit_Framework_MockObject_MockObject */
 	private $tokenManager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->createMock(IRequest::class);
@@ -54,7 +54,9 @@ class CSRFTokenControllerTest extends TestCase {
 			$this->tokenManager);
 	}
 
-	public function testGetToken() {
+	public function testGetToken(): void {
+		$this->request->method('passesStrictCookieCheck')->willReturn(true);
+
 		$token = $this->createMock(CsrfToken::class);
 		$this->tokenManager->method('getToken')->willReturn($token);
 		$token->method('getEncryptedValue')->willReturn('toktok123');
@@ -65,7 +67,16 @@ class CSRFTokenControllerTest extends TestCase {
 		$this->assertSame(Http::STATUS_OK, $response->getStatus());
 		$this->assertEquals([
 			'token' => 'toktok123'
-			], $response->getData());
+		], $response->getData());
+	}
+
+	public function testGetTokenNoStrictSameSiteCookie(): void {
+		$this->request->method('passesStrictCookieCheck')->willReturn(false);
+
+		$response = $this->controller->index();
+
+		$this->assertInstanceOf(JSONResponse::class, $response);
+		$this->assertSame(Http::STATUS_FORBIDDEN, $response->getStatus());
 	}
 
 }

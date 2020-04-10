@@ -3,10 +3,12 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
- * @author Juan Pablo Villafáñez <jvillafanez@solidgear.es>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Juan Pablo Villafáñez <jvillafanez@solidgear.es>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Philipp Staiger <philipp@staiger.it>
  * @author Roger Szabo <roger.szabo@web.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
@@ -24,7 +26,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -96,7 +98,7 @@ class User {
 	/**
 	 * @var string[]
 	 */
-	protected $refreshedFeatures = array();
+	protected $refreshedFeatures = [];
 	/**
 	 * @var string
 	 */
@@ -125,7 +127,7 @@ class User {
 		IConfig $config, FilesystemHelper $fs, Image $image,
 		LogWrapper $log, IAvatarManager $avatarManager, IUserManager $userManager,
 		INotificationManager $notificationManager) {
-	
+
 		if ($username === null) {
 			$log->log("uid for '$dn' must not be null!", ILogger::ERROR);
 			throw new \InvalidArgumentException('uid must not be null!');
@@ -173,6 +175,21 @@ class User {
 				$this->markRefreshTime();
 			}
 		}
+	}
+
+	/**
+	 * marks a user as deleted
+	 *
+	 * @throws \OCP\PreConditionNotMetException
+	 */
+	public function markUser() {
+		$curValue = $this->config->getUserValue($this->getUsername(), 'user_ldap', 'isDeleted', '0');
+		if($curValue === '1') {
+			// the user is already marked, do not write to DB again
+			return;
+		}
+		$this->config->setUserValue($this->getUsername(), 'user_ldap', 'isDeleted', '1');
+		$this->config->setUserValue($this->getUsername(), 'user_ldap', 'foundDeleted', (string)time());
 	}
 
 	/**
@@ -310,12 +327,12 @@ class User {
 		if ($path !== '') {
 			//if attribute's value is an absolute path take this, otherwise append it to data dir
 			//check for / at the beginning or pattern c:\ resp. c:/
-			if(   '/' !== $path[0]
+			if('/' !== $path[0]
 			   && !(3 < strlen($path) && ctype_alpha($path[0])
-			       && $path[1] === ':' && ('\\' === $path[2] || '/' === $path[2]))
+				   && $path[1] === ':' && ('\\' === $path[2] || '/' === $path[2]))
 			) {
 				$path = $this->config->getSystemValue('datadirectory',
-						\OC::$SERVERROOT.'/data' ) . '/' . $path;
+						\OC::$SERVERROOT.'/data') . '/' . $path;
 			}
 			//we need it to store it in the DB as well in case a user gets
 			//deleted so we can clean up afterwards
@@ -325,7 +342,7 @@ class User {
 			return $path;
 		}
 
-		if(    !is_null($attr)
+		if(!is_null($attr)
 			&& $this->config->getAppValue('user_ldap', 'enforce_home_folder_naming_rule', true)
 		) {
 			// a naming rule attribute is defined, but it doesn't exist for that LDAP user
@@ -584,10 +601,26 @@ class User {
 			//not set, nothing left to do;
 			return false;
 		}
+
 		if(!$this->image->loadFromBase64(base64_encode($avatarImage))) {
 			return false;
 		}
-		return $this->setOwnCloudAvatar();
+
+		// use the checksum before modifications
+		$checksum = md5($this->image->data());
+
+		if($checksum === $this->config->getUserValue($this->uid, 'user_ldap', 'lastAvatarChecksum', '')) {
+			return true;
+		}
+
+		$isSet = $this->setOwnCloudAvatar();
+
+		if($isSet) {
+			// save checksum only after successful setting
+			$this->config->setUserValue($this->uid, 'user_ldap', 'lastAvatarChecksum', $checksum);
+		}
+
+		return $isSet;
 	}
 
 	/**
@@ -599,8 +632,10 @@ class User {
 			$this->log->log('avatar image data from LDAP invalid for '.$this->dn, ILogger::ERROR);
 			return false;
 		}
+
+
 		//make sure it is a square and not bigger than 128x128
-		$size = min(array($this->image->width(), $this->image->height(), 128));
+		$size = min([$this->image->width(), $this->image->height(), 128]);
 		if(!$this->image->centerCrop($size)) {
 			$this->log->log('croping image for avatar failed for '.$this->dn, ILogger::ERROR);
 			return false;
@@ -650,7 +685,7 @@ class User {
 	 * @throws \OC\ServerNotAvailableException
 	 */
 	public function updateExtStorageHome(string $valueFromLDAP = null):string {
-		if($valueFromLDAP === null) {
+		if ($valueFromLDAP === null) {
 			$extHomeValues = $this->access->readAttribute($this->getDN(), $this->connection->ldapExtStorageHomeAttribute);
 		} else {
 			$extHomeValues = [$valueFromLDAP];
@@ -676,67 +711,65 @@ class User {
 			return;//password expiry handling disabled
 		}
 		$uid = $params['uid'];
-		if(isset($uid) && $uid === $this->getUsername()) {
+		if (isset($uid) && $uid === $this->getUsername()) {
 			//retrieve relevant user attributes
-			$result = $this->access->search('objectclass=*', array($this->dn), ['pwdpolicysubentry', 'pwdgraceusetime', 'pwdreset', 'pwdchangedtime']);
-			
-			if(array_key_exists('pwdpolicysubentry', $result[0])) {
+			$result = $this->access->search('objectclass=*', [$this->dn], ['pwdpolicysubentry', 'pwdgraceusetime', 'pwdreset', 'pwdchangedtime']);
+
+			if (array_key_exists('pwdpolicysubentry', $result[0])) {
 				$pwdPolicySubentry = $result[0]['pwdpolicysubentry'];
-				if($pwdPolicySubentry && (count($pwdPolicySubentry) > 0)){
+				if ($pwdPolicySubentry && (count($pwdPolicySubentry) > 0)){
 					$ppolicyDN = $pwdPolicySubentry[0];//custom ppolicy DN
 				}
 			}
-			
-			$pwdGraceUseTime = array_key_exists('pwdgraceusetime', $result[0]) ? $result[0]['pwdgraceusetime'] : null;
-			$pwdReset = array_key_exists('pwdreset', $result[0]) ? $result[0]['pwdreset'] : null;
-			$pwdChangedTime = array_key_exists('pwdchangedtime', $result[0]) ? $result[0]['pwdchangedtime'] : null;
-			
+
+			$pwdGraceUseTime = array_key_exists('pwdgraceusetime', $result[0]) ? $result[0]['pwdgraceusetime'] : [];
+			$pwdReset = array_key_exists('pwdreset', $result[0]) ? $result[0]['pwdreset'] : [];
+			$pwdChangedTime = array_key_exists('pwdchangedtime', $result[0]) ? $result[0]['pwdchangedtime'] : [];
+
 			//retrieve relevant password policy attributes
 			$cacheKey = 'ppolicyAttributes' . $ppolicyDN;
 			$result = $this->connection->getFromCache($cacheKey);
 			if(is_null($result)) {
-				$result = $this->access->search('objectclass=*', array($ppolicyDN), ['pwdgraceauthnlimit', 'pwdmaxage', 'pwdexpirewarning']);
+				$result = $this->access->search('objectclass=*', [$ppolicyDN], ['pwdgraceauthnlimit', 'pwdmaxage', 'pwdexpirewarning']);
 				$this->connection->writeToCache($cacheKey, $result);
 			}
-			
-			$pwdGraceAuthNLimit = array_key_exists('pwdgraceauthnlimit', $result[0]) ? $result[0]['pwdgraceauthnlimit'] : null;
-			$pwdMaxAge = array_key_exists('pwdmaxage', $result[0]) ? $result[0]['pwdmaxage'] : null;
-			$pwdExpireWarning = array_key_exists('pwdexpirewarning', $result[0]) ? $result[0]['pwdexpirewarning'] : null;
-			
+
+			$pwdGraceAuthNLimit = array_key_exists('pwdgraceauthnlimit', $result[0]) ? $result[0]['pwdgraceauthnlimit'] : [];
+			$pwdMaxAge = array_key_exists('pwdmaxage', $result[0]) ? $result[0]['pwdmaxage'] : [];
+			$pwdExpireWarning = array_key_exists('pwdexpirewarning', $result[0]) ? $result[0]['pwdexpirewarning'] : [];
+
 			//handle grace login
-			$pwdGraceUseTimeCount = count($pwdGraceUseTime);
-			if($pwdGraceUseTime && $pwdGraceUseTimeCount > 0) { //was this a grace login?
-				if($pwdGraceAuthNLimit 
-					&& (count($pwdGraceAuthNLimit) > 0)
-					&&($pwdGraceUseTimeCount < (int)$pwdGraceAuthNLimit[0])) { //at least one more grace login available?
+			if (!empty($pwdGraceUseTime)) { //was this a grace login?
+				if (!empty($pwdGraceAuthNLimit)
+					&& count($pwdGraceUseTime) < (int)$pwdGraceAuthNLimit[0]) { //at least one more grace login available?
 					$this->config->setUserValue($uid, 'user_ldap', 'needsPasswordReset', 'true');
 					header('Location: '.\OC::$server->getURLGenerator()->linkToRouteAbsolute(
-					'user_ldap.renewPassword.showRenewPasswordForm', array('user' => $uid)));
+					'user_ldap.renewPassword.showRenewPasswordForm', ['user' => $uid]));
 				} else { //no more grace login available
 					header('Location: '.\OC::$server->getURLGenerator()->linkToRouteAbsolute(
-					'user_ldap.renewPassword.showLoginFormInvalidPassword', array('user' => $uid)));
+					'user_ldap.renewPassword.showLoginFormInvalidPassword', ['user' => $uid]));
 				}
 				exit();
 			}
 			//handle pwdReset attribute
-			if($pwdReset && (count($pwdReset) > 0) && $pwdReset[0] === 'TRUE') { //user must change his password
+			if (!empty($pwdReset) && $pwdReset[0] === 'TRUE') { //user must change his password
 				$this->config->setUserValue($uid, 'user_ldap', 'needsPasswordReset', 'true');
 				header('Location: '.\OC::$server->getURLGenerator()->linkToRouteAbsolute(
-				'user_ldap.renewPassword.showRenewPasswordForm', array('user' => $uid)));
+				'user_ldap.renewPassword.showRenewPasswordForm', ['user' => $uid]));
 				exit();
 			}
 			//handle password expiry warning
-			if($pwdChangedTime && (count($pwdChangedTime) > 0)) {
-				if($pwdMaxAge && (count($pwdMaxAge) > 0)
-					&& $pwdExpireWarning && (count($pwdExpireWarning) > 0)) {
+			if (!empty($pwdChangedTime)) {
+				if (!empty($pwdMaxAge)
+					&& !empty($pwdExpireWarning)) {
 					$pwdMaxAgeInt = (int)$pwdMaxAge[0];
 					$pwdExpireWarningInt = (int)$pwdExpireWarning[0];
-					if($pwdMaxAgeInt > 0 && $pwdExpireWarningInt > 0){
+					if ($pwdMaxAgeInt > 0 && $pwdExpireWarningInt > 0){
 						$pwdChangedTimeDt = \DateTime::createFromFormat('YmdHisZ', $pwdChangedTime[0]);
 						$pwdChangedTimeDt->add(new \DateInterval('PT'.$pwdMaxAgeInt.'S'));
 						$currentDateTime = new \DateTime();
 						$secondsToExpiry = $pwdChangedTimeDt->getTimestamp() - $currentDateTime->getTimestamp();
-						if($secondsToExpiry <= $pwdExpireWarningInt) {
+						if ($secondsToExpiry <= $pwdExpireWarningInt) {
 							//remove last password expiry warning if any
 							$notification = $this->notificationManager->createNotification();
 							$notification->setApp('user_ldap')
@@ -749,7 +782,7 @@ class User {
 							$notification->setApp('user_ldap')
 								->setUser($uid)
 								->setDateTime($currentDateTime)
-								->setObject('pwd_exp_warn', $uid) 
+								->setObject('pwd_exp_warn', $uid)
 								->setSubject('pwd_exp_warn_days', [(int) ceil($secondsToExpiry / 60 / 60 / 24)])
 							;
 							$this->notificationManager->notify($notification);

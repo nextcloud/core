@@ -40,11 +40,6 @@ OC.L10N.register(
     "Beta" : "베타",
     "A pre-release version only for testing new features, not for production environments." : "새로운 기능을 테스트하는 출시 이전 버전이며, 프로덕션 환경에 적합하지 않습니다.",
     "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["앱 <strong>%n</strong>개는 이 버전과 호환되는 업데이트가 없음"],
-    "You can always update to a newer version / experimental channel. But you can never downgrade to a more stable channel." : "항상 새로운 버전이나 실험 채널로 업그레이드할 수 있지만, 안정 채널로 다운그레이드할 수는 없습니다.",
-    "<strong>production</strong> will always provide the latest patch level, but not update to the next major release immediately. That update usually happens with the second minor release (x.0.2)." : "<strong>프로덕션</strong>은 최신 패치 수준으로 업데이트되지만 다음 주 릴리스로 곧바로 업데이트되지는 않습니다. 해당 업데이트는 대개의 경우 두 번째 부 릴리스(x.0.2)에 진행되며 인스턴스의 버전이 최신 부 버전일 때에만 진행됩니다.",
-    "<strong>stable</strong> is the most recent stable version. It is suited for regular use and will always update to the latest major version." : "<strong>안정판</strong>은 최신 안정 버전입니다. 일반 사용에 적합하며 항상 최신 주 버전으로 업데이트됩니다.",
-    "<strong>beta</strong> is a pre-release version only for testing new features, not for production environments." : "<strong>베타</strong>는 새로운 기능을 테스트하는 출시 이전 버전이며, 프로덕션 환경에 적합하지 않습니다.",
-    "Could not start updater, please try the manual update" : "업데이트를 시작할 수 없습니다. 수동 업데이트를 시도하십시오.",
     "Production" : "프로덕션",
     "Will always provide the latest patch level, but not update to the next major release immediately. That update usually happens with the second minor release (x.0.2) and only if the instance is already on the latest minor version." : "최신 패치 수준으로 업데이트되지만 다음 주 릴리스로 곧바로 업데이트되지는 않습니다. 해당 업데이트는 대개의 경우 두 번째 부 릴리스(x.0.2)에 진행되며 인스턴스의 버전이 최신 부 버전일 때에만 진행됩니다."
 },

@@ -1,9 +1,9 @@
 <?php
-
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -18,7 +18,8 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
@@ -50,17 +51,31 @@ class CreateSessionTokenCommand extends ALoginCommand {
 			$tokenType = IToken::DO_NOT_REMEMBER;
 		}
 
-		$this->userSession->createSessionToken(
-			$loginData->getRequest(),
-			$loginData->getUser()->getUID(),
-			$loginData->getUsername(),
-			$loginData->getPassword(),
-			$tokenType
-		);
-		$this->userSession->updateTokens(
-			$loginData->getUser()->getUID(),
-			$loginData->getUsername()
-		);
+		if ($loginData->getPassword() === '') {
+			$this->userSession->createSessionToken(
+				$loginData->getRequest(),
+				$loginData->getUser()->getUID(),
+				$loginData->getUsername(),
+				null,
+				$tokenType
+			);
+			$this->userSession->updateTokens(
+				$loginData->getUser()->getUID(),
+				''
+			);
+		} else {
+			$this->userSession->createSessionToken(
+				$loginData->getRequest(),
+				$loginData->getUser()->getUID(),
+				$loginData->getUsername(),
+				$loginData->getPassword(),
+				$tokenType
+			);
+			$this->userSession->updateTokens(
+				$loginData->getUser()->getUID(),
+				$loginData->getPassword()
+			);
+		}
 
 		return $this->processNextOrFinishSuccessfully($loginData);
 	}

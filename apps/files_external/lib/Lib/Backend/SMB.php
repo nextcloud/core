@@ -2,7 +2,11 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -16,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -24,13 +28,13 @@ namespace OCA\Files_External\Lib\Backend;
 
 use Icewind\SMB\BasicAuth;
 use Icewind\SMB\KerberosAuth;
-use \OCP\IL10N;
-use \OCA\Files_External\Lib\DefinitionParameter;
-use \OCA\Files_External\Lib\Auth\AuthMechanism;
-use \OCA\Files_External\Lib\StorageConfig;
-use \OCA\Files_External\Lib\LegacyDependencyCheckPolyfill;
+use OCA\Files_External\Lib\Auth\AuthMechanism;
+use OCA\Files_External\Lib\Auth\Password\Password;
+use OCA\Files_External\Lib\DefinitionParameter;
+use OCA\Files_External\Lib\LegacyDependencyCheckPolyfill;
+use OCA\Files_External\Lib\StorageConfig;
 
-use \OCA\Files_External\Lib\Auth\Password\Password;
+use OCP\IL10N;
 use OCP\IUser;
 
 class SMB extends Backend {
@@ -52,6 +56,9 @@ class SMB extends Backend {
 					->setFlag(DefinitionParameter::FLAG_OPTIONAL),
 				(new DefinitionParameter('show_hidden', $l->t('Show hidden files')))
 					->setType(DefinitionParameter::VALUE_BOOLEAN)
+					->setFlag(DefinitionParameter::FLAG_OPTIONAL),
+				(new DefinitionParameter('timeout', $l->t('Timeout')))
+					->setType(DefinitionParameter::VALUE_HIDDEN)
 					->setFlag(DefinitionParameter::FLAG_OPTIONAL),
 			])
 			->addAuthScheme(AuthMechanism::SCHEME_PASSWORD)

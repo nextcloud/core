@@ -101,5 +101,3 @@ interface IAccountProperty extends \JsonSerializable {
 	public function getVerified(): string;
 
 }
-
-

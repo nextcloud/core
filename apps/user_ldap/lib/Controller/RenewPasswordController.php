@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -54,7 +54,7 @@ class RenewPasswordController extends Controller {
 	 * @param IConfig $config
 	 * @param IURLGenerator $urlGenerator
 	 */
-	function __construct($appName, IRequest $request, IUserManager $userManager, 
+	function __construct($appName, IRequest $request, IUserManager $userManager,
 		IConfig $config, IL10N $l10n, ISession $session, IURLGenerator $urlGenerator) {
 		parent::__construct($appName, $request);
 		$this->userManager = $userManager;

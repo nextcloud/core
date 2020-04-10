@@ -12,10 +12,8 @@ OC.L10N.register(
     "No entries found in this folder" : "Der blev ikke fundet poster i denne mappe",
     "Select all" : "Vælg alle",
     "Name" : "Navn",
+    "Actions" : "Handlinger",
     "Deleted" : "Slettet",
-    "Delete" : "Slet",
-    "Couldn't delete %s permanently" : "Kunne ikke slette %s permanent",
-    "Couldn't restore %s" : "Kunne ikke gendanne %s",
-    "Error" : "Fejl"
+    "Delete" : "Slet"
 },
 "nplurals=2; plural=(n != 1);");

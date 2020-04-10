@@ -2,8 +2,11 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -18,16 +21,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\DAV\Tests\unit\Connector\Sabre;
 
+use OC\Log;
 use OC\SystemConfig;
 use OCA\DAV\Connector\Sabre\Exception\InvalidPath;
 use OCA\DAV\Connector\Sabre\ExceptionLoggerPlugin as PluginToTest;
-use OC\Log;
 use PHPUnit_Framework_MockObject_MockObject;
 use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\Exception\ServiceUnavailable;
@@ -59,7 +62,7 @@ class ExceptionLoggerPluginTest extends TestCase {
 		$config = $this->createMock(SystemConfig::class);
 		$config->expects($this->any())
 			->method('getValue')
-			->willReturnCallback(function($key, $default) {
+			->willReturnCallback(function ($key, $default) {
 				switch ($key) {
 					case 'loglevel':
 						return 0;

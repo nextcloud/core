@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -17,9 +18,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OCA\DAV\Files\Sharing;
 
 use OC\Files\View;
@@ -60,11 +62,11 @@ class FilesDropPlugin extends ServerPlugin {
 	 * @throws MethodNotAllowed
 	 */
 	public function initialize(\Sabre\DAV\Server $server) {
-		$server->on('beforeMethod', [$this, 'beforeMethod'], 999);
+		$server->on('beforeMethod:*', [$this, 'beforeMethod'], 999);
 		$this->enabled = false;
 	}
 
-	public function beforeMethod(RequestInterface $request, ResponseInterface $response){
+	public function beforeMethod(RequestInterface $request, ResponseInterface $response) {
 
 		if (!$this->enabled) {
 			return;

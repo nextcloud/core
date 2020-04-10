@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Clark Tomlinson <fallen013@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -24,12 +25,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Encryption\Tests;
-
 
 use OC\Files\FileInfo;
 use OC\Files\View;
@@ -79,7 +79,7 @@ class KeyManagerTest extends TestCase {
 	/** @var \OCP\IConfig|\PHPUnit_Framework_MockObject_MockObject */
 	private $configMock;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->userId = 'user1';
 		$this->systemKeyId = 'systemKeyId';
@@ -220,10 +220,10 @@ class KeyManagerTest extends TestCase {
 		];
 	}
 
-	/**
-	 * @expectedException \OCA\Encryption\Exceptions\PrivateKeyMissingException
-	 */
+	
 	public function testUserHasKeysMissingPrivateKey() {
+		$this->expectException(\OCA\Encryption\Exceptions\PrivateKeyMissingException::class);
+
 		$this->keyStorageMock->expects($this->exactly(2))
 			->method('getUserKey')
 			->willReturnCallback(function ($uid, $keyID, $encryptionModuleId) {
@@ -236,13 +236,13 @@ class KeyManagerTest extends TestCase {
 		$this->instance->userHasKeys($this->userId);
 	}
 
-	/**
-	 * @expectedException \OCA\Encryption\Exceptions\PublicKeyMissingException
-	 */
+	
 	public function testUserHasKeysMissingPublicKey() {
+		$this->expectException(\OCA\Encryption\Exceptions\PublicKeyMissingException::class);
+
 		$this->keyStorageMock->expects($this->exactly(2))
 			->method('getUserKey')
-			->willReturnCallback(function ($uid, $keyID, $encryptionModuleId){
+			->willReturnCallback(function ($uid, $keyID, $encryptionModuleId) {
 				if ($keyID === 'publicKey') {
 					return '';
 				}
@@ -322,7 +322,7 @@ class KeyManagerTest extends TestCase {
 
 		$this->assertTrue(
 			$this->instance->setRecoveryKey('pass',
-				array('publicKey' => 'publicKey', 'privateKey' => 'privateKey'))
+				['publicKey' => 'publicKey', 'privateKey' => 'privateKey'])
 		);
 	}
 
@@ -473,13 +473,13 @@ class KeyManagerTest extends TestCase {
 
 		$this->keyStorageMock->expects($this->any())
 			->method('getSystemUserKey')
-			->willReturnCallback(function($keyId, $encryptionModuleId) {
+			->willReturnCallback(function ($keyId, $encryptionModuleId) {
 				return $keyId;
 			});
 
 		$this->utilMock->expects($this->any())
 			->method('isRecoveryEnabledForUser')
-			->willReturnCallback(function($uid) {
+			->willReturnCallback(function ($uid) {
 				if ($uid === 'user1') {
 					return true;
 				}
@@ -505,12 +505,12 @@ class KeyManagerTest extends TestCase {
 	 * @return array
 	 */
 	public function dataTestAddSystemKeys() {
-		return array(
-			array(['public' => true],[], 'user1', ['publicShareKey', 'recoveryKey']),
-			array(['public' => false], [], 'user1', ['recoveryKey']),
-			array(['public' => true],[], 'user2', ['publicShareKey']),
-			array(['public' => false], [], 'user2', []),
-		);
+		return [
+			[['public' => true],[], 'user1', ['publicShareKey', 'recoveryKey']],
+			[['public' => false], [], 'user1', ['recoveryKey']],
+			[['public' => true],[], 'user2', ['publicShareKey']],
+			[['public' => false], [], 'user2', []],
+		];
 	}
 
 	public function testGetMasterKeyId() {
@@ -536,10 +536,10 @@ class KeyManagerTest extends TestCase {
 		);
 	}
 
-	/**
-	 * @expectedException \Exception
-	 */
+	
 	public function testGetMasterKeyPasswordException() {
+		$this->expectException(\Exception::class);
+
 		$this->configMock->expects($this->once())->method('getSystemValue')->with('secret')
 			->willReturn('');
 

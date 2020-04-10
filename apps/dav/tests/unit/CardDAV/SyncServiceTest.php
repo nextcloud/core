@@ -6,6 +6,7 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -20,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -113,6 +114,10 @@ class SyncServiceTest extends TestCase {
 			'carddata' => "BEGIN:VCARD\r\nVERSION:3.0\r\nPRODID:-//Sabre//Sabre VObject 3.4.8//EN\r\nUID:test-user\r\nFN:test-user\r\nN:test-user;;;;\r\nEND:VCARD\r\n\r\n"
 		]);
 
+		$backend->method('getAddressBooksByUri')
+			->with('principals/system/system', 'system')
+			->willReturn(['id' => -1]);
+
 		/** @var IUserManager | \PHPUnit_Framework_MockObject_MockObject $userManager */
 		$userManager = $this->getMockBuilder(IUserManager::class)->disableOriginalConstructor()->getMock();
 
@@ -126,41 +131,41 @@ class SyncServiceTest extends TestCase {
 		$accountManager = $this->getMockBuilder(AccountManager::class)->disableOriginalConstructor()->getMock();
 		$accountManager->expects($this->any())->method('getUser')
 			->willReturn([
-					AccountManager::PROPERTY_DISPLAYNAME =>
-						[
-							'value' => $user->getDisplayName(),
-							'scope' => AccountManager::VISIBILITY_CONTACTS_ONLY,
-						],
-					AccountManager::PROPERTY_ADDRESS =>
-						[
-							'value' => '',
-							'scope' => AccountManager::VISIBILITY_PRIVATE,
-						],
-					AccountManager::PROPERTY_WEBSITE =>
-						[
-							'value' => '',
-							'scope' => AccountManager::VISIBILITY_PRIVATE,
-						],
-					AccountManager::PROPERTY_EMAIL =>
-						[
-							'value' => $user->getEMailAddress(),
-							'scope' => AccountManager::VISIBILITY_CONTACTS_ONLY,
-						],
-					AccountManager::PROPERTY_AVATAR =>
-						[
-							'scope' => AccountManager::VISIBILITY_CONTACTS_ONLY
-						],
-					AccountManager::PROPERTY_PHONE =>
-						[
-							'value' => '',
-							'scope' => AccountManager::VISIBILITY_PRIVATE,
-						],
-					AccountManager::PROPERTY_TWITTER =>
-						[
-							'value' => '',
-							'scope' => AccountManager::VISIBILITY_PRIVATE,
-						],
-				]
+				AccountManager::PROPERTY_DISPLAYNAME =>
+					[
+						'value' => $user->getDisplayName(),
+						'scope' => AccountManager::VISIBILITY_CONTACTS_ONLY,
+					],
+				AccountManager::PROPERTY_ADDRESS =>
+					[
+						'value' => '',
+						'scope' => AccountManager::VISIBILITY_PRIVATE,
+					],
+				AccountManager::PROPERTY_WEBSITE =>
+					[
+						'value' => '',
+						'scope' => AccountManager::VISIBILITY_PRIVATE,
+					],
+				AccountManager::PROPERTY_EMAIL =>
+					[
+						'value' => $user->getEMailAddress(),
+						'scope' => AccountManager::VISIBILITY_CONTACTS_ONLY,
+					],
+				AccountManager::PROPERTY_AVATAR =>
+					[
+						'scope' => AccountManager::VISIBILITY_CONTACTS_ONLY
+					],
+				AccountManager::PROPERTY_PHONE =>
+					[
+						'value' => '',
+						'scope' => AccountManager::VISIBILITY_PRIVATE,
+					],
+				AccountManager::PROPERTY_TWITTER =>
+					[
+						'value' => '',
+						'scope' => AccountManager::VISIBILITY_PRIVATE,
+					],
+			]
 			);
 
 		$ss = new SyncService($backend, $userManager, $logger, $accountManager);

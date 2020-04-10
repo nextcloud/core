@@ -2,6 +2,8 @@
 /**
  * @copyright Copyright (c) 2016, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -17,9 +19,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OCA\DAV\Tests\Files\Sharing;
 
 use OC\Files\View;
@@ -47,7 +50,7 @@ class FilesDropPluginTest extends TestCase {
 	/** @var ResponseInterface|\PHPUnit_Framework_MockObject_MockObject */
 	private $response;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->view = $this->createMock(View::class);
@@ -65,7 +68,7 @@ class FilesDropPluginTest extends TestCase {
 		$this->server->expects($this->once())
 			->method('on')
 			->with(
-				$this->equalTo('beforeMethod'),
+				$this->equalTo('beforeMethod:*'),
 				$this->equalTo([$this->plugin, 'beforeMethod']),
 				$this->equalTo(999)
 			);
@@ -121,13 +124,13 @@ class FilesDropPluginTest extends TestCase {
 			->willReturn('https://example.com');
 
 		$this->view->method('file_exists')
-			->will($this->returnCallback(function($path) {
+			->willReturnCallback(function ($path) {
 				if ($path === 'file.txt' || $path === '/file.txt') {
 					return true;
 				} else {
 					return false;
 				}
-			}));
+			});
 
 		$this->request->expects($this->once())
 			->method('setUrl')
@@ -162,13 +165,13 @@ class FilesDropPluginTest extends TestCase {
 			->willReturn('https://example.com');
 
 		$this->view->method('file_exists')
-			->will($this->returnCallback(function($path) {
+			->willReturnCallback(function ($path) {
 				if ($path === 'file.txt' || $path === '/file.txt') {
 					return true;
 				} else {
 					return false;
 				}
-			}));
+			});
 
 		$this->request->expects($this->once())
 			->method('setUrl')

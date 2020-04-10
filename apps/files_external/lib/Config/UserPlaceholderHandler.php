@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2019 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Julius Härtl <jus@bitgrid.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,24 +18,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\Files_External\Config;
 
-use OCP\IUserSession;
-
-class UserPlaceholderHandler implements IConfigHandler {
+class UserPlaceholderHandler extends UserContext implements IConfigHandler {
 	use SimpleSubstitutionTrait;
-
-	/** @var IUserSession */
-	private $session;
-
-	public function __construct(IUserSession $session) {
-		$this->session = $session;
-		$this->placeholder = 'user';
-	}
 
 	/**
 	 * @param mixed $optionValue
@@ -42,12 +33,11 @@ class UserPlaceholderHandler implements IConfigHandler {
 	 * @since 16.0.0
 	 */
 	public function handle($optionValue) {
-		$user = $this->session->getUser();
-		if($user === null) {
+		$this->placeholder = 'user';
+		$uid = $this->getUserId();
+		if($uid === null) {
 			return $optionValue;
 		}
-		$uid = $user->getUID();
-
 		return $this->processInput($optionValue, $uid);
 	}
 }

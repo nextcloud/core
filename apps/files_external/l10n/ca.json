@@ -23,7 +23,7 @@
     "Are you sure you want to delete this external storage?" : "Esteu segur que voleu suprimir aquest emmagatzematge extern?",
     "Delete storage?" : "Suprimeix-ho l'emmagatzematge?",
     "Saved" : "Desat",
-    "Saving..." : "S'està desant...",
+    "Saving …" : "S'està desant ...",
     "Save" : "Desa",
     "Empty response from the server" : "Resposta buida del servidor",
     "Couldn't access. Please log out and in again to activate this mount point" : "No s'ha pogut accedir. Si us plau, tanqueu la sessió i torneu a iniciar-la per activar aquest punt de muntatge",
@@ -72,6 +72,7 @@
     "Log-in credentials, save in database" : "Credencials d'inici de sessió, desades a la base de dades",
     "Username and password" : "Nom d'usuari i contrasenya",
     "Log-in credentials, save in session" : "Credencials d'inici de sessió, desades a la sessió",
+    "Global credentials, user entered" : "Credencials globals, l'usuari ha entrat",
     "User entered, store in database" : "Usuari introduït, emmagatzemat a la base de dades",
     "RSA public key" : "Clau pública RSA",
     "Public key" : "Clau pública",
@@ -102,6 +103,7 @@
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Comparteix",
     "Show hidden files" : "Mostra els fitxers ocults",
+    "Timeout" : "Sense temps",
     "SMB / CIFS using OC login" : "SMB / CIFS fent servir acreditació OC",
     "Username as share" : "Nom d'usuari amb que es comparteix",
     "OpenStack Object Storage" : "OpenStack Object Storage",
@@ -117,6 +119,7 @@
     "Name" : "Nom",
     "Storage type" : "Tipus d'emmagatzematge",
     "Scope" : "Abast",
+    "Open documentation" : "Obre la documentació",
     "External storage enables you to mount external storage services and devices as secondary Nextcloud storage devices. You may also allow users to mount their own external storage services." : "L’emmagatzematge extern us permet muntar serveis i dispositius d’emmagatzematge externs com a dispositius d’emmagatzematge secundaris de Nextcloud. També podeu permetre als usuaris muntar els seus propis serveis d’emmagatzematge extern.",
     "Folder name" : "Nom de la carpeta",
     "External storage" : "Emmagatzematge extern",
@@ -128,7 +131,6 @@
     "Advanced settings" : "Paràmetres avançats",
     "Allow users to mount external storage" : "Permet als usuaris muntar emmagatzematge extern",
     "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Les credencials globals es poden utilitzar per autenticar-se amb múltiples emmagatzematges externs que tenen les mateixes credencials.",
-    "Some of the configured external mount points are not connected. Please click on the red row(s) for more information" : "Alguns dels punts de muntatge externs configurats no estan connectats. Si us plau, feu clic a la/les fila/files vermella/vermelles per obtenir més informació",
-    "\"%s\" is not installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "\"%s\" no està instal·lat. El muntatge de %s no és possible. Si us plau, demaneu a l'administrador del sistema que l'instal·li."
+    "Saving..." : "S'està desant..."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

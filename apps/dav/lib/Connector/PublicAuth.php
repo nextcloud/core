@@ -2,10 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Maxence Lange <maxence@artificial-owl.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -24,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -34,6 +34,7 @@ use OCP\IRequest;
 use OCP\ISession;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager;
+use OCP\Share\IShare;
 use Sabre\DAV\Auth\Backend\AbstractBasic;
 
 /**
@@ -97,7 +98,10 @@ class PublicAuth extends AbstractBasic {
 
 		// check if the share is password protected
 		if ($share->getPassword() !== null) {
-			if ($share->getShareType() === \OCP\Share::SHARE_TYPE_LINK || $share->getShareType() === \OCP\Share::SHARE_TYPE_EMAIL) {
+
+			if ($share->getShareType() === IShare::TYPE_LINK
+				|| $share->getShareType() === IShare::TYPE_EMAIL
+				|| $share->getShareType() === IShare::TYPE_CIRCLE) {
 				if ($this->shareManager->checkPassword($share, $password)) {
 					return true;
 				} else if ($this->session->exists('public_link_authenticated')
@@ -112,7 +116,7 @@ class PublicAuth extends AbstractBasic {
 					}
 					return false;
 				}
-			} else if ($share->getShareType() === \OCP\Share::SHARE_TYPE_REMOTE) {
+			} else if ($share->getShareType() === IShare::TYPE_REMOTE) {
 				return true;
 			} else {
 				return false;

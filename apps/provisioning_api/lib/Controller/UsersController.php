@@ -1,19 +1,26 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author michag86 <micha_g@arcor.de>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Tom Needham <tom@owncloud.com>
- * @author John Molakvoæ <skjnldsv@protonmail.com>
- * @author Thomas Citharel <tcit@tcit.fr>
  *
  * @license AGPL-3.0
  *
@@ -27,7 +34,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -36,8 +43,8 @@ namespace OCA\Provisioning_API\Controller;
 use OC\Accounts\AccountManager;
 use OC\Authentication\Token\RemoteWipe;
 use OC\HintException;
-use OC\Settings\Mailer\NewUserMailHelper;
 use OCA\Provisioning_API\FederatedFileSharingFactory;
+use OCA\Settings\Mailer\NewUserMailHelper;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCS\OCSException;
@@ -98,7 +105,7 @@ class UsersController extends AUserData {
 								NewUserMailHelper $newUserMailHelper,
 								FederatedFileSharingFactory $federatedFileSharingFactory,
 								ISecureRandom $secureRandom,
-							    RemoteWipe $remoteWipe) {
+								RemoteWipe $remoteWipe) {
 		parent::__construct($appName,
 							$request,
 							$userManager,
@@ -126,7 +133,7 @@ class UsersController extends AUserData {
 	 * @param int $offset
 	 * @return DataResponse
 	 */
-	public function getUsers(string $search = '', $limit = null, $offset = 0): DataResponse {
+	public function getUsers(string $search = '', int $limit = null, int $offset = 0): DataResponse {
 		$user = $this->userSession->getUser();
 		$users = [];
 
@@ -159,7 +166,7 @@ class UsersController extends AUserData {
 	 *
 	 * returns a list of users and their data
 	 */
-	public function getUsersDetails(string $search = '', $limit = null, $offset = 0): DataResponse {
+	public function getUsersDetails(string $search = '', int $limit = null, int $offset = 0): DataResponse {
 		$currentUser = $this->userSession->getUser();
 		$users = [];
 
@@ -328,7 +335,7 @@ class UsersController extends AUserData {
 			}
 
 			// Send new user mail only if a mail is set
-			if ($email !== '') {
+			if ($email !== '' && $this->config->getAppValue('core', 'newUser.sendEmail', 'yes') === 'yes') {
 				$newUser->setEMailAddress($email);
 				try {
 					$emailTemplate = $this->newUserMailHelper->generateTemplate($newUser, $generatePasswordResetToken);
@@ -482,7 +489,7 @@ class UsersController extends AUserData {
 			}
 
 			if ($this->appManager->isEnabledForUser('federatedfilesharing')) {
-				$federatedFileSharing = new \OCA\FederatedFileSharing\AppInfo\Application();
+				$federatedFileSharing = \OC::$server->query(\OCA\FederatedFileSharing\AppInfo\Application::class);
 				$shareProvider = $federatedFileSharing->getFederatedShareProvider();
 				if ($shareProvider->isLookupServerUploadEnabled()) {
 					$permittedFields[] = AccountManager::PROPERTY_PHONE;

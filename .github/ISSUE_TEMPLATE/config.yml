@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+    - name: ❓ Question
+      url: https://help.nextcloud.com/
+      about: I have a question …
+    - name: 💼 Nextcloud Enterprise
+      url: https://portal.nextcloud.com/
+      about: If you are a customer and are using Nextcloud Enterprise, please submit your issue directly in the Nextcloud Portal so it can be resolved by our dedicated engineers more quickly.

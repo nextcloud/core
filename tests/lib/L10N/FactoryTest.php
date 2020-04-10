@@ -36,7 +36,7 @@ class FactoryTest extends TestCase {
 	/** @var string */
 	protected $serverRoot;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->getMockBuilder(IConfig::class)
@@ -419,7 +419,7 @@ class FactoryTest extends TestCase {
 			->willReturn($availableLanguages);
 
 		$factory->expects($this->any())
-			->method('respectDefaultLanguage')->willReturnCallback(function($app, $lang) {
+			->method('respectDefaultLanguage')->willReturnCallback(function ($app, $lang) {
 				return $lang;
 			});
 
@@ -441,7 +441,7 @@ class FactoryTest extends TestCase {
 			[null, 'de', [\OC::$SERVERROOT . '/core/l10n/de.json']],
 			['core', 'ru', [\OC::$SERVERROOT . '/core/l10n/ru.json']],
 			['lib', 'ru', [\OC::$SERVERROOT . '/lib/l10n/ru.json']],
-			['settings', 'de', [\OC::$SERVERROOT . '/settings/l10n/de.json']],
+			['settings', 'de', [\OC::$SERVERROOT . '/apps/settings/l10n/de.json']],
 			['files', 'de', [\OC::$SERVERROOT . '/apps/files/l10n/de.json']],
 			['files', '_lang_never_exists_', []],
 			['_app_never_exists_', 'de', [\OC::$SERVERROOT . '/core/l10n/de.json']],
@@ -464,7 +464,7 @@ class FactoryTest extends TestCase {
 			[null, \OC::$SERVERROOT . '/core/l10n/'],
 			['core', \OC::$SERVERROOT . '/core/l10n/'],
 			['lib', \OC::$SERVERROOT . '/lib/l10n/'],
-			['settings', \OC::$SERVERROOT . '/settings/l10n/'],
+			['settings', \OC::$SERVERROOT . '/apps/settings/l10n/'],
 			['files', \OC::$SERVERROOT . '/apps/files/l10n/'],
 			['_app_never_exists_', \OC::$SERVERROOT . '/core/l10n/'],
 		];
@@ -510,7 +510,7 @@ class FactoryTest extends TestCase {
 
 		$this->config->expects($this->any())
 			->method('getSystemValue')
-			->will($this->returnCallback(function($var, $default) use ($defaultLang) {
+			->willReturnCallback(function ($var, $default) use ($defaultLang) {
 				if ($var === 'installed') {
 					return true;
 				} else if ($var === 'default_language') {
@@ -518,7 +518,7 @@ class FactoryTest extends TestCase {
 				} else {
 					return $default;
 				}
-			}));
+			});
 
 		if ($loggedIn) {
 			$user = $this->getMockBuilder(IUser::class)
@@ -549,16 +549,16 @@ class FactoryTest extends TestCase {
 		$factory = $this->getFactory(['languageExists', 'findAvailableLanguages', 'respectDefaultLanguage']);
 		$factory->expects($this->any())
 			->method('languageExists')
-			->will($this->returnCallback(function ($app, $lang) use ($availableLang) {
+			->willReturnCallback(function ($app, $lang) use ($availableLang) {
 				return in_array($lang, $availableLang);
-			}));
+			});
 		$factory->expects($this->any())
 			->method('findAvailableLanguages')
-			->will($this->returnCallback(function ($app) use ($availableLang) {
+			->willReturnCallback(function ($app) use ($availableLang) {
 				return $availableLang;
-			}));
+			});
 		$factory->expects($this->any())
-			->method('respectDefaultLanguage')->willReturnCallback(function($app, $lang) {
+			->method('respectDefaultLanguage')->willReturnCallback(function ($app, $lang) {
 			return $lang;
 			});
 

@@ -2,7 +2,10 @@
 /**
  * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -30,7 +33,7 @@ class LDAPTest extends TestCase  {
 	/** @var LDAP|\PHPUnit_Framework_MockObject_MockObject */
 	private $ldap;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->ldap = $this->getMockBuilder(LDAP::class)
 			->setMethods(['invokeLDAPMethod'])
@@ -57,7 +60,7 @@ class LDAPTest extends TestCase  {
 	public function testSearchWithErrorHandler(string $errorMessage, bool $passThrough) {
 
 		$wasErrorHandlerCalled = false;
-		$errorHandler = function($number, $message, $file, $line) use (&$wasErrorHandlerCalled) {
+		$errorHandler = function ($number, $message, $file, $line) use (&$wasErrorHandlerCalled) {
 			$wasErrorHandlerCalled = true;
 		};
 
@@ -67,7 +70,7 @@ class LDAPTest extends TestCase  {
 			->expects($this->once())
 			->method('invokeLDAPMethod')
 			->with('search', $this->anything(), $this->anything(), $this->anything(), $this->anything(), $this->anything())
-			->willReturnCallback(function() use($errorMessage) {
+			->willReturnCallback(function () use ($errorMessage) {
 				trigger_error($errorMessage);
 			});
 
@@ -84,7 +87,7 @@ class LDAPTest extends TestCase  {
 		$this->ldap
 			->expects($this->once())
 			->method('invokeLDAPMethod')
-			->with('mod_replace', $link, $userDN, array('userPassword' => $password))
+			->with('mod_replace', $link, $userDN, ['userPassword' => $password])
 			->willReturn(true);
 
 		$this->assertTrue($this->ldap->modReplace($link, $userDN, $password));

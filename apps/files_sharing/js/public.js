@@ -37,8 +37,6 @@ OCA.Sharing.PublicApp = {
 		fileActions = new OCA.Files.FileActions();
 		// default actions
 		fileActions.registerDefaultActions();
-		// legacy actions
-		fileActions.merge(window.FileActions);
 		// regular actions
 		fileActions.merge(OCA.Files.fileActions);
 
@@ -164,7 +162,7 @@ OCA.Sharing.PublicApp = {
 				url: url,
 				headers: {
 					Authorization: 'Basic ' + btoa(token + ':'),
-					Range: 'bytes=0-1000'
+					Range: 'bytes=0-10000'
 				}
 			}).then(function (data) {
 				self._showTextPreview(data, previewHeight);

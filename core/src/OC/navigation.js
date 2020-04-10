@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -24,10 +24,10 @@
  * @param {string} targetURL URL to redirect to
  * @deprecated 17.0.0 use window.location directly
  */
-export const redirect = targetURL => window.location = targetURL
+export const redirect = targetURL => { window.location = targetURL }
 
 /**
  * Reloads the current page
  * @deprecated 17.0.0 use window.location.reload directly
  */
-export const reload = () => window.location.reload()
+export const reload = () => { window.location.reload() }

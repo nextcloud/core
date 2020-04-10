@@ -2,10 +2,12 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author martin-rueegg <martin.rueegg@metaworx.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author tbelau666 <thomas.belau@gmx.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
@@ -23,18 +25,18 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\DB;
 
-use \Doctrine\DBAL\DBALException;
-use \Doctrine\DBAL\Schema\Index;
-use \Doctrine\DBAL\Schema\Table;
-use \Doctrine\DBAL\Schema\Schema;
-use \Doctrine\DBAL\Schema\SchemaConfig;
-use \Doctrine\DBAL\Schema\Comparator;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Schema\Comparator;
+use Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\SchemaConfig;
+use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\Type;
 use OCP\IConfig;
@@ -60,7 +62,7 @@ class Migrator {
 	private $noEmit = false;
 
 	/**
-	 * @param \Doctrine\DBAL\Connection|Connection $connection
+	 * @param \Doctrine\DBAL\Connection $connection
 	 * @param ISecureRandom $random
 	 * @param IConfig $config
 	 * @param EventDispatcherInterface $dispatcher
@@ -153,7 +155,7 @@ class Migrator {
 		$tmpTable = $this->renameTableSchema($table, $tmpName);
 		$schemaConfig = new SchemaConfig();
 		$schemaConfig->setName($this->connection->getDatabase());
-		$schema = new Schema(array($tmpTable), array(), $schemaConfig);
+		$schema = new Schema([$tmpTable], [], $schemaConfig);
 
 		try {
 			$this->applySchema($schema);
@@ -178,7 +180,7 @@ class Migrator {
 		 * @var \Doctrine\DBAL\Schema\Index[] $indexes
 		 */
 		$indexes = $table->getIndexes();
-		$newIndexes = array();
+		$newIndexes = [];
 		foreach ($indexes as $index) {
 			if ($index->isPrimary()) {
 				// do not rename primary key
@@ -191,7 +193,7 @@ class Migrator {
 		}
 
 		// foreign keys are not supported so we just set it to an empty array
-		return new Table($newName, $table->getColumns(), $newIndexes, array(), 0, $table->getOptions());
+		return new Table($newName, $table->getColumns(), $newIndexes, [], 0, $table->getOptions());
 	}
 
 	public function createSchema() {

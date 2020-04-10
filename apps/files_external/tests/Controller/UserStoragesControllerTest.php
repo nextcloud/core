@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
@@ -20,15 +21,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Files_External\Tests\Controller;
 
-use \OCA\Files_External\Controller\UserStoragesController;
+use OCA\Files_External\Controller\UserStoragesController;
 use OCA\Files_External\Lib\StorageConfig;
-use \OCP\AppFramework\Http;
-use \OCA\Files_External\Service\BackendService;
+use OCA\Files_External\Service\BackendService;
+use OCP\AppFramework\Http;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
@@ -41,7 +43,7 @@ class UserStoragesControllerTest extends StoragesControllerTest {
 	 */
 	private $oldAllowedBackends;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->service = $this->getMockBuilder('\OCA\Files_External\Service\UserStoragesService')
 			->disableOriginalConstructor()
@@ -75,7 +77,7 @@ class UserStoragesControllerTest extends StoragesControllerTest {
 
 		$this->service->expects($this->exactly(2))
 			->method('createStorage')
-			->will($this->returnValue($storageConfig));
+			->willReturn($storageConfig);
 		$this->service->expects($this->never())
 			->method('addStorage');
 		$this->service->expects($this->never())
@@ -85,7 +87,7 @@ class UserStoragesControllerTest extends StoragesControllerTest {
 			'mount',
 			'\OCA\Files_External\Lib\Storage\SMB',
 			'\Auth\Mechanism',
-			array(),
+			[],
 			[],
 			[],
 			[],
@@ -99,7 +101,7 @@ class UserStoragesControllerTest extends StoragesControllerTest {
 			'mount',
 			'\OCA\Files_External\Lib\Storage\SMB',
 			'\Auth\Mechanism',
-			array(),
+			[],
 			[],
 			[],
 			[],

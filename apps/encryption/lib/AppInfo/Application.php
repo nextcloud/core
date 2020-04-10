@@ -4,7 +4,10 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Clark Tomlinson <fallen013@gmail.com>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -19,11 +22,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
-namespace OCA\Encryption\AppInfo;
 
+namespace OCA\Encryption\AppInfo;
 
 use OC\Files\View;
 use OCA\Encryption\Controller\RecoveryController;
@@ -45,7 +48,6 @@ use OCP\Encryption\IManager;
 use OCP\IConfig;
 use Symfony\Component\Console\Helper\QuestionHelper;
 
-
 class Application extends \OCP\AppFramework\App {
 
 	/** @var IManager */
@@ -56,7 +58,7 @@ class Application extends \OCP\AppFramework\App {
 	/**
 	 * @param array $urlParams
 	 */
-	public function __construct($urlParams = array()) {
+	public function __construct($urlParams = []) {
 		parent::__construct('encryption', $urlParams);
 		$this->encryptionManager = \OC::$server->getEncryptionManager();
 		$this->config = \OC::$server->getConfig();
@@ -109,7 +111,7 @@ class Application extends \OCP\AppFramework\App {
 		$this->encryptionManager->registerEncryptionModule(
 			Encryption::ID,
 			Encryption::DISPLAY_NAME,
-			function() use ($container) {
+			function () use ($container) {
 
 			return new Encryption(
 				$container->query('Crypt'),
@@ -165,10 +167,8 @@ class Application extends \OCP\AppFramework\App {
 				return new Recovery(
 					$server->getUserSession(),
 					$c->query('Crypt'),
-					$server->getSecureRandom(),
 					$c->query('KeyManager'),
 					$server->getConfig(),
-					$server->getEncryptionKeyStorage(),
 					$server->getEncryptionFilesHelper(),
 					new View());
 			});

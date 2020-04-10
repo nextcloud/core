@@ -2,9 +2,11 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Clark Tomlinson <fallen013@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -18,13 +20,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Encryption\Tests\Controller;
-
 
 use OCA\Encryption\Controller\RecoveryController;
 use OCA\Encryption\Recovery;
@@ -108,10 +108,10 @@ class RecoveryControllerTest extends TestCase {
 		$this->recoveryMock->expects($this->any())
 			->method('changeRecoveryKeyPassword')
 			->with($password, $oldPassword)
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['test', 'oldTestFail', false],
 				['test', 'oldtest', true]
-			]));
+			]);
 
 		$response = $this->controller->changeRecoveryPassword($password,
 			$oldPassword,
@@ -140,10 +140,10 @@ class RecoveryControllerTest extends TestCase {
 		$this->recoveryMock->expects($this->any())
 			->method('setRecoveryForUser')
 			->with($enableRecovery)
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['1', true],
 				['0', false]
-			]));
+			]);
 
 
 		$response = $this->controller->userSetRecovery($enableRecovery);
@@ -153,7 +153,7 @@ class RecoveryControllerTest extends TestCase {
 
 	}
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->requestMock = $this->getMockBuilder(IRequest::class)

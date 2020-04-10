@@ -10,7 +10,9 @@
 		</title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+		<?php if ($theme->getiTunesAppId() !== '') { ?>
 		<meta name="apple-itunes-app" content="app-id=<?php p($theme->getiTunesAppId()); ?>">
+		<?php } ?>
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<meta name="apple-mobile-web-app-title" content="<?php p((!empty($_['application']) && $_['appid']!='files')? $_['application']:$theme->getTitle()); ?>">
@@ -82,7 +84,7 @@
 								<?php foreach($_['navigation'] as $entry): ?>
 									<li data-id="<?php p($entry['id']); ?>">
 									<a href="<?php print_unescaped($entry['href']); ?>"
-										<?php if( $entry['active'] ): ?> class="active"<?php endif; ?>
+										<?php if($entry['active']): ?> class="active"<?php endif; ?>
 										aria-label="<?php p($entry['name']); ?>">
 										<svg width="16" height="16" viewBox="0 0 16 16" alt="">
 											<defs><filter id="invertMenuMore-<?php p($entry['id']); ?>"><feColorMatrix in="SourceGraphic" type="matrix" values="-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0"></feColorMatrix></filter></defs>
@@ -137,7 +139,7 @@
 					<?php foreach($_['settingsnavigation'] as $entry):?>
 						<li data-id="<?php p($entry['id']); ?>">
 							<a href="<?php print_unescaped($entry['href']); ?>"
-								<?php if( $entry["active"] ): ?> class="active"<?php endif; ?>>
+								<?php if($entry["active"]): ?> class="active"<?php endif; ?>>
 								<img alt="" src="<?php print_unescaped($entry['icon'] . '?v=' . $_['versionHash']); ?>">
 								<?php p($entry['name']) ?>
 							</a>

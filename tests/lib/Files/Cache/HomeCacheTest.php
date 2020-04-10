@@ -66,11 +66,11 @@ class HomeCacheTest extends \Test\TestCase {
 	 */
 	private $user;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->user = new DummyUser('foo', \OC::$server->getTempManager()->getTemporaryFolder());
-		$this->storage = new \OC\Files\Storage\Home(array('user' => $this->user));
+		$this->storage = new \OC\Files\Storage\Home(['user' => $this->user]);
 		$this->cache = $this->storage->getCache();
 	}
 
@@ -82,11 +82,11 @@ class HomeCacheTest extends \Test\TestCase {
 	public function testRootFolderSizeIgnoresUnknownUpdate() {
 		$dir1 = 'files/knownsize';
 		$dir2 = 'files/unknownsize';
-		$fileData = array();
-		$fileData[''] = array('size' => -1, 'mtime' => 20, 'mimetype' => 'httpd/unix-directory');
-		$fileData['files'] = array('size' => -1, 'mtime' => 20, 'mimetype' => 'httpd/unix-directory');
-		$fileData[$dir1] = array('size' => 1000, 'mtime' => 20, 'mimetype' => 'httpd/unix-directory');
-		$fileData[$dir2] = array('size' => -1, 'mtime' => 25, 'mimetype' => 'httpd/unix-directory');
+		$fileData = [];
+		$fileData[''] = ['size' => -1, 'mtime' => 20, 'mimetype' => 'httpd/unix-directory'];
+		$fileData['files'] = ['size' => -1, 'mtime' => 20, 'mimetype' => 'httpd/unix-directory'];
+		$fileData[$dir1] = ['size' => 1000, 'mtime' => 20, 'mimetype' => 'httpd/unix-directory'];
+		$fileData[$dir2] = ['size' => -1, 'mtime' => 25, 'mimetype' => 'httpd/unix-directory'];
 
 		$this->cache->put('', $fileData['']);
 		$this->cache->put('files', $fileData['files']);
@@ -114,10 +114,10 @@ class HomeCacheTest extends \Test\TestCase {
 	public function testRootFolderSizeIsFilesSize() {
 		$dir1 = 'files';
 		$afile = 'test.txt';
-		$fileData = array();
-		$fileData[''] = array('size' => 1500, 'mtime' => 20, 'mimetype' => 'httpd/unix-directory');
-		$fileData[$dir1] = array('size' => 1000, 'mtime' => 20, 'mimetype' => 'httpd/unix-directory');
-		$fileData[$afile] = array('size' => 500, 'mtime' => 20);
+		$fileData = [];
+		$fileData[''] = ['size' => 1500, 'mtime' => 20, 'mimetype' => 'httpd/unix-directory'];
+		$fileData[$dir1] = ['size' => 1000, 'mtime' => 20, 'mimetype' => 'httpd/unix-directory'];
+		$fileData[$afile] = ['size' => 500, 'mtime' => 20];
 
 		$this->cache->put('', $fileData['']);
 		$this->cache->put($dir1, $fileData[$dir1]);

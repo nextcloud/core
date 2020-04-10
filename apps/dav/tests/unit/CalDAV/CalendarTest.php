@@ -1,7 +1,10 @@
 <?php
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
+ * @copyright Copyright (c) 2020, Gary Kim <gary@garykim.dev>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Gary Kim <gary@garykim.dev>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -20,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -43,7 +46,7 @@ class CalendarTest extends TestCase {
 	/** @var IConfig */
 	protected $config;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->l10n = $this->getMockBuilder(IL10N::class)
 			->disableOriginalConstructor()->getMock();
@@ -51,9 +54,9 @@ class CalendarTest extends TestCase {
 		$this->l10n
 			->expects($this->any())
 			->method('t')
-			->will($this->returnCallback(function ($text, $parameters = array()) {
+			->willReturnCallback(function ($text, $parameters = []) {
 				return vsprintf($text, $parameters);
-			}));
+			});
 	}
 
 	public function testDelete() {
@@ -73,10 +76,10 @@ class CalendarTest extends TestCase {
 		$c->delete();
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+
 	public function testDeleteFromGroup() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		/** @var \PHPUnit_Framework_MockObject_MockObject | CalDavBackend $backend */
 		$backend = $this->getMockBuilder(CalDavBackend::class)->disableOriginalConstructor()->getMock();
 		$backend->expects($this->never())->method('updateShares');
@@ -213,21 +216,44 @@ class CalendarTest extends TestCase {
 			'principal' => $hasOwnerSet ? 'user1' : 'user2',
 			'protected' => true
 		], [
-			'privilege' => '{DAV:}write',
-			'principal' => $hasOwnerSet ? 'user1' : 'user2',
-			'protected' => true
+			'privilege' => '{DAV:}read',
+			'principal' => ($hasOwnerSet ? 'user1' : 'user2') . '/calendar-proxy-write',
+			'protected' => true,
+		], [
+			'privilege' => '{DAV:}read',
+			'principal' => ($hasOwnerSet ? 'user1' : 'user2') . '/calendar-proxy-read',
+			'protected' => true,
 		]];
 		if ($uri === BirthdayService::BIRTHDAY_CALENDAR_URI) {
-			$expectedAcl = [[
-				'privilege' => '{DAV:}read',
-				'principal' => $hasOwnerSet ? 'user1' : 'user2',
-				'protected' => true
-			], [
+			$expectedAcl[] = [
 				'privilege' => '{DAV:}write-properties',
 				'principal' => $hasOwnerSet ? 'user1' : 'user2',
 				'protected' => true
-			]];
+			];
+			$expectedAcl[] = [
+				'privilege' => '{DAV:}write-properties',
+				'principal' => ($hasOwnerSet ? 'user1' : 'user2') . '/calendar-proxy-write',
+				'protected' => true
+			];
+		} else {
+			$expectedAcl[] = [
+				'privilege' => '{DAV:}write',
+				'principal' => $hasOwnerSet ? 'user1' : 'user2',
+				'protected' => true
+			];
+			$expectedAcl[] = [
+				'privilege' => '{DAV:}write',
+				'principal' => ($hasOwnerSet ? 'user1' : 'user2') . '/calendar-proxy-write',
+				'protected' => true
+			];
 		}
+
+		$expectedAcl[] = [
+			'privilege' => '{DAV:}write-properties',
+			'principal' => ($hasOwnerSet ? 'user1' : 'user2') . '/calendar-proxy-read',
+			'protected' => true
+		];
+
 		if ($hasOwnerSet) {
 			$expectedAcl[] = [
 				'privilege' => '{DAV:}read',
@@ -404,6 +430,27 @@ EOD;
 		} else {
 			$this->assertEquals('Test Event', $event->VEVENT->SUMMARY->getValue());
 		}
+
+		// Test l10n
+		$l10n = $this->createMock(IL10N::class);
+		if ($isShared) {
+			$l10n->expects($this->once())
+				->method('t')
+				->with('Busy')
+				->willReturn("Translated busy");
+		} else {
+			$l10n->expects($this->never());
+		}
+		$c = new Calendar($backend, $calendarInfo, $l10n, $this->config);
+
+		$calData = $c->getChild('event-1')->get();
+		$event = Reader::read($calData);
+
+		if ($isShared) {
+			$this->assertEquals('Translated busy', $event->VEVENT->SUMMARY->getValue());
+		} else {
+			$this->assertEquals('Test Event', $event->VEVENT->SUMMARY->getValue());
+		}
 	}
 
 	public function providesConfidentialClassificationData() {
@@ -522,7 +569,7 @@ EOD;
 
 		$backend->expects($this->any())
 			->method('getCalendarObject')
-			->will($this->returnCallback(function($cId, $uri) use($publicObject, $confidentialObject) {
+			->willReturnCallback(function ($cId, $uri) use ($publicObject, $confidentialObject) {
 				switch($uri) {
 					case 'event-0':
 						return $publicObject;
@@ -533,7 +580,7 @@ EOD;
 					default:
 						throw new \Exception('unexpected uri');
 				}
-			}));
+			});
 
 		$backend->expects($this->any())
 			->method('applyShareAcl')

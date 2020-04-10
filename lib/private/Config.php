@@ -6,6 +6,8 @@
  * @author Aldo "xoen" Giambelluca <xoen@xoen.org>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Brice Maron <brice@bmaron.net>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Frank Karlitschek <frank@karlitschek.de>
  * @author Jakob Sack <mail@jakobsack.de>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
@@ -29,7 +31,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -44,7 +46,7 @@ class Config {
 	const ENV_PREFIX = 'NC_';
 
 	/** @var array Associative array ($key => $value) */
-	protected $cache = array();
+	protected $cache = [];
 	/** @var string */
 	protected $configDir;
 	/** @var string */
@@ -185,7 +187,7 @@ class Config {
 	 */
 	private function readData() {
 		// Default config should always get loaded
-		$configFiles = array($this->configFilePath);
+		$configFiles = [$this->configFilePath];
 
 		// Add all files in the config dir ending with the same file name
 		$extra = glob($this->configDir.'*.'.$this->configFileName);
@@ -237,20 +239,17 @@ class Config {
 		$content .= var_export($this->cache, true);
 		$content .= ";\n";
 
-		touch ($this->configFilePath);
+		touch($this->configFilePath);
 		$filePointer = fopen($this->configFilePath, 'r+');
 
 		// Prevent others not to read the config
 		chmod($this->configFilePath, 0640);
 
 		// File does not exist, this can happen when doing a fresh install
-		if(!is_resource ($filePointer)) {
-			// TODO fix this via DI once it is very clear that this doesn't cause side effects due to initialization order
-			// currently this breaks app routes but also could have other side effects especially during setup and exception handling
-			$url = \OC::$server->getURLGenerator()->linkToDocs('admin-dir_permissions');
+		if(!is_resource($filePointer)) {
 			throw new HintException(
 				"Can't write into config directory!",
-				'This can usually be fixed by giving the webserver write access to the config directory. See ' . $url);
+				'This can usually be fixed by giving the webserver write access to the config directory.');
 		}
 
 		// Try to acquire a file lock
@@ -259,7 +258,7 @@ class Config {
 		}
 
 		// Write the config and release the lock
-		ftruncate ($filePointer, 0);
+		ftruncate($filePointer, 0);
 		fwrite($filePointer, $content);
 		fflush($filePointer);
 		flock($filePointer, LOCK_UN);
@@ -270,4 +269,3 @@ class Config {
 		}
 	}
 }
-

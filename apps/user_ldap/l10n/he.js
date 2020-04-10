@@ -62,6 +62,7 @@ OC.L10N.register(
     "Could not find the desired feature" : "לא אותרה התכונה הרצויה",
     "Invalid Host" : "מארח לא חוקי",
     "LDAP user and group backend" : "מנגנון משתמשים וקבוצות מול LDAP",
+    "This application enables administrators to connect Nextcloud to an LDAP-based user directory." : "יישומון זה מאפשר למנהלים להתחבר את Nextcloud לספריית משתמשים מבוססת LDAP.",
     "Test Configuration" : "בדיקת הגדרות",
     "Help" : "עזרה",
     "Groups meeting these criteria are available in %s:" : "קבוצות העומדות בקריטריון זה זמינות ב- %s:",

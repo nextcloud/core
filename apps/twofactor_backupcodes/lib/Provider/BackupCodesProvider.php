@@ -1,8 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 /**
+ *
+ *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +22,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -138,7 +143,7 @@ class BackupCodesProvider implements IProvider, IProvidesPersonalSettings {
 	 * @return boolean
 	 */
 	public function isActive(IUser $user): bool {
-		$appIds = array_filter($this->appManager->getEnabledAppsForUser($user), function($appId) {
+		$appIds = array_filter($this->appManager->getEnabledAppsForUser($user), function ($appId) {
 			return $appId !== $this->appName;
 		});
 		foreach ($appIds as $appId) {
@@ -162,4 +167,3 @@ class BackupCodesProvider implements IProvider, IProvidesPersonalSettings {
 	}
 
 }
-

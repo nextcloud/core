@@ -1,6 +1,7 @@
 <li data-toggle="tooltip" title="{{name}}" data-name="{{name}}">
 	{{#if isUploading}}
-		<span class="icon-loading-small"></span> {{name}}
+		<div id="drop-upload-name">{{name}}</div><div id="drop-upload-status"></div>
+		<progress id="drop-upload-progress-bar" value="0" max="100"></progress>	
 	{{else}}
 		<img src="{{iconSrc}}"/> {{name}}
 	{{/if}}

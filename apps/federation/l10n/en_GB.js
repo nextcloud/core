@@ -6,6 +6,7 @@ OC.L10N.register(
     "No server to federate with found" : "No server to federate with found",
     "Could not add server" : "Could not add server",
     "Federation" : "Federation",
+    "Federation allows you to connect with other trusted servers to exchange the user directory." : "Federation allows you to connect with other trusted servers to exchange the user directory.",
     "Federation allows you to connect with other trusted servers to exchange the user directory. For example this will be used to auto-complete external users for federated sharing." : "Federation allows you to connect with other trusted servers to exchange the user directory. For example: to auto-complete external users for federated sharing.",
     "Trusted servers" : "Trusted servers",
     "Add server automatically once a federated share was created successfully" : "Automatically add server once a federated share is successfully created",

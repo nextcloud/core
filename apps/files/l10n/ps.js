@@ -116,6 +116,7 @@ OC.L10N.register(
     "Unlimited" : "نامحدود",
     "Upload (max. %s)" : "پورته کول (%s نهايي)",
     "File Management" : "فایلونه ترتیبول",
+    "Tags" : "نښکې",
     "%s used" : "%sکارول شوې",
     "%1$s of %2$s used" : "د %2$sبرخې %1$sکارول شوې",
     "Settings" : "سمونې",
@@ -128,7 +129,6 @@ OC.L10N.register(
     "The files you are trying to upload exceed the maximum size for file uploads on this server." : "د دې سرور لپاره د پورته کېدونکي فایل کچه لوړه ده",
     "No favorites yet" : "تر اوسه نښې نشته",
     "Files and folders you mark as favorite will show up here" : "هغه فایلونه او فولډرې چې تاسې په نښه کړئ دلته به ښکاري",
-    "Tags" : "نښکې",
     "Deleted files" : "ړنګ شوي فایلونه",
     "Shares" : "شريک شوي",
     "Shared with others" : "نورو سره شريک شوي",
@@ -137,12 +137,7 @@ OC.L10N.register(
     "Deleted shares" : "ړنګ شوي لېنکونه",
     "Text file" : "متن فایل",
     "New text file.txt" : "New text file.txt",
-    "Target folder" : "د ورانتقالېدو فولډر",
-    "File handling" : "فایلونه سمبالول",
-    "Maximum upload size" : "د پورته کولو تر ټولو زیاته اندازه",
-    "Save" : "ساتل",
     "%s of %s used" : "د %sبرخې %sکارول شوې",
-    "Cancel upload" : "پرېښودل",
     "%1$s%% of %2$s used" : "د %2$sبرخې %1$s%%کارول شوې"
 },
 "nplurals=2; plural=(n != 1);");

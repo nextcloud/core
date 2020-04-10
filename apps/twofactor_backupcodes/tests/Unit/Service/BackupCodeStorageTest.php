@@ -1,7 +1,9 @@
 <?php
-
 /**
+ *
+ *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -50,7 +52,7 @@ class BackupCodeStorageTest extends TestCase {
 	/** @var BackupCodeStorage */
 	private $storage;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mapper = $this->createMock(BackupCodeMapper::class);
@@ -67,12 +69,12 @@ class BackupCodeStorageTest extends TestCase {
 		$user->method('getUID')->willReturn('fritz');
 		$this->random->expects($this->exactly($number))
 			->method('generate')
-			->with(16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-			->will($this->returnValue('CODEABCDEF'));
+			->with(16, ISecureRandom::CHAR_HUMAN_READABLE)
+			->willReturn('CODEABCDEF');
 		$this->hasher->expects($this->exactly($number))
 			->method('hash')
 			->with('CODEABCDEF')
-			->will($this->returnValue('HASHEDCODE'));
+			->willReturn('HASHEDCODE');
 		$row = new BackupCode();
 		$row->setUserId('fritz');
 		$row->setCode('HASHEDCODE');
@@ -104,7 +106,7 @@ class BackupCodeStorageTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('getBackupCodes')
 			->with($user)
-			->will($this->returnValue($codes));
+			->willReturn($codes);
 
 		$this->assertTrue($this->storage->hasBackupCodes($user));
 	}
@@ -116,7 +118,7 @@ class BackupCodeStorageTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('getBackupCodes')
 			->with($user)
-			->will($this->returnValue($codes));
+			->willReturn($codes);
 
 		$this->assertFalse($this->storage->hasBackupCodes($user));
 	}
@@ -136,7 +138,7 @@ class BackupCodeStorageTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('getBackupCodes')
 			->with($user)
-			->will($this->returnValue($codes));
+			->willReturn($codes);
 
 		$expected = [
 			'enabled' => true,
@@ -154,7 +156,7 @@ class BackupCodeStorageTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('getBackupCodes')
 			->with($user)
-			->will($this->returnValue($codes));
+			->willReturn($codes);
 
 		$expected = [
 			'enabled' => false,
@@ -176,11 +178,11 @@ class BackupCodeStorageTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('getBackupCodes')
 			->with($user)
-			->will($this->returnValue($codes));
+			->willReturn($codes);
 		$this->hasher->expects($this->once())
 			->method('verify')
 			->with('CHALLENGE', 'HASHEDVALUE', $this->anything())
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->mapper->expects($this->once())
 			->method('update')
 			->with($code);
@@ -202,7 +204,7 @@ class BackupCodeStorageTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('getBackupCodes')
 			->with($user)
-			->will($this->returnValue($codes));
+			->willReturn($codes);
 		$this->hasher->expects($this->never())
 			->method('verify');
 		$this->mapper->expects($this->never())
@@ -223,11 +225,11 @@ class BackupCodeStorageTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('getBackupCodes')
 			->with($user)
-			->will($this->returnValue($codes));
+			->willReturn($codes);
 		$this->hasher->expects($this->once())
 			->method('verify')
 			->with('CHALLENGE', 'HASHEDVALUE')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->mapper->expects($this->never())
 			->method('update');
 

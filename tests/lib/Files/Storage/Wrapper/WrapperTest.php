@@ -14,15 +14,15 @@ class WrapperTest extends \Test\Files\Storage\Storage {
 	 */
 	private $tmpDir;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->tmpDir = \OC::$server->getTempManager()->getTemporaryFolder();
-		$storage = new \OC\Files\Storage\Local(array('datadir' => $this->tmpDir));
-		$this->instance = new \OC\Files\Storage\Wrapper\Wrapper(array('storage' => $storage));
+		$storage = new \OC\Files\Storage\Local(['datadir' => $this->tmpDir]);
+		$this->instance = new \OC\Files\Storage\Wrapper\Wrapper(['storage' => $storage]);
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		\OC_Helper::rmdirr($this->tmpDir);
 		parent::tearDown();
 	}

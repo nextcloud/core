@@ -26,10 +26,10 @@ namespace Test\Authentication\Token;
 use OC\Authentication\Exceptions\ExpiredTokenException;
 use OC\Authentication\Exceptions\InvalidTokenException;
 use OC\Authentication\Token\DefaultToken;
+use OC\Authentication\Token\IToken;
 use OC\Authentication\Token\PublicKeyToken;
 use OC\Authentication\Token\PublicKeyTokenMapper;
 use OC\Authentication\Token\PublicKeyTokenProvider;
-use OC\Authentication\Token\IToken;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
@@ -54,19 +54,19 @@ class PublicKeyTokenProviderTest extends TestCase {
 	/** @var int */
 	private $time;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->mapper = $this->createMock(PublicKeyTokenMapper::class);
 		$this->crypto = \OC::$server->getCrypto();
 		$this->config = $this->createMock(IConfig::class);
 		$this->config->method('getSystemValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['session_lifetime', 60 * 60 * 24, 150],
 				['remember_login_cookie_lifetime', 60 * 60 * 24 * 15, 300],
 				['secret', '', '1f4h9s'],
 				['openssl', [], []],
-			]));
+			]);
 		$this->logger = $this->createMock(ILogger::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->time = 1313131;
@@ -124,7 +124,7 @@ class PublicKeyTokenProviderTest extends TestCase {
 		$this->mapper->expects($this->once())
 			->method('getTokenByUser')
 			->with('uid')
-			->will($this->returnValue(['token']));
+			->willReturn(['token']);
 
 		$this->assertEquals(['token'], $this->tokenProvider->getTokenByUser('uid'));
 	}
@@ -145,10 +145,10 @@ class PublicKeyTokenProviderTest extends TestCase {
 		$this->assertSame($password, $this->tokenProvider->getPassword($actual, $token));
 	}
 
-	/**
-	 * @expectedException \OC\Authentication\Exceptions\PasswordlessTokenException
-	 */
+	
 	public function testGetPasswordPasswordLessToken() {
+		$this->expectException(\OC\Authentication\Exceptions\PasswordlessTokenException::class);
+
 		$token = 'token1234';
 		$tk = new PublicKeyToken();
 		$tk->setPassword(null);
@@ -156,10 +156,10 @@ class PublicKeyTokenProviderTest extends TestCase {
 		$this->tokenProvider->getPassword($tk, $token);
 	}
 
-	/**
-	 * @expectedException \OC\Authentication\Exceptions\InvalidTokenException
-	 */
+	
 	public function testGetPasswordInvalidToken() {
+		$this->expectException(\OC\Authentication\Exceptions\InvalidTokenException::class);
+
 		$token = 'token';
 		$uid = 'user';
 		$user = 'User';
@@ -205,10 +205,10 @@ class PublicKeyTokenProviderTest extends TestCase {
 		$this->assertSame($newpass, $this->tokenProvider->getPassword($actual, 'token'));
 	}
 
-	/**
-	 * @expectedException \OC\Authentication\Exceptions\InvalidTokenException
-	 */
+	
 	public function testSetPasswordInvalidToken() {
+		$this->expectException(\OC\Authentication\Exceptions\InvalidTokenException::class);
+
 		$token = $this->createMock(IToken::class);
 		$tokenId = 'token123';
 		$password = '123456';
@@ -239,10 +239,10 @@ class PublicKeyTokenProviderTest extends TestCase {
 		$defaultRememberMeLifetime = 60 * 60 * 24 * 15;
 		$this->config->expects($this->exactly(2))
 			->method('getSystemValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['session_lifetime', $defaultSessionLifetime, 150],
 				['remember_login_cookie_lifetime', $defaultRememberMeLifetime, 300],
-			]));
+			]);
 		$this->mapper->expects($this->at(0))
 			->method('invalidateOld')
 			->with($this->time - 150);
@@ -285,7 +285,7 @@ class PublicKeyTokenProviderTest extends TestCase {
 		$this->mapper
 			->expects($this->at(2))
 			->method('delete')
-			->with($this->callback(function($token) use ($oldToken) {
+			->with($this->callback(function ($token) use ($oldToken) {
 				return $token === $oldToken;
 			}));
 
@@ -325,7 +325,7 @@ class PublicKeyTokenProviderTest extends TestCase {
 		$this->mapper
 			->expects($this->at(2))
 			->method('delete')
-			->with($this->callback(function($token) use ($oldToken) {
+			->with($this->callback(function ($token) use ($oldToken) {
 				return $token === $oldToken;
 			}));
 

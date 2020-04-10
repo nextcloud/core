@@ -4,6 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -35,13 +36,13 @@ use Test\TestCase;
  * @package OCA\Comments\Tests\Unit\AppInfo
  */
 class ApplicationTest extends TestCase {
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		\OC::$server->getUserManager()->createUser('dummy', '456');
 		\OC::$server->getUserSession()->setUser(\OC::$server->getUserManager()->get('dummy'));
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		\OC::$server->getUserManager()->get('dummy')->delete();
 		parent::tearDown();
 	}

@@ -18,9 +18,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OCA\Files_Sharing\Tests\Middleware;
 
 use OCA\Files_Sharing\Controller\ShareInfoController;
@@ -40,7 +41,7 @@ class ShareInfoMiddlewareTest extends TestCase {
 	/** @var ShareInfoMiddleware */
 	private $middleware;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->shareManager = $this->createMock(ShareManager::class);

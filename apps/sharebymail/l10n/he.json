@@ -3,6 +3,10 @@
     "Shared with {email}" : "משותף עם {email}",
     "Shared with %1$s by %2$s" : "שותף עם %1$s על ידי %2$s",
     "Shared with {email} by {actor}" : "שותף עם {email} על ידי {actor}",
+    "Unshared from %1$s" : "השיתוף עם %1$s בוטל",
+    "Unshared from {email}" : "השיתוף עם {email} בוטל",
+    "Unshared from %1$s by %2$s" : "השיתוף עם %1$s בוטל על ידי %2$s",
+    "Unshared from {email} by {actor}" : "השיתוף עם {email} בוטל על ידי {actor}",
     "Password for mail share sent to %1$s" : "הססמה לשיתוף דוא״ל נשלחה אל %1$s",
     "Password for mail share sent to {email}" : "ססמת השיתוף בדוא״ל נשלחה אל {email}",
     "Password for mail share sent to you" : "ססמת השיתוף בדוא״ל נשלחה אליך",
@@ -18,18 +22,14 @@
     "Failed to send share by email" : "שליחת השיתוף בדוא״ל נכשלה",
     "Click the button below to open it." : "יש ללחוץ על הכפתור שלהלן כדי לפתוח אותו.",
     "Open »%s«" : "פתיחת „%s”",
+    "%1$s via %2$s" : "%1$s דרך %2$s",
     "Password to access »%s«" : "ססמת הגישה אל „%s”",
     "You can choose a different password at any time in the share dialog." : "ניתן לבחור בססמה אחרת בכל עת בתיבת דו־שיח השיתוף.",
     "Could not find share" : "לא ניתן למצוא את השיתוף",
     "Share by mail" : "שיתוף בדוא״ל",
+    "Share provider which allows you to share files by mail" : "ספק השיתוף שמאפשר לך לשתף קבצים בדוא״ל",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "מאפשר למשתמשים לשתף קישורים מותאמים אישית לקובץ או לתיקייה על ידי הקלדת כתובת דוא״ל.",
     "Send password by mail" : "שליחת ססמה בדוא״ל",
-    "Enforce password protection" : "אילוץ הגנה בססמה",
-    "Sharing %s failed, this item is already shared with %s" : "השיתוף של %s נכשל, פריט זה כבר משותף עם %s",
-    "%s via %s" : "%s דרך %s",
-    "Password to access »%s« shared to you by %s" : "ססמת גישה אל „%s” שותפה אתך על ידי %s",
-    "It is protected with the following password: %s" : "מוגן בססמה הבאה: %s",
-    "Password to access »%s« shared with %s" : "ססמת הגישה אל „%s” שותפה עם %s",
-    "This is the password: %s" : "זאת הססמה: %s"
+    "Enforce password protection" : "אילוץ הגנה בססמה"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;"
 }

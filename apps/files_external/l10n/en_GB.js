@@ -25,7 +25,6 @@ OC.L10N.register(
     "Are you sure you want to delete this external storage?" : "Are you sure you want to delete this external storage?",
     "Delete storage?" : "Delete storage?",
     "Saved" : "Saved",
-    "Saving..." : "Saving...",
     "Save" : "Save",
     "Empty response from the server" : "Empty response from the server",
     "Couldn't access. Please log out and in again to activate this mount point" : "Couldn't access. Please log out and in again to activate this mount point",
@@ -103,6 +102,7 @@ OC.L10N.register(
     "SFTP with secret key login" : "SFTP with secret key login",
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Share",
+    "Show hidden files" : "Show hidden files",
     "SMB / CIFS using OC login" : "SMB / CIFS using OC login",
     "Username as share" : "Username as share",
     "OpenStack Object Storage" : "OpenStack Object Storage",
@@ -111,10 +111,13 @@ OC.L10N.register(
     "The cURL support in PHP is not enabled or installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "The cURL support in PHP is not enabled or installed. Mounting of %s is not possible. Please ask your system administrator to install it.",
     "The FTP support in PHP is not enabled or installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "The FTP support in PHP is not enabled or installed. Mounting of %s is not possible. Please ask your system administrator to install it.",
     "External storage support" : "External storage support",
+    "Adds basic external storage support" : "Adds basic external storage support",
+    "This application enables administrators to configure connections to external storage providers, such as FTP servers, S3 or SWIFT object stores, other Nextcloud servers, WebDAV servers, and more. Administrators can choose which types of storage to enable and can mount these storage locations for a user, a group, or the entire system. Users will see a new folder appear in their root Nextcloud directory, which they can access and use like any other Nextcloud folder. External storage also allows users to share files stored in these external locations. In these cases, the credentials for the owner of the file are used when the recipient requests the file from external storage, thereby ensuring that the recipient can access the shared file.\n\nExternal storage can be configured using the GUI or at the command line. This second option provides the advanced user with more flexibility for configuring bulk external storage mounts and setting mount priorities. More information is available in the external storage GUI documentation and the external storage Configuration File documentation." : "This application enables administrators to configure connections to external storage providers, such as FTP servers, S3 or SWIFT object stores, other Nextcloud servers, WebDAV servers, and more. Administrators can choose which types of storage to enable and can mount these storage locations for a user, a group, or the entire system. Users will see a new folder appear in their root Nextcloud directory, which they can access and use like any other Nextcloud folder. External storage also allows users to share files stored in these external locations. In these cases, the credentials for the owner of the file are used when the recipient requests the file from external storage, thereby ensuring that the recipient can access the shared file.\n\nExternal storage can be configured using the GUI or at the command line. This second option provides the advanced user with more flexibility for configuring bulk external storage mounts and setting mount priorities. More information is available in the external storage GUI documentation and the external storage Configuration File documentation.",
     "No external storage configured or you don't have the permission to configure them" : "No external storage configured or you don't have the permission to configure them",
     "Name" : "Name",
     "Storage type" : "Storage type",
     "Scope" : "Scope",
+    "Open documentation" : "Open documentation",
     "Folder name" : "Folder name",
     "External storage" : "External storage",
     "Authentication" : "Authentication",
@@ -124,7 +127,6 @@ OC.L10N.register(
     "Add storage" : "Add storage",
     "Advanced settings" : "Advanced settings",
     "Allow users to mount external storage" : "Allow users to mount external storage",
-    "Some of the configured external mount points are not connected. Please click on the red row(s) for more information" : "Some of the configured external mount points are not connected. Please click on the red row(s) for more information",
-    "\"%s\" is not installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "\"%s\" is not installed. Mounting of %s is not possible. Please ask your system administrator to install it."
+    "Saving..." : "Saving..."
 },
 "nplurals=2; plural=(n != 1);");

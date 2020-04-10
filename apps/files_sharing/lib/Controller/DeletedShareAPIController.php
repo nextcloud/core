@@ -1,9 +1,12 @@
 <?php
+
 declare(strict_types=1);
+
 /**
- * @Copyright 2018, Roeland Jago Douma <roeland@famdouma.nl>
- * @Copyright 2018, John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  *
+ *
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -20,7 +23,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -118,7 +121,7 @@ class DeletedShareAPIController extends OCSController {
 		}
 
 		$result['path'] = $userFolder->getRelativePath($node->getPath());
-		if ($node instanceOf \OCP\Files\Folder) {
+		if ($node instanceof \OCP\Files\Folder) {
 			$result['item_type'] = 'folder';
 		} else {
 			$result['item_type'] = 'file';
@@ -201,7 +204,7 @@ class DeletedShareAPIController extends OCSController {
 	 * If the Talk application is not enabled or the helper is not available
 	 * a QueryException is thrown instead.
 	 *
-	 * @return \OCA\Spreed\Share\Helper\DeletedShareAPIController
+	 * @return \OCA\Talk\Share\Helper\DeletedShareAPIController
 	 * @throws QueryException
 	 */
 	private function getRoomShareHelper() {
@@ -209,6 +212,6 @@ class DeletedShareAPIController extends OCSController {
 			throw new QueryException();
 		}
 
-		return $this->serverContainer->query('\OCA\Spreed\Share\Helper\DeletedShareAPIController');
+		return $this->serverContainer->query('\OCA\Talk\Share\Helper\DeletedShareAPIController');
 	}
 }

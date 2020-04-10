@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2019, Roeland Jago Douma <roeland@famdouma.nl>
@@ -40,7 +41,7 @@ class WipeControllerTest extends TestCase {
 	/** @var WipeController */
 	private $controller;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->remoteWipe = $this->createMock(RemoteWipe::class);

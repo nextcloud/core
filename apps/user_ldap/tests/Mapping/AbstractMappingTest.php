@@ -4,6 +4,7 @@
  *
  * @author Aaron Wood <aaronjwood@gmail.com>
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -21,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -49,23 +50,23 @@ abstract class AbstractMappingTest extends \Test\TestCase {
 	 * @return array
 	 */
 	protected function getTestData() {
-		$data = array(
-			array(
+		$data = [
+			[
 				'dn' => 'uid=foobar,dc=example,dc=org',
 				'name' => 'Foobar',
 				'uuid' => '1111-AAAA-1234-CDEF',
-			),
-			array(
+			],
+			[
 				'dn' => 'uid=barfoo,dc=example,dc=org',
 				'name' => 'Barfoo',
 				'uuid' => '2222-BBBB-1234-CDEF',
-			),
-			array(
+			],
+			[
 				'dn' => 'uid=barabara,dc=example,dc=org',
 				'name' => 'BaraBara',
 				'uuid' => '3333-CCCC-1234-CDEF',
-			)
-		);
+			]
+		];
 
 		return $data;
 	}
@@ -97,7 +98,7 @@ abstract class AbstractMappingTest extends \Test\TestCase {
 		$mapper->clear();
 		$this->mapEntries($mapper, $data);
 
-		return array($mapper, $data);
+		return [$mapper, $data];
 	}
 
 	/**
@@ -109,7 +110,7 @@ abstract class AbstractMappingTest extends \Test\TestCase {
 
 		// test that mapping will not happen when it shall not
 		$tooLongDN = 'uid=joann,ou=Secret Small Specialized Department,ou=Some Tremendously Important Department,ou=Another Very Important Department,ou=Pretty Meaningful Derpartment,ou=Quite Broad And General Department,ou=The Topmost Department,dc=hugelysuccessfulcompany,dc=com';
-		$paramKeys = array('', 'dn', 'name', 'uuid', $tooLongDN);
+		$paramKeys = ['', 'dn', 'name', 'uuid', $tooLongDN];
 		foreach($paramKeys as $key) {
 			$failEntry = $data[0];
 			if(!empty($key)) {

@@ -20,13 +20,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\File\SimpleFS;
 
 use OC\Files\SimpleFS\SimpleFile;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\NotFoundException;
-use OCP\Files\NotPermittedException;
 
 class SimpleFileTest extends \Test\TestCase  {
 	/** @var File|\PHPUnit_Framework_MockObject_MockObject */
@@ -35,7 +35,7 @@ class SimpleFileTest extends \Test\TestCase  {
 	/** @var SimpleFile */
 	private $simpleFile;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->file = $this->createMock(File::class);

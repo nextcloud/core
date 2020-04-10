@@ -19,35 +19,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue';
-import queryString from 'query-string';
+import { loadState } from '@nextcloud/initial-state'
+import queryString from 'query-string'
+import Vue from 'vue'
 
-import OC from './OC/index'; // TODO: Not needed but L10n breaks if removed
-import LoginView from './views/Login.vue';
-import Nextcloud from './mixins/Nextcloud';
+// eslint-disable-next-line no-unused-vars
+import OC from './OC/index' // TODO: Not needed but L10n breaks if removed
+import LoginView from './views/Login.vue'
+import Nextcloud from './mixins/Nextcloud'
 
-const query = queryString.parse(location.search);
+const query = queryString.parse(location.search)
 if (query.clear === '1') {
 	try {
-		window.localStorage.clear();
-		window.sessionStorage.clear();
-		console.debug('Browser storage cleared');
+		window.localStorage.clear()
+		window.sessionStorage.clear()
+		console.debug('Browser storage cleared')
 	} catch (e) {
-		console.error('Could not clear browser storage', e);
+		console.error('Could not clear browser storage', e)
 	}
 }
 
-Vue.mixin(Nextcloud);
+Vue.mixin(Nextcloud)
 
 const fromStateOr = (key, orValue) => {
 	try {
-		return OCP.InitialState.loadState('core', key)
+		return loadState('core', key)
 	} catch (e) {
 		return orValue
 	}
 }
 
-const View = Vue.extend(LoginView);
+const View = Vue.extend(LoginView)
 new View({
 	propsData: {
 		errors: fromStateOr('loginErrors', []),
@@ -61,5 +63,9 @@ new View({
 		autoCompleteAllowed: fromStateOr('loginAutocomplete', true),
 		resetPasswordTarget: fromStateOr('resetPasswordTarget', ''),
 		resetPasswordUser: fromStateOr('resetPasswordUser', ''),
-	}
-}).$mount('#login');
+		directLogin: query.direct === '1',
+		hasPasswordless: fromStateOr('webauthn-available', false),
+		isHttps: window.location.protocol === 'https:',
+		hasPublicKeyCredential: typeof (window.PublicKeyCredential) !== 'undefined',
+	},
+}).$mount('#login')

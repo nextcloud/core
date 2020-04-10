@@ -117,10 +117,11 @@ Feature: tags
     Given user "12345" exists
     Given "admin" creates a "normal" tag with name "MySuperAwesomeTagName"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | 12345 |
       | shareType | 0 |
+    Given user "12345" accepts last share
     When "12345" adds the tag "MySuperAwesomeTagName" to "/myFileToTag.txt" shared by "user0"
     Then The response should have a status code "201"
     And "/myFileToTag.txt" shared by "user0" has the following tags
@@ -144,10 +145,11 @@ Feature: tags
     Given "admin" creates a "normal" tag with name "MyFirstTag"
     Given "admin" creates a "not user-assignable" tag with name "MySecondTag"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | user1 |
       | shareType | 0 |
+    Given user "user1" accepts last share
     When "user0" adds the tag "MyFirstTag" to "/myFileToTag.txt" shared by "user0"
     When "user1" adds the tag "MySecondTag" to "/myFileToTag.txt" shared by "user0"
     Then The response should have a status code "403"
@@ -161,10 +163,11 @@ Feature: tags
     Given user "user1" belongs to group "group1"
     Given "admin" creates a "not user-assignable" tag with name "MySuperAwesomeTagName" and groups "group1"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | user1 |
       | shareType | 0 |
+    Given user "user1" accepts last share
     When "user1" adds the tag "MySuperAwesomeTagName" to "/myFileToTag.txt" shared by "user0"
     Then The response should have a status code "201"
     And "/myFileToTag.txt" shared by "user0" has the following tags
@@ -177,10 +180,11 @@ Feature: tags
     Given "admin" creates a "normal" tag with name "MyFirstTag"
     Given "admin" creates a "not user-visible" tag with name "MySecondTag"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | user1 |
       | shareType | 0 |
+    Given user "user1" accepts last share
     When "user0" adds the tag "MyFirstTag" to "/myFileToTag.txt" shared by "user0"
     When "user1" adds the tag "MySecondTag" to "/myFileToTag.txt" shared by "user0"
     Then The response should have a status code "412"
@@ -192,10 +196,11 @@ Feature: tags
     Given "admin" creates a "normal" tag with name "MyFirstTag"
     Given "admin" creates a "not user-visible" tag with name "MySecondTag"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | admin |
       | shareType | 0 |
+    Given user "admin" accepts last share
     When "user0" adds the tag "MyFirstTag" to "/myFileToTag.txt" shared by "user0"
     When "admin" adds the tag "MySecondTag" to "/myFileToTag.txt" shared by "user0"
     Then The response should have a status code "201"
@@ -210,10 +215,11 @@ Feature: tags
     Given "admin" creates a "normal" tag with name "MyFirstTag"
     Given "admin" creates a "not user-assignable" tag with name "MySecondTag"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | admin |
       | shareType | 0 |
+    Given user "admin" accepts last share
     When "user0" adds the tag "MyFirstTag" to "/myFileToTag.txt" shared by "user0"
     When "admin" adds the tag "MySecondTag" to "/myFileToTag.txt" shared by "user0"
     Then The response should have a status code "201"
@@ -230,10 +236,11 @@ Feature: tags
     Given "admin" creates a "normal" tag with name "MyFirstTag"
     Given "admin" creates a "normal" tag with name "MySecondTag"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | user1 |
       | shareType | 0 |
+    Given user "user1" accepts last share
     Given "user0" adds the tag "MyFirstTag" to "/myFileToTag.txt" shared by "user0"
     Given "user0" adds the tag "MySecondTag" to "/myFileToTag.txt" shared by "user0"
     When "user1" removes the tag "MyFirstTag" from "/myFileToTag.txt" shared by "user0"
@@ -261,14 +268,16 @@ Feature: tags
     Given "admin" creates a "not user-visible" tag with name "MyFirstTag"
     Given "admin" creates a "normal" tag with name "MySecondTag"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | user1 |
       | shareType | 0 |
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given user "user1" accepts last share
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | admin |
       | shareType | 0 |
+    Given user "admin" accepts last share
     Given "admin" adds the tag "MyFirstTag" to "/myFileToTag.txt" shared by "user0"
     Given "user0" adds the tag "MySecondTag" to "/myFileToTag.txt" shared by "user0"
     When "user1" removes the tag "MyFirstTag" from "/myFileToTag.txt" shared by "user0"
@@ -285,14 +294,16 @@ Feature: tags
     Given "admin" creates a "not user-visible" tag with name "MyFirstTag"
     Given "admin" creates a "normal" tag with name "MySecondTag"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | user1 |
       | shareType | 0 |
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given user "user1" accepts last share
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | admin |
       | shareType | 0 |
+    Given user "admin" accepts last share
     Given "admin" adds the tag "MyFirstTag" to "/myFileToTag.txt" shared by "user0"
     Given "user0" adds the tag "MySecondTag" to "/myFileToTag.txt" shared by "user0"
     When "admin" removes the tag "MyFirstTag" from "/myFileToTag.txt" shared by "user0"
@@ -308,14 +319,16 @@ Feature: tags
     Given "admin" creates a "not user-visible" tag with name "MyFirstTag"
     Given "admin" creates a "normal" tag with name "MySecondTag"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | user1 |
       | shareType | 0 |
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given user "user1" accepts last share
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | admin |
       | shareType | 0 |
+    Given user "admin" accepts last share
     Given "admin" adds the tag "MyFirstTag" to "/myFileToTag.txt" shared by "user0"
     Given "user0" adds the tag "MySecondTag" to "/myFileToTag.txt" shared by "user0"
     Given As "user0" remove all shares from the file named "/myFileToTag.txt"
@@ -328,14 +341,16 @@ Feature: tags
     Given "admin" creates a "not user-assignable" tag with name "MyFirstTag"
     Given "admin" creates a "normal" tag with name "MySecondTag"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | user1 |
       | shareType | 0 |
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given user "user1" accepts last share
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | admin |
       | shareType | 0 |
+    Given user "admin" accepts last share
     Given "admin" adds the tag "MyFirstTag" to "/myFileToTag.txt" shared by "user0"
     Given "user0" adds the tag "MySecondTag" to "/myFileToTag.txt" shared by "user0"
     When "user1" removes the tag "MyFirstTag" from "/myFileToTag.txt" shared by "user0"
@@ -353,14 +368,16 @@ Feature: tags
     Given "admin" creates a "not user-assignable" tag with name "MyFirstTag"
     Given "admin" creates a "normal" tag with name "MySecondTag"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | user1 |
       | shareType | 0 |
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given user "user1" accepts last share
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | admin |
       | shareType | 0 |
+    Given user "admin" accepts last share
     Given "admin" adds the tag "MyFirstTag" to "/myFileToTag.txt" shared by "user0"
     Given "user0" adds the tag "MySecondTag" to "/myFileToTag.txt" shared by "user0"
     When "admin" removes the tag "MyFirstTag" from "/myFileToTag.txt" shared by "user0"
@@ -376,14 +393,16 @@ Feature: tags
     Given "admin" creates a "not user-assignable" tag with name "MyFirstTag"
     Given "admin" creates a "normal" tag with name "MySecondTag"
     Given user "user0" uploads file "data/textfile.txt" to "/myFileToTag.txt"
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | user1 |
       | shareType | 0 |
-    Given As "user0" sending "POST" to "/apps/files_sharing/api/v1/shares" with
+    Given user "user1" accepts last share
+    Given as "user0" creating a share with
       | path | myFileToTag.txt |
       | shareWith | admin |
       | shareType | 0 |
+    Given user "admin" accepts last share
     Given "admin" adds the tag "MyFirstTag" to "/myFileToTag.txt" shared by "user0"
     Given "user0" adds the tag "MySecondTag" to "/myFileToTag.txt" shared by "user0"
     Given As "user0" remove all shares from the file named "/myFileToTag.txt"

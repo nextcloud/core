@@ -50,6 +50,7 @@
 	z-index: 2000;
 	height: $header-height;
 	background-color: var(--color-primary);
+	background-image: linear-gradient(40deg, var(--color-primary) 0%, var(--color-primary-element-light) 100%);
 	box-sizing: border-box;
 	justify-content: space-between;
 }
@@ -74,6 +75,11 @@
 	}
 }
 
+@mixin header-menu-height() {
+	min-height: calc(44px * 1.5); // show at least 1.5 entries
+	max-height: calc(100vh - #{$header-height} * 2);
+}
+
 #header {
 	/* Header menu */
 	$header-menu-entry-height: 44px;
@@ -87,11 +93,10 @@
 		z-index: 2000;
 		position: absolute;
 		max-width: 350px;
-		max-height: $header-menu-entry-height * 7.5; // half entry
+		@include header-menu-height();
 		right: 5px; // relative to parent
 		top: $header-height;
 		margin: 0;
-		-webkit-overflow-scrolling: touch;
 
 		&:not(.popovermenu) {
 			display: none;
@@ -108,6 +113,14 @@
 			position: absolute;
 			pointer-events: none;
 			right: 10px;
+		}
+
+		#apps > ul,
+		& > div,
+		& > ul {
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+			@include header-menu-height();
 		}
 
 		/* Use by the apps menu and the settings right menu */
@@ -130,7 +143,7 @@
 					&:active,
 					&.active {
 						opacity: 1;
-						box-shadow: inset 4px 0 var(--color-primary);
+						box-shadow: inset 4px 0 var(--color-primary-element);
 					}
 					span {
 						display: inline-block;
@@ -318,13 +331,6 @@ nav[role='navigation'] {
 	}
 }
 
-#apps {
-	max-height: inherit;
-	overflow-x: hidden;
-	overflow-y: auto;
-	-webkit-overflow-scrolling: touch;
-}
-
 /* USER MENU -----------------------------------------------------------------*/
 #settings {
 	display: inline-block;
@@ -444,7 +450,6 @@ nav[role='navigation'] {
 			text-overflow: initial;
 			width: auto;
 			overflow: hidden;
-			background-color: var(--color-primary);
 			padding: 0 5px;
 			z-index: 2;
 		}

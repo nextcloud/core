@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -29,7 +29,8 @@ const loadedStyles = []
  * the event handler will be called directly
  * @param {string} app the app id to which the script belongs
  * @param {string} script the filename of the script
- * @param ready event handler to be called when the script is loaded
+ * @param {Function} ready event handler to be called when the script is loaded
+ * @returns {jQuery.Deferred}
  * @deprecated 16.0.0 Use OCP.Loader.loadScript
  */
 export const addScript = (app, script, ready) => {

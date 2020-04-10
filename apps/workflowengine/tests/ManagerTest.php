@@ -21,11 +21,26 @@
 
 namespace OCA\WorkflowEngine\Tests;
 
-
+use OC\L10N\L10N;
+use OCA\WorkflowEngine\Entity\File;
+use OCA\WorkflowEngine\Helper\ScopeContext;
 use OCA\WorkflowEngine\Manager;
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Files\IRootFolder;
+use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\IL10N;
+use OCP\ILogger;
 use OCP\IServerContainer;
+use OCP\IURLGenerator;
+use OCP\IUserSession;
+use OCP\SystemTag\ISystemTagManager;
+use OCP\WorkflowEngine\ICheck;
+use OCP\WorkflowEngine\IEntity;
+use OCP\WorkflowEngine\IManager;
+use OCP\WorkflowEngine\IOperation;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Test\TestCase;
 
 /**
@@ -38,37 +53,83 @@ class ManagerTest extends TestCase {
 
 	/** @var Manager */
 	protected $manager;
-	/** @var IDBConnection */
+	/** @var MockObject|IDBConnection */
 	protected $db;
+	/** @var \PHPUnit\Framework\MockObject\MockObject|ILogger */
+	protected $logger;
+	/** @var \PHPUnit\Framework\MockObject\MockObject|EventDispatcherInterface */
+	protected $legacyDispatcher;
+	/** @var MockObject|IServerContainer */
+	protected $container;
+	/** @var MockObject|IUserSession */
+	protected $session;
+	/** @var MockObject|L10N */
+	protected $l;
+	/** @var MockObject|IEventDispatcher */
+	protected $dispatcher;
+	/** @var MockObject|IConfig */
+	protected $config;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->db = \OC::$server->getDatabaseConnection();
-		$container = $this->createMock(IServerContainer::class);
-		$l = $this->createMock(IL10N::class);
-		$l->method('t')
-			->will($this->returnCallback(function($text, $parameters = []) {
+		$this->container = $this->createMock(IServerContainer::class);
+		/** @var IL10N|MockObject $l */
+		$this->l = $this->createMock(IL10N::class);
+		$this->l->method('t')
+			->willReturnCallback(function ($text, $parameters = []) {
 				return vsprintf($text, $parameters);
-			}));
+			});
+
+		$this->legacyDispatcher = $this->createMock(EventDispatcherInterface::class);
+		$this->logger = $this->createMock(ILogger::class);
+		$this->session = $this->createMock(IUserSession::class);
+		$this->dispatcher = $this->createMock(IEventDispatcher::class);
+		$this->config = $this->createMock(IConfig::class);
 
 		$this->manager = new Manager(
 			\OC::$server->getDatabaseConnection(),
-			$container,
-			$l
+			$this->container,
+			$this->l,
+			$this->legacyDispatcher,
+			$this->logger,
+			$this->session,
+			$this->dispatcher,
+			$this->config
 		);
-		$this->clearChecks();
+		$this->clearTables();
 	}
 
-	protected function tearDown() {
-		$this->clearChecks();
+	protected function tearDown(): void {
+		$this->clearTables();
 		parent::tearDown();
 	}
 
-	public function clearChecks() {
+	/**
+	 * @return MockObject|ScopeContext
+	 */
+	protected function buildScope(string $scopeId = null): MockObject {
+		$scopeContext = $this->createMock(ScopeContext::class);
+		$scopeContext->expects($this->any())
+			->method('getScope')
+			->willReturn($scopeId ? IManager::SCOPE_USER : IManager::SCOPE_ADMIN);
+		$scopeContext->expects($this->any())
+			->method('getScopeId')
+			->willReturn($scopeId ?? '');
+		$scopeContext->expects($this->any())
+			->method('getHash')
+			->willReturn(md5($scopeId ?? ''));
+
+		return $scopeContext;
+	}
+
+	public function clearTables() {
 		$query = $this->db->getQueryBuilder();
-		$query->delete('flow_checks')
-			->execute();
+		foreach(['flow_checks', 'flow_operations', 'flow_operations_scope'] as $table) {
+			$query->delete($table)
+				->execute();
+		}
 	}
 
 	public function testChecks() {
@@ -91,4 +152,284 @@ class ManagerTest extends TestCase {
 		$this->assertArrayNotHasKey($check1, $data);
 		$this->assertArrayHasKey($check2, $data);
 	}
+
+	public function testScope() {
+		$adminScope = $this->buildScope();
+		$userScope = $this->buildScope('jackie');
+		$entity = File::class;
+
+		$opId1 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestOp', 'Test01', [11, 22], 'foo', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId1, $adminScope]);
+
+		$opId2 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestOp', 'Test02', [33, 22], 'bar', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId2, $userScope]);
+		$opId3 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestOp', 'Test03', [11, 44], 'foobar', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId3, $userScope]);
+
+		$this->assertTrue($this->invokePrivate($this->manager, 'canModify', [$opId1, $adminScope]));
+		$this->assertFalse($this->invokePrivate($this->manager, 'canModify', [$opId2, $adminScope]));
+		$this->assertFalse($this->invokePrivate($this->manager, 'canModify', [$opId3, $adminScope]));
+
+		$this->assertFalse($this->invokePrivate($this->manager, 'canModify', [$opId1, $userScope]));
+		$this->assertTrue($this->invokePrivate($this->manager, 'canModify', [$opId2, $userScope]));
+		$this->assertTrue($this->invokePrivate($this->manager, 'canModify', [$opId3, $userScope]));
+	}
+
+	public function testGetAllOperations() {
+		$adminScope = $this->buildScope();
+		$userScope = $this->buildScope('jackie');
+		$entity = File::class;
+
+		$opId1 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestAdminOp', 'Test01', [11, 22], 'foo', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId1, $adminScope]);
+
+		$opId2 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestUserOp', 'Test02', [33, 22], 'bar', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId2, $userScope]);
+		$opId3 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestUserOp', 'Test03', [11, 44], 'foobar', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId3, $userScope]);
+
+		$adminOps = $this->manager->getAllOperations($adminScope);
+		$userOps = $this->manager->getAllOperations($userScope);
+
+		$this->assertSame(1, count($adminOps));
+		$this->assertTrue(array_key_exists('OCA\WFE\TestAdminOp', $adminOps));
+		$this->assertFalse(array_key_exists('OCA\WFE\TestUserOp', $adminOps));
+
+		$this->assertSame(1, count($userOps));
+		$this->assertFalse(array_key_exists('OCA\WFE\TestAdminOp', $userOps));
+		$this->assertTrue(array_key_exists('OCA\WFE\TestUserOp', $userOps));
+		$this->assertSame(2, count($userOps['OCA\WFE\TestUserOp']));
+	}
+
+	public function testGetOperations() {
+		$adminScope = $this->buildScope();
+		$userScope = $this->buildScope('jackie');
+		$entity = File::class;
+
+		$opId1 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestOp', 'Test01', [11, 22], 'foo', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId1, $adminScope]);
+		$opId4 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\OtherTestOp', 'Test04', [5], 'foo', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId4, $adminScope]);
+
+		$opId2 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestOp', 'Test02', [33, 22], 'bar', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId2, $userScope]);
+		$opId3 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestOp', 'Test03', [11, 44], 'foobar', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId3, $userScope]);
+		$opId5 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\OtherTestOp', 'Test05', [5], 'foobar', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId5, $userScope]);
+
+		$adminOps = $this->manager->getOperations('OCA\WFE\TestOp', $adminScope);
+		$userOps = $this->manager->getOperations('OCA\WFE\TestOp', $userScope);
+
+		$this->assertSame(1, count($adminOps));
+		array_walk($adminOps, function ($op) {
+			$this->assertTrue($op['class'] === 'OCA\WFE\TestOp');
+		});
+
+		$this->assertSame(2, count($userOps));
+		array_walk($userOps, function ($op) {
+			$this->assertTrue($op['class'] === 'OCA\WFE\TestOp');
+		});
+
+	}
+
+	public function testUpdateOperation() {
+		$adminScope = $this->buildScope();
+		$userScope = $this->buildScope('jackie');
+		$entity = File::class;
+
+		$this->container->expects($this->any())
+			->method('query')
+			->willReturnCallback(function ($class) {
+				if(substr($class, -2) === 'Op') {
+					return $this->createMock(IOperation::class);
+				} else if($class === File::class) {
+					return $this->getMockBuilder(File::class)
+						->setConstructorArgs([
+							$this->l,
+							$this->createMock(IURLGenerator::class),
+							$this->createMock(IRootFolder::class),
+							$this->createMock(ILogger::class),
+							$this->createMock(\OCP\Share\IManager::class),
+							$this->createMock(IUserSession::class),
+							$this->createMock(ISystemTagManager::class)
+						])
+						->setMethodsExcept(['getEvents'])
+						->getMock();
+				}
+				return $this->createMock(ICheck::class);
+			});
+
+		$opId1 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestAdminOp', 'Test01', [11, 22], 'foo', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId1, $adminScope]);
+
+		$opId2 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestUserOp', 'Test02', [33, 22], 'bar', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId2, $userScope]);
+
+		$check1 = ['class' => 'OCA\WFE\C22', 'operator' => 'eq', 'value' => 'asdf'];
+		$check2 = ['class' => 'OCA\WFE\C33', 'operator' => 'eq', 'value' => 23456];
+
+		/** @noinspection PhpUnhandledExceptionInspection */
+		$op = $this->manager->updateOperation($opId1, 'Test01a', [$check1, $check2], 'foohur', $adminScope, $entity, ['\OCP\Files::postDelete']);
+		$this->assertSame('Test01a', $op['name']);
+		$this->assertSame('foohur', $op['operation']);
+
+		/** @noinspection PhpUnhandledExceptionInspection */
+		$op = $this->manager->updateOperation($opId2, 'Test02a', [$check1], 'barfoo', $userScope, $entity, ['\OCP\Files::postDelete']);
+		$this->assertSame('Test02a', $op['name']);
+		$this->assertSame('barfoo', $op['operation']);
+
+		foreach([[$adminScope, $opId2], [$userScope, $opId1]] as $run) {
+			try {
+				/** @noinspection PhpUnhandledExceptionInspection */
+				$this->manager->updateOperation($run[1], 'Evil', [$check2], 'hackx0r', $run[0], $entity, []);
+				$this->assertTrue(false, 'DomainException not thrown');
+			} catch (\DomainException $e) {
+				$this->assertTrue(true);
+			}
+		}
+	}
+
+	public function testDeleteOperation() {
+		$adminScope = $this->buildScope();
+		$userScope = $this->buildScope('jackie');
+		$entity = File::class;
+
+		$opId1 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestAdminOp', 'Test01', [11, 22], 'foo', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId1, $adminScope]);
+
+		$opId2 = $this->invokePrivate(
+			$this->manager,
+			'insertOperation',
+			['OCA\WFE\TestUserOp', 'Test02', [33, 22], 'bar', $entity, []]
+		);
+		$this->invokePrivate($this->manager, 'addScope', [$opId2, $userScope]);
+
+		foreach([[$adminScope, $opId2], [$userScope, $opId1]] as $run) {
+			try {
+				/** @noinspection PhpUnhandledExceptionInspection */
+				$this->manager->deleteOperation($run[1], $run[0]);
+				$this->assertTrue(false, 'DomainException not thrown');
+			} catch (\Exception $e) {
+				$this->assertInstanceOf(\DomainException::class, $e);
+			}
+		}
+
+		/** @noinspection PhpUnhandledExceptionInspection */
+		$this->manager->deleteOperation($opId1, $adminScope);
+		/** @noinspection PhpUnhandledExceptionInspection */
+		$this->manager->deleteOperation($opId2, $userScope);
+
+		foreach([$opId1, $opId2] as $opId) {
+			try {
+				$this->invokePrivate($this->manager, 'getOperation', [$opId]);
+				$this->assertTrue(false, 'UnexpectedValueException not thrown');
+			} catch(\Exception $e) {
+				$this->assertInstanceOf(\UnexpectedValueException::class, $e);
+			}
+		}
+	}
+
+	public function testGetEntitiesListBuildInOnly() {
+		$fileEntityMock = $this->createMock(File::class);
+
+		$this->container->expects($this->once())
+			->method('query')
+			->with(File::class)
+			->willReturn($fileEntityMock);
+
+		$entities = $this->manager->getEntitiesList();
+
+		$this->assertCount(1, $entities);
+		$this->assertInstanceOf(IEntity::class, $entities[0]);
+	}
+
+	public function testGetEntitiesList() {
+		$fileEntityMock = $this->createMock(File::class);
+
+		$this->container->expects($this->once())
+			->method('query')
+			->with(File::class)
+			->willReturn($fileEntityMock);
+
+		/** @var MockObject|IEntity $extraEntity */
+		$extraEntity = $this->createMock(IEntity::class);
+
+		$this->legacyDispatcher->expects($this->once())
+			->method('dispatch')
+			->with('OCP\WorkflowEngine::registerEntities', $this->anything())
+			->willReturnCallback(function () use ($extraEntity) {
+				$this->manager->registerEntity($extraEntity);
+			});
+
+		$entities = $this->manager->getEntitiesList();
+
+		$this->assertCount(2, $entities);
+
+		$entityTypeCounts = array_reduce($entities, function (array $carry, IEntity $entity) {
+			if($entity instanceof File) $carry[0]++;
+			else if($entity instanceof IEntity) $carry[1]++;
+			return $carry;
+		}, [0, 0]);
+
+		$this->assertSame(1, $entityTypeCounts[0]);
+		$this->assertSame(1, $entityTypeCounts[1]);
+	}
+
 }

@@ -9,7 +9,7 @@
  */
 
 (function() {
-	OCA.Versions = OCA.Versions || {};
+	OCA.Versions = OCA.Versions || {}
 
 	/**
 	 * @namespace
@@ -22,13 +22,12 @@
 		 */
 		attach: function(fileList) {
 			if (fileList.id === 'trashbin' || fileList.id === 'files.public') {
-				return;
+				return
 			}
 
-			fileList.registerTabView(new OCA.Versions.VersionsTabView('versionsTabView', {order: -10}));
-		}
-	};
-})();
+			fileList.registerTabView(new OCA.Versions.VersionsTabView('versionsTabView', { order: -10 }))
+		},
+	}
+})()
 
-OC.Plugins.register('OCA.Files.FileList', OCA.Versions.Util);
-
+OC.Plugins.register('OCA.Files.FileList', OCA.Versions.Util)

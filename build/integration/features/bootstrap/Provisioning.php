@@ -2,8 +2,12 @@
 /**
  *
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Sergio Bertolin <sbertolin@solidgear.es>
  * @author Sergio Bertolín <sbertolin@solidgear.es>
@@ -23,7 +27,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -271,7 +275,7 @@ trait Provisioning {
 		];
 
 		$this->response = $client->get($fullUrl, $options);
-		$groups = array($group);
+		$groups = [$group];
 		$respondedArray = $this->getArrayOfGroupsResponded($this->response);
 		Assert::assertNotEquals($groups, $respondedArray, "", 0.0, 10, true);
 		Assert::assertEquals(200, $this->response->getStatusCode());

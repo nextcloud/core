@@ -5,6 +5,7 @@
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christopher Schäpers <kondou@ts.unde.re>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
@@ -24,7 +25,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -59,9 +60,9 @@ class Result {
 	 */
 	public function __construct($data = null, $code = 100, $message = null, $headers = []) {
 		if ($data === null) {
-			$this->data = array();
+			$this->data = [];
 		} elseif (!is_array($data)) {
-			$this->data = array($this->data);
+			$this->data = [$this->data];
 		} else {
 			$this->data = $data;
 		}
@@ -99,7 +100,7 @@ class Result {
 	 * @return array
 	 */
 	public function getMeta() {
-		$meta = array();
+		$meta = [];
 		$meta['status'] = $this->succeeded() ? 'ok' : 'failure';
 		$meta['statuscode'] = $this->statusCode;
 		$meta['message'] = $this->message;

@@ -29,13 +29,13 @@ class ErrorHandlerTest extends \Test\TestCase {
 	 * @return array
 	 */
 	function passwordProvider() {
-		return array(
-			array('user', 'password'),
-			array('user@owncloud.org', 'password'),
-			array('user', 'pass@word'),
-			array('us:er', 'password'),
-			array('user', 'pass:word'),
-			);
+		return [
+			['user', 'password'],
+			['user@owncloud.org', 'password'],
+			['user', 'pass@word'],
+			['us:er', 'password'],
+			['user', 'pass:word'],
+		];
 
 	}
 

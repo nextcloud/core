@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
@@ -20,18 +22,17 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OC\Security;
 
-use phpseclib\Crypt\AES;
-use phpseclib\Crypt\Hash;
+use OCP\IConfig;
 use OCP\Security\ICrypto;
 use OCP\Security\ISecureRandom;
-use OCP\IConfig;
+use phpseclib\Crypt\AES;
+use phpseclib\Crypt\Hash;
 
 /**
  * Class Crypto provides a high-level encryption layer using AES-CBC. If no key has been provided

@@ -49,6 +49,13 @@ interface ISystem {
 	public function getNetPath();
 
 	/**
+	 * Get the full path to the `smbcacls` binary of false if the binary is not available
+	 *
+	 * @return string|bool
+	 */
+	public function getSmbcAclsPath();
+
+	/**
 	 * Get the full path to the `stdbuf` binary of false if the binary is not available
 	 *
 	 * @return string|bool

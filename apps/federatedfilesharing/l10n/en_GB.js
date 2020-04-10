@@ -21,9 +21,7 @@ OC.L10N.register(
     "File is already shared with %s" : "File is already shared with %s",
     "Could not find share" : "Could not find share",
     "Federated sharing" : "Federated sharing",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "You received {share} as a remote share from {user} (on behalf of {behalf})",
-    "You received \"%3$s\" as a remote share from %1$s" : "You received \"%3$s\" as a remote share from %1$s",
     "You received {share} as a remote share from {user}" : "You received {share} as a remote share from {user}",
     "Accept" : "Accept",
     "Decline" : "Decline",
@@ -31,6 +29,7 @@ OC.L10N.register(
     "Share with me through my #Nextcloud Federated Cloud ID" : "Share with me through my #Nextcloud Federated Cloud ID",
     "Sharing" : "Sharing",
     "Federated file sharing" : "Federated file sharing",
+    "Provide federated file sharing across servers" : "Provide federated file sharing across servers",
     "Federated Cloud Sharing" : "Federated Cloud Sharing",
     "Open documentation" : "Open documentation",
     "Adjust how people can share between servers." : "Adjust how people can share between servers.",
@@ -44,7 +43,7 @@ OC.L10N.register(
     "Add to your website" : "Add to your website",
     "Share with me via Nextcloud" : "Share with me via Nextcloud",
     "HTML Code:" : "HTML Code:",
-    "Sharing %s failed, because this item is already shared with %s" : "Sharing %s failed, because this item is already shared with %s",
-    "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate." : "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate."
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)",
+    "You received \"%3$s\" as a remote share from %1$s" : "You received \"%3$s\" as a remote share from %1$s"
 },
 "nplurals=2; plural=(n != 1);");

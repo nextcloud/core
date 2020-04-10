@@ -4,6 +4,8 @@
  *
  * @author Aaron Wood <aaronjwood@gmail.com>
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  *
  * @license AGPL-3.0
@@ -18,16 +20,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\User_LDAP\Mapping;
 
 /**
-* Class AbstractMapping
-* @package OCA\User_LDAP\Mapping
-*/
+ * Class AbstractMapping
+ * @package OCA\User_LDAP\Mapping
+ */
 abstract class AbstractMapping {
 	/**
 	 * @var \OCP\IDBConnection $dbc
@@ -83,7 +85,7 @@ abstract class AbstractMapping {
 			WHERE `' . $compareCol . '` = ?
 		');
 
-		$res = $query->execute(array($search));
+		$res = $query->execute([$search]);
 		if($res !== false) {
 			return $query->fetchColumn();
 		}
@@ -125,7 +127,7 @@ abstract class AbstractMapping {
 			WHERE `directory_uuid` = ?
 		');
 
-		return $this->modify($query, array($fdn, $uuid));
+		return $this->modify($query, [$fdn, $uuid]);
 	}
 
 	/**
@@ -170,8 +172,8 @@ abstract class AbstractMapping {
 			WHERE `owncloud_name` LIKE ?
 		');
 
-		$res = $query->execute(array($prefixMatch.$this->dbc->escapeLikeParameter($search).$postfixMatch));
-		$names = array();
+		$res = $query->execute([$prefixMatch.$this->dbc->escapeLikeParameter($search).$postfixMatch]);
+		$names = [];
 		if($res !== false) {
 			while($row = $query->fetch()) {
 				$names[] = $row['owncloud_name'];
@@ -239,11 +241,11 @@ abstract class AbstractMapping {
 			return false;
 		}
 
-		$row = array(
+		$row = [
 			'ldap_dn'        => $fdn,
 			'owncloud_name'  => $name,
 			'directory_uuid' => $uuid
-		);
+		];
 
 		try {
 			$result = $this->dbc->insertIfNotExist($this->getTableName(), $row);
@@ -264,7 +266,7 @@ abstract class AbstractMapping {
 			DELETE FROM `'. $this->getTableName() .'`
 			WHERE `owncloud_name` = ?');
 
-		return $this->modify($query, array($name));
+		return $this->modify($query, [$name]);
 	}
 
 	/**
@@ -287,7 +289,7 @@ abstract class AbstractMapping {
 	 * @return bool true on success, false when at least one row was not
 	 * deleted
 	 */
-	public function clearCb(Callable $preCallback, Callable $postCallback): bool {
+	public function clearCb(callable $preCallback, callable $postCallback): bool {
 		$picker = $this->dbc->getQueryBuilder();
 		$picker->select('owncloud_name')
 			->from($this->getTableName());

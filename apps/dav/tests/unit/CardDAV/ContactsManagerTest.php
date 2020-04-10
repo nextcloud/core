@@ -19,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -41,8 +41,8 @@ class ContactsManagerTest extends TestCase {
 		/** @var CardDavBackend | \PHPUnit_Framework_MockObject_MockObject $backEnd */
 		$backEnd = $this->getMockBuilder(CardDavBackend::class)->disableOriginalConstructor()->getMock();
 		$backEnd->method('getAddressBooksForUser')->willReturn([
-				['{DAV:}displayname' => 'Test address book', 'uri' => 'default'],
-			]);
+			['{DAV:}displayname' => 'Test address book', 'uri' => 'default'],
+		]);
 
 		$l = $this->createMock(IL10N::class);
 		$app = new ContactsManager($backEnd, $l);

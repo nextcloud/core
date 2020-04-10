@@ -23,17 +23,14 @@
 
 namespace Tests\Core\Command\Maintenance;
 
-use OC\Core\Command\Maintenance\Mimetype\UpdateDB;
 use OC\Core\Command\Maintenance\UpdateTheme;
 use OC\Files\Type\Detection;
-use OC\Files\Type\Loader;
+use OCP\Files\IMimeTypeDetector;
 use OCP\ICache;
 use OCP\ICacheFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Test\TestCase;
-use OCP\Files\IMimeTypeDetector;
-use OCP\Files\IMimeTypeLoader;
 
 class UpdateThemeTest extends TestCase {
 	/** @var IMimeTypeDetector */
@@ -50,7 +47,7 @@ class UpdateThemeTest extends TestCase {
 	/** @var \Symfony\Component\Console\Command\Command */
 	protected $command;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->detector = $this->createMock(Detection::class);

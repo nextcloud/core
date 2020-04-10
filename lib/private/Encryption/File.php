@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -20,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -71,10 +72,10 @@ class File implements \OCP\Encryption\IFile {
 		list($owner, $ownerPath) = $this->util->getUidAndFilename($path);
 
 		// always add owner to the list of users with access to the file
-		$userIds = array($owner);
+		$userIds = [$owner];
 
 		if (!$this->util->isFile($owner . '/' . $ownerPath)) {
-			return array('users' => $userIds, 'public' => false);
+			return ['users' => $userIds, 'public' => false];
 		}
 
 		$ownerPath = substr($ownerPath, strlen('/files'));
@@ -121,7 +122,7 @@ class File implements \OCP\Encryption\IFile {
 		// Remove duplicate UIDs
 		$uniqueUserIds = array_unique($userIds);
 
-		return array('users' => $uniqueUserIds, 'public' => $public);
+		return ['users' => $uniqueUserIds, 'public' => $public];
 	}
 
 }

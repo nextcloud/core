@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
@@ -19,7 +21,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -49,12 +51,12 @@ class SystemTagObjectMapper implements ISystemTagObjectMapper {
 	protected $dispatcher;
 
 	/**
-	* Constructor.
-	*
-	* @param IDBConnection $connection database connection
-	* @param ISystemTagManager $tagManager system tag manager
-	* @param EventDispatcherInterface $dispatcher
-	*/
+	 * Constructor.
+	 *
+	 * @param IDBConnection $connection database connection
+	 * @param ISystemTagManager $tagManager system tag manager
+	 * @param EventDispatcherInterface $dispatcher
+	 */
 	public function __construct(IDBConnection $connection, ISystemTagManager $tagManager, EventDispatcherInterface $dispatcher) {
 		$this->connection = $connection;
 		$this->tagManager = $tagManager;
@@ -154,20 +156,26 @@ class SystemTagObjectMapper implements ISystemTagObjectMapper {
 				'systemtagid' => $query->createParameter('tagid'),
 			]);
 
+		$tagsAssigned = [];
 		foreach ($tagIds as $tagId) {
 			try {
 				$query->setParameter('tagid', $tagId);
 				$query->execute();
+				$tagsAssigned[] = $tagId;
 			} catch (UniqueConstraintViolationException $e) {
 				// ignore existing relations
 			}
+		}
+
+		if (empty($tagsAssigned)) {
+			return;
 		}
 
 		$this->dispatcher->dispatch(MapperEvent::EVENT_ASSIGN, new MapperEvent(
 			MapperEvent::EVENT_ASSIGN,
 			$objectType,
 			$objId,
-			$tagIds
+			$tagsAssigned
 		));
 	}
 
@@ -251,7 +259,7 @@ class SystemTagObjectMapper implements ISystemTagObjectMapper {
 		if (\count($tags) !== \count($tagIds)) {
 			// at least one tag missing, bail out
 			$foundTagIds = array_map(
-				function(ISystemTag $tag) {
+				function (ISystemTag $tag) {
 					return $tag->getId();
 				},
 				$tags

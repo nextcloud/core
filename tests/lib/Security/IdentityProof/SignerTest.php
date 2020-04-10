@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\Security\IdentityProof;
 
 use OC\Security\IdentityProof\Key;
@@ -88,7 +89,7 @@ gQIDAQAB
 	/** @var Signer */
 	private $signer;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->key = new Key($this->public, $this->private);

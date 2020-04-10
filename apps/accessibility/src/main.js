@@ -1,12 +1,19 @@
-import Vue from 'vue';
-import App from './App.vue';
+import Vue from 'vue'
+import { loadState } from '@nextcloud/initial-state'
+import App from './Accessibility.vue'
 
-/* global t */
 // bind to window
-Vue.prototype.OC = OC;
-Vue.prototype.t = t;
+Vue.prototype.OC = OC
+Vue.prototype.t = t
 
-new Vue({
-	el: '#accessibility',
-	render: h => h(App)
-});
+const availableConfig = loadState('accessibility', 'available-config')
+const userConfig = loadState('accessibility', 'user-config')
+
+const View = Vue.extend(App)
+const accessibility = new View({
+	propsData: {
+		availableConfig,
+		userConfig,
+	},
+})
+accessibility.$mount('#accessibility')

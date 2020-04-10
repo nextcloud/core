@@ -2,8 +2,9 @@
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -18,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -99,7 +100,7 @@ class Manager {
 	 * @return IEntry[]
 	 */
 	private function sortEntries(array $entries) {
-		usort($entries, function(IEntry $entryA, IEntry $entryB) {
+		usort($entries, function (IEntry $entryA, IEntry $entryB) {
 			return strcasecmp($entryA->getFullName(), $entryB->getFullName());
 		});
 		return $entries;

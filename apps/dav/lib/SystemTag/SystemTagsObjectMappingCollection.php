@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @license AGPL-3.0
@@ -17,22 +19,22 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\DAV\SystemTag;
 
-use Sabre\DAV\Exception\Forbidden;
-use Sabre\DAV\Exception\NotFound;
-use Sabre\DAV\Exception\BadRequest;
-use Sabre\DAV\Exception\PreconditionFailed;
-use Sabre\DAV\ICollection;
+use OCP\IUser;
+use OCP\SystemTag\ISystemTag;
 use OCP\SystemTag\ISystemTagManager;
 use OCP\SystemTag\ISystemTagObjectMapper;
-use OCP\SystemTag\ISystemTag;
 use OCP\SystemTag\TagNotFoundException;
-use OCP\IUser;
+use Sabre\DAV\Exception\BadRequest;
+use Sabre\DAV\Exception\Forbidden;
+use Sabre\DAV\Exception\NotFound;
+use Sabre\DAV\Exception\PreconditionFailed;
+use Sabre\DAV\ICollection;
 
 /**
  * Collection containing tags by object id
@@ -136,11 +138,11 @@ class SystemTagsObjectMappingCollection implements ICollection {
 		$tags = $this->tagManager->getTagsByIds($tagIds);
 
 		// filter out non-visible tags
-		$tags = array_filter($tags, function($tag) {
+		$tags = array_filter($tags, function ($tag) {
 			return $this->tagManager->canUserSeeTag($tag, $this->user);
 		});
 
-		return array_values(array_map(function($tag) {
+		return array_values(array_map(function ($tag) {
 			return $this->makeNode($tag);
 		}, $tags));
 	}
@@ -187,7 +189,7 @@ class SystemTagsObjectMappingCollection implements ICollection {
 	}
 
 	/**
-	 * Create a sabre node for the mapping of the 
+	 * Create a sabre node for the mapping of the
 	 * given system tag to the collection's object
 	 *
 	 * @param ISystemTag $tag

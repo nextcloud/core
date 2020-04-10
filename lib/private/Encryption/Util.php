@@ -4,8 +4,8 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
- * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -22,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -165,8 +165,8 @@ class Util {
 	 * @return array with list of files relative to the users files folder
 	 */
 	public function getAllFiles($dir) {
-		$result = array();
-		$dirList = array($dir);
+		$result = [];
+		$dirList = [$dir];
 
 		while ($dirList) {
 			$dir = array_pop($dirList);
@@ -240,7 +240,7 @@ class Util {
 
 		$ownerPath = implode('/', array_slice($parts, 2));
 
-		return array($uid, Filesystem::normalizePath($ownerPath));
+		return [$uid, Filesystem::normalizePath($ownerPath)];
 
 	}
 
@@ -253,7 +253,7 @@ class Util {
 	public function stripPartialFileExtension($path) {
 		$extension = pathinfo($path, PATHINFO_EXTENSION);
 
-		if ( $extension === 'part') {
+		if ($extension === 'part') {
 
 			$newLength = strlen($path) - 5; // 5 = strlen(".part")
 			$fPath = substr($path, 0, $newLength);
@@ -275,7 +275,7 @@ class Util {
 		$result = [];
 		if (in_array('all', $users)) {
 			$users = $this->userManager->search('', null, null);
-			$result = array_map(function(IUser $user) {
+			$result = array_map(function (IUser $user) {
 				return $user->getUID();
 			}, $users);
 		} else {
@@ -326,7 +326,7 @@ class Util {
 	 * @return boolean
 	 */
 	private function isMountPointApplicableToUser($mount, $uid) {
-		$acceptedUids = array('all', $uid);
+		$acceptedUids = ['all', $uid];
 		// check if mount point is applicable for the user
 		$intersection = array_intersect($acceptedUids, $mount['applicable']['users']);
 		if (!empty($intersection)) {

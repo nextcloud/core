@@ -28,8 +28,6 @@ OC.L10N.register(
     "Error occurred while posting comment" : "Er trad een fout op bij plaatsen reactie",
     "_%n unread comment_::_%n unread comments_" : ["%n ongelezen reactie","%n ongelezen reacties"],
     "_1 new comment_::_{unread} new comments_" : ["1 nieuwe reactie","{unread} nieuwe reacties"],
-    "Comment" : "Reactie",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "Je werd op “%s”, in een reactie vermeld door een sindsdien verwijderde gebruiker",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s vermeldde jou in een reactie op “%2$s\""
+    "Comment" : "Reactie"
 },
 "nplurals=2; plural=(n != 1);");

@@ -4,6 +4,7 @@
  *
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Felix Epp <work@felixepp.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
@@ -27,22 +28,22 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Route;
 
+use OCP\AppFramework\App;
 use OCP\ILogger;
 use OCP\Route\IRouter;
-use OCP\AppFramework\App;
 use OCP\Util;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class Router implements IRouter {
 	/** @var RouteCollection[] */
@@ -162,7 +163,6 @@ class Router implements IRouter {
 		if (!isset($this->loadedApps['core'])) {
 			$this->loadedApps['core'] = true;
 			$this->useCollection('root');
-			require_once __DIR__ . '/../../../settings/routes.php';
 			require_once __DIR__ . '/../../../core/routes.php';
 
 			// Also add the OCS collection
@@ -258,7 +258,9 @@ class Router implements IRouter {
 			$app = \OC_App::cleanAppId($app);
 			\OC::$REQUESTEDAPP = $app;
 			$this->loadRoutes($app);
-		} else if (substr($url, 0, 6) === '/core/' or substr($url, 0, 10) === '/settings/') {
+		} else if (substr($url, 0, 10) === '/settings/') {
+			$this->loadRoutes('settings');
+		} else if (substr($url, 0, 6) === '/core/') {
 			\OC::$REQUESTEDAPP = $url;
 			if (!\OC::$server->getConfig()->getSystemValueBool('maintenance') && !Util::needUpgrade()) {
 				\OC_App::loadApps();
@@ -370,7 +372,7 @@ class Router implements IRouter {
 			$applicationClassName = $appNameSpace . '\\AppInfo\\Application';
 
 			if (class_exists($applicationClassName)) {
-				$application = new $applicationClassName();
+				$application = \OC::$server->query($applicationClassName);
 			} else {
 				$application = new App($appName);
 			}

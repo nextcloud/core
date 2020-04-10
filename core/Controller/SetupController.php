@@ -2,13 +2,16 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Damjan Georgievski <gdamjan@gmail.com>
  * @author ideaship <ideaship@users.noreply.github.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -23,7 +26,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -67,16 +70,16 @@ class SetupController {
 			return;
 		}
 
-		if(isset($post['install']) AND $post['install']=='true') {
+		if(isset($post['install']) and $post['install']=='true') {
 			// We have to launch the installation process :
 			$e = $this->setupHelper->install($post);
-			$errors = array('errors' => $e);
+			$errors = ['errors' => $e];
 
 			if(count($e) > 0) {
 				$options = array_merge($opts, $post, $errors);
 				$this->display($options);
 			} else {
-				$this->finishSetup();
+				$this->finishSetup(isset($post['install-recommended-apps']));
 			}
 		} else {
 			$options = array_merge($opts, $post);
@@ -89,7 +92,7 @@ class SetupController {
 	}
 
 	public function display($post) {
-		$defaults = array(
+		$defaults = [
 			'adminlogin' => '',
 			'adminpass' => '',
 			'dbuser' => '',
@@ -98,15 +101,15 @@ class SetupController {
 			'dbtablespace' => '',
 			'dbhost' => 'localhost',
 			'dbtype' => '',
-		);
+		];
 		$parameters = array_merge($defaults, $post);
 
 		\OC_Util::addScript('setup');
 		\OC_Template::printGuestPage('', 'installation', $parameters);
 	}
 
-	public function finishSetup() {
-		if( file_exists( $this->autoConfigFile )) {
+	private function finishSetup(bool $installRecommended) {
+		if(file_exists($this->autoConfigFile)) {
 			unlink($this->autoConfigFile);
 		}
 		\OC::$server->getIntegrityCodeChecker()->runInstanceVerification();
@@ -117,22 +120,28 @@ class SetupController {
 			}
 		}
 
+		if ($installRecommended) {
+			$urlGenerator = \OC::$server->getURLGenerator();
+			$location = $urlGenerator->getAbsoluteURL('index.php/core/apps/recommended');
+			header('Location: ' . $location);
+			exit();
+		}
 		\OC_Util::redirectToDefaultPage();
 	}
 
 	public function loadAutoConfig($post) {
-		if( file_exists($this->autoConfigFile)) {
+		if(file_exists($this->autoConfigFile)) {
 			\OCP\Util::writeLog('core', 'Autoconfig file found, setting up Nextcloud…', ILogger::INFO);
-			$AUTOCONFIG = array();
+			$AUTOCONFIG = [];
 			include $this->autoConfigFile;
-			$post = array_merge ($post, $AUTOCONFIG);
+			$post = array_merge($post, $AUTOCONFIG);
 		}
 
 		$dbIsSet = isset($post['dbtype']);
 		$directoryIsSet = isset($post['directory']);
 		$adminAccountIsSet = isset($post['adminlogin']);
 
-		if ($dbIsSet AND $directoryIsSet AND $adminAccountIsSet) {
+		if ($dbIsSet and $directoryIsSet and $adminAccountIsSet) {
 			$post['install'] = 'true';
 		}
 		$post['dbIsSet'] = $dbIsSet;

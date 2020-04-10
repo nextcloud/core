@@ -35,7 +35,7 @@ class OCSTest extends TestCase {
 	/** @var IInstanceFactory */
 	private $instanceFactory;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->instanceFactory = new InstanceFactory(new ArrayCache(), $this->getClientService());
@@ -67,11 +67,11 @@ class OCSTest extends TestCase {
 		$this->assertEquals('user', $user->getUserId());
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Invalid user response, expected field email not found
-	 */
+	
 	public function testGetUserInvalidResponse() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Invalid user response, expected field email not found');
+
 		$client = $this->getOCSClient();
 
 		$this->expectGetRequest($this->getOCSUrl('cloud/users/user'),
@@ -81,10 +81,10 @@ class OCSTest extends TestCase {
 		$client->getUser('user');
 	}
 
-	/**
-	 * @expectedException \OC\ForbiddenException
-	 */
+	
 	public function testInvalidPassword() {
+		$this->expectException(\OC\ForbiddenException::class);
+
 		$client = $this->getOCSClient();
 
 		$this->expectGetRequest($this->getOCSUrl('cloud/users/user'),

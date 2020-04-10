@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -65,7 +65,7 @@ class Listener {
 		$notification = $this->instantiateNotification($comment);
 
 		foreach($mentions as $uid) {
-			if( ($comment->getActorType() === 'users' && $uid === $comment->getActorId())
+			if(($comment->getActorType() === 'users' && $uid === $comment->getActorId())
 				|| !$this->userManager->userExists($uid)
 			) {
 				// do not notify unknown users or yourself
@@ -73,7 +73,7 @@ class Listener {
 			}
 
 			$notification->setUser($uid);
-			if(    $event->getEvent() === CommentsEvent::EVENT_DELETE
+			if($event->getEvent() === CommentsEvent::EVENT_DELETE
 				|| $event->getEvent() === CommentsEvent::EVENT_PRE_UPDATE)
 			{
 				$this->notificationManager->markProcessed($notification);

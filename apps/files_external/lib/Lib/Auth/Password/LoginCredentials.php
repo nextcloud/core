@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2015, ownCloud, Inc.
  *
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -16,19 +17,19 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_External\Lib\Auth\Password;
 
-use \OCP\IL10N;
-use \OCP\IUser;
-use \OCA\Files_External\Lib\Auth\AuthMechanism;
-use \OCA\Files_External\Lib\StorageConfig;
-use \OCP\ISession;
-use \OCP\Security\ICredentialsManager;
-use \OCA\Files_External\Lib\InsufficientDataForMeaningfulAnswerException;
+use OCA\Files_External\Lib\Auth\AuthMechanism;
+use OCA\Files_External\Lib\InsufficientDataForMeaningfulAnswerException;
+use OCA\Files_External\Lib\StorageConfig;
+use OCP\IL10N;
+use OCP\ISession;
+use OCP\IUser;
+use OCP\Security\ICredentialsManager;
 
 /**
  * Username and password from login credentials, saved in DB

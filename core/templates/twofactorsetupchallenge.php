@@ -11,6 +11,6 @@ $template = $_['template'];
 	<h2 class="two-factor-header"><?php p($provider->getDisplayName()); ?></h2>
 	<?php print_unescaped($template); ?>
 	<p><a class="two-factor-secondary" href="<?php print_unescaped($_['logout_url']); ?>">
-			<?php p($l->t('Cancel log in')) ?>
+			<?php p($l->t('Cancel login')) ?>
 	</a></p>
 </div>

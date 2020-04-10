@@ -12,10 +12,8 @@ OC.L10N.register(
     "No entries found in this folder" : "Në këtë dosje s’u gjetën zëra",
     "Select all" : "Përzgjidhi krejt",
     "Name" : "Emër",
+    "Actions" : "Veprimet",
     "Deleted" : "U fshi",
-    "Delete" : "Fshije",
-    "Couldn't delete %s permanently" : "%s s'u fshi dot përgjithmonë",
-    "Couldn't restore %s" : "S’u rikthye dot %s",
-    "Error" : "Gabim"
+    "Delete" : "Fshije"
 },
 "nplurals=2; plural=(n != 1);");

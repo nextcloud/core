@@ -2,6 +2,7 @@ OC.L10N.register(
     "systemtags",
     {
     "Tags" : "标签",
+    "Tag name is empty" : "标签名为空",
     "Update" : "更新",
     "Create" : "创建",
     "Select tag…" : "选择标签...",

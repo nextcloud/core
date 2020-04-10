@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016 Joas Schilling <coding@schilljs.com>
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,6 +26,8 @@ namespace OCA\Files_Sharing\Activity\Providers;
 
 use OCP\Activity\IEvent;
 use OCP\Activity\IManager;
+use OCP\Contacts\IManager as IContactsManager;
+use OCP\Federation\ICloudIdManager;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IURLGenerator;
@@ -35,8 +38,11 @@ class Groups extends Base {
 
 	const SUBJECT_SHARED_GROUP_SELF = 'shared_group_self';
 	const SUBJECT_RESHARED_GROUP_BY = 'reshared_group_by';
+
 	const SUBJECT_UNSHARED_GROUP_SELF = 'unshared_group_self';
 	const SUBJECT_UNSHARED_GROUP_BY = 'unshared_group_by';
+
+	const SUBJECT_EXPIRED_GROUP = 'expired_group';
 
 	/** @var IGroupManager */
 	protected $groupManager;
@@ -44,15 +50,14 @@ class Groups extends Base {
 	/** @var string[] */
 	protected $groupDisplayNames = [];
 
-	/**
-	 * @param IFactory $languageFactory
-	 * @param IURLGenerator $url
-	 * @param IManager $activityManager
-	 * @param IUserManager $userManager
-	 * @param IGroupManager $groupManager
-	 */
-	public function __construct(IFactory $languageFactory, IURLGenerator $url, IManager $activityManager, IUserManager $userManager, IGroupManager $groupManager) {
-		parent::__construct($languageFactory, $url, $activityManager, $userManager);
+	public function __construct(IFactory $languageFactory,
+								IURLGenerator $url,
+								IManager $activityManager,
+								IUserManager $userManager,
+								ICloudIdManager $cloudIdManager,
+								IContactsManager $contactsManager,
+								IGroupManager $groupManager) {
+		parent::__construct($languageFactory, $url, $activityManager, $userManager, $cloudIdManager, $contactsManager);
 		$this->groupManager = $groupManager;
 	}
 
@@ -73,6 +78,8 @@ class Groups extends Base {
 			$subject = $this->l->t('{actor} shared with group {group}');
 		} else if ($event->getSubject() === self::SUBJECT_UNSHARED_GROUP_BY) {
 			$subject = $this->l->t('{actor} removed share for group {group}');
+		} else if ($event->getSubject() === self::SUBJECT_EXPIRED_GROUP) {
+			$subject = $this->l->t('Share for group {group} expired');
 		} else {
 			throw new \InvalidArgumentException();
 		}
@@ -104,6 +111,8 @@ class Groups extends Base {
 			$subject = $this->l->t('{actor} shared {file} with group {group}');
 		} else if ($event->getSubject() === self::SUBJECT_UNSHARED_GROUP_BY) {
 			$subject = $this->l->t('{actor} removed group {group} from {file}');
+		} else if ($event->getSubject() === self::SUBJECT_EXPIRED_GROUP) {
+			$subject = $this->l->t('Share for file {file} with group {group} expired');
 		} else {
 			throw new \InvalidArgumentException();
 		}
@@ -132,6 +141,7 @@ class Groups extends Base {
 				];
 			case self::SUBJECT_SHARED_GROUP_SELF:
 			case self::SUBJECT_UNSHARED_GROUP_SELF:
+			case self::SUBJECT_EXPIRED_GROUP:
 				return [
 					'file' => $this->getFile($parameters[0], $event),
 					'group' => $this->generateGroupParameter($parameters[1]),

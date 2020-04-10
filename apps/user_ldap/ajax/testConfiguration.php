@@ -2,13 +2,13 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Allan Nordhøy <epost@anotheragency.no>
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
- * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Juan Pablo Villafáñez <jvillafanez@solidgear.es>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -23,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -66,23 +66,23 @@ try {
 			 * pass (like e.g. expected syntax error).
 			 */
 			try {
-				$ldapWrapper->read($connection->getConnectionResource(), '', 'objectClass=*', array('dn'));
+				$ldapWrapper->read($connection->getConnectionResource(), '', 'objectClass=*', ['dn']);
 			} catch (\Exception $e) {
 				if($e->getCode() === 1) {
-					\OC_JSON::error(array('message' => $l->t('Invalid configuration: Anonymous binding is not allowed.')));
+					\OC_JSON::error(['message' => $l->t('Invalid configuration: Anonymous binding is not allowed.')]);
 					exit;
 				}
 			}
-			\OC_JSON::success(array('message'
-			=> $l->t('Valid configuration, connection established!')));
+			\OC_JSON::success(['message'
+			=> $l->t('Valid configuration, connection established!')]);
 		} else {
-			\OC_JSON::error(array('message'
-			=> $l->t('Valid configuration, but binding failed. Please check the server settings and credentials.')));
+			\OC_JSON::error(['message'
+			=> $l->t('Valid configuration, but binding failed. Please check the server settings and credentials.')]);
 		}
 	} else {
-		\OC_JSON::error(array('message'
-		=> $l->t('Invalid configuration. Please have a look at the logs for further details.')));
+		\OC_JSON::error(['message'
+		=> $l->t('Invalid configuration. Please have a look at the logs for further details.')]);
 	}
 } catch (\Exception $e) {
-	\OC_JSON::error(array('message' => $e->getMessage()));
+	\OC_JSON::error(['message' => $e->getMessage()]);
 }

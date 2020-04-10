@@ -1,6 +1,6 @@
 { "translations": {
     "Your client is not authorized to connect. Please inform the administrator of your client." : "Din klient har inte behörighet att ansluta. Vänligen meddela din administratör.",
-    "Your redirect URL needs to be a full URL for example: https://yourdomain.com/path" : "Din omdirigeringsadress måste vara en fullständig URL till exempel: https://yourdomain.com/path",
+    "Your redirect URL needs to be a full URL for example: https://yourdomain.com/path" : "Din omdirigeringsadress måste vara en fullständig webbadress till exempel: https://yourdomain.com/path",
     "OAuth 2.0" : "OAuth 2.0",
     "Allows OAuth2 compatible authentication from other web applications." : "Tillåter OAuth2-kompatibel autentisering från andra webbapplikationer.",
     "The OAuth2 app allows administrators to configure the built-in authentication workflow to also allow OAuth2 compatible authentication from other web applications." : "I appen OAuth2 kan administratörer konfigurera det inbyggda autentiseringsflödet för att även tillåta OAuth2-kompatibel autentisering från andra webbapplikationer.",

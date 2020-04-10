@@ -2,6 +2,8 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Vincent Petry <pvince81@owncloud.com>
@@ -18,13 +20,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files\Service;
 
-use OC\Tags;
 use OCA\Files\Activity\FavoriteProvider;
 use OCP\Activity\IManager;
 use OCP\Files\Folder;
@@ -84,7 +85,7 @@ class TagService {
 	public function updateFileTags($path, $tags) {
 		$fileId = $this->homeFolder->get($path)->getId();
 
-		$currentTags = $this->tagger->getTagsForObjects(array($fileId));
+		$currentTags = $this->tagger->getTagsForObjects([$fileId]);
 
 		if (!empty($currentTags)) {
 			$currentTags = current($currentTags);
@@ -92,14 +93,14 @@ class TagService {
 
 		$newTags = array_diff($tags, $currentTags);
 		foreach ($newTags as $tag) {
-			if ($tag === Tags::TAG_FAVORITE) {
+			if ($tag === ITags::TAG_FAVORITE) {
 				$this->addActivity(true, $fileId, $path);
 			}
 			$this->tagger->tagAs($fileId, $tag);
 		}
 		$deletedTags = array_diff($currentTags, $tags);
 		foreach ($deletedTags as $tag) {
-			if ($tag === Tags::TAG_FAVORITE) {
+			if ($tag === ITags::TAG_FAVORITE) {
 				$this->addActivity(false, $fileId, $path);
 			}
 			$this->tagger->unTag($fileId, $tag);
@@ -146,4 +147,3 @@ class TagService {
 		}
 	}
 }
-

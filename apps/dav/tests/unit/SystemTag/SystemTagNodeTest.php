@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -19,19 +20,18 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\DAV\Tests\unit\SystemTag;
 
-
 use OC\SystemTag\SystemTag;
 use OCP\IUser;
-use OCP\SystemTag\ISystemTagManager;
-use OCP\SystemTag\TagNotFoundException;
-use OCP\SystemTag\TagAlreadyExistsException;
 use OCP\SystemTag\ISystemTag;
+use OCP\SystemTag\ISystemTagManager;
+use OCP\SystemTag\TagAlreadyExistsException;
+use OCP\SystemTag\TagNotFoundException;
 use Sabre\DAV\Exception\Forbidden;
 
 class SystemTagNodeTest extends \Test\TestCase {
@@ -46,7 +46,7 @@ class SystemTagNodeTest extends \Test\TestCase {
 	 */
 	private $user;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->tagManager = $this->getMockBuilder(ISystemTagManager::class)
@@ -81,10 +81,10 @@ class SystemTagNodeTest extends \Test\TestCase {
 		$this->assertEquals($tag, $node->getSystemTag());
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\MethodNotAllowed
-	 */
+	
 	public function testSetName() {
+		$this->expectException(\Sabre\DAV\Exception\MethodNotAllowed::class);
+
 		$this->getTagNode()->setName('2');
 	}
 
@@ -118,11 +118,11 @@ class SystemTagNodeTest extends \Test\TestCase {
 		$this->tagManager->expects($this->once())
 			->method('canUserSeeTag')
 			->with($originalTag)
-			->will($this->returnValue($originalTag->isUserVisible() || $isAdmin));
+			->willReturn($originalTag->isUserVisible() || $isAdmin);
 		$this->tagManager->expects($this->once())
 			->method('canUserAssignTag')
 			->with($originalTag)
-			->will($this->returnValue($originalTag->isUserAssignable() || $isAdmin));
+			->willReturn($originalTag->isUserAssignable() || $isAdmin);
 		$this->tagManager->expects($this->once())
 			->method('updateTag')
 			->with(1, $changedArgs[0], $changedArgs[1], $changedArgs[2]);
@@ -178,11 +178,11 @@ class SystemTagNodeTest extends \Test\TestCase {
 		$this->tagManager->expects($this->any())
 			->method('canUserSeeTag')
 			->with($originalTag)
-			->will($this->returnValue($originalTag->isUserVisible()));
+			->willReturn($originalTag->isUserVisible());
 		$this->tagManager->expects($this->any())
 			->method('canUserAssignTag')
 			->with($originalTag)
-			->will($this->returnValue($originalTag->isUserAssignable()));
+			->willReturn($originalTag->isUserAssignable());
 		$this->tagManager->expects($this->never())
 			->method('updateTag');
 
@@ -198,19 +198,19 @@ class SystemTagNodeTest extends \Test\TestCase {
 		$this->assertInstanceOf($expectedException, $thrown);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Conflict
-	 */
+	
 	public function testUpdateTagAlreadyExists() {
+		$this->expectException(\Sabre\DAV\Exception\Conflict::class);
+
 		$tag = new SystemTag(1, 'tag1', true, true);
 		$this->tagManager->expects($this->any())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->tagManager->expects($this->any())
 			->method('canUserAssignTag')
 			->with($tag)
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->tagManager->expects($this->once())
 			->method('updateTag')
 			->with(1, 'Renamed', true, true)
@@ -218,19 +218,19 @@ class SystemTagNodeTest extends \Test\TestCase {
 		$this->getTagNode(false, $tag)->update('Renamed', true, true);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotFound
-	 */
+	
 	public function testUpdateTagNotFound() {
+		$this->expectException(\Sabre\DAV\Exception\NotFound::class);
+
 		$tag = new SystemTag(1, 'tag1', true, true);
 		$this->tagManager->expects($this->any())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->tagManager->expects($this->any())
 			->method('canUserAssignTag')
 			->with($tag)
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->tagManager->expects($this->once())
 			->method('updateTag')
 			->with(1, 'Renamed', true, true)
@@ -246,7 +246,7 @@ class SystemTagNodeTest extends \Test\TestCase {
 		$this->tagManager->expects($isAdmin ? $this->once() : $this->never())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->tagManager->expects($isAdmin ? $this->once() : $this->never())
 			->method('deleteTags')
 			->with('1');
@@ -278,7 +278,7 @@ class SystemTagNodeTest extends \Test\TestCase {
 		$this->tagManager->expects($this->any())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue($tag->isUserVisible()));
+			->willReturn($tag->isUserVisible());
 		$this->tagManager->expects($this->never())
 			->method('deleteTags');
 
@@ -286,15 +286,15 @@ class SystemTagNodeTest extends \Test\TestCase {
 		$this->getTagNode(false, $tag)->delete();
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotFound
-	 */
+	
 	public function testDeleteTagNotFound() {
+		$this->expectException(\Sabre\DAV\Exception\NotFound::class);
+
 		$tag = new SystemTag(1, 'tag1', true, true);
 		$this->tagManager->expects($this->any())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue($tag->isUserVisible()));
+			->willReturn($tag->isUserVisible());
 		$this->tagManager->expects($this->once())
 			->method('deleteTags')
 			->with('1')

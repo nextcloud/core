@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
@@ -23,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -37,7 +38,7 @@ abstract class ResourceLocator {
 	protected $thirdpartyroot;
 	protected $webroot;
 
-	protected $resources = array();
+	protected $resources = [];
 
 	/** @var \OCP\ILogger */
 	protected $logger;
@@ -185,7 +186,7 @@ abstract class ResourceLocator {
 				]);
 			}
 		}
-		$this->resources[] = array($root, $webRoot, $file);
+		$this->resources[] = [$root, $webRoot, $file];
 
 		if ($throw && !is_file($root . '/' . $file)) {
 			throw new ResourceNotFoundException($file, $webRoot);

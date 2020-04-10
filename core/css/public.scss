@@ -11,10 +11,19 @@ $footer-height: 65px;
 			ul li {
 				min-width: 270px;
 			}
-			#save-external-share {
+			#header-actions-toggle {
+				background-color: transparent;
+				border-color: transparent;
+
+				&:hover,
+				&:focus,
+				&:active {
+					opacity: 1;
+				}
+			}
+			#external-share-menu-item {
 				form {
 					display: flex;
-					margin: 0;
 				}
 				.hidden {
 					display: none;

@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christopher Schäpers <kondou@ts.unde.re>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
@@ -22,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -67,12 +68,12 @@ class Cache extends CacheJail {
 
 		parent::__construct(
 			null,
-			null
+			''
 		);
 	}
 
 	protected function getRoot() {
-		if (is_null($this->root)) {
+		if ($this->root === '') {
 			$absoluteRoot = $this->sourceRootInfo->getPath();
 
 			// the sourceRootInfo path is the absolute path of the folder in the "real" storage
@@ -138,7 +139,7 @@ class Cache extends CacheJail {
 
 	protected function formatCacheEntry($entry, $path = null) {
 		if (is_null($path)) {
-			$path = isset($entry['path']) ? $entry['path'] : '';
+			$path = $entry['path'] ?? '';
 			$entry['path'] = $this->getJailedPath($path);
 		} else {
 			$entry['path'] = $path;

@@ -6,6 +6,7 @@
     "Client Identifier" : "Klient ID",
     "Secret" : "Hemmelighed",
     "Add client" : "Tilføj klient",
-    "Add" : "Tilføj"
+    "Add" : "Tilføj",
+    "Delete" : "Slet"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

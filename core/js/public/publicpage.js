@@ -26,9 +26,8 @@ $(document).ready(function () {
 		$(this).next('.popovermenu').toggleClass('open');
 	});
 
-	$('#save-external-share').find('label').click(function () {
-		$(this).toggleClass('hidden');
-		$('.save-form').toggleClass('hidden')
+	$('#save-external-share').click(function () {
+		$('#external-share-menu-item').toggleClass('hidden')
 		$('#remote_address').focus();
 	});
 

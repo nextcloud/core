@@ -25,7 +25,7 @@ OC.L10N.register(
     "Are you sure you want to delete this external storage?" : "Er du sikker på at du ønsker å slette dette eksterne lageret?",
     "Delete storage?" : "Slett lagringsplass",
     "Saved" : "Lagret",
-    "Saving..." : "Lagrer …",
+    "Saving …" : "Lagrer...",
     "Save" : "Lagre",
     "Empty response from the server" : "Tomt svar fra serveren",
     "Couldn't access. Please log out and in again to activate this mount point" : "Fikk ikke tilgang. Logg ut og inn igjen for å aktivere dette oppkoblingspunktet.",
@@ -102,6 +102,8 @@ OC.L10N.register(
     "SFTP with secret key login" : "SFTP med hemmelig nøkkel for pålogging",
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Delt ressurs",
+    "Show hidden files" : "Vis skjulte filer",
+    "Timeout" : "Tidsavbrudd",
     "SMB / CIFS using OC login" : "SMB / CIFS med OC-pålogging",
     "Username as share" : "Brukernavn som delt ressurs",
     "OpenStack Object Storage" : "OpenStack objektlager",
@@ -114,6 +116,7 @@ OC.L10N.register(
     "Name" : "Navn",
     "Storage type" : "Lagringstype",
     "Scope" : "Omfang",
+    "Open documentation" : "Åpne dokumentasjon",
     "Folder name" : "Mappenavn",
     "External storage" : "Ekstern lagring",
     "Authentication" : "Autentisering",
@@ -123,7 +126,6 @@ OC.L10N.register(
     "Add storage" : "Legg til lagringsplass",
     "Advanced settings" : "Avanserte innstillinger",
     "Allow users to mount external storage" : "Tillat at brukere kobler opp eksterne lagre",
-    "Some of the configured external mount points are not connected. Please click on the red row(s) for more information" : "Noen av de oppsatte eksterne oppkoblingspunktene er ikke tilkoblet. Klikk på de røde raden(e) for mer informasjon.",
-    "\"%s\" is not installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "\"%s\" er ikke installert. Oppkobling av %s er ikke mulig. Spør din systemadministrator om å installere det."
+    "Saving..." : "Lagrer …"
 },
 "nplurals=2; plural=(n != 1);");

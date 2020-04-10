@@ -2,8 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  *
@@ -19,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -112,6 +114,38 @@ class DBConfigService {
 			));
 
 		return $this->getMountsFromQuery($query);
+	}
+
+	public function modifyMountsOnUserDelete(string $uid): void {
+		$this->modifyMountsOnDelete($uid, self::APPLICABLE_TYPE_USER);
+	}
+
+	public function modifyMountsOnGroupDelete(string $gid): void {
+		$this->modifyMountsOnDelete($gid, self::APPLICABLE_TYPE_GROUP);
+	}
+
+	protected function modifyMountsOnDelete(string $applicableId, int $applicableType): void {
+		$builder = $this->connection->getQueryBuilder();
+		$query = $builder->select(['a.mount_id', $builder->func()->count('a.mount_id', 'count')])
+			->from('external_applicable', 'a')
+			->leftJoin('a', 'external_applicable', 'b', $builder->expr()->eq('a.mount_id', 'b.mount_id'))
+			->where($builder->expr()->andX(
+				$builder->expr()->eq('b.type', $builder->createNamedParameter($applicableType, IQueryBuilder::PARAM_INT)),
+				$builder->expr()->eq('b.value', $builder->createNamedParameter($applicableId))
+			)
+			)
+			->groupBy(['a.mount_id']);
+		$stmt = $query->execute();
+		$result = $stmt->fetchAll();
+		$stmt->closeCursor();
+
+		foreach ($result as $row) {
+			if((int)$row['count'] > 1) {
+				$this->removeApplicable($row['mount_id'], $applicableType, $applicableId);
+			} else {
+				$this->removeMount($row['mount_id']);
+			}
+		}
 	}
 
 	/**

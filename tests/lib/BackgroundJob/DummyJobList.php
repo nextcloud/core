@@ -7,6 +7,7 @@
  */
 
 namespace Test\BackgroundJob;
+
 use OCP\BackgroundJob\IJob;
 
 /**
@@ -18,7 +19,7 @@ class DummyJobList extends \OC\BackgroundJob\JobList {
 	/**
 	 * @var IJob[]
 	 */
-	private $jobs = array();
+	private $jobs = [];
 
 	private $last = 0;
 

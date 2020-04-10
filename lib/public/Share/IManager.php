@@ -3,8 +3,12 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -20,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -54,6 +58,7 @@ interface IManager {
 	 * Update a share.
 	 * The target of the share can't be changed this way: use moveShare
 	 * The share can't be removed this way (permission 0): use deleteShare
+	 * The state can't be changed this way: use acceptShare
 	 *
 	 * @param IShare $share
 	 * @return IShare The share object
@@ -61,6 +66,17 @@ interface IManager {
 	 * @since 9.0.0
 	 */
 	public function updateShare(IShare $share);
+
+	/**
+	 * Accept a share.
+	 *
+	 * @param IShare $share
+	 * @param string $recipientId
+	 * @return IShare The share object
+	 * @throws \InvalidArgumentException
+	 * @since 18.0.0
+	 */
+	public function acceptShare(IShare $share, string $recipientId): IShare;
 
 	/**
 	 * Delete a share
@@ -354,6 +370,22 @@ interface IManager {
 	public function allowGroupSharing();
 
 	/**
+	 * Check if user enumeration is allowed
+	 *
+	 * @return bool
+	 * @since 19.0.0
+	 */
+	public function allowEnumeration(): bool;
+
+	/**
+	 * Check if user enumeration is limited to the users groups
+	 *
+	 * @return bool
+	 * @since 19.0.0
+	 */
+	public function limitEnumerationToGroups(): bool;
+
+	/**
 	 * Check if sharing is disabled for the given user
 	 *
 	 * @param string $userId
@@ -384,5 +416,17 @@ interface IManager {
 	 * @since 11.0.0
 	 */
 	public function shareProviderExists($shareType);
+
+	/**
+	 * @Internal
+	 *
+	 * Get all the shares as iterable to reduce memory overhead
+	 * Note, since this opens up database cursors the iterable should
+	 * be fully itterated.
+	 *
+	 * @return iterable
+	 * @since 18.0.0
+	 */
+	public function getAllShares(): iterable;
 
 }

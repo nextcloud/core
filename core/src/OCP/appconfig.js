@@ -23,94 +23,94 @@ import $ from 'jquery'
 import OC from '../OC/index'
 
 /**
- * @param {string} method
- * @param {string} endpoint
- * @param {Object} [options]
- * @param {Object} [options.data]
- * @param {function} [options.success]
- * @param {function} [options.error]
+ * @param {string} method 'post' or 'delete'
+ * @param {string} endpoint endpoint
+ * @param {Object} [options] destructuring object
+ * @param {Object} [options.data] option data
+ * @param {function} [options.success] success callback
+ * @param {function} [options.error] error callback
  * @internal
  */
-function call (method, endpoint, options) {
+function call(method, endpoint, options) {
 	if ((method === 'post' || method === 'delete') && OC.PasswordConfirmation.requiresPasswordConfirmation()) {
-		OC.PasswordConfirmation.requirePasswordConfirmation(_.bind(call, this, method, endpoint, options));
-		return;
+		OC.PasswordConfirmation.requirePasswordConfirmation(_.bind(call, this, method, endpoint, options))
+		return
 	}
 
-	options = options || {};
+	options = options || {}
 	$.ajax({
 		type: method.toUpperCase(),
 		url: OC.linkToOCS('apps/provisioning_api/api/v1', 2) + 'config/apps' + endpoint,
 		data: options.data || {},
 		success: options.success,
-		error: options.error
-	});
+		error: options.error,
+	})
 }
 
 /**
- * @param {Object} [options]
- * @param {function} [options.success]
+ * @param {Object} [options] destructuring object
+ * @param {function} [options.success] success callback
  * @since 11.0.0
  */
-export function getApps (options) {
-	call('get', '', options);
+export function getApps(options) {
+	call('get', '', options)
 }
 
 /**
- * @param {string} app
- * @param {Object} [options]
- * @param {function} [options.success]
- * @param {function} [options.error]
+ * @param {string} app app id
+ * @param {Object} [options] destructuring object
+ * @param {function} [options.success] success callback
+ * @param {function} [options.error] error callback
  * @since 11.0.0
  */
-export function getKeys (app, options) {
-	call('get', '/' + app, options);
+export function getKeys(app, options) {
+	call('get', '/' + app, options)
 }
 
 /**
- * @param {string} app
- * @param {string} key
- * @param {string|function} defaultValue
- * @param {Object} [options]
- * @param {function} [options.success]
- * @param {function} [options.error]
+ * @param {string} app app id
+ * @param {string} key key
+ * @param {string|function} defaultValue default value
+ * @param {Object} [options] destructuring object
+ * @param {function} [options.success] success callback
+ * @param {function} [options.error] error callback
  * @since 11.0.0
  */
-export function getValue (app, key, defaultValue, options) {
-	options = options || {};
+export function getValue(app, key, defaultValue, options) {
+	options = options || {}
 	options.data = {
-		defaultValue: defaultValue
-	};
+		defaultValue: defaultValue,
+	}
 
-	call('get', '/' + app + '/' + key, options);
+	call('get', '/' + app + '/' + key, options)
 }
 
 /**
- * @param {string} app
- * @param {string} key
- * @param {string} value
- * @param {Object} [options]
- * @param {function} [options.success]
- * @param {function} [options.error]
+ * @param {string} app app id
+ * @param {string} key key
+ * @param {string} value value
+ * @param {Object} [options] destructuring object
+ * @param {function} [options.success] success callback
+ * @param {function} [options.error] error callback
  * @since 11.0.0
  */
-export function setValue (app, key, value, options) {
-	options = options || {};
+export function setValue(app, key, value, options) {
+	options = options || {}
 	options.data = {
-		value: value
-	};
+		value: value,
+	}
 
-	call('post', '/' + app + '/' + key, options);
+	call('post', '/' + app + '/' + key, options)
 }
 
 /**
- * @param {string} app
- * @param {string} key
- * @param {Object} [options]
- * @param {function} [options.success]
- * @param {function} [options.error]
+ * @param {string} app app id
+ * @param {string} key key
+ * @param {Object} [options] destructuring object
+ * @param {function} [options.success] success callback
+ * @param {function} [options.error] error callback
  * @since 11.0.0
  */
-export function deleteKey (app, key, options) {
-	call('delete', '/' + app + '/' + key, options);
+export function deleteKey(app, key, options) {
+	call('delete', '/' + app + '/' + key, options)
 }

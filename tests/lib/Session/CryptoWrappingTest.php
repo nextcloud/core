@@ -35,7 +35,7 @@ class CryptoWrappingTest extends TestCase {
 	/** @var \OC\Session\CryptoSessionData */
 	protected $instance;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->wrappedSession = $this->getMockBuilder(ISession::class)
@@ -52,6 +52,9 @@ class CryptoWrappingTest extends TestCase {
 		$this->crypto->expects($this->any())
 			->method('decrypt')
 			->willReturnCallback(function ($input) {
+				if ($input === '') {
+					return '';
+				}
 				return substr($input, 1, -1);
 			});
 

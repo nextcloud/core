@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\Files\AppData;
 
 use OC\Files\AppData\Factory;
@@ -36,7 +37,7 @@ class FactoryTest extends \Test\TestCase {
 	/** @var Factory */
 	private $factory;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->rootFolder = $this->createMock(IRootFolder::class);

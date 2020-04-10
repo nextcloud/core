@@ -28,8 +28,6 @@ OC.L10N.register(
     "Error occurred while posting comment" : "Hi ha hagut un error en publicar el comentari",
     "_%n unread comment_::_%n unread comments_" : ["%n comentari no llegit","%n comentaris no llegits"],
     "_1 new comment_::_{unread} new comments_" : ["1 comentari nou","{unread} comentaris nous"],
-    "Comment" : "Comentari",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "Hau estat esmentats a \"%s\" en un comentari d'un usuari que ja no existeix",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s us ha esmentat en un comentari a “%2$s”"
+    "Comment" : "Comentari"
 },
 "nplurals=2; plural=(n != 1);");

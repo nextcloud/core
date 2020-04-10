@@ -3,8 +3,8 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
- * @author Christian Weiske <cweiske@cweiske.de>
  * @author Christopher Schäpers <kondou@ts.unde.re>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -26,7 +26,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -52,7 +52,7 @@ class TAR extends Archive {
 	 * @param string $source
 	 */
 	public function __construct($source) {
-		$types = array(null, 'gz', 'bz2');
+		$types = [null, 'gz', 'bz2'];
 		$this->path = $source;
 		$this->tar = new \Archive_Tar($source, $types[self::getTarType($source)]);
 	}
@@ -103,7 +103,7 @@ class TAR extends Archive {
 				mkdir($folder);
 			}
 		}
-		$result = $this->tar->addModify(array($tmpBase . $path), '', $tmpBase);
+		$result = $this->tar->addModify([$tmpBase . $path], '', $tmpBase);
 		rmdir($tmpBase . $path);
 		$this->fileList = false;
 		$this->cachedHeaders = false;
@@ -144,9 +144,9 @@ class TAR extends Archive {
 		rename($tmp . $source, $tmp . $dest);
 		$this->tar = null;
 		unlink($this->path);
-		$types = array(null, 'gz', 'bz');
+		$types = [null, 'gz', 'bz'];
 		$this->tar = new \Archive_Tar($this->path, $types[self::getTarType($this->path)]);
-		$this->tar->createModify(array($tmp), '', $tmp . '/');
+		$this->tar->createModify([$tmp], '', $tmp . '/');
 		$this->fileList = false;
 		$this->cachedHeaders = false;
 		return true;
@@ -201,7 +201,7 @@ class TAR extends Archive {
 	 */
 	public function getFolder($path) {
 		$files = $this->getFiles();
-		$folderContent = array();
+		$folderContent = [];
 		$pathLength = strlen($path);
 		foreach ($files as $file) {
 			if ($file[0] == '/') {
@@ -232,7 +232,7 @@ class TAR extends Archive {
 		if (!$this->cachedHeaders) {
 			$this->cachedHeaders = $this->tar->listContent();
 		}
-		$files = array();
+		$files = [];
 		foreach ($this->cachedHeaders as $header) {
 			$files[] = $header['filename'];
 		}
@@ -263,9 +263,9 @@ class TAR extends Archive {
 			return false;
 		}
 		if ($this->fileExists('/' . $path)) {
-			$success = $this->tar->extractList(array('/' . $path), $tmp);
+			$success = $this->tar->extractList(['/' . $path], $tmp);
 		} else {
-			$success = $this->tar->extractList(array($path), $tmp);
+			$success = $this->tar->extractList([$path], $tmp);
 		}
 		if ($success) {
 			rename($tmp . $path, $dest);
@@ -329,7 +329,7 @@ class TAR extends Archive {
 		$this->tar = null;
 		unlink($this->path);
 		$this->reopen();
-		$this->tar->createModify(array($tmp), '', $tmp);
+		$this->tar->createModify([$tmp], '', $tmp);
 		return true;
 	}
 
@@ -378,7 +378,7 @@ class TAR extends Archive {
 			$this->tar->_close();
 			$this->tar = null;
 		}
-		$types = array(null, 'gz', 'bz');
+		$types = [null, 'gz', 'bz'];
 		$this->tar = new \Archive_Tar($this->path, $types[self::getTarType($this->path)]);
 	}
 }

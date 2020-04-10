@@ -7,6 +7,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -21,14 +22,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_External\Tests\Storage;
 
 use GuzzleHttp\Exception\ClientException;
-use \OCA\Files_External\Lib\Storage\Swift;
+use OCA\Files_External\Lib\Storage\Swift;
 
 /**
  * Class SwiftTest
@@ -46,7 +47,7 @@ class SwiftTest extends \Test\Files\Storage\Storage {
 	 */
 	protected $instance;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = include('files_external/tests/config.swift.php');
@@ -56,7 +57,7 @@ class SwiftTest extends \Test\Files\Storage\Storage {
 		$this->instance = new Swift($this->config);
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		if ($this->instance) {
 			try {
 				$container = $this->instance->getContainer();

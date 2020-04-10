@@ -3,8 +3,14 @@ OC.L10N.register(
     {
     "Deleted files" : "Ezabatutako fitxategiak",
     "restored" : "Berrezarrita",
+    "This application enables users to restore files that were deleted from the system." : "Aplikazio honek erabiltzaileei sistematik ezabatutako fitxategiak berrezartzeko aukera eskaintzen die.",
     "Restore" : "Berrezarri",
     "Delete permanently" : "Ezabatu betirako",
+    "Error while restoring file from trashbin" : "Errore bat gertatu da fitxategia zakarrontzitik berrezartzean",
+    "Error while removing file from trashbin" : "Errore bat gertatu da fitxategia zakarrontzitik ezabatzean",
+    "Error while restoring files from trashbin" : "Errore bat gertatu da fitxategiak zakarrontzitik berrezartzean",
+    "Error while emptying trashbin" : "Errore bat gertatu da zakarrontzia hustutzean",
+    "Error while removing files from trashbin" : "Errore bat gertatu da fitxategiak zakarrontzitik ezabatzean",
     "This operation is forbidden" : "Eragiketa hau debekatuta dago",
     "This directory is unavailable, please check the logs or contact the administrator" : "Direktorio hau ez dago erabilgarri, administratzailearekin harremanetan jarri",
     "No deleted files" : "Ez dago ezabatutako fitxategirik",
@@ -14,9 +20,6 @@ OC.L10N.register(
     "Name" : "Izena",
     "Actions" : "Ekintzak",
     "Deleted" : "Ezabatuta",
-    "Delete" : "Ezabatu",
-    "Couldn't delete %s permanently" : "Ezin izan da %s betirako ezabatu",
-    "Couldn't restore %s" : "Ezin izan da %s berreskuratu",
-    "Error" : "Errorea"
+    "Delete" : "Ezabatu"
 },
 "nplurals=2; plural=(n != 1);");

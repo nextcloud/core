@@ -2,6 +2,9 @@
 /**
  * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -20,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -33,7 +36,6 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
 use OCP\ILogger;
-use OCP\Util;
 
 class AppFetcher extends Fetcher {
 
@@ -66,7 +68,7 @@ class AppFetcher extends Fetcher {
 		);
 
 		$this->fileName = 'apps.json';
-		$this->setEndpoint();
+		$this->endpointName = 'apps.json';
 		$this->compareVersion = $compareVersion;
 		$this->ignoreMaxVersion = true;
 	}
@@ -115,6 +117,7 @@ class AppFetcher extends Fetcher {
 
 			if (empty($releases)) {
 				// Remove apps that don't have a matching release
+				$response['data'][$dataKey] = [];
 				continue;
 			}
 
@@ -136,12 +139,8 @@ class AppFetcher extends Fetcher {
 			}
 		}
 
-		$response['data'] = array_values($response['data']);
+		$response['data'] = array_values(array_filter($response['data']));
 		return $response;
-	}
-
-	private function setEndpoint() {
-		$this->endpointUrl = 'https://apps.nextcloud.com/api/v1/apps.json';
 	}
 
 	/**
@@ -153,6 +152,5 @@ class AppFetcher extends Fetcher {
 		parent::setVersion($version);
 		$this->fileName = $fileName;
 		$this->ignoreMaxVersion = $ignoreMaxVersion;
-		$this->setEndpoint();
 	}
 }

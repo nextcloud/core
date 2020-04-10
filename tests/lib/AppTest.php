@@ -9,6 +9,7 @@
 
 namespace Test;
 
+use OC\App\AppManager;
 use OC\App\InfoParser;
 use OC\AppConfig;
 use OCP\IAppConfig;
@@ -27,245 +28,245 @@ class AppTest extends \Test\TestCase {
 	const TEST_GROUP2 = 'group2';
 
 	public function appVersionsProvider() {
-		return array(
+		return [
 			// exact match
-			array(
+			[
 				'6.0.0.0',
-				array(
+				[
 					'requiremin' => '6.0',
 					'requiremax' => '6.0',
-				),
+				],
 				true
-			),
+			],
 			// in-between match
-			array(
+			[
 				'6.0.0.0',
-				array(
+				[
 					'requiremin' => '5.0',
 					'requiremax' => '7.0',
-				),
+				],
 				true
-			),
+			],
 			// app too old
-			array(
+			[
 				'6.0.0.0',
-				array(
+				[
 					'requiremin' => '5.0',
 					'requiremax' => '5.0',
-				),
+				],
 				false
-			),
+			],
 			// app too new
-			array(
+			[
 				'5.0.0.0',
-				array(
+				[
 					'requiremin' => '6.0',
 					'requiremax' => '6.0',
-				),
+				],
 				false
-			),
+			],
 			// only min specified
-			array(
+			[
 				'6.0.0.0',
-				array(
+				[
 					'requiremin' => '6.0',
-				),
+				],
 				true
-			),
+			],
 			// only min specified fail
-			array(
+			[
 				'5.0.0.0',
-				array(
+				[
 					'requiremin' => '6.0',
-				),
+				],
 				false
-			),
+			],
 			// only min specified legacy
-			array(
+			[
 				'6.0.0.0',
-				array(
+				[
 					'require' => '6.0',
-				),
+				],
 				true
-			),
+			],
 			// only min specified legacy fail
-			array(
+			[
 				'4.0.0.0',
-				array(
+				[
 					'require' => '6.0',
-				),
+				],
 				false
-			),
+			],
 			// only max specified
-			array(
+			[
 				'5.0.0.0',
-				array(
+				[
 					'requiremax' => '6.0',
-				),
+				],
 				true
-			),
+			],
 			// only max specified fail
-			array(
+			[
 				'7.0.0.0',
-				array(
+				[
 					'requiremax' => '6.0',
-				),
+				],
 				false
-			),
+			],
 			// variations of versions
 			// single OC number
-			array(
+			[
 				'4',
-				array(
+				[
 					'require' => '4.0',
-				),
+				],
 				true
-			),
+			],
 			// multiple OC number
-			array(
+			[
 				'4.3.1',
-				array(
+				[
 					'require' => '4.3',
-				),
+				],
 				true
-			),
+			],
 			// single app number
-			array(
+			[
 				'4',
-				array(
+				[
 					'require' => '4',
-				),
+				],
 				true
-			),
+			],
 			// single app number fail
-			array(
+			[
 				'4.3',
-				array(
+				[
 					'require' => '5',
-				),
+				],
 				false
-			),
+			],
 			// complex
-			array(
+			[
 				'5.0.0',
-				array(
+				[
 					'require' => '4.5.1',
-				),
+				],
 				true
-			),
+			],
 			// complex fail
-			array(
+			[
 				'4.3.1',
-				array(
+				[
 					'require' => '4.3.2',
-				),
+				],
 				false
-			),
+			],
 			// two numbers
-			array(
+			[
 				'4.3.1',
-				array(
+				[
 					'require' => '4.4',
-				),
+				],
 				false
-			),
+			],
 			// one number fail
-			array(
+			[
 				'4.3.1',
-				array(
+				[
 					'require' => '5',
-				),
+				],
 				false
-			),
+			],
 			// pre-alpha app
-			array(
+			[
 				'5.0.3',
-				array(
+				[
 					'require' => '4.93',
-				),
+				],
 				true
-			),
+			],
 			// pre-alpha OC
-			array(
+			[
 				'6.90.0.2',
-				array(
+				[
 					'require' => '6.90',
-				),
+				],
 				true
-			),
+			],
 			// pre-alpha OC max
-			array(
+			[
 				'6.90.0.2',
-				array(
+				[
 					'requiremax' => '7',
-				),
+				],
 				true
-			),
+			],
 			// expect same major number match
-			array(
+			[
 				'5.0.3',
-				array(
+				[
 					'require' => '5',
-				),
+				],
 				true
-			),
+			],
 			// expect same major number match
-			array(
+			[
 				'5.0.3',
-				array(
+				[
 					'requiremax' => '5',
-				),
+				],
 				true
-			),
+			],
 			// dependencies versions before require*
-			array(
+			[
 				'6.0.0.0',
-				array(
+				[
 					'requiremin' => '5.0',
 					'requiremax' => '7.0',
-					'dependencies' => array(
-						'owncloud' => array(
-							'@attributes' => array(
+					'dependencies' => [
+						'owncloud' => [
+							'@attributes' => [
 								'min-version' => '7.0',
 								'max-version' => '7.0',
-							),
-						),
-					),
-				),
+							],
+						],
+					],
+				],
 				false
-			),
-			array(
+			],
+			[
 				'6.0.0.0',
-				array(
+				[
 					'requiremin' => '5.0',
 					'requiremax' => '7.0',
-					'dependencies' => array(
-						'owncloud' => array(
-							'@attributes' => array(
+					'dependencies' => [
+						'owncloud' => [
+							'@attributes' => [
 								'min-version' => '5.0',
 								'max-version' => '5.0',
-							),
-						),
-					),
-				),
+							],
+						],
+					],
+				],
 				false
-			),
-			array(
+			],
+			[
 				'6.0.0.0',
-				array(
+				[
 					'requiremin' => '5.0',
 					'requiremax' => '5.0',
-					'dependencies' => array(
-						'owncloud' => array(
-							'@attributes' => array(
+					'dependencies' => [
+						'owncloud' => [
+							'@attributes' => [
 								'min-version' => '5.0',
 								'max-version' => '7.0',
-							),
-						),
-					),
-				),
+							],
+						],
+					],
+				],
 				true
-			),
+			],
 			[
 				'9.2.0.0',
 				[
@@ -300,7 +301,7 @@ class AppTest extends \Test\TestCase {
 				],
 				true
 			],
-		);
+		];
 	}
 
 	/**
@@ -328,11 +329,11 @@ class AppTest extends \Test\TestCase {
 	 * Providers for the app config values
 	 */
 	public function appConfigValuesProvider() {
-		return array(
+		return [
 			// logged in user1
-			array(
+			[
 				self::TEST_USER1,
-				array(
+				[
 					'files',
 					'app1',
 					'app3',
@@ -344,15 +345,17 @@ class AppTest extends \Test\TestCase {
 					'lookup_server_connector',
 					'oauth2',
 					'provisioning_api',
+					'settings',
 					'twofactor_backupcodes',
+					'viewer',
 					'workflowengine',
-				),
+				],
 				false
-			),
+			],
 			// logged in user2
-			array(
+			[
 				self::TEST_USER2,
-				array(
+				[
 					'files',
 					'app1',
 					'app3',
@@ -364,15 +367,17 @@ class AppTest extends \Test\TestCase {
 					'lookup_server_connector',
 					'oauth2',
 					'provisioning_api',
+					'settings',
 					'twofactor_backupcodes',
+					'viewer',
 					'workflowengine',
-				),
+				],
 				false
-			),
+			],
 			// logged in user3
-			array(
+			[
 				self::TEST_USER3,
-				array(
+				[
 					'files',
 					'app1',
 					'app3',
@@ -385,15 +390,17 @@ class AppTest extends \Test\TestCase {
 					'lookup_server_connector',
 					'oauth2',
 					'provisioning_api',
+					'settings',
 					'twofactor_backupcodes',
+					'viewer',
 					'workflowengine',
-				),
+				],
 				false
-			),
+			],
 			//  no user, returns all apps
-			array(
+			[
 				null,
-				array(
+				[
 					'files',
 					'app1',
 					'app3',
@@ -406,15 +413,17 @@ class AppTest extends \Test\TestCase {
 					'lookup_server_connector',
 					'oauth2',
 					'provisioning_api',
+					'settings',
 					'twofactor_backupcodes',
+					'viewer',
 					'workflowengine',
-				),
+				],
 				false,
-			),
+			],
 			//  user given, but ask for all
-			array(
+			[
 				self::TEST_USER1,
-				array(
+				[
 					'files',
 					'app1',
 					'app3',
@@ -427,12 +436,14 @@ class AppTest extends \Test\TestCase {
 					'lookup_server_connector',
 					'oauth2',
 					'provisioning_api',
+					'settings',
 					'twofactor_backupcodes',
+					'viewer',
 					'workflowengine',
-				),
+				],
 				true,
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -458,16 +469,16 @@ class AppTest extends \Test\TestCase {
 
 		$this->setupAppConfigMock()->expects($this->once())
 			->method('getValues')
-			->will($this->returnValue(
-				array(
+			->willReturn(
+				[
 					'app3' => 'yes',
 					'app2' => 'no',
 					'app1' => 'yes',
 					'appforgroup1' => '["group1"]',
 					'appforgroup2' => '["group2"]',
 					'appforgroup12' => '["group2","group1"]',
-				)
-			)
+				]
+			
 			);
 
 		$apps = \OC_App::getEnabledApps(false, $forceAll);
@@ -497,20 +508,20 @@ class AppTest extends \Test\TestCase {
 
 		$this->setupAppConfigMock()->expects($this->once())
 			->method('getValues')
-			->will($this->returnValue(
-				array(
+			->willReturn(
+				[
 					'app3' => 'yes',
 					'app2' => 'no',
-				)
-			)
+				]
+			
 			);
 
 		$apps = \OC_App::getEnabledApps();
-		$this->assertEquals(array('files', 'app3', 'cloud_federation_api', 'dav', 'federatedfilesharing', 'lookup_server_connector', 'oauth2', 'provisioning_api', 'twofactor_backupcodes', 'workflowengine'), $apps);
+		$this->assertEquals(['files', 'app3', 'cloud_federation_api', 'dav', 'federatedfilesharing', 'lookup_server_connector', 'oauth2', 'provisioning_api', 'settings', 'twofactor_backupcodes', 'viewer', 'workflowengine'], $apps);
 
 		// mock should not be called again here
 		$apps = \OC_App::getEnabledApps();
-		$this->assertEquals(array('files', 'app3', 'cloud_federation_api', 'dav', 'federatedfilesharing', 'lookup_server_connector', 'oauth2', 'provisioning_api', 'twofactor_backupcodes', 'workflowengine'), $apps);
+		$this->assertEquals(['files', 'app3', 'cloud_federation_api', 'dav', 'federatedfilesharing', 'lookup_server_connector', 'oauth2', 'provisioning_api', 'settings', 'twofactor_backupcodes', 'viewer', 'workflowengine'], $apps);
 
 		$this->restoreAppConfig();
 		\OC_User::setUserId(null);
@@ -536,9 +547,10 @@ class AppTest extends \Test\TestCase {
 	 * @param IAppConfig $appConfig app config mock
 	 */
 	private function registerAppConfig(AppConfig $appConfig) {
-		$this->overwriteService('AppConfig', $appConfig);
-		$this->overwriteService('AppManager', new \OC\App\AppManager(
+		$this->overwriteService(AppConfig::class, $appConfig);
+		$this->overwriteService(AppManager::class, new \OC\App\AppManager(
 			\OC::$server->getUserSession(),
+			\OC::$server->getConfig(),
 			$appConfig,
 			\OC::$server->getGroupManager(),
 			\OC::$server->getMemCacheFactory(),
@@ -551,8 +563,8 @@ class AppTest extends \Test\TestCase {
 	 * Restore the original app config service.
 	 */
 	private function restoreAppConfig() {
-		$this->restoreService('AppConfig');
-		$this->restoreService('AppManager');
+		$this->restoreService(AppConfig::class);
+		$this->restoreService(AppManager::class);
 
 		// Remove the cache of the mocked apps list with a forceRefresh
 		\OC_App::getEnabledApps();
@@ -613,4 +625,3 @@ class AppTest extends \Test\TestCase {
 		$this->assertEquals('English', \OC_App::parseAppInfo($data, 'en')['description']);
 	}
 }
-

@@ -19,13 +19,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Federation\Tests\BackgroundJob;
-
 
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Ring\Exception\RingException;
@@ -74,7 +72,7 @@ class RequestSharedSecretTest extends TestCase {
 	/** @var  RequestSharedSecret */
 	private $requestSharedSecret;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->httpClientService = $this->createMock(IClientService::class);

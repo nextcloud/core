@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2019 Julius Härtl <jus@bitgrid.net>
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Julius Härtl <jus@bitgrid.net>
  *
  * @license GNU AGPL version 3 or any later version
@@ -13,7 +14,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
@@ -80,6 +81,16 @@ abstract class LogDetails {
 			'userAgent',
 			'version'
 		);
+
+		if(is_array($message) && !array_key_exists('Exception', $message)) {
+			// Exception messages should stay as they are,
+			// anything else modern is split to 'message' (string) and
+			// data (array) fields
+			$shortMessage = $message['message'] ?? '(no message provided)';
+			$entry['data'] = $message;
+			$entry['message'] = $shortMessage;
+		}
+
 		return $entry;
 	}
 
@@ -90,12 +101,12 @@ abstract class LogDetails {
 		// them manually.
 		foreach($entry as $key => $value) {
 			if(is_string($value)) {
-				$testEncode = json_encode($value);
+				$testEncode = json_encode($value, JSON_UNESCAPED_SLASHES);
 				if($testEncode === false) {
 					$entry[$key] = utf8_encode($value);
 				}
 			}
 		}
-		return json_encode($entry, JSON_PARTIAL_OUTPUT_ON_ERROR);
+		return json_encode($entry, JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_UNESCAPED_SLASHES);
 	}
 }

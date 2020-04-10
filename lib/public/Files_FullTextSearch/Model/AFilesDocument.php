@@ -1,15 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
-
 /**
- * Files_FullTextSearch - Index the content of your files
- *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @copyright 2018
  *
  * @author Maxence Lange <maxence@artificial-owl.com>
- * @copyright 2018
+ *
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,17 +20,14 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-
 namespace OCP\Files_FullTextSearch\Model;
-
 
 use OC\FullTextSearch\Model\IndexDocument;
 use OCP\FullTextSearch\Model\IIndexDocument;
-
 
 /**
  * Abstract Class AFilesDocument
@@ -108,4 +102,3 @@ abstract class AFilesDocument extends IndexDocument {
 	abstract public function getPath(): string;
 
 }
-

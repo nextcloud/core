@@ -45,7 +45,7 @@ class MandatoryTwoFactorTest extends TestCase {
 	/** @var MandatoryTwoFactor */
 	private $mandatoryTwoFactor;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);
@@ -109,7 +109,7 @@ class MandatoryTwoFactorTest extends TestCase {
 				['twofactor_enforced_excluded_groups', [], []],
 			]);
 		$this->groupManager->method('isInGroup')
-			->willReturnCallback(function($user, $group) {
+			->willReturnCallback(function ($user, $group) {
 				return $user === 'user123' && $group ==='twofactorers';
 			});
 
@@ -147,7 +147,7 @@ class MandatoryTwoFactorTest extends TestCase {
 				['twofactor_enforced_excluded_groups', [], ['yoloers']],
 			]);
 		$this->groupManager->method('isInGroup')
-			->willReturnCallback(function($user, $group) {
+			->willReturnCallback(function ($user, $group) {
 				return $user === 'user123' && $group ==='yoloers';
 			});
 

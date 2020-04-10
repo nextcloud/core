@@ -1,7 +1,6 @@
 OC.L10N.register(
     "federatedfilesharing",
     {
-    "Federated sharing" : "Federatīva koplietošana",
     "Do you want to add the remote share {name} from {owner}@{remote}?" : "Vai vēlaties pievienot attālo koplietošanu {name} no {owner}@{remote}?",
     "Remote share" : "Attālinātā koplietotne",
     "Remote share password" : "Attālinātās koplietotnes parole",
@@ -16,8 +15,10 @@ OC.L10N.register(
     "Server to server sharing is not enabled on this server" : "Koplietošana no servera uz serveri, šajā serverī nav iespējota",
     "File is already shared with %s" : "Datne ir jau koplietota ar %s",
     "Could not find share" : "Nevarēja atrast koplietojumu",
+    "Federated sharing" : "Federatīva koplietošana",
     "Accept" : "Akceptēt",
     "Decline" : "Noraidīt",
+    "Sharing" : "Koplietošana",
     "Federated Cloud Sharing" : "Federatīva mākoņkoplietošana",
     "Open documentation" : "Atvērt dokumentāciju",
     "Allow users on this server to send shares to other servers" : "Atļaut šī servera lietotājiem sūtīt koplietotnes uz citiem serveriem",
@@ -25,11 +26,6 @@ OC.L10N.register(
     "Federated Cloud" : "Federated Cloud",
     "Your Federated Cloud ID:" : "Tavs Federated Cloud ID:",
     "Add to your website" : "Pievienojiet savai vietnei",
-    "HTML Code:" : "HTML kods:",
-    "The mountpoint name contains invalid characters." : "Montēšanas punkta nosaukums satur nederīgus simbolus.",
-    "Not allowed to create a federated share with the owner." : "Nav atļauts izveidot ārēju koplietošanu ar īpašnieku.",
-    "Invalid or untrusted SSL certificate" : "Nederīgs vai neuzticams SSL sertifikāts",
-    "Storage not valid" : "Nederīga krātuve",
-    "Couldn't add remote share" : "Nevarēja pievienot attālināto koplietotni"
+    "HTML Code:" : "HTML kods:"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);");

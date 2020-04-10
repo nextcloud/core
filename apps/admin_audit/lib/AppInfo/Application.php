@@ -1,10 +1,17 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2017 Joas Schilling <coding@schilljs.com>
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author GrayFix <grayfix@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Tiago Flores <tiago.flores@yahoo.com.br>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,7 +26,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -47,9 +54,9 @@ use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IPreview;
 use OCP\IUserSession;
+use OCP\Share;
 use OCP\Util;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use OCP\Share;
 
 class Application extends App {
 
@@ -113,7 +120,7 @@ class Application extends App {
 		$userSession->listen('\OC\User', 'postUnassignedUserId', [$userActions, 'unassign']);
 	}
 
-	protected function groupHooks()  {
+	protected function groupHooks() {
 		$groupActions = new GroupManagement($this->logger);
 
 		/** @var IGroupManager|Manager $groupManager */
@@ -129,6 +136,7 @@ class Application extends App {
 
 		Util::connectHook(Share::class, 'post_shared', $shareActions, 'shared');
 		Util::connectHook(Share::class, 'post_unshare', $shareActions, 'unshare');
+		Util::connectHook(Share::class, 'post_unshareFromSelf', $shareActions, 'unshare');
 		Util::connectHook(Share::class, 'post_update_permissions', $shareActions, 'updatePermissions');
 		Util::connectHook(Share::class, 'post_update_password', $shareActions, 'updatePassword');
 		Util::connectHook(Share::class, 'post_set_expiration_date', $shareActions, 'updateExpirationDate');
@@ -146,15 +154,15 @@ class Application extends App {
 	protected function appHooks() {
 
 		$eventDispatcher = $this->getContainer()->getServer()->getEventDispatcher();
-		$eventDispatcher->addListener(ManagerEvent::EVENT_APP_ENABLE, function(ManagerEvent $event) {
+		$eventDispatcher->addListener(ManagerEvent::EVENT_APP_ENABLE, function (ManagerEvent $event) {
 			$appActions = new AppManagement($this->logger);
 			$appActions->enableApp($event->getAppID());
 		});
-		$eventDispatcher->addListener(ManagerEvent::EVENT_APP_ENABLE_FOR_GROUPS, function(ManagerEvent $event) {
+		$eventDispatcher->addListener(ManagerEvent::EVENT_APP_ENABLE_FOR_GROUPS, function (ManagerEvent $event) {
 			$appActions = new AppManagement($this->logger);
 			$appActions->enableAppForGroups($event->getAppID(), $event->getGroups());
 		});
-		$eventDispatcher->addListener(ManagerEvent::EVENT_APP_DISABLE, function(ManagerEvent $event) {
+		$eventDispatcher->addListener(ManagerEvent::EVENT_APP_DISABLE, function (ManagerEvent $event) {
 			$appActions = new AppManagement($this->logger);
 			$appActions->disableApp($event->getAppID());
 		});
@@ -163,7 +171,7 @@ class Application extends App {
 
 	protected function consoleHooks() {
 		$eventDispatcher = $this->getContainer()->getServer()->getEventDispatcher();
-		$eventDispatcher->addListener(ConsoleEvent::EVENT_RUN, function(ConsoleEvent $event) {
+		$eventDispatcher->addListener(ConsoleEvent::EVENT_RUN, function (ConsoleEvent $event) {
 			$appActions = new Console($this->logger);
 			$appActions->runCommand($event->getArguments());
 		});
@@ -174,11 +182,11 @@ class Application extends App {
 		$eventDispatcher = $this->getContainer()->getServer()->getEventDispatcher();
 		$eventDispatcher->addListener(
 			IPreview::EVENT,
-			function(GenericEvent $event) use ($fileActions) {
+			function (GenericEvent $event) use ($fileActions) {
 				/** @var File $file */
 				$file = $event->getSubject();
 				$fileActions->preview([
-					'path' => substr($file->getInternalPath(), 5),
+					'path' => mb_substr($file->getInternalPath(), 5),
 					'width' => $event->getArguments()['width'],
 					'height' => $event->getArguments()['height'],
 					'crop' => $event->getArguments()['crop'],
@@ -245,11 +253,11 @@ class Application extends App {
 
 	protected function securityHooks() {
 		$eventDispatcher = $this->getContainer()->getServer()->getEventDispatcher();
-		$eventDispatcher->addListener(IProvider::EVENT_SUCCESS, function(GenericEvent $event) {
+		$eventDispatcher->addListener(IProvider::EVENT_SUCCESS, function (GenericEvent $event) {
 			$security = new Security($this->logger);
 			$security->twofactorSuccess($event->getSubject(), $event->getArguments());
 		});
-		$eventDispatcher->addListener(IProvider::EVENT_FAILED, function(GenericEvent $event) {
+		$eventDispatcher->addListener(IProvider::EVENT_FAILED, function (GenericEvent $event) {
 			$security = new Security($this->logger);
 			$security->twofactorFailed($event->getSubject(), $event->getArguments());
 		});

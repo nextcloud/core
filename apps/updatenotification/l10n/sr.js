@@ -42,11 +42,6 @@ OC.L10N.register(
     "Beta" : "Бета",
     "A pre-release version only for testing new features, not for production environments." : "Пред-издање и служи само за тестирање нових могућности, не за свакодневни рад.",
     "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> апликација имају доступна ажурирања за ову верзију","<strong>%n</strong> апликације имају доступна ажурирања за ову верзију","<strong>%n</strong> апликација имају доступна ажурирања за ову верзију"],
-    "You can always update to a newer version / experimental channel. But you can never downgrade to a more stable channel." : "Увек можете да надоградите на новију верзију/експериментални канал. Али не можете се вратити на стабилни канал.",
-    "<strong>production</strong> will always provide the latest patch level, but not update to the next major release immediately. That update usually happens with the second minor release (x.0.2)." : "<strong>радна</strong> ће увек давати последњи ниво закрпа али неће се одмах ажурирати на следеће главно издање. То ажурирање се углавном обавља по изласку другог мањег издања (x.0.2).",
-    "<strong>stable</strong> is the most recent stable version. It is suited for regular use and will always update to the latest major version." : "<strong>стабилна</strong> је најновија стабилна верзија. Прикладна за свакодневну употребу и увек се ажурира на најновију главну верзију.",
-    "<strong>beta</strong> is a pre-release version only for testing new features, not for production environments." : "<strong>бета</strong> је пред-издање и служи само за тестирање нових могућности, не за свакодневни рад.",
-    "Could not start updater, please try the manual update" : "Не могу да покренем програм за ажурирање, покушајте ручно ажурирање",
     "Production" : "Продукција",
     "Will always provide the latest patch level, but not update to the next major release immediately. That update usually happens with the second minor release (x.0.2) and only if the instance is already on the latest minor version." : "Увек ће нудити најновији ниво закрпа, али неће бити ажурирана на следећу главну верзију аутоматски. То ажурирање се углавном обавља по изласку друге мање верзије (x.0.2) и само ако је инстанца већ на најновијој мањој верзији."
 },

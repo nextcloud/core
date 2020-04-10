@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud GmbH.
  *
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -17,17 +18,17 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_Trashbin\Command;
 
-use OCP\IUser;
-use OCP\IUserManager;
 use OCA\Files_Trashbin\Expiration;
 use OCA\Files_Trashbin\Helper;
 use OCA\Files_Trashbin\Trashbin;
+use OCP\IUser;
+use OCP\IUserManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -91,7 +92,7 @@ class ExpireTrash extends Command {
 		} else {
 			$p = new ProgressBar($output);
 			$p->start();
-			$this->userManager->callForSeenUsers(function(IUser $user) use ($p) {
+			$this->userManager->callForSeenUsers(function (IUser $user) use ($p) {
 				$p->advance();
 				$this->expireTrashForUser($user);
 			});

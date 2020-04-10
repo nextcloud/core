@@ -56,7 +56,7 @@ class ElementFinder {
 		$locator = $elementLocator->getLocator();
 		$ancestorElement = self::findAncestorElement($session, $elementLocator, $timeout, $timeoutStep);
 
-		$findCallback = function() use (&$element, $selector, $locator, $ancestorElement) {
+		$findCallback = function () use (&$element, $selector, $locator, $ancestorElement) {
 			$element = $ancestorElement->find($selector, $locator);
 
 			return $element !== null;

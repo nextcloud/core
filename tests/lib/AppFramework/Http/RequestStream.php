@@ -77,7 +77,7 @@ class RequestStream {
 	public function stream_stat() {
 		$size = strlen($GLOBALS[$this->varname]);
 		$time = time();
-		$data = array(
+		$data = [
 			'dev' => 0,
 			'ino' => 0,
 			'mode' => 0777,
@@ -91,7 +91,7 @@ class RequestStream {
 			'ctime' => $time,
 			'blksize' => -1,
 			'blocks' => -1,
-		);
+		];
 		return array_values($data) + $data;
 		//return false;
 	}

@@ -21,7 +21,7 @@ class MySqlMigrationTest extends \Test\TestCase {
 	/** @var string */
 	private $tableName;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->connection = \OC::$server->getDatabaseConnection();
@@ -34,7 +34,7 @@ class MySqlMigrationTest extends \Test\TestCase {
 		$this->connection->exec("CREATE TABLE $this->tableName(b BIT,  e ENUM('1','2','3','4'))");
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$this->connection->getSchemaManager()->dropTable($this->tableName);
 		parent::tearDown();
 	}

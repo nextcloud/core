@@ -20,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -29,8 +29,8 @@ namespace OCA\User_LDAP\Tests\Integration;
 use OCA\User_LDAP\Access;
 use OCA\User_LDAP\Connection;
 use OCA\User_LDAP\FilesystemHelper;
-use OCA\User_LDAP\LDAP;
 use OCA\User_LDAP\Helper;
+use OCA\User_LDAP\LDAP;
 use OCA\User_LDAP\LogWrapper;
 use OCA\User_LDAP\User\Manager;
 
@@ -71,10 +71,10 @@ abstract class AbstractIntegrationTest {
 	 * the LDAP backend.
 	 */
 	public function init() {
-		\OC::$server->registerService('LDAPUserPluginManager', function() {
+		\OC::$server->registerService('LDAPUserPluginManager', function () {
 			return new \OCA\User_LDAP\UserPluginManager();
 		});
-		\OC::$server->registerService('LDAPGroupPluginManager', function() {
+		\OC::$server->registerService('LDAPGroupPluginManager', function () {
 			return new \OCA\User_LDAP\GroupPluginManager();
 		});
 

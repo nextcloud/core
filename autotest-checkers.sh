@@ -6,6 +6,8 @@ bash ./build/autoloaderchecker.sh
 RESULT=$(($RESULT+$?))
 php ./build/translation-checker.php
 RESULT=$(($RESULT+$?))
+php ./build/triple-dot-checker.php
+RESULT=$(($RESULT+$?))
 php ./build/htaccess-checker.php
 RESULT=$(($RESULT+$?))
 bash ./build/ca-bundle-checker.sh
@@ -29,6 +31,7 @@ for app in $(find "apps/" -mindepth 1 -maxdepth 1 -type d -exec basename {} \;);
         [ "$app" == "files_trashbin" ] || \
         [ "$app" == "files_versions" ] || \
         [ "$app" == "provisioning_api" ] || \
+        [ "$app" == "settings" ] || \
         [ "$app" == "updatenotification" ] || \
         [ "$app" == "user_ldap" ]
     then

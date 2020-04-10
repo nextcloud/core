@@ -6,6 +6,7 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roger Szabo <roger.szabo@web.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -21,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -29,8 +30,8 @@ namespace OCA\User_LDAP\User;
 
 use OC\Cache\CappedMemoryCache;
 use OCA\User_LDAP\Access;
-use OCA\User_LDAP\LogWrapper;
 use OCA\User_LDAP\FilesystemHelper;
+use OCA\User_LDAP\LogWrapper;
 use OCP\IAvatarManager;
 use OCP\IConfig;
 use OCP\IDBConnection;
@@ -129,7 +130,7 @@ class Manager {
 		$this->checkAccess();
 		$user = new User($uid, $dn, $this->access, $this->ocConfig,
 			$this->ocFilesystem, clone $this->image, $this->ocLog,
-			$this->avatarManager, $this->userManager, 
+			$this->avatarManager, $this->userManager,
 			$this->notificationManager);
 		$this->usersByDN[$dn]   = $user;
 		$this->usersByUid[$uid] = $user;
@@ -194,7 +195,7 @@ class Manager {
 		}
 
 		$attributes = array_reduce($attributes,
-			function($list, $attribute) {
+			function ($list, $attribute) {
 				$attribute = strtolower(trim((string)$attribute));
 				if(!empty($attribute) && !in_array($attribute, $list)) {
 					$list[] = $attribute;
@@ -263,7 +264,7 @@ class Manager {
 			return $this->usersByUid[$id];
 		}
 
-		if($this->access->stringResemblesDN($id) ) {
+		if($this->access->stringResemblesDN($id)) {
 			$uid = $this->access->dn2username($id);
 			if($uid !== false) {
 				return $this->createAndCache($id, $uid);

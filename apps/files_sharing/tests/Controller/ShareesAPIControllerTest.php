@@ -4,7 +4,9 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -22,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -62,7 +64,7 @@ class ShareesAPIControllerTest extends TestCase {
 	/** @var  ISearch|\PHPUnit_Framework_MockObject_MockObject */
 	protected $collaboratorSearch;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->uid = 'test123';
@@ -236,12 +238,10 @@ class ShareesAPIControllerTest extends TestCase {
 
 		/** @var IConfig|\PHPUnit_Framework_MockObject_MockObject $config */
 		$config = $this->createMock(IConfig::class);
-		$config->expects($this->exactly(3))
+		$config->expects($this->exactly(1))
 			->method('getAppValue')
 			->with($this->anything(), $this->anything(), $this->anything())
 			->willReturnMap([
-				['core', 'shareapi_only_share_with_group_members', 'no', $apiSetting],
-				['core', 'shareapi_allow_share_dialog_user_enumeration', 'yes', $enumSetting],
 				['files_sharing', 'lookupServerEnabled', 'yes', 'yes'],
 			]);
 
@@ -270,9 +270,12 @@ class ShareesAPIControllerTest extends TestCase {
 			->setMethods(['isRemoteSharingAllowed', 'shareProviderExists', 'isRemoteGroupSharingAllowed'])
 			->getMock();
 
+		$expectedShareTypes = $shareTypes;
+		sort($expectedShareTypes);
+
 		$this->collaboratorSearch->expects($this->once())
 			->method('search')
-			->with($search, $shareTypes, $this->anything(), $perPage, $perPage * ($page -1))
+			->with($search, $expectedShareTypes, $this->anything(), $perPage, $perPage * ($page -1))
 			->willReturn([[], false]);
 
 		$sharees->expects($this->any())
@@ -289,18 +292,15 @@ class ShareesAPIControllerTest extends TestCase {
 
 		$this->shareManager->expects($this->any())
 			->method('shareProviderExists')
-			->will($this->returnCallback(function($shareType) use ($emailSharingEnabled) {
+			->willReturnCallback(function ($shareType) use ($emailSharingEnabled) {
 				if ($shareType === \OCP\Share::SHARE_TYPE_EMAIL) {
 					return $emailSharingEnabled;
 				} else {
 					return false;
 				}
-			}));
+			});
 
 		$this->assertInstanceOf(Http\DataResponse::class, $sharees->search($search, $itemType, $page, $perPage, $shareType));
-
-		$this->assertSame($shareWithGroupOnly, $this->invokePrivate($sharees, 'shareWithGroupOnly'));
-		$this->assertSame($shareeEnumeration, $this->invokePrivate($sharees, 'shareeEnumeration'));
 	}
 
 	public function dataSearchInvalid() {
@@ -397,11 +397,11 @@ class ShareesAPIControllerTest extends TestCase {
 		$this->assertSame($expected, $this->invokePrivate($this->sharees, 'isRemoteSharingAllowed', [$itemType]));
 	}
 
-	/**
-	 * @expectedException \OCP\AppFramework\OCS\OCSBadRequestException
-	 * @expectedExceptionMessage Missing itemType
-	 */
+
 	public function testSearchNoItemType() {
+		$this->expectException(\OCP\AppFramework\OCS\OCSBadRequestException::class);
+		$this->expectExceptionMessage('Missing itemType');
+
 		$this->sharees->search('', null, 1, 10, [], false);
 	}
 

@@ -2,8 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Ari Selseng <ari@selseng.net>
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Jagszent <daniel@jagszent.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
@@ -28,7 +30,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -122,7 +124,7 @@ class Scanner extends BasicEmitter implements IScanner {
 	 * @param string $file
 	 * @param int $reuseExisting
 	 * @param int $parentId
-	 * @param array | null $cacheData existing data in the cache for the file to be scanned
+	 * @param array|null|false $cacheData existing data in the cache for the file to be scanned
 	 * @param bool $lock set to false to disable getting an additional read lock during scanning
 	 * @return array an array of metadata of the scanned file
 	 * @throws \OC\ServerNotAvailableException
@@ -163,8 +165,8 @@ class Scanner extends BasicEmitter implements IScanner {
 
 					// pre-emit only if it was a file. By that we avoid counting/treating folders as files
 					if ($data['mimetype'] !== 'httpd/unix-directory') {
-						$this->emit('\OC\Files\Cache\Scanner', 'scanFile', array($file, $this->storageId));
-						\OC_Hook::emit('\OC\Files\Cache\Scanner', 'scan_file', array('path' => $file, 'storage' => $this->storageId));
+						$this->emit('\OC\Files\Cache\Scanner', 'scanFile', [$file, $this->storageId]);
+						\OC_Hook::emit('\OC\Files\Cache\Scanner', 'scan_file', ['path' => $file, 'storage' => $this->storageId]);
 					}
 
 					$parent = dirname($file);
@@ -218,22 +220,23 @@ class Scanner extends BasicEmitter implements IScanner {
 					if (!empty($newData)) {
 						// Reset the checksum if the data has changed
 						$newData['checksum'] = '';
+						$newData['parent'] = $parentId;
 						$data['fileid'] = $this->addToCache($file, $newData, $fileId);
 					}
-					if (isset($cacheData['size'])) {
+					if ($cacheData && isset($cacheData['size'])) {
 						$data['oldSize'] = $cacheData['size'];
 					} else {
 						$data['oldSize'] = 0;
 					}
 
-					if (isset($cacheData['encrypted'])) {
+					if ($cacheData && isset($cacheData['encrypted'])) {
 						$data['encrypted'] = $cacheData['encrypted'];
 					}
 
 					// post-emit only if it was a file. By that we avoid counting/treating folders as files
 					if ($data['mimetype'] !== 'httpd/unix-directory') {
-						$this->emit('\OC\Files\Cache\Scanner', 'postScanFile', array($file, $this->storageId));
-						\OC_Hook::emit('\OC\Files\Cache\Scanner', 'post_scan_file', array('path' => $file, 'storage' => $this->storageId));
+						$this->emit('\OC\Files\Cache\Scanner', 'postScanFile', [$file, $this->storageId]);
+						\OC_Hook::emit('\OC\Files\Cache\Scanner', 'post_scan_file', ['path' => $file, 'storage' => $this->storageId]);
 					}
 
 				} else {
@@ -265,8 +268,8 @@ class Scanner extends BasicEmitter implements IScanner {
 	}
 
 	protected function removeFromCache($path) {
-		\OC_Hook::emit('Scanner', 'removeFromCache', array('file' => $path));
-		$this->emit('\OC\Files\Cache\Scanner', 'removeFromCache', array($path));
+		\OC_Hook::emit('Scanner', 'removeFromCache', ['file' => $path]);
+		$this->emit('\OC\Files\Cache\Scanner', 'removeFromCache', [$path]);
 		if ($this->cacheActive) {
 			$this->cache->remove($path);
 		}
@@ -282,14 +285,14 @@ class Scanner extends BasicEmitter implements IScanner {
 		if (isset($data['scan_permissions'])) {
 			$data['permissions'] = $data['scan_permissions'];
 		}
-		\OC_Hook::emit('Scanner', 'addToCache', array('file' => $path, 'data' => $data));
-		$this->emit('\OC\Files\Cache\Scanner', 'addToCache', array($path, $this->storageId, $data));
+		\OC_Hook::emit('Scanner', 'addToCache', ['file' => $path, 'data' => $data]);
+		$this->emit('\OC\Files\Cache\Scanner', 'addToCache', [$path, $this->storageId, $data]);
 		if ($this->cacheActive) {
 			if ($fileId !== -1) {
 				$this->cache->update($fileId, $data);
 				return $fileId;
 			} else {
-				return $this->cache->put($path, $data);
+				return $this->cache->insert($path, $data);
 			}
 		} else {
 			return -1;
@@ -302,8 +305,8 @@ class Scanner extends BasicEmitter implements IScanner {
 	 * @param int $fileId
 	 */
 	protected function updateCache($path, $data, $fileId = -1) {
-		\OC_Hook::emit('Scanner', 'addToCache', array('file' => $path, 'data' => $data));
-		$this->emit('\OC\Files\Cache\Scanner', 'updateCache', array($path, $this->storageId, $data));
+		\OC_Hook::emit('Scanner', 'addToCache', ['file' => $path, 'data' => $data]);
+		$this->emit('\OC\Files\Cache\Scanner', 'updateCache', [$path, $this->storageId, $data]);
 		if ($this->cacheActive) {
 			if ($fileId !== -1) {
 				$this->cache->update($fileId, $data);
@@ -356,7 +359,7 @@ class Scanner extends BasicEmitter implements IScanner {
 	 * @return array[]
 	 */
 	protected function getExistingChildren($folderId) {
-		$existingChildren = array();
+		$existingChildren = [];
 		$children = $this->cache->getFolderContentsById($folderId);
 		foreach ($children as $child) {
 			$existingChildren[$child['name']] = $child;
@@ -371,7 +374,7 @@ class Scanner extends BasicEmitter implements IScanner {
 	 * @return string[]
 	 */
 	protected function getNewChildren($folder) {
-		$children = array();
+		$children = [];
 		if ($dh = $this->storage->opendir($folder)) {
 			if (is_resource($dh)) {
 				while (($file = readdir($dh)) !== false) {
@@ -398,7 +401,7 @@ class Scanner extends BasicEmitter implements IScanner {
 		if ($reuse === -1) {
 			$reuse = ($recursive === self::SCAN_SHALLOW) ? self::REUSE_ETAG | self::REUSE_SIZE : self::REUSE_ETAG;
 		}
-		$this->emit('\OC\Files\Cache\Scanner', 'scanFolder', array($path, $this->storageId));
+		$this->emit('\OC\Files\Cache\Scanner', 'scanFolder', [$path, $this->storageId]);
 		$size = 0;
 		if (!is_null($folderId)) {
 			$folderId = $this->cache->getId($path);
@@ -414,9 +417,9 @@ class Scanner extends BasicEmitter implements IScanner {
 			}
 		}
 		if ($this->cacheActive) {
-			$this->cache->update($folderId, array('size' => $size));
+			$this->cache->update($folderId, ['size' => $size]);
 		}
-		$this->emit('\OC\Files\Cache\Scanner', 'postScanFolder', array($path, $this->storageId));
+		$this->emit('\OC\Files\Cache\Scanner', 'postScanFolder', [$path, $this->storageId]);
 		return $size;
 	}
 
@@ -434,7 +437,7 @@ class Scanner extends BasicEmitter implements IScanner {
 		foreach ($newChildren as $file) {
 			$child = $path ? $path . '/' . $file : $file;
 			try {
-				$existingData = isset($existingChildren[$file]) ? $existingChildren[$file] : null;
+				$existingData = isset($existingChildren[$file]) ? $existingChildren[$file] : false;
 				$data = $this->scanFile($child, $reuse, $folderId, $existingData, $lock);
 				if ($data) {
 					if ($data['mimetype'] === 'httpd/unix-directory' and $recursive === self::SCAN_RECURSIVE) {
@@ -530,7 +533,7 @@ class Scanner extends BasicEmitter implements IScanner {
 	private function runBackgroundScanJob(callable $callback, $path) {
 		try {
 			$callback();
-			\OC_Hook::emit('Scanner', 'correctFolderSize', array('path' => $path));
+			\OC_Hook::emit('Scanner', 'correctFolderSize', ['path' => $path]);
 			if ($this->cacheActive && $this->cache instanceof Cache) {
 				$this->cache->correctFolderSize($path, null, true);
 			}

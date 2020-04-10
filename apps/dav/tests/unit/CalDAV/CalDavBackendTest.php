@@ -3,10 +3,13 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @copyright Copyright (c) 2017 Georg Ehrke
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author dartcafe <github@dartcafe.de>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
- * @author Thomas Citharel <tcit@tcit.fr>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -21,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -33,10 +36,10 @@ use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\DAV\CalDAV\Calendar;
 use OCP\IConfig;
 use OCP\IL10N;
+use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\PropPatch;
 use Sabre\DAV\Xml\Property\Href;
 use Sabre\DAVACL\IACL;
-use Sabre\DAV\Exception\NotFound;
 
 /**
  * Class CalDavBackendTest
@@ -129,9 +132,9 @@ class CalDavBackendTest extends AbstractCalDavBackend {
 		$l10n
 			->expects($this->any())
 			->method('t')
-			->will($this->returnCallback(function ($text, $parameters = array()) {
+			->willReturnCallback(function ($text, $parameters = []) {
 				return vsprintf($text, $parameters);
-			}));
+			});
 
 		$config = $this->createMock(IConfig::class);
 
@@ -279,11 +282,11 @@ EOD;
 		$this->assertCount(0, $calendarObjects);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\BadRequest
-	 * @expectedExceptionMessage Calendar object with uid already exists in this calendar collection.
-	 */
+	
 	public function testMultipleCalendarObjectsWithSameUID() {
+		$this->expectException(\Sabre\DAV\Exception\BadRequest::class);
+		$this->expectExceptionMessage('Calendar object with uid already exists in this calendar collection.');
+
 		$calendarId = $this->createTestCalendar();
 
 		$calData = <<<'EOD'
@@ -398,7 +401,7 @@ EOD;
 			$this->assertArrayHasKey('classification', $card);
 		}
 
-		usort($calendarObjects, function($a, $b) {
+		usort($calendarObjects, function ($a, $b) {
 			return $a['id'] - $b['id'];
 		});
 
@@ -439,7 +442,7 @@ EOD;
 			'comp-filters' => $compFilter
 		]);
 
-		$expectedEventsInResult = array_map(function($index) use($events) {
+		$expectedEventsInResult = array_map(function ($index) use ($events) {
 			return $events[$index];
 		}, $expectedEventsInResult);
 		$this->assertEquals($expectedEventsInResult, $result, '', 0.0, 10, true);
@@ -545,8 +548,8 @@ EOD;
 		$this->assertEquals($id, $subscriptions[0]['id']);
 
 		$patch = new PropPatch([
-				'{DAV:}displayname' => 'Unit test',
-				'{http://apple.com/ns/ical/}calendar-color' => '#ac0606',
+			'{DAV:}displayname' => 'Unit test',
+			'{http://apple.com/ns/ical/}calendar-color' => '#ac0606',
 		]);
 		$this->backend->updateSubscription($id, $patch);
 		$patch->commit();
@@ -806,7 +809,7 @@ EOD;
 	/**
 	 * @dataProvider searchDataProvider
 	 */
-	public function testSearch($isShared, $count) {
+	public function testSearch(bool $isShared, array $searchOptions, int $count) {
 		$calendarId = $this->createTestCalendar();
 
 		$uris = [];
@@ -900,15 +903,16 @@ EOD;
 		];
 
 		$result = $this->backend->search($calendarInfo, 'Test',
-			['SUMMARY', 'LOCATION', 'ATTENDEE'], [], null, null);
+			['SUMMARY', 'LOCATION', 'ATTENDEE'], $searchOptions, null, null);
 
 		$this->assertCount($count, $result);
 	}
 
 	public function searchDataProvider() {
 		return [
-			[false, 4],
-			[true, 2],
+			[false, [], 4],
+			[true, ['timerange' => ['start' => new DateTime('2013-09-12 13:00:00'), 'end' => new DateTime('2013-09-12 14:00:00')]], 2],
+			[true, ['timerange' => ['start' => new DateTime('2013-09-12 15:00:00'), 'end' => new DateTime('2013-09-12 16:00:00')]], 0],
 		];
 	}
 

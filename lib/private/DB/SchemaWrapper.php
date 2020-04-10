@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -64,7 +64,7 @@ class SchemaWrapper implements ISchemaWrapper {
 	 */
 	public function getTableNamesWithoutPrefix() {
 		$tableNames = $this->schema->getTableNames();
-		return array_map(function($tableName) {
+		return array_map(function ($tableName) {
 			if (strpos($tableName, $this->connection->getPrefix()) === 0) {
 				return substr($tableName, strlen($this->connection->getPrefix()));
 			}

@@ -4,6 +4,7 @@
  *
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -18,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -55,7 +56,7 @@ class DeleteOrphanedFilesTest extends TestCase {
 	 */
 	private $user1;
 
-	protected function setup() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->connection = \OC::$server->getDatabaseConnection();
@@ -68,7 +69,7 @@ class DeleteOrphanedFilesTest extends TestCase {
 		$this->command = new DeleteOrphanedFiles($this->connection);
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$userManager = \OC::$server->getUserManager();
 		$user1 = $userManager->get($this->user1);
 		if($user1) {
@@ -132,4 +133,3 @@ class DeleteOrphanedFilesTest extends TestCase {
 		}
 	}
 }
-

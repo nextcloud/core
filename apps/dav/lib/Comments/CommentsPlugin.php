@@ -19,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -29,9 +29,9 @@ use OCP\Comments\IComment;
 use OCP\Comments\ICommentsManager;
 use OCP\IUserSession;
 use Sabre\DAV\Exception\BadRequest;
+use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\Exception\ReportNotSupported;
 use Sabre\DAV\Exception\UnsupportedMediaType;
-use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\Server;
 use Sabre\DAV\ServerPlugin;
 use Sabre\DAV\Xml\Element\Response;
@@ -91,7 +91,7 @@ class CommentsPlugin extends ServerPlugin {
 
 		$this->server->xml->namespaceMap[self::NS_OWNCLOUD] = 'oc';
 
-		$this->server->xml->classMap['DateTime'] = function(Writer $writer, \DateTime $value) {
+		$this->server->xml->classMap['DateTime'] = function (Writer $writer, \DateTime $value) {
 			$writer->write(\Sabre\HTTP\toDate($value));
 		};
 

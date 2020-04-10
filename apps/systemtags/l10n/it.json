@@ -1,5 +1,6 @@
 { "translations": {
     "Tags" : "Etichette",
+    "Tag name is empty" : "Il nome dell'etichetta è vuoto",
     "Update" : "Aggiorna",
     "Create" : "Crea",
     "Select tag…" : "Seleziona etichetta...",
@@ -48,7 +49,7 @@
     "No tags found" : "Nessuna etichetta trovata",
     "Please select tags to filter by" : "Seleziona le etichette per filtrare",
     "No files found for the selected tags" : "Nessun file trovato per le etichette selezionate",
-    "Collaborative tags are available for all users. Restricted tags are visible to users but cannot be assigned by them. Invisible tags are for internal use, since users cannot see or assign them." : "Le etichette collaborative sono disponibili per tutti gli utenti. Le etichette limitate sono visibili agli utenti, ma non possono essere assegnate da essi. Le etichette invisibili sono per iso interno, poiché gli utenti non possono vederle o assegnarle.",
+    "Collaborative tags are available for all users. Restricted tags are visible to users but cannot be assigned by them. Invisible tags are for internal use, since users cannot see or assign them." : "Le etichette collaborative sono disponibili per tutti gli utenti. Le etichette limitate sono visibili agli utenti, ma non possono essere assegnate da essi. Le etichette invisibili sono per uso interno, poiché gli utenti non possono vederle o assegnarle.",
     "Select tag …" : "Seleziona etichetta...",
     "Create a new tag" : "Crea una nuova etichetta",
     "Name" : "Nome",

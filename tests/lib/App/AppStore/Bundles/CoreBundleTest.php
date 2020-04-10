@@ -24,7 +24,7 @@ namespace Test\App\AppStore\Bundles;
 use OC\App\AppStore\Bundles\CoreBundle;
 
 class CoreBundleTest extends BundleBase {
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->bundle = new CoreBundle($this->l10n);
 		$this->bundleIdentifier = 'CoreBundle';

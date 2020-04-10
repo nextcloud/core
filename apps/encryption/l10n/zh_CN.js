@@ -37,7 +37,7 @@ OC.L10N.register(
     "The share will expire on %s." : "此共享将在 %s 过期。",
     "Cheers!" : "干杯！",
     "Hey there,<br><br>the admin enabled server-side-encryption. Your files were encrypted using the password <strong>%s</strong>.<br><br>Please login to the web interface, go to the section \"basic encryption module\" of your personal settings and update your encryption password by entering this password into the \"old log-in password\" field and your current login-password.<br><br>" : "您好，<br><br>管理员已启用服务器端加密，您的文件已使用密码 <strong>%s</strong> 加密。<br><br>\n请登陆网页界面，进入个人设置中的“基础加密模块”部分，在“旧登陆密码”处输入上述密码并输入您的当前登陆密码，即可更新加密密码。<br><br>",
-    "Encryption app is enabled but your keys are not initialized, please log-out and log-in again" : "加密应用程序已启用，但您的密钥未初始化，请注销并再次登录",
+    "Encryption app is enabled but your keys are not initialized, please log-out and log-in again" : "加密应用已启用，但您的密钥未初始化，请登出并再次登录",
     "Encrypt the home storage" : "加密主目录储存",
     "Enabling this option encrypts all files stored on the main storage, otherwise only files on external storage will be encrypted" : "启用此选项将加密存储在主存储上的所有文件，否则只会加密外部存储上的文件",
     "Enable recovery key" : "启用恢复密钥",

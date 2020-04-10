@@ -4,6 +4,7 @@
  *
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,16 +18,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_External\Service;
 
+use OCA\Files_External\Lib\StorageConfig;
 use OCP\Files\Config\IUserMountCache;
-use \OCP\IUserSession;
-use \OCP\IGroupManager;
-use \OCA\Files_External\Lib\StorageConfig;
+use OCP\IGroupManager;
+use OCP\IUserSession;
 
 /**
  * Service class to read global storages applicable to the user

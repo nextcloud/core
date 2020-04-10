@@ -1,0 +1,7 @@
+{ "translations": {
+    "Authentication error" : "Samgildis feilur",
+    "Delete" : "Strika",
+    "Security" : "Trygd",
+    "Unlimited" : "Óavmarkað"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

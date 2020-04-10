@@ -37,7 +37,7 @@ class PropertyDoesNotExistException extends \Exception {
 	 * @param string $msg the error message
 	 * @since 15.0.0
 	 */
-	public function __construct($property){
+	public function __construct($property) {
 		parent::__construct('Property ' . $property . ' does not exist.');
 	}
 

@@ -2,7 +2,9 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Ruben Homs <ruben@homs.codes>
  *
  * @license AGPL-3.0
  *
@@ -16,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -68,7 +70,7 @@ class ListModules extends Base {
 		$encryptionModules = $this->encryptionManager->getEncryptionModules();
 		$defaultEncryptionModuleId = $this->encryptionManager->getDefaultEncryptionModuleId();
 
-		$encModules = array();
+		$encModules = [];
 		foreach ($encryptionModules as $module) {
 			$encModules[$module['id']]['displayName'] = $module['displayName'];
 			$encModules[$module['id']]['default'] = $module['id'] === $defaultEncryptionModuleId;
@@ -83,7 +85,7 @@ class ListModules extends Base {
 	 */
 	protected function writeModuleList(InputInterface $input, OutputInterface $output, $items) {
 		if ($input->getOption('output') === self::OUTPUT_FORMAT_PLAIN) {
-			array_walk($items, function(&$item) {
+			array_walk($items, function (&$item) {
 				if (!$item['default']) {
 					$item = $item['displayName'];
 				} else {

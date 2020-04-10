@@ -19,8 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\AppFramework\Middleware;
 
+use OC\AppFramework\Middleware\OCSMiddleware;
 use OC\AppFramework\OCS\BaseResponse;
 use OC\AppFramework\OCS\V1Response;
 use OC\AppFramework\OCS\V2Response;
@@ -32,8 +34,6 @@ use OCP\AppFramework\OCS\OCSForbiddenException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
-use OC\AppFramework\Middleware\OCSMiddleware;
-
 
 class OCSMiddlewareTest extends \Test\TestCase {
 
@@ -42,7 +42,7 @@ class OCSMiddlewareTest extends \Test\TestCase {
 	 */
 	private $request;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->getMockBuilder(IRequest::class)

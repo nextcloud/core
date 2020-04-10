@@ -4,6 +4,7 @@
  *
  * @author Christopher Schäpers <kondou@ts.unde.re>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Tom Needham <tom@owncloud.com>
  *
@@ -19,14 +20,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files;
 
+use OCA\Files\Service\DirectEditingService;
 use OCP\Capabilities\ICapability;
 use OCP\IConfig;
+use OCP\IURLGenerator;
 
 /**
  * Class Capabilities
@@ -34,16 +37,25 @@ use OCP\IConfig;
  * @package OCA\Files
  */
 class Capabilities implements ICapability {
+
 	/** @var IConfig */
 	protected $config;
+
+	/** @var DirectEditingService */
+	protected $directEditingService;
+
+	/** @var IURLGenerator */
+	private $urlGenerator;
 
 	/**
 	 * Capabilities constructor.
 	 *
 	 * @param IConfig $config
 	 */
-	public function __construct(IConfig $config) {
+	public function __construct(IConfig $config, DirectEditingService $directEditingService, IURLGenerator $urlGenerator) {
 		$this->config = $config;
+		$this->directEditingService = $directEditingService;
+		$this->urlGenerator = $urlGenerator;
 	}
 
 	/**
@@ -56,7 +68,13 @@ class Capabilities implements ICapability {
 			'files' => [
 				'bigfilechunking' => true,
 				'blacklisted_files' => $this->config->getSystemValue('blacklisted_files', ['.htaccess']),
+				'directEditing' => [
+					'url' => $this->urlGenerator->linkToOCSRouteAbsolute('files.DirectEditing.info'),
+					'etag' => $this->directEditingService->getDirectEditingETag()
+				]
 			],
 		];
 	}
+
+
 }

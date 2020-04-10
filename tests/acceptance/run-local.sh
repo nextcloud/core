@@ -193,6 +193,11 @@ cd ../../
 # server to make possible to run the Nextcloud server on Apache if needed.
 ln --symbolic $(pwd) /var/www/html
 
+# Add Notifications app to the "apps" directory (unless it is already there).
+if [ ! -e "apps/notifications" ]; then
+	(cd apps && git clone --depth 1 https://github.com/nextcloud/notifications)
+fi
+
 INSTALL_AND_CONFIGURE_SERVER_PARAMETERS=""
 if [ "$NEXTCLOUD_SERVER_DOMAIN" != "$DEFAULT_NEXTCLOUD_SERVER_DOMAIN" ]; then
 	INSTALL_AND_CONFIGURE_SERVER_PARAMETERS+="--nextcloud-server-domain $NEXTCLOUD_SERVER_DOMAIN"

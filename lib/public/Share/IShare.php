@@ -3,6 +3,10 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Maxence Lange <maxence@nextcloud.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -18,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -38,6 +42,84 @@ use OCP\Share\Exceptions\IllegalIDChangeException;
  * @since 9.0.0
  */
 interface IShare {
+
+	/**
+	 * @since 17.0.0
+	 */
+	public const TYPE_USER = 0;
+
+	/**
+	 * @since 17.0.0
+	 */
+	public const TYPE_GROUP = 1;
+
+	/**
+	 * @internal
+	 * @since 18.0.0
+	 */
+	public const TYPE_USERGROUP = 2;
+
+	/**
+	 * @since 17.0.0
+	 */
+	public const TYPE_LINK = 3;
+
+	/**
+	 * @since 17.0.0
+	 */
+	public const TYPE_EMAIL = 4;
+
+	/**
+	 * ToDo Check if it is still in use otherwise remove it
+	 * @since 17.0.0
+	 */
+	// public const TYPE_CONTACT = 5;
+
+	/**
+	 * @since 17.0.0
+	 */
+	public const TYPE_REMOTE = 6;
+
+	/**
+	 * @since 17.0.0
+	 */
+	public const TYPE_CIRCLE = 7;
+
+	/**
+	 * @since 17.0.0
+	 */
+	public const TYPE_GUEST = 8;
+
+	/**
+	 * @since 17.0.0
+	 */
+	public const TYPE_REMOTE_GROUP = 9;
+
+	/**
+	 * @since 17.0.0
+	 */
+	public const TYPE_ROOM = 10;
+
+	/**
+	 * Internal type used by RoomShareProvider
+	 * @since 17.0.0
+	 */
+	// const TYPE_USERROOM = 11;
+
+	/**
+	 * @since 18.0.0
+	 */
+	public const STATUS_PENDING = 0;
+
+	/**
+	 * @since 18.0.0
+	 */
+	public const STATUS_ACCEPTED = 1;
+
+	/**
+	 * @since 18.0.0
+	 */
+	public const STATUS_REJECTED = 2;
 
 	/**
 	 * Set the internal id of the share
@@ -223,6 +305,25 @@ interface IShare {
 	public function getPermissions();
 
 	/**
+	 * Set the accepted status
+	 * See self::STATUS_*
+	 *
+	 * @param int $status
+	 * @return IShare The modified object
+	 * @since 18.0.0
+	 */
+	public function setStatus(int $status): IShare;
+
+	/**
+	 * Get the accepted status
+	 * See self::STATUS_*
+	 *
+	 * @return int
+	 * @since 18.0.0
+	 */
+	public function getStatus(): int;
+
+	/**
 	 * Attach a note to a share
 	 *
 	 * @param string $note
@@ -256,6 +357,14 @@ interface IShare {
 	 * @since 9.0.0
 	 */
 	public function getExpirationDate();
+
+	/**
+	 * Is the share expired ?
+	 *
+	 * @return boolean
+	 * @since 18.0.0
+	 */
+	public function isExpired();
 
 	/**
 	 * set a label for a share, some shares, e.g. public links can have a label

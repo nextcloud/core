@@ -6,20 +6,19 @@
  * later.
  * See the COPYING-README file.
  *
-*/
+ */
 
 namespace Test\SystemTag;
 
 use OC\SystemTag\SystemTagManager;
 use OC\SystemTag\SystemTagObjectMapper;
 use OCP\IDBConnection;
+use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\SystemTag\ISystemTag;
 use OCP\SystemTag\ISystemTagManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Test\TestCase;
-use OCP\IUserManager;
-use OCP\IGroupManager;
 
 /**
  * Class TestSystemTagManager
@@ -49,7 +48,7 @@ class SystemTagManagerTest extends TestCase {
 	 */
 	private $dispatcher;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->connection = \OC::$server->getDatabaseConnection();
@@ -67,7 +66,7 @@ class SystemTagManagerTest extends TestCase {
 		$this->pruneTagsTables();
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		$this->pruneTagsTables();
 		parent::tearDown();
 	}
@@ -249,9 +248,10 @@ class SystemTagManagerTest extends TestCase {
 
 	/**
 	 * @dataProvider oneTagMultipleFlagsProvider
-	 * @expectedException \OCP\SystemTag\TagAlreadyExistsException
 	 */
 	public function testCreateDuplicate($name, $userVisible, $userAssignable) {
+		$this->expectException(\OCP\SystemTag\TagAlreadyExistsException::class);
+
 		try {
 			$this->tagManager->createTag($name, $userVisible, $userAssignable);
 		} catch (\Exception $e) {
@@ -282,25 +282,25 @@ class SystemTagManagerTest extends TestCase {
 		$this->assertSameTag($tag2, $tagList[$tag2->getId()]);
 	}
 
-	/**
-	 * @expectedException \OCP\SystemTag\TagNotFoundException
-	 */
+	
 	public function testGetNonExistingTag() {
+		$this->expectException(\OCP\SystemTag\TagNotFoundException::class);
+
 		$this->tagManager->getTag('nonexist', false, false);
 	}
 
-	/**
-	 * @expectedException \OCP\SystemTag\TagNotFoundException
-	 */
+	
 	public function testGetNonExistingTagsById() {
+		$this->expectException(\OCP\SystemTag\TagNotFoundException::class);
+
 		$tag1 = $this->tagManager->createTag('one', true, false);
 		$this->tagManager->getTagsByIds([$tag1->getId(), 100, 101]);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 */
+	
 	public function testGetInvalidTagIdFormat() {
+		$this->expectException(\InvalidArgumentException::class);
+
 		$tag1 = $this->tagManager->createTag('one', true, false);
 		$this->tagManager->getTagsByIds([$tag1->getId() . 'suffix']);
 	}
@@ -359,9 +359,10 @@ class SystemTagManagerTest extends TestCase {
 
 	/**
 	 * @dataProvider updateTagProvider
-	 * @expectedException \OCP\SystemTag\TagAlreadyExistsException
 	 */
 	public function testUpdateTagDuplicate($tagCreate, $tagUpdated) {
+		$this->expectException(\OCP\SystemTag\TagAlreadyExistsException::class);
+
 		$this->tagManager->createTag(
 			$tagCreate[0],
 			$tagCreate[1],
@@ -391,10 +392,10 @@ class SystemTagManagerTest extends TestCase {
 		$this->assertEmpty($this->tagManager->getAllTags());
 	}
 
-	/**
-	 * @expectedException \OCP\SystemTag\TagNotFoundException
-	 */
+	
 	public function testDeleteNonExistingTag() {
+		$this->expectException(\OCP\SystemTag\TagNotFoundException::class);
+
 		$this->tagManager->deleteTags([100]);
 	}
 
@@ -437,13 +438,13 @@ class SystemTagManagerTest extends TestCase {
 		$user = $this->getMockBuilder(IUser::class)->getMock();
 		$user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('test'));
+			->willReturn('test');
 		$tag1 = $this->tagManager->createTag('one', $userVisible, $userAssignable);
 
 		$this->groupManager->expects($this->any())
 			->method('isAdmin')
 			->with('test')
-			->will($this->returnValue($isAdmin));
+			->willReturn($isAdmin);
 
 		$this->assertEquals($expectedResult, $this->tagManager->canUserSeeTag($tag1, $user));
 	}
@@ -484,18 +485,18 @@ class SystemTagManagerTest extends TestCase {
 		$user = $this->getMockBuilder(IUser::class)->getMock();
 		$user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('test'));
+			->willReturn('test');
 		$tag1 = $this->tagManager->createTag('one', $userVisible, $userAssignable);
 		$this->tagManager->setTagGroups($tag1, $tagGroupIds);
 
 		$this->groupManager->expects($this->any())
 			->method('isAdmin')
 			->with('test')
-			->will($this->returnValue($isAdmin));
+			->willReturn($isAdmin);
 		$this->groupManager->expects($this->any())
 			->method('getUserGroupIds')
 			->with($user)
-			->will($this->returnValue($userGroupIds));
+			->willReturn($userGroupIds);
 
 		$this->assertEquals($expectedResult, $this->tagManager->canUserAssignTag($tag1, $user));
 	}

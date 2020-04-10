@@ -1,8 +1,14 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright 2018, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Marius David Wieschollek <git.public@mdns.eu>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -18,7 +24,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -52,7 +58,7 @@ abstract class QBMapper {
 	 * mapped to queries without using sql
 	 * @since 14.0.0
 	 */
-	public function __construct(IDBConnection $db, string $tableName, string $entityClass=null){
+	public function __construct(IDBConnection $db, string $tableName, string $entityClass=null) {
 		$this->db = $db;
 		$this->tableName = $tableName;
 
@@ -84,9 +90,11 @@ abstract class QBMapper {
 	public function delete(Entity $entity): Entity {
 		$qb = $this->db->getQueryBuilder();
 
+		$idType = $this->getParameterTypeForProperty($entity, 'id');
+
 		$qb->delete($this->tableName)
 			->where(
-				$qb->expr()->eq('id', $qb->createNamedParameter($entity->getId()))
+				$qb->expr()->eq('id', $qb->createNamedParameter($entity->getId(), $idType))
 			);
 		$qb->execute();
 		return $entity;
@@ -121,6 +129,7 @@ abstract class QBMapper {
 		$qb->execute();
 
 		if($entity->id === null) {
+			// When autoincrement is used id is always an int
 			$entity->setId((int)$qb->getLastInsertId());
 		}
 
@@ -186,8 +195,10 @@ abstract class QBMapper {
 			$qb->set($column, $qb->createNamedParameter($value, $type));
 		}
 
+		$idType = $this->getParameterTypeForProperty($entity, 'id');
+
 		$qb->where(
-			$qb->expr()->eq('id', $qb->createNamedParameter($id, IQueryBuilder::PARAM_INT))
+			$qb->expr()->eq('id', $qb->createNamedParameter($id, $idType))
 		);
 		$qb->execute();
 
@@ -250,7 +261,7 @@ abstract class QBMapper {
 
 		$row2 = $cursor->fetch();
 		$cursor->closeCursor();
-		if($row2 !== false ) {
+		if($row2 !== false) {
 			$msg = $this->buildDebugMessage(
 				'Did not expect more than one result when executing', $query
 			);

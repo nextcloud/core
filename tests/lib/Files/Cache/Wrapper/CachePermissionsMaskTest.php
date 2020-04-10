@@ -24,7 +24,7 @@ class CachePermissionsMaskTest extends CacheTest {
 	 */
 	protected $sourceCache;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->storage->mkdir('foo');
 		$this->sourceCache = $this->cache;
@@ -36,12 +36,12 @@ class CachePermissionsMaskTest extends CacheTest {
 	}
 
 	public function maskProvider() {
-		return array(
-			array(Constants::PERMISSION_ALL),
-			array(Constants::PERMISSION_ALL - Constants::PERMISSION_SHARE),
-			array(Constants::PERMISSION_ALL - Constants::PERMISSION_UPDATE),
-			array(Constants::PERMISSION_READ)
-		);
+		return [
+			[Constants::PERMISSION_ALL],
+			[Constants::PERMISSION_ALL - Constants::PERMISSION_SHARE],
+			[Constants::PERMISSION_ALL - Constants::PERMISSION_UPDATE],
+			[Constants::PERMISSION_READ]
+		];
 	}
 
 	/**
@@ -50,12 +50,12 @@ class CachePermissionsMaskTest extends CacheTest {
 	 */
 	public function testGetMasked($mask) {
 		$cache = $this->getMaskedCached($mask);
-		$data = array('size' => 100, 'mtime' => 50, 'mimetype' => 'text/plain', 'permissions' => Constants::PERMISSION_ALL);
+		$data = ['size' => 100, 'mtime' => 50, 'mimetype' => 'text/plain', 'permissions' => Constants::PERMISSION_ALL];
 		$this->sourceCache->put('foo', $data);
 		$result = $cache->get('foo');
 		$this->assertEquals($mask, $result['permissions']);
 
-		$data = array('size' => 100, 'mtime' => 50, 'mimetype' => 'text/plain', 'permissions' => Constants::PERMISSION_ALL - Constants::PERMISSION_DELETE);
+		$data = ['size' => 100, 'mtime' => 50, 'mimetype' => 'text/plain', 'permissions' => Constants::PERMISSION_ALL - Constants::PERMISSION_DELETE];
 		$this->sourceCache->put('bar', $data);
 		$result = $cache->get('bar');
 		$this->assertEquals($mask & ~Constants::PERMISSION_DELETE, $result['permissions']);

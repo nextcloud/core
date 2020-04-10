@@ -5,7 +5,6 @@
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Joas Schilling <coding@schilljs.com>
- * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -21,13 +20,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Federation\Tests;
-
 
 use OCA\Federation\DbHandler;
 use OCA\Federation\TrustedServers;
@@ -77,7 +74,7 @@ class TrustedServersTest extends TestCase {
 	/** @var \PHPUnit_Framework_MockObject_MockObject|ITimeFactory */
 	private $timeFactory;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->dbHandler = $this->getMockBuilder(DbHandler::class)
@@ -219,7 +216,7 @@ class TrustedServersTest extends TestCase {
 			->willReturn($server);
 		$this->dispatcher->expects($this->once())->method('dispatch')
 			->willReturnCallback(
-				function($eventId, $event) {
+				function ($eventId, $event) {
 					$this->assertSame($eventId, 'OCP\Federation\TrustedServerEvent::remove');
 					$this->assertInstanceOf('Symfony\Component\EventDispatcher\GenericEvent', $event);
 					/** @var \Symfony\Component\EventDispatcher\GenericEvent $event */
@@ -353,10 +350,11 @@ class TrustedServersTest extends TestCase {
 
 	/**
 	 * @dataProvider dataTestCheckOwnCloudVersionTooLow
-	 * @expectedException \OC\HintException
-	 * @expectedExceptionMessage Remote server version is too low. 9.0 is required.
 	 */
 	public function testCheckOwnCloudVersionTooLow($status) {
+		$this->expectException(\OC\HintException::class);
+		$this->expectExceptionMessage('Remote server version is too low. 9.0 is required.');
+
 		$this->invokePrivate($this->trustedServers, 'checkOwnCloudVersion', [$status]);
 	}
 

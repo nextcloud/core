@@ -31,7 +31,7 @@ class QuoteHelperTest extends \Test\TestCase {
 	/** @var QuoteHelper */
 	protected $helper;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->helper = new QuoteHelper();

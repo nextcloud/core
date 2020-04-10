@@ -1,8 +1,11 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2018, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -18,7 +21,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -137,5 +140,29 @@ class AppPasswordController extends \OCP\AppFramework\OCSController {
 
 		$this->tokenProvider->invalidateTokenById($token->getUID(), $token->getId());
 		return new DataResponse();
+	}
+
+	/**
+	 * @NoAdminRequired
+	 */
+	public function rotateAppPassword(): DataResponse {
+		if (!$this->session->exists('app_password')) {
+			throw new OCSForbiddenException('no app password in use');
+		}
+
+		$appPassword = $this->session->get('app_password');
+
+		try {
+			$token = $this->tokenProvider->getToken($appPassword);
+		} catch (InvalidTokenException $e) {
+			throw new OCSForbiddenException('could not rotate apptoken');
+		}
+
+		$newToken = $this->random->generate(72, ISecureRandom::CHAR_UPPER.ISecureRandom::CHAR_LOWER.ISecureRandom::CHAR_DIGITS);
+		$this->tokenProvider->rotate($token, $appPassword, $newToken);
+
+		return new DataResponse([
+			'apppassword' => $newToken,
+		]);
 	}
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -29,27 +31,27 @@ use OC\Authentication\TwoFactorAuth\Registry;
 use OCP\Authentication\TwoFactorAuth\IProvider;
 use OCP\Authentication\TwoFactorAuth\IRegistry;
 use OCP\Authentication\TwoFactorAuth\RegistryEvent;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUser;
-use PHPUnit_Framework_MockObject_MockObject;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
 
 class RegistryTest extends TestCase {
 
-	/** @var ProviderUserAssignmentDao|PHPUnit_Framework_MockObject_MockObject */
+	/** @var ProviderUserAssignmentDao|MockObject */
 	private $dao;
+
+	/** @var IEventDispatcher|MockObject */
+	private $dispatcher;
 
 	/** @var Registry */
 	private $registry;
 
-	/** @var EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject */
-	private $dispatcher;
-
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->dao = $this->createMock(ProviderUserAssignmentDao::class);
-		$this->dispatcher = $this->createMock(EventDispatcherInterface::class);
+		$this->dispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->registry = new Registry($this->dao, $this->dispatcher);
 	}
@@ -79,7 +81,7 @@ class RegistryTest extends TestCase {
 			->method('dispatch')
 			->with(
 				$this->equalTo(IRegistry::EVENT_PROVIDER_ENABLED),
-				$this->callback(function(RegistryEvent $e) use ($user, $provider) {
+				$this->callback(function (RegistryEvent $e) use ($user, $provider) {
 					return $e->getUser() === $user && $e->getProvider() === $provider;
 				})
 			);
@@ -100,12 +102,22 @@ class RegistryTest extends TestCase {
 			->method('dispatch')
 			->with(
 				$this->equalTo(IRegistry::EVENT_PROVIDER_DISABLED),
-				$this->callback(function(RegistryEvent $e) use ($user, $provider) {
+				$this->callback(function (RegistryEvent $e) use ($user, $provider) {
 					return $e->getUser() === $user && $e->getProvider() === $provider;
 				})
 			);
 
 		$this->registry->disableProviderFor($provider, $user);
+	}
+
+	public function testDeleteUserData() {
+		$user = $this->createMock(IUser::class);
+		$user->expects($this->once())->method('getUID')->willReturn('user123');
+		$this->dao->expects($this->once())
+			->method('deleteByUser')
+			->with('user123');
+
+		$this->registry->deleteUserData($user);
 	}
 
 	public function testCleanUp() {

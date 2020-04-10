@@ -31,8 +31,8 @@
 	 * This is a simple method. Register a new search with your function as references.
 	 * The events will forward the search or reset directly
 	 *
-	 * @param {function} searchCallback the function to run on a query search
-	 * @param {function} resetCallback the function to run when the user reset the form
+	 * @param {Function} searchCallback the function to run on a query search
+	 * @param {Function} resetCallback the function to run when the user reset the form
 	 */
 	var Search = function(searchCallback, resetCallback) {
 		this.initialize(searchCallback, resetCallback);
@@ -45,8 +45,8 @@
 		/**
 		 * Initialize the search box
 		 *
-		 * @param {function} searchCallback the function to run on a query search
-		 * @param {function} resetCallback the function to run when the user reset the form
+		 * @param {Function} searchCallback the function to run on a query search
+		 * @param {Function} resetCallback the function to run when the user reset the form
 		 */
 		initialize: function(searchCallback, resetCallback) {
 

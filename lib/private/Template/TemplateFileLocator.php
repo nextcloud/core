@@ -19,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -32,7 +32,7 @@ class TemplateFileLocator {
 	/**
 	 * @param string[] $dirs
 	 */
-	public function __construct( $dirs ) {
+	public function __construct($dirs) {
 		$this->dirs = $dirs;
 	}
 
@@ -41,7 +41,7 @@ class TemplateFileLocator {
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function find( $template ) {
+	public function find($template) {
 		if ($template === '') {
 			throw new \InvalidArgumentException('Empty template name');
 		}

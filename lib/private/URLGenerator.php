@@ -1,19 +1,23 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Felix Epp <work@felixepp.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
- * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author mmccarn <mmccarn-github@mmsionline.us>
  * @author Morris Jobke <hey@morrisjobke.de>
- * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Tanghus <thomas@tanghus.net>
  *
@@ -29,7 +33,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -74,7 +78,7 @@ class URLGenerator implements IURLGenerator {
 	 *
 	 * Returns a url to the given route.
 	 */
-	public function linkToRoute(string $route, array $parameters = array()): string {
+	public function linkToRoute(string $route, array $parameters = []): string {
 		// TODO: mock router
 		return \OC::$server->getRouter()->generate($route, $parameters);
 	}
@@ -87,15 +91,16 @@ class URLGenerator implements IURLGenerator {
 	 *
 	 * Returns an absolute url to the given route.
 	 */
-	public function linkToRouteAbsolute(string $routeName, array $arguments = array()): string {
+	public function linkToRouteAbsolute(string $routeName, array $arguments = []): string {
 		return $this->getAbsoluteURL($this->linkToRoute($routeName, $arguments));
 	}
 
 	public function linkToOCSRouteAbsolute(string $routeName, array $arguments = []): string {
 		$route = \OC::$server->getRouter()->generate('ocs.'.$routeName, $arguments, false);
 
-		if (strpos($route, '/index.php') === 0) {
-			$route = substr($route, 10);
+		$indexPhpPos = strpos($route, '/index.php/');
+		if ($indexPhpPos !== false) {
+			$route = substr($route, $indexPhpPos + 10);
 		}
 
 		$route = substr($route, 7);
@@ -114,10 +119,10 @@ class URLGenerator implements IURLGenerator {
 	 *
 	 * Returns a url to the given app and file.
 	 */
-	public function linkTo(string $app, string $file, array $args = array()): string {
+	public function linkTo(string $app, string $file, array $args = []): string {
 		$frontControllerActive = ($this->config->getSystemValue('htaccess.IgnoreFrontController', false) === true || getenv('front_controller_active') === 'true');
 
-		if( $app !== '' ) {
+		if($app !== '') {
 			$app_path = \OC_App::getAppPath($app);
 			// Check if the app is in the app folder
 			if ($app_path && file_exists($app_path . '/' . $file)) {

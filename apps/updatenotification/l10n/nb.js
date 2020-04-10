@@ -12,6 +12,7 @@ OC.L10N.register(
     "Update notification" : "Oppdateringsvarsel",
     "The version you are running is not maintained anymore. Please make sure to update to a supported version as soon as possible." : "Versjonen du kjører vedlikeholdes ikke lengre. Vennligst sørg for å oppdatere til en støttet versjon så snart som mulig.",
     "Apps missing updates" : "Apper mangler oppdateringer",
+    "View in store" : "Vis i butikk",
     "Apps with available updates" : "Apper med tilgjengelige oppdateringer",
     "Open updater" : "Åpne oppdaterer",
     "Download now" : "Last ned nå",
@@ -28,9 +29,10 @@ OC.L10N.register(
     "A new version is available: <strong>{newVersionString}</strong>" : "En ny versjon er tilgjengelig: <strong>{newVersionString}</strong>",
     "Checked on {lastCheckedDate}" : "Sist sjekket {lastCheckedDate}",
     "Checking apps for compatible updates" : "Kontrollerer programmer for kompatible oppdateringer",
+    "Please make sure your config.php does not set <samp>appstoreenabled</samp> to false." : "Forsikre deg om at <samp>appstoreenabled</samp> ikke er satt til false i config.php.",
+    "Could not connect to the appstore or the appstore returned no updates at all. Search manually for updates or make sure your server has access to the internet and can connect to the appstore." : "Kunne ikke opprette forbindelse med appstore eller den rapporterte ingen oppdateringer. Søk manuelt for oppdatering eller sørg for at din tjener har tilgang til internet og kan opprette forbindelse med appstore.",
     "<strong>All</strong> apps have an update for this version available" : "<strong>Alle</strong> apper har en oppdatering tilgjengelig for denne versjonen",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong>  app har ingen oppdatering tilgjengelig for denne versjonen","<strong>%n</strong> apper har ingen oppdatering tilgjengelig for denne versjonen"],
-    "You can always update to a newer version / experimental channel. But you can never downgrade to a more stable channel." : "Du kan alltid oppdatere til en nyere versjon / eksperimentell kanal. Men du kan aldri nedgradere til en mer stabil kanal.",
-    "Could not start updater, please try the manual update" : "Kunne ikke starte oppdateringen, prøv å oppdatere manuelt"
+    "View changelog" : "Se endringslogg",
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong>  app har ingen oppdatering tilgjengelig for denne versjonen","<strong>%n</strong> apper har ingen oppdatering tilgjengelig for denne versjonen"]
 },
 "nplurals=2; plural=(n != 1);");

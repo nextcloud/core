@@ -21,13 +21,12 @@
 
 namespace OCA\WorkflowEngine\Check;
 
-
-use OCP\Files\Storage\IStorage;
 use OCP\IGroupManager;
 use OCP\IL10N;
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\WorkflowEngine\ICheck;
+use OCP\WorkflowEngine\IManager;
 
 class UserGroupMembership implements ICheck {
 
@@ -55,14 +54,6 @@ class UserGroupMembership implements ICheck {
 		$this->userSession = $userSession;
 		$this->groupManager = $groupManager;
 		$this->l = $l;
-	}
-
-	/**
-	 * @param IStorage $storage
-	 * @param string $path
-	 */
-	public function setFileInfo(IStorage $storage, $path) {
-		// A different path doesn't change group memberships, so nothing to do here.
 	}
 
 	/**
@@ -110,5 +101,15 @@ class UserGroupMembership implements ICheck {
 		}
 
 		return $this->cachedGroupMemberships;
+	}
+
+	public function supportedEntities(): array {
+		// universal by default
+		return [];
+	}
+
+	public function isAvailableForScope(int $scope): bool {
+		// admin only by default
+		return $scope === IManager::SCOPE_ADMIN;
 	}
 }

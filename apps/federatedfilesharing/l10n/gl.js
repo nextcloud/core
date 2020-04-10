@@ -24,9 +24,9 @@ OC.L10N.register(
     "Sharing %1$s failed, could not find %2$s, maybe the server is currently unreachable or uses a self-signed certificate." : "Produciuse un fallo ao compartir %1$s Non foi posíbel atopar %2$s, quizais haxa un problema de conexión co servidor  ou emprega un certificado autoasinado.",
     "Could not find share" : "Non foi posíbel atopar o recurso compartido",
     "Federated sharing" : "Compartición federada",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Vostede recibiu «%3$s» como un elemento compartido remoto de %1$s  (de parte de %2$s)",
+    "You received \"%3$s\" as a remote share from %4$s (%1$s) (on behalf of %5$s (%2$s))" : "Vostede recibiu «%3$s» como un elemento compartido remoto de %4$s (%1$s) (de parte de %5$s (%2$s))",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "Vostede recibiu {share} como un elemento compartido remoto de {user} (de parte de {behalf})",
-    "You received \"%3$s\" as a remote share from %1$s" : "Vostede recibiu «%3$s» como un elemento compartido remoto de %1$s",
+    "You received \"%3$s\" as a remote share from %4$s (%1$s)" : "Vostede recibiu «%3$s» como un elemento compartido remoto de %4$s (%1$s)",
     "You received {share} as a remote share from {user}" : "Vostede recibiu {share} como un elemento compartido remoto de {user}",
     "Accept" : "Aceptar",
     "Decline" : "Declinar",
@@ -51,7 +51,7 @@ OC.L10N.register(
     "Add to your website" : "Engadir ao seu sitio web",
     "Share with me via Nextcloud" : "Comparte comigo a través do Nextcloud",
     "HTML Code:" : "Código HTML:",
-    "Sharing %s failed, because this item is already shared with %s" : "Fallou a compartición de %s, este elemento xa está compartido con %s",
-    "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate." : "Produciuse un erro ao compartir %s Non foi posíbel atopar %s, quizais haxa un problema de conexión con el servidor  ou usa un certificado autoasinado."
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Vostede recibiu «%3$s» como un elemento compartido remoto de %1$s  (de parte de %2$s)",
+    "You received \"%3$s\" as a remote share from %1$s" : "Vostede recibiu «%3$s» como un elemento compartido remoto de %1$s"
 },
 "nplurals=2; plural=(n != 1);");

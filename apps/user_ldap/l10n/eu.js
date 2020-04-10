@@ -28,10 +28,12 @@ OC.L10N.register(
     "More than 1,000 directory entries available." : "1.000 baino direktorio sarrera gehiago daude.",
     "Do you really want to delete the current Server Configuration?" : "Ziur zaude Zerbitzariaren Konfigurazioa ezabatu nahi duzula?",
     "Confirm Deletion" : "Baieztatu Ezabatzea",
+    "Error while clearing the mappings." : "Errorea mapatzeak garbitzean.",
     "Select attributes" : "Hautatu atributuak",
     "User found and settings verified." : "Erabiltzailea aurkituta eta ezarpenak egiaztatutak.",
     "Please provide a login name to test against" : "Mesedez saioa hasteko izen bat eman probatu ahal izateko",
     "The group box was disabled, because the LDAP / AD server does not support memberOf." : "Taldeen sarrera desgaitu da, LDAP / AD zerbitzariak ez duelako memberOf onartzen.",
+    "LDAP / AD integration" : "LDAP / AD integrazioa",
     "_%s group found_::_%s groups found_" : ["Talde %s aurkitu da","%s talde aurkitu dira"],
     "_%s user found_::_%s users found_" : ["Erabiltzaile %s aurkitu da","%s erabiltzaile aurkitu dira"],
     "Could not find the desired feature" : "Ezin izan da nahi zen ezaugarria aurkitu",
@@ -74,6 +76,8 @@ OC.L10N.register(
     "Back" : "Atzera",
     "Continue" : "Jarraitu",
     "Please renew your password." : "Berritu zure pasahitza mesedez.",
+    "An internal error occurred." : "Barne-errorea gertatu da.",
+    "Please try again or contact your administrator." : "Saiatu berriro edo jarri harremanetan administratzailearekin.",
     "Current password" : "Uneko pasahitza",
     "New password" : "Pasahitz berria",
     "Renew password" : "Berritu pasahitza",
@@ -118,7 +122,6 @@ OC.L10N.register(
     "Quota Default" : "Kuota Lehenetsia",
     "Email Field" : "Eposta eremua",
     "User Home Folder Naming Rule" : "Erabiltzailearen Karpeta Nagusia Izendatzeko Patroia",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Utzi hutsik erabiltzaile izenarako (lehentsia). Bestela zehaztu LDAP/AD atributua.",
     "Internal Username" : "Barneko erabiltzaile izena",
     "Internal Username Attribute:" : "Baliogabeko Erabiltzaile Izen atributua",
     "Override UUID detection" : "Gainidatzi UUID antzematea",
@@ -127,6 +130,7 @@ OC.L10N.register(
     "UUID Attribute for Groups:" : "Taldeentzako UUID atributuak:",
     "Username-LDAP User Mapping" : "LDAP-erabiltzaile-izena erabiltzailearen mapeatzea",
     "Clear Username-LDAP User Mapping" : "Garbitu LDAP-erabiltzaile-izenaren erabiltzaile mapaketa",
-    "Clear Groupname-LDAP Group Mapping" : "Garbitu LDAP-talde-izenaren talde mapaketa"
+    "Clear Groupname-LDAP Group Mapping" : "Garbitu LDAP-talde-izenaren talde mapaketa",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Utzi hutsik erabiltzaile izenarako (lehentsia). Bestela zehaztu LDAP/AD atributua."
 },
 "nplurals=2; plural=(n != 1);");

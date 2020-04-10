@@ -2,11 +2,12 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Gary Kim <gary@garykim.dev>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Thomas Citharel <tcit@tcit.fr>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -21,9 +22,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\DAV\CalDAV;
 
 use OCA\DAV\DAV\Sharing\IShareable;
@@ -46,6 +48,17 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 	/** @var IConfig */
 	private $config;
 
+	/** @var IL10N */
+	protected $l10n;
+
+	/**
+	 * Calendar constructor.
+	 *
+	 * @param BackendInterface $caldavBackend
+	 * @param $calendarInfo
+	 * @param IL10N $l10n
+	 * @param IConfig $config
+	 */
 	public function __construct(BackendInterface $caldavBackend, $calendarInfo, IL10N $l10n, IConfig $config) {
 		parent::__construct($caldavBackend, $calendarInfo);
 
@@ -58,6 +71,7 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 		}
 
 		$this->config = $config;
+		$this->l10n = $l10n;
 	}
 
 	/**
@@ -119,17 +133,37 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 		return $this->calendarInfo['principaluri'];
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getACL() {
 		$acl =  [
 			[
 				'privilege' => '{DAV:}read',
 				'principal' => $this->getOwner(),
 				'protected' => true,
-			]];
+			],
+			[
+				'privilege' => '{DAV:}read',
+				'principal' => $this->getOwner() . '/calendar-proxy-write',
+				'protected' => true,
+			],
+			[
+				'privilege' => '{DAV:}read',
+				'principal' => $this->getOwner() . '/calendar-proxy-read',
+				'protected' => true,
+			],
+		];
+
 		if ($this->getName() !== BirthdayService::BIRTHDAY_CALENDAR_URI) {
 			$acl[] = [
 				'privilege' => '{DAV:}write',
 				'principal' => $this->getOwner(),
+				'protected' => true,
+			];
+			$acl[] = [
+				'privilege' => '{DAV:}write',
+				'principal' => $this->getOwner() . '/calendar-proxy-write',
 				'protected' => true,
 			];
 		} else {
@@ -138,7 +172,18 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 				'principal' => $this->getOwner(),
 				'protected' => true,
 			];
+			$acl[] = [
+				'privilege' => '{DAV:}write-properties',
+				'principal' => $this->getOwner() . '/calendar-proxy-write',
+				'protected' => true,
+			];
 		}
+
+		$acl[] = [
+			'privilege' => '{DAV:}write-properties',
+			'principal' => $this->getOwner() . '/calendar-proxy-read',
+			'protected' => true,
+		];
 
 		if (!$this->isShared()) {
 			return $acl;
@@ -146,10 +191,10 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 
 		if ($this->getOwner() !== parent::getOwner()) {
 			$acl[] =  [
-					'privilege' => '{DAV:}read',
-					'principal' => parent::getOwner(),
-					'protected' => true,
-				];
+				'privilege' => '{DAV:}read',
+				'principal' => parent::getOwner(),
+				'protected' => true,
+			];
 			if ($this->canWrite()) {
 				$acl[] = [
 					'privilege' => '{DAV:}write',
@@ -173,8 +218,14 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 		}
 
 		$acl = $this->caldavBackend->applyShareAcl($this->getResourceId(), $acl);
-		$allowedPrincipals = [$this->getOwner(), parent::getOwner(), 'principals/system/public'];
-		return array_filter($acl, function($rule) use ($allowedPrincipals) {
+		$allowedPrincipals = [
+			$this->getOwner(),
+			$this->getOwner(). '/calendar-proxy-read',
+			$this->getOwner(). '/calendar-proxy-write',
+			parent::getOwner(),
+			'principals/system/public'
+		];
+		return array_filter($acl, function ($rule) use ($allowedPrincipals) {
 			return \in_array($rule['principal'], $allowedPrincipals, true);
 		});
 	}
@@ -195,7 +246,7 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 			$this->calendarInfo['{http://owncloud.org/ns}owner-principal'] !== $this->calendarInfo['principaluri']) {
 			$principal = 'principal:' . parent::getOwner();
 			$shares = $this->caldavBackend->getShares($this->getResourceId());
-			$shares = array_filter($shares, function($share) use ($principal){
+			$shares = array_filter($shares, function ($share) use ($principal) {
 				return $share['href'] === $principal;
 			});
 			if (empty($shares)) {
@@ -242,7 +293,7 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 
 		$obj['acl'] = $this->getChildACL();
 
-		return new CalendarObject($this->caldavBackend, $this->calendarInfo, $obj);
+		return new CalendarObject($this->caldavBackend, $this->l10n, $this->calendarInfo, $obj);
 
 	}
 
@@ -255,7 +306,7 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 				continue;
 			}
 			$obj['acl'] = $this->getChildACL();
-			$children[] = new CalendarObject($this->caldavBackend, $this->calendarInfo, $obj);
+			$children[] = new CalendarObject($this->caldavBackend, $this->l10n, $this->calendarInfo, $obj);
 		}
 		return $children;
 
@@ -270,7 +321,7 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 				continue;
 			}
 			$obj['acl'] = $this->getChildACL();
-			$children[] = new CalendarObject($this->caldavBackend, $this->calendarInfo, $obj);
+			$children[] = new CalendarObject($this->caldavBackend, $this->l10n, $this->calendarInfo, $obj);
 		}
 		return $children;
 
@@ -317,7 +368,11 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 		return $this->caldavBackend->getPublishStatus($this);
 	}
 
-	private function canWrite() {
+	public function canWrite() {
+		if ($this->getName() === BirthdayService::BIRTHDAY_CALENDAR_URI) {
+			return false;
+		}
+
 		if (isset($this->calendarInfo['{http://owncloud.org/ns}read-only'])) {
 			return !$this->calendarInfo['{http://owncloud.org/ns}read-only'];
 		}

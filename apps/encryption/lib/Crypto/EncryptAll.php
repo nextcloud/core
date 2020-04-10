@@ -2,7 +2,9 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Kenneth Newwood <kenneth@newwood.name>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -20,10 +22,9 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
-
 
 namespace OCA\Encryption\Crypto;
 
@@ -120,7 +121,7 @@ class EncryptAll {
 		$this->questionHelper = $questionHelper;
 		$this->secureRandom = $secureRandom;
 		// store one time passwords for the users
-		$this->userPasswords = array();
+		$this->userPasswords = [];
 	}
 
 	/**
@@ -265,7 +266,7 @@ class EncryptAll {
 	protected function encryptUsersFiles($uid, ProgressBar $progress, $userCount) {
 
 		$this->setupUserFS($uid);
-		$directories = array();
+		$directories = [];
 		$directories[] =  '/' . $uid . '/files';
 
 		while($root = array_pop($directories)) {
@@ -322,11 +323,11 @@ class EncryptAll {
 	 */
 	protected function outputPasswords() {
 		$table = new Table($this->output);
-		$table->setHeaders(array('Username', 'Private key password'));
+		$table->setHeaders(['Username', 'Private key password']);
 
 		//create rows
-		$newPasswords = array();
-		$unchangedPasswords = array();
+		$newPasswords = [];
+		$unchangedPasswords = [];
 		foreach ($this->userPasswords as $uid => $password) {
 			if (empty($password)) {
 				$unchangedPasswords[] = $uid;
@@ -451,7 +452,7 @@ class EncryptAll {
 			$this->output->writeln("\n\nPassword successfully send to all users");
 		} else {
 			$table = new Table($this->output);
-			$table->setHeaders(array('Username', 'Private key password'));
+			$table->setHeaders(['Username', 'Private key password']);
 			$this->output->writeln("\n\nCould not send password to following users:\n");
 			$rows = [];
 			foreach ($noMail as $uid) {
@@ -472,11 +473,11 @@ class EncryptAll {
 	protected function createMailBody($password) {
 
 		$html = new \OC_Template("encryption", "mail", "");
-		$html->assign ('password', $password);
+		$html->assign('password', $password);
 		$htmlMail = $html->fetchPage();
 
 		$plainText = new \OC_Template("encryption", "altmail", "");
-		$plainText->assign ('password', $password);
+		$plainText->assign('password', $password);
 		$plainTextMail = $plainText->fetchPage();
 
 		return [$htmlMail, $plainTextMail];

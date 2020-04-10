@@ -21,7 +21,6 @@
 
 namespace Tests\Core\Command\User;
 
-
 use OC\Core\Command\User\LastSeen;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -40,7 +39,7 @@ class LastSeenTest extends TestCase {
 	/** @var \Symfony\Component\Console\Command\Command */
 	protected $command;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$userManager = $this->userManager = $this->getMockBuilder(IUserManager::class)

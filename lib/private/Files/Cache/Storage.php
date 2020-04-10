@@ -2,6 +2,8 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -22,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -81,7 +83,7 @@ class Storage {
 				if ($row = self::getStorageById($this->storageId)) {
 					$this->numericId = (int)$row['numeric_id'];
 				} else {
-					throw new \RuntimeException('Storage could neither be inserted nor be selected from the database');
+					throw new \RuntimeException('Storage could neither be inserted nor be selected from the database: ' . $this->storageId);
 				}
 			}
 		}
@@ -126,7 +128,7 @@ class Storage {
 	public static function getStorageId($numericId) {
 
 		$sql = 'SELECT `id` FROM `*PREFIX*storages` WHERE `numeric_id` = ?';
-		$result = \OC_DB::executeAudited($sql, array($numericId));
+		$result = \OC_DB::executeAudited($sql, [$numericId]);
 		if ($row = $result->fetchRow()) {
 			return $row['id'];
 		} else {
@@ -166,11 +168,12 @@ class Storage {
 
 	/**
 	 * @param bool $isAvailable
+	 * @param int $delay amount of seconds to delay reconsidering that storage further
 	 */
-	public function setAvailability($isAvailable) {
+	public function setAvailability($isAvailable, int $delay = 0) {
 		$sql = 'UPDATE `*PREFIX*storages` SET `available` = ?, `last_checked` = ? WHERE `id` = ?';
 		$available = $isAvailable ? 1 : 0;
-		\OC_DB::executeAudited($sql, array($available, time(), $this->storageId));
+		\OC_DB::executeAudited($sql, [$available, time() + $delay, $this->storageId]);
 	}
 
 	/**
@@ -192,11 +195,11 @@ class Storage {
 		$storageId = self::adjustStorageId($storageId);
 		$numericId = self::getNumericStorageId($storageId);
 		$sql = 'DELETE FROM `*PREFIX*storages` WHERE `id` = ?';
-		\OC_DB::executeAudited($sql, array($storageId));
+		\OC_DB::executeAudited($sql, [$storageId]);
 
 		if (!is_null($numericId)) {
 			$sql = 'DELETE FROM `*PREFIX*filecache` WHERE `storage` = ?';
-			\OC_DB::executeAudited($sql, array($numericId));
+			\OC_DB::executeAudited($sql, [$numericId]);
 		}
 	}
 }

@@ -1,15 +1,11 @@
-/* 938 = table min-width(688) + app-navigation width: 250
-   $breakpoint-mobile +1 = size where app-navigation is hidden +1
-   688 = table min-width */
+/* 938 = table min-width(688) + app-navigation width: 250\
+	$breakpoint-mobile +1 = size where app-navigation is hidden +1
+	688 = table min-width */
 $min-table-width: 688px;
 @media only screen and (max-width: $min-table-width + $navigation-width) and (min-width: $breakpoint-mobile + 1), only screen and (max-width: $min-table-width) {
 
 .app-files #app-content.dir-drop{
 	background-color: rgba(255, 255, 255, 1)!important;
-}
-
-#body-user #filestable {
-	min-width: 250px;
 }
 
 table th#headerSize,

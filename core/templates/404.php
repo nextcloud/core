@@ -20,7 +20,7 @@ if(!isset($_)) {//standalone  page is not supported anymore - redirect to /
 		<h2><?php p($l->t('File not found')); ?></h2>
 		<p class="infogroup"><?php p($l->t('The document could not be found on the server. Maybe the share was deleted or has expired?')); ?></p>
 		<p><a class="button primary" href="<?php p(\OC::$server->getURLGenerator()->linkTo('', 'index.php')) ?>">
-			<?php p($l->t('Back to %s', array($theme->getName()))); ?>
+			<?php p($l->t('Back to %s', [$theme->getName()])); ?>
 		</a></p>
 	</div>
 <?php endif; ?>

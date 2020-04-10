@@ -21,7 +21,7 @@ class SqliteMigrationTest extends \Test\TestCase {
 	/** @var string */
 	private $tableName;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->connection = \OC::$server->getDatabaseConnection();
@@ -34,7 +34,7 @@ class SqliteMigrationTest extends \Test\TestCase {
 		$this->connection->exec("CREATE TABLE $this->tableName(t0 tinyint unsigned, t1 tinyint)");
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$this->connection->getSchemaManager()->dropTable($this->tableName);
 		parent::tearDown();
 	}

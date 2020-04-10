@@ -40,6 +40,7 @@ OC.L10N.register(
     "%1$s shared »%2$s« with you and wants to add:" : "%1$s deildi »%2$s« með þér og vill bæta við:",
     "%1$s shared »%2$s« with you and wants to add" : "%1$s deildi »%2$s« með þér og vill bæta við",
     "»%s« added a note to a file shared with you" : "»%s« bætti minnispunkti við skrá sem deilt er með þér",
+    "You just shared »%1$s« with %2$s. The share was already sent to the recipient. Due to the security policies defined by the administrator of %3$s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Þú varst í þessu að deila »%1$s« með %2$s. Sameignin var þegar send til viðtakandans. Vegna öryggisskilmála sem skilgreindir hafa verið af kerfisstjóra %3$s þarf hver sameign að vera varin með lykilorði og að ekki er leyfilegt að senda það lykilorð beint til viðtakandans. Því er nauðsynlegt að þú homir lykilorðinu beint til sjálfs viðtakandans.",
     "Password to access »%1$s« shared by you with %2$s" : "Lykilorði fyrir aðgang að »%1$s« var deilt af þér með %2$s",
     "This is the password:" : "Þetta er lykilorðið:",
     "You can choose a different password at any time in the share dialog." : "Þú getur hvenær sem er valið annað lykilorð með því að fara í deilingargluggann.",
@@ -48,18 +49,6 @@ OC.L10N.register(
     "Share provider which allows you to share files by mail" : "Deilingarþjónusta sem gerir þér kleift að deila skrám með tölvupósti",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Gerir notendum kleift að deila sérsniðnum tengli á skrá eða möppu með því að setja inn tölvupóstfang.",
     "Send password by mail" : "Senda lykilorð með pósti",
-    "Enforce password protection" : "Krefjast verndunar með aðgangsorði",
-    "Sharing %s failed, this item is already shared with %s" : "Deiling %s mistókst, því þessu atriði er þegar deilt með %s",
-    "%s shared »%s« with you" : "%s deildi »%s« með þér",
-    "%s shared »%s« with you." : "%s deildi »%s« með þér",
-    "%s via %s" : "%s með %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s deildi »%s« með þér.\nÞú ættir að hafa fengið sérstakan tölvupóst með tengli sem vísar á gögnin.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s deildi »%s« með þér.\nÞú ættir að hafa fengið sérstakan tölvupóst með tengli sem vísar á gögnin.",
-    "Password to access »%s« shared to you by %s" : "Lykilorð fyrir aðgang að »%s« deilt með þér af %s",
-    "It is protected with the following password: %s" : "Það er varið með eftirfarandi lykilorði: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Þú varst í þessu að deila »%s« með %s. Sameignin var þegar send til viðtakandans. Vegna öryggisskilmála sem skilgreindir hafa verið af kerfisstjóra %s þarf hver sameign að vera varin með lykilorði og að ekki er leyfilegt að senda það lykilorð beint til viðtakandans. Því er nauðsynlegt að þú homir lykilorðinu beint til sjálfs viðtakandans.",
-    "Password to access »%s« shared with %s" : "Lykilorð fyrir aðgang að »%s« deilt með %s",
-    "This is the password: %s" : "Þetta er lykilorðið: %s",
-    "Password to access »%1$s« shared with %2$s" : "Lykilorði fyrir aðgang að »%1$s« var deilt með %2$s"
+    "Enforce password protection" : "Krefjast verndunar með aðgangsorði"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

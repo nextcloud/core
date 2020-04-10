@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author brumsel <brumsel@losecatcher.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -21,11 +22,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-use OCA\Files\Tests;
 
 /**
  * Class Helper
@@ -37,13 +37,13 @@ class HelperTest extends \Test\TestCase {
 			'/' . $name,
 			null,
 			'/',
-			array(
+			[
 				'name' => $name,
 				'size' => $size,
 				'mtime' => $mtime,
 				'type' => $isDir ? 'dir' : 'file',
 				'mimetype' => $isDir ? 'httpd/unix-directory' : 'application/octet-stream'
-			),
+			],
 			null
 		);
 	}
@@ -52,49 +52,49 @@ class HelperTest extends \Test\TestCase {
 	 * Returns a file list for testing
 	 */
 	private function getTestFileList() {
-		return array(
+		return [
 			self::makeFileInfo('a.txt', 4, 2.3 * pow(10, 9)),
 			self::makeFileInfo('q.txt', 5, 150),
 			self::makeFileInfo('subdir2', 87, 128, true),
 			self::makeFileInfo('b.txt', 2.2 * pow(10, 9), 800),
 			self::makeFileInfo('o.txt', 12, 100),
 			self::makeFileInfo('subdir', 88, 125, true),
-		);
+		];
 	}
 
 	function sortDataProvider() {
-		return array(
-			array(
+		return [
+			[
 				'name',
 				false,
-				array('subdir', 'subdir2', 'a.txt', 'b.txt', 'o.txt', 'q.txt'),
-			),
-			array(
+				['subdir', 'subdir2', 'a.txt', 'b.txt', 'o.txt', 'q.txt'],
+			],
+			[
 				'name',
 				true,
-				array('q.txt', 'o.txt', 'b.txt', 'a.txt', 'subdir2', 'subdir'),
-			),
-			array(
+				['q.txt', 'o.txt', 'b.txt', 'a.txt', 'subdir2', 'subdir'],
+			],
+			[
 				'size',
 				false,
-				array('a.txt', 'q.txt', 'o.txt', 'subdir2', 'subdir', 'b.txt'),
-			),
-			array(
+				['a.txt', 'q.txt', 'o.txt', 'subdir2', 'subdir', 'b.txt'],
+			],
+			[
 				'size',
 				true,
-				array('b.txt', 'subdir', 'subdir2', 'o.txt', 'q.txt', 'a.txt'),
-			),
-			array(
+				['b.txt', 'subdir', 'subdir2', 'o.txt', 'q.txt', 'a.txt'],
+			],
+			[
 				'mtime',
 				false,
-				array('o.txt', 'subdir', 'subdir2', 'q.txt', 'b.txt', 'a.txt'),
-			),
-			array(
+				['o.txt', 'subdir', 'subdir2', 'q.txt', 'b.txt', 'a.txt'],
+			],
+			[
 				'mtime',
 				true,
-				array('a.txt', 'b.txt', 'q.txt', 'subdir2', 'subdir', 'o.txt'),
-			),
-		);
+				['a.txt', 'b.txt', 'q.txt', 'subdir2', 'subdir', 'o.txt'],
+			],
+		];
 	}
 
 	/**
@@ -103,7 +103,7 @@ class HelperTest extends \Test\TestCase {
 	public function testSortByName($sort, $sortDescending, $expectedOrder) {
 		$files = self::getTestFileList();
 		$files = \OCA\Files\Helper::sortFiles($files, $sort, $sortDescending);
-		$fileNames = array();
+		$fileNames = [];
 		foreach ($files as $fileInfo) {
 			$fileNames[] = $fileInfo->getName();
 		}

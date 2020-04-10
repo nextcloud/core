@@ -5,6 +5,8 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author Jakob Sack <mail@jakobsack.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
@@ -14,6 +16,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Tobias Kaminsky <tobias@kaminsky.me>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @license AGPL-3.0
@@ -28,7 +31,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -39,11 +42,9 @@ use OC\Files\View;
 use OCA\DAV\Connector\Sabre\Exception\InvalidPath;
 use OCP\Files\FileInfo;
 use OCP\Files\StorageNotAvailableException;
+use OCP\Share;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager;
-use OCP\Share;
-use OCP\Share\IShare;
-
 
 abstract class Node implements \Sabre\DAV\INode {
 
@@ -198,7 +199,15 @@ abstract class Node implements \Sabre\DAV\INode {
 	 * @return int file id of updated file or -1 on failure
 	 */
 	public function setETag($etag) {
-		return $this->fileView->putFileInfo($this->path, array('etag' => $etag));
+		return $this->fileView->putFileInfo($this->path, ['etag' => $etag]);
+	}
+
+	public function setCreationTime(int $time) {
+		return $this->fileView->putFileInfo($this->path, ['creation_time' => $time]);
+	}
+
+	public function setUploadTime(int $time) {
+		return $this->fileView->putFileInfo($this->path, ['upload_time' => $time]);
 	}
 
 	/**

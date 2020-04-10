@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -17,9 +18,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OC\Files\Node;
 
 use OCP\Files\IRootFolder;
@@ -88,14 +90,14 @@ class LazyRoot implements IRootFolder {
 	/**
 	 * @inheritDoc
 	 */
-	public function emit($scope, $method, $arguments = array()) {
+	public function emit($scope, $method, $arguments = []) {
 		$this->__call(__FUNCTION__, func_get_args());
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function mount($storage, $mountPoint, $arguments = array()) {
+	public function mount($storage, $mountPoint, $arguments = []) {
 		$this->__call(__FUNCTION__, func_get_args());
 	}
 
@@ -393,7 +395,7 @@ class LazyRoot implements IRootFolder {
 	/**
 	 * @inheritDoc
 	 */
-	public function newFile($path) {
+	public function newFile($path, $content = null) {
 		return $this->__call(__FUNCTION__, func_get_args());
 	}
 
@@ -478,6 +480,20 @@ class LazyRoot implements IRootFolder {
 	 * @inheritDoc
 	 */
 	public function getRecent($limit, $offset = 0) {
+		return $this->__call(__FUNCTION__, func_get_args());
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getCreationTime(): int {
+		return $this->__call(__FUNCTION__, func_get_args());
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getUploadTime(): int {
 		return $this->__call(__FUNCTION__, func_get_args());
 	}
 }

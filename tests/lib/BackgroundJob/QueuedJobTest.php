@@ -35,7 +35,7 @@ class QueuedJobTest extends \Test\TestCase {
 	 */
 	private $jobList;
 
-	protected function setup() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->jobList = new DummyJobList();

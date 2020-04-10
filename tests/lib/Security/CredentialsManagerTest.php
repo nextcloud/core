@@ -21,11 +21,11 @@
 
 namespace Test\Security;
 
+use OC\Security\CredentialsManager;
 use OC\SystemConfig;
+use OCP\IDBConnection;
 use OCP\ILogger;
-use \OCP\Security\ICrypto;
-use \OCP\IDBConnection;
-use \OC\Security\CredentialsManager;
+use OCP\Security\ICrypto;
 
 class CredentialsManagerTest extends \Test\TestCase {
 
@@ -38,7 +38,7 @@ class CredentialsManagerTest extends \Test\TestCase {
 	/** @var CredentialsManager */
 	protected $manager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->dbConnection = $this->getMockBuilder('\OC\DB\Connection')
@@ -54,7 +54,7 @@ class CredentialsManagerTest extends \Test\TestCase {
 
 		$result->expects($this->any())
 			->method('fetch')
-			->will($this->returnValue($row));
+			->willReturn($row);
 
 		return $result;
 	}

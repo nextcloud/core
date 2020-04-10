@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2016 Joas Schilling <coding@schilljs.com>
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -26,10 +28,10 @@ namespace OCA\DAV\Tests\unit\CalDAV\Activity\Provider;
 use OCA\DAV\CalDAV\Activity\Provider\Base;
 use OCP\Activity\IEvent;
 use OCP\Activity\IProvider;
+use OCP\IGroupManager;
 use OCP\IL10N;
 use OCP\IUser;
 use OCP\IUserManager;
-use OCP\IGroupManager;
 use Test\TestCase;
 
 class BaseTest extends TestCase {
@@ -43,7 +45,7 @@ class BaseTest extends TestCase {
 	/** @var IProvider|Base|\PHPUnit_Framework_MockObject_MockObject */
 	protected $provider;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
@@ -113,10 +115,11 @@ class BaseTest extends TestCase {
 
 	/**
 	 * @dataProvider dataGenerateObjectParameterThrows
-	 * @expectedException \InvalidArgumentException
 	 * @param mixed $eventData
 	 */
 	public function testGenerateObjectParameterThrows($eventData) {
+		$this->expectException(\InvalidArgumentException::class);
+
 		$this->invokePrivate($this->provider, 'generateObjectParameter', [$eventData]);
 	}
 
@@ -138,7 +141,7 @@ class BaseTest extends TestCase {
 		$l = $this->createMock(IL10N::class);
 		$l->expects($this->any())
 			->method('t')
-			->willReturnCallback(function($string, $args) {
+			->willReturnCallback(function ($string, $args) {
 				return 't(' . vsprintf($string, $args) . ')';
 			});
 

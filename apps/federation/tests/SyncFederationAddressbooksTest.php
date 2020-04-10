@@ -6,6 +6,7 @@
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -20,9 +21,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Federation\Tests;
 
 use OC\OCS\DiscoveryService;
@@ -37,7 +39,7 @@ class SyncFederationAddressbooksTest extends \Test\TestCase {
 	/** @var  \PHPUnit_Framework_MockObject_MockObject | DiscoveryService */
 	private $discoveryService;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->discoveryService = $this->getMockBuilder(DiscoveryService::class)
@@ -52,13 +54,13 @@ class SyncFederationAddressbooksTest extends \Test\TestCase {
 			getMock();
 		$dbHandler->method('getAllServer')->
 			willReturn([
-			[
-				'url' => 'https://cloud.drop.box',
-				'url_hash' => 'sha1',
-				'shared_secret' => 'iloveowncloud',
-				'sync_token' => '0'
-			]
-		]);
+				[
+					'url' => 'https://cloud.drop.box',
+					'url_hash' => 'sha1',
+					'shared_secret' => 'iloveowncloud',
+					'sync_token' => '0'
+				]
+			]);
 		$dbHandler->expects($this->once())->method('setServerStatus')->
 			with('https://cloud.drop.box', 1, '1');
 		$syncService = $this->getMockBuilder('OCA\DAV\CardDAV\SyncService')
@@ -69,7 +71,7 @@ class SyncFederationAddressbooksTest extends \Test\TestCase {
 
 		/** @var \OCA\DAV\CardDAV\SyncService $syncService */
 		$s = new SyncFederationAddressBooks($dbHandler, $syncService, $this->discoveryService);
-		$s->syncThemAll(function($url, $ex) {
+		$s->syncThemAll(function ($url, $ex) {
 			$this->callBacks[] = [$url, $ex];
 		});
 		$this->assertEquals(1, count($this->callBacks));
@@ -97,7 +99,7 @@ class SyncFederationAddressbooksTest extends \Test\TestCase {
 
 		/** @var \OCA\DAV\CardDAV\SyncService $syncService */
 		$s = new SyncFederationAddressBooks($dbHandler, $syncService, $this->discoveryService);
-		$s->syncThemAll(function($url, $ex) {
+		$s->syncThemAll(function ($url, $ex) {
 			$this->callBacks[] = [$url, $ex];
 		});
 		$this->assertEquals(2, count($this->callBacks));

@@ -23,7 +23,6 @@
 
 namespace Test\Collaboration\Collaborators;
 
-
 use OC\Collaboration\Collaborators\GroupPlugin;
 use OC\Collaboration\Collaborators\SearchResult;
 use OCP\Collaboration\Collaborators\ISearchResult;
@@ -60,7 +59,7 @@ class GroupPluginTest extends TestCase {
 	/** @var  IUser|\PHPUnit_Framework_MockObject_MockObject */
 	protected $user;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);
@@ -460,8 +459,7 @@ class GroupPluginTest extends TestCase {
 		$this->config->expects($this->any())
 			->method('getAppValue')
 			->willReturnCallback(
-				function($appName, $key, $default)
-				use ($shareWithGroupOnly, $shareeEnumeration)
+				function ($appName, $key, $default) use ($shareWithGroupOnly, $shareeEnumeration)
 				{
 					if ($appName === 'core' && $key === 'shareapi_only_share_with_group_members') {
 						return $shareWithGroupOnly ? 'yes' : 'no';

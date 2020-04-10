@@ -2,7 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -20,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -62,7 +65,7 @@ class GroupsControllerTest extends \Test\TestCase {
 	protected $api;
 
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->createMock(IRequest::class);
@@ -165,18 +168,18 @@ class GroupsControllerTest extends \Test\TestCase {
 
 		$this->subAdminManager
 			->method('isSubAdminOfGroup')
-			->will($this->returnCallback(function($_user, $_group) use ($user, $group) {
+			->willReturnCallback(function ($_user, $_group) use ($user, $group) {
 				if ($_user === $user && $_group === $group) {
 					return true;
 				}
 				return false;
-			}));
+			});
 	}
 
 	private function useAccountManager() {
 		$this->accountManager->expects($this->any())
 			->method('getUser')
-			->willReturnCallback(function(IUser $user) {
+			->willReturnCallback(function (IUser $user) {
 				return [
 					AccountManager::PROPERTY_PHONE => ['value' => '0800-call-' . $user->getUID()],
 					AccountManager::PROPERTY_ADDRESS => ['value' => 'Holzweg 99, 0601 Herrera, Panama'],
@@ -239,15 +242,15 @@ class GroupsControllerTest extends \Test\TestCase {
 
 		$result = $this->api->getGroupsDetails($search, $limit, $offset);
 		$this->assertEquals(['groups' => [
-			Array(
+			[
 				'id' => 'group1',
 				'displayname' => 'group1-name',
 				'usercount' => 123,
 				'disabled' => 11,
 				'canAdd' => true,
 				'canRemove' => true
-			), 
-			Array(
+			],
+			[
 				'id' => 'group2',
 				'displayname' => 'group2-name',
 				'usercount' => 123,
@@ -255,7 +258,7 @@ class GroupsControllerTest extends \Test\TestCase {
 				'canAdd' => true,
 				'canRemove' => true
 				
-				)
+			]
 		]], $result->getData());
 
 	}
@@ -284,11 +287,11 @@ class GroupsControllerTest extends \Test\TestCase {
 		$this->assertEquals(['users' => ['user1', 'user2']], $result->getData());
 	}
 
-	/**
-	 * @expectedException \OCP\AppFramework\OCS\OCSException
-	 * @expectedExceptionCode 403
-	 */
+	
 	public function testGetGroupAsIrrelevantSubadmin() {
+		$this->expectException(\OCP\AppFramework\OCS\OCSException::class);
+		$this->expectExceptionCode(403);
+
 		$group = $this->createGroup('group');
 		$otherGroup = $this->createGroup('otherGroup');
 		$this->asSubAdminOfGroup($otherGroup);
@@ -329,23 +332,23 @@ class GroupsControllerTest extends \Test\TestCase {
 		$this->assertEquals(['users' => ['user1', 'user2']], $result->getData());
 	}
 
-	/**
-	 * @expectedException \OCP\AppFramework\OCS\OCSException
-	 * @expectedExceptionCode 404
-	 * @expectedExceptionMessage The requested group could not be found
-	 */
+	
 	public function testGetGroupNonExisting() {
+		$this->expectException(\OCP\AppFramework\OCS\OCSException::class);
+		$this->expectExceptionMessage('The requested group could not be found');
+		$this->expectExceptionCode(404);
+
 		$this->asUser();
 
 		$this->api->getGroup($this->getUniqueID());
 	}
 
-	/**
-	 * @expectedException \OCP\AppFramework\OCS\OCSException
-	 * @expectedExceptionCode 101
-	 * @expectedExceptionMessage Group does not exist
-	 */
+	
 	public function testGetSubAdminsOfGroupsNotExists() {
+		$this->expectException(\OCP\AppFramework\OCS\OCSException::class);
+		$this->expectExceptionMessage('Group does not exist');
+		$this->expectExceptionCode(101);
+
 		$this->api->getSubAdminsOfGroup('NonExistingGroup');
 	}
 
@@ -387,20 +390,20 @@ class GroupsControllerTest extends \Test\TestCase {
 		$this->assertEquals([], $result->getData());
 	}
 
-	/**
-	 * @expectedException \OCP\AppFramework\OCS\OCSException
-	 * @expectedExceptionCode 101
-	 * @expectedExceptionMessage Invalid group name
-	 */
+	
 	public function testAddGroupEmptyGroup() {
+		$this->expectException(\OCP\AppFramework\OCS\OCSException::class);
+		$this->expectExceptionMessage('Invalid group name');
+		$this->expectExceptionCode(101);
+
 		$this->api->addGroup('');
 	}
 
-	/**
-	 * @expectedException \OCP\AppFramework\OCS\OCSException
-	 * @expectedExceptionCode 102
-	 */
+	
 	public function testAddGroupExistingGroup() {
+		$this->expectException(\OCP\AppFramework\OCS\OCSException::class);
+		$this->expectExceptionCode(102);
+
 		$this->groupManager
 			->method('groupExists')
 			->with('ExistingGroup')
@@ -437,19 +440,19 @@ class GroupsControllerTest extends \Test\TestCase {
 		$this->api->addGroup('Iñtërnâtiônàlizætiøn');
 	}
 
-	/**
-	 * @expectedException \OCP\AppFramework\OCS\OCSException
-	 * @expectedExceptionCode 101
-	 */
+	
 	public function testDeleteGroupNonExisting() {
+		$this->expectException(\OCP\AppFramework\OCS\OCSException::class);
+		$this->expectExceptionCode(101);
+
 		$this->api->deleteGroup('NonExistingGroup');
 	}
 
-	/**
-	 * @expectedException \OCP\AppFramework\OCS\OCSException
-	 * @expectedExceptionCode 102
-	 */
+	
 	public function testDeleteAdminGroup() {
+		$this->expectException(\OCP\AppFramework\OCS\OCSException::class);
+		$this->expectExceptionCode(102);
+
 		$this->groupManager
 			->method('groupExists')
 			->with('admin')
@@ -493,7 +496,7 @@ class GroupsControllerTest extends \Test\TestCase {
 
 		$this->userManager->expects($this->any())
 			->method('get')
-			->willReturnCallback(function(string $uid) use ($users) {
+			->willReturnCallback(function (string $uid) use ($users) {
 				return isset($users[$uid]) ? $users[$uid] : null;
 			});
 

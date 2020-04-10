@@ -21,8 +21,8 @@
 
 namespace Test\Files\Type;
 
-use \OC\Files\Type\Loader;
-use \OCP\IDBConnection;
+use OC\Files\Type\Loader;
+use OCP\IDBConnection;
 
 class LoaderTest extends \Test\TestCase {
 	/** @var IDBConnection */
@@ -30,12 +30,12 @@ class LoaderTest extends \Test\TestCase {
 	/** @var Loader */
 	protected $loader;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		$this->db = \OC::$server->getDatabaseConnection();
 		$this->loader = new Loader($this->db);
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$deleteMimetypes = $this->db->getQueryBuilder();
 		$deleteMimetypes->delete('mimetypes')
 			->where($deleteMimetypes->expr()->like(

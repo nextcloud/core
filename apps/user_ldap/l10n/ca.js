@@ -158,7 +158,7 @@ OC.L10N.register(
     "Group Search Attributes" : "Atributs de cerca de grup",
     "Group-Member association" : "Associació membres-grup",
     "Dynamic Group Member URL" : "URL del Dynamic Group Member",
-    "The LDAP attribute that on group objects contains an LDAP search URL that determines what objects belong to the group. (An empty setting disables dynamic group membership functionality.)" : "L'atribut LDAP que en objectes de Grup conté una URL de cerca LDAP que determina quins objectes pertanyen al grup. (Si es deixa en blanc es desactiva la funcionalitat de pertinença dinàmica a grups)",
+    "The LDAP attribute that on group objects contains an LDAP search URL that determines what objects belong to the group. (An empty setting disables dynamic group membership functionality.)" : "L'atribut LDAP que en objectes de Grup conté un URL de cerca LDAP que determina quins objectes pertanyen al grup. (Si es deixa en blanc es desactiva la funcionalitat de pertinença dinàmica a grups)",
     "Nested Groups" : "Grups imbricats",
     "When switched on, groups that contain groups are supported. (Only works if the group member attribute contains DNs.)" : "Quan està activat, els grups que contenen grups estan permesos. (Només funciona si l'atribut del grup membre conté DNs.)",
     "Paging chunksize" : "Mida de la pàgina",
@@ -176,7 +176,6 @@ OC.L10N.register(
     "Email Field" : "Camp de correu electrònic",
     "Set the user's email from their LDAP attribute. Leave it empty for default behaviour." : "Estableix l'adreça de correu a partir del seu atribut LDAP. Deixeu buit pel comportament predeterminat.",
     "User Home Folder Naming Rule" : "Norma per anomenar la carpeta arrel d'usuari",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Deixeu-ho buit pel nom d'usuari (per defecte). Altrament, especifiqueu un atribut LDAP/AD.",
     "\"$home\" Placeholder Field" : "Camp de text variable per \"$home\" ",
     "$home in an external storage configuration will be replaced with the value of the specified attribute" : "En la configuració d'un emmagatzematge extern es reemplaçarà $home amb el valor de l'atribut especificat",
     "Internal Username" : "Nom d'usuari intern",
@@ -189,6 +188,7 @@ OC.L10N.register(
     "Username-LDAP User Mapping" : "Mapatge d'usuari Nom d'usuari-LDAP",
     "Usernames are used to store and assign metadata. In order to precisely identify and recognize users, each LDAP user will have an internal username. This requires a mapping from username to LDAP user. The created username is mapped to the UUID of the LDAP user. Additionally the DN is cached as well to reduce LDAP interaction, but it is not used for identification. If the DN changes, the changes will be found. The internal username is used all over. Clearing the mappings will have leftovers everywhere. Clearing the mappings is not configuration sensitive, it affects all LDAP configurations! Never clear the mappings in a production environment, only in a testing or experimental stage." : "Els noms d'usuari son emprats per emmagatzemar i assignar metadades. Per tal d'identificar i reconèixer amb precisió als usuaris, cada usuari LDAP té un nom d'usuari intern. Això requereix una assignació de noms d'usuari interns per a cada un dels usuaris LDAP. Al nom d'usuari creat s'assigna el UUID de l'usuari LDAP. A més el DN es guarda en memòria cau per a reduir la interacció amb LDAP, però no s'utilitza per a identificació. Si el DN canvia, es trobaran els canvis. El nom d'usuari intern s'utilitza arreu. Netejar el mapa d'assignacions deixaria restes per totes bandes. Netejar el mapa d'assignacions no és que sigui sensible a la configuració, sinó que afecta a totes les configuracions LDAP! Mai netegeu el mapa d'assignacions en un entorn de producció, només en escenaris de proves o experimentals.",
     "Clear Username-LDAP User Mapping" : "Elimina el mapatge d'usuari Nom d'usuari-LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Suprimeix el mapatge de grup Nom de grup-LDAP"
+    "Clear Groupname-LDAP Group Mapping" : "Suprimeix el mapatge de grup Nom de grup-LDAP",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Deixeu-ho buit pel nom d'usuari (per defecte). Altrament, especifiqueu un atribut LDAP/AD."
 },
 "nplurals=2; plural=(n != 1);");

@@ -89,7 +89,7 @@ abstract class AsyncBusTest extends TestCase {
 	 */
 	abstract protected function createBus();
 
-	public function setUp() {
+	protected function setUp(): void {
 		self::$lastCommand = '';
 	}
 

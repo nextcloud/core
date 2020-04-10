@@ -4,11 +4,15 @@
  *
  * @author Brice Maron <brice@bmaron.net>
  * @author Christopher Schäpers <kondou@ts.unde.re>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
@@ -24,7 +28,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -56,7 +60,7 @@ function handleException($e) {
 			// we shall not log on RemoteException
 			$server->addPlugin(new ExceptionLoggerPlugin('webdav', \OC::$server->getLogger()));
 		}
-		$server->on('beforeMethod', function () use ($e) {
+		$server->on('beforeMethod:*', function () use ($e) {
 			if ($e instanceof RemoteException) {
 				switch ($e->getCode()) {
 					case 503:
@@ -72,7 +76,7 @@ function handleException($e) {
 		$server->exec();
 	} else {
 		$statusCode = 500;
-		if ($e instanceof \OC\ServiceUnavailableException ) {
+		if ($e instanceof \OC\ServiceUnavailableException) {
 			$statusCode = 503;
 		}
 		if ($e instanceof RemoteException) {
@@ -144,8 +148,8 @@ try {
 
 	// Load all required applications
 	\OC::$REQUESTEDAPP = $app;
-	OC_App::loadApps(array('authentication'));
-	OC_App::loadApps(array('filesystem', 'logging'));
+	OC_App::loadApps(['authentication']);
+	OC_App::loadApps(['filesystem', 'logging']);
 
 	switch ($app) {
 		case 'core':

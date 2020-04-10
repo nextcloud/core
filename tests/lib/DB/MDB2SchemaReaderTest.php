@@ -38,10 +38,10 @@ class MDB2SchemaReaderTest extends TestCase {
 			->getMock();
 		$config->expects($this->any())
 			->method('getSystemValue')
-			->will($this->returnValueMap(array(
-				array('dbname', 'owncloud', 'testDB'),
-				array('dbtableprefix', 'oc_', 'test_')
-			)));
+			->willReturnMap([
+				['dbname', 'owncloud', 'testDB'],
+				['dbtableprefix', 'oc_', 'test_']
+			]);
 		return $config;
 	}
 
@@ -85,10 +85,10 @@ class MDB2SchemaReaderTest extends TestCase {
 		$this->assertEquals(2, $table->getColumn('decimalfield_precision_scale')->getScale());
 
 		$this->assertCount(2, $table->getIndexes());
-		$this->assertEquals(array('integerfield'), $table->getIndex('primary')->getUnquotedColumns());
+		$this->assertEquals(['integerfield'], $table->getIndex('primary')->getUnquotedColumns());
 		$this->assertTrue($table->getIndex('primary')->isPrimary());
 		$this->assertTrue($table->getIndex('primary')->isUnique());
-		$this->assertEquals(array('booleanfield'), $table->getIndex('index_boolean')->getUnquotedColumns());
+		$this->assertEquals(['booleanfield'], $table->getIndex('index_boolean')->getUnquotedColumns());
 		$this->assertFalse($table->getIndex('index_boolean')->isPrimary());
 		$this->assertFalse($table->getIndex('index_boolean')->isUnique());
 	}

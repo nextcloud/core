@@ -5,6 +5,7 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -21,21 +22,22 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Comments;
 
 use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\Exception\InvalidFieldNameException;
 use OCP\Comments\CommentsEvent;
 use OCP\Comments\IComment;
 use OCP\Comments\ICommentsEventHandler;
 use OCP\Comments\ICommentsManager;
 use OCP\Comments\NotFoundException;
 use OCP\DB\QueryBuilder\IQueryBuilder;
-use OCP\IDBConnection;
 use OCP\IConfig;
+use OCP\IDBConnection;
 use OCP\ILogger;
 use OCP\IUser;
 
@@ -95,6 +97,7 @@ class Manager implements ICommentsManager {
 			$data['latest_child_timestamp'] = new \DateTime($data['latest_child_timestamp']);
 		}
 		$data['children_count'] = (int)$data['children_count'];
+		$data['reference_id'] = $data['reference_id'] ?? null;
 		return $data;
 	}
 
@@ -118,9 +121,9 @@ class Manager implements ICommentsManager {
 	 */
 	protected function prepareCommentForDatabaseWrite(IComment $comment) {
 		if (!$comment->getActorType()
-			|| !$comment->getActorId()
+			|| $comment->getActorId() === ''
 			|| !$comment->getObjectType()
-			|| !$comment->getObjectId()
+			|| $comment->getObjectId() === ''
 			|| !$comment->getVerb()
 		) {
 			throw new \UnexpectedValueException('Actor, Object and Verb information must be provided for saving');
@@ -600,11 +603,13 @@ class Manager implements ICommentsManager {
 		$query = $qb->select('f.fileid')
 			->addSelect($qb->func()->count('c.id', 'num_ids'))
 			->from('filecache', 'f')
-			->leftJoin('f', 'comments', 'c', $qb->expr()->eq(
-				'f.fileid', $qb->expr()->castColumn('c.object_id', IQueryBuilder::PARAM_INT)
+			->leftJoin('f', 'comments', 'c', $qb->expr()->andX(
+				$qb->expr()->eq('f.fileid', $qb->expr()->castColumn('c.object_id', IQueryBuilder::PARAM_INT)),
+				$qb->expr()->eq('c.object_type', $qb->createNamedParameter('files'))
 			))
-			->leftJoin('c', 'comments_read_markers', 'm', $qb->expr()->eq(
-				'c.object_id', 'm.object_id'
+			->leftJoin('c', 'comments_read_markers', 'm', $qb->expr()->andX(
+				$qb->expr()->eq('c.object_id', 'm.object_id'),
+				$qb->expr()->eq('m.object_type', $qb->createNamedParameter('files'))
 			))
 			->where(
 				$qb->expr()->andX(
@@ -741,23 +746,46 @@ class Manager implements ICommentsManager {
 	 * @param IComment $comment
 	 * @return bool
 	 */
-	protected function insert(IComment &$comment) {
+	protected function insert(IComment $comment): bool {
+
+		try {
+			$result = $this->insertQuery($comment, true);
+		} catch (InvalidFieldNameException $e) {
+			// The reference id field was only added in Nextcloud 19.
+			// In order to not cause too long waiting times on the update,
+			// it was decided to only add it lazy, as it is also not a critical
+			// feature, but only helps to have a better experience while commenting.
+			// So in case the reference_id field is missing,
+			// we simply save the comment without that field.
+			$result = $this->insertQuery($comment, false);
+		}
+
+		return $result;
+	}
+
+	protected function insertQuery(IComment $comment, bool $tryWritingReferenceId): bool {
 		$qb = $this->dbConn->getQueryBuilder();
-		$affectedRows = $qb
-			->insert('comments')
-			->values([
-				'parent_id' => $qb->createNamedParameter($comment->getParentId()),
-				'topmost_parent_id' => $qb->createNamedParameter($comment->getTopmostParentId()),
-				'children_count' => $qb->createNamedParameter($comment->getChildrenCount()),
-				'actor_type' => $qb->createNamedParameter($comment->getActorType()),
-				'actor_id' => $qb->createNamedParameter($comment->getActorId()),
-				'message' => $qb->createNamedParameter($comment->getMessage()),
-				'verb' => $qb->createNamedParameter($comment->getVerb()),
-				'creation_timestamp' => $qb->createNamedParameter($comment->getCreationDateTime(), 'datetime'),
-				'latest_child_timestamp' => $qb->createNamedParameter($comment->getLatestChildDateTime(), 'datetime'),
-				'object_type' => $qb->createNamedParameter($comment->getObjectType()),
-				'object_id' => $qb->createNamedParameter($comment->getObjectId()),
-			])
+
+		$values = [
+			'parent_id' => $qb->createNamedParameter($comment->getParentId()),
+			'topmost_parent_id' => $qb->createNamedParameter($comment->getTopmostParentId()),
+			'children_count' => $qb->createNamedParameter($comment->getChildrenCount()),
+			'actor_type' => $qb->createNamedParameter($comment->getActorType()),
+			'actor_id' => $qb->createNamedParameter($comment->getActorId()),
+			'message' => $qb->createNamedParameter($comment->getMessage()),
+			'verb' => $qb->createNamedParameter($comment->getVerb()),
+			'creation_timestamp' => $qb->createNamedParameter($comment->getCreationDateTime(), 'datetime'),
+			'latest_child_timestamp' => $qb->createNamedParameter($comment->getLatestChildDateTime(), 'datetime'),
+			'object_type' => $qb->createNamedParameter($comment->getObjectType()),
+			'object_id' => $qb->createNamedParameter($comment->getObjectId()),
+		];
+
+		if ($tryWritingReferenceId) {
+			$values['reference_id'] = $qb->createNamedParameter($comment->getReferenceId());
+		}
+
+		$affectedRows = $qb->insert('comments')
+			->values($values)
 			->execute();
 
 		if ($affectedRows > 0) {
@@ -782,8 +810,21 @@ class Manager implements ICommentsManager {
 		$this->sendEvent(CommentsEvent::EVENT_PRE_UPDATE, $this->get($comment->getId()));
 		$this->uncache($comment->getId());
 
+		try {
+			$result = $this->updateQuery($comment, true);
+		} catch (InvalidFieldNameException $e) {
+			// See function insert() for explanation
+			$result = $this->updateQuery($comment, false);
+		}
+
+		$this->sendEvent(CommentsEvent::EVENT_UPDATE, $comment);
+
+		return $result;
+	}
+
+	protected function updateQuery(IComment $comment, bool $tryWritingReferenceId): bool {
 		$qb = $this->dbConn->getQueryBuilder();
-		$affectedRows = $qb
+		$qb
 			->update('comments')
 			->set('parent_id', $qb->createNamedParameter($comment->getParentId()))
 			->set('topmost_parent_id', $qb->createNamedParameter($comment->getTopmostParentId()))
@@ -795,16 +836,18 @@ class Manager implements ICommentsManager {
 			->set('creation_timestamp', $qb->createNamedParameter($comment->getCreationDateTime(), 'datetime'))
 			->set('latest_child_timestamp', $qb->createNamedParameter($comment->getLatestChildDateTime(), 'datetime'))
 			->set('object_type', $qb->createNamedParameter($comment->getObjectType()))
-			->set('object_id', $qb->createNamedParameter($comment->getObjectId()))
-			->where($qb->expr()->eq('id', $qb->createParameter('id')))
-			->setParameter('id', $comment->getId())
+			->set('object_id', $qb->createNamedParameter($comment->getObjectId()));
+
+		if ($tryWritingReferenceId) {
+			$qb->set('reference_id', $qb->createNamedParameter($comment->getReferenceId()));
+		}
+
+		$affectedRows = $qb->where($qb->expr()->eq('id', $qb->createNamedParameter($comment->getId())))
 			->execute();
 
 		if ($affectedRows === 0) {
 			throw new NotFoundException('Comment to update does ceased to exist');
 		}
-
-		$this->sendEvent(CommentsEvent::EVENT_UPDATE, $comment);
 
 		return $affectedRows > 0;
 	}

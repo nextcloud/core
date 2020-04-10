@@ -1,6 +1,6 @@
 <?php
 /**
-
+ *
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
@@ -28,6 +28,7 @@ style('theming', 'settings-admin');
 ?>
 <div id="theming" class="section">
 	<h2 class="inlineblock"><?php p($l->t('Theming')); ?></h2>
+	<a target="_blank" rel="noreferrer" class="icon-info" title="<?php p($l->t('Open documentation'));?>" href="<?php p(link_to_docs('admin-theming')); ?>"></a>
         <p class="settings-hint"><?php p($l->t('Theming makes it possible to easily customize the look and feel of your instance and supported clients. This will be visible for all users.')); ?></p>
 		<div id="theming_settings_status">
 			<div id="theming_settings_loading" class="icon-loading-small" style="display: none;"></div>

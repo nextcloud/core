@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, Roger Szabo (roger.szabo@web.de)
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roger Szabo <roger.szabo@web.de>
  * @author root <root@localhost.localdomain>
@@ -20,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -75,7 +76,7 @@ interface ILDAPProvider {
 	public function sanitizeDN($dn);
 	
 	/**
-	 * Return a new LDAP connection resource for the specified user. 
+	 * Return a new LDAP connection resource for the specified user.
 	 * @param string $uid user id
 	 * @return resource of the LDAP connection
 	 * @since 11.0.0

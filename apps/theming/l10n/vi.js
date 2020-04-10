@@ -9,6 +9,14 @@ OC.L10N.register(
     "The given web address is too long" : "Địa chỉ web quá dài",
     "The given slogan is too long" : "Khẩu hiệu quá dài",
     "The given color is invalid" : "Màu đã chọn không hợp lệ",
+    "The file was uploaded" : "Tập tin đã được tải lên",
+    "The uploaded file exceeds the upload_max_filesize directive in php.ini" : "Tập tin tải lên đã vượt quá upload_max_filesize giới hạn trong hệ thống",
+    "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form" : "Tập được tải lên vượt quá MAX_FILE_SIZE đã được giới hạn trong biểu mẫu HTML",
+    "The file was only partially uploaded" : "Tệp chỉ được tải lên một phần",
+    "No file was uploaded" : "Chưa có tệp nào dược tải lên",
+    "Missing a temporary folder" : "Thiếu một thư mục tạm thời",
+    "Could not write file to disk" : "Không thể ghi tệp lên hệ thống",
+    "A PHP extension stopped the file upload" : "Một chức năng mở rộng của PHP đã dừng tải tệp lên",
     "No file uploaded" : "Không có tệp nào được tải lên",
     "Unsupported image type" : "Loại hình ảnh không được hỗ trợ",
     "Theming" : "Điều chỉnh giao diện",
@@ -22,9 +30,6 @@ OC.L10N.register(
     "Login image" : "Hình ảnh trang đăng nhập",
     "Upload new login background" : "Tải lên ảnh nền trang đăng nhập mới",
     "Remove background image" : "Xóa bỏ ảnh nền",
-    "You are already using a custom theme" : "Bạn đã sử dụng một chủ đề tuỳ chỉnh",
-    "reset to default" : "đặt lại về mặc định",
-    "Web address" : "Địa chỉ web",
-    "Web address https://…" : "Địa chỉ web https://..."
+    "Advanced options" : "Tùy chọn nâng cao"
 },
 "nplurals=1; plural=0;");

@@ -103,7 +103,7 @@ class SettingsMenuContext implements Context, ActorAwareInterface {
 	}
 
 	/**
-	 * @return array 
+	 * @return array
 	 */
 	public function menuItems() {
 		return $this->actor->find(self::settingsMenu(), 10)

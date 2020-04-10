@@ -43,6 +43,7 @@ OC.L10N.register(
     "Please select tags to filter by" : "Ju lutemi, përzgjidhni etiketa sipas të cilat të bëhet filtrimi",
     "No files found for the selected tags" : "S’u gjetën kartela për etiketat e përzgjedhura",
     "Select tag …" : "Zgjidh etiketimin",
+    "Create a new tag" : "Krijo një etiketë të re",
     "Name" : "Emër",
     "Public" : "Publik",
     "Restricted" : "I/E kufizuar",

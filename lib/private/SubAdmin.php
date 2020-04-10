@@ -4,8 +4,9 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
- * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -22,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -30,11 +31,11 @@ namespace OC;
 
 use OC\Hooks\PublicEmitter;
 use OCP\Group\ISubAdmin;
-use OCP\IUser;
-use OCP\IUserManager;
+use OCP\IDBConnection;
 use OCP\IGroup;
 use OCP\IGroupManager;
-use OCP\IDBConnection;
+use OCP\IUser;
+use OCP\IUserManager;
 
 class SubAdmin extends PublicEmitter implements ISubAdmin {
 
@@ -53,16 +54,16 @@ class SubAdmin extends PublicEmitter implements ISubAdmin {
 	 * @param IDBConnection $dbConn
 	 */
 	public function __construct(IUserManager $userManager,
-	                            IGroupManager $groupManager,
+								IGroupManager $groupManager,
 								IDBConnection $dbConn) {
 		$this->userManager = $userManager;
 		$this->groupManager = $groupManager;
 		$this->dbConn = $dbConn;
 
-		$this->userManager->listen('\OC\User', 'postDelete', function($user) {
+		$this->userManager->listen('\OC\User', 'postDelete', function ($user) {
 			$this->post_deleteUser($user);
 		});
-		$this->groupManager->listen('\OC\Group', 'postDelete', function($group) {
+		$this->groupManager->listen('\OC\Group', 'postDelete', function ($group) {
 			$this->post_deleteGroup($group);
 		});
 	}
@@ -134,8 +135,8 @@ class SubAdmin extends PublicEmitter implements ISubAdmin {
 	 * @return array ['displayName' => displayname]
 	 */
 	public function getSubAdminsGroupsName(IUser $user): array {
-		return array_map(function($group) {
-			return array('displayName' => $group->getDisplayName());
+		return array_map(function ($group) {
+			return ['displayName' => $group->getDisplayName()];
 		}, $this->getSubAdminsGroups($user));
 	}
 

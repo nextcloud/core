@@ -2,6 +2,7 @@
 /**
  *
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -20,9 +21,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OC\Core\Controller;
 
 use OC\CapabilitiesManager;
@@ -91,14 +93,14 @@ class OCSController extends \OCP\AppFramework\OCSController {
 	public function getCapabilities() {
 		$result = [];
 		list($major, $minor, $micro) = \OCP\Util::getVersion();
-		$result['version'] = array(
+		$result['version'] = [
 			'major' => $major,
 			'minor' => $minor,
 			'micro' => $micro,
 			'string' => \OC_Util::getVersionString(),
 			'edition' => '',
 			'extendedSupport' => \OCP\Util::hasExtendedSupport()
-		);
+		];
 
 		if($this->userSession->isLoggedIn()) {
 			$result['capabilities'] = $this->capabilitiesManager->getCapabilities();

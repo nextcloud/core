@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2017 Robin Appelman <robin@icewind.nl>
  *
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Tobias Kaminsky <tobias@kaminsky.me>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -88,14 +90,18 @@ class QuerySearchHelper {
 	 * @param ISearchOperator $operator
 	 */
 	public function searchOperatorArrayToDBExprArray(IQueryBuilder $builder, array $operators) {
-		return array_map(function ($operator) use ($builder) {
+		return array_filter(array_map(function ($operator) use ($builder) {
 			return $this->searchOperatorToDBExpr($builder, $operator);
-		}, $operators);
+		}, $operators));
 	}
 
 	public function searchOperatorToDBExpr(IQueryBuilder $builder, ISearchOperator $operator) {
 		$expr = $builder->expr();
 		if ($operator instanceof ISearchBinaryOperator) {
+			if (count($operator->getArguments()) === 0) {
+				return null;
+			}
+
 			switch ($operator->getType()) {
 				case ISearchBinaryOperator::OPERATOR_NOT:
 					$negativeOperator = $operator->getArguments()[0];
@@ -136,16 +142,19 @@ class QuerySearchHelper {
 		$type = $operator->getType();
 		if ($field === 'mimetype') {
 			if ($operator->getType() === ISearchComparison::COMPARE_EQUAL) {
-				$value = $this->mimetypeLoader->getId($value);
+				$value = (int)$this->mimetypeLoader->getId($value);
 			} else if ($operator->getType() === ISearchComparison::COMPARE_LIKE) {
 				// transform "mimetype='foo/%'" to "mimepart='foo'"
 				if (preg_match('|(.+)/%|', $value, $matches)) {
 					$field = 'mimepart';
-					$value = $this->mimetypeLoader->getId($matches[1]);
+					$value = (int)$this->mimetypeLoader->getId($matches[1]);
 					$type = ISearchComparison::COMPARE_EQUAL;
-				}
-				if (strpos($value, '%') !== false) {
+				} else if (strpos($value, '%') !== false) {
 					throw new \InvalidArgumentException('Unsupported query value for mimetype: ' . $value . ', only values in the format "mime/type" or "mime/%" are supported');
+				} else {
+					$field = 'mimetype';
+					$value = (int)$this->mimetypeLoader->getId($value);
+					$type = ISearchComparison::COMPARE_EQUAL;
 				}
 			}
 		} else if ($field === 'favorite') {
@@ -153,6 +162,8 @@ class QuerySearchHelper {
 			$value = self::TAG_FAVORITE;
 		} else if ($field === 'tagname') {
 			$field = 'tag.category';
+		} else if ($field === 'fileid') {
+			$field = 'file.fileid';
 		}
 		return [$field, $value, $type];
 	}

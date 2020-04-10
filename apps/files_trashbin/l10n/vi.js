@@ -12,10 +12,8 @@ OC.L10N.register(
     "No entries found in this folder" : "Chưa có mục nào trong thư mục",
     "Select all" : "Chọn tất cả",
     "Name" : "Tên",
+    "Actions" : "Hành động",
     "Deleted" : "Đã xóa",
-    "Delete" : "Xóa",
-    "Couldn't delete %s permanently" : "Không thể xóa %s vĩnh viễn",
-    "Couldn't restore %s" : "Không thể khôi phục %s",
-    "Error" : "Lỗi"
+    "Delete" : "Xóa"
 },
 "nplurals=1; plural=0;");

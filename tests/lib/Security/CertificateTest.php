@@ -21,7 +21,7 @@
 
 namespace Test\Security;
 
-use \OC\Security\Certificate;
+use OC\Security\Certificate;
 
 class CertificateTest extends \Test\TestCase {
 
@@ -32,7 +32,7 @@ class CertificateTest extends \Test\TestCase {
 	/** @var Certificate That contains an expired certificate */
 	protected $expiredCertificate;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$goodCertificate = file_get_contents(__DIR__ . '/../../data/certificates/goodCertificate.crt');
@@ -43,20 +43,20 @@ class CertificateTest extends \Test\TestCase {
 		$this->expiredCertificate = new Certificate($expiredCertificate, 'ExpiredCertificate');
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Certificate could not get parsed.
-	 */
+	
 	public function testBogusData() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Certificate could not get parsed.');
+
 		$certificate = new Certificate('foo', 'bar');
 		$certificate->getIssueDate();
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Certificate could not get parsed.
-	 */
+	
 	function testCertificateStartingWithFileReference() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Certificate could not get parsed.');
+
 		new Certificate('file://'.__DIR__ . '/../../data/certificates/goodCertificate.crt', 'bar');
 	}
 

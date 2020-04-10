@@ -41,6 +41,10 @@ class System implements ISystem {
 		return $this->getBinaryPath('net');
 	}
 
+	public function getSmbcAclsPath() {
+		return $this->getBinaryPath('smbcacls');
+	}
+
 	public function getStdBufPath() {
 		return $this->getBinaryPath('stdbuf');
 	}

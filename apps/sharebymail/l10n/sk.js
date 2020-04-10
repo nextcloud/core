@@ -38,17 +38,6 @@ OC.L10N.register(
     "Share by mail" : "Sprístupniť e-mailom",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Povoľuje používateľom zdieľať personalizovaný odkaz na súbor alebo priečinok zadaním e-mailovej adresy.",
     "Send password by mail" : "Odoslať heslo e-mailom",
-    "Enforce password protection" : "Vynútiť ochranu heslom",
-    "Sharing %s failed, this item is already shared with %s" : "Sprístupnenie %s zlyhalo, táto položka je už používateľovi %s sprístupnená",
-    "%s shared »%s« with you" : "%s vám sprístupnil »%s«",
-    "%s shared »%s« with you." : "%s Vám sprístupnil »%s«",
-    "%s via %s" : "%s cez %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s Vám sprístupnil »%s«.\nSpráva s odkazom by Vám už mala byť doručená.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s Vám sprístupnil »%s«. Správa s odkazom by Vám už mala byť doručená.",
-    "Password to access »%s« shared to you by %s" : "Heslo pre prístup k »%s« Vám sprístupnil %s",
-    "It is protected with the following password: %s" : "Je chránené nasledovným heslom: %s",
-    "Password to access »%s« shared with %s" : "Heslo pre prístup k »%s« sprístupnené používateľovi %s",
-    "This is the password: %s" : "Toto je heslo: %s",
-    "Password to access »%1$s« shared with %2$s" : "Heslo pre prístup k »%1$s« sprístupnené používateľovi %2$s"
+    "Enforce password protection" : "Vynútiť ochranu heslom"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

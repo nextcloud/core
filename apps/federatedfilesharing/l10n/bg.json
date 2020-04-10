@@ -27,7 +27,6 @@
     "Share it so your friends can share files with you:" : "Споделете, за да могат приятелите ви да споделят файлове, с вас:",
     "Add to your website" : "Добавете към вашия уеб сайт",
     "Share with me via Nextcloud" : "Споделете с мен, чрез Nextcloud",
-    "HTML Code:" : "HTML код:",
-    "Sharing %s failed, because this item is already shared with %s" : "Неуспешно споделяне на %s, защото съдържанието е вече споделено с %s."
+    "HTML Code:" : "HTML код:"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -12,10 +12,8 @@ OC.L10N.register(
     "No entries found in this folder" : "დირექტორიაში ჩანაწერები ვერ მოიძებნა",
     "Select all" : "ყველას მონიშვნა",
     "Name" : "სახელი",
+    "Actions" : "მოქმედებები",
     "Deleted" : "წაშლილი",
-    "Delete" : "წაშლა",
-    "Couldn't delete %s permanently" : "%s-ის სრულად წაშლა ვერ მოხერხდა",
-    "Couldn't restore %s" : "%s-ის აღდგენა ვერ მოხერხდა",
-    "Error" : "შეცდომა"
+    "Delete" : "წაშლა"
 },
 "nplurals=2; plural=(n!=1);");

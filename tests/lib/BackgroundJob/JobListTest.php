@@ -33,7 +33,7 @@ class JobListTest extends TestCase {
 	/** @var \OCP\AppFramework\Utility\ITimeFactory|\PHPUnit_Framework_MockObject_MockObject */
 	protected $timeFactory;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->connection = \OC::$server->getDatabaseConnection();
@@ -64,16 +64,16 @@ class JobListTest extends TestCase {
 	}
 
 	public function argumentProvider() {
-		return array(
-			array(null),
-			array(false),
-			array('foobar'),
-			array(12),
-			array(array(
+		return [
+			[null],
+			[false],
+			['foobar'],
+			[12],
+			[[
 				'asd' => 5,
 				'foo' => 'bar'
-			))
-		);
+			]]
+		];
 	}
 
 	/**
@@ -150,7 +150,7 @@ class JobListTest extends TestCase {
 		$this->config->expects($this->once())
 			->method('getAppValue')
 			->with('backgroundjob', 'lastjob', 0)
-			->will($this->returnValue(15));
+			->willReturn(15);
 
 		$this->assertEquals(15, $this->instance->getLastJob());
 	}

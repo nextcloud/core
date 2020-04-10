@@ -20,26 +20,25 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_Sharing\Middleware;
 
 use OCA\Files_Sharing\Controller\ExternalSharesController;
-use OCA\Files_Sharing\Controller\ShareController;
+use OCA\Files_Sharing\Exceptions\S2SException;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Middleware;
+use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\Files\NotFoundException;
 use OCP\IConfig;
-use OCP\AppFramework\Utility\IControllerMethodReflector;
-use OCA\Files_Sharing\Exceptions\S2SException;
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
-use OCP\Share\IManager;
 use OCP\Share\Exceptions\ShareNotFound;
+use OCP\Share\IManager;
 
 /**
  * Checks whether the "sharing check" is enabled
@@ -137,7 +136,7 @@ class SharingCheckMiddleware extends Middleware {
 		}
 
 		if (!$this->reflector->hasAnnotation('NoOutgoingFederatedSharingRequired') &&
-		    $this->config->getAppValue('files_sharing', 'outgoing_server2server_share_enabled', 'yes') !== 'yes') {
+			$this->config->getAppValue('files_sharing', 'outgoing_server2server_share_enabled', 'yes') !== 'yes') {
 			return false;
 		}
 

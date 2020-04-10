@@ -22,16 +22,16 @@
 $.prototype.tooltip = (function(tooltip) {
 	return function(config) {
 		try {
-			return tooltip.call(this, config);
+			return tooltip.call(this, config)
 		} catch (ex) {
 			if (ex instanceof TypeError && config === 'destroy') {
-				console.error('Deprecated call $.tooltip(\'destroy\') has been deprecated and should be removed');
-				return tooltip.call(this, 'dispose');
+				console.error('Deprecated call $.tooltip(\'destroy\') has been deprecated and should be removed')
+				return tooltip.call(this, 'dispose')
 			}
 			if (ex instanceof TypeError && config === 'fixTitle') {
-				console.error('Deprecated call $.tooltip(\'fixTitle\') has been deprecated and should be removed');
-				return tooltip.call(this, '_fixTitle');
+				console.error('Deprecated call $.tooltip(\'fixTitle\') has been deprecated and should be removed')
+				return tooltip.call(this, '_fixTitle')
 			}
 		}
-	};
-})($.prototype.tooltip);
+	}
+})($.prototype.tooltip)

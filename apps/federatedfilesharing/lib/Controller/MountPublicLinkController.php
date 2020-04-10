@@ -4,11 +4,12 @@
  * @copyright Copyright (c) 2016, Björn Schießle <bjoern@schiessle.org>
  *
  * @author Allan Nordhøy <epost@anotheragency.no>
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
- * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -22,24 +23,19 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\FederatedFileSharing\Controller;
 
-use OC\Files\Filesystem;
 use OC\HintException;
-use OC\Share\Helper;
 use OCA\FederatedFileSharing\AddressHandler;
 use OCA\FederatedFileSharing\FederatedShareProvider;
-use OCA\Files_Sharing\External\Manager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Federation\ICloudIdManager;
-use OCP\Files\StorageInvalidException;
 use OCP\Http\Client\IClientService;
 use OCP\IL10N;
 use OCP\ILogger;
@@ -47,7 +43,6 @@ use OCP\IRequest;
 use OCP\ISession;
 use OCP\IUserSession;
 use OCP\Share\IManager;
-use OCP\Util;
 
 /**
  * Class MountPublicLinkController
@@ -151,7 +146,7 @@ class MountPublicLinkController extends Controller {
 		$storedPassword = $share->getPassword();
 		$authenticated = $this->session->get('public_link_authenticated') === $share->getId() ||
 			$this->shareManager->checkPassword($share, $password);
-		if (!empty($storedPassword) && !$authenticated ) {
+		if (!empty($storedPassword) && !$authenticated) {
 			$response = new JSONResponse(
 				['message' => 'No permission to access the share'],
 				Http::STATUS_BAD_REQUEST

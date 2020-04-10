@@ -1,9 +1,13 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2019 Morris Jobke <hey@morrisjobke.de>
  *
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -18,18 +22,17 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 
 namespace OC\Core\Migrations;
 
 use Closure;
 use Doctrine\DBAL\Types\Type;
 use OCP\DB\ISchemaWrapper;
-use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
+use OCP\Migration\SimpleMigrationStep;
 
 class Version17000Date20190514105811 extends SimpleMigrationStep {
 
@@ -44,7 +47,7 @@ class Version17000Date20190514105811 extends SimpleMigrationStep {
 		$schema = $schemaClosure();
 		if(!$schema->hasTable('filecache_extended')) {
 			$table = $schema->createTable('filecache_extended');
-			$table->addColumn('fileid', Type::INTEGER, [
+			$table->addColumn('fileid', Type::BIGINT, [
 				'notnull' => true,
 				'length' => 4,
 				'unsigned' => true,

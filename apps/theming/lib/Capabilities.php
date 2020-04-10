@@ -2,9 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, Joas Schilling <coding@schilljs.com>
  *
- * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
+ * @author Guillaume COMPAGNON <gcompagnon@outlook.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
+ * @author Morris Jobke <hey@morrisjobke.de>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -83,6 +84,8 @@ class Capabilities implements IPublicCapability {
 					$this->url->getAbsoluteURL($this->theming->getBackground()),
 				'background-plain' => $backgroundLogo === 'backgroundColor',
 				'background-default' => !$this->util->isBackgroundThemed(),
+				'logoheader' => $this->url->getAbsoluteURL($this->theming->getLogo()),
+				'favicon' => $this->url->getAbsoluteURL($this->theming->getLogo()),
 			],
 		];
 	}

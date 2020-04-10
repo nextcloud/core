@@ -8,6 +8,6 @@ OC.L10N.register(
     "Secret" : "Rahasia",
     "Add client" : "Tambah klien",
     "Add" : "Tambah",
-    "OAuth 2.0 allows external services to request access to %s." : "OAuth 2.0 memungkinkan layanan eksternal untuk meminta akses ke %s."
+    "Delete" : "Hapus"
 },
 "nplurals=1; plural=0;");

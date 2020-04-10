@@ -65,4 +65,9 @@ interface IFileInfo {
 	 * @return bool
 	 */
 	public function isArchived();
+
+	/**
+	 * @return ACL[]
+	 */
+	public function getAcls(): array;
 }

@@ -22,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -78,23 +78,28 @@ class EtagPropagationTest extends PropagationTestCase {
 			->setSharedWith(self::TEST_FILES_SHARING_API_USER2)
 			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_READ | \OCP\Constants::PERMISSION_UPDATE | \OCP\Constants::PERMISSION_SHARE);
-		$shareManager->createShare($share);
+		$share = $shareManager->createShare($share);
+		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER2);
 		$node = $rootFolder->getUserFolder(self::TEST_FILES_SHARING_API_USER1)
 			->get('/sub1/sub2/folder');
+
 		$share = $shareManager->newShare();
 		$share->setNode($node)
 			->setShareType(\OCP\Share::SHARE_TYPE_USER)
 			->setSharedWith(self::TEST_FILES_SHARING_API_USER2)
 			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL);
-		$shareManager->createShare($share);
+		$share = $shareManager->createShare($share);
+		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER2);
+
 		$share = $shareManager->newShare();
 		$share->setNode($node)
 			->setShareType(\OCP\Share::SHARE_TYPE_USER)
 			->setSharedWith(self::TEST_FILES_SHARING_API_USER3)
 			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL);
-		$shareManager->createShare($share);
+		$share = $shareManager->createShare($share);
+		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER3);
 
 		$folderInfo = $view1->getFileInfo('/directReshare');
 		$this->assertInstanceOf('\OC\Files\FileInfo', $folderInfo);
@@ -107,7 +112,8 @@ class EtagPropagationTest extends PropagationTestCase {
 			->setSharedWith(self::TEST_FILES_SHARING_API_USER2)
 			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL);
-		$shareManager->createShare($share);
+		$share = $shareManager->createShare($share);
+		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER2);
 
 		$this->fileIds[self::TEST_FILES_SHARING_API_USER1][''] = $view1->getFileInfo('')->getId();
 		$this->fileIds[self::TEST_FILES_SHARING_API_USER1]['sub1'] = $view1->getFileInfo('sub1')->getId();
@@ -131,7 +137,8 @@ class EtagPropagationTest extends PropagationTestCase {
 			->setSharedWith(self::TEST_FILES_SHARING_API_USER4)
 			->setSharedBy(self::TEST_FILES_SHARING_API_USER2)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL);
-		$shareManager->createShare($share);
+		$share = $shareManager->createShare($share);
+		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER4);
 
 		$folderInfo = $view2->getFileInfo('/directReshare');
 		$this->assertInstanceOf('\OC\Files\FileInfo', $folderInfo);
@@ -144,7 +151,8 @@ class EtagPropagationTest extends PropagationTestCase {
 			->setSharedWith(self::TEST_FILES_SHARING_API_USER4)
 			->setSharedBy(self::TEST_FILES_SHARING_API_USER2)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL);
-		$shareManager->createShare($share);
+		$share = $shareManager->createShare($share);
+		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER4);
 
 		$this->fileIds[self::TEST_FILES_SHARING_API_USER2][''] = $view2->getFileInfo('')->getId();
 		$this->fileIds[self::TEST_FILES_SHARING_API_USER2]['sub1'] = $view2->getFileInfo('sub1')->getId();
@@ -448,7 +456,7 @@ class EtagPropagationTest extends PropagationTestCase {
 
 		$shares = $this->shareManager->getSharesBy(self::TEST_FILES_SHARING_API_USER1, \OCP\Share::SHARE_TYPE_USER, $node);
 		/** @var \OCP\Share\IShare[] $shares */
-		$shares = array_filter($shares, function(\OCP\Share\IShare $share) {
+		$shares = array_filter($shares, function (\OCP\Share\IShare $share) {
 			return $share->getSharedWith() === self::TEST_FILES_SHARING_API_USER2;
 		});
 		$this->assertCount(1, $shares);

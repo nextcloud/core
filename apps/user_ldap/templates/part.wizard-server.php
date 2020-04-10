@@ -6,7 +6,7 @@
 		$sel = ' selected';
 		foreach($_['serverConfigurationPrefixes'] as $prefix) {
 			?>
-			<option value="<?php p($prefix); ?>"<?php p($sel); $sel = ''; ?>><?php p($l->t('%s. Server:', array($i++)));?> <?php p(' '.$_['serverConfigurationHosts'][$prefix]); ?></option>
+			<option value="<?php p($prefix); ?>"<?php p($sel); $sel = ''; ?>><?php p($l->t('%s. Server:', [$i++]));?> <?php p(' '.$_['serverConfigurationHosts'][$prefix]); ?></option>
 			<?php
 		}
 		?>

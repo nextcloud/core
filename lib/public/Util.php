@@ -5,24 +5,23 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Frank Karlitschek <frank@karlitschek.de>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Individual IT Services <info@individual-it.net>
  * @author Jens-Christian Fischer <jens-christian.fischer@switch.ch>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Michael Gapczynski <GapczynskiM@gmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
- * @author Nicolas Grekas <nicolas.grekas@gmail.com>
  * @author Pellaeon Lin <nfsmwlin@gmail.com>
  * @author Randolph Carter <RandolphCarter@fantasymail.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Stefan Herbrechtsmeier <stefan@herbrechtsmeier.net>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Thomas Tanghus <thomas@tanghus.net>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
@@ -38,7 +37,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -50,6 +49,7 @@
 
 // use OCP namespace for all classes that are considered public.
 // This means that they should be used by apps instead of the internal ownCloud classes
+
 namespace OCP;
 
 /**
@@ -128,7 +128,7 @@ class Util {
 	 * @since 4.0.0
 	 * @deprecated 13.0.0 use log of \OCP\ILogger
 	 */
-	public static function writeLog( $app, $message, $level ) {
+	public static function writeLog($app, $message, $level) {
 		$context = ['app' => $app];
 		\OC::$server->getLogger()->log($level, $message, $context);
 	}
@@ -170,8 +170,8 @@ class Util {
 	 * @param string $file
 	 * @since 4.0.0
 	 */
-	public static function addStyle( $application, $file = null ) {
-		\OC_Util::addStyle( $application, $file );
+	public static function addStyle($application, $file = null) {
+		\OC_Util::addStyle($application, $file);
 	}
 
 	/**
@@ -180,8 +180,8 @@ class Util {
 	 * @param string $file
 	 * @since 4.0.0
 	 */
-	public static function addScript( $application, $file = null ) {
-		\OC_Util::addScript( $application, $file );
+	public static function addScript($application, $file = null) {
+		\OC_Util::addScript($application, $file);
 	}
 
 	/**
@@ -216,7 +216,7 @@ class Util {
 	 * @return string the url
 	 * @since 4.0.0 - parameter $args was added in 4.5.0
 	 */
-	public static function linkToAbsolute( $app, $file, $args = array() ) {
+	public static function linkToAbsolute($app, $file, $args = []) {
 		$urlGenerator = \OC::$server->getURLGenerator();
 		return $urlGenerator->getAbsoluteURL(
 			$urlGenerator->linkTo($app, $file, $args)
@@ -229,7 +229,7 @@ class Util {
 	 * @return string the url
 	 * @since 4.0.0
 	 */
-	public static function linkToRemote( $service ) {
+	public static function linkToRemote($service) {
 		$urlGenerator = \OC::$server->getURLGenerator();
 		$remoteBase = $urlGenerator->linkTo('', 'remote.php') . '/' . $service;
 		return $urlGenerator->getAbsoluteURL(
@@ -261,7 +261,7 @@ class Util {
 		$host_name = \OC::$server->getRequest()->getServerHost();
 		// strip away port number (if existing)
 		$colon_pos = strpos($host_name, ':');
-		if ($colon_pos != FALSE) {
+		if ($colon_pos != false) {
 			$host_name = substr($host_name, 0, $colon_pos);
 		}
 		return $host_name;
@@ -349,7 +349,7 @@ class Util {
 	 * TODO: write example
 	 * @since 4.0.0
 	 */
-	static public function emitHook($signalclass, $signalname, $params = array()) {
+	static public function emitHook($signalclass, $signalname, $params = []) {
 		return \OC_Hook::emit($signalclass, $signalname, $params);
 	}
 

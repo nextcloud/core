@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -32,7 +32,7 @@ namespace OCP\Calendar\Room;
 interface IRoom {
 
 	/**
-	 * get the room id
+	 * Get a unique ID for the room
 	 *
 	 * This id has to be unique within the backend
 	 *
@@ -42,7 +42,7 @@ interface IRoom {
 	public function getId():string;
 
 	/**
-	 * get the display name for a room
+	 * Get the display name for the room
 	 *
 	 * @return string
 	 * @since 14.0.0
@@ -61,9 +61,9 @@ interface IRoom {
 	public function getGroupRestrictions():array;
 
 	/**
-	 * get email-address for room
+	 * Get the email-address for the room
 	 *
-	 * The email address has to be globally unique
+	 * The email-address has to be globally unique
 	 *
 	 * @return string
 	 * @since 14.0.0

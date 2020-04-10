@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2014 Robin Appelman <icewind@owncloud.com>
  *
  * This file is licensed under the Affero General Public License version 3
@@ -7,17 +7,22 @@
  * See the COPYING-README file.
  *
  */
-(function () {
+(function() {
+
+	OCA.Sharing = OCA.Sharing || {}
+
 	/**
 	 * Shows "add external share" dialog.
 	 *
-	 * @param {String} remote remote server URL
-	 * @param {String} owner owner name
-	 * @param {String} name name of the shared folder
-	 * @param {String} token authentication token
+	 * @param {Object} share the share
+	 * @param {String} share.remote remote server URL
+	 * @param {String} share.owner owner name
+	 * @param {String} share.name name of the shared folder
+	 * @param {String} share.token authentication token
 	 * @param {bool} passwordProtected true if the share is password protected
+	 * @param {Function} callback the callback
 	 */
-	OCA.Sharing.showAddExternalDialog = function (share, passwordProtected, callback) {
+	OCA.Sharing.showAddExternalDialog = function(share, passwordProtected, callback) {
 		var remote = share.remote;
 		var owner = share.ownerDisplayName || share.owner;
 		var name = share.name;
@@ -28,10 +33,10 @@
 				t(
 					'files_sharing',
 					'Do you want to add the remote share {name} from {owner}@{remote}?',
-					{name: name, owner: owner, remote: remoteClean}
+					{ name: name, owner: owner, remote: remoteClean }
 				),
-				t('files_sharing','Remote share'),
-				function (result) {
+				t('files_sharing', 'Remote share'),
+				function(result) {
 					callback(result, share);
 				},
 				true
@@ -41,15 +46,15 @@
 				t(
 					'files_sharing',
 					'Do you want to add the remote share {name} from {owner}@{remote}?',
-					{name: name, owner: owner, remote: remoteClean}
+					{ name: name, owner: owner, remote: remoteClean }
 				),
-				t('files_sharing','Remote share'),
-				function (result, password) {
+				t('files_sharing', 'Remote share'),
+				function(result, password) {
 					share.password = password;
 					callback(result, share);
 				},
 				true,
-				t('files_sharing','Remote share password'),
+				t('files_sharing', 'Remote share password'),
 				true
 			).then(this._adjustDialog);
 		}
@@ -93,7 +98,7 @@
 		processIncomingShareFromUrl: function() {
 			var fileList = this.filesApp.fileList;
 			var params = OC.Util.History.parseUrlQuery();
-			//manually add server-to-server share
+			// manually add server-to-server share
 			if (params.remote && params.token && params.owner && params.name) {
 
 				var callbackAddShare = function(result, share) {
@@ -109,19 +114,15 @@
 								name: share.name,
 								password: password
 							}
-						).done(
-							function(data) {
-								if (data.hasOwnProperty('legacyMount')) {
-									fileList.reload();
-								} else {
-									OC.Notification.showTemporary(data.message);
-								}
-						}
-						).fail(
-							function(data) {
-								OC.Notification.showTemporary(JSON.parse(data.responseText).message);
+						).done(function(data) {
+							if (data.hasOwnProperty('legacyMount')) {
+								fileList.reload();
+							} else {
+								OC.Notification.showTemporary(data.message);
 							}
-						);
+						}).fail(function(data) {
+							OC.Notification.showTemporary(JSON.parse(data.responseText).message);
+						});
 					}
 				};
 
@@ -142,36 +143,31 @@
 		processSharesToConfirm: function() {
 			var fileList = this.filesApp.fileList;
 			// check for new server-to-server shares which need to be approved
-			$.get(OC.generateUrl('/apps/files_sharing/api/externalShares'),
-			{},
-			function(shares) {
+			$.get(OC.generateUrl('/apps/files_sharing/api/externalShares'), {}, function(shares) {
 				var index;
 				for (index = 0; index < shares.length; ++index) {
 					OCA.Sharing.showAddExternalDialog(
-							shares[index],
-							false,
-							function(result, share) {
-								if (result) {
-									// Accept
-									$.post(OC.generateUrl('/apps/files_sharing/api/externalShares'), {id: share.id})
-										.then(function() {
-											fileList.reload();
-										});
-								} else {
-									// Delete
-									$.ajax({
-										url: OC.generateUrl('/apps/files_sharing/api/externalShares/'+share.id),
-										type: 'DELETE'
+						shares[index],
+						false,
+						function(result, share) {
+							if (result) {
+								// Accept
+								$.post(OC.generateUrl('/apps/files_sharing/api/externalShares'), {id: share.id})
+									.then(function() {
+										fileList.reload();
 									});
-								}
+							} else {
+								// Delete
+								$.ajax({
+									url: OC.generateUrl('/apps/files_sharing/api/externalShares/'+share.id),
+									type: 'DELETE'
+								});
 							}
+						}
 					);
-				}
-
-			});
-
+				}});
 		}
 	};
-})();
+})(OC, OCA);
 
 OC.Plugins.register('OCA.Files.App', OCA.Sharing.ExternalShareDialogPlugin);

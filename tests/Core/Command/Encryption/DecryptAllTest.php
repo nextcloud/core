@@ -19,9 +19,7 @@
  *
  */
 
-
 namespace Tests\Core\Command\Encryption;
-
 
 use OC\Core\Command\Encryption\DecryptAll;
 use OCP\App\IAppManager;
@@ -55,7 +53,7 @@ class DecryptAllTest extends TestCase {
 	/** @var \PHPUnit_Framework_MockObject_MockObject | \OC\Encryption\DecryptAll */
 	protected $decryptAll;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->getMockBuilder(IConfig::class)
@@ -182,10 +180,10 @@ class DecryptAllTest extends TestCase {
 		];
 	}
 
-	/**
-	 * @expectedException \Exception
-	 */
+	
 	public function testExecuteFailure() {
+		$this->expectException(\Exception::class);
+
 		$instance = new DecryptAll(
 			$this->encryptionManager,
 			$this->appManager,
@@ -219,7 +217,7 @@ class DecryptAllTest extends TestCase {
 		$this->decryptAll->expects($this->once())
 			->method('decryptAll')
 			->with($this->consoleInput, $this->consoleOutput, 'user1')
-			->willReturnCallback(function() { throw new \Exception(); });
+			->willReturnCallback(function () { throw new \Exception(); });
 
 		$this->invokePrivate($instance, 'execute', [$this->consoleInput, $this->consoleOutput]);
 	}

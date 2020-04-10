@@ -49,18 +49,6 @@ OC.L10N.register(
     "Share provider which allows you to share files by mail" : "Dosyaların e-posta ile paylaşılması için kullanılacak paylaşım hizmeti sağlayıcısı",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Kullanıcıların bir e-posta adresi yazarak bir dosya ya da klasör için kişisel bir bağlantı paylaşmasını sağlar.",
     "Send password by mail" : "Parolayı e-posta ile gönder",
-    "Enforce password protection" : "Parola koruması dayatılsın",
-    "Sharing %s failed, this item is already shared with %s" : "%s paylaşılamadı, bu öge zaten %s ile paylaşılmış",
-    "%s shared »%s« with you" : "%s sizinle »%s« ögesini paylaştı",
-    "%s shared »%s« with you." : "%s sizinle »%s« ögesini paylaştı.",
-    "%s via %s" : "%s, %s aracılığıyla",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s sizinle »%s« ögesini paylaştı.\nErişim bağlantısını içeren başka bir e-posta daha almış olmalısınız.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s sizinle »%s« ögesini paylaştı. Erişim bağlantısını içeren başka bir e-posta daha almış olmalısınız.",
-    "Password to access »%s« shared to you by %s" : "»%s« için sizin tarafınızdan %s üzerinden paylaşılan erişim parolası",
-    "It is protected with the following password: %s" : "Öge şu parola ile korunuyor: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "»%s« ögesini %s ile paylaştınız. Paylaşım alıcıya gönderildi. %s yöneticisi tarafından belirlenmiş güvenlik ilkelerine göre her bir paylaşım için bir parola belirtilmesi ve bu parolanın alıcıya doğrudan gönderilmemesi gerekiyor. Bu nedenle parolayı alıcıya el ile siz iletmelisiniz.",
-    "Password to access »%s« shared with %s" : "»%s« için %s üzerinden paylaşılan erişim parolası",
-    "This is the password: %s" : "İleteceğiniz parola: %s",
-    "Password to access »%1$s« shared with %2$s" : "»%1$s« için %2$s üzerinden paylaşılan erişim parolası"
+    "Enforce password protection" : "Parola koruması dayatılsın"
 },
 "nplurals=2; plural=(n > 1);");

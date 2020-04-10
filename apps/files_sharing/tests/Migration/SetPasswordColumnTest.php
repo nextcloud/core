@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -16,12 +17,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_Sharing\Tests\Migration;
-
 
 use OCA\Files_Sharing\Migration\SetPasswordColumn;
 use OCA\Files_Sharing\Tests\TestCase;
@@ -47,7 +47,7 @@ class SetPasswordColumnTest extends TestCase {
 
 	private $table = 'share';
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->connection = \OC::$server->getDatabaseConnection();
@@ -57,7 +57,7 @@ class SetPasswordColumnTest extends TestCase {
 		$this->cleanDB();
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		parent::tearDown();
 		$this->cleanDB();
 	}
@@ -109,7 +109,7 @@ class SetPasswordColumnTest extends TestCase {
 
 		foreach ($allShares as $share) {
 			if ((int)$share['share_type'] === Share::SHARE_TYPE_LINK) {
-				$this->assertNull( $share['share_with']);
+				$this->assertNull($share['share_with']);
 				$this->assertSame('shareWith', $share['password']);
 			} else {
 				$this->assertSame('shareWith', $share['share_with']);

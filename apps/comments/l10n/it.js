@@ -28,8 +28,6 @@ OC.L10N.register(
     "Error occurred while posting comment" : "Si è verificato un errore durante la pubblicazione del commento.",
     "_%n unread comment_::_%n unread comments_" : ["%n commento non letto","%n commenti non letti"],
     "_1 new comment_::_{unread} new comments_" : ["1 nuovo commento","{unread} nuovi commenti"],
-    "Comment" : "Commento",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "Sei stato menzionato su \"%s\", in un commento di un utente che è stato eliminato",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s ti ha menzionato in un commento su \"%2$s\""
+    "Comment" : "Commento"
 },
 "nplurals=2; plural=(n != 1);");

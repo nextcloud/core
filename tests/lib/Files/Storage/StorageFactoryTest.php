@@ -9,10 +9,10 @@
 namespace Test\Files\Storage;
 
 use OC\Files\Mount\MountPoint;
+use OC\Files\Storage\Wrapper\Wrapper;
 use OCP\Files\Mount\IMountPoint;
 use OCP\Files\Storage as IStorage;
 use Test\TestCase;
-use OC\Files\Storage\Wrapper\Wrapper;
 
 class DummyWrapper extends Wrapper {
 	public $data;

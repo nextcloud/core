@@ -4,16 +4,14 @@
  * @copyright Copyright (c) 2016 Joas Schilling <coding@schilljs.com>
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
- * @author justin-sleep <justin@quarterfull.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
- * @author Morris Jobke <hey@morrisjobke.de>
- * @author Sandro Lutz <sandro.lutz@temparus.ch>
- * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Ujjwal Bhardwaj <ujjwalb1996@gmail.com>
+ * @author Michael Weimann <mail@michael-weimann.eu>
+ * @author Rayn0r <andrew@ilpss8.myfirewall.org>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -27,15 +25,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Core\Controller;
 
+use OC\AppFramework\Http\Request;
 use OC\Authentication\Login\Chain;
 use OC\Authentication\Login\LoginData;
-use OC\Authentication\TwoFactorAuth\Manager;
+use OC\Authentication\WebAuthn\Manager as WebAuthnManager;
 use OC\Security\Bruteforce\Throttler;
 use OC\User\Session;
 use OC_App;
@@ -82,6 +81,8 @@ class LoginController extends Controller {
 	private $loginChain;
 	/** @var IInitialStateService */
 	private $initialStateService;
+	/** @var WebAuthnManager */
+	private $webAuthnManager;
 
 	public function __construct(?string $appName,
 								IRequest $request,
@@ -94,7 +95,8 @@ class LoginController extends Controller {
 								Defaults $defaults,
 								Throttler $throttler,
 								Chain $loginChain,
-								IInitialStateService $initialStateService) {
+								IInitialStateService $initialStateService,
+								WebAuthnManager $webAuthnManager) {
 		parent::__construct($appName, $request);
 		$this->userManager = $userManager;
 		$this->config = $config;
@@ -106,6 +108,7 @@ class LoginController extends Controller {
 		$this->throttler = $throttler;
 		$this->loginChain = $loginChain;
 		$this->initialStateService = $initialStateService;
+		$this->webAuthnManager = $webAuthnManager;
 	}
 
 	/**
@@ -128,7 +131,11 @@ class LoginController extends Controller {
 
 		$this->session->set('clearingExecutionContexts', '1');
 		$this->session->close();
-		$response->addHeader('Clear-Site-Data', '"cache", "storage"');
+
+		if (!$this->request->isUserAgent([Request::USER_AGENT_CHROME, Request::USER_AGENT_ANDROID_MOBILE_CHROME])) {
+			$response->addHeader('Clear-Site-Data', '"cache", "storage"');
+		}
+
 		return $response;
 	}
 
@@ -178,6 +185,8 @@ class LoginController extends Controller {
 		);
 
 		$this->setPasswordResetInitialState($user);
+
+		$this->initialStateService->provideInitialState('core', 'webauthn-available', $this->webAuthnManager->isWebAuthnAvailable());
 
 		// OpenGraph Support: http://ogp.me/
 		Util::addHeader('meta', ['property' => 'og:title', 'content' => Util::sanitizeHTML($this->defaults->getName())]);
@@ -289,7 +298,7 @@ class LoginController extends Controller {
 
 		$data = new LoginData(
 			$this->request,
-			$user,
+			trim($user),
 			$password,
 			$redirect_url,
 			$timezone,

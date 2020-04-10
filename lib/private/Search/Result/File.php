@@ -19,11 +19,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Search\Result;
+
 use OCP\Files\FileInfo;
 use OCP\Files\Folder;
 
@@ -34,7 +35,7 @@ class File extends \OCP\Search\Result {
 
 	/**
 	 * Type name; translated in templates
-	 * @var string 
+	 * @var string
 	 */
 	public $type = 'file';
 
@@ -46,7 +47,7 @@ class File extends \OCP\Search\Result {
 
 	/**
 	 * Size, in bytes
-	 * @var int 
+	 * @var int
 	 */
 	public $size;
 
@@ -64,7 +65,7 @@ class File extends \OCP\Search\Result {
 
 	/**
 	 * File permissions:
-	 * 
+	 *
 	 * @var string
 	 */
 	public $permissions;
@@ -105,7 +106,7 @@ class File extends \OCP\Search\Result {
 	 * @param string $path
 	 * @return string relative path
 	 */
-	protected function getRelativePath ($path) {
+	protected function getRelativePath($path) {
 		if (!isset(self::$userFolderCache)) {
 			$user = \OC::$server->getUserSession()->getUser()->getUID();
 			self::$userFolderCache = \OC::$server->getUserFolder($user);

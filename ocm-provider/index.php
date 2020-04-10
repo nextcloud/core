@@ -36,4 +36,3 @@ if ($isEnabled) {
 	header($_SERVER["SERVER_PROTOCOL"]." 501 Not Implemented", true, 501);
 	exit("501 Not Implemented");
 }
-

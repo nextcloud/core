@@ -24,17 +24,6 @@
     "Share by mail" : "გაზიარება ელ-ფოსტით",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "მიეცით უფლება მომხმარებლებს ელ-მისამართში მოთავსებით, ფაილზე ან დირექტორიაზე გააზიარონ პერსონალიზირებული ბმულები",
     "Send password by mail" : "პაროლის გაგზავნა ფოსტით",
-    "Enforce password protection" : "პროლით დაცვის იძულება",
-    "Sharing %s failed, this item is already shared with %s" : "%s ფაილის გაზიარება ვერ მოხერხდა, ის %s მომხმარებელთან უკვე გაზიარებულია",
-    "%s shared »%s« with you" : "თქვენთან %s მომხმარებლისგან გააზიარდა »%s«",
-    "%s shared »%s« with you." : "თქვენთან %s მომხმარებლისგან გააზიარდა »%s«.",
-    "%s via %s" : "%s %s-ით",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s მომხმარებელმა გაგიზიარათ »%s«.\nთქვენ მასზე წვდომის ბმულით, უკვე უნდა მოგსვლოდათ ცალკეული ელ-წერილი.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s მომხმარებელმა გაგიზიარათ »%s«. თქვენ მასზე წვდომის ბმულით, უკვე უნდა მოგსვლოდათ ცალკეული ელ-წერილი.",
-    "Password to access »%s« shared to you by %s" : "%s მომხმარებელმა გაგიზიარათ პაროლი წვდომისთვის »%s«",
-    "It is protected with the following password: %s" : "ეს დაცულია შემდეგი პაროლით: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "თქვენ »%s« გააზიარეთ მომხმარებელთან %s. გაზიარება მიმღებთან უკვე გაიგზავნა. %s-ის ადმინისტრატორის მიერ დაწესებული თავდაცვის პოლიტიკის გამო, ყოველი გაზიარება საჭიროებს პაროლით დაცვას და არ გამოიყენება პირდაპირ პაროლის გასაგზავნად. ამისთვის პაროლი ხელით უნდა მიაწვდინოთ მიმღებს.",
-    "Password to access »%s« shared with %s" : "პაროლი »%s« წვდომაზე გაზიარდა მომხმარებელთან %s",
-    "This is the password: %s" : "ეს პაროლია: %s"
+    "Enforce password protection" : "პროლით დაცვის იძულება"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

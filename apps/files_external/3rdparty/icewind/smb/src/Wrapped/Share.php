@@ -8,6 +8,7 @@
 namespace Icewind\SMB\Wrapped;
 
 use Icewind\SMB\AbstractShare;
+use Icewind\SMB\ACL;
 use Icewind\SMB\Exception\ConnectionException;
 use Icewind\SMB\Exception\DependencyException;
 use Icewind\SMB\Exception\FileInUseException;
@@ -55,6 +56,8 @@ class Share extends AbstractShare {
 		FileInfo::MODE_SYSTEM   => 's'
 	];
 
+	const EXEC_CMD = 'exec';
+
 	/**
 	 * @param IServer $server
 	 * @param string $name
@@ -78,7 +81,8 @@ class Share extends AbstractShare {
 
 	protected function getConnection() {
 		$command = sprintf(
-			'%s%s -t %s %s %s %s',
+			'%s %s%s -t %s %s %s %s',
+			self::EXEC_CMD,
 			$this->system->getStdBufPath() ? $this->system->getStdBufPath() . ' -o0 ' : '',
 			$this->system->getSmbclientPath(),
 			$this->server->getOptions()->getTimeout(),
@@ -150,7 +154,9 @@ class Share extends AbstractShare {
 
 		$this->execute('cd /');
 
-		return $this->parser->parseDir($output, $path);
+		return $this->parser->parseDir($output, $path, function ($path) {
+			return $this->getAcls($path);
+		});
 	}
 
 	/**
@@ -183,7 +189,9 @@ class Share extends AbstractShare {
 			$this->parseOutput($output, $path);
 		}
 		$stat = $this->parser->parseStat($output);
-		return new FileInfo($path, basename($path), $stat['size'], $stat['mtime'], $stat['mode']);
+		return new FileInfo($path, basename($path), $stat['size'], $stat['mtime'], $stat['mode'], function () use ($path) {
+			return $this->getAcls($path);
+		});
 	}
 
 	/**
@@ -418,13 +426,13 @@ class Share extends AbstractShare {
 	 * @param string[] $lines
 	 * @param string $path
 	 *
-	 * @throws NotFoundException
+	 * @return bool
 	 * @throws \Icewind\SMB\Exception\AlreadyExistsException
 	 * @throws \Icewind\SMB\Exception\AccessDeniedException
 	 * @throws \Icewind\SMB\Exception\NotEmptyException
 	 * @throws \Icewind\SMB\Exception\InvalidTypeException
 	 * @throws \Icewind\SMB\Exception\Exception
-	 * @return bool
+	 * @throws NotFoundException
 	 */
 	protected function parseOutput($lines, $path = '') {
 		if (count($lines) === 0) {
@@ -465,6 +473,83 @@ class Share extends AbstractShare {
 	protected function escapeLocalPath($path) {
 		$path = str_replace('"', '\"', $path);
 		return '"' . $path . '"';
+	}
+
+	protected function getAcls($path) {
+		$commandPath = $this->system->getSmbcAclsPath();
+		if (!$commandPath) {
+			return [];
+		}
+
+		$command = sprintf(
+			'%s %s %s %s/%s %s',
+			$commandPath,
+			$this->getAuthFileArgument(),
+			$this->server->getAuth()->getExtraCommandLineArguments(),
+			escapeshellarg('//' . $this->server->getHost()),
+			escapeshellarg($this->name),
+			escapeshellarg($path)
+		);
+		$connection = new RawConnection($command);
+		$connection->writeAuthentication($this->server->getAuth()->getUsername(), $this->server->getAuth()->getPassword());
+		$connection->connect();
+		if (!$connection->isValid()) {
+			throw new ConnectionException($connection->readLine());
+		}
+
+		$rawAcls = $connection->readAll();
+
+		$acls = [];
+		foreach ($rawAcls as $acl) {
+			[$type, $acl] = explode(':', $acl, 2);
+			if ($type !== 'ACL') {
+				continue;
+			}
+			[$user, $permissions] = explode(':', $acl, 2);
+			[$type, $flags, $mask] = explode('/', $permissions);
+
+			$type = $type === 'ALLOWED' ? ACL::TYPE_ALLOW : ACL::TYPE_DENY;
+
+			$flagsInt = 0;
+			foreach (explode('|', $flags) as $flagString) {
+				if ($flagString === 'OI') {
+					$flagsInt += ACL::FLAG_OBJECT_INHERIT;
+				} elseif ($flagString === 'CI') {
+					$flagsInt += ACL::FLAG_CONTAINER_INHERIT;
+				}
+			}
+
+			if (substr($mask, 0, 2) === '0x') {
+				$maskInt = hexdec($mask);
+			} else {
+				$maskInt = 0;
+				foreach (explode('|', $mask) as $maskString) {
+					if ($maskString === 'R') {
+						$maskInt += ACL::MASK_READ;
+					} elseif ($maskString === 'W') {
+						$maskInt += ACL::MASK_WRITE;
+					} elseif ($maskString === 'X') {
+						$maskInt += ACL::MASK_EXECUTE;
+					} elseif ($maskString === 'D') {
+						$maskInt += ACL::MASK_DELETE;
+					} elseif ($maskString === 'READ') {
+						$maskInt += ACL::MASK_READ + ACL::MASK_EXECUTE;
+					} elseif ($maskString === 'CHANGE') {
+						$maskInt += ACL::MASK_READ + ACL::MASK_EXECUTE + ACL::MASK_WRITE + ACL::MASK_DELETE;
+					} elseif ($maskString === 'FULL') {
+						$maskInt += ACL::MASK_READ + ACL::MASK_EXECUTE + ACL::MASK_WRITE + ACL::MASK_DELETE;
+					}
+				}
+			}
+
+			if (isset($acls[$user])) {
+				$existing = $acls[$user];
+				$maskInt += $existing->getMask();
+			}
+			$acls[$user] = new ACL($type, $flagsInt, $maskInt);
+		}
+
+		return $acls;
 	}
 
 	public function __destruct() {

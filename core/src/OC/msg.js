@@ -1,5 +1,3 @@
-/* global t */
-
 /*
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -21,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import $ from 'jquery';
+import $ from 'jquery'
 
 /**
  * A little class to manage a status field for a "saving" process.
@@ -36,8 +34,8 @@ export default {
 	 *
 	 * @param {Object} selector    Placeholder to display the message in
 	 */
-	startSaving: function (selector) {
-		this.startAction(selector, t('core', 'Saving...'));
+	startSaving: function(selector) {
+		this.startAction(selector, t('core', 'Saving …'))
 	},
 
 	/**
@@ -46,12 +44,12 @@ export default {
 	 * @param {Object} selector    Placeholder to display the message in
 	 * @param {string} message    Plain text message to display (no HTML allowed)
 	 */
-	startAction: function (selector, message) {
+	startAction: function(selector, message) {
 		$(selector).text(message)
 			.removeClass('success')
 			.removeClass('error')
 			.stop(true, true)
-			.show();
+			.show()
 	},
 
 	/**
@@ -64,8 +62,8 @@ export default {
 	 * @param {string} response.status    is being used to decide whether the message
 	 * is displayed as an error/success
 	 */
-	finishedSaving: function (selector, response) {
-		this.finishedAction(selector, response);
+	finishedSaving: function(selector, response) {
+		this.finishedAction(selector, response)
 	},
 
 	/**
@@ -78,11 +76,11 @@ export default {
 	 * @param {string} response.status is being used to decide whether the message
 	 * is displayed as an error/success
 	 */
-	finishedAction: function (selector, response) {
-		if (response.status === "success") {
-			this.finishedSuccess(selector, response.data.message);
+	finishedAction: function(selector, response) {
+		if (response.status === 'success') {
+			this.finishedSuccess(selector, response.data.message)
 		} else {
-			this.finishedError(selector, response.data.message);
+			this.finishedError(selector, response.data.message)
 		}
 	},
 
@@ -92,14 +90,14 @@ export default {
 	 * @param {Object} selector Placeholder to display the message in
 	 * @param {string} message Plain text success message to display (no HTML allowed)
 	 */
-	finishedSuccess: function (selector, message) {
+	finishedSuccess: function(selector, message) {
 		$(selector).text(message)
 			.addClass('success')
 			.removeClass('error')
 			.stop(true, true)
 			.delay(3000)
 			.fadeOut(900)
-			.show();
+			.show()
 	},
 
 	/**
@@ -108,10 +106,10 @@ export default {
 	 * @param {Object} selector Placeholder to display the message in
 	 * @param {string} message Plain text error message to display (no HTML allowed)
 	 */
-	finishedError: function (selector, message) {
+	finishedError: function(selector, message) {
 		$(selector).text(message)
 			.addClass('error')
 			.removeClass('success')
-			.show();
-	}
+			.show()
+	},
 }

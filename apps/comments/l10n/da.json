@@ -25,8 +25,7 @@
     "Error occurred while updating comment with id {id}" : "Der opstod fejl under opdatering af kommentar med id {id}",
     "Error occurred while posting comment" : "Der opstod fejl under indsendelse af kommentar",
     "_%n unread comment_::_%n unread comments_" : ["%n ulæst kommentar","%n ulæste kommentarer"],
-    "Comment" : "Kommentér",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "Du blev nævnt i \"%s”, I en kommentar af en bruger der er blevet slettet efterfølgende",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s nævnte dig i en kommentarer på “%2$s”"
+    "_1 new comment_::_{unread} new comments_" : ["1 ny kommentar","{unread} nye kommentarer"],
+    "Comment" : "Kommentér"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -2,6 +2,8 @@
 /**
  * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
  *
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -21,14 +23,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OC\App\AppStore\Fetcher;
 
-use OC\Files\AppData\Factory;
 use GuzzleHttp\Exception\ConnectException;
+use OC\Files\AppData\Factory;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\IAppData;
@@ -36,7 +38,6 @@ use OCP\Files\NotFoundException;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
 use OCP\ILogger;
-use OCP\Util;
 
 abstract class Fetcher {
 	const INVALIDATE_AFTER_SECONDS = 300;
@@ -54,7 +55,7 @@ abstract class Fetcher {
 	/** @var string */
 	protected $fileName;
 	/** @var string */
-	protected $endpointUrl;
+	protected $endpointName;
 	/** @var string */
 	protected $version;
 	/** @var string */
@@ -105,7 +106,7 @@ abstract class Fetcher {
 		}
 
 		$client = $this->clientService->newClient();
-		$response = $client->get($this->endpointUrl, $options);
+		$response = $client->get($this->getEndpoint(), $options);
 
 		$responseJson = [];
 		if ($response->getStatusCode() === Http::STATUS_NOT_MODIFIED) {
@@ -173,10 +174,10 @@ abstract class Fetcher {
 			$file->putContent(json_encode($responseJson));
 			return json_decode($file->getContent(), true)['data'];
 		} catch (ConnectException $e) {
-			$this->logger->logException($e, ['app' => 'appstoreFetcher', 'level' => ILogger::INFO, 'message' => 'Could not connect to appstore']);
+			$this->logger->warning('Could not connect to appstore: ' . $e->getMessage(), ['app' => 'appstoreFetcher']);
 			return [];
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app' => 'appstoreFetcher', 'level' => ILogger::INFO]);
+			$this->logger->logException($e, ['app' => 'appstoreFetcher', 'level' => ILogger::WARN]);
 			return [];
 		}
 	}
@@ -217,5 +218,9 @@ abstract class Fetcher {
 	 */
 	public function setChannel(string $channel) {
 		$this->channel = $channel;
+	}
+
+	protected function getEndpoint(): string {
+		return $this->config->getSystemValue('appstoreurl', 'https://apps.nextcloud.com/api/v1') . '/' . $this->endpointName;
 	}
 }

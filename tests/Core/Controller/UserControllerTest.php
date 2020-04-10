@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\Core\Controller;
 
 use OC\Core\Controller\UserController;
@@ -37,7 +38,7 @@ class UserControllerTest extends TestCase {
 	/** @var UserController */
 	private $controller;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userManager = $this->createMock(IUserManager::class);
@@ -55,12 +56,12 @@ class UserControllerTest extends TestCase {
 
 		$this->userManager
 			->method('get')
-			->will($this->returnCallback(function ($uid) use ($user) {
+			->willReturnCallback(function ($uid) use ($user) {
 				if ($uid === 'foo') {
 					return $user;
 				}
 				return null;
-			}));
+			});
 
 		$expected = new JSONResponse([
 			'users' => [

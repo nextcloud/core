@@ -48,7 +48,7 @@ class GuestAvatarControllerTest extends \Test\TestCase {
 	/**
 	 * Sets up the test environment.
 	 */
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->logger = $this->getMockBuilder(ILogger::class)->getMock();

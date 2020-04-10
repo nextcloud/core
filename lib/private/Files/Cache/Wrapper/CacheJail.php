@@ -2,13 +2,14 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Ari Selseng <ari@selseng.net>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Jagszent <daniel@jagszent.de>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @license AGPL-3.0
  *
@@ -22,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -209,9 +210,9 @@ class CacheJail extends CacheWrapper {
 	}
 
 	private function formatSearchResults($results) {
-		$results = array_filter($results, array($this, 'filterCacheEntry'));
+		$results = array_filter($results, [$this, 'filterCacheEntry']);
 		$results = array_values($results);
-		return array_map(array($this, 'formatCacheEntry'), $results);
+		return array_map([$this, 'formatCacheEntry'], $results);
 	}
 
 	/**
@@ -241,7 +242,7 @@ class CacheJail extends CacheWrapper {
 		$results = $this->getCache()->searchQuery($simpleQuery);
 		$results = $this->formatSearchResults($results);
 
-		$limit = $query->getLimit() === 0 ? NULL : $query->getLimit();
+		$limit = $query->getLimit() === 0 ? null : $query->getLimit();
 		$results = array_slice($results, $query->getOffset(), $limit);
 
 		return $results;
@@ -282,7 +283,7 @@ class CacheJail extends CacheWrapper {
 	 */
 	public function getAll() {
 		// not supported
-		return array();
+		return [];
 	}
 
 	/**

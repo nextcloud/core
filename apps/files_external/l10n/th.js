@@ -82,6 +82,7 @@ OC.L10N.register(
     "SFTP with secret key login" : "SFTP กับคีย์ลับสำหรับเข้าสู่ระบบ",
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "แชร์",
+    "Show hidden files" : "แสดงไฟล์ที่ซ่อนอยู่",
     "SMB / CIFS using OC login" : "SMB/CIFS กำลังใช้ OC เข้าสู่ระบบ",
     "Username as share" : "ชื่อผู้ใช้ที่แชร์",
     "OpenStack Object Storage" : "OpenStack Object Storage",
@@ -90,6 +91,7 @@ OC.L10N.register(
     "Name" : "ชื่อ",
     "Storage type" : "ชนิดการจัดเก็บข้อมูล",
     "Scope" : "ขอบเขต",
+    "Open documentation" : "เปิดเอกสาร",
     "Folder name" : "ชื่อโฟลเดอร์",
     "External storage" : "จัดเก็บข้อมูลภายนอก",
     "Authentication" : "รับรองความถูกต้อง",
@@ -98,6 +100,6 @@ OC.L10N.register(
     "Add storage" : "เพิ่มพื้นที่จัดเก็บข้อมูล",
     "Advanced settings" : "ตั้งค่าขั้นสูง",
     "Allow users to mount external storage" : "อนุญาตให้ผู้ใช้ติดตั้งการจัดเก็บข้อมูลภายนอก",
-    "Some of the configured external mount points are not connected. Please click on the red row(s) for more information" : "การกำหนดค่าบางส่วนของจุดเชื่อมต่อภายนอกไม่ถูกเชื่อมต่อ กรุณาคลิกที่ตรงสีแดงสำหรับข้อมูลเพิ่มเติม"
+    "Saving..." : "กำลังบันทึกข้อมูล..."
 },
 "nplurals=1; plural=0;");

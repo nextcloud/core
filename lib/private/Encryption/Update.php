@@ -4,6 +4,8 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -18,15 +20,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Encryption;
 
 use OC\Files\Filesystem;
-use \OC\Files\Mount;
-use \OC\Files\View;
+use OC\Files\Mount;
+use OC\Files\View;
 
 /**
  * update encrypted files, e.g. because a file was shared
@@ -157,7 +159,7 @@ class Update {
 			throw new \InvalidArgumentException('No file found for ' . $info->getId());
 		}
 
-		return array($owner, $path);
+		return [$owner, $path];
 	}
 
 	/**
@@ -180,7 +182,7 @@ class Update {
 		if ($this->view->is_dir($path)) {
 			$allFiles = $this->util->getAllFiles($path);
 		} else {
-			$allFiles = array($path);
+			$allFiles = [$path];
 		}
 
 

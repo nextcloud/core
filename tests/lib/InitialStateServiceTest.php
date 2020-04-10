@@ -36,7 +36,7 @@ class InitialStateServiceTest extends TestCase {
 	/** @var InitialStateService */
 	private $service;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->service = new InitialStateService(
@@ -84,7 +84,7 @@ class InitialStateServiceTest extends TestCase {
 	 * @dataProvider staticData
 	 */
 	public function testLazyData($value) {
-		$this->service->provideLazyInitialState('test', 'key', function() use ($value) {
+		$this->service->provideLazyInitialState('test', 'key', function () use ($value) {
 			return $value;
 		});
 		$data = $this->service->getInitialStates();

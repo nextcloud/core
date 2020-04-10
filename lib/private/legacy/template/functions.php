@@ -4,9 +4,10 @@
  *
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
- * @author Julius Härtl <jus@bitgrid.net>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Michael Letzgus <www@chronos.michael-letzgus.de>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -27,7 +28,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -44,7 +45,7 @@ function p($string) {
  * Prints a <link> tag for loading css
  * @param string $href the source URL, ignored when empty
  * @param string $opts, additional optional options
-*/
+ */
 function emit_css_tag($href, $opts = '') {
 	$s='<link rel="stylesheet"';
 	if (!empty($href)) {
@@ -59,7 +60,7 @@ function emit_css_tag($href, $opts = '') {
 /**
  * Prints all tags for CSS loading
  * @param array $obj all the script information from template
-*/
+ */
 function emit_css_loading_tags($obj) {
 	foreach($obj['cssfiles'] as $css) {
 		emit_css_tag($css);
@@ -73,7 +74,7 @@ function emit_css_loading_tags($obj) {
  * Prints a <script> tag with nonce and defer depending on config
  * @param string $src the source URL, ignored when empty
  * @param string $script_content the inline script content, ignored when empty
-*/
+ */
 function emit_script_tag($src, $script_content='') {
 	$defer_str=' defer';
 	$s='<script nonce="' . \OC::$server->getContentSecurityPolicyNonceManager()->getNonce() . '"';
@@ -94,7 +95,7 @@ function emit_script_tag($src, $script_content='') {
 /**
  * Print all <script> tags for loading JS
  * @param array $obj all the script information from template
-*/
+ */
 function emit_script_loading_tags($obj) {
 	foreach($obj['jsfiles'] as $jsfile) {
 		emit_script_tag($jsfile, '');
@@ -196,11 +197,11 @@ function component($app, $file) {
 	if(is_array($file)) {
 		foreach($file as $f) {
 			$url = link_to($app, 'component/' . $f . '.html');
-			OC_Util::addHeader('link', array('rel' => 'import', 'href' => $url));
+			OC_Util::addHeader('link', ['rel' => 'import', 'href' => $url]);
 		}
 	} else {
 		$url = link_to($app, 'component/' . $file . '.html');
-		OC_Util::addHeader('link', array('rel' => 'import', 'href' => $url));
+		OC_Util::addHeader('link', ['rel' => 'import', 'href' => $url]);
 	}
 }
 
@@ -213,7 +214,7 @@ function component($app, $file) {
  *
  * For further information have a look at \OCP\IURLGenerator::linkTo
  */
-function link_to( $app, $file, $args = array() ) {
+function link_to($app, $file, $args = []) {
 	return \OC::$server->getURLGenerator()->linkTo($app, $file, $args);
 }
 
@@ -233,8 +234,8 @@ function link_to_docs($key) {
  *
  * For further information have a look at \OCP\IURLGenerator::imagePath
  */
-function image_path( $app, $image ) {
-	return \OC::$server->getURLGenerator()->imagePath( $app, $image );
+function image_path($app, $image) {
+	return \OC::$server->getURLGenerator()->imagePath($app, $image);
 }
 
 /**
@@ -242,8 +243,8 @@ function image_path( $app, $image ) {
  * @param string $mimetype mimetype
  * @return string link to the image
  */
-function mimetype_icon( $mimetype ) {
-	return \OC::$server->getMimeTypeDetector()->mimeTypeIcon( $mimetype );
+function mimetype_icon($mimetype) {
+	return \OC::$server->getMimeTypeDetector()->mimeTypeIcon($mimetype);
 }
 
 /**
@@ -252,7 +253,7 @@ function mimetype_icon( $mimetype ) {
  * @param string $path path of file
  * @return string link to the preview
  */
-function preview_icon( $path ) {
+function preview_icon($path) {
 	return \OC::$server->getURLGenerator()->linkToRoute('core.Preview.getPreview', ['x' => 32, 'y' => 32, 'file' => $path]);
 }
 
@@ -261,7 +262,7 @@ function preview_icon( $path ) {
  * @param string $token
  * @return string
  */
-function publicPreview_icon ( $path, $token ) {
+function publicPreview_icon($path, $token) {
 	return \OC::$server->getURLGenerator()->linkToRoute('files_sharing.PublicPreview.getPreview', ['x' => 32, 'y' => 32, 'file' => $path, 'token' => $token]);
 }
 
@@ -272,8 +273,8 @@ function publicPreview_icon ( $path, $token ) {
  *
  * For further information have a look at OC_Helper::humanFileSize
  */
-function human_file_size( $bytes ) {
-	return OC_Helper::humanFileSize( $bytes );
+function human_file_size($bytes) {
+	return OC_Helper::humanFileSize($bytes);
 }
 
 /**
@@ -281,7 +282,7 @@ function human_file_size( $bytes ) {
  * @param int $timestamp UNIX timestamp to strip
  * @return int timestamp without time value
  */
-function strip_time($timestamp){
+function strip_time($timestamp) {
 	$date = new \DateTime("@{$timestamp}");
 	$date->setTime(0, 0, 0);
 	return (int)$date->format('U');
@@ -305,9 +306,9 @@ function relative_modified_date($timestamp, $fromTime = null, $dateOnly = false)
 	return $formatter->formatTimeSpan($timestamp, $fromTime);
 }
 
-function html_select_options($options, $selected, $params=array()) {
+function html_select_options($options, $selected, $params=[]) {
 	if (!is_array($selected)) {
-		$selected=array($selected);
+		$selected=[$selected];
 	}
 	if (isset($params['combine']) && $params['combine']) {
 		$options = array_combine($options, $options);

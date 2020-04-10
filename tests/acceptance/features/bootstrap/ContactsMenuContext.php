@@ -66,7 +66,7 @@ class ContactsMenuContext implements Context, ActorAwareInterface {
 	 * @return Locator
 	 */
 	private static function menuItemFor($contactName) {
-		return Locator::forThe()->xpath("//*[@class = 'contact' and normalize-space() = '$contactName']")->
+		return Locator::forThe()->xpath("//*[@class = 'full-name' and normalize-space() = '$contactName']")->
 				descendantOf(self::contactsMenu())->
 				describedAs($contactName . " contact in Contacts menu");
 	}

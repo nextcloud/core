@@ -18,7 +18,7 @@
  *    - TODO music upload button
  */
 
-/* global jQuery, humanFileSize, md5 */
+/* global jQuery, md5 */
 
 /**
  * File upload object
@@ -242,6 +242,10 @@ OC.FileUpload.prototype = {
 			// TODO: if fails, it means same id already existed, need to retry
 		} else {
 			chunkFolderPromise = $.Deferred().resolve().promise();
+			var mtime = this.getFile().lastModified;
+			if (mtime) {
+				data.headers['X-OC-Mtime'] = mtime / 1000;
+			}
 		}
 
 		// wait for creation of the required directory before uploading
@@ -727,11 +731,11 @@ OC.Uploader.prototype = _.extend({
 	 *
 	 * @param {array} selection of files to upload
 	 * @param {object} callbacks - object with several callback methods
-	 * @param {function} callbacks.onNoConflicts
-	 * @param {function} callbacks.onSkipConflicts
-	 * @param {function} callbacks.onReplaceConflicts
-	 * @param {function} callbacks.onChooseConflicts
-	 * @param {function} callbacks.onCancel
+	 * @param {Function} callbacks.onNoConflicts
+	 * @param {Function} callbacks.onSkipConflicts
+	 * @param {Function} callbacks.onReplaceConflicts
+	 * @param {Function} callbacks.onChooseConflicts
+	 * @param {Function} callbacks.onCancel
 	 */
 	checkExistingFiles: function (selection, callbacks) {
 		var fileList = this.fileList;
@@ -967,8 +971,8 @@ OC.Uploader.prototype = _.extend({
 						data.textStatus = 'notenoughspace';
 						data.errorThrown = t('files',
 							'Not enough free space, you are uploading {size1} but only {size2} is left', {
-							'size1': humanFileSize(selection.totalBytes),
-							'size2': humanFileSize($('#free_space').val())
+							'size1': OC.Util.humanFileSize(selection.totalBytes),
+							'size2': OC.Util.humanFileSize($('#free_space').val())
 						});
 					}
 
@@ -1167,9 +1171,9 @@ OC.Uploader.prototype = _.extend({
 						h = t('files', 'Uploading …');
 					}
 					self._setProgressBarText(h, h, t('files', '{loadedSize} of {totalSize} ({bitrate})' , {
-							loadedSize: humanFileSize(data.loaded),
-							totalSize: humanFileSize(total),
-							bitrate: humanFileSize(data.bitrate / 8) + '/s'
+							loadedSize: OC.Util.humanFileSize(data.loaded),
+							totalSize: OC.Util.humanFileSize(total),
+							bitrate: OC.Util.humanFileSize(data.bitrate / 8) + '/s'
 						}));
 					self._setProgressBarValue(progress);
 					self.trigger('progressall', e, data);

@@ -21,7 +21,6 @@
 
 namespace Tests\Core\Command\Config\App;
 
-
 use OC\Core\Command\Config\App\SetConfig;
 use OCP\IConfig;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,7 +39,7 @@ class SetConfigTest extends TestCase {
 	/** @var \Symfony\Component\Console\Command\Command */
 	protected $command;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$config = $this->config = $this->getMockBuilder(IConfig::class)

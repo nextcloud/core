@@ -6,6 +6,11 @@
     "No data specified" : "Nav norādīti dati",
     " Could not set configuration %s" : "Nevarēja iestatīt konfigurāciju %s",
     "Action does not exist" : "Darbība neeksistē",
+    "Very weak password" : "Ļoti vāja parole",
+    "Weak password" : "Vāja parole",
+    "So-so password" : "Normāla parole",
+    "Good password" : "Laba parole",
+    "Strong password" : "Lieliska parole",
     "The Base DN appears to be wrong" : "DN bāze šķiet nepareiza",
     "Testing configuration…" : "Konfigurācijas pārbaude...",
     "Configuration incorrect" : "Nepareiza konfigurācija",
@@ -61,6 +66,12 @@
     "Saving" : "Saglabā",
     "Back" : "Atpakaļ",
     "Continue" : "Turpināt",
+    "An internal error occurred." : "Radās iekšēja kļūda.",
+    "Please try again or contact your administrator." : "Lūdzu, mēģiniet vēlreiz vai sazinieties ar administratoru.",
+    "Current password" : "Pašreizējā parole",
+    "New password" : "Jauna parole",
+    "Wrong password." : "Nepareiza parole.",
+    "Cancel" : "Atcelt",
     "Server" : "Serveris",
     "Users" : "Lietotāji",
     "Login Attributes" : "Pieteikšanās atribūti",
@@ -96,10 +107,10 @@
     "Quota Default" : "Kvotas noklusējums",
     "Email Field" : "E-pasta lauks",
     "User Home Folder Naming Rule" : "Lietotāja mājas mapes nosaukšanas kārtula",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Atstāt tukšu lietotāja vārdam (noklusējuma). Citādi, norādi LDAP/AD atribūtu.",
     "Internal Username" : "Iekšējais lietotājvārds",
     "Override UUID detection" : "Ignorēt UUID noteikšanu",
     "UUID Attribute for Users:" : "UUID atribūti lietotājiem:",
-    "UUID Attribute for Groups:" : "UUID atribūti grupām:"
+    "UUID Attribute for Groups:" : "UUID atribūti grupām:",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Atstāt tukšu lietotāja vārdam (noklusējuma). Citādi, norādi LDAP/AD atribūtu."
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
 }

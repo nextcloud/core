@@ -48,7 +48,7 @@ class QuerySearchHelperTest extends TestCase {
 	/** @var  integer */
 	private $numericStorageId;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->builder = \OC::$server->getDatabaseConnection()->getQueryBuilder();
 		$this->mimetypeLoader = $this->createMock(IMimeTypeLoader::class);
@@ -83,7 +83,7 @@ class QuerySearchHelperTest extends TestCase {
 			->where($this->builder->expr()->eq('storage', new Literal($this->numericStorageId)));
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		parent::tearDown();
 
 		$builder = \OC::$server->getDatabaseConnection()->getQueryBuilder();
@@ -200,7 +200,7 @@ class QuerySearchHelperTest extends TestCase {
 			'mimetype' => 'image/png'
 		]);
 
-		$fileIds = array_map(function($i) use ($fileId) {
+		$fileIds = array_map(function ($i) use ($fileId) {
 			return $fileId[$i];
 		}, $fileIds);
 

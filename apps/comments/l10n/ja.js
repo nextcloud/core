@@ -28,8 +28,6 @@ OC.L10N.register(
     "Error occurred while posting comment" : "コメント投稿中にエラーが発生しました",
     "_%n unread comment_::_%n unread comments_" : ["%n の未読のコメント"],
     "_1 new comment_::_{unread} new comments_" : ["の未読のコメント {unread}"],
-    "Comment" : "コメント",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "削除されたユーザーのコメントで %s にあなたに言及しました",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s さんが “%2$s” のコメントであなたについて言及しました。"
+    "Comment" : "コメント"
 },
 "nplurals=1; plural=0;");

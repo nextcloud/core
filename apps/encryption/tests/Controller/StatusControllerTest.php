@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -20,13 +21,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Encryption\Tests\Controller;
-
 
 use OCA\Encryption\Controller\StatusController;
 use OCA\Encryption\Session;
@@ -52,7 +51,7 @@ class StatusControllerTest extends TestCase {
 	/** @var StatusController */
 	protected $controller;
 
-	protected function setUp() {
+	protected function setUp(): void {
 
 		parent::setUp();
 
@@ -64,9 +63,9 @@ class StatusControllerTest extends TestCase {
 			->disableOriginalConstructor()->getMock();
 		$this->l10nMock->expects($this->any())
 			->method('t')
-			->will($this->returnCallback(function($message) {
+			->willReturnCallback(function ($message) {
 				return $message;
-			}));
+			});
 		$this->encryptionManagerMock = $this->createMock(IManager::class);
 
 		$this->controller = new StatusController('encryptionTest',

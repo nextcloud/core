@@ -6,8 +6,10 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
- * @author Thomas Citharel <tcit@tcit.fr>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Vinicius Cubas Brand <vinicius@eita.org.br>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -22,19 +24,20 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OCA\DAV\Tests\unit\CalDAV;
 
+use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\DAV\CalDAV\Calendar;
 use OCA\DAV\CalDAV\PublicCalendar;
+use OCA\DAV\CalDAV\PublicCalendarRoot;
 use OCA\DAV\Connector\Sabre\Principal;
 use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IL10N;
-use OCA\DAV\CalDAV\CalDavBackend;
-use OCA\DAV\CalDAV\PublicCalendarRoot;
 use OCP\ILogger;
 use OCP\IUserManager;
 use OCP\Security\ISecureRandom;
@@ -71,7 +74,7 @@ class PublicCalendarRootTest extends TestCase {
 	/** @var ILogger */
 	private $logger;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$db = \OC::$server->getDatabaseConnection();
@@ -107,7 +110,7 @@ class PublicCalendarRootTest extends TestCase {
 			$this->l10n, $this->config);
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		parent::tearDown();
 
 		if (is_null($this->backend)) {

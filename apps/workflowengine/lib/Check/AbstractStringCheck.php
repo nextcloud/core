@@ -21,10 +21,9 @@
 
 namespace OCA\WorkflowEngine\Check;
 
-
-use OCP\Files\Storage\IStorage;
 use OCP\IL10N;
 use OCP\WorkflowEngine\ICheck;
+use OCP\WorkflowEngine\IManager;
 
 abstract class AbstractStringCheck implements ICheck {
 
@@ -42,14 +41,6 @@ abstract class AbstractStringCheck implements ICheck {
 	}
 
 	/**
-	 * @param IStorage $storage
-	 * @param string $path
-	 */
-	public function setFileInfo(IStorage $storage, $path) {
-		// Nothing changes here with a different path
-	}
-
-	/**
 	 * @return string
 	 */
 	abstract protected function getActualValue();
@@ -59,7 +50,7 @@ abstract class AbstractStringCheck implements ICheck {
 	 * @param string $value
 	 * @return bool
 	 */
-	public function executeCheck($operator, $value)  {
+	public function executeCheck($operator, $value) {
 		$actualValue = $this->getActualValue();
 		return $this->executeStringCheck($operator, $value, $actualValue);
 	}
@@ -99,6 +90,16 @@ abstract class AbstractStringCheck implements ICheck {
 			  @preg_match($value, null) === false) {
 			throw new \UnexpectedValueException($this->l->t('The given regular expression is invalid'), 2);
 		}
+	}
+
+	public function supportedEntities(): array {
+		// universal by default
+		return [];
+	}
+
+	public function isAvailableForScope(int $scope): bool {
+		// admin only by default
+		return $scope === IManager::SCOPE_ADMIN;
 	}
 
 	/**

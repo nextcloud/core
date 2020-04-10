@@ -25,7 +25,7 @@ declare(strict_types=1);
 ?>
 <div class="body-login-container update">
 	<h2 class="two-factor-header"><?php p($l->t('Setup two-factor authentication')) ?></h2>
-	<?php p($l->t('Enhanced security is enforced for your account. Choose wich provider to set up:')) ?>
+	<?php p($l->t('Enhanced security is enforced for your account. Choose which provider to set up:')) ?>
 	<ul>
 	<?php foreach ($_['providers'] as $provider): ?>
 		<li>
@@ -53,6 +53,6 @@ declare(strict_types=1);
 	<?php endforeach; ?>
 	</ul>
 	<p><a class="two-factor-secondary" href="<?php print_unescaped($_['logout_url']); ?>">
-		<?php p($l->t('Cancel log in')) ?>
+		<?php p($l->t('Cancel login')) ?>
 	</a></p>
 </div>

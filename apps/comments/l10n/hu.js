@@ -28,8 +28,6 @@ OC.L10N.register(
     "Error occurred while posting comment" : "Hiba történt a hozzászólás küldése közben",
     "_%n unread comment_::_%n unread comments_" : ["%n olvasatlan hozzászólás","%n olvasatlan hozzászólás"],
     "_1 new comment_::_{unread} new comments_" : ["1 új hozzászólás","{unread} új hozzászólás"],
-    "Comment" : "Hozzászólás",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "Megemlítették ennél: „%s”, egy már törölt felhasználó hozzászólásában",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s megemlítette egy hozzászólásban ennél: „%2$s”"
+    "Comment" : "Hozzászólás"
 },
 "nplurals=2; plural=(n != 1);");

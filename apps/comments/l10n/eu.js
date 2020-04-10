@@ -28,8 +28,6 @@ OC.L10N.register(
     "Error occurred while posting comment" : "Errore bat gertatu da iruzkina bidaltzerakoan",
     "_%n unread comment_::_%n unread comments_" : ["iruzkin %n irakurri gabe","%n iruzkin irakurri gabe"],
     "_1 new comment_::_{unread} new comments_" : ["Iruzkin berri 1","{unread} iruzkin berri"],
-    "Comment" : "Iruzkina",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "“%s” iruzkinean dagoeneko ezabatuta dagoen erabiltzaile batek aipatu zaitu.",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s-(e)k aipatu zaitu iruzkinean “%2$s”"
+    "Comment" : "Iruzkina"
 },
 "nplurals=2; plural=(n != 1);");

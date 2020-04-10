@@ -20,7 +20,7 @@ class PropagatorTest extends TestCase {
 	/** @var  IStorage */
 	private $storage;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->storage = new Temporary();
 		$this->storage->mkdir('foo/bar');
@@ -78,6 +78,17 @@ class PropagatorTest extends TestCase {
 
 		foreach ($oldInfos as $i => $oldInfo) {
 			$this->assertEquals($oldInfo->getSize() + 10, $newInfos[$i]->getSize());
+		}
+	}
+
+	public function testSizePropagationNoNegative() {
+		$paths = ['', 'foo', 'foo/bar'];
+		$oldInfos = $this->getFileInfos($paths);
+		$this->storage->getPropagator()->propagateChange('foo/bar/file.txt', time(), -100);
+		$newInfos = $this->getFileInfos($paths);
+
+		foreach ($oldInfos as $i => $oldInfo) {
+			$this->assertEquals(-1, $newInfos[$i]->getSize());
 		}
 	}
 

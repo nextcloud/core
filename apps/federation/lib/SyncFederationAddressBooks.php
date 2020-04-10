@@ -5,6 +5,7 @@
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -19,9 +20,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Federation;
 
 use OC\OCS\DiscoveryService;
@@ -76,7 +78,7 @@ class SyncFederationAddressBooks {
 			$targetBookId = $trustedServer['url_hash'];
 			$targetPrincipal = "principals/system/system";
 			$targetBookProperties = [
-					'{DAV:}displayname' => $url
+				'{DAV:}displayname' => $url
 			];
 			try {
 				$newToken = $this->syncService->syncRemoteAddressBook($url, $cardDavUser, $addressBookUrl, $sharedSecret, $syncToken, $targetBookId, $targetPrincipal, $targetBookProperties);

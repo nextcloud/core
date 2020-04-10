@@ -2,8 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -26,8 +28,8 @@ namespace OC\Files\Config;
 use OC\Hooks\Emitter;
 use OC\Hooks\EmitterTrait;
 use OCP\Files\Config\IHomeMountProvider;
-use OCP\Files\Config\IMountProviderCollection;
 use OCP\Files\Config\IMountProvider;
+use OCP\Files\Config\IMountProviderCollection;
 use OCP\Files\Config\IUserMountCache;
 use OCP\Files\Mount\IMountManager;
 use OCP\Files\Mount\IMountPoint;
@@ -45,7 +47,7 @@ class MountProviderCollection implements IMountProviderCollection, Emitter {
 	/**
 	 * @var \OCP\Files\Config\IMountProvider[]
 	 */
-	private $providers = array();
+	private $providers = [];
 
 	/**
 	 * @var \OCP\Files\Storage\IStorageFactory
@@ -85,7 +87,7 @@ class MountProviderCollection implements IMountProviderCollection, Emitter {
 		});
 		$mounts = array_reduce($mounts, function (array $mounts, array $providerMounts) {
 			return array_merge($mounts, $providerMounts);
-		}, array());
+		}, []);
 		return $this->filterMounts($user, $mounts);
 	}
 

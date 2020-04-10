@@ -1,9 +1,13 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2017 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -18,14 +22,14 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OC\Core\Controller;
 
-use OCP\AppFramework\OCSController as Controller;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\OCSController as Controller;
 use OCP\Collaboration\AutoComplete\AutoCompleteEvent;
 use OCP\Collaboration\AutoComplete\IManager;
 use OCP\Collaboration\Collaborators\ISearch;
@@ -107,7 +111,7 @@ class AutoCompleteController extends Controller {
 		foreach ($results as $type => $subResult) {
 			foreach ($subResult as $result) {
 				$output[] = [
-					'id' => $result['value']['shareWith'],
+					'id' => (string) $result['value']['shareWith'],
 					'label' => $result['label'],
 					'source' => $type,
 				];

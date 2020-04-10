@@ -19,9 +19,6 @@
     "Name" : "Naam",
     "Actions" : "Acties",
     "Deleted" : "Verwijderd",
-    "Delete" : "Verwijder",
-    "Couldn't delete %s permanently" : "Kon %s niet permanent verwijderen",
-    "Couldn't restore %s" : "Kon %s niet herstellen",
-    "Error" : "Fout"
+    "Delete" : "Verwijder"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

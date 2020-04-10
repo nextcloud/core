@@ -50,7 +50,7 @@ class SchemaDiffTest extends TestCase {
 
 	private $schemaFile;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->schemaFile = \OC::$server->getTempManager()->getTemporaryFile();
@@ -61,7 +61,7 @@ class SchemaDiffTest extends TestCase {
 		$this->testPrefix= strtolower($this->getUniqueID($this->config->getSystemValue('dbtableprefix', 'oc_'), 3));
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$this->manager->removeDBStructure($this->schemaFile);
 		parent::tearDown();
 	}
@@ -72,7 +72,7 @@ class SchemaDiffTest extends TestCase {
 	 */
 	public function testZeroChangeOnSchemaMigrations($xml) {
 
-		$xml = str_replace( '*dbprefix*', $this->testPrefix, $xml );
+		$xml = str_replace('*dbprefix*', $this->testPrefix, $xml);
 		$schemaFile = $this->schemaFile;
 		file_put_contents($schemaFile, $xml);
 

@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -20,13 +21,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\FederatedFileSharing\Tests;
-
 
 use OC\Federation\CloudIdManager;
 use OCA\FederatedFileSharing\AddressHandler;
@@ -47,7 +46,7 @@ class AddressHandlerTest extends \Test\TestCase {
 	/** @var CloudIdManager */
 	private $cloudIdManager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->urlGenerator = $this->getMockBuilder(IURLGenerator::class)
@@ -105,30 +104,31 @@ class AddressHandlerTest extends \Test\TestCase {
 	}
 
 	public function dataTestSplitUserRemoteError() {
-		return array(
+		return [
 			// Invalid path
-			array('user@'),
+			['user@'],
 
 			// Invalid user
-			array('@server'),
-			array('us/er@server'),
-			array('us:er@server'),
+			['@server'],
+			['us/er@server'],
+			['us:er@server'],
 
 			// Invalid splitting
-			array('user'),
-			array(''),
-			array('us/erserver'),
-			array('us:erserver'),
-		);
+			['user'],
+			[''],
+			['us/erserver'],
+			['us:erserver'],
+		];
 	}
 
 	/**
 	 * @dataProvider dataTestSplitUserRemoteError
 	 *
 	 * @param string $id
-	 * @expectedException \OC\HintException
 	 */
 	public function testSplitUserRemoteError($id) {
+		$this->expectException(\OC\HintException::class);
+
 		$this->addressHandler->splitUserRemote($id);
 	}
 

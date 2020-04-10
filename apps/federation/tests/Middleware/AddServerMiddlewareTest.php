@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -19,13 +20,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Federation\Tests\Middleware;
-
 
 use OC\HintException;
 use OCA\Federation\Controller\SettingsController;
@@ -49,7 +48,7 @@ class AddServerMiddlewareTest extends TestCase {
 	/** @var  \PHPUnit_Framework_MockObject_MockObject | SettingsController */
 	private $controller;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->logger = $this->getMockBuilder(ILogger::class)->getMock();
@@ -76,7 +75,7 @@ class AddServerMiddlewareTest extends TestCase {
 
 		$this->l10n->expects($this->any())->method('t')
 			->willReturnCallback(
-				function($message) {
+				function ($message) {
 					return $message;
 				}
 			);

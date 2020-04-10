@@ -4,29 +4,29 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5639a09feff2318b1b69e11a10a81e7d",
+    "content-hash": "ef0d9929f5f25696e010d5733eb51fbb",
     "packages": [
         {
             "name": "icewind/smb",
-            "version": "v3.1.1",
+            "version": "v3.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/icewind1991/SMB.git",
-                "reference": "26b7b8780342d0e61313b464b880d50a2ea898e2"
+                "reference": "db50bb51bd0a0e55506e82cf439a9ecd232f64d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/icewind1991/SMB/zipball/26b7b8780342d0e61313b464b880d50a2ea898e2",
-                "reference": "26b7b8780342d0e61313b464b880d50a2ea898e2",
+                "url": "https://api.github.com/repos/icewind1991/SMB/zipball/db50bb51bd0a0e55506e82cf439a9ecd232f64d4",
+                "reference": "db50bb51bd0a0e55506e82cf439a9ecd232f64d4",
                 "shasum": ""
             },
             "require": {
                 "icewind/streams": ">=0.2.0",
-                "php": ">=5.6"
+                "php": ">=7.1"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.13",
-                "phpunit/phpunit": "^5.7"
+                "phpunit/phpunit": "^7.0"
             },
             "type": "library",
             "autoload": {
@@ -46,7 +46,7 @@
                 }
             ],
             "description": "php wrapper for smbclient and libsmbclient-php",
-            "time": "2019-03-04T15:02:42+00:00"
+            "time": "2020-04-08T15:20:22+00:00"
         },
         {
             "name": "icewind/streams",
@@ -97,5 +97,6 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }

@@ -71,7 +71,7 @@ class Utils {
 	 * @return boolean true if the server was found, false otherwise.
 	 */
 	public static function waitForServer($url, $timeout, $timeoutStep = 0.5) {
-		$isServerUpCallback = function() use ($url) {
+		$isServerUpCallback = function () use ($url) {
 			$curlHandle = curl_init($url);
 
 			// Returning the transfer as the result of curl_exec prevents the

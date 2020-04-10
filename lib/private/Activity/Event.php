@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @copyright Copyright (c) 2016 Joas Schilling <coding@schilljs.com>
@@ -19,7 +21,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -522,10 +524,10 @@ class Event implements IEvent {
 			$this->getTimestamp() !== 0
 			/**
 			 * Disabled for BC with old activities
-			&&
-			$this->getObjectType() !== ''
-			&&
-			$this->getObjectId() !== 0
+			 * &&
+			 * $this->getObjectType() !== ''
+			 * &&
+			 * $this->getObjectId() !== 0
 			 */
 		;
 	}

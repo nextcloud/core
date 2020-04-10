@@ -1,14 +1,18 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @copyright Copyright (c) 2016, Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Flávio Gomes da Silva Lisboa <flavio.lisboa@serpro.gov.br>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
- * @author Marcel Waldvogel <marcel.waldvogel@uni-konstanz.de>
  * @author Martin <github@diemattels.at>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -22,7 +26,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -49,19 +53,12 @@ class DefaultTokenProvider implements IProvider {
 	/** @var IConfig */
 	private $config;
 
-	/** @var ILogger $logger */
+	/** @var ILogger */
 	private $logger;
 
-	/** @var ITimeFactory $time */
+	/** @var ITimeFactory */
 	private $time;
 
-	/**
-	 * @param DefaultTokenMapper $mapper
-	 * @param ICrypto $crypto
-	 * @param IConfig $config
-	 * @param ILogger $logger
-	 * @param ITimeFactory $time
-	 */
 	public function __construct(DefaultTokenMapper $mapper,
 								ICrypto $crypto,
 								IConfig $config,
@@ -196,8 +193,9 @@ class DefaultTokenProvider implements IProvider {
 	 * @param string $oldSessionId
 	 * @param string $sessionId
 	 * @throws InvalidTokenException
+	 * @return IToken
 	 */
-	public function renewSessionToken(string $oldSessionId, string $sessionId) {
+	public function renewSessionToken(string $oldSessionId, string $sessionId): IToken {
 		$token = $this->getToken($oldSessionId);
 
 		$newToken = new DefaultToken();
@@ -214,6 +212,8 @@ class DefaultTokenProvider implements IProvider {
 		$newToken->setLastActivity($this->time->getTime());
 		$this->mapper->insert($newToken);
 		$this->mapper->delete($token);
+
+		return $newToken;
 	}
 
 	/**

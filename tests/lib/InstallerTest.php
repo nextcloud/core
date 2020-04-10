@@ -8,8 +8,6 @@
 
 namespace Test;
 
-
-use OC\App\AppStore\Bundles\Bundle;
 use OC\App\AppStore\Fetcher\AppFetcher;
 use OC\Archive\ZIP;
 use OC\Installer;
@@ -40,7 +38,7 @@ class InstallerTest extends TestCase {
 	/** @var IConfig|\PHPUnit_Framework_MockObject_MockObject */
 	private $config;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->appFetcher = $this->createMock(AppFetcher::class);
@@ -57,7 +55,8 @@ class InstallerTest extends TestCase {
 			\OC::$server->getHTTPClientService(),
 			\OC::$server->getTempManager(),
 			\OC::$server->getLogger(),
-			$config
+			$config,
+			false
 		);
 		$installer->removeApp(self::$appid);
 	}
@@ -68,17 +67,19 @@ class InstallerTest extends TestCase {
 			$this->clientService,
 			$this->tempManager,
 			$this->logger,
-			$this->config
+			$this->config,
+			false
 		);
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$installer = new Installer(
 			\OC::$server->getAppFetcher(),
 			\OC::$server->getHTTPClientService(),
 			\OC::$server->getTempManager(),
 			\OC::$server->getLogger(),
-			\OC::$server->getConfig()
+			\OC::$server->getConfig(),
+			false
 		);
 		$installer->removeApp(self::$appid);
 		\OC::$server->getConfig()->setSystemValue('appstoreenabled', $this->appstore);
@@ -101,7 +102,8 @@ class InstallerTest extends TestCase {
 			\OC::$server->getHTTPClientService(),
 			\OC::$server->getTempManager(),
 			\OC::$server->getLogger(),
-			\OC::$server->getConfig()
+			\OC::$server->getConfig(),
+			false
 		);
 		$this->assertNull(\OC::$server->getConfig()->getAppValue('testapp', 'enabled', null), 'Check that the app is not listed before installation');
 		$this->assertSame('testapp', $installer->installApp(self::$appid));
@@ -159,11 +161,11 @@ class InstallerTest extends TestCase {
 		$this->assertSame($updateAvailable, $installer->isUpdateAvailable('files'), 'Cached result should be returned and fetcher should be only called once');
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Certificate "4112" has been revoked
-	 */
+
 	public function testDownloadAppWithRevokedCertificate() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Certificate "4112" has been revoked');
+
 		$appArray = [
 			[
 				'id' => 'news',
@@ -203,11 +205,11 @@ gLgK8d8sKL60JMmKHN3boHrsThKBVA==
 		$installer->downloadApp('news');
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage App with id news has a certificate not issued by a trusted Code Signing Authority
-	 */
+
 	public function testDownloadAppWithNotNextcloudCertificate() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('App with id news has a certificate not issued by a trusted Code Signing Authority');
+
 		$appArray = [
 			[
 				'id' => 'news',
@@ -246,11 +248,11 @@ YSu356M=
 		$installer->downloadApp('news');
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage App with id news has a cert issued to passman
-	 */
+
 	public function testDownloadAppWithDifferentCN() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('App with id news has a cert issued to passman');
+
 		$appArray = [
 			[
 				'id' => 'news',
@@ -289,11 +291,11 @@ u/spPSSVhaun5BA1FlphB2TkgnzlCmxJa63nFY045e/Jq+IKMcqqZl/092gbI2EQ
 		$installer->downloadApp('news');
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage App with id passman has invalid signature
-	 */
+
 	public function testDownloadAppWithInvalidSignature() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('App with id passman has invalid signature');
+
 		$appArray = [
 			[
 				'id' => 'passman',
@@ -347,7 +349,7 @@ u/spPSSVhaun5BA1FlphB2TkgnzlCmxJa63nFY045e/Jq+IKMcqqZl/092gbI2EQ
 		$client
 			->expects($this->once())
 			->method('get')
-			->with('https://example.com', ['save_to' => $realTmpFile]);
+			->with('https://example.com', ['save_to' => $realTmpFile, 'timeout' => 120]);
 		$this->clientService
 			->expects($this->once())
 			->method('newClient')
@@ -357,11 +359,11 @@ u/spPSSVhaun5BA1FlphB2TkgnzlCmxJa63nFY045e/Jq+IKMcqqZl/092gbI2EQ
 		$installer->downloadApp('passman');
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Extracted app testapp has more than 1 folder
-	 */
+
 	public function testDownloadAppWithMoreThanOneFolderDownloaded() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Extracted app testapp has more than 1 folder');
+
 		$appArray = [
 			[
 				'id' => 'testapp',
@@ -431,7 +433,7 @@ YwDVP+QmNRzx72jtqAN/Kc3CvQ9nkgYhU65B95aX0xA=',
 		$client
 			->expects($this->once())
 			->method('get')
-			->with('https://example.com', ['save_to' => $realTmpFile]);
+			->with('https://example.com', ['save_to' => $realTmpFile, 'timeout' => 120]);
 		$this->clientService
 			->expects($this->once())
 			->method('newClient')
@@ -441,11 +443,11 @@ YwDVP+QmNRzx72jtqAN/Kc3CvQ9nkgYhU65B95aX0xA=',
 		$installer->downloadApp('testapp');
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage App for id testapp has a wrong app ID in info.xml: testapp1
-	 */
+
 	public function testDownloadAppWithMismatchingIdentifier() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('App for id testapp has a wrong app ID in info.xml: testapp1');
+
 		$appArray = [
 			[
 				'id' => 'testapp',
@@ -514,7 +516,7 @@ YwDVP+QmNRzx72jtqAN/Kc3CvQ9nkgYhU65B95aX0xA=',
 		$client
 			->expects($this->once())
 			->method('get')
-			->with('https://example.com', ['save_to' => $realTmpFile]);
+			->with('https://example.com', ['save_to' => $realTmpFile, 'timeout' => 120]);
 		$this->clientService
 			->expects($this->once())
 			->method('newClient')
@@ -593,7 +595,7 @@ MPLX6f5V9tCJtlH6ztmEcDROfvuVc0U3rEhqx2hphoyo+MZrPFpdcJL8KkIdMKbY
 		$client
 			->expects($this->once())
 			->method('get')
-			->with('https://example.com', ['save_to' => $realTmpFile]);
+			->with('https://example.com', ['save_to' => $realTmpFile, 'timeout' => 120]);
 		$this->clientService
 			->expects($this->at(0))
 			->method('newClient')
@@ -606,11 +608,11 @@ MPLX6f5V9tCJtlH6ztmEcDROfvuVc0U3rEhqx2hphoyo+MZrPFpdcJL8KkIdMKbY
 		$this->assertEquals('0.9', \OC_App::getAppVersionByPath(__DIR__ . '/../../apps/testapp/'));
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage App for id testapp has version 0.9 and tried to update to lower version 0.8
-	 */
+
 	public function testDownloadAppWithDowngrade() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('App for id testapp has version 0.9 and tried to update to lower version 0.8');
+
 		$appArray = [
 			[
 				'id' => 'testapp',
@@ -679,7 +681,7 @@ JXhrdaWDZ8fzpUjugrtC3qslsqL0dzgU37anS3HwrT8=',
 		$client
 			->expects($this->once())
 			->method('get')
-			->with('https://example.com', ['save_to' => $realTmpFile]);
+			->with('https://example.com', ['save_to' => $realTmpFile, 'timeout' => 120]);
 		$this->clientService
 			->expects($this->at(1))
 			->method('newClient')

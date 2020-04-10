@@ -4,6 +4,7 @@
  *
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -18,20 +19,20 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\DAV\Connector\Sabre;
 
+use Sabre\DAV\INode;
 use Sabre\DAV\Locks\LockInfo;
+use Sabre\DAV\PropFind;
 use Sabre\DAV\ServerPlugin;
 use Sabre\DAV\Xml\Property\LockDiscovery;
 use Sabre\DAV\Xml\Property\SupportedLock;
 use Sabre\HTTP\RequestInterface;
 use Sabre\HTTP\ResponseInterface;
-use Sabre\DAV\PropFind;
-use Sabre\DAV\INode;
 
 /**
  * Class FakeLockerPlugin is a plugin only used when connections come in from
@@ -88,10 +89,10 @@ class FakeLockerPlugin extends ServerPlugin {
 	 * @return void
 	 */
 	function propFind(PropFind $propFind, INode $node) {
-		$propFind->handle('{DAV:}supportedlock', function() {
+		$propFind->handle('{DAV:}supportedlock', function () {
 			return new SupportedLock(true);
 		});
-		$propFind->handle('{DAV:}lockdiscovery', function() use ($propFind) {
+		$propFind->handle('{DAV:}lockdiscovery', function () use ($propFind) {
 			return new LockDiscovery([]);
 		});
 	}
@@ -133,8 +134,8 @@ class FakeLockerPlugin extends ServerPlugin {
 		$lockInfo->timeout = 1800;
 
 		$body = $this->server->xml->write('{DAV:}prop', [
-				'{DAV:}lockdiscovery' =>
-						new LockDiscovery([$lockInfo])
+			'{DAV:}lockdiscovery' =>
+					new LockDiscovery([$lockInfo])
 		]);
 
 		$response->setStatus(200);

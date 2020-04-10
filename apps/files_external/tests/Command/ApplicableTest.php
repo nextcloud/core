@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -36,11 +37,11 @@ class ApplicableTest extends CommandTest {
 
 		$userManager->expects($this->any())
 			->method('userExists')
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$groupManager->expects($this->any())
 			->method('groupExists')
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		return new Applicable($storageService, $userManager, $groupManager);
 	}

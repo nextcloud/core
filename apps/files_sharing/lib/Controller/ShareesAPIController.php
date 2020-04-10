@@ -1,11 +1,15 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Maxence Lange <maxence@nextcloud.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -24,12 +28,12 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Files_Sharing\Controller;
 
-use function array_filter;
 use function array_slice;
 use function array_values;
 use Generator;
@@ -40,8 +44,8 @@ use OCP\AppFramework\OCSController;
 use OCP\Collaboration\Collaborators\ISearch;
 use OCP\Collaboration\Collaborators\ISearchResult;
 use OCP\Collaboration\Collaborators\SearchResultType;
-use OCP\IRequest;
 use OCP\IConfig;
+use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\Share;
 use OCP\Share\IManager;
@@ -60,12 +64,6 @@ class ShareesAPIController extends OCSController {
 
 	/** @var IManager */
 	protected $shareManager;
-
-	/** @var bool */
-	protected $shareWithGroupOnly = false;
-
-	/** @var bool */
-	protected $shareeEnumeration = true;
 
 	/** @var int */
 	protected $offset = 0;
@@ -193,18 +191,23 @@ class ShareesAPIController extends OCSController {
 			$shareTypes[] = Share::SHARE_TYPE_CIRCLE;
 		}
 
-		if (isset($_GET['shareType']) && is_array($_GET['shareType'])) {
-			$shareTypes = array_intersect($shareTypes, $_GET['shareType']);
-			sort($shareTypes);
+		if ($shareType !== null && is_array($shareType)) {
+			$shareTypes = array_intersect($shareTypes, $shareType);
 		} else if (is_numeric($shareType)) {
 			$shareTypes = array_intersect($shareTypes, [(int) $shareType]);
-			sort($shareTypes);
 		}
+		sort($shareTypes);
 
-		$this->shareWithGroupOnly = $this->config->getAppValue('core', 'shareapi_only_share_with_group_members', 'no') === 'yes';
-		$this->shareeEnumeration = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes') === 'yes';
 		$this->limit = (int) $perPage;
 		$this->offset = $perPage * ($page - 1);
+
+		// In global scale mode we always search the loogup server
+		if ($this->config->getSystemValueBool('gs.enabled', false)) {
+			$lookup = true;
+			$this->result['lookupEnabled'] = true;
+		} else {
+			$this->result['lookupEnabled'] = $this->config->getAppValue('files_sharing', 'lookupServerEnabled', 'yes') === 'yes';
+		}
 
 		list($result, $hasMoreResults) = $this->collaboratorSearch->search($search, $shareTypes, $lookup, $this->limit, $this->offset);
 
@@ -213,7 +216,6 @@ class ShareesAPIController extends OCSController {
 			$result['exact'] = array_merge($this->result['exact'], $result['exact']);
 		}
 		$this->result = array_merge($this->result, $result);
-		$this->result['lookupEnabled'] = $this->config->getAppValue('files_sharing', 'lookupServerEnabled', 'yes') === 'yes';
 		$response = new DataResponse($this->result);
 
 		if ($hasMoreResults) {
@@ -255,7 +257,7 @@ class ShareesAPIController extends OCSController {
 	}
 
 	private function sortShareesByFrequency(array $sharees): array {
-		usort($sharees, function(array $s1, array $s2) {
+		usort($sharees, function (array $s1, array $s2) {
 			return $s2['count'] - $s1['count'];
 		});
 		return $sharees;

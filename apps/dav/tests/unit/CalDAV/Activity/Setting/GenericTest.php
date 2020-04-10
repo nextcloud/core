@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016 Joas Schilling <coding@schilljs.com>
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -55,7 +56,7 @@ class GenericTest extends TestCase {
 	public function testGetIdentifier($settingClass) {
 		/** @var ISetting $setting */
 		$setting = \OC::$server->query($settingClass);
-		$this->assertInternalType('string', $setting->getIdentifier());
+		$this->assertIsString($setting->getIdentifier());
 	}
 
 	/**
@@ -65,7 +66,7 @@ class GenericTest extends TestCase {
 	public function testGetName($settingClass) {
 		/** @var ISetting $setting */
 		$setting = \OC::$server->query($settingClass);
-		$this->assertInternalType('string', $setting->getName());
+		$this->assertIsString($setting->getName());
 	}
 
 	/**
@@ -76,7 +77,7 @@ class GenericTest extends TestCase {
 		/** @var ISetting $setting */
 		$setting = \OC::$server->query($settingClass);
 		$priority = $setting->getPriority();
-		$this->assertInternalType('int', $setting->getPriority());
+		$this->assertIsInt($setting->getPriority());
 		$this->assertGreaterThanOrEqual(0, $priority);
 		$this->assertLessThanOrEqual(100, $priority);
 	}
@@ -88,7 +89,7 @@ class GenericTest extends TestCase {
 	public function testCanChangeStream($settingClass) {
 		/** @var ISetting $setting */
 		$setting = \OC::$server->query($settingClass);
-		$this->assertInternalType('bool', $setting->canChangeStream());
+		$this->assertIsBool($setting->canChangeStream());
 	}
 
 	/**
@@ -98,7 +99,7 @@ class GenericTest extends TestCase {
 	public function testIsDefaultEnabledStream($settingClass) {
 		/** @var ISetting $setting */
 		$setting = \OC::$server->query($settingClass);
-		$this->assertInternalType('bool', $setting->isDefaultEnabledStream());
+		$this->assertIsBool($setting->isDefaultEnabledStream());
 	}
 
 	/**
@@ -108,7 +109,7 @@ class GenericTest extends TestCase {
 	public function testCanChangeMail($settingClass) {
 		/** @var ISetting $setting */
 		$setting = \OC::$server->query($settingClass);
-		$this->assertInternalType('bool', $setting->canChangeMail());
+		$this->assertIsBool($setting->canChangeMail());
 	}
 
 	/**
@@ -118,6 +119,6 @@ class GenericTest extends TestCase {
 	public function testIsDefaultEnabledMail($settingClass) {
 		/** @var ISetting $setting */
 		$setting = \OC::$server->query($settingClass);
-		$this->assertInternalType('bool', $setting->isDefaultEnabledMail());
+		$this->assertIsBool($setting->isDefaultEnabledMail());
 	}
 }

@@ -5,7 +5,7 @@
     <name>Accessibility</name>
     <summary>Accessibility options for nextcloud</summary>
     <description><![CDATA[Provides multiple accessibilities options to ease your use of Nextcloud]]></description>
-    <version>1.3.0</version>
+    <version>1.5.0</version>
     <licence>agpl</licence>
     <author>John Molakvoæ</author>
     <namespace>Accessibility</namespace>
@@ -16,8 +16,14 @@
     <bugs>https://github.com/nextcloud/server/issues</bugs>
 
     <dependencies>
-        <nextcloud min-version="17" max-version="17"/>
+        <nextcloud min-version="19" max-version="19"/>
     </dependencies>
+
+	<repair-steps>
+		<pre-migration>
+			<step>OCA\Accessibility\Migration\RepairUserConfig</step>
+		</pre-migration>
+	</repair-steps>
 
     <settings>
         <personal>OCA\Accessibility\Settings\Personal</personal>

@@ -15,4 +15,4 @@ import './vendor/At.js/dist/js/jquery.atwho.min'
 import './style/autocomplete.scss'
 import './style/comments.scss'
 
-window.OCA.Comments = OCA.Comments;
+window.OCA.Comments = OCA.Comments

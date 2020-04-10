@@ -1,20 +1,25 @@
 <?php
 /**
- * @author Thomas Citharel <tcit@tcit.fr>
  *
- * @license AGPL-3.0
  *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
+ * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
+ *
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -30,7 +35,6 @@ use OCP\IUserManager;
 use OCP\Share\IManager;
 use Symfony\Component\Console\Tester\CommandTester;
 use Test\TestCase;
-
 
 /**
  * Class MoveCalendarTest
@@ -60,7 +64,7 @@ class MoveCalendarTest extends TestCase {
 	/** @var MoveCalendar */
 	private $command;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userManager = $this->createMock(IUserManager::class);
@@ -90,12 +94,13 @@ class MoveCalendarTest extends TestCase {
 	/**
 	 * @dataProvider dataExecute
 	 *
-	 * @expectedException InvalidArgumentException
 	 * @param $userOriginExists
 	 * @param $userDestinationExists
 	 */
 	public function testWithBadUserOrigin($userOriginExists, $userDestinationExists)
 	{
+		$this->expectException(\InvalidArgumentException::class);
+
 		$this->userManager->expects($this->at(0))
 			->method('userExists')
 			->with('user')
@@ -116,12 +121,12 @@ class MoveCalendarTest extends TestCase {
 		]);
 	}
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 * @expectedExceptionMessage User <user> has no calendar named <personal>. You can run occ dav:list-calendars to list calendars URIs for this user.
-	 */
+	
 	public function testMoveWithInexistantCalendar()
 	{
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('User <user> has no calendar named <personal>. You can run occ dav:list-calendars to list calendars URIs for this user.');
+
 		$this->userManager->expects($this->at(0))
 			->method('userExists')
 			->with('user')
@@ -144,12 +149,12 @@ class MoveCalendarTest extends TestCase {
 		]);
 	}
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 * @expectedExceptionMessage User <user2> already has a calendar named <personal>.
-	 */
+	
 	public function testMoveWithExistingDestinationCalendar()
 	{
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('User <user2> already has a calendar named <personal>.');
+
 		$this->userManager->expects($this->at(0))
 			->method('userExists')
 			->with('user')
@@ -257,7 +262,7 @@ class MoveCalendarTest extends TestCase {
 			->with(1234)
 			->willReturn([
 				['href' => 'principal:principals/groups/nextclouders']
-		]);
+			]);
 		if ($shareWithGroupMembersOnly === true) {
 			$this->expectException(InvalidArgumentException::class);
 			$this->expectExceptionMessage("User <user2> is not part of the group <nextclouders> with whom the calendar <personal> was shared. You may use -f to move the calendar while deleting this share.");
@@ -407,7 +412,7 @@ class MoveCalendarTest extends TestCase {
 						'href' => 'principal:principals/users/user2',
 						'{DAV:}displayname' => 'Personal'
 					]
-			]);
+				]);
 
 		if ($force === false) {
 			$this->expectException(InvalidArgumentException::class);

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2019 Joas Schilling <coding@schilljs.com>
@@ -21,7 +22,6 @@ declare(strict_types=1);
  */
 
 namespace Test\Notification;
-
 
 use OCP\Notification\IApp;
 use OCP\Notification\INotification;

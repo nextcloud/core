@@ -16,7 +16,7 @@ class InfoParserTest extends TestCase {
 	/** @var OC\Cache\CappedMemoryCache */
 	private static $cache;
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		self::$cache = new OC\Cache\CappedMemoryCache();
 	}
 

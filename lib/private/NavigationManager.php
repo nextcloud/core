@@ -4,11 +4,13 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
- * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -23,7 +25,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -114,11 +116,11 @@ class NavigationManager implements INavigationManager {
 		foreach ($this->closureEntries as $c) {
 			$this->add($c());
 		}
-		$this->closureEntries = array();
+		$this->closureEntries = [];
 
 		$result = $this->entries;
 		if ($type !== 'all') {
-			$result = array_filter($this->entries, function($entry) use ($type) {
+			$result = array_filter($this->entries, function ($entry) use ($type) {
 				return $entry['type'] === $type;
 			});
 		}
@@ -133,7 +135,7 @@ class NavigationManager implements INavigationManager {
 	 * @return array
 	 */
 	private function proceedNavigation(array $list): array {
-		uasort($list, function($a, $b) {
+		uasort($list, function ($a, $b) {
 			if (isset($a['order']) && isset($b['order'])) {
 				return ($a['order'] < $b['order']) ? -1 : 1;
 			} else if (isset($a['order']) || isset($b['order'])) {
@@ -199,7 +201,7 @@ class NavigationManager implements INavigationManager {
 				'type' => 'settings',
 				'id' => 'help',
 				'order' => 5,
-				'href' => $this->urlGenerator->linkToRoute('settings_help'),
+				'href' => $this->urlGenerator->linkToRoute('settings.Help.help'),
 				'name' => $l->t('Help'),
 				'icon' => $this->urlGenerator->imagePath('settings', 'help.svg'),
 			]);

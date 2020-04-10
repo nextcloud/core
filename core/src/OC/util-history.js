@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -20,7 +20,6 @@
  */
 
 import _ from 'underscore'
-
 import OC from './index'
 
 /**
@@ -46,40 +45,42 @@ export default {
 	 * using the params as query string
 	 * @param {boolean} [replace=false] whether to replace instead of pushing
 	 */
-	_pushState: function (params, url, replace) {
-		var strParams;
+	_pushState: function(params, url, replace) {
+		let strParams
 		if (typeof (params) === 'string') {
-			strParams = params;
+			strParams = params
 		} else {
-			strParams = OC.buildQueryString(params);
+			strParams = OC.buildQueryString(params)
 		}
+
 		if (window.history.pushState) {
-			url = url || location.pathname + '?' + strParams;
+			url = url || location.pathname + '?' + strParams
 			// Workaround for bug with SVG and window.history.pushState on Firefox < 51
 			// https://bugzilla.mozilla.org/show_bug.cgi?id=652991
-			var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+			const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1
 			if (isFirefox && parseInt(navigator.userAgent.split('/').pop()) < 51) {
-				var patterns = document.querySelectorAll('[fill^="url(#"], [stroke^="url(#"], [filter^="url(#invert"]');
-				for (var i = 0, ii = patterns.length, pattern; i < ii; i++) {
-					pattern = patterns[i];
-					pattern.style.fill = pattern.style.fill;
-					pattern.style.stroke = pattern.style.stroke;
-					pattern.removeAttribute("filter");
-					pattern.setAttribute("filter", "url(#invert)");
+				const patterns = document.querySelectorAll('[fill^="url(#"], [stroke^="url(#"], [filter^="url(#invert"]')
+				for (let i = 0, ii = patterns.length, pattern; i < ii; i++) {
+					pattern = patterns[i]
+					// eslint-disable-next-line no-self-assign
+					pattern.style.fill = pattern.style.fill
+					// eslint-disable-next-line no-self-assign
+					pattern.style.stroke = pattern.style.stroke
+					pattern.removeAttribute('filter')
+					pattern.setAttribute('filter', 'url(#invert)')
 				}
 			}
 			if (replace) {
-				window.history.replaceState(params, '', url);
+				window.history.replaceState(params, '', url)
 			} else {
-				window.history.pushState(params, '', url);
+				window.history.pushState(params, '', url)
 			}
-		}
-		// use URL hash for IE8
-		else {
-			window.location.hash = '?' + strParams;
+		} else {
+			// use URL hash for IE8
+			window.location.hash = '?' + strParams
 			// inhibit next onhashchange that just added itself
 			// to the event queue
-			this._cancelPop = true;
+			this._cancelPop = true
 		}
 	},
 
@@ -89,13 +90,11 @@ export default {
 	 * Note: this includes a workaround for IE8/IE9 that uses
 	 * the hash part instead of the search part.
 	 *
-	 * @param {Object|string} params to append to the URL, can be either a string
-	 * or a map
-	 * @param {string} [url] URL to be used, otherwise the current URL will be used,
-	 * using the params as query string
+	 * @param {Object|string} params to append to the URL, can be either a string or a map
+	 * @param {string} [url] URL to be used, otherwise the current URL will be used, using the params as query string
 	 */
-	pushState: function (params, url) {
-		return this._pushState(params, url, false);
+	pushState: function(params, url) {
+		this._pushState(params, url, false)
 	},
 
 	/**
@@ -109,75 +108,76 @@ export default {
 	 * @param {string} [url] URL to be used, otherwise the current URL will be used,
 	 * using the params as query string
 	 */
-	replaceState: function (params, url) {
-		return this._pushState(params, url, true);
+	replaceState: function(params, url) {
+		this._pushState(params, url, true)
 	},
 
 	/**
 	 * Add a popstate handler
 	 *
-	 * @param handler function
+	 * @param {Function} handler handler
 	 */
-	addOnPopStateHandler: function (handler) {
-		this._handlers.push(handler);
+	addOnPopStateHandler: function(handler) {
+		this._handlers.push(handler)
 	},
 
 	/**
 	 * Parse a query string from the hash part of the URL.
 	 * (workaround for IE8 / IE9)
+	 * @returns {string}
 	 */
-	_parseHashQuery: function () {
-		var hash = window.location.hash,
-			pos = hash.indexOf('?');
+	_parseHashQuery: function() {
+		const hash = window.location.hash
+		const pos = hash.indexOf('?')
 		if (pos >= 0) {
-			return hash.substr(pos + 1);
+			return hash.substr(pos + 1)
 		}
 		if (hash.length) {
 			// remove hash sign
-			return hash.substr(1);
+			return hash.substr(1)
 		}
-		return '';
+		return ''
 	},
 
-	_decodeQuery: function (query) {
-		return query.replace(/\+/g, ' ');
+	_decodeQuery: function(query) {
+		return query.replace(/\+/g, ' ')
 	},
 
 	/**
 	 * Parse the query/search part of the URL.
 	 * Also try and parse it from the URL hash (for IE8)
 	 *
-	 * @return map of parameters
+	 * @returns {Object} map of parameters
 	 */
-	parseUrlQuery: function () {
-		var query = this._parseHashQuery(),
-			params;
+	parseUrlQuery: function() {
+		const query = this._parseHashQuery()
+		let params
 		// try and parse from URL hash first
 		if (query) {
-			params = OC.parseQueryString(this._decodeQuery(query));
+			params = OC.parseQueryString(this._decodeQuery(query))
 		}
 		// else read from query attributes
-		params = _.extend(params || {}, OC.parseQueryString(this._decodeQuery(location.search)));
-		return params || {};
+		params = _.extend(params || {}, OC.parseQueryString(this._decodeQuery(location.search)))
+		return params || {}
 	},
 
-	_onPopState: function (e) {
+	_onPopState: function(e) {
 		if (this._cancelPop) {
-			this._cancelPop = false;
-			return;
+			this._cancelPop = false
+			return
 		}
-		var params;
+		let params
 		if (!this._handlers.length) {
-			return;
+			return
 		}
-		params = (e && e.state);
+		params = (e && e.state)
 		if (_.isString(params)) {
-			params = OC.parseQueryString(params);
+			params = OC.parseQueryString(params)
 		} else if (!params) {
-			params = this.parseUrlQuery() || {};
+			params = this.parseUrlQuery() || {}
 		}
-		for (var i = 0; i < this._handlers.length; i++) {
-			this._handlers[i](params);
+		for (let i = 0; i < this._handlers.length; i++) {
+			this._handlers[i](params)
 		}
-	}
+	},
 }

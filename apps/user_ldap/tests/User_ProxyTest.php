@@ -4,6 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roger Szabo <roger.szabo@web.de>
  * @author Vinicius Cubas Brand <vinicius@eita.org.br>
  *
@@ -20,13 +21,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\User_LDAP\Tests;
 
-use OCA\User_LDAP\ILDAPUserPlugin;
 use OCA\User_LDAP\ILDAPWrapper;
 use OCA\User_LDAP\User_Proxy;
 use OCA\User_LDAP\UserPluginManager;
@@ -49,7 +49,7 @@ class User_ProxyTest extends TestCase  {
 	/** @var UserPluginManager|\PHPUnit_Framework_MockObject_MockObject */
 	private $userPluginManager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->ldapWrapper = $this->createMock(ILDAPWrapper::class);

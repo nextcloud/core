@@ -33,27 +33,27 @@ class CasTraitTest extends TestCase {
 
 		$mock->expects($this->any())
 			->method('set')
-			->will($this->returnCallback(function ($key, $value, $ttl) use ($sourceCache) {
+			->willReturnCallback(function ($key, $value, $ttl) use ($sourceCache) {
 				return $sourceCache->set($key, $value, $ttl);
-			}));
+			});
 
 		$mock->expects($this->any())
 			->method('get')
-			->will($this->returnCallback(function ($key) use ($sourceCache) {
+			->willReturnCallback(function ($key) use ($sourceCache) {
 				return $sourceCache->get($key);
-			}));
+			});
 
 		$mock->expects($this->any())
 			->method('add')
-			->will($this->returnCallback(function ($key, $value, $ttl) use ($sourceCache) {
+			->willReturnCallback(function ($key, $value, $ttl) use ($sourceCache) {
 				return $sourceCache->add($key, $value, $ttl);
-			}));
+			});
 
 		$mock->expects($this->any())
 			->method('remove')
-			->will($this->returnCallback(function ($key) use ($sourceCache) {
+			->willReturnCallback(function ($key) use ($sourceCache) {
 				return $sourceCache->remove($key);
-			}));
+			});
 		return $mock;
 	}
 

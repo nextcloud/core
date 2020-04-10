@@ -1,7 +1,15 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2017 Lukas Reschke <lukas@statuscode.ch>
+ *
+ * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Patrik Kernstock <info@pkern.at>
+ * @author rakekniven <mark.ziegler@rakekniven.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,7 +24,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -102,23 +110,5 @@ class SettingsController extends Controller {
 		$this->defaultTokenMapper->deleteByName($client->getName());
 		$this->clientMapper->delete($client);
 		return new JSONResponse([]);
-	}
-
-	public function getClients(): JSONResponse {
-		$clients = $this->clientMapper->getClients();
-
-		$result = [];
-
-		foreach ($clients as $client) {
-			$result[] = [
-				'id' => $client->getId(),
-				'name' => $client->getName(),
-				'redirectUri' => $client->getRedirectUri(),
-				'clientId' => $client->getClientIdentifier(),
-				'clientSecret' => $client->getSecret(),
-			];
-		}
-
-		return new JSONResponse($result);
 	}
 }

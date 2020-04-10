@@ -5,6 +5,7 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Phil Davis <phil.davis@inf.org>
+ * @author Robin Appelman <robin@icewind.nl>
  *
  * @license AGPL-3.0
  *
@@ -18,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -205,7 +206,7 @@ class CardDavContext implements \Behat\Behat\Context\Context {
 	/**
 	 * @Given :user uploads the contact :fileName to the addressbook :addressbook
 	 */
-	public function uploadsTheContactToTheAddressbook($user, $fileName, $addressBook)  {
+	public function uploadsTheContactToTheAddressbook($user, $fileName, $addressBook) {
 		$davUrl = $this->baseUrl . '/remote.php/dav/addressbooks/users/'.$user.'/'.$addressBook . '/' . $fileName;
 		$password = ($user === 'admin') ? 'admin' : '123456';
 
@@ -238,7 +239,7 @@ class CardDavContext implements \Behat\Behat\Context\Context {
 	/**
 	 * @When Exporting the picture of contact :fileName from addressbook :addressBook as user :user
 	 */
-	public function whenExportingThePictureOfContactFromAddressbookAsUser($fileName, $addressBook, $user)  {
+	public function whenExportingThePictureOfContactFromAddressbookAsUser($fileName, $addressBook, $user) {
 		$davUrl = $this->baseUrl . '/remote.php/dav/addressbooks/users/'.$user.'/'.$addressBook . '/' . $fileName . '?photo=true';
 		$password = ($user === 'admin') ? 'admin' : '123456';
 
@@ -264,7 +265,7 @@ class CardDavContext implements \Behat\Behat\Context\Context {
 	/**
 	 * @When Downloading the contact :fileName from addressbook :addressBook as user :user
 	 */
-	public function whenDownloadingTheContactFromAddressbookAsUser($fileName, $addressBook, $user)  {
+	public function whenDownloadingTheContactFromAddressbookAsUser($fileName, $addressBook, $user) {
 		$davUrl = $this->baseUrl . '/remote.php/dav/addressbooks/users/'.$user.'/'.$addressBook . '/' . $fileName;
 		$password = ($user === 'admin') ? 'admin' : '123456';
 

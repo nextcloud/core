@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -25,17 +25,17 @@ import OC from './index'
  * Do a search query and display the results
  * @param {string} query the search query
  */
-const search = function (query) {
-	OC.Search.search(query, null, 0, 30);
-};
+const search = function(query) {
+	OC.Search.search(query, null, 0, 30)
+}
 
 /**
  * @namespace OC.search
  */
-search.customResults = {};
+search.customResults = {}
 /**
  * @deprecated use get/setFormatter() instead
  */
-search.resultTypes = {};
+search.resultTypes = {}
 
-export default search;
+export default search

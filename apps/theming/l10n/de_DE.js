@@ -30,6 +30,7 @@ OC.L10N.register(
     "Legal notice" : "Impressum",
     "Privacy policy" : "Datenschutz",
     "Adjust the Nextcloud theme" : "Passe das Design von Nextcloud an",
+    "Open documentation" : "Dokumentation öffnen",
     "Theming makes it possible to easily customize the look and feel of your instance and supported clients. This will be visible for all users." : "Das Ändern des Designs ermöglicht es auf einfache Weise das Aussehen Ihrer Installation und Clients anzupassen. Die Änderungen wirken sich auf alle Benutzer aus.",
     "Name" : "Name",
     "Reset to default" : " Auf Standard zurücksetzen ",
@@ -45,8 +46,8 @@ OC.L10N.register(
     "Advanced options" : "Erweiterte Optionen",
     "Legal notice link" : "Link zum Impressum",
     "Privacy policy link" : "Link zur Datenschutzerklärung",
-    "Header logo" : "Kopfbereich-Logo",
-    "Upload new header logo" : "Neues Kopfbereich-Logo hochladen",
+    "Header logo" : "Kopfbereichs-Logo",
+    "Upload new header logo" : "Neues Kopfbereichs-Logo hochladen",
     "Favicon" : "Favicon",
     "Upload new favicon" : "Neues Favicon hochladen",
     "Install the Imagemagick PHP extension with support for SVG images to automatically generate favicons based on the uploaded logo and color." : "Installieren Sie die Imagemagick PHP-Erweiterung mit Unterstützung für SVG-Bilder, um automatisch Favoriten-Icons auf Basis des hochgeladenen Icons und der Farbe zu erstellen."

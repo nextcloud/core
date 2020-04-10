@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -20,14 +21,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Files_Sharing\Tests;
 
 use OCA\Files_Sharing\Capabilities;
 use OCP\IConfig;
-
 
 /**
  * Class CapabilitiesTest
@@ -58,7 +59,7 @@ class CapabilitiesTest extends \Test\TestCase {
 	 */
 	private function getResults(array $map) {
 		$config = $this->getMockBuilder(IConfig::class)->disableOriginalConstructor()->getMock();
-		$config->method('getAppValue')->will($this->returnValueMap($map));
+		$config->method('getAppValue')->willReturnMap($map);
 		$cap = new Capabilities($config);
 		$result = $this->getFilesSharingPart($cap->getCapabilities());
 		return $result;
@@ -92,7 +93,7 @@ class CapabilitiesTest extends \Test\TestCase {
 			['core', 'shareapi_allow_links', 'yes', 'no'],
 		];
 		$result = $this->getResults($map);
-		$this->assertInternalType('array', $result['public']);
+		$this->assertIsArray($result['public']);
 		$this->assertFalse($result['public']['enabled']);
 	}
 
@@ -102,7 +103,7 @@ class CapabilitiesTest extends \Test\TestCase {
 			['core', 'shareapi_allow_links', 'yes', 'yes'],
 		];
 		$result = $this->getResults($map);
-		$this->assertInternalType('array', $result['public']);
+		$this->assertIsArray($result['public']);
 		$this->assertTrue($result['public']['enabled']);
 	}
 
@@ -138,7 +139,7 @@ class CapabilitiesTest extends \Test\TestCase {
 		];
 		$result = $this->getResults($map);
 		$this->assertArrayHasKey('expire_date', $result['public']);
-		$this->assertInternalType('array', $result['public']['expire_date']);
+		$this->assertIsArray($result['public']['expire_date']);
 		$this->assertFalse($result['public']['expire_date']['enabled']);
 	}
 
@@ -152,7 +153,7 @@ class CapabilitiesTest extends \Test\TestCase {
 		];
 		$result = $this->getResults($map);
 		$this->assertArrayHasKey('expire_date', $result['public']);
-		$this->assertInternalType('array', $result['public']['expire_date']);
+		$this->assertIsArray($result['public']['expire_date']);
 		$this->assertTrue($result['public']['expire_date']['enabled']);
 		$this->assertArrayHasKey('days', $result['public']['expire_date']);
 		$this->assertFalse($result['public']['expire_date']['enforced']);
@@ -167,7 +168,7 @@ class CapabilitiesTest extends \Test\TestCase {
 		];
 		$result = $this->getResults($map);
 		$this->assertArrayHasKey('expire_date', $result['public']);
-		$this->assertInternalType('array', $result['public']['expire_date']);
+		$this->assertIsArray($result['public']['expire_date']);
 		$this->assertTrue($result['public']['expire_date']['enforced']);
 	}
 

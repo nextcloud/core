@@ -4,6 +4,7 @@
  *
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Michael Gapczynski <GapczynskiM@gmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -26,7 +27,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -34,15 +35,15 @@ namespace OCA\Files_Sharing;
 
 use OC\Files\Cache\FailedCache;
 use OC\Files\Filesystem;
-use OC\Files\Storage\Wrapper\PermissionsMask;
 use OC\Files\Storage\FailedStorage;
+use OC\Files\Storage\Wrapper\PermissionsMask;
+use OC\User\NoUserException;
 use OCP\Constants;
 use OCP\Files\Cache\ICacheEntry;
 use OCP\Files\NotFoundException;
 use OCP\Files\Storage\IDisableEncryptionStorage;
 use OCP\Files\Storage\IStorage;
 use OCP\Lock\ILockingProvider;
-use OC\User\NoUserException;
 
 /**
  * Convert target path to source path and pass the function call to the correct storage provider
@@ -285,11 +286,11 @@ class SharedStorage extends \OC\Files\Storage\Wrapper\Jail implements ISharedSto
 						}
 					}
 			}
-			$info = array(
+			$info = [
 				'target' => $this->getMountPoint() . $path,
 				'source' => $source,
 				'mode' => $mode,
-			);
+			];
 			\OCP\Util::emitHook('\OC\Files\Storage\Shared', 'fopen', $info);
 			return $this->nonMaskedStorage->fopen($this->getUnjailedPath($path), $mode);
 		}

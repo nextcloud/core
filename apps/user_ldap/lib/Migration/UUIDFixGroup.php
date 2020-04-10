@@ -19,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -34,7 +34,7 @@ use OCP\IConfig;
 class UUIDFixGroup extends UUIDFix {
 	public function __construct(GroupMapping $mapper, LDAP $ldap, IConfig $config, Helper $helper) {
 		$this->mapper = $mapper;
-		$this->proxy = new User_Proxy($helper->getServerConfigurationPrefixes(true), $ldap, $config, 
+		$this->proxy = new User_Proxy($helper->getServerConfigurationPrefixes(true), $ldap, $config,
 			\OC::$server->getNotificationManager(), \OC::$server->getUserSession(),
 			\OC::$server->query('LDAPUserPluginManager'));
 	}

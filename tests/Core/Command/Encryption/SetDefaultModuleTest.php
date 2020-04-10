@@ -21,7 +21,6 @@
 
 namespace Tests\Core\Command\Encryption;
 
-
 use OC\Core\Command\Encryption\SetDefaultModule;
 use OCP\Encryption\IManager;
 use OCP\IConfig;
@@ -42,7 +41,7 @@ class SetDefaultModuleTest extends TestCase {
 	/** @var \Symfony\Component\Console\Command\Command */
 	protected $command;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->manager = $this->getMockBuilder(IManager::class)

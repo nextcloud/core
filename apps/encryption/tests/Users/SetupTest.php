@@ -20,13 +20,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Encryption\Tests\Users;
-
 
 use OCA\Encryption\Crypto\Crypt;
 use OCA\Encryption\KeyManager;
@@ -49,7 +47,7 @@ class SetupTest extends TestCase {
 	 */
 	private $instance;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$logMock = $this->createMock(ILogger::class);
 		$userSessionMock = $this->getMockBuilder(IUserSession::class)

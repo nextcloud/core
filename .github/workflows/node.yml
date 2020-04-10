@@ -1,0 +1,67 @@
+name: Node
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - stable*
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use node ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install dependencies & build
+      run: |
+        npm ci
+        npm run build --if-present
+    - name: Check webpack build changes
+      run: |
+        bash -c "[[ ! \"`git status --porcelain `\" ]] || ( echo 'Uncommited changes in webpack build' && git status && exit 1 )"
+      env:
+        CI: true
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use node ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+          node-version: ${{ matrix.node-version }}
+    - name: Install dependencies
+      run: |
+          npm ci
+    - name: Test
+      run: npm run test
+
+  handlebars:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: |
+          npm ci
+      - name: Run compile
+        run: ./build/compile-handlebars-templates.sh

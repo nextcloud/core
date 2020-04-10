@@ -63,9 +63,10 @@
 			$('#uploadprogressbar .ui-progressbar-value>em').addClass('inner');
 			$('#uploadprogressbar>em').replaceWith(labelHtml);
 			$('#uploadprogressbar>em').addClass('outer');
-			$('#uploadprogressbar').tooltip({placement: 'bottom'});
-			if(title) {
-				$('#uploadprogressbar').attr('original-title', title);
+			$('#uploadprogressbar').tooltip({placement: 'bottom', container: '#uploadprogresswrapper'});
+			if (title) {
+				$('#uploadprogressbar').attr('data-original-title', title);
+				$('#uploadprogresswrapper .tooltip-inner').text(title);
 			}
 			if(textDesktop || textMobile) {
 				$('#uploadprogresswrapper .stop').show();

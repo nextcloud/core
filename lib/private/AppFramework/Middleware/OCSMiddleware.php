@@ -18,9 +18,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OC\AppFramework\Middleware;
 
 use OC\AppFramework\Http;
@@ -32,10 +33,10 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Middleware;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
-use OCP\AppFramework\Middleware;
 
 class OCSMiddleware extends Middleware {
 
@@ -100,7 +101,7 @@ class OCSMiddleware extends Middleware {
 		 */
 		if ($controller instanceof OCSController && !($response instanceof BaseResponse)) {
 			if ($response->getStatus() === Http::STATUS_UNAUTHORIZED ||
-			    $response->getStatus() === Http::STATUS_FORBIDDEN) {
+				$response->getStatus() === Http::STATUS_FORBIDDEN) {
 
 				$message = '';
 				if ($response instanceof JSONResponse) {

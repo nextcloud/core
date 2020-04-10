@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -48,8 +48,8 @@ import './css/jquery.ocdialog.scss'
  */
 $.ajaxSetup({
 	contents: {
-		script: false
-	}
+		script: false,
+	},
 })
 
 /**
@@ -59,5 +59,5 @@ $.ajaxSetup({
  *
  * This thus mitigates some unexpected XSS vectors.
  */
-$.globalEval = function () {
+$.globalEval = function() {
 }

@@ -1,4 +1,7 @@
 { "translations": {
+    "Unknown filetype" : "Onbekende lêertipe",
+    "Invalid image" : "Ongeldige beeld",
+    "seconds ago" : "sekondes gelede",
     "__language_name__" : "Afrikaans",
     "Help" : "Hulp",
     "Apps" : "Toeps",
@@ -6,9 +9,21 @@
     "Log out" : "Meld af",
     "Users" : "Gebruikers",
     "Unknown user" : "Onbekende gebruiker",
-    "Security" : "Sekuriteit",
+    "Open »%s«" : "Open »%s«",
+    "Sunday" : "Sondag",
+    "Monday" : "Maandag",
+    "Tuesday" : "Dinsdag",
+    "Wednesday" : "Woensdag",
+    "Thursday" : "Donderdag",
+    "Friday" : "Vrydag",
+    "Saturday" : "Saterdag",
+    "a safe home for all your data" : "’n veilige tuiste vir al u data",
+    "Storage is temporarily not available" : "Berging is tydelik nie beskikbaar nie",
     "Create" : "Skep",
     "Delete" : "Skrap",
-    "Share" : "Deel"
+    "Share" : "Deel",
+    "Security" : "Sekuriteit",
+    "Personal info" : "Persoonlike inligting",
+    "Unlimited" : "Onbeperkte"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

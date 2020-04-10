@@ -1,6 +1,6 @@
 <?php
 script('core', [
-	'installation'
+	'dist/install'
 ]);
 ?>
 <input type='hidden' id='hasMySQL' value='<?php p($_['hasMySQL']) ?>'>
@@ -15,10 +15,10 @@ script('core', [
 		<?php foreach($_['errors'] as $err): ?>
 		<p>
 			<?php if(is_array($err)):?>
-				<?php print_unescaped($err['error']); ?>
-				<span class='hint'><?php print_unescaped($err['hint']); ?></span>
+				<?php p($err['error']); ?>
+				<span class='hint'><?php p($err['hint']); ?></span>
 			<?php else: ?>
-				<?php print_unescaped($err); ?>
+				<?php p($err); ?>
 			<?php endif; ?>
 		</p>
 		<?php endforeach; ?>
@@ -35,35 +35,35 @@ script('core', [
 	</fieldset>
 	<?php endif; ?>
 	<fieldset id="adminaccount">
-		<legend><?php print_unescaped($l->t( 'Create an <strong>admin account</strong>' )); ?></legend>
+		<legend><?php print_unescaped($l->t('Create an <strong>admin account</strong>')); ?></legend>
 		<p class="grouptop">
 			<input type="text" name="adminlogin" id="adminlogin"
-				placeholder="<?php p($l->t( 'Username' )); ?>"
+				placeholder="<?php p($l->t('Username')); ?>"
 				value="<?php p($_['adminlogin']); ?>"
 				autocomplete="off" autocapitalize="none" autocorrect="off" autofocus required>
-			<label for="adminlogin" class="infield"><?php p($l->t( 'Username' )); ?></label>
+			<label for="adminlogin" class="infield"><?php p($l->t('Username')); ?></label>
 		</p>
 		<p class="groupbottom">
 			<input type="password" name="adminpass" data-typetoggle="#show" id="adminpass"
-				placeholder="<?php p($l->t( 'Password' )); ?>"
+				placeholder="<?php p($l->t('Password')); ?>"
 				value="<?php p($_['adminpass']); ?>"
 				autocomplete="off" autocapitalize="none" autocorrect="off" required>
-			<label for="adminpass" class="infield"><?php p($l->t( 'Password' )); ?></label>
+			<label for="adminpass" class="infield"><?php p($l->t('Password')); ?></label>
 			<input type="checkbox" id="show" class="hidden-visually" name="show">
-			<label for="show"></label>
+			<label for="show" class="hidden-visually"><?php p($l->t('Show password')); ?></label>
 		</p>
 	</fieldset>
 
-	<?php if(!$_['directoryIsSet'] OR !$_['dbIsSet'] OR count($_['errors']) > 0): ?>
+	<?php if(!$_['directoryIsSet'] or !$_['dbIsSet'] or count($_['errors']) > 0): ?>
 	<fieldset id="advancedHeader">
-		<legend><a id="showAdvanced" tabindex="0" href="#"><?php p($l->t( 'Storage & database' )); ?><img src="<?php print_unescaped(image_path('', 'actions/caret-white.svg')); ?>" /></a></legend>
+		<legend><a id="showAdvanced" tabindex="0" href="#"><?php p($l->t('Storage & database')); ?><img src="<?php print_unescaped(image_path('', 'actions/caret-white.svg')); ?>" /></a></legend>
 	</fieldset>
 	<?php endif; ?>
 
-	<?php if(!$_['directoryIsSet'] OR count($_['errors']) > 0): ?>
+	<?php if(!$_['directoryIsSet'] or count($_['errors']) > 0): ?>
 	<fieldset id="datadirField">
 		<div id="datadirContent">
-			<label for="directory"><?php p($l->t( 'Data folder' )); ?></label>
+			<label for="directory"><?php p($l->t('Data folder')); ?></label>
 			<input type="text" name="directory" id="directory"
 				placeholder="<?php p(OC::$SERVERROOT.'/data'); ?>"
 				value="<?php p($_['directory']); ?>"
@@ -72,19 +72,19 @@ script('core', [
 	</fieldset>
 	<?php endif; ?>
 
-	<?php if(!$_['dbIsSet'] OR count($_['errors']) > 0): ?>
+	<?php if(!$_['dbIsSet'] or count($_['errors']) > 0): ?>
 	<fieldset id='databaseBackend'>
 		<?php if($_['hasMySQL'] or $_['hasPostgreSQL'] or $_['hasOracle'])
-			$hasOtherDB = true; else $hasOtherDB =false; //other than SQLite ?>
-		<legend><?php p($l->t( 'Configure the database' )); ?></legend>
+			$hasOtherDB = true; else $hasOtherDB =false; //other than SQLite?>
+		<legend><?php p($l->t('Configure the database')); ?></legend>
 		<div id="selectDbType">
 		<?php foreach($_['databases'] as $type => $label): ?>
 		<?php if(count($_['databases']) === 1): ?>
 		<p class="info">
-			<?php p($l->t( 'Only %s is available.', array($label) )); ?>
-			<?php p($l->t( 'Install and activate additional PHP modules to choose other database types.' )); ?><br>
+			<?php p($l->t('Only %s is available.', [$label])); ?>
+			<?php p($l->t('Install and activate additional PHP modules to choose other database types.')); ?><br>
 			<a href="<?php print_unescaped(link_to_docs('admin-source_install')); ?>" target="_blank" rel="noreferrer noopener">
-				<?php p($l->t( 'For more details check out the documentation.' )); ?> ↗</a>
+				<?php p($l->t('For more details check out the documentation.')); ?> ↗</a>
 		</p>
 		<input type="hidden" id="dbtype" name="dbtype" value="<?php p($type) ?>">
 		<?php else: ?>
@@ -100,25 +100,25 @@ script('core', [
 		<fieldset id='databaseField'>
 		<div id="use_other_db">
 			<p class="grouptop">
-				<label for="dbuser" class="infield"><?php p($l->t( 'Database user' )); ?></label>
+				<label for="dbuser" class="infield"><?php p($l->t('Database user')); ?></label>
 				<input type="text" name="dbuser" id="dbuser"
-					placeholder="<?php p($l->t( 'Database user' )); ?>"
+					placeholder="<?php p($l->t('Database user')); ?>"
 					value="<?php p($_['dbuser']); ?>"
 					autocomplete="off" autocapitalize="none" autocorrect="off">
 			</p>
 			<p class="groupmiddle">
 				<input type="password" name="dbpass" id="dbpass" data-typetoggle="#dbpassword-toggle"
-					placeholder="<?php p($l->t( 'Database password' )); ?>"
+					placeholder="<?php p($l->t('Database password')); ?>"
 					value="<?php p($_['dbpass']); ?>"
 					autocomplete="off" autocapitalize="none" autocorrect="off">
-				<label for="dbpass" class="infield"><?php p($l->t( 'Database password' )); ?></label>
+				<label for="dbpass" class="infield"><?php p($l->t('Database password')); ?></label>
 				<input type="checkbox" id="dbpassword-toggle" class="hidden-visually" name="dbpassword-toggle">
 				<label for="dbpassword-toggle"></label>
 			</p>
 			<p class="groupmiddle">
-				<label for="dbname" class="infield"><?php p($l->t( 'Database name' )); ?></label>
+				<label for="dbname" class="infield"><?php p($l->t('Database name')); ?></label>
 				<input type="text" name="dbname" id="dbname"
-					placeholder="<?php p($l->t( 'Database name' )); ?>"
+					placeholder="<?php p($l->t('Database name')); ?>"
 					value="<?php p($_['dbname']); ?>"
 					autocomplete="off" autocapitalize="none" autocorrect="off"
 					pattern="[0-9a-zA-Z$_-]+">
@@ -126,30 +126,30 @@ script('core', [
 			<?php if($_['hasOracle']): ?>
 			<div id="use_oracle_db">
 				<p class="groupmiddle">
-					<label for="dbtablespace" class="infield"><?php p($l->t( 'Database tablespace' )); ?></label>
+					<label for="dbtablespace" class="infield"><?php p($l->t('Database tablespace')); ?></label>
 					<input type="text" name="dbtablespace" id="dbtablespace"
-						placeholder="<?php p($l->t( 'Database tablespace' )); ?>"
+						placeholder="<?php p($l->t('Database tablespace')); ?>"
 						value="<?php p($_['dbtablespace']); ?>"
 						autocomplete="off" autocapitalize="none" autocorrect="off">
 				</p>
 			</div>
 			<?php endif; ?>
 			<p class="groupbottom">
-				<label for="dbhost" class="infield"><?php p($l->t( 'Database host' )); ?></label>
+				<label for="dbhost" class="infield"><?php p($l->t('Database host')); ?></label>
 				<input type="text" name="dbhost" id="dbhost"
-					placeholder="<?php p($l->t( 'Database host' )); ?>"
+					placeholder="<?php p($l->t('Database host')); ?>"
 					value="<?php p($_['dbhost']); ?>"
 					autocomplete="off" autocapitalize="none" autocorrect="off">
 			</p>
 			<p class="info">
-				<?php p($l->t( 'Please specify the port number along with the host name (e.g., localhost:5432).' )); ?>
+				<?php p($l->t('Please specify the port number along with the host name (e.g., localhost:5432).')); ?>
 			</p>
 		</div>
 		</fieldset>
 		<?php endif; ?>
 	<?php endif; ?>
 
-	<?php if(!$_['dbIsSet'] OR count($_['errors']) > 0): ?>
+	<?php if(!$_['dbIsSet'] or count($_['errors']) > 0): ?>
 		<fieldset id="sqliteInformation" class="warning">
 			<legend><?php p($l->t('Performance warning'));?></legend>
 			<p><?php p($l->t('You chose SQLite as database.'));?></p>
@@ -158,9 +158,19 @@ script('core', [
 		</fieldset>
 	<?php endif ?>
 
+	<fieldset>
+		<p class="info">
+			<input type="checkbox" id="install-recommended-apps" name="install-recommended-apps" class="checkbox checkbox--white" checked>
+			<label for="install-recommended-apps">
+				<?php p($l->t('Install recommended apps')); ?>
+				<span><?php p($l->t('Calendar, Contacts, Talk, Mail & OnlyOffice')); ?></span>
+			</label>
+		</p>
+	</fieldset>
+
 	<div class="icon-loading-dark float-spinner">&nbsp;</div>
 
-	<div class="buttons"><input type="submit" class="primary" value="<?php p($l->t( 'Finish setup' )); ?>" data-finishing="<?php p($l->t( 'Finishing …' )); ?>"></div>
+	<div class="buttons"><input type="submit" class="primary" value="<?php p($l->t('Finish setup')); ?>" data-finishing="<?php p($l->t('Finishing …')); ?>"></div>
 
 	<p class="info">
 		<span class="icon-info-white"></span>

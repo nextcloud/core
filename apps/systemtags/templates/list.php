@@ -18,14 +18,14 @@
 		<tr>
 			<th id='headerName' class="hidden column-name">
 				<div id="headerName-container">
-					<a class="name sort columntitle" data-sort="name"><span><?php p($l->t( 'Name' )); ?></span><span class="sort-indicator"></span></a>
+					<a class="name sort columntitle" data-sort="name"><span><?php p($l->t('Name')); ?></span><span class="sort-indicator"></span></a>
 				</div>
 			</th>
 			<th id="headerSize" class="hidden column-size">
 				<a class="size sort columntitle" data-sort="size"><span><?php p($l->t('Size')); ?></span><span class="sort-indicator"></span></a>
 			</th>
 			<th id="headerDate" class="hidden column-mtime">
-				<a id="modified" class="columntitle" data-sort="mtime"><span><?php p($l->t( 'Modified' )); ?></span><span class="sort-indicator"></span></a>
+				<a id="modified" class="columntitle" data-sort="mtime"><span><?php p($l->t('Modified')); ?></span><span class="sort-indicator"></span></a>
 			</th>
 		</tr>
 	</thead>

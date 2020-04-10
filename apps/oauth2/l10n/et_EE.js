@@ -8,6 +8,6 @@ OC.L10N.register(
     "Secret" : "Saladus",
     "Add client" : "Lisa klient",
     "Add" : "Lisa",
-    "OAuth 2.0 allows external services to request access to %s." : "OAuth 2.0 lubab välistel teenustel %s teenusele ligipääsu taotleda."
+    "Delete" : "Kustuta"
 },
 "nplurals=2; plural=(n != 1);");

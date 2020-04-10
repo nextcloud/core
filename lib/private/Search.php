@@ -4,9 +4,11 @@
  *
  * @author Andrew Brown <andrew@casabrown.com>
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -20,22 +22,23 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC;
+
+use OCP\ISearch;
 use OCP\Search\PagedProvider;
 use OCP\Search\Provider;
-use OCP\ISearch;
 
 /**
  * Provide an interface to all search providers
  */
 class Search implements ISearch {
 
-	private $providers = array();
-	private $registeredProviders = array();
+	private $providers = [];
+	private $registeredProviders = [];
 
 	/**
 	 * Search all providers for $query
@@ -45,12 +48,12 @@ class Search implements ISearch {
 	 * @param int $size, 0 = all
 	 * @return array An array of OC\Search\Result's
 	 */
-	public function searchPaged($query, array $inApps = array(), $page = 1, $size = 30) {
+	public function searchPaged($query, array $inApps = [], $page = 1, $size = 30) {
 		$this->initProviders();
-		$results = array();
+		$results = [];
 		foreach($this->providers as $provider) {
 			/** @var $provider Provider */
-			if ( ! $provider->providesResultsFor($inApps) ) {
+			if (! $provider->providesResultsFor($inApps)) {
 				continue;
 			}
 			if ($provider instanceof PagedProvider) {
@@ -64,7 +67,7 @@ class Search implements ISearch {
 					$results = array_merge($results, $providerResults);
 				}
 			} else {
-				\OC::$server->getLogger()->warning('Ignoring Unknown search provider', array('provider' => $provider));
+				\OC::$server->getLogger()->warning('Ignoring Unknown search provider', ['provider' => $provider]);
 			}
 		}
 		return $results;
@@ -74,8 +77,8 @@ class Search implements ISearch {
 	 * Remove all registered search providers
 	 */
 	public function clearProviders() {
-		$this->providers = array();
-		$this->registeredProviders = array();
+		$this->providers = [];
+		$this->registeredProviders = [];
 	}
 
 	/**
@@ -90,7 +93,7 @@ class Search implements ISearch {
 			}
 		);
 		// force regeneration of providers on next search
-		$this->providers = array();
+		$this->providers = [];
 	}
 
 	/**
@@ -98,15 +101,15 @@ class Search implements ISearch {
 	 * @param string $class class name of a OC\Search\Provider
 	 * @param array $options optional
 	 */
-	public function registerProvider($class, array $options = array()) {
-		$this->registeredProviders[] = array('class' => $class, 'options' => $options);
+	public function registerProvider($class, array $options = []) {
+		$this->registeredProviders[] = ['class' => $class, 'options' => $options];
 	}
 
 	/**
 	 * Create instances of all the registered search providers
 	 */
 	private function initProviders() {
-		if( ! empty($this->providers) ) {
+		if(! empty($this->providers)) {
 			return;
 		}
 		foreach($this->registeredProviders as $provider) {

@@ -2,7 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -17,9 +20,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\DAV\Command;
 
 use OCA\DAV\CalDAV\BirthdayService;
@@ -92,7 +96,7 @@ class SyncBirthdayCalendar extends Command {
 		$output->writeln("Start birthday calendar sync for all users ...");
 		$p = new ProgressBar($output);
 		$p->start();
-		$this->userManager->callForSeenUsers(function($user) use ($p)  {
+		$this->userManager->callForSeenUsers(function ($user) use ($p) {
 			$p->advance();
 
 			$userId = $user->getUID();
@@ -109,7 +113,7 @@ class SyncBirthdayCalendar extends Command {
 		$output->writeln('');
 	}
 
-	protected function verifyEnabled () {
+	protected function verifyEnabled() {
 		$isEnabled = $this->config->getAppValue('dav', 'generateBirthdayCalendar', 'yes');
 
 		if ($isEnabled !== 'yes') {

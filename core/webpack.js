@@ -7,10 +7,13 @@ module.exports = [
 			login: path.join(__dirname, 'src/login.js'),
 			main: path.join(__dirname, 'src/main.js'),
 			maintenance: path.join(__dirname, 'src/maintenance.js'),
+			recommendedapps: path.join(__dirname, 'src/recommendedapps.js'),
+			install: path.join(__dirname, 'src/install.js')
 		},
 		output: {
 			filename: '[name].js',
-			path: path.resolve(__dirname, 'js/dist')
+			path: path.resolve(__dirname, 'js/dist'),
+			jsonpFunction: 'webpackJsonpCore'
 		},
 		module: {
 			rules: [
@@ -30,7 +33,6 @@ module.exports = [
 	},
 	{
 		entry: {
-			share_backend: path.resolve(__dirname, 'js/merged-share-backend.js'),
 			systemtags: path.resolve(__dirname, 'js/systemtags/merged-systemtags.js')
 		},
 		output: {

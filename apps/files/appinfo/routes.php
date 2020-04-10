@@ -1,15 +1,21 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Felix Nüsse <Felix.nuesse@t-online.de>
+ * @author fnuesse <felix.nuesse@t-online.de>
+ * @author fnuesse <fnuesse@techfak.uni-bielefeld.de>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Tobias Kaminsky <tobias@kaminsky.me>
- * @author Tom Needham <tom@owncloud.com>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @license AGPL-3.0
@@ -24,12 +30,13 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 namespace OCA\Files\AppInfo;
 
-$application = new Application();
+/** @var Application $application */
+$application = \OC::$server->query(Application::class);
 $application->registerRoutes(
 	$this,
 	[
@@ -91,7 +98,49 @@ $application->registerRoutes(
 				'url' => '/api/v1/quickaccess/get/NodeType',
 				'verb' => 'GET',
 			],
-		]
+			[
+				'name' => 'DirectEditingView#edit',
+				'url' => '/directEditing/{token}',
+				'verb' => 'GET'
+			],
+		],
+		'ocs' => [
+			[
+				'name' => 'DirectEditing#info',
+				'url' => '/api/v1/directEditing',
+				'verb' => 'GET'
+			],
+			[
+				'name' => 'DirectEditing#templates',
+				'url' => '/api/v1/directEditing/templates/{editorId}/{creatorId}',
+				'verb' => 'GET'
+			],
+			[
+				'name' => 'DirectEditing#open',
+				'url' => '/api/v1/directEditing/open',
+				'verb' => 'POST'
+			],
+			[
+				'name' => 'DirectEditing#create',
+				'url' => '/api/v1/directEditing/create',
+				'verb' => 'POST'
+			],
+			[
+				'name' => 'TransferOwnership#transfer',
+				'url' => '/api/v1/transferownership',
+				'verb' => 'POST',
+			],
+			[
+				'name' => 'TransferOwnership#accept',
+				'url' => '/api/v1/transferownership/{id}',
+				'verb' => 'POST',
+			],
+			[
+				'name' => 'TransferOwnership#reject',
+				'url' => '/api/v1/transferownership/{id}',
+				'verb' => 'DELETE',
+			],
+		],
 	]
 );
 

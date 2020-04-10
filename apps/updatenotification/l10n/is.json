@@ -33,16 +33,12 @@
     "Could not connect to the appstore or the appstore returned no updates at all. Search manually for updates or make sure your server has access to the internet and can connect to the appstore." : "Gat ekki tengst við forritabúðina eða að í henni eru engar uppfærslur. Leitaðu handvirkt að uppfærslum, eða gakktu úr skugga um að þjónninn þinn sé með aðgang að internetinu og geti tengst forritabúðinni.",
     "<strong>All</strong> apps have an update for this version available" : "<strong>Öll</strong> forrit eru með uppfærslu tiltæka fyrir þessa útgáfu",
     "View changelog" : "Skoða breytingaannál",
+    "Enterprise" : "Fyrirtæki",
     "Stable" : "Stöðug",
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "Nýjasta stöðuga útgáfan. Hún hentar fyrir alla venjulega notkun og er alltaf uppfærð í nýjustu aðalútgáfu.",
     "Beta" : "BETA-prófunarútgáfa",
     "A pre-release version only for testing new features, not for production environments." : "For-útgáfa sem einungis er hugsuð til að prófa nýja eiginleika, og er alls ekki ætluð fyrir alvöru vinnslu.",
     "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> forrit eru með uppfærslu tiltæka fyrir þessa útgáfu","<strong>%n</strong> forrit eru með uppfærslu tiltæka fyrir þessa útgáfu"],
-    "You can always update to a newer version / experimental channel. But you can never downgrade to a more stable channel." : "Þú getur alltaf uppfært í nýrri útgáfu eða tilraunaútgáfurás. En þú getur aldrei niðurfært í stöðugri rás.",
-    "<strong>production</strong> will always provide the latest patch level, but not update to the next major release immediately. That update usually happens with the second minor release (x.0.2)." : "<strong>vinnsla</strong> mun alltaf vera á nýjasta stigi endurbóta (öryggisviðbætur o.fl.), en ekki uppfærast samstundis í næstu aðalútgáfu. Sú uppfærsla á sér yfirleitt stað við undirútgáfu númer tvö (x.0.2).",
-    "<strong>stable</strong> is the most recent stable version. It is suited for regular use and will always update to the latest major version." : "<strong>stöðug</strong> er nýjasta stöðuga útgáfan. Hún hentar fyrir alla venjulega notkun og er alltaf uppfærð í nýjustu aðalútgáfu.",
-    "<strong>beta</strong> is a pre-release version only for testing new features, not for production environments." : "<strong>beta</strong> er for-útgáfa sem einungis er hugsuð til að prófa nýja eiginleika, og er alls ekki ætluð fyrir alvöru vinnslu.",
-    "Could not start updater, please try the manual update" : "Gat ekki ræst uppfærslustýringu, prófaðu að uppfæra handvirkt",
     "Production" : "Vinnsluútgáfa",
     "Will always provide the latest patch level, but not update to the next major release immediately. That update usually happens with the second minor release (x.0.2) and only if the instance is already on the latest minor version." : "vinnsla mun alltaf vera á nýjasta stigi endurbóta (öryggisviðbætur o.fl.), en ekki uppfærast samstundis í næstu aðalútgáfu. Sú uppfærsla á sér yfirleitt stað við undirútgáfu númer tvö (x.0.2) og þá aðeins ef þjónninn er þegar með síðustu undirútgáfu."
 },"pluralForm" :"nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"

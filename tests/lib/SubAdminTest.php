@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace Test;
 
 /**
@@ -40,7 +41,7 @@ class SubAdminTest extends \Test\TestCase {
 	/** @var \OCP\IGroup[] */
 	private $groups;
 	
-	public function setup() {
+	protected function setUp(): void {
 		$this->users = [];
 		$this->groups = [];
 
@@ -82,7 +83,7 @@ class SubAdminTest extends \Test\TestCase {
 			->execute();
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		foreach($this->users as $user) {
 			$user->delete();
 		}
@@ -112,7 +113,7 @@ class SubAdminTest extends \Test\TestCase {
 			->fetch();
 		$this->assertEquals(
 			[
-				'gid' => $this->groups[0]->getGID(), 
+				'gid' => $this->groups[0]->getGID(),
 				'uid' => $this->users[0]->getUID()
 			], $result);
 

@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\Share20;
 
 use OC\Share20\LegacyHooks;
@@ -41,7 +42,7 @@ class LegacyHooksTest extends TestCase {
 	/** @var Manager */
 	private $manager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->eventDispatcher = new EventDispatcher();
@@ -280,10 +281,10 @@ class LegacyHooksTest extends TestCase {
 			->expects($this->exactly(1))
 			->method('preShare')
 			->with($expected)
-			->will($this->returnCallback(function ($data) {
+			->willReturnCallback(function ($data) {
 				$data['run'] = false;
 				$data['error'] = 'I error';
-			}));
+			});
 
 		$event = new GenericEvent($share);
 		$this->eventDispatcher->dispatch('OCP\Share::preShare', $event);

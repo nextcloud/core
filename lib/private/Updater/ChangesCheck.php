@@ -1,9 +1,12 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2018 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -18,7 +21,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -53,7 +56,11 @@ class ChangesCheck {
 	public function getChangesForVersion(string $version): array {
 		$version = $this->normalizeVersion($version);
 		$changesInfo = $this->mapper->getChanges($version);
-		return json_decode($changesInfo->getData(), true);
+		$changesData = json_decode($changesInfo->getData(), true);
+		if (empty($changesData)) {
+			throw new DoesNotExistException('Unable to decode changes info');
+		}
+		return $changesData;
 	}
 
 	/**

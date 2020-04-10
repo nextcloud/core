@@ -23,7 +23,6 @@
 
 namespace Test\Collaboration\Collaborators;
 
-
 use OC\Collaboration\Collaborators\Search;
 use OC\Collaboration\Collaborators\SearchResult;
 use OCP\Collaboration\Collaborators\ISearch;
@@ -39,7 +38,7 @@ class SearchTest extends TestCase {
 	/** @var  ISearch */
 	protected $search;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->container = $this->createMock(IContainer::class);
@@ -76,7 +75,7 @@ class SearchTest extends TestCase {
 		$userPlugin = $this->createMock(ISearchPlugin::class);
 		$userPlugin->expects($this->any())
 			->method('search')
-			->willReturnCallback(function() use ($searchResult, $mockedUserResult, $expectedMoreResults) {
+			->willReturnCallback(function () use ($searchResult, $mockedUserResult, $expectedMoreResults) {
 				$type = new SearchResultType('users');
 				$searchResult->addResultSet($type, $mockedUserResult);
 				return $expectedMoreResults;
@@ -85,7 +84,7 @@ class SearchTest extends TestCase {
 		$groupPlugin = $this->createMock(ISearchPlugin::class);
 		$groupPlugin->expects($this->any())
 			->method('search')
-			->willReturnCallback(function() use ($searchResult, $mockedGroupsResult, $expectedMoreResults) {
+			->willReturnCallback(function () use ($searchResult, $mockedGroupsResult, $expectedMoreResults) {
 				$type = new SearchResultType('groups');
 				$searchResult->addResultSet($type, $mockedGroupsResult);
 				return $expectedMoreResults;
@@ -94,7 +93,7 @@ class SearchTest extends TestCase {
 		$remotePlugin = $this->createMock(ISearchPlugin::class);
 		$remotePlugin->expects($this->any())
 			->method('search')
-			->willReturnCallback(function() use ($searchResult, $mockedRemotesResult, $expectedMoreResults) {
+			->willReturnCallback(function () use ($searchResult, $mockedRemotesResult, $expectedMoreResults) {
 				if($mockedRemotesResult !== null) {
 					$type = new SearchResultType('remotes');
 					$searchResult->addResultSet($type, $mockedRemotesResult['results'], $mockedRemotesResult['exact']);
@@ -107,7 +106,7 @@ class SearchTest extends TestCase {
 
 		$this->container->expects($this->any())
 			->method('resolve')
-			->willReturnCallback(function($class) use ($searchResult, $userPlugin, $groupPlugin, $remotePlugin) {
+			->willReturnCallback(function ($class) use ($searchResult, $userPlugin, $groupPlugin, $remotePlugin) {
 				if($class === SearchResult::class) {
 					return $searchResult;
 				} elseif ($class === $userPlugin) {
@@ -152,12 +151,12 @@ class SearchTest extends TestCase {
 			],
 			[
 				'test', [Share::SHARE_TYPE_USER, Share::SHARE_TYPE_GROUP, Share::SHARE_TYPE_REMOTE], 1, 2, [
-				['label' => 'test One', 'value' => ['shareType' => Share::SHARE_TYPE_USER, 'shareWith' => 'test1']],
-			], [
-				['label' => 'testgroup1', 'value' => ['shareType' => Share::SHARE_TYPE_GROUP, 'shareWith' => 'testgroup1']],
-			], [
-				'results' => [['label' => 'testz@remote', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'testz@remote']]], 'exact' => [], 'exactIdMatch' => false,
-			],
+					['label' => 'test One', 'value' => ['shareType' => Share::SHARE_TYPE_USER, 'shareWith' => 'test1']],
+				], [
+					['label' => 'testgroup1', 'value' => ['shareType' => Share::SHARE_TYPE_GROUP, 'shareWith' => 'testgroup1']],
+				], [
+					'results' => [['label' => 'testz@remote', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'testz@remote']]], 'exact' => [], 'exactIdMatch' => false,
+				],
 				[
 					'exact' => ['users' => [], 'groups' => [], 'remotes' => []],
 					'users' => [
@@ -174,10 +173,10 @@ class SearchTest extends TestCase {
 			// No groups requested
 			[
 				'test', [Share::SHARE_TYPE_USER, Share::SHARE_TYPE_REMOTE], 1, 2, [
-				['label' => 'test One', 'value' => ['shareType' => Share::SHARE_TYPE_USER, 'shareWith' => 'test1']],
-			], [], [
-				'results' => [['label' => 'testz@remote', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'testz@remote']]], 'exact' => [], 'exactIdMatch' => false
-			],
+					['label' => 'test One', 'value' => ['shareType' => Share::SHARE_TYPE_USER, 'shareWith' => 'test1']],
+				], [], [
+					'results' => [['label' => 'testz@remote', 'value' => ['shareType' => Share::SHARE_TYPE_REMOTE, 'shareWith' => 'testz@remote']]], 'exact' => [], 'exactIdMatch' => false
+				],
 				[
 					'exact' => ['users' => [], 'remotes' => []],
 					'users' => [
@@ -191,8 +190,8 @@ class SearchTest extends TestCase {
 			// Share type restricted to user - Only one user
 			[
 				'test', [Share::SHARE_TYPE_USER], 1, 2, [
-				['label' => 'test One', 'value' => ['shareType' => Share::SHARE_TYPE_USER, 'shareWith' => 'test1']],
-			], [], [],
+					['label' => 'test One', 'value' => ['shareType' => Share::SHARE_TYPE_USER, 'shareWith' => 'test1']],
+				], [], [],
 				[
 					'exact' => ['users' => []],
 					'users' => [
@@ -203,9 +202,9 @@ class SearchTest extends TestCase {
 			// Share type restricted to user - Multipage result
 			[
 				'test', [Share::SHARE_TYPE_USER], 1, 2, [
-				['label' => 'test 1', 'value' => ['shareType' => Share::SHARE_TYPE_USER, 'shareWith' => 'test1']],
-				['label' => 'test 2', 'value' => ['shareType' => Share::SHARE_TYPE_USER, 'shareWith' => 'test2']],
-			], [], [],
+					['label' => 'test 1', 'value' => ['shareType' => Share::SHARE_TYPE_USER, 'shareWith' => 'test1']],
+					['label' => 'test 2', 'value' => ['shareType' => Share::SHARE_TYPE_USER, 'shareWith' => 'test2']],
+				], [], [],
 				[
 					'exact' => ['users' => []],
 					'users' => [

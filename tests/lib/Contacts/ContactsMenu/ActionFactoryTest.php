@@ -33,7 +33,7 @@ class ActionFactoryTest extends TestCase {
 	/** @var ActionFactory */
 	private $actionFactory;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->actionFactory = new ActionFactory();
@@ -61,7 +61,7 @@ class ActionFactoryTest extends TestCase {
 		$this->assertInstanceOf(IAction::class, $action);
 		$this->assertEquals($name, $action->getName());
 		$this->assertEquals(10, $action->getPriority());
-		$this->assertEquals('mailto:user%40example.com', $action->getHref());
+		$this->assertEquals('mailto:user@example.com', $action->getHref());
 	}
 
 }

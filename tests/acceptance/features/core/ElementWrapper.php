@@ -141,7 +141,7 @@ class ElementWrapper {
 	 * @return bool true if the wrapped element is visible, false otherwise.
 	 */
 	public function isVisible() {
-		$commandCallback = function() {
+		$commandCallback = function () {
 			return $this->element->isVisible();
 		};
 		return $this->executeCommand($commandCallback, "visibility could not be got");
@@ -153,7 +153,7 @@ class ElementWrapper {
 	 * @return bool true if the wrapped element is checked, false otherwise.
 	 */
 	public function isChecked() {
-		$commandCallback = function() {
+		$commandCallback = function () {
 			return $this->element->isChecked();
 		};
 		return $this->executeCommand($commandCallback, "check state could not be got");
@@ -169,7 +169,7 @@ class ElementWrapper {
 	 *         is not visible.
 	 */
 	public function getText() {
-		$commandCallback = function() {
+		$commandCallback = function () {
 			return $this->element->getText();
 		};
 		return $this->executeCommand($commandCallback, "text could not be got");
@@ -183,7 +183,7 @@ class ElementWrapper {
 	 * @return string the value of the wrapped element.
 	 */
 	public function getValue() {
-		$commandCallback = function() {
+		$commandCallback = function () {
 			return $this->element->getValue();
 		};
 		return $this->executeCommand($commandCallback, "value could not be got");
@@ -198,7 +198,7 @@ class ElementWrapper {
 	 * @param string $value the value to set.
 	 */
 	public function setValue($value) {
-		$commandCallback = function() use ($value) {
+		$commandCallback = function () use ($value) {
 			$this->element->setValue($value);
 		};
 		$this->executeCommandOnVisibleElement($commandCallback, "value could not be set");
@@ -211,7 +211,7 @@ class ElementWrapper {
 	 * timeout set when finding it).
 	 */
 	public function click() {
-		$commandCallback = function() {
+		$commandCallback = function () {
 			$this->element->click();
 		};
 		$this->executeCommandOnVisibleElement($commandCallback, "could not be clicked");
@@ -224,7 +224,7 @@ class ElementWrapper {
 	 * timeout set when finding it).
 	 */
 	public function check() {
-		$commandCallback = function() {
+		$commandCallback = function () {
 			$this->element->check();
 		};
 		$this->executeCommand($commandCallback, "could not be checked");
@@ -237,7 +237,7 @@ class ElementWrapper {
 	 * timeout set when finding it).
 	 */
 	public function uncheck() {
-		$commandCallback = function() {
+		$commandCallback = function () {
 			$this->element->uncheck();
 		};
 		$this->executeCommand($commandCallback, "could not be unchecked");
@@ -325,7 +325,7 @@ class ElementWrapper {
 	 *         otherwise.
 	 */
 	private function waitForElementToBeVisible() {
-		$isVisibleCallback = function() {
+		$isVisibleCallback = function () {
 			return $this->isVisible();
 		};
 		$timeout = $this->elementFinder->getTimeout();

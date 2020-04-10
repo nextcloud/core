@@ -6,6 +6,7 @@
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -19,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -41,7 +42,7 @@ class StreamResponse extends Response implements ICallbackResponse {
 	 * @param string|resource $filePath the path to the file or a file handle which should be streamed
 	 * @since 8.1.0
 	 */
-	public function __construct ($filePath) {
+	public function __construct($filePath) {
 		parent::__construct();
 
 		$this->filePath = $filePath;
@@ -54,7 +55,7 @@ class StreamResponse extends Response implements ICallbackResponse {
 	 * @param IOutput $output a small wrapper that handles output
 	 * @since 8.1.0
 	 */
-	public function callback (IOutput $output) {
+	public function callback(IOutput $output) {
 		// handle caching
 		if ($output->getHttpResponseCode() !== Http::STATUS_NOT_MODIFIED) {
 			if (!(is_resource($this->filePath) || file_exists($this->filePath))) {

@@ -1,5 +1,5 @@
 <?php
 
-$CONFIG = array(
+$CONFIG = [
 	'mysql.utf8mb4' => true,
-);
+];

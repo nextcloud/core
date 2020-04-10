@@ -1,6 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2019 Robin Appelman <robin@icewind.nl>
+ *
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Robin Appelman <robin@icewind.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -15,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -36,11 +42,11 @@ class ProviderV1Adapter implements IProviderV2 {
 	}
 
 	public function getMimeType(): string {
-		return $this->providerV1->getMimeType();
+		return (string)$this->providerV1->getMimeType();
 	}
 
 	public function isAvailable(FileInfo $file): bool {
-		return $this->providerV1->isAvailable($file);
+		return (bool)$this->providerV1->isAvailable($file);
 	}
 
 	public function getThumbnail(File $file, int $maxX, int $maxY): ?IImage {

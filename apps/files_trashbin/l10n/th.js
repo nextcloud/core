@@ -12,10 +12,8 @@ OC.L10N.register(
     "No entries found in this folder" : "ไม่พบรายการในโฟลเดอร์นี้",
     "Select all" : "เลือกทั้งหมด",
     "Name" : "ชื่อ",
+    "Actions" : "การกระทำ",
     "Deleted" : "ลบแล้ว",
-    "Delete" : "ลบ",
-    "Couldn't delete %s permanently" : "ไม่สามารถลบ %s แบบถาวร",
-    "Couldn't restore %s" : "ไม่สามารถกู้คืน %s",
-    "Error" : "ข้อผิดพลาด"
+    "Delete" : "ลบ"
 },
 "nplurals=1; plural=0;");

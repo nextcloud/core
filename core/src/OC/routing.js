@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -22,27 +22,27 @@
 import _ from 'underscore'
 
 import OC from './index'
-import {coreApps} from './constants'
+import { coreApps } from './constants'
 
 /**
  * Get an absolute url to a file in an app
  * @param {string} app the id of the app the file belongs to
  * @param {string} file the file path relative to the app folder
- * @return {string} Absolute URL to a file
+ * @returns {string} Absolute URL to a file
  */
 export const linkTo = (app, file) => filePath(app, '', file)
 
 /**
  * Creates a relative url for remote use
  * @param {string} service id
- * @return {string} the url
+ * @returns {string} the url
  */
 export const linkToRemoteBase = service => getRootPath() + '/remote.php/' + service
 
 /**
  * @brief Creates an absolute url for remote use
  * @param {string} service id
- * @return {string} the url
+ * @returns {string} the url
  */
 export const linkToRemote = service => window.location.protocol + '//' + window.location.host + linkToRemoteBase(service)
 
@@ -50,7 +50,7 @@ export const linkToRemote = service => window.location.protocol + '//' + window.
  * Gets the base path for the given OCS API service.
  * @param {string} service name
  * @param {int} version OCS API version
- * @return {string} OCS API base path
+ * @returns {string} OCS API base path
  */
 export const linkToOCS = (service, version) => {
 	version = (version !== 2) ? 1 : 2
@@ -60,42 +60,42 @@ export const linkToOCS = (service, version) => {
 /**
  * Generates the absolute url for the given relative url, which can contain parameters.
  * Parameters will be URL encoded automatically.
- * @param {string} url
- * @param [params] params
- * @param [options] options
+ * @param {string} url the url
+ * @param {Object} [params] params
+ * @param {Object} [options] destructuring object
  * @param {bool} [options.escape=true] enable/disable auto escape of placeholders (by default enabled)
- * @return {string} Absolute URL for the given relative URL
+ * @returns {string} Absolute URL for the given relative URL
  */
 export const generateUrl = (url, params, options) => {
 	const defaultOptions = {
-			escape: true
-		},
-		allOptions = options || {};
-	_.defaults(allOptions, defaultOptions);
+		escape: true,
+	}
+	const allOptions = options || {}
+	_.defaults(allOptions, defaultOptions)
 
-	const _build = function (text, vars) {
-		vars = vars || [];
+	const _build = function(text, vars) {
+		vars = vars || []
 		return text.replace(/{([^{}]*)}/g,
-			function (a, b) {
-				var r = (vars[b]);
+			function(a, b) {
+				const r = (vars[b])
 				if (allOptions.escape) {
-					return (typeof r === 'string' || typeof r === 'number') ? encodeURIComponent(r) : encodeURIComponent(a);
+					return (typeof r === 'string' || typeof r === 'number') ? encodeURIComponent(r) : encodeURIComponent(a)
 				} else {
-					return (typeof r === 'string' || typeof r === 'number') ? r : a;
+					return (typeof r === 'string' || typeof r === 'number') ? r : a
 				}
 			}
-		);
-	};
+		)
+	}
 	if (url.charAt(0) !== '/') {
-		url = '/' + url;
+		url = '/' + url
 
 	}
 
 	if (OC.config.modRewriteWorking === true) {
-		return getRootPath() + _build(url, params);
+		return getRootPath() + _build(url, params)
 	}
 
-	return getRootPath() + '/index.php' + _build(url, params);
+	return getRootPath() + '/index.php' + _build(url, params)
 }
 
 /**
@@ -105,11 +105,12 @@ export const generateUrl = (url, params, options) => {
  *
  * @param {string} app the app id to which the image belongs
  * @param {string} file the name of the image file
- * @return {string}
+ * @returns {string}
+ * @deprecated 19.0.0 use `imagePath` from https://www.npmjs.com/package/@nextcloud/router
  */
 export const imagePath = (app, file) => {
 	if (file.indexOf('.') === -1) {
-		//if no extension is given, use svg
+		// if no extension is given, use svg
 		return filePath(app, 'img', file + '.svg')
 	}
 
@@ -121,13 +122,14 @@ export const imagePath = (app, file) => {
  * @param {string} app the id of the app
  * @param {string} type the type of the file to link to (e.g. css,img,ajax.template)
  * @param {string} file the filename
- * @return {string} Absolute URL for a file in an app
+ * @returns {string} Absolute URL for a file in an app
+ * @deprecated 19.0.0 use `generateFilePath` from https://www.npmjs.com/package/@nextcloud/router
  */
 export const filePath = (app, type, file) => {
 	const isCore = coreApps.indexOf(app) !== -1
 	let link = getRootPath()
 	if (file.substring(file.length - 3) === 'php' && !isCore) {
-		link += '/index.php/apps/' + app;
+		link += '/index.php/apps/' + app
 		if (file !== 'index.php') {
 			link += '/'
 			if (type) {
@@ -136,7 +138,7 @@ export const filePath = (app, type, file) => {
 			link += file
 		}
 	} else if (file.substring(file.length - 3) !== 'php' && !isCore) {
-		link = OC.appswebroots[app];
+		link = OC.appswebroots[app]
 		if (type) {
 			link += '/' + type + '/'
 		}
@@ -145,7 +147,7 @@ export const filePath = (app, type, file) => {
 		}
 		link += file
 	} else {
-		if ((app === 'settings' || app === 'core' || app === 'search') && type === 'ajax') {
+		if ((app === 'core' || app === 'search') && type === 'ajax') {
 			link += '/index.php/'
 		} else {
 			link += '/'
@@ -170,8 +172,9 @@ export const filePath = (app, type, file) => {
  * is accessible, with a leading slash.
  * For example "/nextcloud".
  *
- * @return {string} web root path
+ * @returns {string} web root path
  *
+ * @deprecated 19.0.0 use `getRootUrl` from https://www.npmjs.com/package/@nextcloud/router
  * @since 8.2
  */
 export const getRootPath = () => OC.webroot

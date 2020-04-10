@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Laurens Post <lkpost@scept.re>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -18,22 +19,23 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Core\Command\User;
 
 use OC\Files\Filesystem;
+use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\IUserManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Question\Question;
 
 class Add extends Command {
@@ -152,10 +154,14 @@ class Add extends Command {
 			if (!$group) {
 				$this->groupManager->createGroup($groupName);
 				$group = $this->groupManager->get($groupName);
-				$output->writeln('Created group "' . $group->getGID() . '"');
+				if($group instanceof IGroup) {
+					$output->writeln('Created group "' . $group->getGID() . '"');
+				}
 			}
-			$group->addUser($user);
-			$output->writeln('User "' . $user->getUID() . '" added to group "' . $group->getGID() . '"');
+			if($group instanceof IGroup) {
+				$group->addUser($user);
+				$output->writeln('User "' . $user->getUID() . '" added to group "' . $group->getGID() . '"');
+			}
 		}
 	}
 }

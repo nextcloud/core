@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -19,15 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import VendorBackbone from 'backbone';
-import {davCall, davSync} from './backbone-webdav';
+import VendorBackbone from 'backbone'
+import { davCall, davSync } from './backbone-webdav'
 
-const Backbone = VendorBackbone.noConflict();
+const Backbone = VendorBackbone.noConflict()
 
 // Patch Backbone for DAV
 Object.assign(Backbone, {
 	davCall,
 	davSync: davSync(Backbone),
-});
+})
 
-export default Backbone;
+export default Backbone

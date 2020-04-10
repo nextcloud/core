@@ -2,7 +2,9 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Robin Appelman <robin@icewind.nl>
  *
  * @license AGPL-3.0
  *
@@ -16,15 +18,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files\BackgroundJob;
 
 use OC\Files\Utils\Scanner;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
-use OCP\IDBConnection;
 use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -40,39 +42,31 @@ class ScanFiles extends \OC\BackgroundJob\TimedJob {
 	private $config;
 	/** @var IUserManager */
 	private $userManager;
-	/** @var IDBConnection */
-	private $dbConnection;
+	/** @var IEventDispatcher */
+	private $dispatcher;
 	/** @var ILogger */
 	private $logger;
+
 	/** Amount of users that should get scanned per execution */
 	const USERS_PER_SESSION = 500;
 
 	/**
 	 * @param IConfig|null $config
 	 * @param IUserManager|null $userManager
-	 * @param IDBConnection|null $dbConnection
+	 * @param IEventDispatcher|null $dispatcher
 	 * @param ILogger|null $logger
 	 */
 	public function __construct(IConfig $config = null,
 								IUserManager $userManager = null,
-								IDBConnection $dbConnection = null,
+								IEventDispatcher $dispatcher = null,
 								ILogger $logger = null) {
 		// Run once per 10 minutes
 		$this->setInterval(60 * 10);
 
-		if (is_null($userManager) || is_null($config)) {
-			$this->fixDIForJobs();
-		} else {
-			$this->config = $config;
-			$this->userManager = $userManager;
-			$this->logger = $logger;
-		}
-	}
-
-	protected function fixDIForJobs() {
-		$this->config = \OC::$server->getConfig();
-		$this->userManager = \OC::$server->getUserManager();
-		$this->logger = \OC::$server->getLogger();
+		$this->config = $config ?? \OC::$server->getConfig();
+		$this->userManager = $userManager ?? \OC::$server->getUserManager();
+		$this->dispatcher = $dispatcher ?? \OC::$server->query(IEventDispatcher::class);
+		$this->logger = $logger ?? \OC::$server->getLogger();
 	}
 
 	/**
@@ -82,7 +76,8 @@ class ScanFiles extends \OC\BackgroundJob\TimedJob {
 		try {
 			$scanner = new Scanner(
 					$user->getUID(),
-					$this->dbConnection,
+					null,
+					$this->dispatcher,
 					$this->logger
 			);
 			$scanner->backgroundScan('');
@@ -97,6 +92,10 @@ class ScanFiles extends \OC\BackgroundJob\TimedJob {
 	 * @throws \Exception
 	 */
 	protected function run($argument) {
+		if ($this->config->getSystemValueBool('files_no_background_scan', false)) {
+			return;
+		}
+
 		$offset = $this->config->getAppValue('files', 'cronjob_scan_files', 0);
 		$users = $this->userManager->search('', self::USERS_PER_SESSION, $offset);
 		if (!count($users)) {

@@ -2,11 +2,14 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Olivier Paroz <github@oparoz.com>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Tor Lillqvist <tml@collabora.com>
  *
  * @license AGPL-3.0
  *
@@ -20,14 +23,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OC\Preview;
 
+use OCP\Files\File;
 use OCP\IImage;
 use OCP\ILogger;
-use OCP\Files\File;
 
 abstract class Office extends ProviderV2 {
 	private $cmd;
@@ -56,7 +60,7 @@ abstract class Office extends ProviderV2 {
 		$pngPreview = null;
 		try {
 			list($dirname, , , $filename) = array_values(pathinfo($absPath));
-			$pngPreview = $dirname . '/' . $filename . '.png';
+			$pngPreview = $tmpDir . '/' . $filename . '.png';
 
 			$png = new \imagick($pngPreview . '[0]');
 			$png->setImageFormat('jpg');

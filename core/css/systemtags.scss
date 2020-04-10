@@ -69,8 +69,15 @@
 	}
 }
 
+.systemTagsInfoView,
 .systemtags-select2-container {
 	width: 100%;
+
+	.select2-choices {
+		flex-wrap: nowrap !important;
+		max-height: 44px;
+	}
+
 	.select2-choices .select2-search-choice.select2-locked .label {
 		opacity: 0.5;
 	}

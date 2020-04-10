@@ -4,6 +4,7 @@
  *
  * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -31,17 +32,17 @@ abstract class PropagationTestCase extends TestCase {
 	protected $fileIds = []; // [$user=>[$path=>$id]]
 	protected $fileEtags = []; // [$id=>$etag]
 
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 		\OCA\Files_Sharing\Helper::registerHooks();
 	}
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->setUpShares();
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		\OC_Hook::clear('OC_Filesystem', 'post_write');
 		\OC_Hook::clear('OC_Filesystem', 'post_delete');
 		\OC_Hook::clear('OC_Filesystem', 'post_rename');

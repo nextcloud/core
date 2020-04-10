@@ -72,7 +72,7 @@ class NextcloudTestServerLocalApacheHelper implements NextcloudTestServerHelper 
 	 * @throws \Exception if the Nextcloud test server can not be reset or
 	 *         started again.
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		// Ensure that previous Apache server is not running (as cleanUp may not
 		// have been called).
 		$this->stopApacheServer();

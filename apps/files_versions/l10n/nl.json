@@ -5,9 +5,6 @@
     "Failed to revert {file} to revision {timestamp}." : "Kon {file} niet terugdraaien naar revisie {timestamp}.",
     "_%n byte_::_%n bytes_" : ["%n byte","%n bytes"],
     "Restore" : "Herstellen",
-    "No other versions available" : "Geen andere versies beschikbaar",
-    "Could not revert: %s" : "Kon niet terugdraaien: %s",
-    "No earlier versions available" : "Geen oudere versies beschikbaar",
-    "More versions …" : "Meer versies..."
+    "No other versions available" : "Geen andere versies beschikbaar"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

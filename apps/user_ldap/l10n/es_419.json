@@ -170,7 +170,6 @@
     "Email Field" : "Campo de correo electrónico",
     "Set the user's email from their LDAP attribute. Leave it empty for default behaviour." : "Establecer el correo electrónico del usuario con base en el atributo LDAP. Déjalo vacío para el comportamiento predeterminado. ",
     "User Home Folder Naming Rule" : "Regla de Nomenclatura para la Carpeta Inicio del Usuario",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Dejar vacío para el usuario (predeterminado). En caso contrario, especifica un atributo LDAP/AD.",
     "Internal Username" : "Usuario interno",
     "By default the internal username will be created from the UUID attribute. It makes sure that the username is unique and characters do not need to be converted. The internal username has the restriction that only these characters are allowed: [ a-zA-Z0-9_.@- ].  Other characters are replaced with their ASCII correspondence or simply omitted. On collisions a number will be added/increased. The internal username is used to identify a user internally. It is also the default name for the user home folder. It is also a part of remote URLs, for instance for all *DAV services. With this setting, the default behavior can be overridden. Leave it empty for default behavior. Changes will have effect only on newly mapped (added) LDAP users." : "Por defecto, el usuario interno se creará con base en el atributo UUID. Ésto asegura que el nombre de usuario sea único y que los caracteres no tengan que ser convertidos. El usuario intenro tiene la restricción de que sólo permite los siguientes caracteres: [ a-zA-Z0-9_.@- ]. El resto de los caracteres son reemplazados con su correspondencia ASCII o simplemente se omiten. En caso de colisiones, se agregará/ incrementará un número. El usuario interno se usa para identificar a un usuario internamente. Adicionalmente es el nombre predeterminado para la carpeta de inicio. También es parte de las URLs remotas, por ejemplo, para todos los servicios *DAV. Con este ajuste se puede anular el comportamiento predeterminado. Déjalo vacío para mantener el comportamiento predeterminado. Los cambios surtiran efecto sólo en los usuarios mapeados (agregados) nuevos a LDAP. ",
     "Internal Username Attribute:" : "Atributo de nombre de usuario Interno:",
@@ -180,6 +179,7 @@
     "UUID Attribute for Groups:" : "Atributo UUID para Grupos:",
     "Username-LDAP User Mapping" : "Mapeo del Usuario al Usuario LDAP",
     "Clear Username-LDAP User Mapping" : "Borrar el mapeo de los Usuarios a los Usuarios-LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Borrar el mapeo de los Nombres de grupo a los grupos-LDAP"
+    "Clear Groupname-LDAP Group Mapping" : "Borrar el mapeo de los Nombres de grupo a los grupos-LDAP",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Dejar vacío para el usuario (predeterminado). En caso contrario, especifica un atributo LDAP/AD."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

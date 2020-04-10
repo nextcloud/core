@@ -2,10 +2,13 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Christoph Wurst <christoph@owncloud.com>
- * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Michael Weimann <mail@michael-weimann.eu>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -23,7 +26,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -31,20 +34,21 @@ namespace OCA\Files\Tests\Controller;
 
 use OCA\Files\Activity\Helper;
 use OCA\Files\Controller\ViewController;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Http;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
-use OCP\IUser;
-use OCP\Template;
-use Test\TestCase;
+use OCP\IConfig;
+use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use OCP\IL10N;
-use OCP\IConfig;
+use OCP\IUser;
 use OCP\IUserSession;
+use OCP\Template;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use OCP\App\IAppManager;
+use Test\TestCase;
 
 /**
  * Class ViewControllerTest
@@ -75,37 +79,37 @@ class ViewControllerTest extends TestCase {
 	/** @var Helper|\PHPUnit_Framework_MockObject_MockObject */
 	private $activityHelper;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->request = $this->getMockBuilder(IRequest::class)->getMock();
 		$this->urlGenerator = $this->getMockBuilder(IURLGenerator::class)->getMock();
 		$this->l10n = $this->getMockBuilder(IL10N::class)->getMock();
 		$this->config = $this->getMockBuilder(IConfig::class)->getMock();
-		$this->eventDispatcher = $this->getMockBuilder('\Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
+		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 		$this->userSession = $this->getMockBuilder(IUserSession::class)->getMock();
 		$this->appManager = $this->getMockBuilder('\OCP\App\IAppManager')->getMock();
 		$this->user = $this->getMockBuilder(IUser::class)->getMock();
 		$this->user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('testuser1'));
+			->willReturn('testuser1');
 		$this->userSession->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($this->user));
+			->willReturn($this->user);
 		$this->rootFolder = $this->getMockBuilder('\OCP\Files\IRootFolder')->getMock();
 		$this->activityHelper = $this->createMock(Helper::class);
 		$this->viewController = $this->getMockBuilder('\OCA\Files\Controller\ViewController')
 			->setConstructorArgs([
-			'files',
-			$this->request,
-			$this->urlGenerator,
-			$this->l10n,
-			$this->config,
-			$this->eventDispatcher,
-			$this->userSession,
-			$this->appManager,
-			$this->rootFolder,
-			$this->activityHelper,
-		])
+				'files',
+				$this->request,
+				$this->urlGenerator,
+				$this->l10n,
+				$this->config,
+				$this->eventDispatcher,
+				$this->userSession,
+				$this->appManager,
+				$this->rootFolder,
+				$this->activityHelper,
+			])
 		->setMethods([
 			'getStorageInfo',
 			'renderScript'
@@ -117,34 +121,34 @@ class ViewControllerTest extends TestCase {
 		$this->viewController
 			->expects($this->once())
 			->method('getStorageInfo')
-			->will($this->returnValue([
+			->willReturn([
 				'used' => 123,
 				'quota' => 100,
 				'total' => 100,
 				'relative' => 123,
 				'owner' => 'MyName',
 				'ownerDisplayName' => 'MyDisplayName',
-			]));
+			]);
 		$this->config
 			->method('getUserValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				[$this->user->getUID(), 'files', 'file_sorting', 'name', 'name'],
 				[$this->user->getUID(), 'files', 'file_sorting_direction', 'asc', 'asc'],
 				[$this->user->getUID(), 'files', 'show_hidden', false, false],
 				[$this->user->getUID(), 'files', 'show_grid', true],
-			]));
+			]);
 
 			$this->config
 				->expects($this->any())
 				->method('getAppValue')
-				->will($this->returnArgument(2));
+				->willReturnArgument(2);
 
 		$nav = new Template('files', 'appnavigation');
 		$nav->assign('usage_relative', 123);
 		$nav->assign('usage', '123 B');
 		$nav->assign('quota', 100);
 		$nav->assign('total_space', '100 B');
-		//$nav->assign('webdavurl', '');
+		$nav->assign('webdav_url', 'http://localhost/remote.php/dav/files/testuser1/');
 		$nav->assign('navigationItems', [
 			'files' => [
 				'id' => 'files',
@@ -258,14 +262,14 @@ class ViewControllerTest extends TestCase {
 				'classes' => 'collapsible',
 				'sublist' => [
 					[
-					'id' => 'sharingout',
+						'id' => 'sharingout',
 						'appname' => 'files_sharing',
 						'script' => 'list.php',
 						'order' => 16,
 						'name' => \OC::$server->getL10N('files_sharing')->t('Shared with others'),
 					],
 					[
-					'id' => 'sharingin',
+						'id' => 'sharingin',
 						'appname' => 'files_sharing',
 						'script' => 'list.php',
 						'order' => 15,
@@ -284,6 +288,13 @@ class ViewControllerTest extends TestCase {
 						'script' => 'list.php',
 						'order' => 19,
 						'name' => \OC::$server->getL10N('files_sharing')->t('Deleted shares'),
+					],
+					[
+						'id' => 'pendingshares',
+						'appname' => 'files_sharing',
+						'script' => 'list.php',
+						'order' => 19,
+						'name' => \OC::$server->getL10N('files_sharing')->t('Pending shares'),
 					],
 				],
 				'active' => false,
@@ -345,6 +356,10 @@ class ViewControllerTest extends TestCase {
 						'id' => 'deletedshares',
 						'content' => null,
 					],
+					'pendingshares' => [
+						'id' => 'pendingshares',
+						'content' => null
+					],
 					'shareoverview' => [
 						'id' => 'shareoverview',
 						'content' => null,
@@ -394,29 +409,29 @@ class ViewControllerTest extends TestCase {
 		$node = $this->getMockBuilder(Folder::class)->getMock();
 		$node->expects($this->once())
 			->method('getPath')
-			->will($this->returnValue('/testuser1/files/test/sub'));
+			->willReturn('/testuser1/files/test/sub');
 
 		$baseFolder = $this->getMockBuilder(Folder::class)->getMock();
 
 		$this->rootFolder->expects($this->once())
 			->method('getUserFolder')
 			->with('testuser1')
-			->will($this->returnValue($baseFolder));
+			->willReturn($baseFolder);
 
 		$baseFolder->expects($this->at(0))
 			->method('getById')
 			->with(123)
-			->will($this->returnValue([$node]));
+			->willReturn([$node]);
 		$baseFolder->expects($this->at(1))
 			->method('getRelativePath')
 			->with('/testuser1/files/test/sub')
-			->will($this->returnValue('/test/sub'));
+			->willReturn('/test/sub');
 
 		$this->urlGenerator
 			->expects($this->once())
 			->method('linkToRoute')
 			->with('files.view.index', ['dir' => '/test/sub'])
-			->will($this->returnValue('/apps/files/?dir=/test/sub'));
+			->willReturn('/apps/files/?dir=/test/sub');
 
 		$expected = new Http\RedirectResponse('/apps/files/?dir=/test/sub');
 		$this->assertEquals($expected, $this->viewController->index('/whatever', '', '123'));
@@ -426,37 +441,37 @@ class ViewControllerTest extends TestCase {
 		$parentNode = $this->getMockBuilder(Folder::class)->getMock();
 		$parentNode->expects($this->once())
 			->method('getPath')
-			->will($this->returnValue('testuser1/files/test'));
+			->willReturn('testuser1/files/test');
 
 		$baseFolder = $this->getMockBuilder(Folder::class)->getMock();
 
 		$this->rootFolder->expects($this->once())
 			->method('getUserFolder')
 			->with('testuser1')
-			->will($this->returnValue($baseFolder));
+			->willReturn($baseFolder);
 
 		$node = $this->getMockBuilder(File::class)->getMock();
 		$node->expects($this->once())
 			->method('getParent')
-			->will($this->returnValue($parentNode));
+			->willReturn($parentNode);
 		$node->expects($this->once())
 			->method('getName')
-			->will($this->returnValue('somefile.txt'));
+			->willReturn('somefile.txt');
 
 		$baseFolder->expects($this->at(0))
 			->method('getById')
 			->with(123)
-			->will($this->returnValue([$node]));
+			->willReturn([$node]);
 		$baseFolder->expects($this->at(1))
 			->method('getRelativePath')
 			->with('testuser1/files/test')
-			->will($this->returnValue('/test'));
+			->willReturn('/test');
 
 		$this->urlGenerator
 			->expects($this->once())
 			->method('linkToRoute')
 			->with('files.view.index', ['dir' => '/test', 'scrollto' => 'somefile.txt'])
-			->will($this->returnValue('/apps/files/?dir=/test/sub&scrollto=somefile.txt'));
+			->willReturn('/apps/files/?dir=/test/sub&scrollto=somefile.txt');
 
 		$expected = new Http\RedirectResponse('/apps/files/?dir=/test/sub&scrollto=somefile.txt');
 		$this->assertEquals($expected, $this->viewController->index('/whatever', '', '123'));
@@ -467,12 +482,12 @@ class ViewControllerTest extends TestCase {
 		$this->rootFolder->expects($this->once())
 			->method('getUserFolder')
 			->with('testuser1')
-			->will($this->returnValue($baseFolder));
+			->willReturn($baseFolder);
 
 		$baseFolder->expects($this->at(0))
 			->method('getById')
 			->with(123)
-			->will($this->returnValue([]));
+			->willReturn([]);
 
 		$this->urlGenerator->expects($this->once())
 			->method('linkToRoute')
@@ -488,12 +503,12 @@ class ViewControllerTest extends TestCase {
 		$this->appManager->expects($this->once())
 			->method('isEnabledForUser')
 			->with('files_trashbin')
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$parentNode = $this->getMockBuilder(Folder::class)->getMock();
 		$parentNode->expects($this->once())
 			->method('getPath')
-			->will($this->returnValue('testuser1/files_trashbin/files/test.d1462861890/sub'));
+			->willReturn('testuser1/files_trashbin/files/test.d1462861890/sub');
 
 		$baseFolderFiles = $this->getMockBuilder(Folder::class)->getMock();
 		$baseFolderTrash = $this->getMockBuilder(Folder::class)->getMock();
@@ -501,39 +516,39 @@ class ViewControllerTest extends TestCase {
 		$this->rootFolder->expects($this->at(0))
 			->method('getUserFolder')
 			->with('testuser1')
-			->will($this->returnValue($baseFolderFiles));
+			->willReturn($baseFolderFiles);
 		$this->rootFolder->expects($this->at(1))
 			->method('get')
 			->with('testuser1/files_trashbin/files/')
-			->will($this->returnValue($baseFolderTrash));
+			->willReturn($baseFolderTrash);
 
 		$baseFolderFiles->expects($this->once())
 			->method('getById')
 			->with(123)
-			->will($this->returnValue([]));
+			->willReturn([]);
 
 		$node = $this->getMockBuilder(File::class)->getMock();
 		$node->expects($this->once())
 			->method('getParent')
-			->will($this->returnValue($parentNode));
+			->willReturn($parentNode);
 		$node->expects($this->once())
 			->method('getName')
-			->will($this->returnValue('somefile.txt'));
+			->willReturn('somefile.txt');
 
 		$baseFolderTrash->expects($this->at(0))
 			->method('getById')
 			->with(123)
-			->will($this->returnValue([$node]));
+			->willReturn([$node]);
 		$baseFolderTrash->expects($this->at(1))
 			->method('getRelativePath')
 			->with('testuser1/files_trashbin/files/test.d1462861890/sub')
-			->will($this->returnValue('/test.d1462861890/sub'));
+			->willReturn('/test.d1462861890/sub');
 
 		$this->urlGenerator
 			->expects($this->once())
 			->method('linkToRoute')
 			->with('files.view.index', ['view' => 'trashbin', 'dir' => '/test.d1462861890/sub', 'scrollto' => 'somefile.txt'])
-			->will($this->returnValue('/apps/files/?view=trashbin&dir=/test.d1462861890/sub&scrollto=somefile.txt'));
+			->willReturn('/apps/files/?view=trashbin&dir=/test.d1462861890/sub&scrollto=somefile.txt');
 
 		$expected = new Http\RedirectResponse('/apps/files/?view=trashbin&dir=/test.d1462861890/sub&scrollto=somefile.txt');
 		$this->assertEquals($expected, $this->viewController->index('/whatever', '', '123'));

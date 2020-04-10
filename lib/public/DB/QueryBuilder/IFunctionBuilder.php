@@ -2,6 +2,8 @@
 /**
  * @copyright Copyright (c) 2017 Robin Appelman <robin@icewind.nl>
  *
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -104,5 +106,55 @@ interface IFunctionBuilder {
 	 * @return IQueryFunction
 	 * @since 14.0.0
 	 */
-	public function count($count, $alias = '');
+	public function count($count = '', $alias = '');
+
+	/**
+	 * Takes the maximum of all rows in a column
+	 *
+	 * If you want to get the maximum value of multiple columns in the same row, use `greatest` instead
+	 *
+	 * @param mixed $field the column to maximum
+	 *
+	 * @return IQueryFunction
+	 * @since 18.0.0
+	 */
+	public function max($field);
+
+	/**
+	 * Takes the minimum of all rows in a column
+	 *
+	 * If you want to get the minimum value of multiple columns in the same row, use `least` instead
+	 *
+	 * @param mixed $field the column to minimum
+	 *
+	 * @return IQueryFunction
+	 * @since 18.0.0
+	 */
+	public function min($field);
+
+	/**
+	 * Takes the maximum of multiple values
+	 *
+	 * If you want to get the maximum value of all rows in a column, use `max` instead
+	 *
+	 * @param mixed $x the first input field or number
+	 * @param mixed $y the first input field or number
+	 *
+	 * @return IQueryFunction
+	 * @since 18.0.0
+	 */
+	public function greatest($x, $y);
+
+	/**
+	 * Takes the minimum of multiple values
+	 *
+	 * If you want to get the minimum value of all rows in a column, use `min` instead
+	 *
+	 * @param mixed $x the first input field or number
+	 * @param mixed $y the first input field or number
+	 *
+	 * @return IQueryFunction
+	 * @since 18.0.0
+	 */
+	public function least($x, $y);
 }

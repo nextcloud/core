@@ -31,7 +31,7 @@ class ProviderTest extends \Test\TestCase {
 	/** @var Provider */
 	private $ocsProvider;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->getMockBuilder('\\OCP\\IRequest')->getMock();
@@ -44,22 +44,22 @@ class ProviderTest extends \Test\TestCase {
 			->expects($this->at(0))
 			->method('isEnabledForUser')
 			->with('files_sharing')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->appManager
 			->expects($this->at(1))
 			->method('isEnabledForUser')
 			->with('federation')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->appManager
 			->expects($this->at(2))
 			->method('isEnabledForUser')
 			->with('activity')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->appManager
 			->expects($this->at(3))
 			->method('isEnabledForUser')
 			->with('provisioning_api')
-			->will($this->returnValue(false));
+			->willReturn(false);
 
 		$expected = new \OCP\AppFramework\Http\JSONResponse(
 			[
@@ -85,22 +85,22 @@ class ProviderTest extends \Test\TestCase {
 			->expects($this->at(0))
 			->method('isEnabledForUser')
 			->with('files_sharing')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->appManager
 			->expects($this->at(1))
 			->method('isEnabledForUser')
 			->with('federation')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->appManager
 			->expects($this->at(2))
 			->method('isEnabledForUser')
 			->with('activity')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->appManager
 			->expects($this->at(3))
 			->method('isEnabledForUser')
 			->with('provisioning_api')
-			->will($this->returnValue(false));
+			->willReturn(false);
 
 		$expected = new \OCP\AppFramework\Http\JSONResponse(
 			[
@@ -139,22 +139,22 @@ class ProviderTest extends \Test\TestCase {
 			->expects($this->at(0))
 			->method('isEnabledForUser')
 			->with('files_sharing')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->appManager
 			->expects($this->at(1))
 			->method('isEnabledForUser')
 			->with('federation')
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->appManager
 			->expects($this->at(2))
 			->method('isEnabledForUser')
 			->with('activity')
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->appManager
 			->expects($this->at(3))
 			->method('isEnabledForUser')
 			->with('provisioning_api')
-			->will($this->returnValue(false));
+			->willReturn(false);
 
 		$expected = new \OCP\AppFramework\Http\JSONResponse(
 			[
@@ -187,7 +187,7 @@ class ProviderTest extends \Test\TestCase {
 		$this->appManager
 			->expects($this->any())
 			->method('isEnabledForUser')
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$expected = new \OCP\AppFramework\Http\JSONResponse(
 			[

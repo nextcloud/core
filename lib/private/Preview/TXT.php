@@ -3,10 +3,12 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Nmz <nemesiz@nmz.lt>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -21,9 +23,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OC\Preview;
 
 use OCP\Files\File;
@@ -65,7 +68,7 @@ class TXT extends ProviderV2 {
 		$lines = preg_split("/\r\n|\n|\r/", $content);
 
 		// Define text size of text file preview
-		$fontSize = $maxX ? (int) ((2 / 32) * $maxX) : 5; //5px
+		$fontSize = $maxX ? (int) ((1 / 32) * $maxX) : 5; //5px
 		$lineSize = ceil($fontSize * 1.5);
 
 		$image = imagecreate($maxX, $maxY);

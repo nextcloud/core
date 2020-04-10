@@ -20,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -52,13 +52,14 @@ class GroupEtagPropagationTest extends PropagationTestCase {
 		$view1 = new View('/' . self::TEST_FILES_SHARING_API_USER1 . '/files');
 		$view1->mkdir('/test/sub');
 
-		$this->share(
+		$share = $this->share(
 			\OCP\Share::SHARE_TYPE_GROUP,
 			'/test',
 			self::TEST_FILES_SHARING_API_USER1,
 			'group1',
 			\OCP\Constants::PERMISSION_ALL
 		);
+		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER2);
 		$this->fileIds[self::TEST_FILES_SHARING_API_USER1][''] = $view1->getFileInfo('')->getId();
 		$this->fileIds[self::TEST_FILES_SHARING_API_USER1]['test'] = $view1->getFileInfo('test')->getId();
 		$this->fileIds[self::TEST_FILES_SHARING_API_USER1]['test/sub'] = $view1->getFileInfo('test/sub')->getId();
@@ -66,20 +67,22 @@ class GroupEtagPropagationTest extends PropagationTestCase {
 		$this->loginAsUser(self::TEST_FILES_SHARING_API_USER2);
 		$view2 = new View('/' . self::TEST_FILES_SHARING_API_USER2 . '/files');
 
-		$this->share(
+		$share = $this->share(
 			\OCP\Share::SHARE_TYPE_GROUP,
 			'/test',
 			self::TEST_FILES_SHARING_API_USER2,
 			'group2',
 			\OCP\Constants::PERMISSION_ALL
 		);
-		$this->share(
+		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER3);
+		$share = $this->share(
 			\OCP\Share::SHARE_TYPE_GROUP,
 			'/test/sub',
 			self::TEST_FILES_SHARING_API_USER2,
 			'group3',
 			\OCP\Constants::PERMISSION_ALL
 		);
+		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER4);
 
 		$this->fileIds[self::TEST_FILES_SHARING_API_USER2][''] = $view2->getFileInfo('')->getId();
 		$this->fileIds[self::TEST_FILES_SHARING_API_USER2]['test'] = $view2->getFileInfo('test')->getId();

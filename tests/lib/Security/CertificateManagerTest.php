@@ -8,9 +8,8 @@
 
 namespace Test\Security;
 
-use OC\Files\Storage\Temporary;
 use OC\Files\View;
-use \OC\Security\CertificateManager;
+use OC\Security\CertificateManager;
 use OCP\IConfig;
 use OCP\ILogger;
 use OCP\Security\ISecureRandom;
@@ -31,7 +30,7 @@ class CertificateManagerTest extends \Test\TestCase {
 	/** @var ISecureRandom */
 	private $random;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->username = $this->getUniqueID('', 20);
@@ -62,7 +61,7 @@ class CertificateManagerTest extends \Test\TestCase {
 		);
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$user = \OC::$server->getUserManager()->get($this->username);
 		if ($user !== null) {
 			$user->delete();
@@ -79,11 +78,11 @@ class CertificateManagerTest extends \Test\TestCase {
 
 	function testListCertificates() {
 		// Test empty certificate bundle
-		$this->assertSame(array(), $this->certificateManager->listCertificates());
+		$this->assertSame([], $this->certificateManager->listCertificates());
 
 		// Add some certificates
 		$this->certificateManager->addCertificate(file_get_contents(__DIR__ . '/../../data/certificates/goodCertificate.crt'), 'GoodCertificate');
-		$certificateStore = array();
+		$certificateStore = [];
 		$certificateStore[] = new \OC\Security\Certificate(file_get_contents(__DIR__ . '/../../data/certificates/goodCertificate.crt'), 'GoodCertificate');
 		$this->assertEqualsArrays($certificateStore, $this->certificateManager->listCertificates());
 
@@ -93,11 +92,11 @@ class CertificateManagerTest extends \Test\TestCase {
 		$this->assertEqualsArrays($certificateStore, $this->certificateManager->listCertificates());
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Certificate could not get parsed.
-	 */
+	
 	function testAddInvalidCertificate() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Certificate could not get parsed.');
+
 		$this->certificateManager->addCertificate('InvalidCertificate', 'invalidCertificate');
 	}
 
@@ -113,12 +112,13 @@ class CertificateManagerTest extends \Test\TestCase {
 	}
 
 	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Filename is not valid
 	 * @dataProvider dangerousFileProvider
 	 * @param string $filename
 	 */
 	function testAddDangerousFile($filename) {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Filename is not valid');
+
 		$this->certificateManager->addCertificate(file_get_contents(__DIR__ . '/../../data/certificates/expiredCertificate.crt'), $filename);
 	}
 
@@ -181,7 +181,7 @@ class CertificateManagerTest extends \Test\TestCase {
 		}
 
 		$view->expects($this->any())->method('filemtime')
-			->willReturnCallback(function($path) use ($systemWideMtime, $targetBundleMtime)  {
+			->willReturnCallback(function ($path) use ($systemWideMtime, $targetBundleMtime) {
 				if ($path === 'SystemBundlePath') {
 					return $systemWideMtime;
 				} elseif ($path === 'targetBundlePath') {

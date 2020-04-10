@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -24,9 +24,9 @@ window._oc_l10n_registry_translations = window._oc_l10n_registry_translations ||
 window._oc_l10n_registry_plural_functions = window._oc_l10n_registry_plural_functions || {}
 
 /**
- * @param {String} appId
- * @param {Object} translations
- * @param {Function} pluralFunction
+ * @param {String} appId the app id
+ * @param {Object} translations the translations list
+ * @param {Function} pluralFunction the translations list
  */
 const register = (appId, translations, pluralFunction) => {
 	window._oc_l10n_registry_translations[appId] = translations
@@ -34,9 +34,9 @@ const register = (appId, translations, pluralFunction) => {
 }
 
 /**
- * @param {String} appId
- * @param {Object} translations
- * @param {Function} pluralFunction
+ * @param {String} appId the app id
+ * @param {Object} translations the translations list
+ * @param {Function} pluralFunction the translations list
  */
 const extend = (appId, translations, pluralFunction) => {
 	window._oc_l10n_registry_translations[appId] = Object.assign(
@@ -47,9 +47,9 @@ const extend = (appId, translations, pluralFunction) => {
 }
 
 /**
- * @param {String} appId
- * @param {Object} translations
- * @param {Function} pluralFunction
+ * @param {String} appId the app id
+ * @param {Object} translations the translations list
+ * @param {Function} pluralFunction the translations list
  */
 export const registerAppTranslations = (appId, translations, pluralFunction) => {
 	if (!hasAppTranslations(appId)) {
@@ -60,7 +60,7 @@ export const registerAppTranslations = (appId, translations, pluralFunction) => 
 }
 
 /**
- * @param {String} appId
+ * @param {String} appId the app id
  */
 export const unregisterAppTranslations = appId => {
 	delete window._oc_l10n_registry_translations[appId]
@@ -68,8 +68,8 @@ export const unregisterAppTranslations = appId => {
 }
 
 /**
- * @param {String} appId
- * @return {Boolean}
+ * @param {String} appId the app id
+ * @returns {Boolean}
  */
 export const hasAppTranslations = appId => {
 	return window._oc_l10n_registry_translations[appId] !== undefined
@@ -77,8 +77,8 @@ export const hasAppTranslations = appId => {
 }
 
 /**
- * @param {String} appId
- * @return {Object}
+ * @param {String} appId the app id
+ * @returns {Object}
  */
 export const getAppTranslations = appId => {
 	return {

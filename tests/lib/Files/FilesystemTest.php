@@ -46,7 +46,7 @@ class DummyMountProvider implements IMountProvider {
 	 * @param IStorageFactory $loader
 	 * @return \OCP\Files\Mount\IMountPoint[]
 	 */
-	public function  getMountsForUser(IUser $user, IStorageFactory $loader) {
+	public function getMountsForUser(IUser $user, IStorageFactory $loader) {
 		return isset($this->mounts[$user->getUID()]) ? $this->mounts[$user->getUID()] : [];
 	}
 }
@@ -66,7 +66,7 @@ class FilesystemTest extends \Test\TestCase {
 	/**
 	 * @var array tmpDirs
 	 */
-	private $tmpDirs = array();
+	private $tmpDirs = [];
 
 	/**
 	 * @return array
@@ -74,10 +74,10 @@ class FilesystemTest extends \Test\TestCase {
 	private function getStorageData() {
 		$dir = \OC::$server->getTempManager()->getTemporaryFolder();
 		$this->tmpDirs[] = $dir;
-		return array('datadir' => $dir);
+		return ['datadir' => $dir];
 	}
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$userBackend = new \Test\Util\User\Dummy();
 		$userBackend->createUser(self::TEST_FILESYSTEM_USER1, self::TEST_FILESYSTEM_USER1);
@@ -86,7 +86,7 @@ class FilesystemTest extends \Test\TestCase {
 		$this->loginAsUser();
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		foreach ($this->tmpDirs as $dir) {
 			\OC_Helper::rmdirr($dir);
 		}
@@ -225,29 +225,29 @@ class FilesystemTest extends \Test\TestCase {
 	}
 
 	public function isValidPathData() {
-		return array(
-			array('/', true),
-			array('/path', true),
-			array('/foo/bar', true),
-			array('/foo//bar/', true),
-			array('/foo////bar', true),
-			array('/foo//\///bar', true),
-			array('/foo/bar/.', true),
-			array('/foo/bar/./', true),
-			array('/foo/bar/./.', true),
-			array('/foo/bar/././', true),
-			array('/foo/bar/././..bar', true),
-			array('/foo/bar/././..bar/a', true),
-			array('/foo/bar/././..', false),
-			array('/foo/bar/././../', false),
-			array('/foo/bar/.././', false),
-			array('/foo/bar/../../', false),
-			array('/foo/bar/../..\\', false),
-			array('..', false),
-			array('../', false),
-			array('../foo/bar', false),
-			array('..\foo/bar', false),
-		);
+		return [
+			['/', true],
+			['/path', true],
+			['/foo/bar', true],
+			['/foo//bar/', true],
+			['/foo////bar', true],
+			['/foo//\///bar', true],
+			['/foo/bar/.', true],
+			['/foo/bar/./', true],
+			['/foo/bar/./.', true],
+			['/foo/bar/././', true],
+			['/foo/bar/././..bar', true],
+			['/foo/bar/././..bar/a', true],
+			['/foo/bar/././..', false],
+			['/foo/bar/././../', false],
+			['/foo/bar/.././', false],
+			['/foo/bar/../../', false],
+			['/foo/bar/../..\\', false],
+			['..', false],
+			['../', false],
+			['../foo/bar', false],
+			['..\foo/bar', false],
+		];
 	}
 
 	/**
@@ -258,18 +258,18 @@ class FilesystemTest extends \Test\TestCase {
 	}
 
 	public function isFileBlacklistedData() {
-		return array(
-			array('/etc/foo/bar/foo.txt', false),
-			array('\etc\foo/bar\foo.txt', false),
-			array('.htaccess', true),
-			array('.htaccess/', true),
-			array('.htaccess\\', true),
-			array('/etc/foo\bar/.htaccess\\', true),
-			array('/etc/foo\bar/.htaccess/', true),
-			array('/etc/foo\bar/.htaccess/foo', false),
-			array('//foo//bar/\.htaccess/', true),
-			array('\foo\bar\.HTAccess', true),
-		);
+		return [
+			['/etc/foo/bar/foo.txt', false],
+			['\etc\foo/bar\foo.txt', false],
+			['.htaccess', true],
+			['.htaccess/', true],
+			['.htaccess\\', true],
+			['/etc/foo\bar/.htaccess\\', true],
+			['/etc/foo\bar/.htaccess/', true],
+			['/etc/foo\bar/.htaccess/foo', false],
+			['//foo//bar/\.htaccess/', true],
+			['\foo\bar\.HTAccess', true],
+		];
 	}
 
 	/**
@@ -304,7 +304,7 @@ class FilesystemTest extends \Test\TestCase {
 		\OC_Hook::clear('OC_Filesystem');
 		\OC_Hook::connect('OC_Filesystem', 'post_write', $this, 'dummyHook');
 
-		\OC\Files\Filesystem::mount('OC\Files\Storage\Temporary', array(), '/');
+		\OC\Files\Filesystem::mount('OC\Files\Storage\Temporary', [], '/');
 
 		$rootView = new \OC\Files\View('');
 		$rootView->mkdir('/' . $user);
@@ -323,18 +323,19 @@ class FilesystemTest extends \Test\TestCase {
 	/**
 	 * Tests that an exception is thrown when passed user does not exist.
 	 *
-	 * @expectedException \OC\User\NoUserException
 	 */
 	public function testLocalMountWhenUserDoesNotExist() {
+		$this->expectException(\OC\User\NoUserException::class);
+
 		$userId = $this->getUniqueID('user_');
 
 		\OC\Files\Filesystem::initMountPoints($userId);
 	}
 
-	/**
-	 * @expectedException \OC\User\NoUserException
-	 */
+	
 	public function testNullUserThrows() {
+		$this->expectException(\OC\User\NoUserException::class);
+
 		\OC\Files\Filesystem::initMountPoints(null);
 	}
 

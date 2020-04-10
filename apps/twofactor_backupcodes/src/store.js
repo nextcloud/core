@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @author 2019 Roeland Jago Douma <roeland@famdouma.nl>
@@ -11,7 +11,7 @@
  * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
@@ -21,12 +21,18 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-
-import {generateCodes} from './service/BackupCodesService'
+import { generateCodes } from './service/BackupCodesService'
 
 Vue.use(Vuex)
 
-export const mutations = {
+const state = {
+	enabled: false,
+	total: 0,
+	used: 0,
+	codes: [],
+}
+
+const mutations = {
 	setEnabled(state, enabled) {
 		Vue.set(state, 'enabled', enabled)
 	},
@@ -38,32 +44,26 @@ export const mutations = {
 	},
 	setCodes(state, codes) {
 		Vue.set(state, 'codes', codes)
-	}
+	},
 }
 
-export const actions = {
-	generate ({commit}) {
-		commit('setEnabled', false);
+const actions = {
+	generate({ commit }) {
+		commit('setEnabled', false)
 
-		return generateCodes()
-			.then(({codes, state})  => {
-				commit('setEnabled', state.enabled);
-				commit('setTotal', state.total);
-				commit('setUsed', state.used);
-				commit('setCodes', codes);
-				return true;
-			});
-	}
+		return generateCodes().then(({ codes, state }) => {
+			commit('setEnabled', state.enabled)
+			commit('setTotal', state.total)
+			commit('setUsed', state.used)
+			commit('setCodes', codes)
+			return true
+		})
+	},
 }
 
 export default new Vuex.Store({
 	strict: process.env.NODE_ENV !== 'production',
-	state: {
-		enabled: false,
-		total: 0,
-		used: 0,
-		codes: undefined
-	},
+	state,
 	mutations,
-	actions
+	actions,
 })

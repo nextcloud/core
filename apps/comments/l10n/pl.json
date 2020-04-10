@@ -1,10 +1,10 @@
 { "translations": {
     "Comments" : "Komentarze",
-    "You commented" : "Skomentowałeś/-aś",
+    "You commented" : "Skomentowałeś",
     "%1$s commented" : "%1$s skomentował",
     "{author} commented" : "{author} skomentował",
-    "You commented on %1$s" : "Skomentowałeś/-aś w %1$s",
-    "You commented on {file}" : "Skomentowałeś/-aś w {file}",
+    "You commented on %1$s" : "Skomentowałeś w %1$s",
+    "You commented on {file}" : "Skomentowałeś w {file}",
     "%1$s commented on %2$s" : "%1$s skomentował %2$s",
     "{author} commented on {file}" : "{author} skomentował w {file}‭",
     "<strong>Comments</strong> for files" : "<strong>Komentarze</strong> dla plików",
@@ -26,8 +26,6 @@
     "Error occurred while posting comment" : "Wystąpił błąd podczas publikowania komentarza",
     "_%n unread comment_::_%n unread comments_" : ["%n nieprzeczytany komentarz","%n nieprzeczytane komentarze","%n nieprzeczytanych komentarzy","%n nieprzeczytanych komentarzy"],
     "_1 new comment_::_{unread} new comments_" : ["{unread} nowy komentarz","{unread} nowe komentarze","{unread} nowych komentarzy","{unread} nowe komentarze"],
-    "Comment" : "Komentarz",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "Wspomniano o Tobie w komentarzu w \"%s\" przez użytkownika, który został usunięty",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s wspomniał o Tobie w komentarzu “%2$s”"
+    "Comment" : "Komentarz"
 },"pluralForm" :"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
 }

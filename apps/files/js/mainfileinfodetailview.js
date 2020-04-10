@@ -186,6 +186,9 @@
 					this._previewManager.loadPreview(this.model, $iconDiv, $container);
 				} else {
 					var iconUrl = this.model.get('icon') || OC.MimeType.getIconUrl('dir');
+					if (typeof this.model.get('mountType') !== 'undefined') {
+						iconUrl = OC.MimeType.getIconUrl('dir-' + this.model.get('mountType'))
+					}
 					$iconDiv.css('background-image', 'url("' + iconUrl + '")');
 				}
 				this.$el.find('[title]').tooltip({placement: 'bottom'});

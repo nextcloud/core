@@ -2,6 +2,9 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arne Hamann <kontakt+github@arne.email>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -18,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -30,6 +33,7 @@
 
 // use OCP namespace for all classes that are considered public.
 // This means that they should be used by apps instead of the internal ownCloud classes
+
 namespace OCP\Contacts;
 
 /**
@@ -95,7 +99,7 @@ interface IManager {
 	 * @return array an array of contacts which are arrays of key-value-pairs
 	 * @since 6.0.0
 	 */
-	public function search($pattern, $searchProperties = array(), $options = array());
+	public function search($pattern, $searchProperties = [], $options = []);
 
 	/**
 	 * This function can be used to delete the contact identified by the given id
@@ -156,7 +160,7 @@ interface IManager {
 
 	/**
 	 * Return a list of the user's addressbooks display names
-	 * 
+	 *
 	 * @return array
 	 * @since 6.0.0
 	 * @deprecated 16.0.0 - Use `$this->getUserAddressBooks()` instead
@@ -165,7 +169,7 @@ interface IManager {
 
 	/**
 	 * Return a list of the user's addressbooks
-	 * 
+	 *
 	 * @return IAddressBook[]
 	 * @since 16.0.0
 	 */
@@ -173,7 +177,7 @@ interface IManager {
 
 	/**
 	 * removes all registered address book instances
-	 * 
+	 *
 	 * @return void
 	 * @since 6.0.0
 	 */

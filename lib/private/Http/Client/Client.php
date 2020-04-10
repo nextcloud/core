@@ -1,10 +1,16 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Mohammed Abdellatif <m.latief@gmail.com>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Scott Shambarger <devel@shambarger.net>
  *
  * @license AGPL-3.0
  *
@@ -18,7 +24,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -60,10 +66,19 @@ class Client implements IClient {
 	}
 
 	private function buildRequestOptions(array $options): array {
+		$proxy = $this->getProxyUri();
+
 		$defaults = [
-			RequestOptions::PROXY => $this->getProxyUri(),
 			RequestOptions::VERIFY => $this->getCertBundle(),
+			RequestOptions::TIMEOUT => 30,
 		];
+
+		// Only add RequestOptions::PROXY if Nextcloud is explicitly
+		// configured to use a proxy. This is needed in order not to override
+		// Guzzle default values.
+		if($proxy !== null) {
+			$defaults[RequestOptions::PROXY] = $proxy;
+		}
 
 		$options = array_merge($defaults, $options);
 
@@ -90,24 +105,43 @@ class Client implements IClient {
 	}
 
 	/**
-	 * Get the proxy URI
+	 * Returns a null or an associative array specifiying the proxy URI for
+	 * 'http' and 'https' schemes, in addition to a 'no' key value pair
+	 * providing a list of host names that should not be proxied to.
 	 *
-	 * @return string|null
+	 * @return array|null
+	 *
+	 * The return array looks like:
+	 * [
+	 *   'http' => 'username:password@proxy.example.com',
+	 *   'https' => 'username:password@proxy.example.com',
+	 *   'no' => ['foo.com', 'bar.com']
+	 * ]
+	 *
 	 */
-	private function getProxyUri(): ?string {
-		$proxyHost = $this->config->getSystemValue('proxy', null);
+	private function getProxyUri(): ?array {
+		$proxyHost = $this->config->getSystemValue('proxy', '');
 
-		if ($proxyHost === null) {
+		if ($proxyHost === '' || $proxyHost === null) {
 			return null;
 		}
 
-		$proxyUserPwd = $this->config->getSystemValue('proxyuserpwd', null);
-
-		if ($proxyUserPwd === null) {
-			return $proxyHost;
+		$proxyUserPwd = $this->config->getSystemValue('proxyuserpwd', '');
+		if ($proxyUserPwd !== '' && $proxyUserPwd !== null) {
+			$proxyHost = $proxyUserPwd . '@' . $proxyHost;
 		}
 
-		return $proxyUserPwd . '@' . $proxyHost;
+		$proxy = [
+			'http' => $proxyHost,
+			'https' => $proxyHost,
+		];
+
+		$proxyExclude = $this->config->getSystemValue('proxyexclude', []);
+		if ($proxyExclude !== [] && $proxyExclude !== null) {
+			$proxy['no'] = $proxyExclude;
+		}
+
+		return $proxy;
 	}
 
 	/**

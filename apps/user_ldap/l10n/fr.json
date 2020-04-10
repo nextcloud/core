@@ -54,7 +54,7 @@
     "Password change rejected. Hint: " : "La modification du mot de passe a été rejetée. Indice :",
     "Please login with the new password" : "Veuillez vous connecter avec le nouveau mot de passe",
     "LDAP User backend" : "Infrastructure utilisateur LDAP",
-    "Your password will expire tomorrow." : "Votre mot de passe va expirer demain.",
+    "Your password will expire tomorrow." : "Votre mot de passe expirera demain",
     "Your password will expire today." : "Votre mot de passe va expirer aujourd'hui.",
     "_Your password will expire within %n day._::_Your password will expire within %n days._" : ["Votre mot de passe va expirer dans %n jour.","Votre mot de passe va expirer dans %n jours."],
     "LDAP / AD integration" : "Intégration LDAP/AD",
@@ -174,7 +174,7 @@
     "Email Field" : "Champ Email",
     "Set the user's email from their LDAP attribute. Leave it empty for default behaviour." : "Définissez le courrier électronique de l'utilisateur à partir de leur attribut LDAP. Laissez le champ vide pour appliquer le comportement par défaut.",
     "User Home Folder Naming Rule" : "Règle de nommage du répertoire utilisateur",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Laisser vide pour user name (défaut). Vous pouvez aussi spécifier un attribut LDAP / AD.",
+    "Leave empty for username (default). Otherwise, specify an LDAP/AD attribute." : "Laisser vide pour le nom d’utilisateur (par défaut). Sinon, spécifiez un attribut LDAP/AD.",
     "\"$home\" Placeholder Field" : "\"$home\" Champ Placeholder",
     "$home in an external storage configuration will be replaced with the value of the specified attribute" : "$home dans la configuration du stockage externe sera remplacé avec la valeur de l'attribut spécifié",
     "Internal Username" : "Nom d'utilisateur interne",
@@ -187,6 +187,7 @@
     "Username-LDAP User Mapping" : "Association Nom d'utilisateur-Utilisateur LDAP",
     "Usernames are used to store and assign metadata. In order to precisely identify and recognize users, each LDAP user will have an internal username. This requires a mapping from username to LDAP user. The created username is mapped to the UUID of the LDAP user. Additionally the DN is cached as well to reduce LDAP interaction, but it is not used for identification. If the DN changes, the changes will be found. The internal username is used all over. Clearing the mappings will have leftovers everywhere. Clearing the mappings is not configuration sensitive, it affects all LDAP configurations! Never clear the mappings in a production environment, only in a testing or experimental stage." : "Les noms d'utilisateurs sont utilisés pour le stockage et l'assignation de (meta) données. Pour identifier et reconnaître précisément les utilisateurs, chaque utilisateur LDAP aura un nom interne spécifique. Cela requiert l'association d'un nom d'utilisateur NextCloud à un nom d'utilisateur LDAP. Le nom d'utilisateur créé est associé à l'attribut UUID de l'utilisateur LDAP. Par ailleurs, le DN est mémorisé en cache pour limiter les interactions LDAP mais il n'est pas utilisé pour l'identification. Si le DN est modifié, ces modifications seront retrouvées. Seul le nom interne à NextCloud est utilisé au sein du produit. Supprimer les associations créera des orphelins et l'action affectera toutes les configurations LDAP. NE JAMAIS SUPPRIMER LES ASSOCIATIONS EN ENVIRONNEMENT DE PRODUCTION, mais uniquement sur des environnements de tests et d'expérimentations.",
     "Clear Username-LDAP User Mapping" : "Supprimer l'association utilisateur interne-utilisateur LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Supprimer l'association nom de groupe-groupe LDAP"
+    "Clear Groupname-LDAP Group Mapping" : "Supprimer l'association nom de groupe-groupe LDAP",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Laisser vide pour user name (défaut). Vous pouvez aussi spécifier un attribut LDAP / AD."
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

@@ -23,15 +23,25 @@ class MessageTest extends TestCase {
 	 * @return array
 	 */
 	public function mailAddressProvider() {
-		return array(
-			array(array('lukas@owncloud.com' => 'Lukas Reschke'), array('lukas@owncloud.com' => 'Lukas Reschke')),
-			array(array('lukas@owncloud.com' => 'Lukas Reschke', 'lukas@öwnclöüd.com', 'lukäs@owncloud.örg' => 'Lükäs Réschke'),
-				array('lukas@owncloud.com' => 'Lukas Reschke', 'lukas@xn--wncld-iuae2c.com', 'lukäs@owncloud.xn--rg-eka' => 'Lükäs Réschke')),
-			array(array('lukas@öwnclöüd.com'), array('lukas@xn--wncld-iuae2c.com'))
-		);
+		return [
+			[['lukas@owncloud.com' => 'Lukas Reschke'], ['lukas@owncloud.com' => 'Lukas Reschke']],
+			[['lukas@owncloud.com' => 'Lukas Reschke', 'lukas@öwnclöüd.com', 'lukäs@owncloud.örg' => 'Lükäs Réschke'],
+				['lukas@owncloud.com' => 'Lukas Reschke', 'lukas@xn--wncld-iuae2c.com', 'lukäs@owncloud.xn--rg-eka' => 'Lükäs Réschke']],
+			[['lukas@öwnclöüd.com'], ['lukas@xn--wncld-iuae2c.com']],
+		];
 	}
 
-	public function setUp() {
+	/**
+	 * @return array
+	 */
+	public function getMailAddressProvider() {
+		return [
+			[null, []],
+			[['lukas@owncloud.com' => 'Lukas Reschke'], ['lukas@owncloud.com' => 'Lukas Reschke']],
+		];
+	}
+
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->swiftMessage = $this->getMockBuilder('\Swift_Message')
@@ -48,24 +58,31 @@ class MessageTest extends TestCase {
 	 * @param string $expected
 	 */
 	public function testConvertAddresses($unconverted, $expected) {
-		$this->assertSame($expected, self::invokePrivate($this->message, 'convertAddresses', array($unconverted)));
+		$this->assertSame($expected, self::invokePrivate($this->message, 'convertAddresses', [$unconverted]));
 	}
 
 	public function testSetFrom() {
 		$this->swiftMessage
 			->expects($this->once())
 			->method('setFrom')
-			->with(array('lukas@owncloud.com'));
-		$this->message->setFrom(array('lukas@owncloud.com'));
+			->with(['lukas@owncloud.com']);
+		$this->message->setFrom(['lukas@owncloud.com']);
 	}
 
-	public function testGetFrom() {
+
+	/**
+	 * @dataProvider getMailAddressProvider
+	 *
+	 * @param $swiftresult
+	 * @param $return
+	 */
+	public function testGetFrom($swiftresult, $return) {
 		$this->swiftMessage
 			->expects($this->once())
 			->method('getFrom')
-			->will($this->returnValue(array('lukas@owncloud.com')));
+			->willReturn($swiftresult);
 
-		$this->assertSame(array('lukas@owncloud.com'), $this->message->getFrom());
+		$this->assertSame($return, $this->message->getFrom());
 	}
 
 	public function testSetReplyTo() {
@@ -89,51 +106,60 @@ class MessageTest extends TestCase {
 		$this->swiftMessage
 			->expects($this->once())
 			->method('setTo')
-			->with(array('lukas@owncloud.com'));
-		$this->message->setTo(array('lukas@owncloud.com'));
+			->with(['lukas@owncloud.com']);
+		$this->message->setTo(['lukas@owncloud.com']);
 	}
 
-	public function testGetTo() {
+	/**
+	 * @dataProvider  getMailAddressProvider
+	 */
+	public function testGetTo($swiftresult,$return) {
 		$this->swiftMessage
 			->expects($this->once())
 			->method('getTo')
-			->will($this->returnValue(array('lukas@owncloud.com')));
+			->willReturn($swiftresult);
 
-		$this->assertSame(array('lukas@owncloud.com'), $this->message->getTo());
+		$this->assertSame($return, $this->message->getTo());
 	}
 
 	public function testSetCc() {
 		$this->swiftMessage
 			->expects($this->once())
 			->method('setCc')
-			->with(array('lukas@owncloud.com'));
-		$this->message->setCc(array('lukas@owncloud.com'));
+			->with(['lukas@owncloud.com']);
+		$this->message->setCc(['lukas@owncloud.com']);
 	}
 
-	public function testGetCc() {
+	/**
+	 * @dataProvider  getMailAddressProvider
+	 */
+	public function testGetCc($swiftresult,$return) {
 		$this->swiftMessage
 			->expects($this->once())
 			->method('getCc')
-			->will($this->returnValue(array('lukas@owncloud.com')));
+			->willReturn($swiftresult);
 
-		$this->assertSame(array('lukas@owncloud.com'), $this->message->getCc());
+		$this->assertSame($return, $this->message->getCc());
 	}
 
 	public function testSetBcc() {
 		$this->swiftMessage
 			->expects($this->once())
 			->method('setBcc')
-			->with(array('lukas@owncloud.com'));
-		$this->message->setBcc(array('lukas@owncloud.com'));
+			->with(['lukas@owncloud.com']);
+		$this->message->setBcc(['lukas@owncloud.com']);
 	}
 
-	public function testGetBcc() {
+	/**
+	 * @dataProvider  getMailAddressProvider
+	 */
+	public function testGetBcc($swiftresult,$return) {
 		$this->swiftMessage
 			->expects($this->once())
 			->method('getBcc')
-			->will($this->returnValue(array('lukas@owncloud.com')));
+			->willReturn($swiftresult);
 
-		$this->assertSame(array('lukas@owncloud.com'), $this->message->getBcc());
+		$this->assertSame($return, $this->message->getBcc());
 	}
 
 	public function testSetSubject() {
@@ -149,7 +175,7 @@ class MessageTest extends TestCase {
 		$this->swiftMessage
 			->expects($this->once())
 			->method('getSubject')
-			->will($this->returnValue('Fancy Subject'));
+			->willReturn('Fancy Subject');
 
 		$this->assertSame('Fancy Subject', $this->message->getSubject());
 	}
@@ -167,7 +193,7 @@ class MessageTest extends TestCase {
 		$this->swiftMessage
 			->expects($this->once())
 			->method('getBody')
-			->will($this->returnValue('Fancy Body'));
+			->willReturn('Fancy Body');
 
 		$this->assertSame('Fancy Body', $this->message->getPlainBody());
 	}

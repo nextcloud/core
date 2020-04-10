@@ -117,8 +117,9 @@ class Connection extends RawConnection {
 	}
 
 	public function close($terminate = true) {
-		if (is_resource($this->getInputStream())) {
-			$this->write('close' . PHP_EOL);
+		if (get_resource_type($this->getInputStream()) === 'stream') {
+			// ignore any errors while trying to send the close command, the process might already be dead
+			@$this->write('close' . PHP_EOL);
 		}
 		parent::close($terminate);
 	}

@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -23,9 +23,13 @@ import $ from 'jquery'
 
 /**
  * Filter jQuery selector by attribute value
+ *
+ * @param {string} attrName attribute name
+ * @param {string} attrValue attribute value
+ * @returns {Void}
  */
-$.fn.filterAttr = function (attrName, attrValue) {
-	return this.filter(function () {
-		return $(this).attr(attrName) === attrValue;
-	});
-};
+$.fn.filterAttr = function(attrName, attrValue) {
+	return this.filter(function() {
+		return $(this).attr(attrName) === attrValue
+	})
+}

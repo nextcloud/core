@@ -2,12 +2,17 @@
     "Shared with others" : "Koplietots ar citiem",
     "Shared with you" : "Koplietots ar tevi",
     "Shared by link" : "Koplietots ar saiti",
+    "Deleted shares" : "Dzēstās koplietotnes",
+    "Shares" : "Koplietots",
     "Nothing shared with you yet" : "Nekas vēl nav koplietots",
     "Files and folders others share with you will show up here" : "Datnes un mapes, ko citi koplietos ar tevi, tiks rādīti šeit",
     "Nothing shared yet" : "Nekas vēl nav koplietots",
     "Files and folders you share will show up here" : "Datnes un mapes, ko koplietosi ar citiem, tiks rādīti šeit",
     "No shared links" : "Nav koplietotu saišu",
     "Files and folders you share by link will show up here" : "Datnes un mapes, ko koplietosi ar saitēm, tiks rādīti šeit",
+    "No deleted shares" : "Nav dzēstu koplietotņu",
+    "Shares you deleted will show up here" : "Koplietotnes, kuras izdzēsīsi, tiks rādītas šeit",
+    "No shares" : "Nav koplietotnes",
     "Download" : "Lejupielādēt",
     "You can upload into this folder" : "Jūs variet augšuplādēt šajā mapē",
     "No compatible server found at {remote}" : "Nav atrasts neviens saderīgs serveris {remote}",
@@ -32,7 +37,6 @@
     "A file or folder was shared from <strong>another server</strong>" : "Datne vai mape tika koplietota no <strong>cita servera</strong>",
     "A file or folder has been <strong>shared</strong>" : "<strong>Koplietota</strong> datne vai mape",
     "Wrong share ID, share doesn't exist" : "Nepareizs koplietošanas ID, koplietotne neeksistē",
-    "could not delete share" : "neizdevās dzēst koplietotni",
     "Could not delete share" : "Neizdevās dzēst koplietotni",
     "Please specify a file or folder path" : "Lūdzu norādiet datnes vai mapes ceļu",
     "Wrong path, file/folder doesn't exist" : "Nepareizs ceļš, datne/mape neeksistē",
@@ -52,6 +56,7 @@
     "Direct link" : "Tiešā saite",
     "Add to your Nextcloud" : "Pievienot savam Nextcloud",
     "Share API is disabled" : "Koplietošanas API ir atslēgta",
+    "File sharing" : "Datņu koplietošana",
     "Share" : "Koplietot",
     "Sharing" : "Koplietošana",
     "No entries found in this folder" : "Šajā mapē nekas nav atrasts",
@@ -66,6 +71,7 @@
     "For more info, please ask the person who sent this link." : "Vairāk informācijas vaicā personai, kas nosūtīja šo saiti.",
     "Download %s" : "Lejupielādēt %s",
     "Uploading files…" : "Augšupielādē datnes",
-    "Uploaded files:" : "Augšupielādētas datnes:"
+    "Uploaded files:" : "Augšupielādētas datnes:",
+    "could not delete share" : "neizdevās dzēst koplietotni"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
 }

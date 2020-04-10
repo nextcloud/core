@@ -3,7 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Stefan Weil <sw@weilnetz.de>
@@ -20,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -80,7 +80,7 @@ class CORSMiddleware extends Middleware {
 	 * @throws SecurityException
 	 * @since 6.0.0
 	 */
-	public function beforeController($controller, $methodName){
+	public function beforeController($controller, $methodName) {
 		// ensure that @CORS annotated API routes are not used in conjunction
 		// with session authentication since this enables CSRF attack vectors
 		if ($this->reflector->hasAnnotation('CORS') &&
@@ -110,7 +110,7 @@ class CORSMiddleware extends Middleware {
 	 * @return Response a Response object
 	 * @throws SecurityException
 	 */
-	public function afterController($controller, $methodName, Response $response){
+	public function afterController($controller, $methodName, Response $response) {
 		// only react if its a CORS request and if the request sends origin and
 
 		if(isset($this->request->server['HTTP_ORIGIN']) &&
@@ -143,7 +143,7 @@ class CORSMiddleware extends Middleware {
 	 * @throws \Exception the passed in exception if it can't handle it
 	 * @return Response a Response object or null in case that the exception could not be handled
 	 */
-	public function afterException($controller, $methodName, \Exception $exception){
+	public function afterException($controller, $methodName, \Exception $exception) {
 		if($exception instanceof SecurityException){
 			$response =  new JSONResponse(['message' => $exception->getMessage()]);
 			if($exception->getCode() !== 0) {

@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Frank Karlitschek <frank@karlitschek.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -22,22 +22,22 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 // We only can count up. The 4. digit is only for the internal patchlevel to trigger DB upgrades
 // between betas, final and RCs. This is _not_ the public version number. Reset minor/patchlevel
 // when updating major/minor version number.
 
-$OC_Version = array(17, 0, 0, 1);
+$OC_Version = [19, 0, 0, 3];
 
 // The human readable string
-$OC_VersionString = '17.0.0 alpha';
+$OC_VersionString = '19.0.0 beta 2';
 
 $OC_VersionCanBeUpgradedFrom = [
 	'nextcloud' => [
-		'16.0' => true,
-		'17.0' => true,
+		'18.0' => true,
+		'19.0' => true,
 	],
 	'owncloud' => [
 	],

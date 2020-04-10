@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\Share20;
 
 use OC\Share20\ShareHelper;
@@ -36,7 +37,7 @@ class ShareHelperTest extends TestCase {
 	/** @var ShareHelper */
 	private $helper;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->manager = $this->createMock(IManager::class);

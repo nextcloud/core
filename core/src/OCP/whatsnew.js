@@ -12,121 +12,121 @@ import $ from 'jquery'
 
 import OC from '../OC/index'
 
-export function query (options) {
-	options = options || {};
-	var dismissOptions = options.dismiss || {};
+export function query(options) {
+	options = options || {}
+	const dismissOptions = options.dismiss || {}
 	$.ajax({
 		type: 'GET',
 		url: options.url || OC.linkToOCS('core', 2) + 'whatsnew?format=json',
-		success: options.success || function (data, statusText, xhr) {
-			onQuerySuccess(data, statusText, xhr, dismissOptions);
+		success: options.success || function(data, statusText, xhr) {
+			onQuerySuccess(data, statusText, xhr, dismissOptions)
 		},
-		error: options.error || onQueryError
-	});
+		error: options.error || onQueryError,
+	})
 }
 
-export function dismiss (version, options) {
-	options = options || {};
+export function dismiss(version, options) {
+	options = options || {}
 	$.ajax({
 		type: 'POST',
 		url: options.url || OC.linkToOCS('core', 2) + 'whatsnew',
-		data: {version: encodeURIComponent(version)},
+		data: { version: encodeURIComponent(version) },
 		success: options.success || onDismissSuccess,
-		error: options.error || onDismissError
-	});
+		error: options.error || onDismissError,
+	})
 	// remove element immediately
-	$('.whatsNewPopover').remove();
+	$('.whatsNewPopover').remove()
 }
 
-function onQuerySuccess (data, statusText, xhr, dismissOptions) {
-	console.debug('querying Whats New data was successful: ' + statusText);
-	console.debug(data);
+function onQuerySuccess(data, statusText, xhr, dismissOptions) {
+	console.debug('querying Whats New data was successful: ' + statusText)
+	console.debug(data)
 
 	if (xhr.status !== 200) {
-		return;
+		return
 	}
 
-	var item, menuItem, text, icon;
+	let item, menuItem, text, icon
 
-	var div = document.createElement('div');
-	div.classList.add('popovermenu', 'open', 'whatsNewPopover', 'menu-left');
+	const div = document.createElement('div')
+	div.classList.add('popovermenu', 'open', 'whatsNewPopover', 'menu-left')
 
-	var list = document.createElement('ul');
+	const list = document.createElement('ul')
 
 	// header
-	item = document.createElement('li');
-	menuItem = document.createElement('span');
-	menuItem.className = "menuitem";
+	item = document.createElement('li')
+	menuItem = document.createElement('span')
+	menuItem.className = 'menuitem'
 
-	text = document.createElement('span');
-	text.innerText = t('core', 'New in') + ' ' + data['ocs']['data']['product'];
-	text.className = 'caption';
-	menuItem.appendChild(text);
+	text = document.createElement('span')
+	text.innerText = t('core', 'New in') + ' ' + data['ocs']['data']['product']
+	text.className = 'caption'
+	menuItem.appendChild(text)
 
-	icon = document.createElement('span');
-	icon.className = 'icon-close';
-	icon.onclick = function () {
-		dismiss(data['ocs']['data']['version'], dismissOptions);
-	};
-	menuItem.appendChild(icon);
+	icon = document.createElement('span')
+	icon.className = 'icon-close'
+	icon.onclick = function() {
+		dismiss(data['ocs']['data']['version'], dismissOptions)
+	}
+	menuItem.appendChild(icon)
 
-	item.appendChild(menuItem);
-	list.appendChild(item);
+	item.appendChild(menuItem)
+	list.appendChild(item)
 
 	// Highlights
-	for (var i in data['ocs']['data']['whatsNew']['regular']) {
-		var whatsNewTextItem = data['ocs']['data']['whatsNew']['regular'][i];
-		item = document.createElement('li');
+	for (const i in data['ocs']['data']['whatsNew']['regular']) {
+		const whatsNewTextItem = data['ocs']['data']['whatsNew']['regular'][i]
+		item = document.createElement('li')
 
-		menuItem = document.createElement('span');
-		menuItem.className = "menuitem";
+		menuItem = document.createElement('span')
+		menuItem.className = 'menuitem'
 
-		icon = document.createElement('span');
-		icon.className = 'icon-checkmark';
-		menuItem.appendChild(icon);
+		icon = document.createElement('span')
+		icon.className = 'icon-checkmark'
+		menuItem.appendChild(icon)
 
-		text = document.createElement('p');
-		text.innerHTML = _.escape(whatsNewTextItem);
-		menuItem.appendChild(text);
+		text = document.createElement('p')
+		text.innerHTML = _.escape(whatsNewTextItem)
+		menuItem.appendChild(text)
 
-		item.appendChild(menuItem);
-		list.appendChild(item);
+		item.appendChild(menuItem)
+		list.appendChild(item)
 	}
 
 	// Changelog URL
 	if (!_.isUndefined(data['ocs']['data']['changelogURL'])) {
-		item = document.createElement('li');
+		item = document.createElement('li')
 
-		menuItem = document.createElement('a');
-		menuItem.href = data['ocs']['data']['changelogURL'];
-		menuItem.rel = 'noreferrer noopener';
-		menuItem.target = '_blank';
+		menuItem = document.createElement('a')
+		menuItem.href = data['ocs']['data']['changelogURL']
+		menuItem.rel = 'noreferrer noopener'
+		menuItem.target = '_blank'
 
-		icon = document.createElement('span');
-		icon.className = 'icon-link';
-		menuItem.appendChild(icon);
+		icon = document.createElement('span')
+		icon.className = 'icon-link'
+		menuItem.appendChild(icon)
 
-		text = document.createElement('span');
-		text.innerText = t('core', 'View changelog');
-		menuItem.appendChild(text);
+		text = document.createElement('span')
+		text.innerText = t('core', 'View changelog')
+		menuItem.appendChild(text)
 
-		item.appendChild(menuItem);
-		list.appendChild(item);
+		item.appendChild(menuItem)
+		list.appendChild(item)
 	}
 
-	div.appendChild(list);
-	document.body.appendChild(div);
+	div.appendChild(list)
+	document.body.appendChild(div)
 }
 
-function onQueryError (x, t, e) {
-	console.debug('querying Whats New Data resulted in an error: ' + t + e);
-	console.debug(x);
+function onQueryError(x, t, e) {
+	console.debug('querying Whats New Data resulted in an error: ' + t + e)
+	console.debug(x)
 }
 
-function onDismissSuccess (data) {
-	//noop
+function onDismissSuccess(data) {
+	// noop
 }
 
-function onDismissError (data) {
-	console.debug('dismissing Whats New data resulted in an error: ' + data);
+function onDismissError(data) {
+	console.debug('dismissing Whats New data resulted in an error: ' + data)
 }

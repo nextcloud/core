@@ -5,7 +5,8 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
- * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Michael Weimann <mail@michael-weimann.eu>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,28 +21,26 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace OCA\Theming\Tests\Controller;
 
+namespace OCA\Theming\Tests\Controller;
 
 use OC\Files\SimpleFS\SimpleFile;
 use OC\IntegrityCheck\Helpers\FileAccessHelper;
+use OCA\Theming\Controller\IconController;
 use OCA\Theming\IconBuilder;
 use OCA\Theming\ImageManager;
 use OCA\Theming\ThemingDefaults;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataDisplayResponse;
+use OCP\AppFramework\Http\FileDisplayResponse;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\NotFoundException;
 use OCP\IConfig;
 use OCP\IRequest;
 use Test\TestCase;
-use OCA\Theming\Util;
-use OCA\Theming\Controller\IconController;
-use OCP\AppFramework\Http\FileDisplayResponse;
-use OCP\AppFramework\Utility\ITimeFactory;
-
 
 class IconControllerTest extends TestCase {
 	/** @var IRequest|\PHPUnit_Framework_MockObject_MockObject */
@@ -61,7 +60,7 @@ class IconControllerTest extends TestCase {
 	/** @var ImageManager */
 	private $imageManager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		$this->request = $this->createMock(IRequest::class);
 		$this->themingDefaults = $this->createMock(ThemingDefaults::class);
 		$this->iconBuilder = $this->createMock(IconBuilder::class);

@@ -5,6 +5,7 @@
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -18,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -33,14 +34,14 @@ class HomeObjectStoreStorage extends ObjectStoreStorage implements \OCP\Files\IH
 	 * @param array $params
 	 */
 	public function __construct($params) {
-		if ( ! isset($params['user']) || ! $params['user'] instanceof User) {
+		if (! isset($params['user']) || ! $params['user'] instanceof User) {
 			throw new \Exception('missing user object in parameters');
 		}
 		$this->user = $params['user'];
 		parent::__construct($params);
 	}
 
-	public function getId () {
+	public function getId() {
 		return 'object::user:' . $this->user->getUID();
 	}
 

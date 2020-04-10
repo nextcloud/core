@@ -7,9 +7,13 @@
     "The given web address is too long" : "Norādītā adrese ir pārāk gara",
     "The given slogan is too long" : "Norādītais teiciens ir pārāk garšs",
     "The given color is invalid" : "Norādītā krāsa ir nederīga",
+    "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form" : "Augšupielādētā datne pārsniedz MAX_FILE_SIZE norādi, kas ir norādīta HTML formā",
+    "No file was uploaded" : "Neviena datne netika augšupielādēta",
+    "Missing a temporary folder" : "Trūkst pagaidu mapes",
     "No file uploaded" : "Nav augšupielādēta datne",
     "Unsupported image type" : "Neatbalstīts attēla tips",
     "Theming" : "Dizains",
+    "Open documentation" : "Atvērt dokumentāciju",
     "Theming makes it possible to easily customize the look and feel of your instance and supported clients. This will be visible for all users." : "Tēmošana padara iespējamu viegli pielāgot savas instances un atbalstošo klientaplikāciju izskatu un sajūtu. Tas būs redzams visiem lietotājiem.",
     "Name" : "Nosaukums",
     "Reset to default" : "Atiestatīt",
@@ -17,12 +21,9 @@
     "Color" : "Krāsa",
     "Logo" : "Logo",
     "Upload new logo" : "Augšupielādēt jaunu logo",
-    "Login image" : "Pieslēgšanās fona attēls",
-    "Upload new login background" : "Augšupielādēt jaunu pieslēgšanās fona attēlu",
+    "Login image" : "Pieteikšanās fona attēls",
+    "Upload new login background" : "Augšupielādēt jaunu pieteikšanās fona attēlu",
     "Remove background image" : "Noņemt fona attēlu",
-    "You are already using a custom theme" : "Tu jau izmanto pielāgotu tēmu",
-    "reset to default" : "Atiestatīt",
-    "Web address" : "Tīmekļa adrese",
-    "Web address https://…" : "Servera adrese https://…"
+    "Advanced options" : "Papildu opcijas"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
 }

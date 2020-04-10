@@ -21,7 +21,6 @@
 
 namespace Tests\Core\Command\Config;
 
-
 use OC\Core\Command\Config\Import;
 use OCP\IConfig;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,7 +39,7 @@ class ImportTest extends TestCase {
 	/** @var \Symfony\Component\Console\Command\Command */
 	protected $command;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$config = $this->config = $this->getMockBuilder(IConfig::class)

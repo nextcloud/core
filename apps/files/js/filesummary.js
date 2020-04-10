@@ -62,7 +62,7 @@
 		 * Returns whether the given file info must be hidden
 		 *
 		 * @param {OC.Files.FileInfo} fileInfo file info
-		 * 
+		 *
 		 * @return {boolean} true if the file is a hidden file, false otherwise
 		 */
 		_isHiddenFile: function(file) {
@@ -266,7 +266,7 @@
 			}
 
 			var $summary = $(
-				'<td>' + this._infoTemplate() + '</td>' +
+				'<td class="filesummary">'+ this._infoTemplate() + '</td>' +
 				fileSize +
 				'<td class="date"></td>'
 			);

@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright 2018, Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -18,7 +20,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -59,7 +61,7 @@ class DirectControllerTest extends TestCase {
 	/** @var DirectController */
 	private $controller;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->rootFolder = $this->createMock(IRootFolder::class);
@@ -141,7 +143,7 @@ class DirectControllerTest extends TestCase {
 			});
 
 		$this->urlGenerator->method('getAbsoluteURL')
-			->willReturnCallback(function(string $url) {
+			->willReturnCallback(function (string $url) {
 				return 'https://my.nextcloud/'.$url;
 			});
 

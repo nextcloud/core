@@ -215,8 +215,8 @@ function execute_tests {
 			fi
 		fi
 		echo "Waiting for MySQL initialisation ..."
-		if ! apps/files_external/tests/env/wait-for-connection $DATABASEHOST 3306 600; then
-			echo "[ERROR] Waited 600 seconds, no response" >&2
+		if ! apps/files_external/tests/env/wait-for-connection $DATABASEHOST 3306 300; then
+			echo "[ERROR] Waited 300 seconds, no response" >&2
 			exit 1
 		fi
 	fi
@@ -251,8 +251,8 @@ function execute_tests {
 
 		echo "Waiting for MySQL(utf8mb4) initialisation ..."
 
-		if ! apps/files_external/tests/env/wait-for-connection $DATABASEHOST 3306 600; then
-			echo "[ERROR] Waited 600 seconds, no response" >&2
+		if ! apps/files_external/tests/env/wait-for-connection $DATABASEHOST 3306 300; then
+			echo "[ERROR] Waited 300 seconds, no response" >&2
 			exit 1
 		fi
 		sleep 1
@@ -275,8 +275,8 @@ function execute_tests {
 			DATABASEHOST=$(docker inspect --format="{{.NetworkSettings.IPAddress}}" "$DOCKER_CONTAINER_ID")
 
 			echo "Waiting for MariaDB initialisation ..."
-			if ! apps/files_external/tests/env/wait-for-connection $DATABASEHOST 3306 600; then
-				echo "[ERROR] Waited 600 seconds, no response" >&2
+			if ! apps/files_external/tests/env/wait-for-connection $DATABASEHOST 3306 300; then
+				echo "[ERROR] Waited 300 seconds, no response" >&2
 				exit 1
 			fi
 
@@ -296,8 +296,8 @@ function execute_tests {
 		fi
 
 		echo "Waiting for MariaDB initialisation ..."
-		if ! apps/files_external/tests/env/wait-for-connection $DATABASEHOST 3306 600; then
-			echo "[ERROR] Waited 600 seconds, no response" >&2
+		if ! apps/files_external/tests/env/wait-for-connection $DATABASEHOST 3306 300; then
+			echo "[ERROR] Waited 300 seconds, no response" >&2
 			exit 1
 		fi
 

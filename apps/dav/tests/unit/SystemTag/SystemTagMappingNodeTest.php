@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -19,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -27,10 +28,10 @@ namespace OCA\DAV\Tests\unit\SystemTag;
 
 use OC\SystemTag\SystemTag;
 use OCP\IUser;
+use OCP\SystemTag\ISystemTag;
 use OCP\SystemTag\ISystemTagManager;
 use OCP\SystemTag\ISystemTagObjectMapper;
 use OCP\SystemTag\TagNotFoundException;
-use OCP\SystemTag\ISystemTag;
 
 class SystemTagMappingNodeTest extends \Test\TestCase {
 
@@ -49,7 +50,7 @@ class SystemTagMappingNodeTest extends \Test\TestCase {
 	 */
 	private $user;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->tagManager = $this->getMockBuilder(ISystemTagManager::class)
@@ -88,11 +89,11 @@ class SystemTagMappingNodeTest extends \Test\TestCase {
 		$this->tagManager->expects($this->once())
 			->method('canUserSeeTag')
 			->with($node->getSystemTag())
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->tagManager->expects($this->once())
 			->method('canUserAssignTag')
 			->with($node->getSystemTag())
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->tagManager->expects($this->never())
 			->method('deleteTags');
 		$this->tagMapper->expects($this->once())
@@ -124,11 +125,11 @@ class SystemTagMappingNodeTest extends \Test\TestCase {
 		$this->tagManager->expects($this->any())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue($tag->isUserVisible()));
+			->willReturn($tag->isUserVisible());
 		$this->tagManager->expects($this->any())
 			->method('canUserAssignTag')
 			->with($tag)
-			->will($this->returnValue($tag->isUserAssignable()));
+			->willReturn($tag->isUserAssignable());
 		$this->tagManager->expects($this->never())
 			->method('deleteTags');
 		$this->tagMapper->expects($this->never())
@@ -144,21 +145,21 @@ class SystemTagMappingNodeTest extends \Test\TestCase {
 		$this->assertInstanceOf($expectedException, $thrown);
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotFound
-	 */
+	
 	public function testDeleteTagNotFound() {
+		$this->expectException(\Sabre\DAV\Exception\NotFound::class);
+
 		// assuming the tag existed at the time the node was created,
 		// but got deleted concurrently in the database
 		$tag = new SystemTag(1, 'Test', true, true);
 		$this->tagManager->expects($this->once())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue($tag->isUserVisible()));
+			->willReturn($tag->isUserVisible());
 		$this->tagManager->expects($this->once())
 			->method('canUserAssignTag')
 			->with($tag)
-			->will($this->returnValue($tag->isUserAssignable()));
+			->willReturn($tag->isUserAssignable());
 		$this->tagMapper->expects($this->once())
 			->method('unassignTags')
 			->with(123, 'files', 1)

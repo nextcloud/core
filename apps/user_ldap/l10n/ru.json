@@ -9,7 +9,7 @@
     "No configuration specified" : "Конфигурация не указана",
     "No data specified" : "Нет данных",
     " Could not set configuration %s" : "Невозможно создать конфигурацию %s",
-    "Action does not exist" : "Действия не существует",
+    "Action does not exist" : "Действие не существует",
     "Renewing …" : "Обновление…",
     "Very weak password" : "Очень слабый пароль",
     "Weak password" : "Слабый пароль",
@@ -53,6 +53,7 @@
     "The group box was disabled, because the LDAP / AD server does not support memberOf." : "Настройка групп была отключена, так как сервер LDAP / AD не поддерживает memberOf.",
     "Password change rejected. Hint: " : "Смена пароля отклонена. Подсказка:",
     "Please login with the new password" : "Войдите в систему со своим новым паролем",
+    "LDAP User backend" : "Механизм учета пользователей LDAP",
     "Your password will expire tomorrow." : "Завтра истекает срок действия пароля.",
     "Your password will expire today." : "Сегодня истекает срок действия пароля.",
     "_Your password will expire within %n day._::_Your password will expire within %n days._" : ["Срок действия пароля истекает через %n день.","Срок действия пароля истекает через %n дня.","Срок действия пароля истекает через %n дней.","Срок действия пароля истекает через %n день."],
@@ -173,7 +174,7 @@
     "Email Field" : "Поле адреса email",
     "Set the user's email from their LDAP attribute. Leave it empty for default behaviour." : "Устанавливать адрес email пользователя из атрибута LDAP. Оставьте поле пустым для поведения по умолчанию.",
     "User Home Folder Naming Rule" : "Правило именования домашнего каталога пользователя",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Оставьте пустым для использования имени пользователя (по умолчанию). Иначе укажите атрибут LDAP/AD.",
+    "Leave empty for username (default). Otherwise, specify an LDAP/AD attribute." : "Оставьте пустым для использования имени пользователя (по умолчанию) или укажите атрибут LDAP/AD.",
     "\"$home\" Placeholder Field" : "Поле-заполнитель \"$home\"",
     "$home in an external storage configuration will be replaced with the value of the specified attribute" : "В конфигурации внешнего хранилища $home будет заменен значением указанного атрибута",
     "Internal Username" : "Внутреннее имя пользователя",
@@ -186,6 +187,7 @@
     "Username-LDAP User Mapping" : "Соответствия Имя-Пользователь LDAP",
     "Usernames are used to store and assign metadata. In order to precisely identify and recognize users, each LDAP user will have an internal username. This requires a mapping from username to LDAP user. The created username is mapped to the UUID of the LDAP user. Additionally the DN is cached as well to reduce LDAP interaction, but it is not used for identification. If the DN changes, the changes will be found. The internal username is used all over. Clearing the mappings will have leftovers everywhere. Clearing the mappings is not configuration sensitive, it affects all LDAP configurations! Never clear the mappings in a production environment, only in a testing or experimental stage." : "Имена пользователей используются для хранения и назначения метаданных. Для точной идентификации и распознавания пользователей, каждый пользователь LDAP будет иметь свое внутреннее имя пользователя. Это требует привязки имени пользователя к пользователю LDAP. При создании имя пользователя назначается идентификатору UUID пользователя LDAP. Помимо этого кешируется DN для уменьшения числа обращений к LDAP, однако он не используется для идентификации. Если DN был изменён, то изменения будут найдены. Внутреннее имя используется повсеместно. После сброса привязок в базе могут сохраниться остатки старой информации. Сброс привязок не привязан к конфигурации, он повлияет на все LDAP подключения! Ни в коем случае не рекомендуется сбрасывать привязки если система уже находится в эксплуатации, только на этапе тестирования.",
     "Clear Username-LDAP User Mapping" : "Очистить соответствия Имя-Пользователь LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Очистить соответствия Группа-Группа LDAP"
+    "Clear Groupname-LDAP Group Mapping" : "Очистить соответствия Группа-Группа LDAP",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Оставьте пустым для использования имени пользователя (по умолчанию). Иначе укажите атрибут LDAP/AD."
 },"pluralForm" :"nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);"
 }

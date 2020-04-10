@@ -8,6 +8,7 @@ OC.L10N.register(
     "Client Identifier" : "Klient ID",
     "Secret" : "Hemmelighed",
     "Add client" : "Tilføj klient",
-    "Add" : "Tilføj"
+    "Add" : "Tilføj",
+    "Delete" : "Slet"
 },
 "nplurals=2; plural=(n != 1);");

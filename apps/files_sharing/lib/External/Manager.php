@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Hansson <daniel@techandme.se>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
@@ -25,7 +26,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -44,6 +45,7 @@ use OCP\IUserManager;
 use OCP\Notification\IManager;
 use OCP\OCS\IDiscoveryService;
 use OCP\Share;
+use OCP\Share\IShare;
 
 class Manager {
 	const STORAGE = '\OCA\Files_Sharing\External\Storage';
@@ -151,10 +153,10 @@ class Manager {
 	public function addShare($remote, $token, $password, $name, $owner, $shareType, $accepted=false, $user = null, $remoteId = -1, $parent = -1) {
 
 		$user = $user ? $user : $this->uid;
-		$accepted = $accepted ? 1 : 0;
+		$accepted = $accepted ? IShare::STATUS_ACCEPTED : IShare::STATUS_PENDING;
 		$name = Filesystem::normalizePath('/' . $name);
 
-		if (!$accepted) {
+		if ($accepted !== IShare::STATUS_ACCEPTED)  {
 			// To avoid conflicts with the mount point generation later,
 			// we only use a temporary mount point name here. The real
 			// mount point name will be generated when accepting the share,
@@ -192,13 +194,13 @@ class Manager {
 
 		$this->writeShareToDb($remote, $token, $password, $name, $owner, $user, $mountPoint, $hash, $accepted, $remoteId, $parent, $shareType);
 
-		$options = array(
+		$options = [
 			'remote'	=> $remote,
 			'token'		=> $token,
 			'password'	=> $password,
 			'mountpoint'	=> $mountPoint,
 			'owner'		=> $owner
-		);
+		];
 		return $this->mountShare($options);
 	}
 
@@ -225,7 +227,7 @@ class Manager {
 					(`remote`, `share_token`, `password`, `name`, `owner`, `user`, `mountpoint`, `mountpoint_hash`, `accepted`, `remote_id`, `parent`, `share_type`)
 				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 			');
-		return $query->execute(array($remote, $token, $password, $name, $owner, $user, $mountPoint, $hash, $accepted, $remoteId, $parent, $shareType));
+		return $query->execute([$remote, $token, $password, $name, $owner, $user, $mountPoint, $hash, $accepted, $remoteId, $parent, $shareType]);
 	}
 
 	/**
@@ -239,7 +241,7 @@ class Manager {
 			SELECT `id`, `remote`, `remote_id`, `share_token`, `name`, `owner`, `user`, `mountpoint`, `accepted`, `parent`, `share_type`, `password`, `mountpoint_hash`
 			FROM  `*PREFIX*share_external`
 			WHERE `id` = ?');
-		$result = $getShare->execute(array($id));
+		$result = $getShare->execute([$id]);
 
 		$share = $result ? $getShare->fetch() : [];
 
@@ -285,7 +287,7 @@ class Manager {
 					`mountpoint` = ?,
 					`mountpoint_hash` = ?
 				WHERE `id` = ? AND `user` = ?');
-				$userShareAccepted = $acceptShare->execute(array(1, $mountPoint, $hash, $id, $this->uid));
+				$userShareAccepted = $acceptShare->execute([1, $mountPoint, $hash, $id, $this->uid]);
 			} else {
 				$result = $this->writeShareToDb(
 					$share['remote'],
@@ -326,7 +328,7 @@ class Manager {
 		if ($share && (int)$share['share_type'] === Share::SHARE_TYPE_USER) {
 			$removeShare = $this->connection->prepare('
 				DELETE FROM `*PREFIX*share_external` WHERE `id` = ? AND `user` = ?');
-			$removeShare->execute(array($id, $this->uid));
+			$removeShare->execute([$id, $this->uid]);
 			$this->sendFeedbackToRemote($share['remote'], $share['share_token'], $share['remote_id'], 'decline');
 
 			$this->processNotification($id);
@@ -383,7 +385,7 @@ class Manager {
 		$endpoint = isset($federationEndpoints['share']) ? $federationEndpoints['share'] : '/ocs/v2.php/cloud/shares';
 
 		$url = rtrim($remote, '/') . $endpoint . '/' . $remoteId . '/' . $feedback . '?format=' . Share::RESPONSE_FORMAT;
-		$fields = array('token' => $token);
+		$fields = ['token' => $token];
 
 		$client = $this->clientService->newClient();
 
@@ -501,7 +503,7 @@ class Manager {
 			WHERE `mountpoint_hash` = ?
 			AND `user` = ?
 		');
-		$result = (bool)$query->execute(array($target, $targetHash, $sourceHash, $this->uid));
+		$result = (bool)$query->execute([$target, $targetHash, $sourceHash, $this->uid]);
 
 		return $result;
 	}
@@ -518,7 +520,7 @@ class Manager {
 			SELECT `remote`, `share_token`, `remote_id`, `share_type`, `id`
 			FROM  `*PREFIX*share_external`
 			WHERE `mountpoint_hash` = ? AND `user` = ?');
-		$result = $getShare->execute(array($hash, $this->uid));
+		$result = $getShare->execute([$hash, $this->uid]);
 
 		$share = $getShare->fetch();
 		$getShare->closeCursor();
@@ -534,13 +536,13 @@ class Manager {
 			DELETE FROM `*PREFIX*share_external`
 			WHERE `id` = ?
 			');
-			$result = (bool)$query->execute(array((int)$share['id']));
+			$result = (bool)$query->execute([(int)$share['id']]);
 		} else if ($result && (int)$share['share_type'] === Share::SHARE_TYPE_GROUP) {
 			$query = $this->connection->prepare('
 				UPDATE `*PREFIX*share_external`
 				SET `accepted` = ?
 				WHERE `id` = ?');
-			$result = (bool)$query->execute(array(0, (int)$share['id']));
+			$result = (bool)$query->execute([0, (int)$share['id']]);
 		}
 
 		if($result) {
@@ -584,7 +586,7 @@ class Manager {
 			SELECT `remote`, `share_token`, `remote_id`
 			FROM  `*PREFIX*share_external`
 			WHERE `user` = ?');
-		$result = $getShare->execute(array($uid));
+		$result = $getShare->execute([$uid]);
 
 		if ($result) {
 			$shares = $getShare->fetchAll();
@@ -597,7 +599,7 @@ class Manager {
 			DELETE FROM `*PREFIX*share_external`
 			WHERE `user` = ?
 		');
-		return (bool)$query->execute(array($uid));
+		return (bool)$query->execute([$uid]);
 	}
 
 	/**

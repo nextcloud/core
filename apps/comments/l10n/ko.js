@@ -28,8 +28,6 @@ OC.L10N.register(
     "Error occurred while posting comment" : "댓글을 게시하는 중 오류가 발생했습니다",
     "_%n unread comment_::_%n unread comments_" : ["읽지 않은 댓글 %n개"],
     "_1 new comment_::_{unread} new comments_" : ["새 댓글 {unread}개"],
-    "Comment" : "설명",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "삭제된 사용자가 남긴 “%s”의 댓글에서 여러분을 언급함",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s 님이 “%2$s”에 남긴 댓글에서 여러분을 언급함"
+    "Comment" : "설명"
 },
 "nplurals=1; plural=0;");

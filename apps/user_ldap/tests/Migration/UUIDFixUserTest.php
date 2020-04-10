@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2017 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,14 +18,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\User_LDAP\Tests\Migration;
 
-use OCA\User_LDAP\Migration\UUIDFixUser;
 use OCA\User_LDAP\Mapping\UserMapping;
+use OCA\User_LDAP\Migration\UUIDFixUser;
 use OCA\User_LDAP\User_Proxy;
 
 /**
@@ -34,7 +35,7 @@ use OCA\User_LDAP\User_Proxy;
  * @group DB
  */
 class UUIDFixUserTest extends AbstractUUIDFixTest {
-	public function setUp() {
+	protected function setUp(): void {
 		$this->isUser = true;
 		parent::setUp();
 

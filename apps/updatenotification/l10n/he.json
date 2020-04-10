@@ -1,7 +1,7 @@
 { "translations": {
     "{version} is available. Get more information on how to update." : "{version} זמינה. ניתן לקבל מידע נוסף על איך לעדכן.",
-    "Update notifications" : "עדכון דיווחים",
     "Channel updated" : "הערוץ התעדכן",
+    "Update notifications" : "עדכון דיווחים",
     "The update server could not be reached since %d days to check for new updates." : "לא ניתן לגשת אל שרת העדכון מזה %d ימים כדי לבדוק אם יש עדכונים חדשים.",
     "Please check the Nextcloud and server log files for errors." : "נא לחפש שגיאות בקובצי היומן של Nextcloud ושל השרת.",
     "Update to %1$s is available." : "קיים עדכון ל־%1$s.",
@@ -9,9 +9,11 @@
     "Update for {app} to version %s is available." : "קיים עדכון עבור {app} לגרסה %s.",
     "Update notification" : "התראה על עדכון",
     "The version you are running is not maintained anymore. Please make sure to update to a supported version as soon as possible." : "הגרסה שפועלת אצלך אינה מתוחזקת יותר. נא לוודא לעדכן לגרסה נתמכת במהירות האפשרית.",
+    "View in store" : "הצגה בחנות",
     "Apps with available updates" : "יישומים עם עדכונים זמינים",
     "Open updater" : "פתיחת המעדכן",
     "Download now" : "להוריד כעת",
+    "What's new?" : "מה חדש?",
     "The update check is not yet finished. Please refresh the page." : "בדיקת העדכונים לא הסתיימה עדיין. נא לעדכן את העמוד.",
     "Your version is up to date." : "הגרסה שבידך מעודכנת.",
     "Update channel:" : "עדכון ערוץ:",
@@ -19,9 +21,8 @@
     "A new version is available: <strong>{newVersionString}</strong>" : "גרסה חדשה זמינה: <strong>{newVersionString}</strong>",
     "Checked on {lastCheckedDate}" : "נבדק לאחרונה ב־{lastCheckedDate}",
     "Checking apps for compatible updates" : "היישומונים נבדקים לאיתור עדכונים תואמים",
-    "Could not start updater, please try the manual update" : "לא ניתן להתחיל את המעדכן, נא לנסות לעדכן ידנית",
-    "A new version is available: %s" : "קיימת גרסה מעודכנת: %s",
-    "Checked on %s" : "נבדק לאחרונה ב- %s",
-    "You can always update to a newer version / experimental channel. But you can never downgrade to a more stable channel." : "תמיד ניתן לעדכן לגרסה חדשה / ערוץ ניסיון. אבל לא ניתן להוריד גרסה לערוץ יציב יותר."
+    "Please make sure your config.php does not set <samp>appstoreenabled</samp> to false." : "נא לוודא שב־config.php שלך ה־<samp>appstoreenabled</samp> לא מוגדר ל‏־false.",
+    "Could not connect to the appstore or the appstore returned no updates at all. Search manually for updates or make sure your server has access to the internet and can connect to the appstore." : "לא ניתן להתחבר לחנות היישומונים או שחנות היישומונים לא החזירה שיש עדכונים. ניתן לחפש ידנית עדכונים או לוודא שלשרת שלך יש גישה לאינטרנט ושיש לו איך להתחבר לחנות היישומונים.",
+    "View changelog" : "הצגת יומן שינויים"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;"
 }

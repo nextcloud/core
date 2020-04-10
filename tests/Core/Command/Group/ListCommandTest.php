@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\Core\Command\Group;
 
 use OC\Core\Command\Group\ListCommand;
@@ -44,7 +45,7 @@ class ListCommandTest extends TestCase {
 	/** @var OutputInterface|\PHPUnit_Framework_MockObject_MockObject */
 	private $output;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->groupManager = $this->createMock(IGroupManager::class);
@@ -55,7 +56,7 @@ class ListCommandTest extends TestCase {
 
 		$this->input = $this->createMock(InputInterface::class);
 		$this->input->method('getOption')
-			->willReturnCallback(function($arg) {
+			->willReturnCallback(function ($arg) {
 				if ($arg === 'limit') {
 					return '100';
 				} else if ($arg === 'offset') {

@@ -4,6 +4,7 @@
  *
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,19 +18,19 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_External\Lib\Auth\Password;
 
+use OCA\Files_External\Lib\Auth\AuthMechanism;
+use OCA\Files_External\Lib\InsufficientDataForMeaningfulAnswerException;
+use OCA\Files_External\Lib\StorageConfig;
 use OCA\Files_External\Service\BackendService;
 use OCP\IL10N;
 use OCP\IUser;
-use OCA\Files_External\Lib\Auth\AuthMechanism;
-use OCA\Files_External\Lib\StorageConfig;
 use OCP\Security\ICredentialsManager;
-use OCA\Files_External\Lib\InsufficientDataForMeaningfulAnswerException;
 
 /**
  * Global Username and Password

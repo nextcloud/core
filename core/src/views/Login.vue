@@ -22,113 +22,153 @@
 <template>
 	<div>
 		<transition name="fade" mode="out-in">
-			<div v-if="!resetPassword && resetPasswordTarget === ''"
-				 key="login">
+			<div v-if="!passwordlessLogin && !resetPassword && resetPasswordTarget === ''"
+				key="login">
 				<LoginForm
 					:username.sync="user"
 					:redirect-url="redirectUrl"
+					:direct-login="directLogin"
 					:messages="messages"
 					:errors="errors"
 					:throttle-delay="throttleDelay"
 					:inverted-colors="invertedColors"
 					:auto-complete-allowed="autoCompleteAllowed"
-					@submit="loading = true"/>
+					@submit="loading = true" />
 				<a v-if="canResetPassword && resetPasswordLink !== ''"
-				   id="lost-password"
-				   :href="resetPasswordLink">
+					id="lost-password"
+					:href="resetPasswordLink">
 					{{ t('core', 'Forgot password?') }}
 				</a>
 				<a v-else-if="canResetPassword && !resetPassword"
-				   id="lost-password"
-				   :href="resetPasswordLink"
-				   @click.prevent="resetPassword = true">
+					id="lost-password"
+					:href="resetPasswordLink"
+					@click.prevent="resetPassword = true">
 					{{ t('core', 'Forgot password?') }}
+				</a>
+				<br>
+				<a v-if="hasPasswordless" @click.prevent="passwordlessLogin = true">
+					{{ t('core', 'Log in with a device') }}
+				</a>
+			</div>
+			<div v-else-if="!loading && passwordlessLogin"
+				key="reset"
+				class="login-additional">
+				<PasswordLessLoginForm
+					:username.sync="user"
+					:redirect-url="redirectUrl"
+					:inverted-colors="invertedColors"
+					:auto-complete-allowed="autoCompleteAllowed"
+					:isHttps="isHttps"
+					:hasPublicKeyCredential="hasPublicKeyCredential"
+					@submit="loading = true" />
+				<a @click.prevent="passwordlessLogin = false">
+					{{ t('core', 'Back') }}
 				</a>
 			</div>
 			<div v-else-if="!loading && canResetPassword"
-				 key="reset"
-				 class="login-additional">
+				key="reset"
+				class="login-additional">
 				<div class="lost-password-container">
 					<ResetPassword v-if="resetPassword"
-								   :username.sync="user"
-								   :reset-password-link="resetPasswordLink"
-								   :inverted-colors="invertedColors"
-								   @abort="resetPassword = false"/>
+						:username.sync="user"
+						:reset-password-link="resetPasswordLink"
+						:inverted-colors="invertedColors"
+						@abort="resetPassword = false" />
 				</div>
 			</div>
 			<div v-else-if="resetPasswordTarget !== ''">
 				<UpdatePassword :username.sync="user"
-							   :reset-password-target="resetPasswordTarget"
-							   :inverted-colors="invertedColors"
-							   @done="passwordResetFinished"/>
+					:reset-password-target="resetPasswordTarget"
+					:inverted-colors="invertedColors"
+					@done="passwordResetFinished" />
 			</div>
 		</transition>
 	</div>
 </template>
 
 <script>
-	import LoginForm from '../components/login/LoginForm.vue'
-	import ResetPassword from '../components/login/ResetPassword.vue'
-	import UpdatePassword from '../components/login/UpdatePassword.vue'
+import LoginForm from '../components/login/LoginForm.vue'
+import PasswordLessLoginForm from '../components/login/PasswordLessLoginForm.vue'
+import ResetPassword from '../components/login/ResetPassword.vue'
+import UpdatePassword from '../components/login/UpdatePassword.vue'
 
-	export default {
-		name: 'Login',
-		props: {
-			username: {
-				type: String,
-				default: '',
-			},
-			redirectUrl: {
-				type: String,
-			},
-			errors: {
-				type: Array,
-				default: () => [],
-			},
-			messages: {
-				type: Array,
-				default: () => [],
-			},
-			throttleDelay: {
-				type: Number,
-			},
-			canResetPassword: {
-				type: Boolean,
-				default: false,
-			},
-			resetPasswordLink: {
-				type: String,
-			},
-			resetPasswordTarget: {
-				type: String,
-			},
-			invertedColors: {
-				type: Boolean,
-				default: false,
-			},
-			autoCompleteAllowed: {
-				type: Boolean,
-				default: true,
-			},
+export default {
+	name: 'Login',
+	components: {
+		LoginForm,
+		PasswordLessLoginForm,
+		ResetPassword,
+		UpdatePassword,
+	},
+	props: {
+		username: {
+			type: String,
+			default: '',
 		},
-		components: {
-			LoginForm,
-			ResetPassword,
-			UpdatePassword,
+		redirectUrl: {
+			type: String,
 		},
-		data () {
-			return {
-				loading: false,
-				user: this.username,
-				resetPassword: false,
-			}
+		errors: {
+			type: Array,
+			default: () => [],
 		},
-		methods: {
-			passwordResetFinished() {
-				this.resetPasswordTarget = ''
-			}
+		messages: {
+			type: Array,
+			default: () => [],
+		},
+		throttleDelay: {
+			type: Number,
+		},
+		canResetPassword: {
+			type: Boolean,
+			default: false,
+		},
+		resetPasswordLink: {
+			type: String,
+		},
+		resetPasswordTarget: {
+			type: String,
+		},
+		invertedColors: {
+			type: Boolean,
+			default: false,
+		},
+		autoCompleteAllowed: {
+			type: Boolean,
+			default: true,
+		},
+		directLogin: {
+			type: Boolean,
+			default: false,
+		},
+		hasPasswordless: {
+			type: Boolean,
+			default: false,
+		},
+		isHttps: {
+			type: Boolean,
+			default: false,
+		},
+		hasPublicKeyCredential: {
+			type: Boolean,
+			default: false,
+		},
+	},
+	data() {
+		return {
+			loading: false,
+			user: this.username,
+			passwordlessLogin: false,
+			resetPassword: false,
 		}
-	}
+	},
+	methods: {
+		passwordResetFinished() {
+			this.resetPasswordTarget = ''
+			this.directLogin = true
+		},
+	},
+}
 </script>
 
 <style>

@@ -206,7 +206,7 @@ Feature: sharees
     Then "exact groups" sharees returned is empty
     Then "groups" sharees returned is empty
     Then "exact remotes" sharees returned are
-      | test@localhost | 6 | test@localhost |
+      | test (localhost) | 6 | test@localhost |
     Then "remotes" sharees returned is empty
 
   Scenario: Remote sharee for calendars not allowed

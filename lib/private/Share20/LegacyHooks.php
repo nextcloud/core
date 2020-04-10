@@ -1,8 +1,9 @@
 <?php
-
 /**
  * @copyright 2017, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -19,17 +20,17 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OC\Share20;
 
 use OCP\Files\File;
+use OCP\Share;
 use OCP\Share\IShare;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use OCP\Share;
 
 class LegacyHooks {
 
@@ -74,7 +75,7 @@ class LegacyHooks {
 		/** @var IShare[] $deletedShares */
 		$deletedShares = $e->getArgument('deletedShares');
 
-		$formattedDeletedShares = array_map(function($share) {
+		$formattedDeletedShares = array_map(function ($share) {
 			return $this->formatHookParams($share);
 		}, $deletedShares);
 

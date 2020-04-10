@@ -7,6 +7,7 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Robin Appelman <robin@icewind.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,11 +22,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-$app = new \OCP\AppFramework\App('theming');
+use OCA\Theming\AppInfo\Application;
+
+$app = \OC::$server->query(Application::class);
 $app->getContainer()->registerCapability(\OCA\Theming\Capabilities::class);
 
 $linkToCSS = \OC::$server->getURLGenerator()->linkToRoute(

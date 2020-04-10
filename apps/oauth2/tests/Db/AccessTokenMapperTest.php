@@ -2,6 +2,9 @@
 /**
  * @copyright Copyright (c) 2017 Lukas Reschke <lukas@statuscode.ch>
  *
+ * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ *
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -32,7 +35,7 @@ class AccessTokenMapperTest extends TestCase {
 	/** @var AccessTokenMapper */
 	private $accessTokenMapper;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->accessTokenMapper = new AccessTokenMapper(\OC::$server->getDatabaseConnection());
 	}
@@ -52,10 +55,10 @@ class AccessTokenMapperTest extends TestCase {
 		$this->accessTokenMapper->delete($token);
 	}
 
-	/**
-	 * @expectedException \OCA\OAuth2\Exceptions\AccessTokenNotFoundException
-	 */
+	
 	public function testDeleteByClientId() {
+		$this->expectException(\OCA\OAuth2\Exceptions\AccessTokenNotFoundException::class);
+
 		$this->accessTokenMapper->deleteByClientId(1234);
 		$token = new AccessToken();
 		$token->setClientId(1234);

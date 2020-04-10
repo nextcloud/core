@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -19,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -86,6 +86,16 @@ class TwoFactorMiddleware extends Middleware {
 		if ($this->reflector->hasAnnotation('PublicPage')) {
 			// Don't block public pages
 			return;
+		}
+
+		if ($controller instanceof TwoFactorChallengeController
+			&& $this->userSession->getUser() !== null
+			&& !$this->reflector->hasAnnotation('TwoFactorSetUpDoneRequired')) {
+			$providers = $this->twoFactorManager->getProviderSet($this->userSession->getUser());
+
+			if (!($providers->getProviders() === [] && !$providers->isProviderMissing())) {
+				throw new TwoFactorAuthRequiredException();
+			}
 		}
 
 		if ($controller instanceof ALoginSetupController

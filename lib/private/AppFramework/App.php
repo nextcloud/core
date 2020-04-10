@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
@@ -22,20 +24,19 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OC\AppFramework;
 
-use OC\AppFramework\Http\Dispatcher;
 use OC\AppFramework\DependencyInjection\DIContainer;
+use OC\AppFramework\Http\Dispatcher;
 use OC\HintException;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\QueryException;
 use OCP\AppFramework\Http\ICallbackResponse;
 use OCP\AppFramework\Http\IOutput;
+use OCP\AppFramework\QueryException;
 use OCP\IRequest;
 
 /**
@@ -67,8 +68,19 @@ class App {
 		if (isset($appInfo['namespace'])) {
 			self::$nameSpaceCache[$appId] = trim($appInfo['namespace']);
 		} else {
-			// if the tag is not found, fall back to uppercasing the first letter
-			self::$nameSpaceCache[$appId] = ucfirst($appId);
+			if ($appId !== 'spreed') {
+				// if the tag is not found, fall back to uppercasing the first letter
+				self::$nameSpaceCache[$appId] = ucfirst($appId);
+			} else {
+				// For the Talk app (appid spreed) the above fallback doesn't work.
+				// This leads to a problem when trying to install it freshly,
+				// because the apps namespace is already registered before the
+				// app is downloaded from the appstore, because of the hackish
+				// global route index.php/call/{token} which is registered via
+				// the core/routes.php so it does not have the app namespace.
+				// @ref https://github.com/nextcloud/server/pull/19433
+				self::$nameSpaceCache[$appId] = 'Talk';
+			}
 		}
 
 		return $topNamespace . self::$nameSpaceCache[$appId];
@@ -104,8 +116,6 @@ class App {
 
 			if ($appName === 'core') {
 				$appNameSpace = 'OC\\Core';
-			} else if ($appName === 'settings') {
-				$appNameSpace = 'OC\\Settings';
 			} else {
 				$appNameSpace = self::buildAppNamespace($appName);
 			}
@@ -189,7 +199,7 @@ class App {
 	 * @param DIContainer $container an instance of a pimple container.
 	 */
 	public static function part(string $controllerName, string $methodName, array $urlParams,
-								DIContainer $container){
+								DIContainer $container) {
 
 		$container['urlParams'] = $urlParams;
 		$controller = $container[$controllerName];

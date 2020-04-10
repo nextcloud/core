@@ -1,0 +1,19 @@
+{ "translations": {
+    "seconds ago" : "pre par sekundi",
+    "__language_name__" : "Srpski",
+    "Help" : "Help",
+    "Settings" : "Postavke",
+    "Log out" : "Odjava",
+    "Sunday" : "Nedelja",
+    "Monday" : "Ponedeljak",
+    "Tuesday" : "Utorak",
+    "Wednesday" : "Sreda",
+    "Thursday" : "Četvrtak",
+    "Friday" : "Petak",
+    "Saturday" : "Subota",
+    "Create" : "Napravi",
+    "Delete" : "Delete",
+    "Share" : "Deljenje",
+    "Sharing" : "Deljenje"
+},"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+}

@@ -131,6 +131,16 @@
 	overflow: hidden;
 }
 
+#externalStorage .select2-container .select2-search-choice {
+	display: flex;
+	.select2-search-choice-close {
+		display: block;
+		left: auto;
+		position: relative;
+		width: 20px;
+	}
+}
+
 #externalStorage .mountOptionsToggle .dropdown {
 	width: auto;
 }

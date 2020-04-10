@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\AppFramework\Middleware\PublicShare;
 
 use OC\AppFramework\Middleware\PublicShare\Exceptions\NeedAuthenticationException;
@@ -35,7 +36,6 @@ use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
 
-
 class PublicShareMiddlewareTest extends \Test\TestCase {
 
 	/** @var IRequest|\PHPUnit_Framework_MockObject_MockObject */
@@ -49,7 +49,7 @@ class PublicShareMiddlewareTest extends \Test\TestCase {
 	private $middleware;
 
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->createMock(IRequest::class);

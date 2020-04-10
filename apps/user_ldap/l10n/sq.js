@@ -168,7 +168,6 @@ OC.L10N.register(
     "Email Field" : "Fushë Email-i",
     "Set the user's email from their LDAP attribute. Leave it empty for default behaviour." : "Vendos emailin e përdoruesit nga atributi i tyre LDAP. Lëreni bosh për sjelljen e paracaktuar.",
     "User Home Folder Naming Rule" : "Rregull Emërtimi Dosjeje Kreu të Përdoruesit",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Lëreni bosh për emrin e përdoruesit (I Paracaktuar). Ose, përcaktoni një atribut LDAP/AD.",
     "Internal Username" : "Emër i Brendshëm Përdoruesi",
     "By default the internal username will be created from the UUID attribute. It makes sure that the username is unique and characters do not need to be converted. The internal username has the restriction that only these characters are allowed: [ a-zA-Z0-9_.@- ].  Other characters are replaced with their ASCII correspondence or simply omitted. On collisions a number will be added/increased. The internal username is used to identify a user internally. It is also the default name for the user home folder. It is also a part of remote URLs, for instance for all *DAV services. With this setting, the default behavior can be overridden. Leave it empty for default behavior. Changes will have effect only on newly mapped (added) LDAP users." : "Në paracaktim, emri i brendshëm i përdoruesit do të krijohet nga atributi UUID. Sigurohuni që emri i përdoruesit është unik dhe karakteret nuk kanë nevojë të konvertohen. Emri i përdoruesit të brendshëm ka kufizim që lejohen vetëm këto karaktere: [a-zA-Z0-9 _. @ -]. Karaktere të tjera zëvendësohen me korrespondencën e tyre ASCII ose thjesht hiqen. Për goditjet një numër do të shtohet / rritet. Emri i brendshëm përdoret për të identifikuar një përdorues brenda. Është gjithashtu emri i parazgjedhur për dosjen e përdoruesit në shtëpi. Është gjithashtu një pjesë e URL-ve të largëta, për shembull për të gjitha shërbimet * DAV. Me këtë cilësim, sjellja e parazgjedhur mund të fshihet. Lëreni bosh për sjelljen e paracaktuar. Ndryshimet do të kenë efekt vetëm në përdoruesit e sapo hartuar (shtuar) LDAP.",
     "Internal Username Attribute:" : "Atribut Emër i Brendshëm Përdoruesi:",
@@ -178,6 +177,7 @@ OC.L10N.register(
     "UUID Attribute for Groups:" : "Atribut UUID për Grupe:",
     "Username-LDAP User Mapping" : "Përshoqërim Emër përdoruesi-Përdorues LDAP",
     "Clear Username-LDAP User Mapping" : "Pastro Përshoqërimin Emër përdoruesi-Përdorues LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Pastro Përshoqërimin Emër grupi-Grup LDAP"
+    "Clear Groupname-LDAP Group Mapping" : "Pastro Përshoqërimin Emër grupi-Grup LDAP",
+    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Lëreni bosh për emrin e përdoruesit (I Paracaktuar). Ose, përcaktoni një atribut LDAP/AD."
 },
 "nplurals=2; plural=(n != 1);");

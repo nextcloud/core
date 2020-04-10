@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-namespace Test\Files\ObjectStore;
 
+namespace Test\Files\ObjectStore;
 
 use OC\Files\ObjectStore\Mapper;
 use OCP\IUser;

@@ -27,7 +27,7 @@
     "Failed to send share by email" : "Nie udało się wysłać linku udostępnienia e-mailem",
     "%1$s shared »%2$s« with you" : "%1$s udostępnił »%2$s«",
     "%1$s shared »%2$s« with you." : "%1$s udostępnił »%2$s«.",
-    "Click the button below to open it." : "Kliknij przycisk poniżej aby przejść do udostępnionego zasobu.",
+    "Click the button below to open it." : "Kliknij przycisk poniżej, aby go otworzyć.",
     "Open »%s«" : "Otwórz »%s«",
     "%1$s via %2$s" : "%1$s przez %2$s",
     "%1$s shared »%2$s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%1$s udostępnił »%2$s«.\nPowinieneś już otrzymać oddzielną wiadomość zawierającą link do udostępnionego zasobu.\n",
@@ -47,18 +47,6 @@
     "Share provider which allows you to share files by mail" : "Wskaż dostawcę, który umożliwia udostępnianie plików pocztą",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Umożliwia użytkownikom udostępnianie spersonalizowanego linku do pliku lub katalogu poprzez umieszczenie go w wiadomości e-mail.",
     "Send password by mail" : "Wyślij hasło e-mailem",
-    "Enforce password protection" : "Wymuś zabezpieczenie hasłem",
-    "Sharing %s failed, this item is already shared with %s" : "Udostępnianie %s zakończone niepowodzeniem, ten element jest już współdzielony z %s",
-    "%s shared »%s« with you" : "%s udostępnił »%s«",
-    "%s shared »%s« with you." : "%s udostępnił »%s«.",
-    "%s via %s" : "%s przez %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s udostępnił »%s«.\nPowinieneś już otrzymać oddzielną pocztę z linkiem, aby uzyskać dostęp do zasobu.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s udostępnił Ci »%s«. Powinieneś już otrzymać oddzielną pocztę z linkiem, aby uzyskać dostęp do zasobu.",
-    "Password to access »%s« shared to you by %s" : "Hasło dostępu do zasobu »%s« udostępnionego przez %s",
-    "It is protected with the following password: %s" : "Zasób chroniony jest następującym hasłem: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Właśnie udostępniłeś »%s« użytkownikowi %s. Udostępnienie zostało już wysłane do odbiorcy. Ze względu na zasady bezpieczeństwa określone przez administratora %s każda akcja musi być chroniona hasłem i nie wolno wysyłać hasła od razu do odbiorcy. Z tego powodu należy je wysłać w osobnej wiadomości.",
-    "Password to access »%s« shared with %s" : "Hasło dostępu do »%s« udostępnionego dla %s",
-    "This is the password: %s" : "Hasło do zasobu to: %s",
-    "Password to access »%1$s« shared with %2$s" : "Hasło dostępu do %1$s, udostępnionego dla %2$s"
+    "Enforce password protection" : "Wymuś zabezpieczenie hasłem"
 },"pluralForm" :"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
 }

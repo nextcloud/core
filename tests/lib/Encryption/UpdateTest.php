@@ -19,9 +19,7 @@
  *
  */
 
-
 namespace Test\Encryption;
-
 
 use OC\Encryption\Update;
 use OC\Files\Mount\Manager;
@@ -54,7 +52,7 @@ class UpdateTest extends TestCase {
 	/** @var \OC\Encryption\File | \PHPUnit_Framework_MockObject_MockObject */
 	private $fileHelper;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->view = $this->getMockBuilder(View::class)
@@ -122,10 +120,10 @@ class UpdateTest extends TestCase {
 	 * @return array
 	 */
 	public function dataTestUpdate() {
-		return array(
-			array('/user/files/foo', true, ['/user/files/foo/file1.txt', '/user/files/foo/file1.txt'], 2),
-			array('/user/files/test.txt', false, [], 1),
-		);
+		return [
+			['/user/files/foo', true, ['/user/files/foo/file1.txt', '/user/files/foo/file1.txt'], 2],
+			['/user/files/test.txt', false, [], 1],
+		];
 	}
 
 	/**
@@ -149,7 +147,7 @@ class UpdateTest extends TestCase {
 		} else {
 			$updateMock->expects($this->once())
 				->method('getOwnerPath')
-				->willReturnCallback(function($path) use ($target) {
+				->willReturnCallback(function ($path) use ($target) {
 					$this->assertSame(
 						$target,
 						$path,
@@ -169,14 +167,14 @@ class UpdateTest extends TestCase {
 	 * @return array
 	 */
 	public function dataTestPostRename() {
-		return array(
-			array('/test.txt', '/testNew.txt', true),
-			array('/test.txt', '/testNew.txt', false),
-			array('/folder/test.txt', '/testNew.txt', true),
-			array('/folder/test.txt', '/testNew.txt', false),
-			array('/folder/test.txt', '/testNew.txt', true),
-			array('/test.txt', '/folder/testNew.txt', false),
-		);
+		return [
+			['/test.txt', '/testNew.txt', true],
+			['/test.txt', '/testNew.txt', false],
+			['/folder/test.txt', '/testNew.txt', true],
+			['/folder/test.txt', '/testNew.txt', false],
+			['/folder/test.txt', '/testNew.txt', true],
+			['/test.txt', '/folder/testNew.txt', false],
+		];
 	}
 
 
@@ -209,10 +207,10 @@ class UpdateTest extends TestCase {
 	 * @return array
 	 */
 	public function dataTestPostRestore() {
-		return array(
-			array(true),
-			array(false),
-		);
+		return [
+			[true],
+			[false],
+		];
 	}
 
 	/**

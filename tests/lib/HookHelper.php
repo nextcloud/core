@@ -62,45 +62,45 @@ class HookHelper {
 	}
 
 	public static function createCallback($params) {
-		self::$hookCalls[] = array(
+		self::$hookCalls[] = [
 			'signal' => Filesystem::signal_create,
 			'params' => $params
-		);
+		];
 	}
 
 	public static function updateCallback($params) {
-		self::$hookCalls[] = array(
+		self::$hookCalls[] = [
 			'signal' => Filesystem::signal_update,
 			'params' => $params
-		);
+		];
 	}
 
 	public static function writeCallback($params) {
-		self::$hookCalls[] = array(
+		self::$hookCalls[] = [
 			'signal' => Filesystem::signal_write,
 			'params' => $params
-		);
+		];
 	}
 
 	public static function postCreateCallback($params) {
-		self::$hookCalls[] = array(
+		self::$hookCalls[] = [
 			'signal' => Filesystem::signal_post_create,
 			'params' => $params
-		);
+		];
 	}
 
 	public static function postUpdateCallback($params) {
-		self::$hookCalls[] = array(
+		self::$hookCalls[] = [
 			'signal' => Filesystem::signal_post_update,
 			'params' => $params
-		);
+		];
 	}
 
 	public static function postWriteCallback($params) {
-		self::$hookCalls[] = array(
+		self::$hookCalls[] = [
 			'signal' => Filesystem::signal_post_write,
 			'params' => $params
-		);
+		];
 	}
 
 	/**

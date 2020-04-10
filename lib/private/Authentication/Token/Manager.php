@@ -1,28 +1,34 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright 2018, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
- * @license AGPL-3.0
+ * @license GNU AGPL version 3 or any later version
  *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OC\Authentication\Token;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use OC\Authentication\Exceptions\ExpiredTokenException;
 use OC\Authentication\Exceptions\InvalidTokenException;
 use OC\Authentication\Exceptions\PasswordlessTokenException;
@@ -60,15 +66,29 @@ class Manager implements IProvider {
 								  string $name,
 								  int $type = IToken::TEMPORARY_TOKEN,
 								  int $remember = IToken::DO_NOT_REMEMBER): IToken {
-		return $this->publicKeyTokenProvider->generateToken(
-			$token,
-			$uid,
-			$loginName,
-			$password,
-			$name,
-			$type,
-			$remember
-		);
+		try {
+			return $this->publicKeyTokenProvider->generateToken(
+				$token,
+				$uid,
+				$loginName,
+				$password,
+				$name,
+				$type,
+				$remember
+			);
+		} catch (UniqueConstraintViolationException $e) {
+			// It's rare, but if two requests of the same session (e.g. env-based SAML)
+			// try to create the session token they might end up here at the same time
+			// because we use the session ID as token and the db token is created anew
+			// with every request.
+			//
+			// If the UIDs match, then this should be fine.
+			$existing = $this->getToken($token);
+			if ($existing->getUID() !== $uid) {
+				throw new \Exception('Token conflict handled, but UIDs do not match. This should not happen', 0, $e);
+			}
+			return $existing;
+		}
 	}
 
 	/**
@@ -158,14 +178,15 @@ class Manager implements IProvider {
 	 * @param string $oldSessionId
 	 * @param string $sessionId
 	 * @throws InvalidTokenException
+	 * @return IToken
 	 */
-	public function renewSessionToken(string $oldSessionId, string $sessionId) {
+	public function renewSessionToken(string $oldSessionId, string $sessionId): IToken {
 		try {
-			$this->publicKeyTokenProvider->renewSessionToken($oldSessionId, $sessionId);
+			return $this->publicKeyTokenProvider->renewSessionToken($oldSessionId, $sessionId);
 		} catch (ExpiredTokenException $e) {
 			throw $e;
 		} catch (InvalidTokenException $e) {
-			$this->defaultTokenProvider->renewSessionToken($oldSessionId, $sessionId);
+			return $this->defaultTokenProvider->renewSessionToken($oldSessionId, $sessionId);
 		}
 	}
 

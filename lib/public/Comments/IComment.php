@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -18,9 +19,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCP\Comments;
 
 /**
@@ -261,5 +263,21 @@ interface IComment {
 	 */
 	public function setObject($objectType, $objectId);
 
-}
+	/**
+	 * returns the reference id of the comment
+	 *
+	 * @return string|null
+	 * @since 19.0.0
+	 */
+	public function getReferenceId(): ?string;
 
+	/**
+	 * sets (overwrites) the reference id of the comment
+	 *
+	 * @param string|null $referenceId e.g. sha256 hash sum
+	 * @return IComment
+	 * @since 19.0.0
+	 */
+	public function setReferenceId(?string $referenceId): IComment;
+
+}

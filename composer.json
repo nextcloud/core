@@ -4,18 +4,21 @@
         "optimize-autoloader": true
     },
     "autoload" : {
-        "psr-0": {
-            "": "lib/private/legacy"
-        },
-        "psr-4": {
+			"psr-4": {
+			"": "lib/private/legacy",
             "OC\\": "lib/private",
             "OC\\Core\\": "core/",
-            "OC\\Settings\\": "settings/",
             "OCP\\": "lib/public"
         }
     },
     "require-dev": {
         "jakub-onderka/php-parallel-lint": "^0.9.2",
-        "jakub-onderka/php-console-highlighter": "^0.3.2"
+        "jakub-onderka/php-console-highlighter": "^0.3.2",
+        "nextcloud/coding-standard": "^0.1.0"
+    },
+    "scripts": {
+        "cs:fix": "php-cs-fixer fix",
+        "cs:check": "php-cs-fixer fix --dry-run",
+        "lint": "find . -name \\*.php -not -path './lib/composer/*' -not -path './build/.phan/*' -exec php -l \"{}\" \\;"
     }
 }

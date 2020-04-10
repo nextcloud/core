@@ -1,15 +1,15 @@
-import Vue from 'vue';
-import PersonalSettings from './views/PersonalSettings';
-import store from './store';
+import { loadState } from '@nextcloud/initial-state'
+import Vue from 'vue'
 
-Vue.prototype.t = t;
+import PersonalSettings from './views/PersonalSettings'
+import store from './store'
 
-const initialState = OCP.InitialState.loadState('twofactor_backupcodes', 'state');
-store.replaceState(
-	initialState
-)
+Vue.prototype.t = t
+
+const initialState = loadState('twofactor_backupcodes', 'state')
+store.replaceState(initialState)
 
 const View = Vue.extend(PersonalSettings)
 new View({
-	store
+	store,
 }).$mount('#twofactor-backupcodes-settings')

@@ -12,10 +12,8 @@ OC.L10N.register(
     "No entries found in this folder" : "Nun s'alcontraron entraes nesti carpeta",
     "Select all" : "Esbillar too",
     "Name" : "Nome",
+    "Actions" : "Aiciones",
     "Deleted" : "Desanicióse",
-    "Delete" : "Desaniciar",
-    "Couldn't delete %s permanently" : "Nun pudo desaniciase dafechu %s",
-    "Couldn't restore %s" : "Nun pudo restaurase %s",
-    "Error" : "Fallu"
+    "Delete" : "Desaniciar"
 },
 "nplurals=2; plural=(n != 1);");

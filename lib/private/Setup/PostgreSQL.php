@@ -8,6 +8,8 @@
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Vitor Mattos <vitor@php.rio>
  *
  * @license AGPL-3.0
  *
@@ -21,9 +23,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OC\Setup;
 
 use OC\DatabaseException;
@@ -154,6 +157,10 @@ class PostgreSQL extends AbstractDatabase {
 			// create the user
 			$query = $connection->prepare("CREATE USER " . addslashes($this->dbUser) . " CREATEDB PASSWORD '" . addslashes($this->dbPassword) . "'");
 			$query->execute();
+			if ($this->databaseExists($connection)) {
+				$query = $connection->prepare('GRANT CONNECT ON DATABASE ' . addslashes($this->dbName) . ' TO '.addslashes($this->dbUser));
+				$query->execute();
+			}
 		} catch (DatabaseException $e) {
 			$this->logger->error('Error while trying to create database user');
 			$this->logger->logException($e);

@@ -10,10 +10,8 @@
     "No entries found in this folder" : "Няма намерени записи в тази папка",
     "Select all" : "Избери всички",
     "Name" : "Име",
+    "Actions" : "Действия",
     "Deleted" : "Изтрито",
-    "Delete" : "Изтрий",
-    "Couldn't delete %s permanently" : "Неуспешно безвъзвратно изтриване на %s.",
-    "Couldn't restore %s" : "Неуспешно възстановяване на %s",
-    "Error" : "Грешка"
+    "Delete" : "Изтрий"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

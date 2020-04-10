@@ -26,7 +26,7 @@ trait ActorAware {
 	/**
 	 * @var Actor
 	 */
-	private $actor;
+	protected $actor;
 
 	/**
 	 * @param Actor $actor

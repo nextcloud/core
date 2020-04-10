@@ -5,8 +5,10 @@
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -20,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -31,7 +33,10 @@
 
 // use OCP namespace for all classes that are considered public.
 // This means that they should be used by apps instead of the internal ownCloud classes
+
 namespace OCP\Files;
+
+use OCP\Lock\LockedException;
 
 /**
  * Interface Node
@@ -44,15 +49,22 @@ interface Node extends FileInfo {
 	 * Move the file or folder to a new location
 	 *
 	 * @param string $targetPath the absolute target path
-	 * @throws \OCP\Files\NotPermittedException
-	 * @return \OCP\Files\Node
+	 * @return Node
+	 * @throws NotFoundException
+	 * @throws NotPermittedException if move not allowed or failed
+	 * @throws LockedException
+	 * @throws InvalidPathException
 	 * @since 6.0.0
 	 */
 	public function move($targetPath);
 
 	/**
 	 * Delete the file or folder
+	 *
 	 * @return void
+	 * @throws NotPermittedException
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
 	 * @since 6.0.0
 	 */
 	public function delete();
@@ -61,7 +73,7 @@ interface Node extends FileInfo {
 	 * Cope the file or folder to a new location
 	 *
 	 * @param string $targetPath the absolute target path
-	 * @return \OCP\Files\Node
+	 * @return Node
 	 * @since 6.0.0
 	 */
 	public function copy($targetPath);
@@ -71,7 +83,9 @@ interface Node extends FileInfo {
 	 * If $mtime is omitted the current time will be used
 	 *
 	 * @param int $mtime (optional) modified date as unix timestamp
-	 * @throws \OCP\Files\NotPermittedException
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
+	 * @throws NotPermittedException
 	 * @return void
 	 * @since 6.0.0
 	 */
@@ -80,8 +94,8 @@ interface Node extends FileInfo {
 	/**
 	 * Get the storage backend the file or folder is stored on
 	 *
-	 * @return \OCP\Files\Storage
-	 * @throws \OCP\Files\NotFoundException
+	 * @return Storage
+	 * @throws NotFoundException
 	 * @since 6.0.0
 	 */
 	public function getStorage();
@@ -246,7 +260,7 @@ interface Node extends FileInfo {
 	 * any filesystem operation will automatically acquire the relevant locks for that operation.
 	 *
 	 * @param int $type \OCP\Lock\ILockingProvider::LOCK_SHARED or \OCP\Lock\ILockingProvider::LOCK_EXCLUSIVE
-	 * @throws \OCP\Lock\LockedException
+	 * @throws LockedException
 	 * @since 9.1.0
 	 */
 	public function lock($type);
@@ -261,7 +275,7 @@ interface Node extends FileInfo {
 	 * Note that this is also the case if no existing lock exists for the file.
 	 *
 	 * @param int $targetType \OCP\Lock\ILockingProvider::LOCK_SHARED or \OCP\Lock\ILockingProvider::LOCK_EXCLUSIVE
-	 * @throws \OCP\Lock\LockedException
+	 * @throws LockedException
 	 * @since 9.1.0
 	 */
 	public function changeLock($targetType);
@@ -274,7 +288,7 @@ interface Node extends FileInfo {
 	 * Note that this method will not give any sort of error when trying to free a lock that doesn't exist.
 	 *
 	 * @param int $type \OCP\Lock\ILockingProvider::LOCK_SHARED or \OCP\Lock\ILockingProvider::LOCK_EXCLUSIVE
-	 * @throws \OCP\Lock\LockedException
+	 * @throws LockedException
 	 * @since 9.1.0
 	 */
 	public function unlock($type);

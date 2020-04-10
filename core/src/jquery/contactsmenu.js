@@ -32,96 +32,92 @@ const LIST = ''
 	+ '            </a>'
 	+ '        </li>'
 	+ '    </ul>'
-	+ '</div>';
+	+ '</div>'
 
-const entryTemplate = require('./contactsmenu/jquery_entry.handlebars');
+const entryTemplate = require('./contactsmenu/jquery_entry.handlebars')
 
-$.fn.contactsMenu = function (shareWith, shareType, appendTo) {
+$.fn.contactsMenu = function(shareWith, shareType, appendTo) {
 	// 0 - user, 4 - email, 6 - remote
-	var allowedTypes = [0, 4, 6];
+	const allowedTypes = [0, 4, 6]
 	if (allowedTypes.indexOf(shareType) === -1) {
-		return;
+		return
 	}
 
-	var $div = this;
-	appendTo.append(LIST);
-	var $list = appendTo.find('div.contactsmenu-popover');
+	const $div = this
+	appendTo.append(LIST)
+	const $list = appendTo.find('div.contactsmenu-popover')
 
-	$div.click(function () {
+	$div.click(function() {
 		if (!$list.hasClass('hidden')) {
-			$list.addClass('hidden');
-			$list.hide();
-			return;
+			$list.addClass('hidden')
+			$list.hide()
+			return
 		}
 
-		$list.removeClass('hidden');
-		$list.show();
+		$list.removeClass('hidden')
+		$list.show()
 
 		if ($list.hasClass('loaded')) {
-			return;
+			return
 		}
 
-		$list.addClass('loaded');
+		$list.addClass('loaded')
 		$.ajax(OC.generateUrl('/contactsmenu/findOne'), {
 			method: 'POST',
 			data: {
 				shareType: shareType,
-				shareWith: shareWith
-			}
-		}).then(function (data) {
-			$list.find('ul').find('li').addClass('hidden');
+				shareWith: shareWith,
+			},
+		}).then(function(data) {
+			$list.find('ul').find('li').addClass('hidden')
 
-			var actions;
+			let actions
 			if (!data.topAction) {
 				actions = [{
 					hyperlink: '#',
-					title: t('core', 'No action available')
-				}];
+					title: t('core', 'No action available'),
+				}]
 			} else {
-				actions = [data.topAction].concat(data.actions);
+				actions = [data.topAction].concat(data.actions)
 			}
 
-			actions.forEach(function (action) {
-				var template = entryTemplate;
-				$list.find('ul').append(template(action));
-			});
+			actions.forEach(function(action) {
+				const template = entryTemplate
+				$list.find('ul').append(template(action))
+			})
+		}, function(jqXHR) {
+			$list.find('ul').find('li').addClass('hidden')
 
-			if (actions.length === 0) {
-
-			}
-		}, function (jqXHR) {
-			$list.find('ul').find('li').addClass('hidden');
-
-			var title;
+			let title
 			if (jqXHR.status === 404) {
-				title = t('core', 'No action available');
+				title = t('core', 'No action available')
 			} else {
-				title = t('core', 'Error fetching contact actions');
+				title = t('core', 'Error fetching contact actions')
 			}
 
-			var template = entryTemplate;
+			const template = entryTemplate
 			$list.find('ul').append(template({
 				hyperlink: '#',
-				title: title
-			}));
-		});
-	});
+				title: title,
+			}))
+		})
+	})
 
-	$(document).click(function (event) {
-		var clickedList = ($list.has(event.target).length > 0);
-		var clickedTarget = ($div.has(event.target).length > 0);
+	$(document).click(function(event) {
+		const clickedList = ($list.has(event.target).length > 0)
+		let clickedTarget = ($div.has(event.target).length > 0)
 
-		$div.each(function () {
+		$div.each(function() {
 			if ($(this).is(event.target)) {
-				clickedTarget = true;
+				clickedTarget = true
 			}
-		});
+		})
 
 		if (clickedList || clickedTarget) {
-			return;
+			return
 		}
 
-		$list.addClass('hidden');
-		$list.hide();
-	});
-};
+		$list.addClass('hidden')
+		$list.hide()
+	})
+}

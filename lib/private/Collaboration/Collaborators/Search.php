@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -82,6 +82,13 @@ class Search implements ISearch {
 		if($searchResult->hasExactIdMatch($emailType) && !$searchResult->hasExactIdMatch($remoteType)) {
 			$searchResult->unsetResult($remoteType);
 		} elseif (!$searchResult->hasExactIdMatch($emailType) && $searchResult->hasExactIdMatch($remoteType)) {
+			$searchResult->unsetResult($emailType);
+		}
+
+		// if we have an exact local user match, there is no need to show the remote and email matches
+		$userType = new SearchResultType('users');
+		if($searchResult->hasExactIdMatch($userType)) {
+			$searchResult->unsetResult($remoteType);
 			$searchResult->unsetResult($emailType);
 		}
 

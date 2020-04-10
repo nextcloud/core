@@ -24,8 +24,8 @@
 
 namespace Test\Avatar;
 
-use OC\Avatar\UserAvatar;
 use OC\Avatar\AvatarManager;
+use OC\Avatar\UserAvatar;
 use OC\User\Manager;
 use OCP\Files\IAppData;
 use OCP\Files\SimpleFS\ISimpleFolder;
@@ -51,7 +51,7 @@ class AvatarManagerTest extends \Test\TestCase {
 	/** @var AvatarManager | \PHPUnit_Framework_MockObject_MockObject */
 	private $avatarManager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userManager = $this->createMock(Manager::class);
@@ -69,11 +69,11 @@ class AvatarManagerTest extends \Test\TestCase {
 		);
 	}
 
-	/**
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage user does not exist
-	 */
+	
 	public function testGetAvatarInvalidUser() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('user does not exist');
+
 		$this->userManager
 			->expects($this->once())
 			->method('get')

@@ -27,6 +27,7 @@ Feature: transfer-ownership
 		And user "user2" exists
 		And User "user0" uploads file "data/textfile.txt" to "/somefile.txt"
 		And file "/somefile.txt" of user "user0" is shared with user "user2" with permissions 19
+		And user "user2" accepts last share
 		When transfering ownership from "user0" to "user1"
 		And the command was successful
 		And As an "user2"
@@ -39,6 +40,7 @@ Feature: transfer-ownership
 		And User "user0" created a folder "/test"
 		And User "user0" uploads file "data/textfile.txt" to "/test/somefile.txt"
 		And folder "/test" of user "user0" is shared with user "user2" with permissions 31
+		And user "user2" accepts last share
 		When transfering ownership from "user0" to "user1"
 		And the command was successful
 		And As an "user2"
@@ -50,6 +52,7 @@ Feature: transfer-ownership
 		And User "user0" created a folder "/test"
 		And User "user0" uploads file "data/textfile.txt" to "/test/somefile.txt"
 		And folder "/test" of user "user0" is shared with user "user1" with permissions 31
+		And user "user1" accepts last share
 		When transfering ownership from "user0" to "user1"
 		And the command was successful
 		And As an "user1"
@@ -66,7 +69,9 @@ Feature: transfer-ownership
 		And User "user0" created a folder "/test"
 		And User "user0" uploads file "data/textfile.txt" to "/test/somefile.txt"
 		And folder "/test" of user "user0" is shared with group "group1" with permissions 31
+		And user "user2" accepts last share
 		And folder "/test" of user "user0" is shared with user "user2" with permissions 31
+		And user "user2" accepts last share
 		When transfering ownership from "user0" to "user1"
 		And the command was successful
 		And As an "user2"
@@ -80,6 +85,7 @@ Feature: transfer-ownership
 		And user "user2" belongs to group "test"
 		And User "user0" uploads file "data/textfile.txt" to "/somefile.txt"
 		And file "/somefile.txt" of user "user0" is shared with group "test"
+		And user "user2" accepts last share
 		When transfering ownership from "user0" to "test"
 		And the command was successful
 		And As an "user2"
@@ -91,6 +97,7 @@ Feature: transfer-ownership
 		And user "user2" exists
 		And User "user2" created a folder "/test"
 		And folder "/test" of user "user2" is shared with user "user0" with permissions 31
+		And user "user0" accepts last share
 		When transfering ownership from "user0" to "user1"
 		And the command was successful
 		And As an "user1"
@@ -114,6 +121,7 @@ Feature: transfer-ownership
 		And User "user0" created a folder "/sub"
 		And User "user0" created a folder "/sub/test"
 		And folder "/sub/test" of user "user0" is shared with user "user2" with permissions 31
+		And user "user2" accepts last share
 		And User "user0" deletes folder "/sub"
 		When transfering ownership from "user0" to "user1"
 		Then the command was successful
@@ -148,6 +156,7 @@ Feature: transfer-ownership
 		And User "user0" created a folder "/test"
 		And User "user0" uploads file "data/textfile.txt" to "/test/somefile.txt"
 		And file "/test/somefile.txt" of user "user0" is shared with user "user2" with permissions 19
+		And user "user2" accepts last share
 		When transfering ownership of path "test" from "user0" to "user1"
 		And the command was successful
 		And As an "user2"
@@ -160,6 +169,7 @@ Feature: transfer-ownership
 		And User "user0" created a folder "/test"
 		And User "user0" uploads file "data/textfile.txt" to "/test/somefile.txt"
 		And folder "/test" of user "user0" is shared with user "user2" with permissions 31
+		And user "user2" accepts last share
 		When transfering ownership of path "test" from "user0" to "user1"
 		And the command was successful
 		And As an "user2"
@@ -171,6 +181,7 @@ Feature: transfer-ownership
 		And User "user0" created a folder "/test"
 		And User "user0" uploads file "data/textfile.txt" to "/test/somefile.txt"
 		And folder "/test" of user "user0" is shared with user "user1" with permissions 31
+		And user "user1" accepts last share
 		When transfering ownership of path "test" from "user0" to "user1"
 		And the command was successful
 		And As an "user1"
@@ -187,7 +198,9 @@ Feature: transfer-ownership
 		And User "user0" created a folder "/test"
 		And User "user0" uploads file "data/textfile.txt" to "/test/somefile.txt"
 		And folder "/test" of user "user0" is shared with group "group1" with permissions 31
+		And user "user2" accepts last share
 		And folder "/test" of user "user0" is shared with user "user2" with permissions 31
+		And user "user2" accepts last share
 		When transfering ownership of path "test" from "user0" to "user1"
 		And the command was successful
 		And As an "user2"
@@ -200,6 +213,7 @@ Feature: transfer-ownership
 		And User "user2" created a folder "/test"
 		And User "user0" created a folder "/sub"
 		And folder "/test" of user "user2" is shared with user "user0" with permissions 31
+		And user "user0" accepts last share
 		And User "user0" moved folder "/test" to "/sub/test"
 		When transfering ownership of path "sub" from "user0" to "user1"
 		And the command was successful

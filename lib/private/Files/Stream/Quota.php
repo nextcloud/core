@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -19,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -44,12 +45,12 @@ class Quota extends Wrapper {
 	 * @return resource
 	 */
 	static public function wrap($stream, $limit) {
-		$context = stream_context_create(array(
-			'quota' => array(
+		$context = stream_context_create([
+			'quota' => [
 				'source' => $stream,
 				'limit' => $limit
-			)
-		));
+			]
+		]);
 		return Wrapper::wrapSource($stream, $context, 'quota', self::class);
 	}
 

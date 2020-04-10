@@ -36,7 +36,7 @@ class RegistryTest extends TestCase {
 	/** @var Registry */
 	private $registry;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->registry = new Registry();

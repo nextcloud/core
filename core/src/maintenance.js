@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Axios from 'nextcloud-axios'
+import Axios from '@nextcloud/axios'
 
 import OC from './OC/index'
 
@@ -40,10 +40,10 @@ const check = () => {
 			console.info('Nextcloud is still in maintenance mode')
 
 			// Wait 20sec before the next request
-			setTimeout(check, 20 * 1000);
+			setTimeout(check, 20 * 1000)
 		})
 		.catch(console.error.bind(this))
-};
+}
 
 // Off we go!
-check();
+check()

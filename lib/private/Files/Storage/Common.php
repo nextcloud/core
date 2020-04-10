@@ -5,6 +5,8 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Greta Doci <gretadoci@gmail.com>
  * @author hkjolhede <hkjolhede@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
@@ -15,6 +17,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Roland Tapken <roland@bitarbeiter.net>
  * @author Sam Tuke <mail@samtuke.com>
  * @author scambra <sergio@entrecables.com>
  * @author Stefan Weil <sw@weilnetz.de>
@@ -34,7 +37,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -44,8 +47,10 @@ use OC\Files\Cache\Cache;
 use OC\Files\Cache\Propagator;
 use OC\Files\Cache\Scanner;
 use OC\Files\Cache\Updater;
-use OC\Files\Filesystem;
 use OC\Files\Cache\Watcher;
+use OC\Files\Filesystem;
+use OC\Files\Storage\Wrapper\Jail;
+use OC\Files\Storage\Wrapper\Wrapper;
 use OCP\Files\EmptyFileNameException;
 use OCP\Files\FileNameTooLongException;
 use OCP\Files\InvalidCharacterInPathException;
@@ -292,7 +297,7 @@ abstract class Common implements Storage, ILockingStorage, IWriteStreamStorage {
 	 * @return array
 	 */
 	protected function searchInDir($query, $dir = '') {
-		$files = array();
+		$files = [];
 		$dh = $this->opendir($dir);
 		if (is_resource($dh)) {
 			while (($item = readdir($dh)) !== false) {
@@ -430,7 +435,7 @@ abstract class Common implements Storage, ILockingStorage, IWriteStreamStorage {
 			$path = '/' . $path;
 		}
 
-		$output = array();
+		$output = [];
 		foreach (explode('/', $path) as $chunk) {
 			if ($chunk == '..') {
 				array_pop($output);
@@ -533,7 +538,9 @@ abstract class Common implements Storage, ILockingStorage, IWriteStreamStorage {
 			}
 		}
 
-		if (isset($fileName[255])) {
+		// 255 characters is the limit on common file systems (ext/xfs)
+		// oc_filecache has a 250 char length limit for the filename
+		if (isset($fileName[250])) {
 			throw new FileNameTooLongException();
 		}
 
@@ -636,13 +643,39 @@ abstract class Common implements Storage, ILockingStorage, IWriteStreamStorage {
 	}
 
 	/**
+	 * Check if a storage is the same as the current one, including wrapped storages
+	 *
+	 * @param IStorage $storage
+	 * @return bool
+	 */
+	private function isSameStorage(IStorage $storage): bool {
+		while ($storage->instanceOfStorage(Wrapper::class)) {
+			/**
+			 * @var Wrapper $sourceStorage
+			 */
+			$storage = $storage->getWrapperStorage();
+		}
+
+		return $storage === $this;
+	}
+
+	/**
 	 * @param IStorage $sourceStorage
 	 * @param string $sourceInternalPath
 	 * @param string $targetInternalPath
 	 * @return bool
 	 */
 	public function moveFromStorage(IStorage $sourceStorage, $sourceInternalPath, $targetInternalPath) {
-		if ($sourceStorage === $this) {
+		if ($this->isSameStorage($sourceStorage)) {
+			// resolve any jailed paths
+			while ($sourceStorage->instanceOfStorage(Jail::class)) {
+				/**
+				 * @var Jail $sourceStorage
+				 */
+				$sourceInternalPath = $sourceStorage->getUnjailedPath($sourceInternalPath);
+				$sourceStorage = $sourceStorage->getUnjailedStorage();
+			}
+
 			return $this->rename($sourceInternalPath, $targetInternalPath);
 		}
 

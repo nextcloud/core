@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Clark Tomlinson <fallen013@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -21,23 +22,21 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Encryption\Tests;
-
 
 use OC\Files\View;
 use OCA\Encryption\Crypto\Crypt;
 use OCA\Encryption\KeyManager;
 use OCA\Encryption\Recovery;
 use OCP\Encryption\IFile;
-use OCP\Encryption\Keys\IStorage;
 use OCP\IConfig;
+use OCP\IUser;
 use OCP\IUserSession;
-use OCP\Security\ISecureRandom;
+use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
 
 class RecoveryTest extends TestCase {
@@ -54,6 +53,10 @@ class RecoveryTest extends TestCase {
 	 * @var \OCP\IUserSession|\PHPUnit_Framework_MockObject_MockObject
 	 */
 	private $userSessionMock;
+	/**
+	 * @var MockObject|IUser
+	 */
+	private $user;
 	/**
 	 * @var \OCA\Encryption\KeyManager|\PHPUnit_Framework_MockObject_MockObject
 	 */
@@ -106,8 +109,8 @@ class RecoveryTest extends TestCase {
 		$this->cryptMock->expects($this->once())
 			->method('createKeyPair')
 			->willReturn([
-					'publicKey' => 'privateKey',
-					'privateKey' => 'publicKey',
+				'publicKey' => 'privateKey',
+				'privateKey' => 'publicKey',
 			]);
 
 		$this->keyManagerMock->expects($this->once())
@@ -163,7 +166,7 @@ class RecoveryTest extends TestCase {
 
 		$this->cryptMock->expects($this->once())
 			->method('decryptPrivateKey')
-			->will($this->returnValue(false));
+			->willReturn(false);
 
 		$this->assertFalse($this->instance->changeRecoveryKeyPassword('password', 'passwordOld'));
 	}
@@ -254,52 +257,40 @@ class RecoveryTest extends TestCase {
 			['/', 'testkey', 'admin']));
 	}
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
+		$this->user = $this->createMock(IUser::class);
+		$this->user->expects($this->any())
+			->method('getUID')
+			->willReturn('admin');
 
-		$this->userSessionMock = $this->getMockBuilder(IUserSession::class)
-			->disableOriginalConstructor()
-			->setMethods([
-				'isLoggedIn',
-				'getUID',
-				'login',
-				'logout',
-				'setUser',
-				'getUser'
-			])
-			->getMock();
-
-		$this->userSessionMock->expects($this->any())->method('getUID')->will($this->returnValue('admin'));
-
+		$this->userSessionMock = $this->createMock(IUserSession::class);
 		$this->userSessionMock->expects($this->any())
-			->method($this->anything())
-			->will($this->returnSelf());
+			->method('getUser')
+			->willReturn($this->user);
+		$this->userSessionMock->expects($this->any())
+			->method('isLoggedIn')
+			->willReturn(true);
 
 		$this->cryptMock = $this->getMockBuilder(Crypt::class)->disableOriginalConstructor()->getMock();
-		/** @var \OCP\Security\ISecureRandom $randomMock */
-		$randomMock = $this->createMock(ISecureRandom::class);
 		$this->keyManagerMock = $this->getMockBuilder(KeyManager::class)->disableOriginalConstructor()->getMock();
 		$this->configMock = $this->createMock(IConfig::class);
-		/** @var \OCP\Encryption\Keys\IStorage $keyStorageMock */
-		$keyStorageMock = $this->createMock(IStorage::class);
 		$this->fileMock = $this->createMock(IFile::class);
 		$this->viewMock = $this->createMock(View::class);
 
 		$this->configMock->expects($this->any())
 			->method('setAppValue')
-			->will($this->returnCallback([$this, 'setValueTester']));
+			->willReturnCallback([$this, 'setValueTester']);
 
 		$this->configMock->expects($this->any())
 			->method('getAppValue')
-			->will($this->returnCallback([$this, 'getValueTester']));
+			->willReturnCallback([$this, 'getValueTester']);
 
 		$this->instance = new Recovery($this->userSessionMock,
 			$this->cryptMock,
-			$randomMock,
 			$this->keyManagerMock,
 			$this->configMock,
-			$keyStorageMock,
 			$this->fileMock,
 			$this->viewMock);
 	}

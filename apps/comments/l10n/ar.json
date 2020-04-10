@@ -17,6 +17,7 @@
     "More comments …" : "مزيد من التعليقات...",
     "Save" : "حفظ",
     "Allowed characters {count} of {max}" : "عدد الأحرف المسموح بها {count} من {max}",
+    "Error occurred while retrieving comment with ID {id}" : "حدث خطأ عند محاولة إيجاد التعليق المعرف بـ {id}",
     "Error occurred while updating comment with id {id}" : "حصل خطأ أثناء تعديل التعليق رقم {id}",
     "Error occurred while posting comment" : "حصل خطأ أثناء إرسال التعليق",
     "_%n unread comment_::_%n unread comments_" : ["%n تعليق غير مقروء","%n تعليق غير مقروء","تعليقان غير مقروءة","%n تعليقات غير مقروء","%n تعليق غير مقروء","%n تعليق غير مقروء"],

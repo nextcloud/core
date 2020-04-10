@@ -24,7 +24,6 @@ OC.L10N.register(
     "Error occurred while updating comment with id {id}" : "Un error occurreva durante le actualisation del commentario identificate per {id}",
     "Error occurred while posting comment" : "Un error occurreva durante le publication del commentario",
     "_%n unread comment_::_%n unread comments_" : ["%n commentario non legite","%n commentarios non legite"],
-    "Comment" : "Commentario",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s mentionava tu in un commentario in “%2$s”"
+    "Comment" : "Commentario"
 },
 "nplurals=2; plural=(n != 1);");

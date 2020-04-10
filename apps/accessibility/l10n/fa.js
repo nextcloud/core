@@ -1,24 +1,23 @@
 OC.L10N.register(
     "accessibility",
     {
-    "High contrast theme" : "تم با وضوح بالا",
-    "A high contrast theme to ease your navigation. Visual quality will be reduced but clarity will be increased." : "یک تم با وضوح بالا برای آسان نمودن راهبری شما\nکیفیت بصری کاهش خاهد یافت تا وضوح افزایش یابد.",
     "Dark theme" : "تم تاریک",
     "A dark theme to ease your eyes by reducing the overall luminosity and brightness. It is still under development, so please report any issues you may find." : "تم تاریک برای با کاهش نور و نیز شفافیت برای راحتی بیشتر چشمان شما در استفاده از نکست کلود تعبیه دیده شده است و این امکان در حال توسعه می باشد،به همین دلیل هرگونه ایراد پیش آمده را گزارش دهید.",
+    "High contrast mode" : "حالت کنتراست بالا",
+    "A high contrast mode to ease your navigation. Visual quality will be reduced but clarity will be increased." : "یک حالت کنتراست بالا برای سهولت در پیمایش. کیفیت بصری کاهش می یابد اما وضوح افزایش می یابد.",
     "Dyslexia font" : "فونت Dyslexia",
     "OpenDyslexic is a free typeface/font designed to mitigate some of the common reading errors caused by dyslexia." : "اپن دیسلکسیک یک فونت و نمایه رایگان است که طراحی شده برای خواندن بعضی ایراد های دیسلکسیا",
     "Accessibility" : "در دسترس بودن",
     "Accessibility options for nextcloud" : "امکان در دسترس بودن برای نکس کلود",
     "Provides multiple accessibilities options to ease your use of Nextcloud" : "امکان دسترسی امکانات از چند مسیر برای کار کردن راحت تر شما با نکست کلود قرارداده شده است.",
+    "High contrast theme" : "تم با وضوح بالا",
+    "A high contrast theme to ease your navigation. Visual quality will be reduced but clarity will be increased." : "یک تم با وضوح بالا برای آسان نمودن راهبری شما\nکیفیت بصری کاهش خاهد یافت تا وضوح افزایش یابد.",
+    "Dark theme (beta)" : "تم تاریک (بتا)",
     "Web Content Accessibility Guidelines" : "راهنمای در دسترس بودن محتوا وب",
     "our issue tracker" : "دنبال کننده مساله ها",
     "our design team" : "تیم طراحی ما",
-    "Enable" : "فعال",
-    "Dark theme (beta)" : "تم تاریک (بتا)",
-    "OpenDyslexic is a free typeface/font designed to mitigate some of the common reading errors caused by dyslexia. The typeface was created by Abelardo Gonzalez, who released it through an open-source license." : "OpenDuslexis یک فونت رایگان است که طراحی شده برای کم کردن زحمت خواندن خطاهای معمول رخ داده توسط duslexia.  طرح حروف بوسیله آبرلاردو گنزالز Abelardo Gonzalez ایجاد شده است که به صورت متن باز منتشر گریده است.",
-    "Provides multiple accessibilities options to ease your use of nextcloud" : "فراهم کردن چندین گزینه دسترسی را، برای سهولت استفاده ی شما در nextcloud.",
-    "Themes" : "تم",
-    "Fonts" : "فونت",
-    "enabled" : "فعال شده"
+    "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines} 2.1 on AA level, with the high contrast theme even on AAA level." : "دسترسی جهانی برای ما بسیار مهم است. ما از استانداردهای وب پیروی می کنیم و بررسی می کنیم تا همه چیز را بدون ماوس و نرم افزارهای کمکی مانند صفحه نمایشگر نیز قابل استفاده کنیم. هدف ما این است که مطابق با دستورالعمل {2.1} در سطح AA ، با تم کنتراست بالا حتی در سطح AAA باشد.",
+    "If you find any issues, don’t hesitate to report them on {issuetracker}. And if you want to get involved, come join {designteam}!" : "اگر مشکلی پیدا کردید ، از گزارش آنها در مورد {issuetracker} دریغ نکنید. و اگر می خواهید درگیر شوید ، به ما بپیوندید {designteam}!",
+    "Enable" : "فعال"
 },
 "nplurals=2; plural=(n > 1);");

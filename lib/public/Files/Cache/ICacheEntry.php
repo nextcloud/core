@@ -16,7 +16,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -132,4 +132,28 @@ interface ICacheEntry {
 	 * @since 9.0.0
 	 */
 	public function isEncrypted();
+
+	/**
+	 * Get the metadata etag for the file
+	 *
+	 * @return string | null
+	 * @since 18.0.0
+	 */
+	public function getMetadataEtag(): ?string;
+
+	/**
+	 * Get the last modified date as unix timestamp
+	 *
+	 * @return int | null
+	 * @since 18.0.0
+	 */
+	public function getCreationTime(): ?int;
+
+	/**
+	 * Get the last modified date as unix timestamp
+	 *
+	 * @return int | null
+	 * @since 18.0.0
+	 */
+	public function getUploadTime(): ?int;
 }

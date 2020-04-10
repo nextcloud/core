@@ -30,7 +30,7 @@ namespace Test\Preview;
  */
 class MP3Test extends Provider {
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$fileName = 'testimage.mp3';

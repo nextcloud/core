@@ -4,6 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -28,8 +29,8 @@ use OCP\Comments\ICommentsManager;
 use OCP\ILogger;
 use OCP\IUserManager;
 use OCP\IUserSession;
-use Sabre\DAV\Exception\NotAuthenticated;
 use Sabre\DAV\Exception\Forbidden;
+use Sabre\DAV\Exception\NotAuthenticated;
 use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\ICollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

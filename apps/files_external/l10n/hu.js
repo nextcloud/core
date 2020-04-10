@@ -25,7 +25,7 @@ OC.L10N.register(
     "Are you sure you want to delete this external storage?" : "Biztosan törlöd ezt a külső tárolót?",
     "Delete storage?" : "Tároló törlése?",
     "Saved" : "Elmentve",
-    "Saving..." : "Mentés...",
+    "Saving …" : "Mentés ...",
     "Save" : "Mentés",
     "Empty response from the server" : "Üres válasz a szervertől",
     "Couldn't access. Please log out and in again to activate this mount point" : "Nem hozzáférhető. Kérjük lépj ki és be ismét a csatolási pont aktiválásához",
@@ -103,6 +103,8 @@ OC.L10N.register(
     "SFTP with secret key login" : "SFTP titkos kulcs belépéssel",
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Megosztás",
+    "Show hidden files" : "Rejtett fájlok megjelenítése",
+    "Timeout" : "Időtúllépés",
     "SMB / CIFS using OC login" : "SMB / CIFS OC belépéssel",
     "Username as share" : "Felhasználónév és megosztás",
     "OpenStack Object Storage" : "OpenStack Object Storage",
@@ -115,6 +117,7 @@ OC.L10N.register(
     "Name" : "Név",
     "Storage type" : "Tároló típusa",
     "Scope" : "Hatáskör",
+    "Open documentation" : "Dokumentáció megnyitása",
     "Folder name" : "Mappa neve",
     "External storage" : "Külső tárolók",
     "Authentication" : "Hitelesítés",
@@ -124,7 +127,6 @@ OC.L10N.register(
     "Add storage" : "Tároló becsatolása",
     "Advanced settings" : "Haladó beállítások",
     "Allow users to mount external storage" : "Külső tárolók csatolásának  engedélyezése a felhasználók részére",
-    "Some of the configured external mount points are not connected. Please click on the red row(s) for more information" : "Néhány beállított külső csatolási pont nincs kapcsolatban. További információkért kattints a piros sor(ok)ra.",
-    "\"%s\" is not installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "%s nincs telepítve. %s csatolása lehetetlen. Kérd meg a rendszergazdádat, hogy telepítse."
+    "Saving..." : "Mentés..."
 },
 "nplurals=2; plural=(n != 1);");

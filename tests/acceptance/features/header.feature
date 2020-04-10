@@ -28,6 +28,17 @@ Feature: header
     And I see that the contact "user0" in the Contacts menu is shown
     And I see that the contact "admin" in the Contacts menu is not shown
 
+  Scenario: users from other groups are not seen in the contacts menu when autocompletion is restricted within the same group
+    Given I am logged in as the admin
+    And I visit the settings page
+    And I open the "Sharing" section of the "Administration" group
+    And I enable restricting username autocompletion to groups
+    And I see that username autocompletion is restricted to groups
+    When I open the Contacts menu
+    Then I see that the Contacts menu is shown
+    And I see that the contact "user0" in the Contacts menu is not shown
+    And I see that the contact "admin" in the Contacts menu is not shown
+
   Scenario: just added users are seen in the contacts menu
     Given I am logged in as the admin
     And I open the User settings

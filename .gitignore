@@ -16,6 +16,7 @@
 !/apps/accessibility
 !/apps/cloud_federation_api
 !/apps/comments
+!/apps/contactsinteraction
 !/apps/dav
 !/apps/files
 !/apps/federation
@@ -30,6 +31,7 @@
 !/apps/user_ldap
 !/apps/oauth2
 !/apps/provisioning_api
+!/apps/settings
 !/apps/systemtags
 !/apps/testing
 !/apps/admin_audit
@@ -68,6 +70,7 @@ CVS/*
 .svn/*
 RCS/*
 *.backup*
+.php_cs.cache
 
 # kdevelop
 .kdev
@@ -134,6 +137,7 @@ Vagrantfile
 
 # Tests - auto-generated files
 /data-autotest
+/tests/.phpunit.result.cache
 /tests/coverage*
 /tests/css
 /tests/karma-coverage

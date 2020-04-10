@@ -3,14 +3,18 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christopher Schäpers <kondou@ts.unde.re>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Clark Tomlinson <fallen013@gmail.com>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
+ * @author Guillaume COMPAGNON <gcompagnon@outlook.com>
  * @author Hendrik Leppelsack <hendrik@leppelsack.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
- * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Michael Gapczynski <GapczynskiM@gmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -19,6 +23,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -33,16 +38,18 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OC;
 
+use OC\AppFramework\Http\Request;
 use OC\Template\JSCombiner;
 use OC\Template\JSConfigHelper;
 use OC\Template\SCSSCacher;
 use OCP\Defaults;
-use OC\AppFramework\Http\Request;
+use OCP\Support\Subscription\IRegistry;
 
 class TemplateLayout extends \OC_Template {
 
@@ -57,7 +64,7 @@ class TemplateLayout extends \OC_Template {
 	 * @param string $renderAs
 	 * @param string $appId application id
 	 */
-	public function __construct( $renderAs, $appId = '' ) {
+	public function __construct($renderAs, $appId = '') {
 
 		// yes - should be injected ....
 		$this->config = \OC::$server->getConfig();
@@ -68,7 +75,7 @@ class TemplateLayout extends \OC_Template {
 
 		// Decide which page we show
 		if($renderAs === 'user') {
-			parent::__construct( 'core', 'layout.user' );
+			parent::__construct('core', 'layout.user');
 			if(in_array(\OC_App::getCurrentApp(), ['settings','admin', 'help']) !== false) {
 				$this->assign('bodyid', 'body-settings');
 			}else{
@@ -76,22 +83,22 @@ class TemplateLayout extends \OC_Template {
 			}
 
 			// Add navigation entry
-			$this->assign( 'application', '');
-			$this->assign( 'appid', $appId );
+			$this->assign('application', '');
+			$this->assign('appid', $appId);
 			$navigation = \OC::$server->getNavigationManager()->getAll();
-			$this->assign( 'navigation', $navigation);
+			$this->assign('navigation', $navigation);
 			$settingsNavigation = \OC::$server->getNavigationManager()->getAll('settings');
-			$this->assign( 'settingsnavigation', $settingsNavigation);
+			$this->assign('settingsnavigation', $settingsNavigation);
 			foreach($navigation as $entry) {
 				if ($entry['active']) {
-					$this->assign( 'application', $entry['name'] );
+					$this->assign('application', $entry['name']);
 					break;
 				}
 			}
 
 			foreach($settingsNavigation as $entry) {
 				if ($entry['active']) {
-					$this->assign( 'application', $entry['name'] );
+					$this->assign('application', $entry['name']);
 					break;
 				}
 			}
@@ -113,6 +120,8 @@ class TemplateLayout extends \OC_Template {
 				$this->assign('themingInvertMenu', $util->invertTextColor(\OC::$server->getThemingDefaults()->getColorPrimary()));
 			} catch (\OCP\AppFramework\QueryException $e) {
 				$this->assign('themingInvertMenu', false);
+			} catch (\OCP\AutoloadNotAllowedException $e) {
+				$this->assign('themingInvertMenu', false);
 			}
 
 		} else if ($renderAs === 'error') {
@@ -130,9 +139,16 @@ class TemplateLayout extends \OC_Template {
 			$this->assign('user_uid', \OC_User::getUser());
 		} else if ($renderAs === 'public') {
 			parent::__construct('core', 'layout.public');
-			$this->assign( 'appid', $appId );
+			$this->assign('appid', $appId);
 			$this->assign('bodyid', 'body-public');
-			$this->assign('showSimpleSignUpLink', $this->config->getSystemValue('simpleSignUpLink.shown', true) !== false);
+
+			/** @var IRegistry $subscription */
+			$subscription = \OC::$server->query(IRegistry::class);
+			$showSimpleSignup = $this->config->getSystemValueBool('simpleSignUpLink.shown', true);
+			if ($showSimpleSignup && $subscription->delegateHasValidSubscription()) {
+				$showSimpleSignup = false;
+			}
+			$this->assign('showSimpleSignUpLink', $showSimpleSignup);
 		} else {
 			parent::__construct('core', 'layout.base');
 
@@ -140,7 +156,6 @@ class TemplateLayout extends \OC_Template {
 		// Send the language and the locale to our layouts
 		$lang = \OC::$server->getL10NFactory()->findLanguage();
 		$locale = \OC::$server->getL10NFactory()->findLocale($lang);
-		$localeLang = \OC::$server->getL10NFactory()->findLanguageFromLocale('lib', $locale);
 
 		$lang = str_replace('_', '-', $lang);
 		$this->assign('language', $lang);
@@ -158,11 +173,11 @@ class TemplateLayout extends \OC_Template {
 
 		// Add the js files
 		$jsFiles = self::findJavascriptFiles(\OC_Util::$scripts);
-		$this->assign('jsfiles', array());
+		$this->assign('jsfiles', []);
 		if ($this->config->getSystemValue('installed', false) && $renderAs != 'error') {
 			if (\OC::$server->getContentSecurityPolicyNonceManager()->browserSupportsCspV3()) {
 				$jsConfigHelper = new JSConfigHelper(
-					\OC::$server->getL10N('lib', $localeLang ?: $lang),
+					\OC::$server->getL10N('lib'),
 					\OC::$server->query(Defaults::class),
 					\OC::$server->getAppManager(),
 					\OC::$server->getSession(),
@@ -181,7 +196,7 @@ class TemplateLayout extends \OC_Template {
 		foreach($jsFiles as $info) {
 			$web = $info[1];
 			$file = $info[2];
-			$this->append( 'jsfiles', $web.'/'.$file . $this->getVersionHashSuffix() );
+			$this->append('jsfiles', $web.'/'.$file . $this->getVersionHashSuffix());
 		}
 
 		try {
@@ -206,7 +221,7 @@ class TemplateLayout extends \OC_Template {
 			$cssFiles = self::findStylesheetFiles(\OC_Util::$styles, false);
 		}
 
-		$this->assign('cssfiles', array());
+		$this->assign('cssfiles', []);
 		$this->assign('printcssfiles', []);
 		$this->assign('versionHash', self::$versionHash);
 		foreach($cssFiles as $info) {
@@ -214,14 +229,14 @@ class TemplateLayout extends \OC_Template {
 			$file = $info[2];
 
 			if (substr($file, -strlen('print.css')) === 'print.css') {
-				$this->append( 'printcssfiles', $web.'/'.$file . $this->getVersionHashSuffix() );
+				$this->append('printcssfiles', $web.'/'.$file . $this->getVersionHashSuffix());
 			} else {
 				$suffix = $this->getVersionHashSuffix($web, $file);
 
 				if (strpos($file, '?v=') == false) {
-					$this->append( 'cssfiles', $web.'/'.$file . $suffix);
+					$this->append('cssfiles', $web.'/'.$file . $suffix);
 				} else {
-					$this->append( 'cssfiles', $web.'/'.$file . '-' . substr($suffix, 3));
+					$this->append('cssfiles', $web.'/'.$file . '-' . substr($suffix, 3));
 				}
 
 			}
@@ -234,7 +249,7 @@ class TemplateLayout extends \OC_Template {
 
 	/**
 	 * @param string $path
- 	 * @param string $file
+	 * @param string $file
 	 * @return string
 	 */
 	protected function getVersionHashSuffix($path = false, $file = false) {
@@ -289,8 +304,8 @@ class TemplateLayout extends \OC_Template {
 		$locator = new \OC\Template\CSSResourceLocator(
 			\OC::$server->getLogger(),
 			$theme,
-			array( \OC::$SERVERROOT => \OC::$WEBROOT ),
-			array( \OC::$SERVERROOT => \OC::$WEBROOT ),
+			[ \OC::$SERVERROOT => \OC::$WEBROOT ],
+			[ \OC::$SERVERROOT => \OC::$WEBROOT ],
 			$SCSSCacher
 		);
 		$locator->find($styles);
@@ -325,8 +340,8 @@ class TemplateLayout extends \OC_Template {
 		$locator = new \OC\Template\JSResourceLocator(
 			\OC::$server->getLogger(),
 			$theme,
-			array( \OC::$SERVERROOT => \OC::$WEBROOT ),
-			array( \OC::$SERVERROOT => \OC::$WEBROOT ),
+			[ \OC::$SERVERROOT => \OC::$WEBROOT ],
+			[ \OC::$SERVERROOT => \OC::$WEBROOT ],
 			\OC::$server->query(JSCombiner::class)
 			);
 		$locator->find($scripts);

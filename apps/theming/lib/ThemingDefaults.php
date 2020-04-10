@@ -5,13 +5,19 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Guillaume COMPAGNON <gcompagnon@outlook.com>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joachim Bauch <bauch@struktur.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Michael Weimann <mail@michael-weimann.eu>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Patrik Kernstock <info@pkern.at>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -27,7 +33,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -69,8 +75,6 @@ class ThemingDefaults extends \OC_Defaults {
 	private $entity;
 	/** @var string */
 	private $url;
-	/** @var string */
-	private $slogan;
 	/** @var string */
 	private $color;
 
@@ -115,7 +119,6 @@ class ThemingDefaults extends \OC_Defaults {
 		$this->title = parent::getTitle();
 		$this->entity = parent::getEntity();
 		$this->url = parent::getBaseUrl();
-		$this->slogan = parent::getSlogan();
 		$this->color = parent::getColorPrimary();
 		$this->iTunesAppId = parent::getiTunesAppId();
 		$this->iOSClientUrl = parent::getiOSClientUrl();
@@ -143,7 +146,7 @@ class ThemingDefaults extends \OC_Defaults {
 	}
 
 	public function getSlogan() {
-		return \OCP\Util::sanitizeHTML($this->config->getAppValue('theming', 'slogan', $this->slogan));
+		return \OCP\Util::sanitizeHTML($this->config->getAppValue('theming', 'slogan', parent::getSlogan()));
 	}
 
 	public function getImprintUrl() {
@@ -177,7 +180,7 @@ class ThemingDefaults extends \OC_Defaults {
 		];
 
 		$navigation = $this->navigationManager->getAll(INavigationManager::TYPE_GUEST);
-		$guestNavigation = array_map(function($nav) {
+		$guestNavigation = array_map(function ($nav) {
 			return [
 				'text' => $nav['name'],
 				'url' => $nav['href']
@@ -195,7 +198,7 @@ class ThemingDefaults extends \OC_Defaults {
 				$divider = ' · ';
 			}
 		}
-		if($legalLinks !== '' ) {
+		if($legalLinks !== '') {
 			$footer .= '<br/>' . $legalLinks;
 		}
 
@@ -290,8 +293,8 @@ class ThemingDefaults extends \OC_Defaults {
 		];
 
 		$variables['image-logo'] = "url('".$this->imageManager->getImageUrl('logo')."')";
-		$variables['image-logoheader'] = "'".$this->imageManager->getImageUrl('logoheader')."'";
-		$variables['image-favicon'] = "'".$this->imageManager->getImageUrl('favicon')."'";
+		$variables['image-logoheader'] = "url('".$this->imageManager->getImageUrl('logoheader')."')";
+		$variables['image-favicon'] = "url('".$this->imageManager->getImageUrl('favicon')."')";
 		$variables['image-login-background'] = "url('".$this->imageManager->getImageUrl('background')."')";
 		$variables['image-login-plain'] = 'false';
 
@@ -334,11 +337,12 @@ class ThemingDefaults extends \OC_Defaults {
 			$customFavicon = null;
 		}
 
+		$route = false;
 		if ($image === 'favicon.ico' && ($customFavicon !== null || $this->imageManager->shouldReplaceIcons())) {
-			return $this->urlGenerator->linkToRoute('theming.Icon.getFavicon', ['app' => $app]) . '?v=' . $cacheBusterValue;
+			$route = $this->urlGenerator->linkToRoute('theming.Icon.getFavicon', ['app' => $app]);
 		}
-		if ($image === 'favicon-touch.png' && ($customFavicon !== null || $this->imageManager->shouldReplaceIcons())) {
-			return $this->urlGenerator->linkToRoute('theming.Icon.getTouchIcon', ['app' => $app]) . '?v=' . $cacheBusterValue;
+		if (($image === 'favicon-touch.png' || $image === 'favicon-fb.png') && ($customFavicon !== null || $this->imageManager->shouldReplaceIcons())) {
+			$route = $this->urlGenerator->linkToRoute('theming.Icon.getTouchIcon', ['app' => $app]);
 		}
 		if ($image === 'manifest.json') {
 			try {
@@ -347,11 +351,16 @@ class ThemingDefaults extends \OC_Defaults {
 					return false;
 				}
 			} catch (AppPathNotFoundException $e) {}
-			return $this->urlGenerator->linkToRoute('theming.Theming.getManifest') . '?v=' . $cacheBusterValue;
+			$route = $this->urlGenerator->linkToRoute('theming.Theming.getManifest');
 		}
-		if (strpos($image, 'filetypes/') === 0 && file_exists(\OC::$SERVERROOT . '/core/img/' . $image )) {
-			return $this->urlGenerator->linkToRoute('theming.Icon.getThemedIcon', ['app' => $app, 'image' => $image]);
+		if (strpos($image, 'filetypes/') === 0 && file_exists(\OC::$SERVERROOT . '/core/img/' . $image)) {
+			$route = $this->urlGenerator->linkToRoute('theming.Icon.getThemedIcon', ['app' => $app, 'image' => $image]);
 		}
+
+		if ($route) {
+			return $route . '?v=' . $cacheBusterValue;
+		}
+
 		return false;
 	}
 

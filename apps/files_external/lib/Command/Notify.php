@@ -19,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -208,7 +208,7 @@ class Notify extends Base {
 	/**
 	 * @param int $mountId
 	 * @return array
-	*/
+	 */
 	private function getStorageIds($mountId) {
 		$qb = $this->connection->getQueryBuilder();
 		return $qb
@@ -223,7 +223,7 @@ class Notify extends Base {
 	 * @param array $storageIds
 	 * @param string $parent
 	 * @return int
-	*/
+	 */
 	private function updateParent($storageIds, $parent) {
 		$pathHash = md5(trim(\OC_Util::normalizeUnicode($parent), '/'));
 		$qb = $this->connection->getQueryBuilder();
@@ -237,7 +237,7 @@ class Notify extends Base {
 
 	/**
 	 * @return \OCP\IDBConnection
-	*/
+	 */
 	private function reconnectToDatabase(IDBConnection $connection, OutputInterface $output) {
 		try {
 			$connection->close();

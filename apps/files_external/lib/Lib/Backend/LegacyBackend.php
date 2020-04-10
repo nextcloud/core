@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -16,16 +17,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_External\Lib\Backend;
 
-use \OCA\Files_External\Lib\DefinitionParameter;
-use \OCA\Files_External\Lib\Auth\Builtin;
-use \OCA\Files_External\Lib\MissingDependency;
-use \OCA\Files_External\Lib\LegacyDependencyCheckPolyfill;
+use OCA\Files_External\Lib\Auth\Builtin;
+use OCA\Files_External\Lib\DefinitionParameter;
+use OCA\Files_External\Lib\LegacyDependencyCheckPolyfill;
+use OCA\Files_External\Lib\MissingDependency;
 
 /**
  * Legacy compatibility for OC_Mount_Config::registerBackend()

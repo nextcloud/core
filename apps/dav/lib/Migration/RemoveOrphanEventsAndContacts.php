@@ -1,7 +1,13 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2019 Joas Schilling <coding@schilljs.com>
+ *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,7 +22,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -55,6 +61,11 @@ class RemoveOrphanEventsAndContacts implements IRepairStep {
 		$orphanItems = $this->removeOrphanChildren('calendarchanges', 'calendars',  'calendarid');
 		$output->info(sprintf('%d changes without a calendar have been cleaned up', $orphanItems));
 
+		$orphanItems = $this->removeOrphanChildren('calendarobjects', 'calendarsubscriptions',  'calendarid');
+		$output->info(sprintf('%d cached events without a calendar subscription have been cleaned up', $orphanItems));
+		$orphanItems = $this->removeOrphanChildren('calendarchanges', 'calendarsubscriptions',  'calendarid');
+		$output->info(sprintf('%d changes without a calendar subscription have been cleaned up', $orphanItems));
+
 		$orphanItems = $this->removeOrphanChildren('cards', 'addressbooks',  'addressbookid');
 		$output->info(sprintf('%d contacts without an addressbook have been cleaned up', $orphanItems));
 		$orphanItems = $this->removeOrphanChildren('cards_properties', 'cards',  'cardid');
@@ -70,9 +81,15 @@ class RemoveOrphanEventsAndContacts implements IRepairStep {
 			->from($childTable, 'c')
 			->leftJoin('c', $parentTable, 'p', $qb->expr()->eq('c.' . $parentId, 'p.id'))
 			->where($qb->expr()->isNull('p.id'));
+
+		if (\in_array($parentTable, ['calendars', 'calendarsubscriptions'], true)) {
+			$calendarType = $parentTable === 'calendarsubscriptions' ? CalDavBackend::CALENDAR_TYPE_SUBSCRIPTION : CalDavBackend::CALENDAR_TYPE_CALENDAR;
+			$qb->andWhere($qb->expr()->eq('c.calendartype', $qb->createNamedParameter($calendarType, IQueryBuilder::PARAM_INT), IQueryBuilder::PARAM_INT));
+		}
+
 		$result = $qb->execute();
 
-		$orphanItems = array();
+		$orphanItems = [];
 		while ($row = $result->fetch()) {
 			$orphanItems[] = (int) $row['id'];
 		}

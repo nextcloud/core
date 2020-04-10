@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2016 Joas Schilling <coding@schilljs.com>
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -44,7 +46,7 @@ class BackendTest extends TestCase {
 	/** @var IUserSession|\PHPUnit_Framework_MockObject_MockObject */
 	protected $userSession;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->activityManager = $this->createMock(IManager::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
@@ -95,7 +97,7 @@ class BackendTest extends TestCase {
 		$backend = $this->getBackend(['triggerCalendarActivity']);
 		$backend->expects($this->once())
 			->method('triggerCalendarActivity')
-			->willReturnCallback(function() use($expectedPayload, $expectedSubject) {
+			->willReturnCallback(function () use ($expectedPayload, $expectedSubject) {
 				$arguments = func_get_args();
 				$this->assertSame($expectedSubject, array_shift($arguments));
 				$this->assertEquals($expectedPayload, $arguments);

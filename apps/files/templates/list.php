@@ -19,6 +19,7 @@
 	<input type="hidden" class="max_human_file_size"
 		   value="(max <?php isset($_['uploadMaxHumanFilesize']) ? p($_['uploadMaxHumanFilesize']) : ''; ?>)">
 </div>
+<div id="filelist-header"></div>
 
 <div id="emptycontent" class="hidden">
 	<div class="icon-folder"></div>
@@ -43,7 +44,7 @@
 			<th id='headerName' class="hidden column-name">
 				<div id="headerName-container">
 					<a class="name sort columntitle" data-sort="name">
-                        <span><?php p($l->t( 'Name' )); ?></span>
+                        <span><?php p($l->t('Name')); ?></span>
                         <span class="sort-indicator"></span>
 
                     </a>
@@ -59,7 +60,7 @@
 				<a class="size sort columntitle" data-sort="size"><span><?php p($l->t('Size')); ?></span><span class="sort-indicator"></span></a>
 			</th>
 			<th id="headerDate" class="hidden column-mtime">
-				<a id="modified" class="columntitle" data-sort="mtime"><span><?php p($l->t( 'Modified' )); ?></span><span class="sort-indicator"></span></a>
+				<a id="modified" class="columntitle" data-sort="mtime"><span><?php p($l->t('Modified')); ?></span><span class="sort-indicator"></span></a>
 			</th>
 		</tr>
 	</thead>
@@ -68,6 +69,7 @@
 	<tfoot>
 	</tfoot>
 </table>
+<div id="filelist-footer"></div>
 <input type="hidden" name="dir" id="dir" value="" />
 <div class="hiddenuploadfield">
 	<input type="file" id="file_upload_start" class="hiddenuploadfield" name="files[]" />

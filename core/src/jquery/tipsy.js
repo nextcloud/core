@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -23,61 +23,63 @@ import $ from 'jquery'
 
 /**
  * $ tipsy shim for the bootstrap tooltip
+ * @param {Object} argument options
+ * @returns {Object} this
  * @deprecated
  */
-$.fn.tipsy = function (argument) {
-	console.warn('Deprecation warning: tipsy is deprecated. Use tooltip instead.');
+$.fn.tipsy = function(argument) {
+	console.warn('Deprecation warning: tipsy is deprecated. Use tooltip instead.')
 	if (typeof argument === 'object' && argument !== null) {
 
 		// tipsy defaults
-		var options = {
+		const options = {
 			placement: 'bottom',
-			delay: {'show': 0, 'hide': 0},
+			delay: { 'show': 0, 'hide': 0 },
 			trigger: 'hover',
 			html: false,
-			container: 'body'
-		};
+			container: 'body',
+		}
 		if (argument.gravity) {
 			switch (argument.gravity) {
-				case 'n':
-				case 'nw':
-				case 'ne':
-					options.placement = 'bottom';
-					break;
-				case 's':
-				case 'sw':
-				case 'se':
-					options.placement = 'top';
-					break;
-				case 'w':
-					options.placement = 'right';
-					break;
-				case 'e':
-					options.placement = 'left';
-					break;
+			case 'n':
+			case 'nw':
+			case 'ne':
+				options.placement = 'bottom'
+				break
+			case 's':
+			case 'sw':
+			case 'se':
+				options.placement = 'top'
+				break
+			case 'w':
+				options.placement = 'right'
+				break
+			case 'e':
+				options.placement = 'left'
+				break
 			}
 		}
 		if (argument.trigger) {
-			options.trigger = argument.trigger;
+			options.trigger = argument.trigger
 		}
 		if (argument.delayIn) {
-			options.delay.show = argument.delayIn;
+			options.delay.show = argument.delayIn
 		}
 		if (argument.delayOut) {
-			options.delay.hide = argument.delayOut;
+			options.delay.hide = argument.delayOut
 		}
 		if (argument.html) {
-			options.html = true;
+			options.html = true
 		}
 		if (argument.fallback) {
-			options.title = argument.fallback;
+			options.title = argument.fallback
 		}
 		// destroy old tooltip in case the title has changed
-		$.fn.tooltip.call(this, 'destroy');
-		$.fn.tooltip.call(this, options);
+		$.fn.tooltip.call(this, 'destroy')
+		$.fn.tooltip.call(this, options)
 	} else {
-		this.tooltip(argument);
-		$.fn.tooltip.call(this, argument);
+		this.tooltip(argument)
+		$.fn.tooltip.call(this, argument)
 	}
-	return this;
-};
+	return this
+}

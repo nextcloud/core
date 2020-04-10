@@ -28,8 +28,6 @@ OC.L10N.register(
     "Error occurred while posting comment" : "Ocorreu um erro ao postar o  comentário",
     "_%n unread comment_::_%n unread comments_" : ["%n comentários não lidos","%n comentários não lidos"],
     "_1 new comment_::_{unread} new comments_" : ["1 novo comentário","{unread} novos comentários"],
-    "Comment" : "Comentar",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "Você foi mencionado em \"\", “%s”, em um comentário por um usuário que já foi excluído",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s mencionou você em um comentário sobre “%2$s”"
+    "Comment" : "Comentar"
 },
 "nplurals=2; plural=(n > 1);");

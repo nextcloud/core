@@ -1,7 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 /**
+ *
+ *
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  *
  * @license GNU AGPL version 3 or any later version
@@ -17,12 +21,13 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OC\Support\Subscription;
 
+use OCP\IConfig;
 use OCP\Support\Subscription\Exception\AlreadyRegisteredException;
 use OCP\Support\Subscription\IRegistry;
 use OCP\Support\Subscription\ISubscription;
@@ -32,6 +37,13 @@ class Registry implements IRegistry {
 
 	/** @var ISubscription */
 	private $subscription = null;
+
+	/** @var IConfig */
+	private $config;
+
+	public function __construct(IConfig $config) {
+		$this->config = $config;
+	}
 
 	/**
 	 * Register a subscription instance. In case it is called multiple times the
@@ -67,6 +79,11 @@ class Registry implements IRegistry {
 	 * @since 17.0.0
 	 */
 	public function delegateHasValidSubscription(): bool {
+		// Allow overwriting this manually for environments where the subscription information cannot be fetched
+		if ($this->config->getSystemValueBool('has_valid_subscription')) {
+			return true;
+		}
+
 		if ($this->subscription instanceof ISubscription) {
 			return $this->subscription->hasValidSubscription();
 		}

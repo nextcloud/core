@@ -31,13 +31,14 @@
 	margin-top: -250px;
 	table {
 		border-spacing: 0;
+		padding-left: 41px;
 		table-layout: fixed;
 		top: 0;
 		width: 100%;
 	}
 	tr {
 		&.result {
-			border-bottom: 1px solid $color-border;
+			border-bottom: 1px solid var(--color-border);
 			* {
 				cursor: pointer;
 			}
@@ -47,7 +48,7 @@
 		}
 		&:hover,
 		&.current {
-			background-color: nc-darken($color-main-background, 3%);
+			background-color: var(--color-primary-light);
 		}
 		td {
 			padding: 5px 9px;
@@ -78,13 +79,13 @@
 		}
 		.text {
 			white-space: normal;
-			color: #545454;
+			color: var(--color-primary-text);
 		}
 		.path {
 			opacity: 0.5;
 		}
 		.text em {
-			color: #545454;
+			color: var(--color-primary-text);
 			font-weight: bold;
 			opacity: 1;
 		}

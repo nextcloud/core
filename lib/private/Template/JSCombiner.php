@@ -2,6 +2,8 @@
 /**
  * @copyright 2017, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -19,17 +21,18 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OC\Template;
 
 use OC\SystemConfig;
-use OCP\ICache;
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\Files\SimpleFS\ISimpleFolder;
+use OCP\ICache;
 use OCP\ICacheFactory;
 use OCP\ILogger;
 use OCP\IURLGenerator;
@@ -131,7 +134,7 @@ class JSCombiner {
 
 			$deps = json_decode($deps, true);
 
-			if ($deps === NULL) {
+			if ($deps === null) {
 				return false;
 			}
 
@@ -214,7 +217,7 @@ class JSCombiner {
 		$fileName = array_pop($tmpfileLoc);
 		$fileName = str_replace('.json', '.js', $fileName);
 
-		return substr($this->urlGenerator->linkToRoute('core.Js.getJs', array('fileName' => $fileName, 'appName' => $appName)), strlen(\OC::$WEBROOT) + 1);
+		return substr($this->urlGenerator->linkToRoute('core.Js.getJs', ['fileName' => $fileName, 'appName' => $appName]), strlen(\OC::$WEBROOT) + 1);
 	}
 
 	/**

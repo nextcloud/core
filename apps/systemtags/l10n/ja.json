@@ -1,5 +1,6 @@
 { "translations": {
     "Tags" : "タグ",
+    "Tag name is empty" : "タグ名が空です",
     "Update" : "更新",
     "Create" : "作成",
     "Select tag…" : "タグを選択...",
@@ -25,6 +26,7 @@
     "You updated system tag {oldsystemtag} to {newsystemtag}" : "システムタグを {oldsystemtag} から {newsystemtag} に更新しました",
     "%1$s updated system tag %3$s to %2$s" : "%1$s が タグを %3$s から %2$s に更新",
     "{actor} updated system tag {oldsystemtag} to {newsystemtag}" : "{actor} がシステムタグを {oldsystemtag} から {newsystemtag} に更新しました",
+    "System tag %2$s was added to %1$s by the system" : "システムタグ %2$s は、システムによって %1$s に追加されました",
     "System tag {systemtag} was added to {file} by the system" : "システムによって{file}にシステムタグ {systemtag}が追加されました",
     "You added system tag %2$s to %1$s" : "%1$s にシステムタグ %2$s を追加しました",
     "You added system tag {systemtag} to {file}" : "{file} にシステムタグ {systemtag} を追加",
@@ -41,6 +43,7 @@
     "<strong>System tags</strong> for a file have been modified" : "ファイルの<strong>タグ</strong>が変更されたとき",
     "Collaborative tags" : "コラボタグ",
     "Collaborative tagging functionality which shares tags among users." : "ユーザー間でタグを共有するコラボレーティブタグ機能。",
+    "Collaborative tagging functionality which shares tags among users. Great for teams.\n\t(If you are a provider with a multi-tenancy installation, it is advised to deactivate this app as tags are shared.)" : "ユーザー間でタグを共有する共同タグ機能。 チームに最適です。\n（マルチテナンシーインストールのプロバイダーの場合は、タグが共有されているため、このアプリを非アクティブ化することをお勧めします。）",
     "Tagged files" : "タグ済ファイル",
     "Select tags to filter by" : "フィルターするタグを選択してください",
     "No tags found" : "タグが見つかりません",

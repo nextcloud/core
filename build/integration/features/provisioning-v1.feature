@@ -337,12 +337,14 @@ Feature: provisioning
 			| files_versions |
 			| lookup_server_connector |
 			| provisioning_api |
+			| settings |
 			| sharebymail |
 			| systemtags |
 			| theming |
 			| twofactor_backupcodes |
 			| updatenotification |
 			| user_ldap |
+			| viewer |
 			| workflowengine |
 			| files_external |
 			| oauth2 |

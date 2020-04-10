@@ -22,22 +22,22 @@ class PermissionsMaskTest extends \Test\Files\Storage\Storage {
 	 */
 	private $sourceStorage;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
-		$this->sourceStorage = new \OC\Files\Storage\Temporary(array());
+		$this->sourceStorage = new \OC\Files\Storage\Temporary([]);
 		$this->instance = $this->getMaskedStorage(Constants::PERMISSION_ALL);
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		$this->sourceStorage->cleanUp();
 		parent::tearDown();
 	}
 
 	protected function getMaskedStorage($mask) {
-		return new \OC\Files\Storage\Wrapper\PermissionsMask(array(
+		return new \OC\Files\Storage\Wrapper\PermissionsMask([
 			'storage' => $this->sourceStorage,
 			'mask' => $mask
-		));
+		]);
 	}
 
 	public function testMkdirNoCreate() {
@@ -129,10 +129,10 @@ class PermissionsMaskTest extends \Test\Files\Storage\Storage {
 
 	public function testScanNewFilesNested() {
 		$storage = $this->getMaskedStorage(Constants::PERMISSION_READ + Constants::PERMISSION_CREATE + Constants::PERMISSION_UPDATE);
-		$nestedStorage = new \OC\Files\Storage\Wrapper\PermissionsMask(array(
+		$nestedStorage = new \OC\Files\Storage\Wrapper\PermissionsMask([
 			'storage' => $storage,
 			'mask' => Constants::PERMISSION_READ + Constants::PERMISSION_CREATE
-		));
+		]);
 		$wrappedStorage = new Wrapper(['storage' => $nestedStorage]);
 		$wrappedStorage->file_put_contents('foo', 'bar');
 		$wrappedStorage->getScanner()->scan('');

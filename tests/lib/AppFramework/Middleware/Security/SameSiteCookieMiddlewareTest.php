@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\AppFramework\Middleware\Security;
 
 use OC\AppFramework\Http\Request;
@@ -42,7 +43,7 @@ class SameSiteCookieMiddlewareTest extends TestCase {
 	/** @var ControllerMethodReflector|\PHPUnit_Framework_MockObject_MockObject */
 	private $reflector;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->createMock(Request::class);

@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -20,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -28,7 +29,6 @@ namespace OCA\DAV\Tests\unit\CardDAV;
 
 use OC\Accounts\AccountManager;
 use OCA\DAV\CardDAV\Converter;
-use OCP\IDBConnection;
 use OCP\IImage;
 use OCP\IUser;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -39,7 +39,7 @@ class ConverterTest extends  TestCase {
 	/** @var  AccountManager | PHPUnit_Framework_MockObject_MockObject */
 	private $accountManager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->accountManager = $this->createMock(AccountManager::class);
@@ -192,9 +192,9 @@ class ConverterTest extends  TestCase {
 
 	public function providesNames() {
 		return [
-				['Sauron;;;;', 'Sauron'],
-				['Baggins;Bilbo;;;', 'Bilbo Baggins'],
-				['Tolkien;John;Ronald Reuel;;', 'John Ronald Reuel Tolkien'],
+			['Sauron;;;;', 'Sauron'],
+			['Baggins;Bilbo;;;', 'Bilbo Baggins'],
+			['Tolkien;John;Ronald Reuel;;', 'John Ronald Reuel Tolkien'],
 		];
 	}
 

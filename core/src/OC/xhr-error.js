@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -34,11 +34,12 @@ import Notification from './notification'
  */
 export const ajaxConnectionLostHandler = _.throttle(() => {
 	Notification.showTemporary(t('core', 'Connection to server lost'))
-}, 7 * 1000, {trailing: false})
+}, 7 * 1000, { trailing: false })
 
 /**
  * Process ajax error, redirects to main page
  * if an error/auth error status was returned.
+ * @param {XMLHttpRequest} xhr xhr request
  */
 export const processAjaxError = xhr => {
 	// purposefully aborted request ?
@@ -50,18 +51,18 @@ export const processAjaxError = xhr => {
 
 	if (_.contains([302, 303, 307, 401], xhr.status) && OC.currentUser) {
 		// sometimes "beforeunload" happens later, so need to defer the reload a bit
-		setTimeout(function () {
+		setTimeout(function() {
 			if (!OC._userIsNavigatingAway && !OC._reloadCalled) {
 				let timer = 0
 				const seconds = 5
-				const interval = setInterval(function () {
-						Notification.showUpdate(n('core', 'Problem loading page, reloading in %n second', 'Problem loading page, reloading in %n seconds', seconds - timer))
-						if (timer >= seconds) {
-							clearInterval(interval)
-							OC.reload()
-						}
-						timer++
-					}, 1000 // 1 second interval
+				const interval = setInterval(function() {
+					Notification.showUpdate(n('core', 'Problem loading page, reloading in %n second', 'Problem loading page, reloading in %n seconds', seconds - timer))
+					if (timer >= seconds) {
+						clearInterval(interval)
+						OC.reload()
+					}
+					timer++
+				}, 1000 // 1 second interval
 				)
 
 				// only call reload once
@@ -70,7 +71,7 @@ export const processAjaxError = xhr => {
 		}, 100)
 	} else if (xhr.status === 0) {
 		// Connection lost (e.g. WiFi disconnected or server is down)
-		setTimeout(function () {
+		setTimeout(function() {
 			if (!OC._userIsNavigatingAway && !OC._reloadCalled) {
 				// TODO: call method above directly
 				OC._ajaxConnectionLostHandler()
@@ -85,7 +86,7 @@ export const processAjaxError = xhr => {
  * This means that if this XHR object returns 401 or session timeout errors,
  * the current page will automatically be reloaded.
  *
- * @param {XMLHttpRequest} xhr
+ * @param {XMLHttpRequest} xhr xhr request
  */
 export const registerXHRForErrorProcessing = xhr => {
 	const loadCallback = () => {
@@ -93,7 +94,7 @@ export const registerXHRForErrorProcessing = xhr => {
 			return
 		}
 
-		if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+		if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
 			return
 		}
 

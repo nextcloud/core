@@ -9,9 +9,14 @@ OC.L10N.register(
     "The given web address is too long" : "La dirección web dada es demasiado larga",
     "The given slogan is too long" : "El lema dado es demasiado largo",
     "The given color is invalid" : "El color dado es inválido",
+    "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form" : "El archivo subido sobrepasa el valor MAX_FILE_SIZE especificada en el formulario HTML",
+    "No file was uploaded" : "No se subió ningún archivo ",
+    "Missing a temporary folder" : "Falta un directorio temporal",
     "No file uploaded" : "No hay archivos cargados",
     "Unsupported image type" : "Tipo de imagen no soportado",
     "Theming" : "Tematizar",
+    "Privacy policy" : "Políticas de privacidad",
+    "Open documentation" : "Abrir documentación",
     "Theming makes it possible to easily customize the look and feel of your instance and supported clients. This will be visible for all users." : "El tematizar hace posible personalizar facilmente la manera en que se ve su instancia y clientes soportados. Esto será visible para todos los usuarios. ",
     "Name" : "Nombre",
     "Reset to default" : "Restablecer al predeterminado",
@@ -22,9 +27,6 @@ OC.L10N.register(
     "Login image" : "Imágen de inicio de sesión",
     "Upload new login background" : "Cargar nueva imagen de fondo para inicio de sesión",
     "Remove background image" : "Eliminar imagen de fondo",
-    "You are already using a custom theme" : "Usted ya se encuentra usando un tema personalizado",
-    "reset to default" : "restaurar a predeterminado",
-    "Web address" : "Dirección web",
-    "Web address https://…" : "Dirección web https://..."
+    "Advanced options" : "Opciones avanzadas"
 },
 "nplurals=2; plural=(n != 1);");

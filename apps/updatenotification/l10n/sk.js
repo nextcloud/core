@@ -11,9 +11,11 @@ OC.L10N.register(
     "Update for {app} to version %s is available." : "Pre {app} je dostupná aktualizácia na verziu %s.",
     "Update notification" : "Aktualizovať hlásenie",
     "The version you are running is not maintained anymore. Please make sure to update to a supported version as soon as possible." : "Verzia, ktorú používate už nie je podporovaná. Čím skôr aktualizujte na podporovanú verziu prosím.",
+    "View in store" : "Zobraziť v obchode",
     "Apps with available updates" : "Aplikácie pre ktoré sú dostupné aktualizácie",
     "Open updater" : "Otvoriť aktualizátor",
     "Download now" : "Stiahnuť teraz",
+    "What's new?" : "Čo je nové?",
     "The update check is not yet finished. Please refresh the page." : "Kontrola aktualizácií ešte neskončila. Obnovte prosím stránku.",
     "Your version is up to date." : "Vaša verzia je atuálna.",
     "A non-default update server is in use to be checked for updates:" : "Pre kontrolu aktualizácií sa používa iný než predvolený server:",
@@ -30,8 +32,7 @@ OC.L10N.register(
     "Could not connect to the appstore or the appstore returned no updates at all. Search manually for updates or make sure your server has access to the internet and can connect to the appstore." : "Nepodarilo sa pripojiť k obchodu s aplikáciami alebo obchod nemá žiadne aktualizácie. Aktualizácie hľadajte manuálne alebo sa uistite, že Váš server má prístup na internet a že sa môže pripojiť k obchodu.",
     "<strong>All</strong> apps have an update for this version available" : "<strong>Všetky</strong> aplikácie majú dostupnú aktualizáciu",
     "View changelog" : "Zobraziť súhrn zmien",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> aplikácia nemá dostupnú aktualizáciu na túto verziu","<strong>%n</strong> aplikácie nemá dostupnú aktualizáciu na túto verziu ","<strong>%n</strong> aplikácií nemá dostupnú aktualizáciu na túto verziu","<strong>%n</strong>aplikácií nemá dostupnú aktualizáciu na túto verziu"],
-    "You can always update to a newer version / experimental channel. But you can never downgrade to a more stable channel." : "Vždy je možné prejsť na novšiu verziu / experimentálny kanál. Ale následne nie je možné prejsť naspäť na staršiu verziu / stabilnejší kanál.",
-    "Could not start updater, please try the manual update" : "Nebolo možné spustiť aktualizátor, skúste prosím manuálnu aktualizáciu"
+    "Beta" : "Beta",
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> aplikácia nemá dostupnú aktualizáciu na túto verziu","<strong>%n</strong> aplikácie nemá dostupnú aktualizáciu na túto verziu ","<strong>%n</strong> aplikácií nemá dostupnú aktualizáciu na túto verziu","<strong>%n</strong>aplikácií nemá dostupnú aktualizáciu na túto verziu"]
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

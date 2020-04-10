@@ -12,6 +12,10 @@
 
 namespace Test;
 
+use OC\App\AppManager;
+use OC\Group\Manager;
+use OC\NavigationManager;
+use OC\SubAdmin;
 use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IL10N;
@@ -19,10 +23,6 @@ use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\L10N\IFactory;
-use OC\App\AppManager;
-use OC\Group\Manager;
-use OC\NavigationManager;
-use OC\SubAdmin;
 
 class NavigationManagerTest extends TestCase {
 	/** @var AppManager|\PHPUnit_Framework_MockObject_MockObject */
@@ -41,7 +41,7 @@ class NavigationManagerTest extends TestCase {
 	/** @var \OC\NavigationManager */
 	protected $navigationManager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->appManager        = $this->createMock(AppManager::class);
@@ -228,9 +228,9 @@ class NavigationManagerTest extends TestCase {
 		$this->userSession->expects($this->any())->method('getUser')->willReturn($user);
 		$this->userSession->expects($this->any())->method('isLoggedIn')->willReturn(true);
 		$this->appManager->expects($this->once())
-		     ->method('getEnabledAppsForUser')
-		     ->with($user)
-		     ->willReturn(['test']);
+			 ->method('getEnabledAppsForUser')
+			 ->with($user)
+			 ->willReturn(['test']);
 		$this->groupManager->expects($this->any())->method('isAdmin')->willReturn($isAdmin);
 		$subadmin = $this->createMock(SubAdmin::class);
 		$subadmin->expects($this->any())->method('isSubAdmin')->with($user)->willReturn(false);

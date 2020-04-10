@@ -3,12 +3,14 @@ OC.L10N.register(
     {
     "Deleted files" : "Устгасан файлууд",
     "Restore" : "Сэргээх",
-    "Delete" : "Устгах",
     "Delete permanently" : "Үүрд устгах",
-    "Error" : "Алдаа",
     "This operation is forbidden" : "Энэ үйлдэл хориотой",
+    "This directory is unavailable, please check the logs or contact the administrator" : "Энэ хавтас байхгүй байна, үйлдлийн лог шалгах эсвэл админ хэрэглэгчтэй холбогдоно уу.",
+    "No entries found in this folder" : "Энэ хавтаст юм олдсонгүй",
     "Select all" : "Бүгдийг сонгох",
     "Name" : "Нэр",
-    "Deleted" : "Устгагдсан"
+    "Actions" : "Үйл ажиллагаа",
+    "Deleted" : "Устгагдсан",
+    "Delete" : "Устгах"
 },
 "nplurals=2; plural=(n != 1);");

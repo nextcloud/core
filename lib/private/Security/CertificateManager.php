@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -22,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -88,17 +89,17 @@ class CertificateManager implements ICertificateManager {
 	public function listCertificates() {
 
 		if (!$this->config->getSystemValue('installed', false)) {
-			return array();
+			return [];
 		}
 
 		$path = $this->getPathToCertificates() . 'uploads/';
 		if (!$this->view->is_dir($path)) {
-			return array();
+			return [];
 		}
-		$result = array();
+		$result = [];
 		$handle = $this->view->opendir($path);
 		if (!is_resource($handle)) {
-			return array();
+			return [];
 		}
 		while (false !== ($file = readdir($handle))) {
 			if ($file != '.' && $file != '..') {

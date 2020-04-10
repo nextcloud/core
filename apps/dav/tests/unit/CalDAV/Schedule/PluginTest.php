@@ -2,7 +2,9 @@
 /**
  * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
  *
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -26,6 +28,8 @@ namespace OCA\DAV\Tests\unit\CalDAV\Schedule;
 use OCA\DAV\CalDAV\Schedule\Plugin;
 use Sabre\DAV\Server;
 use Sabre\DAV\Xml\Property\Href;
+use Sabre\VObject\Parameter;
+use Sabre\VObject\Property\ICalendar\CalAddress;
 use Test\TestCase;
 
 class PluginTest extends TestCase  {
@@ -34,7 +38,7 @@ class PluginTest extends TestCase  {
 	/** @var Server|\PHPUnit_Framework_MockObject_MockObject */
 	private $server;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->server = $this->createMock(Server::class);
@@ -81,5 +85,44 @@ class PluginTest extends TestCase  {
 
 		$result = $this->invokePrivate($this->plugin, 'getAddressesForPrincipal', ['MyPrincipal']);
 		$this->assertSame([], $result);
+	}
+
+	public function testStripOffMailTo() {
+		$this->assertEquals('test@example.com', $this->invokePrivate($this->plugin, 'stripOffMailTo', ['test@example.com']));
+		$this->assertEquals('test@example.com', $this->invokePrivate($this->plugin, 'stripOffMailTo', ['mailto:test@example.com']));
+	}
+
+	public function testGetAttendeeRSVP() {
+		$property1 = $this->createMock(CalAddress::class);
+		$parameter1 = $this->createMock(Parameter::class);
+		$property1->expects($this->once())
+			->method('offsetGet')
+			->with('RSVP')
+			->willReturn($parameter1);
+		$parameter1->expects($this->once())
+			->method('getValue')
+			->with()
+			->willReturn('TRUE');
+
+		$property2 = $this->createMock(CalAddress::class);
+		$parameter2 = $this->createMock(Parameter::class);
+		$property2->expects($this->once())
+			->method('offsetGet')
+			->with('RSVP')
+			->willReturn($parameter2);
+		$parameter2->expects($this->once())
+			->method('getValue')
+			->with()
+			->willReturn('FALSE');
+
+		$property3 = $this->createMock(CalAddress::class);
+		$property3->expects($this->once())
+			->method('offsetGet')
+			->with('RSVP')
+			->willReturn(null);
+
+		$this->assertTrue($this->invokePrivate($this->plugin, 'getAttendeeRSVP', [$property1]));
+		$this->assertFalse($this->invokePrivate($this->plugin, 'getAttendeeRSVP', [$property2]));
+		$this->assertFalse($this->invokePrivate($this->plugin, 'getAttendeeRSVP', [$property3]));
 	}
 }

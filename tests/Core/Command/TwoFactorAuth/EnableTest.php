@@ -45,7 +45,7 @@ class EnableTest extends TestCase {
 	/** @var CommandTester */
 	private $command;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->providerManager = $this->createMock(ProviderManager::class);

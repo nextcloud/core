@@ -8,7 +8,6 @@
 
 namespace Test\Archive;
 
-
 abstract class TestBase extends \Test\TestCase {
 	/**
 	 * @var \OC\Archive\Archive
@@ -29,7 +28,7 @@ abstract class TestBase extends \Test\TestCase {
 	public function testGetFiles() {
 		$this->instance=$this->getExisting();
 		$allFiles=$this->instance->getFiles();
-		$expected=array('lorem.txt','logo-wide.png','dir/', 'dir/lorem.txt');
+		$expected=['lorem.txt','logo-wide.png','dir/', 'dir/lorem.txt'];
 		$this->assertEquals(4, count($allFiles), 'only found '.count($allFiles).' out of 4 expected files');
 		foreach($expected as $file) {
 			$this->assertContains($file, $allFiles, 'cant find '.  $file . ' in archive');
@@ -38,14 +37,14 @@ abstract class TestBase extends \Test\TestCase {
 		$this->assertFalse($this->instance->fileExists('non/existing/file'));
 
 		$rootContent=$this->instance->getFolder('');
-		$expected=array('lorem.txt','logo-wide.png', 'dir/');
+		$expected=['lorem.txt','logo-wide.png', 'dir/'];
 		$this->assertEquals(3, count($rootContent));
 		foreach($expected as $file) {
 			$this->assertContains($file, $rootContent, 'cant find '.  $file . ' in archive');
 		}
 
 		$dirContent=$this->instance->getFolder('dir/');
-		$expected=array('lorem.txt');
+		$expected=['lorem.txt'];
 		$this->assertEquals(1, count($dirContent));
 		foreach($expected as $file) {
 			$this->assertContains($file, $dirContent, 'cant find '.  $file . ' in archive');

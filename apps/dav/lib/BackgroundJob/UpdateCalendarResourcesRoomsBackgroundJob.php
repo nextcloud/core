@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2018, Georg Ehrke <oc.list@georgehrke.com>
+ * @copyright 2019, Georg Ehrke <oc.list@georgehrke.com>
  *
  * @author Georg Ehrke <oc.list@georgehrke.com>
  *
@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -26,6 +26,8 @@ namespace OCA\DAV\BackgroundJob;
 use OC\BackgroundJob\TimedJob;
 use OCA\DAV\CalDAV\CalDavBackend;
 use OCP\Calendar\BackendTemporarilyUnavailableException;
+use OCP\Calendar\IMetadataProvider;
+use OCP\Calendar\Resource\IBackend as IResourceBackend;
 use OCP\Calendar\Resource\IManager as IResourceManager;
 use OCP\Calendar\Resource\IResource;
 use OCP\Calendar\Room\IManager as IRoomManager;
@@ -41,22 +43,10 @@ class UpdateCalendarResourcesRoomsBackgroundJob extends TimedJob {
 	private $roomManager;
 
 	/** @var IDBConnection */
-	private $db;
+	private $dbConnection;
 
 	/** @var CalDavBackend */
 	private $calDavBackend;
-
-	/** @var string */
-	private $resourceDbTable;
-
-	/** @var string */
-	private $resourcePrincipalUri;
-
-	/** @var string */
-	private $roomDbTable;
-
-	/** @var string */
-	private $roomPrincipalUri;
 
 	/**
 	 * UpdateCalendarResourcesRoomsBackgroundJob constructor.
@@ -66,16 +56,14 @@ class UpdateCalendarResourcesRoomsBackgroundJob extends TimedJob {
 	 * @param IDBConnection $dbConnection
 	 * @param CalDavBackend $calDavBackend
 	 */
-	public function __construct(IResourceManager $resourceManager, IRoomManager $roomManager,
-								IDBConnection $dbConnection, CalDavBackend $calDavBackend) {
+	public function __construct(IResourceManager $resourceManager,
+								IRoomManager $roomManager,
+								IDBConnection $dbConnection,
+								CalDavBackend $calDavBackend) {
 		$this->resourceManager = $resourceManager;
 		$this->roomManager = $roomManager;
-		$this->db = $dbConnection;
+		$this->dbConnection = $dbConnection;
 		$this->calDavBackend = $calDavBackend;
-		$this->resourceDbTable = 'calendar_resources';
-		$this->resourcePrincipalUri = 'principals/calendar-resources';
-		$this->roomDbTable = 'calendar_rooms';
-		$this->roomPrincipalUri = 'principals/calendar-rooms';
 
 		// run once an hour
 		$this->setInterval(60 * 60);
@@ -84,211 +72,132 @@ class UpdateCalendarResourcesRoomsBackgroundJob extends TimedJob {
 	/**
 	 * @param $argument
 	 */
-	public function run($argument) {
-		$this->runResources();
-		$this->runRooms();
+	public function run($argument):void {
+		$this->runForBackend(
+			$this->resourceManager,
+			'calendar_resources',
+			'calendar_resources_md',
+			'resource_id',
+			'principals/calendar-resources'
+		);
+		$this->runForBackend(
+			$this->roomManager,
+			'calendar_rooms',
+			'calendar_rooms_md',
+			'room_id',
+			'principals/calendar-rooms'
+		);
 	}
 
 	/**
-	 * run timed job for resources
-	 */
-	private function runResources() {
-		$resourceBackends = $this->resourceManager->getBackends();
-		$cachedResources = $this->getCached($this->resourceDbTable);
-		$cachedResourceIds = $this->getCachedResourceIds($cachedResources);
-
-		$remoteResourceIds = [];
-		foreach($resourceBackends as $resourceBackend) {
-			try {
-				$remoteResourceIds[$resourceBackend->getBackendIdentifier()] =
-					$resourceBackend->listAllResources();
-			} catch(BackendTemporarilyUnavailableException $ex) {
-				// If the backend is temporarily unavailable
-				// ignore this backend in this execution
-				unset($cachedResourceIds[$resourceBackend->getBackendIdentifier()]);
-			}
-		}
-
-		$sortedResources = $this->sortByNewDeletedExisting($cachedResourceIds, $remoteResourceIds);
-
-		foreach($sortedResources['new'] as $backendId => $newResources) {
-			foreach ($newResources as $newResource) {
-				$backend = $this->resourceManager->getBackend($backendId);
-				if ($backend === null) {
-					continue;
-				}
-
-				$resource = $backend->getResource($newResource);
-				$this->addToCache($this->resourceDbTable, $resource);
-			}
-		}
-		foreach($sortedResources['deleted'] as $backendId => $deletedResources) {
-			foreach ($deletedResources as $deletedResource) {
-				$this->deleteFromCache($this->resourceDbTable,
-					$this->resourcePrincipalUri, $backendId, $deletedResource);
-			}
-		}
-		foreach($sortedResources['edited'] as $backendId => $editedResources) {
-			foreach ($editedResources as $editedResource) {
-				$backend = $this->resourceManager->getBackend($backendId);
-				if ($backend === null) {
-					continue;
-				}
-
-				$resource = $backend->getResource($editedResource);
-				$this->updateCache($this->resourceDbTable, $resource);
-			}
-		}
-	}
-
-	/**
-	 * run timed job for rooms
-	 */
-	private function runRooms() {
-		$roomBackends = $this->roomManager->getBackends();
-		$cachedRooms = $this->getCached($this->roomDbTable);
-		$cachedRoomIds = $this->getCachedRoomIds($cachedRooms);
-
-		$remoteRoomIds = [];
-		foreach($roomBackends as $roomBackend) {
-			try {
-				$remoteRoomIds[$roomBackend->getBackendIdentifier()] =
-					$roomBackend->listAllRooms();
-			} catch(BackendTemporarilyUnavailableException $ex) {
-				// If the backend is temporarily unavailable
-				// ignore this backend in this execution
-				unset($cachedRoomIds[$roomBackend->getBackendIdentifier()]);
-			}
-		}
-
-		$sortedRooms = $this->sortByNewDeletedExisting($cachedRoomIds, $remoteRoomIds);
-
-		foreach($sortedRooms['new'] as $backendId => $newRooms) {
-			foreach ($newRooms as $newRoom) {
-				$backend = $this->roomManager->getBackend($backendId);
-				if ($backend === null) {
-					continue;
-				}
-
-				$resource = $backend->getRoom($newRoom);
-				$this->addToCache($this->roomDbTable, $resource);
-			}
-		}
-		foreach($sortedRooms['deleted'] as $backendId => $deletedRooms) {
-			foreach ($deletedRooms as $deletedRoom) {
-				$this->deleteFromCache($this->roomDbTable,
-					$this->roomPrincipalUri, $backendId, $deletedRoom);
-			}
-		}
-		foreach($sortedRooms['edited'] as $backendId => $editedRooms) {
-			foreach ($editedRooms as $editedRoom) {
-				$backend = $this->roomManager->getBackend($backendId);
-				if ($backend === null) {
-					continue;
-				}
-
-				$resource = $backend->getRoom($editedRoom);
-				$this->updateCache($this->roomDbTable, $resource);
-			}
-		}
-	}
-
-	/**
-	 * get cached db rows for resources / rooms
-	 * @param string $tableName
-	 * @return array
-	 */
-	private function getCached($tableName):array {
-		$query = $this->db->getQueryBuilder();
-		$query->select('*')->from($tableName);
-
-		$rows = [];
-		$stmt = $query->execute();
-		while($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$rows[] = $row;
-		}
-
-		return $rows;
-	}
-
-	/**
-	 * @param array $cachedResources
-	 * @return array
-	 */
-	private function getCachedResourceIds(array $cachedResources):array {
-		$cachedResourceIds = [];
-		foreach ($cachedResources as $cachedResource) {
-			if (!isset($cachedResourceIds[$cachedResource['backend_id']])) {
-				$cachedResourceIds[$cachedResource['backend_id']] = [];
-			}
-
-			$cachedResourceIds[$cachedResource['backend_id']][] =
-				$cachedResource['resource_id'];
-		}
-
-		return $cachedResourceIds;
-	}
-
-	/**
-	 * @param array $cachedRooms
-	 * @return array
-	 */
-	private function getCachedRoomIds(array $cachedRooms):array {
-		$cachedRoomIds = [];
-		foreach ($cachedRooms as $cachedRoom) {
-			if (!isset($cachedRoomIds[$cachedRoom['backend_id']])) {
-				$cachedRoomIds[$cachedRoom['backend_id']] = [];
-			}
-
-			$cachedRoomIds[$cachedRoom['backend_id']][] =
-				$cachedRoom['resource_id'];
-		}
-
-		return $cachedRoomIds;
-	}
-
-	/**
-	 * sort list of ids by whether they appear only in the backend /
-	 * only in the cache / in both
+	 * Run background-job for one specific backendManager
+	 * either ResourceManager or RoomManager
 	 *
-	 * @param array $cached
-	 * @param array $remote
-	 * @return array
+	 * @param IResourceManager|IRoomManager $backendManager
+	 * @param string $dbTable
+	 * @param string $dbTableMetadata
+	 * @param string $foreignKey
+	 * @param string $principalPrefix
 	 */
-	private function sortByNewDeletedExisting(array $cached, array $remote):array {
-		$sorted = [
-			'new' => [],
-			'deleted' => [],
-			'edited' => [],
-		];
+	private function runForBackend($backendManager,
+								   string $dbTable,
+								   string $dbTableMetadata,
+								   string $foreignKey,
+								   string $principalPrefix):void {
+		$backends = $backendManager->getBackends();
 
-		$backendIds = array_merge(array_keys($cached), array_keys($remote));
-		foreach($backendIds as $backendId) {
-			if (!isset($cached[$backendId])) {
-				$sorted['new'][$backendId] = $remote[$backendId];
-			} elseif (!isset($remote[$backendId])) {
-				$sorted['deleted'][$backendId] = $cached[$backendId];
-			} else {
-				$sorted['new'][$backendId] = array_diff($remote[$backendId], $cached[$backendId]);
-				$sorted['deleted'][$backendId] = array_diff($cached[$backendId], $remote[$backendId]);
-				$sorted['edited'][$backendId] = array_intersect($remote[$backendId], $cached[$backendId]);
+		foreach($backends as $backend) {
+			$backendId = $backend->getBackendIdentifier();
+
+			try {
+				if ($backend instanceof IResourceBackend) {
+					$list = $backend->listAllResources();
+				} else {
+					$list = $backend->listAllRooms();
+				}
+			} catch(BackendTemporarilyUnavailableException $ex) {
+				continue;
+			}
+
+			$cachedList = $this->getAllCachedByBackend($dbTable, $backendId);
+			$newIds = array_diff($list, $cachedList);
+			$deletedIds = array_diff($cachedList, $list);
+			$editedIds = array_intersect($list, $cachedList);
+
+			foreach($newIds as $newId) {
+				try {
+					if ($backend instanceof IResourceBackend) {
+						$resource = $backend->getResource($newId);
+					} else {
+						$resource = $backend->getRoom($newId);
+					}
+
+					$metadata = [];
+					if ($resource instanceof IMetadataProvider) {
+						$metadata = $this->getAllMetadataOfBackend($resource);
+					}
+				} catch(BackendTemporarilyUnavailableException $ex) {
+					continue;
+				}
+
+				$id = $this->addToCache($dbTable, $backendId, $resource);
+				$this->addMetadataToCache($dbTableMetadata, $foreignKey, $id, $metadata);
+				// we don't create the calendar here, it is created lazily
+				// when an event is actually scheduled with this resource / room
+			}
+
+			foreach($deletedIds as $deletedId) {
+				$id = $this->getIdForBackendAndResource($dbTable, $backendId, $deletedId);
+				$this->deleteFromCache($dbTable, $id);
+				$this->deleteMetadataFromCache($dbTableMetadata, $foreignKey, $id);
+
+				$principalName = implode('-', [$backendId, $deletedId]);
+				$this->deleteCalendarDataForResource($principalPrefix, $principalName);
+			}
+
+			foreach($editedIds as $editedId) {
+				$id = $this->getIdForBackendAndResource($dbTable, $backendId, $editedId);
+
+				try {
+					if ($backend instanceof IResourceBackend) {
+						$resource = $backend->getResource($editedId);
+					} else {
+						$resource = $backend->getRoom($editedId);
+					}
+
+					$metadata = [];
+					if ($resource instanceof IMetadataProvider) {
+						$metadata = $this->getAllMetadataOfBackend($resource);
+					}
+				} catch(BackendTemporarilyUnavailableException $ex) {
+					continue;
+				}
+
+				$this->updateCache($dbTable, $id, $resource);
+
+				if ($resource instanceof IMetadataProvider) {
+					$cachedMetadata = $this->getAllMetadataOfCache($dbTableMetadata, $foreignKey, $id);
+					$this->updateMetadataCache($dbTableMetadata, $foreignKey, $id, $metadata, $cachedMetadata);
+				}
 			}
 		}
-
-		return $sorted;
 	}
 
 	/**
 	 * add entry to cache that exists remotely but not yet in cache
 	 *
 	 * @param string $table
+	 * @param string $backendId
 	 * @param IResource|IRoom $remote
+	 * @return int Insert id
 	 */
-	private function addToCache($table, $remote) {
-		$query = $this->db->getQueryBuilder();
+	private function addToCache(string $table,
+								string $backendId,
+								$remote):int {
+		$query = $this->dbConnection->getQueryBuilder();
 		$query->insert($table)
 			->values([
-				'backend_id' => $query->createNamedParameter($remote->getBackend()->getBackendIdentifier()),
+				'backend_id' => $query->createNamedParameter($backendId),
 				'resource_id' => $query->createNamedParameter($remote->getId()),
 				'email' => $query->createNamedParameter($remote->getEMail()),
 				'displayname' => $query->createNamedParameter($remote->getDisplayName()),
@@ -298,37 +207,70 @@ class UpdateCalendarResourcesRoomsBackgroundJob extends TimedJob {
 					))
 			])
 			->execute();
+		return $query->getLastInsertId();
+	}
+
+	/**
+	 * @param string $table
+	 * @param string $foreignKey
+	 * @param int $foreignId
+	 * @param array $metadata
+	 */
+	private function addMetadataToCache(string $table,
+										string $foreignKey,
+										int $foreignId,
+										array $metadata):void {
+		foreach($metadata as $key => $value) {
+			$query = $this->dbConnection->getQueryBuilder();
+			$query->insert($table)
+				->values([
+					$foreignKey => $query->createNamedParameter($foreignId),
+					'key' => $query->createNamedParameter($key),
+					'value' => $query->createNamedParameter($value),
+				])
+				->execute();
+		}
 	}
 
 	/**
 	 * delete entry from cache that does not exist anymore remotely
 	 *
 	 * @param string $table
-	 * @param string $principalUri
-	 * @param string $backendId
-	 * @param string $resourceId
+	 * @param int $id
 	 */
-	private function deleteFromCache($table, $principalUri, $backendId, $resourceId) {
-		$query = $this->db->getQueryBuilder();
+	private function deleteFromCache(string $table,
+									 int $id):void {
+		$query = $this->dbConnection->getQueryBuilder();
 		$query->delete($table)
-			->where($query->expr()->eq('backend_id', $query->createNamedParameter($backendId)))
-			->andWhere($query->expr()->eq('resource_id', $query->createNamedParameter($resourceId)))
+			->where($query->expr()->eq('id', $query->createNamedParameter($id)))
 			->execute();
+	}
 
-		$calendar = $this->calDavBackend->getCalendarByUri($principalUri, implode('-', [$backendId, $resourceId]));
-		if ($calendar !== null) {
-			$this->calDavBackend->deleteCalendar($calendar['id']);
-		}
+	/**
+	 * @param string $table
+	 * @param string $foreignKey
+	 * @param int $id
+	 */
+	private function deleteMetadataFromCache(string $table,
+											 string $foreignKey,
+											 int $id):void {
+		$query = $this->dbConnection->getQueryBuilder();
+		$query->delete($table)
+			->where($query->expr()->eq($foreignKey, $query->createNamedParameter($id)))
+			->execute();
 	}
 
 	/**
 	 * update an existing entry in cache
 	 *
 	 * @param string $table
+	 * @param int $id
 	 * @param IResource|IRoom $remote
 	 */
-	private function updateCache($table, $remote) {
-		$query = $this->db->getQueryBuilder();
+	private function updateCache(string $table,
+								 int $id,
+								 $remote):void {
+		$query = $this->dbConnection->getQueryBuilder();
 		$query->update($table)
 			->set('email', $query->createNamedParameter($remote->getEMail()))
 			->set('displayname', $query->createNamedParameter($remote->getDisplayName()))
@@ -336,9 +278,55 @@ class UpdateCalendarResourcesRoomsBackgroundJob extends TimedJob {
 				$this->serializeGroupRestrictions(
 					$remote->getGroupRestrictions()
 				)))
-			->where($query->expr()->eq('backend_id', $query->createNamedParameter($remote->getBackend()->getBackendIdentifier())))
-			->andWhere($query->expr()->eq('resource_id', $query->createNamedParameter($remote->getId())))
+			->where($query->expr()->eq('id', $query->createNamedParameter($id)))
 			->execute();
+	}
+
+	/**
+	 * @param string $dbTable
+	 * @param string $foreignKey
+	 * @param int $id
+	 * @param array $metadata
+	 * @param array $cachedMetadata
+	 */
+	private function updateMetadataCache(string $dbTable,
+										 string $foreignKey,
+										 int $id,
+										 array $metadata,
+										 array $cachedMetadata):void {
+		$newMetadata = array_diff_key($metadata, $cachedMetadata);
+		$deletedMetadata = array_diff_key($cachedMetadata, $metadata);
+
+		foreach ($newMetadata as $key => $value) {
+			$query = $this->dbConnection->getQueryBuilder();
+			$query->insert($dbTable)
+				->values([
+					$foreignKey => $query->createNamedParameter($id),
+					'key' => $query->createNamedParameter($key),
+					'value' => $query->createNamedParameter($value),
+				])
+				->execute();
+		}
+
+		foreach($deletedMetadata as $key => $value) {
+			$query = $this->dbConnection->getQueryBuilder();
+			$query->delete($dbTable)
+				->where($query->expr()->eq($foreignKey, $query->createNamedParameter($id)))
+				->andWhere($query->expr()->eq('key', $query->createNamedParameter($key)))
+				->execute();
+		}
+
+		$existingKeys = array_keys(array_intersect_key($metadata, $cachedMetadata));
+		foreach($existingKeys as $existingKey) {
+			if ($metadata[$existingKey] !== $cachedMetadata[$existingKey]) {
+				$query = $this->dbConnection->getQueryBuilder();
+				$query->update($dbTable)
+					->set('value', $query->createNamedParameter($metadata[$existingKey]))
+					->where($query->expr()->eq($foreignKey, $query->createNamedParameter($id)))
+					->andWhere($query->expr()->eq('key', $query->createNamedParameter($existingKey)))
+					->execute();
+			}
+		}
 	}
 
 	/**
@@ -349,5 +337,103 @@ class UpdateCalendarResourcesRoomsBackgroundJob extends TimedJob {
 	 */
 	private function serializeGroupRestrictions(array $groups):string {
 		return \json_encode($groups);
+	}
+
+	/**
+	 * Gets all metadata of a backend
+	 *
+	 * @param IResource|IRoom $resource
+	 * @return array
+	 */
+	private function getAllMetadataOfBackend($resource):array {
+		if (!($resource instanceof IMetadataProvider)) {
+			return [];
+		}
+
+		$keys = $resource->getAllAvailableMetadataKeys();
+		$metadata = [];
+		foreach($keys as $key) {
+			$metadata[$key] = $resource->getMetadataForKey($key);
+		}
+
+		return $metadata;
+	}
+
+	/**
+	 * @param string $table
+	 * @param string $foreignKey
+	 * @param int $id
+	 * @return array
+	 */
+	private function getAllMetadataOfCache(string $table,
+										   string $foreignKey,
+										   int $id):array {
+		$query = $this->dbConnection->getQueryBuilder();
+		$query->select(['key', 'value'])
+			->from($table)
+			->where($query->expr()->eq($foreignKey, $query->createNamedParameter($id)));
+		$stmt = $query->execute();
+		$rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+		$metadata = [];
+		foreach($rows as $row) {
+			$metadata[$row['key']] = $row['value'];
+		}
+
+		return $metadata;
+	}
+
+	/**
+	 * Gets all cached rooms / resources by backend
+	 *
+	 * @param $tableName
+	 * @param $backendId
+	 * @return array
+	 */
+	private function getAllCachedByBackend(string $tableName,
+										   string $backendId):array {
+		$query = $this->dbConnection->getQueryBuilder();
+		$query->select('resource_id')
+			->from($tableName)
+			->where($query->expr()->eq('backend_id', $query->createNamedParameter($backendId)));
+		$stmt = $query->execute();
+
+		return array_map(function ($row) {
+			return $row['resource_id'];
+		}, $stmt->fetchAll(\PDO::FETCH_NAMED));
+	}
+
+	/**
+	 * @param $principalPrefix
+	 * @param $principalUri
+	 */
+	private function deleteCalendarDataForResource(string $principalPrefix,
+												   string $principalUri):void {
+		$calendar = $this->calDavBackend->getCalendarByUri(
+			implode('/', [$principalPrefix, $principalUri]),
+			CalDavBackend::RESOURCE_BOOKING_CALENDAR_URI);
+
+		if ($calendar !== null) {
+			$this->calDavBackend->deleteCalendar($calendar['id']);
+		}
+	}
+
+	/**
+	 * @param $table
+	 * @param $backendId
+	 * @param $resourceId
+	 * @return int
+	 */
+	private function getIdForBackendAndResource(string $table,
+												string $backendId,
+												string $resourceId):int {
+		$query = $this->dbConnection->getQueryBuilder();
+		$query->select('id')
+			->from($table)
+			->where($query->expr()->eq('backend_id', $query->createNamedParameter($backendId)))
+			->andWhere($query->expr()->eq('resource_id', $query->createNamedParameter($resourceId)));
+		$stmt = $query->execute();
+
+		return $stmt->fetch(\PDO::FETCH_NAMED)['id'];
 	}
 }

@@ -6,6 +6,7 @@
     "Client Identifier" : "Identificador del cliente",
     "Secret" : "Secreto",
     "Add client" : "Agregar cliente",
-    "Add" : "Agregar"
+    "Add" : "Agregar",
+    "Delete" : "Borrar"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

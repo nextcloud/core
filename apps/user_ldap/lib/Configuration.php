@@ -2,15 +2,18 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Alex Weirig <alex.weirig@technolink.lu>
  * @author Alexander Bergolth <leo@strike.wu.ac.at>
+ * @author Alex Weirig <alex.weirig@technolink.lu>
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author blizzz <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lennart Rosam <hello@takuto.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roger Szabo <roger.szabo@web.de>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  * @author Xuanwo <xuanwo@yunify.com>
@@ -27,7 +30,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -51,7 +54,7 @@ class Configuration {
 	protected $unsavedChanges = ['ldapConfigurationActive' => 'ldapConfigurationActive'];
 
 	//settings
-	protected $config = array(
+	protected $config = [
 		'ldapHost' => null,
 		'ldapPort' => null,
 		'ldapBackupHost' => null,
@@ -107,7 +110,7 @@ class Configuration {
 		'ldapDynamicGroupMemberURL' => null,
 		'ldapDefaultPPolicyDN' => null,
 		'ldapExtStorageHomeAttribute' => null,
-	);
+	];
 
 	/**
 	 * @param string $configPrefix
@@ -136,7 +139,7 @@ class Configuration {
 	 * @param mixed $value
 	 */
 	public function __set($name, $value) {
-		$this->setConfiguration(array($name => $value));
+		$this->setConfiguration([$name => $value]);
 	}
 
 	/**
@@ -308,7 +311,7 @@ class Configuration {
 
 	/**
 	 * Sets multi-line values as arrays
-	 * 
+	 *
 	 * @param string $varName name of config-key
 	 * @param array|string $value to set
 	 */
@@ -384,7 +387,7 @@ class Configuration {
 
 	/**
 	 * Sets a scalar value.
-	 * 
+	 *
 	 * @param string $varName name of config key
 	 * @param mixed $value to set
 	 */
@@ -424,7 +427,7 @@ class Configuration {
 	 * to config-value entries in the database table
 	 */
 	public function getDefaults() {
-		return array(
+		return [
 			'ldap_host'                         => '',
 			'ldap_port'                         => '',
 			'ldap_backup_host'                  => '',
@@ -479,7 +482,7 @@ class Configuration {
 			'ldap_default_ppolicy_dn'           => '',
 			'ldap_user_avatar_rule'             => 'default',
 			'ldap_ext_storage_home_attribute'   => '',
-		);
+		];
 	}
 
 	/**
@@ -487,7 +490,7 @@ class Configuration {
 	 */
 	public function getConfigTranslationArray() {
 		//TODO: merge them into one representation
-		static $array = array(
+		static $array = [
 			'ldap_host'                         => 'ldapHost',
 			'ldap_port'                         => 'ldapPort',
 			'ldap_backup_host'                  => 'ldapBackupHost',
@@ -541,7 +544,7 @@ class Configuration {
 			'ldap_default_ppolicy_dn'           => 'ldapDefaultPPolicyDN',
 			'ldap_ext_storage_home_attribute'   => 'ldapExtStorageHomeAttribute',
 			'ldapIgnoreNamingRules'             => 'ldapIgnoreNamingRules',	// sysconfig
-		);
+		];
 		return $array;
 	}
 

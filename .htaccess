@@ -11,12 +11,13 @@
 
   <IfModule mod_env.c>
     # Add security and privacy related headers
-    Header set X-Content-Type-Options "nosniff"
-    Header set X-XSS-Protection "1; mode=block"
-    Header set X-Robots-Tag "none"
-    Header set X-Download-Options "noopen"
-    Header set X-Permitted-Cross-Domain-Policies "none"
-    Header set Referrer-Policy "no-referrer"
+    Header always set Referrer-Policy "no-referrer"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Download-Options "noopen"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Permitted-Cross-Domain-Policies "none"
+    Header always set X-Robots-Tag "none"
+    Header always set X-XSS-Protection "1; mode=block"
     SetEnv modHeadersAvailable true
   </IfModule>
 
@@ -40,12 +41,13 @@
 </IfModule>
 <IfModule mod_rewrite.c>
   RewriteEngine on
-  RewriteCond %{HTTP_USER_AGENT}  DavClnt
-  RewriteRule ^$         /remote.php/webdav/          [L,R=302]
+  RewriteCond %{HTTP_USER_AGENT} DavClnt
+  RewriteRule ^$ /remote.php/webdav/ [L,R=302]
   RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
   RewriteRule ^\.well-known/host-meta /public.php?service=host-meta [QSA,L]
   RewriteRule ^\.well-known/host-meta\.json /public.php?service=host-meta-json [QSA,L]
   RewriteRule ^\.well-known/webfinger /public.php?service=webfinger [QSA,L]
+  RewriteRule ^\.well-known/nodeinfo /public.php?service=nodeinfo [QSA,L]
   RewriteRule ^\.well-known/carddav /remote.php/dav/ [R=301,L]
   RewriteRule ^\.well-known/caldav /remote.php/dav/ [R=301,L]
   RewriteRule ^remote/(.*) remote.php [QSA,L]

@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -146,17 +146,17 @@ class Provider implements IProvider {
 		if ($event->getSubject() === 'add_comment_subject') {
 			if ($subjectParameters['actor'] === $this->activityManager->getCurrentUserId()) {
 				$event->setParsedSubject($this->l->t('You commented on %1$s', [
-						$subjectParameters['filePath'],
-					]))
+					$subjectParameters['filePath'],
+				]))
 					->setRichSubject($this->l->t('You commented on {file}'), [
 						'file' => $this->generateFileParameter($subjectParameters['fileId'], $subjectParameters['filePath']),
 					]);
 			} else {
 				$author = $this->generateUserParameter($subjectParameters['actor']);
 				$event->setParsedSubject($this->l->t('%1$s commented on %2$s', [
-						$author['name'],
-						$subjectParameters['filePath'],
-					]))
+					$author['name'],
+					$subjectParameters['filePath'],
+				]))
 					->setRichSubject($this->l->t('{author} commented on {file}'), [
 						'author' => $author,
 						'file' => $this->generateFileParameter($subjectParameters['fileId'], $subjectParameters['filePath']),

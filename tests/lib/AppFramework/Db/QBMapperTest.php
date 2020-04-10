@@ -105,7 +105,7 @@ class QBMapperTest extends \Test\TestCase {
 	/**
 	 * @throws \ReflectionException
 	 */
-	protected function setUp() {
+	protected function setUp(): void {
 
 		$this->db = $this->getMockBuilder(IDBConnection::class)
 			->disableOriginalConstructor()
@@ -127,9 +127,7 @@ class QBMapperTest extends \Test\TestCase {
 		$this->mapper = new QBTestMapper($this->db);
 	}
 
-	/**
-	 *
-	 */
+	
 	public function testInsertEntityParameterTypeMapping() {
 		$entity = new QBTestEntity();
 		$entity->setIntProp(123);
@@ -166,9 +164,7 @@ class QBMapperTest extends \Test\TestCase {
 		$this->mapper->insert($entity);
 	}
 
-	/**
-	 *
-	 */
+	
 	public function testUpdateEntityParameterTypeMapping() {
 		$entity = new QBTestEntity();
 		$entity->setId(789);
@@ -214,9 +210,7 @@ class QBMapperTest extends \Test\TestCase {
 		$this->mapper->update($entity);
 	}
 
-	/**
-	 *
-	 */
+	
 	public function testGetParameterTypeForProperty() {
 		$entity = new QBTestEntity();
 

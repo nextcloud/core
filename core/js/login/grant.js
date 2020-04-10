@@ -1,9 +1,10 @@
-jQuery(document).ready(function() {
-	$('#submit').click(function (e) {
-		$('#submit + .submit-icon')
-			.removeClass('icon-confirm-white')
-			.addClass(OCA.Theming && OCA.Theming.inverted
-				? 'icon-loading-small'
-				: 'icon-loading-small-dark');
+document.querySelector('form').addEventListener('submit', function(e) {
+	const wrapper = document.getElementById('submit-wrapper')
+	if (wrapper === null) {
+		return
+	}
+	wrapper.getElementsByClassName('icon-confirm-white').forEach(function(el) {
+		el.classList.remove('icon-confirm-white')
+		el.classList.add(OCA.Theming && OCA.Theming.inverted ? 'icon-loading-small' : 'icon-loading-small-dark')
 	})
 })

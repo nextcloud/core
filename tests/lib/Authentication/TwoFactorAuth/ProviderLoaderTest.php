@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -25,7 +26,6 @@ declare(strict_types=1);
 
 namespace lib\Authentication\TwoFactorAuth;
 
-use Exception;
 use OC\Authentication\TwoFactorAuth\ProviderLoader;
 use OCP\App\IAppManager;
 use OCP\Authentication\TwoFactorAuth\IProvider;
@@ -43,7 +43,7 @@ class ProviderLoaderTest extends TestCase {
 	/** @var ProviderLoader */
 	private $loader;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->appManager = $this->createMock(IAppManager::class);
@@ -52,25 +52,25 @@ class ProviderLoaderTest extends TestCase {
 		$this->loader = new ProviderLoader($this->appManager);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Could not load two-factor auth provider \OCA\MyFaulty2faApp\DoesNotExist
-	 */
+	
 	public function testFailHardIfProviderCanNotBeLoaded() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Could not load two-factor auth provider \\OCA\\MyFaulty2faApp\\DoesNotExist');
+
 		$this->appManager->expects($this->once())
 			->method('getEnabledAppsForUser')
 			->with($this->user)
 			->willReturn(['mail', 'twofactor_totp']);
 		$this->appManager
 			->method('getAppInfo')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['mail', false, null, []],
 				['twofactor_totp', false, null, [
 					'two-factor-providers' => [
 						'\\OCA\\MyFaulty2faApp\\DoesNotExist',
 					],
 				]],
-			]));
+			]);
 
 		$this->loader->getProviders($this->user);
 	}

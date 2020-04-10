@@ -23,7 +23,7 @@
     "Are you sure you want to delete this external storage?" : "Naozaj chcete zmazať toto externé úložisko?",
     "Delete storage?" : "Zmazať externé úložisko?",
     "Saved" : "Uložené",
-    "Saving..." : "Ukladá sa...",
+    "Saving …" : "Ukladá sa...",
     "Save" : "Uložiť",
     "Empty response from the server" : "Prázdna odpoveď zo servera",
     "Couldn't access. Please log out and in again to activate this mount point" : "Nedá sa pripojiť. Pre aktiváciu tohto prípojného bodu sa prosím odhláste a znovu prihláste",
@@ -72,6 +72,7 @@
     "Log-in credentials, save in database" : "Prihlasovacie údaje, ukladať v databáze",
     "Username and password" : "Meno a heslo",
     "Log-in credentials, save in session" : "Prihlasovacie údaje, ukladať do relácie",
+    "Global credentials, user entered" : "Globálne oprávnenia, užívateľ zadaný",
     "User entered, store in database" : "Používateľ zadaný, uložiť v databáze",
     "RSA public key" : "RSA verejný kľúč",
     "Public key" : "Verejný kľúč",
@@ -102,6 +103,7 @@
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Sprístupniť",
     "Show hidden files" : "Zobraziť skryté súbory",
+    "Timeout" : "Vypršanie času",
     "SMB / CIFS using OC login" : "SMB / CIFS s použitím OC prihlásenia",
     "Username as share" : "Používateľské meno ako sprístupnený priečinok",
     "OpenStack Object Storage" : "OpenStack Object Storage",
@@ -112,11 +114,12 @@
     "\"%1$s\" is not installed. Mounting of %2$s is not possible. Please ask your system administrator to install it." : "Nie je nainštalované \"%1$s\". Pripojenie %2$s nie je možné. Požiadajte svojho správcu o inštaláciu.",
     "External storage support" : "Podpora externého úložiska",
     "Adds basic external storage support" : "Pridáva základnú podporu externého úložiska",
-    "This application enables administrators to configure connections to external storage providers, such as FTP servers, S3 or SWIFT object stores, other Nextcloud servers, WebDAV servers, and more. Administrators can choose which types of storage to enable and can mount these storage locations for a user, a group, or the entire system. Users will see a new folder appear in their root Nextcloud directory, which they can access and use like any other Nextcloud folder. External storage also allows users to share files stored in these external locations. In these cases, the credentials for the owner of the file are used when the recipient requests the file from external storage, thereby ensuring that the recipient can access the shared file.\n\nExternal storage can be configured using the GUI or at the command line. This second option provides the advanced user with more flexibility for configuring bulk external storage mounts and setting mount priorities. More information is available in the external storage GUI documentation and the external storage Configuration File documentation." : "Táto aplikácia umožňuje správcom nastaviť prepojenia na poskytovateľov externých úložísk, ako napríklad servery FTP, S3 alebo SWIFT objektové úložiská, Google Disk, Dropbox, iné Nextclodu servery, WebDAV servery a pod. Správci môžu zvoliť, ktoré typy úložísk zapnúť a prípadne ich pripojiť pre používateľov, skupiny alebo celý systém. Používatelia uvidia nový priečinok v ich koreňovom Nextcloud priečinku, do ktorého môžu pristupovať a používať ako akýkoľvek iný priečinok v Nextcloude. Používatelia tiež môžu z týchto externých úložísk sprístupňovať v ňom uložené súbory. V takých prípadoch sa použíjú prihlasovacie údaje vlastníka súboru keď si príjemca vyžiada súbor z externého úložiska, čím je zaistene, že príjemca môže pristupovať k sprístupnenému súboru.\n\nExterné úložisko je možné nastaviť pomocou web rozhrania alebo z príkazového riadku. Druhá možnosť poskytuje skúsenejším správcom väčšie možnosti prispôsobenia pre nastavenie viac typov pripojení externých úložísk a nastavenia priorít pre pripájanie. Viac informácií je k dispozícii v dokumentácii v externým úložiskám vo web rozhraní a dokumentácii k súboru s nastaveniami pre externé úložiská.",
+    "This application enables administrators to configure connections to external storage providers, such as FTP servers, S3 or SWIFT object stores, other Nextcloud servers, WebDAV servers, and more. Administrators can choose which types of storage to enable and can mount these storage locations for a user, a group, or the entire system. Users will see a new folder appear in their root Nextcloud directory, which they can access and use like any other Nextcloud folder. External storage also allows users to share files stored in these external locations. In these cases, the credentials for the owner of the file are used when the recipient requests the file from external storage, thereby ensuring that the recipient can access the shared file.\n\nExternal storage can be configured using the GUI or at the command line. This second option provides the advanced user with more flexibility for configuring bulk external storage mounts and setting mount priorities. More information is available in the external storage GUI documentation and the external storage Configuration File documentation." : "Táto aplikácia umožňuje správcom nastaviť prepojenia na poskytovateľov externých úložísk, ako napríklad servery FTP, S3 alebo SWIFT objektové úložiská, Google Disk, Dropbox, iné Nextclodu servery, WebDAV servery a pod. Správci môžu zvoliť, ktoré typy úložísk zapnúť a prípadne ich pripojiť pre používateľov, skupiny alebo celý systém. Používatelia uvidia nový priečinok v ich koreňovom Nextcloud priečinku, do ktorého môžu pristupovať a používať ako akýkoľvek iný priečinok v Nextcloude. Používatelia tiež môžu z týchto externých úložísk sprístupňovať v ňom uložené súbory. V takých prípadoch sa použíjú prihlasovacie údaje vlastníka súboru keď si príjemca vyžiada súbor z externého úložiska, čím je zaistené, že príjemca môže pristupovať k sprístupnenému súboru.\n\nExterné úložisko je možné nastaviť pomocou web rozhrania alebo z príkazového riadku. Druhá možnosť poskytuje skúsenejším správcom väčšie možnosti prispôsobenia pre nastavenie viac typov pripojení externých úložísk a nastavenia priorít pre pripájanie. Viac informácií je k dispozícii v dokumentácii k externým úložiskám vo web rozhraní a dokumentácii k súboru s nastaveniami pre externé úložiská.",
     "No external storage configured or you don't have the permission to configure them" : "Žiadne externé úložisko nie je nakonfigurované alebo nemáte práva ich konfigurovať",
     "Name" : "Názov",
     "Storage type" : "Typ úložiska",
     "Scope" : "Rozsah",
+    "Open documentation" : "Otvoriť dokumentáciu",
     "External storage enables you to mount external storage services and devices as secondary Nextcloud storage devices. You may also allow users to mount their own external storage services." : "Externé úložisko umožňuje pripojiť služby externých úložísk a zariadení ako sekundárne zariadenia na ukladanie pre Nextcloud. Môžete tiež umožniť používateľom pripájať ich vlastné služby externých úložísk.",
     "Folder name" : "Názov priečinka",
     "External storage" : "Externé úložisko",
@@ -128,7 +131,6 @@
     "Advanced settings" : "Rozšírené nastavenia",
     "Allow users to mount external storage" : "Povoliť používateľom pripojiť externé úložiská",
     "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globálne prihlasovacie údaje je možné použiť pre overenie s viacerými externými úložiskami, ktoré majú rovnaké prihlasovacie údaje.",
-    "Some of the configured external mount points are not connected. Please click on the red row(s) for more information" : "Niektoré z nastavených externých úložísk nie sú pripojené. Pre viac informácií kliknite na červenú šípku(y)",
-    "\"%s\" is not installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "Nie je nainštalované \"%s\". Pripojenie %s nie je možné. Požiadajte svojho správcu o inštaláciu."
+    "Saving..." : "Ukladá sa..."
 },"pluralForm" :"nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);"
 }

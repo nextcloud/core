@@ -4,6 +4,7 @@
  *
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,13 +18,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_External\Tests\Backend;
 
-use \OCA\Files_External\Lib\Backend\Backend;
+use OCA\Files_External\Lib\Backend\Backend;
 use OCA\Files_External\Lib\StorageConfig;
 
 class BackendTest extends \Test\TestCase {
@@ -77,7 +78,7 @@ class BackendTest extends \Test\TestCase {
 
 	public function testLegacyAuthMechanismCallback() {
 		$backend = new Backend();
-		$backend->setLegacyAuthMechanismCallback(function(array $params) {
+		$backend->setLegacyAuthMechanismCallback(function (array $params) {
 			if (isset($params['ping'])) {
 				return 'pong';
 			}

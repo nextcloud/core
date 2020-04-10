@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <phpunit bootstrap="bootstrap.php"
-		 strict="true"
 		 verbose="true"
 		 backupGlobals="false"
 		 timeoutForSmallTests="900"
@@ -35,6 +34,7 @@
 				<directory suffix=".php">../apps/provisioning_api/tests</directory>
 				<directory suffix=".php">../apps/systemtags/tests</directory>
 				<directory suffix=".php">../apps/theming/tests</directory>
+				<directory suffix=".php">../apps/settings/tests</directory>
 				<directory suffix=".php">../apps/twofactor_backupcodes/tests</directory>
 				<directory suffix=".php">../apps/updatenotification/tests</directory>
 				<directory suffix=".php">../apps/user_ldap/tests</directory>

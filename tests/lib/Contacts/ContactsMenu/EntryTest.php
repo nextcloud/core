@@ -33,7 +33,7 @@ class EntryTest extends TestCase {
 	/** @var Entry */
 	private $entry;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->entry = new Entry();

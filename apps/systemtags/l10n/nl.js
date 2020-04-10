@@ -2,6 +2,7 @@ OC.L10N.register(
     "systemtags",
     {
     "Tags" : "Markering",
+    "Tag name is empty" : "Markeringsnaam is niet ingevuld",
     "Update" : "Update",
     "Create" : "Opslaan",
     "Select tag…" : "Selecteren markering…",

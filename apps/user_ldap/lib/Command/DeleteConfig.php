@@ -19,12 +19,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\User_LDAP\Command;
-
 
 use OCA\User_LDAP\Helper;
 use Symfony\Component\Console\Command\Command;
@@ -52,7 +51,7 @@ class DeleteConfig extends Command {
 					'configID',
 					InputArgument::REQUIRED,
 					'the configuration ID'
-				     )
+					 )
 		;
 	}
 

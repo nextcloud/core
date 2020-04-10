@@ -7,8 +7,10 @@
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -23,7 +25,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -35,6 +37,7 @@
 
 // use OCP namespace for all classes that are considered public.
 // This means that they should be used by apps instead of the internal ownCloud classes
+
 namespace OCP;
 
 /**
@@ -52,9 +55,9 @@ class App {
 	 * @return void
 	 * @since 4.0.0
 	 * @deprecated 14.0.0 Use settings section in appinfo.xml to register personal admin sections
-	*/
-	public static function registerPersonal( $app, $page ) {
-		\OC_App::registerPersonal( $app, $page );
+	 */
+	public static function registerPersonal($app, $page) {
+		\OC_App::registerPersonal($app, $page);
 	}
 
 	/**
@@ -65,8 +68,8 @@ class App {
 	 * @since 4.0.0
 	 * @deprecated 14.0.0 Use settings section in appinfo.xml to register admin sections
 	 */
-	public static function registerAdmin( $app, $page ) {
-		\OC_App::registerAdmin( $app, $page );
+	public static function registerAdmin($app, $page) {
+		\OC_App::registerAdmin($app, $page);
 	}
 
 	/**
@@ -76,9 +79,9 @@ class App {
 	 * @return array|null
 	 * @deprecated 14.0.0 ise \OC::$server->getAppManager()->getAppInfo($appId)
 	 * @since 4.0.0
-	*/
-	public static function getAppInfo( $app, $path=false ) {
-		return \OC_App::getAppInfo( $app, $path);
+	 */
+	public static function getAppInfo($app, $path=false) {
+		return \OC_App::getAppInfo($app, $path);
 	}
 
 	/**
@@ -90,8 +93,8 @@ class App {
 	 * @since 4.0.0
 	 * @deprecated 13.0.0 use \OC::$server->getAppManager()->isEnabledForUser($appId)
 	 */
-	public static function isEnabled( $app ) {
-		return \OC::$server->getAppManager()->isEnabledForUser( $app );
+	public static function isEnabled($app) {
+		return \OC::$server->getAppManager()->isEnabledForUser($app);
 	}
 
 	/**
@@ -101,7 +104,7 @@ class App {
 	 * @since 4.0.0
 	 * @deprecated 14.0.0 use \OC::$server->getAppManager()->getAppVersion($appId)
 	 */
-	public static function getAppVersion( $app ) {
+	public static function getAppVersion($app) {
 		return \OC::$server->getAppManager()->getAppVersion($app);
 	}
 }

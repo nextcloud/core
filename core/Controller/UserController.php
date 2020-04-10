@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -18,16 +19,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Core\Controller;
 
-use \OCP\AppFramework\Controller;
-use \OCP\AppFramework\Http\JSONResponse;
-use \OCP\IRequest;
-use \OCP\IUserManager;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\JSONResponse;
+use OCP\IRequest;
+use OCP\IUserManager;
 
 class UserController extends Controller {
 	/**
@@ -53,7 +54,7 @@ class UserController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function getDisplayNames($users) {
-		$result = array();
+		$result = [];
 
 		foreach ($users as $user) {
 			$userObject = $this->userManager->get($user);
@@ -64,10 +65,10 @@ class UserController extends Controller {
 			}
 		}
 
-		$json = array(
+		$json = [
 			'users' => $result,
 			'status' => 'success'
-		);
+		];
 
 		return new JSONResponse($json);
 

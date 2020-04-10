@@ -22,76 +22,113 @@
 namespace Test\Files\Type;
 
 use OC\Files\Type\Detection;
+use OCP\ILogger;
 use OCP\IURLGenerator;
 
 class DetectionTest extends \Test\TestCase {
 	/** @var Detection */
 	private $detection;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->detection = new Detection(
 			\OC::$server->getURLGenerator(),
+			\OC::$server->getLogger(),
 			\OC::$SERVERROOT . '/config/',
 			\OC::$SERVERROOT . '/resources/config/'
 		);
 	}
 
-	public function testDetect() {
-		$dir = \OC::$SERVERROOT.'/tests/data';
-
-		$result = $this->detection->detect($dir."/");
-		$expected = 'httpd/unix-directory';
-		$this->assertEquals($expected, $result);
-
-		$result = $this->detection->detect($dir."/data.tar.gz");
-		$expected = 'application/x-gzip';
-		$this->assertEquals($expected, $result);
-
-		$result = $this->detection->detect($dir."/data.zip");
-		$expected = 'application/zip';
-		$this->assertEquals($expected, $result);
-
-		$result = $this->detection->detect($dir."/testimagelarge.svg");
-		$expected = 'image/svg+xml';
-		$this->assertEquals($expected, $result);
-
-		$result = $this->detection->detect($dir."/testimage.png");
-		$expected = 'image/png';
-		$this->assertEquals($expected, $result);
+	public function dataDetectPath(): array {
+		return [
+			['foo.txt', 'text/plain'],
+			['foo.png', 'image/png'],
+			['foo.bar.png', 'image/png'],
+			['.hidden.png', 'image/png'],
+			['.hidden.foo.png', 'image/png'],
+			['.hidden/foo.png', 'image/png'],
+			['.hidden/.hidden.png', 'image/png'],
+			['test.jpg/foo.png', 'image/png'],
+			['.png', 'application/octet-stream'],
+			['..hidden', 'application/octet-stream'],
+			['foo', 'application/octet-stream'],
+			['', 'application/octet-stream'],
+			['foo.png.ocTransferId123456789.part', 'image/png'],
+			['foo.png.v1234567890', 'image/png'],
+		];
 	}
 
-	public function testGetSecureMimeType() {
-		$result = $this->detection->getSecureMimeType('image/svg+xml');
+	/**
+	 * @dataProvider dataDetectPath
+	 *
+	 * @param string $path
+	 * @param string $expected
+	 */
+	public function testDetectPath(string $path, string $expected): void {
+		$this->assertEquals($expected, $this->detection->detectPath($path));
+	}
+
+	public function dataDetectContent(): array {
+		return [
+			['/', 'httpd/unix-directory'],
+			//			['/data.tar.gz', 'application/x-gzip'], TODO: fix as it fails hard on php7.4 now
+			['/data.zip', 'application/zip'],
+			['/testimage.mp3', 'audio/mpeg'],
+			['/testimage.png', 'image/png'],
+		];
+	}
+
+	/**
+	 * @dataProvider dataDetectContent
+	 *
+	 * @param string $path
+	 * @param string $expected
+	 */
+	public function testDetectContent(string $path, string $expected): void {
+		$this->assertEquals($expected, $this->detection->detectContent(\OC::$SERVERROOT . '/tests/data' . $path));
+	}
+
+	public function dataDetect(): array {
+		return [
+			['/', 'httpd/unix-directory'],
+			['/data.tar.gz', 'application/x-gzip'],
+			['/data.zip', 'application/zip'],
+			['/testimagelarge.svg', 'image/svg+xml'],
+			['/testimage.png', 'image/png'],
+		];
+	}
+
+	/**
+	 * @dataProvider dataDetect
+	 *
+	 * @param string $path
+	 * @param string $expected
+	 */
+	public function testDetect(string $path, string $expected): void {
+		$this->assertEquals($expected, $this->detection->detect(\OC::$SERVERROOT . '/tests/data' . $path));
+	}
+
+	public function testDetectString(): void {
+		$result = $this->detection->detectString('/data/data.tar.gz');
 		$expected = 'text/plain';
 		$this->assertEquals($expected, $result);
-
-		$result = $this->detection->getSecureMimeType('image/png');
-		$expected = 'image/png';
-		$this->assertEquals($expected, $result);
 	}
 
-	public function testDetectPath() {
-		$this->assertEquals('text/plain', $this->detection->detectPath('foo.txt'));
-		$this->assertEquals('image/png', $this->detection->detectPath('foo.png'));
-		$this->assertEquals('image/png', $this->detection->detectPath('foo.bar.png'));
-		$this->assertEquals('image/png', $this->detection->detectPath('.hidden.png'));
-		$this->assertEquals('image/png', $this->detection->detectPath('.hidden.foo.png'));
-		$this->assertEquals('image/png', $this->detection->detectPath('.hidden/foo.png'));
-		$this->assertEquals('image/png', $this->detection->detectPath('.hidden/.hidden.png'));
-		$this->assertEquals('image/png', $this->detection->detectPath('test.jpg/foo.png'));
-		$this->assertEquals('application/octet-stream', $this->detection->detectPath('.png'));
-		$this->assertEquals('application/octet-stream', $this->detection->detectPath('..hidden'));
-		$this->assertEquals('application/octet-stream', $this->detection->detectPath('foo'));
-		$this->assertEquals('application/octet-stream', $this->detection->detectPath(''));
-		$this->assertEquals('image/png', $this->detection->detectPath('foo.png.ocTransferId123456789.part'));
-		$this->assertEquals('image/png', $this->detection->detectPath('foo.png.v1234567890'));
+	public function dataGetSecureMimeType(): array {
+		return [
+			['image/svg+xml', 'text/plain'],
+			['image/png', 'image/png'],
+		];
 	}
 
-	public function testDetectString() {
-		$result = $this->detection->detectString("/data/data.tar.gz");
-		$expected = 'text/plain';
-		$this->assertEquals($expected, $result);
+	/**
+	 * @dataProvider dataGetSecureMimeType
+	 *
+	 * @param string $mimeType
+	 * @param string $expected
+	 */
+	public function testGetSecureMimeType(string $mimeType, string $expected): void {
+		$this->assertEquals($expected, $this->detection->getSecureMimeType($mimeType));
 	}
 
 	public function testMimeTypeIcon() {
@@ -114,13 +151,16 @@ class DetectionTest extends \Test\TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
+		/** @var ILogger $logger */
+		$logger = $this->createMock(ILogger::class);
+
 		//Only call the url generator once
 		$urlGenerator->expects($this->once())
 			->method('imagePath')
 			->with($this->equalTo('core'), $this->equalTo('filetypes/folder.png'))
 			->willReturn('folder.svg');
 
-		$detection = new Detection($urlGenerator, $confDir->url(), $confDir->url());
+		$detection = new Detection($urlGenerator, $logger, $confDir->url(), $confDir->url());
 		$mimeType = $detection->mimeTypeIcon('dir');
 		$this->assertEquals('folder.svg', $mimeType);
 
@@ -139,7 +179,7 @@ class DetectionTest extends \Test\TestCase {
 			->with($this->equalTo('core'), $this->equalTo('filetypes/folder-shared.png'))
 			->willReturn('folder-shared.svg');
 
-		$detection = new Detection($urlGenerator, $confDir->url(), $confDir->url());
+		$detection = new Detection($urlGenerator, $logger, $confDir->url(), $confDir->url());
 		$mimeType = $detection->mimeTypeIcon('dir-shared');
 		$this->assertEquals('folder-shared.svg', $mimeType);
 
@@ -159,7 +199,7 @@ class DetectionTest extends \Test\TestCase {
 			->with($this->equalTo('core'), $this->equalTo('filetypes/folder-external.png'))
 			->willReturn('folder-external.svg');
 
-		$detection = new Detection($urlGenerator, $confDir->url(), $confDir->url());
+		$detection = new Detection($urlGenerator, $logger, $confDir->url(), $confDir->url());
 		$mimeType = $detection->mimeTypeIcon('dir-external');
 		$this->assertEquals('folder-external.svg', $mimeType);
 
@@ -179,7 +219,7 @@ class DetectionTest extends \Test\TestCase {
 			->with($this->equalTo('core'), $this->equalTo('filetypes/my-type.png'))
 			->willReturn('my-type.svg');
 
-		$detection = new Detection($urlGenerator, $confDir->url(), $confDir->url());
+		$detection = new Detection($urlGenerator, $logger, $confDir->url(), $confDir->url());
 		$mimeType = $detection->mimeTypeIcon('my-type');
 		$this->assertEquals('my-type.svg', $mimeType);
 
@@ -200,16 +240,16 @@ class DetectionTest extends \Test\TestCase {
 				[$this->equalTo('core'), $this->equalTo('filetypes/my-type.png')],
 				[$this->equalTo('core'), $this->equalTo('filetypes/my.png')]
 			)
-			->will($this->returnCallback(
-				function($appName, $file) {
+			->willReturnCallback(
+				function ($appName, $file) {
 					if ($file === 'filetypes/my.png') {
 						return 'my.svg';
 					}
 					throw new \RuntimeException();
 				}
-			));
+			);
 
-		$detection = new Detection($urlGenerator, $confDir->url(), $confDir->url());
+		$detection = new Detection($urlGenerator, $logger, $confDir->url(), $confDir->url());
 		$mimeType = $detection->mimeTypeIcon('my-type');
 		$this->assertEquals('my.svg', $mimeType);
 
@@ -231,16 +271,16 @@ class DetectionTest extends \Test\TestCase {
 				[$this->equalTo('core'), $this->equalTo('filetypes/foo.png')],
 				[$this->equalTo('core'), $this->equalTo('filetypes/file.png')]
 			)
-			->will($this->returnCallback(
-				function($appName, $file) {
+			->willReturnCallback(
+				function ($appName, $file) {
 					if ($file === 'filetypes/file.png') {
 						return 'file.svg';
 					}
 					throw new \RuntimeException();
 				}
-			));
+			);
 
-		$detection = new Detection($urlGenerator, $confDir->url(), $confDir->url());
+		$detection = new Detection($urlGenerator, $logger, $confDir->url(), $confDir->url());
 		$mimeType = $detection->mimeTypeIcon('foo-bar');
 		$this->assertEquals('file.svg', $mimeType);
 
@@ -259,7 +299,7 @@ class DetectionTest extends \Test\TestCase {
 			->with($this->equalTo('core'), $this->equalTo('filetypes/foo-bar.png'))
 			->willReturn('foo-bar.svg');
 
-		$detection = new Detection($urlGenerator, $confDir->url(), $confDir->url());
+		$detection = new Detection($urlGenerator, $logger, $confDir->url(), $confDir->url());
 		$mimeType = $detection->mimeTypeIcon('foo-bar');
 		$this->assertEquals('foo-bar.svg', $mimeType);
 		$mimeType = $detection->mimeTypeIcon('foo-bar');
@@ -285,7 +325,7 @@ class DetectionTest extends \Test\TestCase {
 			->with($this->equalTo('core'), $this->equalTo('filetypes/foobar-baz.png'))
 			->willReturn('foobar-baz.svg');
 
-		$detection = new Detection($urlGenerator, $confDir->url(), $confDir->url());
+		$detection = new Detection($urlGenerator, $logger, $confDir->url(), $confDir->url());
 		$mimeType = $detection->mimeTypeIcon('foo');
 		$this->assertEquals('foobar-baz.svg', $mimeType);
 	}

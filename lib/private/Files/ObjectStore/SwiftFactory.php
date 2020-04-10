@@ -1,7 +1,15 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2018 Robin Appelman <robin@icewind.nl>
+ *
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Volker <skydiablo@gmx.net>
+ * @author William Pain <pain.william@gmail.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,7 +24,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -31,15 +39,15 @@ use OCP\Files\StorageAuthException;
 use OCP\Files\StorageNotAvailableException;
 use OCP\ICache;
 use OCP\ILogger;
-use OpenStack\Common\Error\BadResponseError;
 use OpenStack\Common\Auth\Token;
+use OpenStack\Common\Error\BadResponseError;
+use OpenStack\Common\Transport\Utils as TransportUtils;
 use OpenStack\Identity\v2\Models\Catalog;
 use OpenStack\Identity\v2\Service as IdentityV2Service;
 use OpenStack\Identity\v3\Service as IdentityV3Service;
-use OpenStack\OpenStack;
-use OpenStack\Common\Transport\Utils as TransportUtils;
-use Psr\Http\Message\RequestInterface;
 use OpenStack\ObjectStore\v1\Models\Container;
+use OpenStack\OpenStack;
+use Psr\Http\Message\RequestInterface;
 
 class SwiftFactory {
 	private $cache;

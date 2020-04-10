@@ -43,6 +43,7 @@ OC.L10N.register(
     "Please select tags to filter by" : "Por favor selecciona las etiquetas del filtro",
     "No files found for the selected tags" : "No se encontraron archivos para las etiquetas seleccionadas",
     "Select tag …" : "Seleccionar etiqueta ...",
+    "Create a new tag" : "Crear una nueva etiqueta",
     "Name" : "Nombre",
     "Public" : "Público",
     "Restricted" : "Restringido",

@@ -24,11 +24,10 @@ namespace Test;
 
 class TemplateFunctionsTest extends \Test\TestCase {
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
-		$loader = new \OC\Autoloader([\OC::$SERVERROOT . '/lib']);
-		$loader->load('OC_Template');
+		require_once \OC::$SERVERROOT . '/lib/private/legacy/OC_Template.php';
 	}
 
 	public function testPJavaScript() {

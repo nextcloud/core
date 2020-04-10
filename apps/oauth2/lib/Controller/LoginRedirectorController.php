@@ -1,7 +1,13 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2017 Lukas Reschke <lukas@statuscode.ch>
+ *
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,7 +22,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -80,11 +86,10 @@ class LoginRedirectorController extends Controller {
 		try {
 			$client = $this->clientMapper->getByIdentifier($client_id);
 		} catch (ClientNotFoundException $e) {
-			$response = new TemplateResponse('core', '404', 'guest');
-			$response->setParams([
+			$params = [
 				'content' => $this->l->t('Your client is not authorized to connect. Please inform the administrator of your client.'),
-			]);
-			return $response;
+			];
+			return new TemplateResponse('core', '404', $params, 'guest');
 		}
 
 		if ($response_type !== 'code') {

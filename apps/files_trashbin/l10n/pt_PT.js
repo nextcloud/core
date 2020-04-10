@@ -12,10 +12,8 @@ OC.L10N.register(
     "No entries found in this folder" : "Não foram encontradas entradas nesta pasta",
     "Select all" : "Selecionar tudo",
     "Name" : "Nome",
+    "Actions" : "Ações",
     "Deleted" : "Eliminado",
-    "Delete" : "Eliminar",
-    "Couldn't delete %s permanently" : "Não foi possível eliminar %s de forma permanente",
-    "Couldn't restore %s" : "Não foi possível restaurar %s",
-    "Error" : "Erro"
+    "Delete" : "Eliminar"
 },
 "nplurals=2; plural=(n != 1);");

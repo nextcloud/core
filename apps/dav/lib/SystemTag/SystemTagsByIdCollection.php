@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
@@ -17,21 +18,21 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\DAV\SystemTag;
 
-use Sabre\DAV\Exception\Forbidden;
-use Sabre\DAV\Exception\NotFound;
-use Sabre\DAV\Exception\BadRequest;
-use Sabre\DAV\ICollection;
-use OCP\SystemTag\ISystemTagManager;
-use OCP\SystemTag\ISystemTag;
-use OCP\SystemTag\TagNotFoundException;
 use OCP\IGroupManager;
 use OCP\IUserSession;
+use OCP\SystemTag\ISystemTag;
+use OCP\SystemTag\ISystemTagManager;
+use OCP\SystemTag\TagNotFoundException;
+use Sabre\DAV\Exception\BadRequest;
+use Sabre\DAV\Exception\Forbidden;
+use Sabre\DAV\Exception\NotFound;
+use Sabre\DAV\ICollection;
 
 class SystemTagsByIdCollection implements ICollection {
 
@@ -121,7 +122,7 @@ class SystemTagsByIdCollection implements ICollection {
 		}
 
 		$tags = $this->tagManager->getAllTags($visibilityFilter);
-		return array_map(function($tag) {
+		return array_map(function ($tag) {
 			return $this->makeNode($tag);
 		}, $tags);
 	}

@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Loki3000 <github@labcms.ru>
@@ -12,7 +13,6 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @license AGPL-3.0
  *
@@ -26,11 +26,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC;
+
 use OC\Cache\CappedMemoryCache;
 use OCP\IDBConnection;
 use OCP\PreConditionNotMetException;
@@ -130,7 +131,9 @@ class AllConfig implements \OCP\IConfig {
 	 *
 	 * @param string $key the key of the value, under which it was saved
 	 * @param mixed $default the default value to be returned if the value isn't set
-	 * @return mixed the value or $default
+	 *
+	 * @return bool
+	 *
 	 * @since 16.0.0
 	 */
 	public function getSystemValueBool(string $key, bool $default = false): bool {
@@ -142,7 +145,9 @@ class AllConfig implements \OCP\IConfig {
 	 *
 	 * @param string $key the key of the value, under which it was saved
 	 * @param mixed $default the default value to be returned if the value isn't set
-	 * @return mixed the value or $default
+	 *
+	 * @return int
+	 *
 	 * @since 16.0.0
 	 */
 	public function getSystemValueInt(string $key, int $default = 0): int {
@@ -154,7 +159,9 @@ class AllConfig implements \OCP\IConfig {
 	 *
 	 * @param string $key the key of the value, under which it was saved
 	 * @param mixed $default the default value to be returned if the value isn't set
-	 * @return mixed the value or $default
+	 *
+	 * @return string
+	 *
 	 * @since 16.0.0
 	 */
 	public function getSystemValueString(string $key, string $default = ''): string {
@@ -292,7 +299,7 @@ class AllConfig implements \OCP\IConfig {
 		// only add to the cache if we already loaded data for the user
 		if (isset($this->userCache[$userId])) {
 			if (!isset($this->userCache[$userId][$appName])) {
-				$this->userCache[$userId][$appName] = array();
+				$this->userCache[$userId][$appName] = [];
 			}
 			$this->userCache[$userId][$appName][$key] = (string)$value;
 		}
@@ -328,7 +335,7 @@ class AllConfig implements \OCP\IConfig {
 		if (isset($data[$appName])) {
 			return array_keys($data[$appName]);
 		} else {
-			return array();
+			return [];
 		}
 	}
 
@@ -345,7 +352,7 @@ class AllConfig implements \OCP\IConfig {
 
 		$sql  = 'DELETE FROM `*PREFIX*preferences` '.
 				'WHERE `userid` = ? AND `appid` = ? AND `configkey` = ?';
-		$this->connection->executeUpdate($sql, array($userId, $appName, $key));
+		$this->connection->executeUpdate($sql, [$userId, $appName, $key]);
 
 		if (isset($this->userCache[$userId]) and isset($this->userCache[$userId][$appName])) {
 			unset($this->userCache[$userId][$appName][$key]);
@@ -363,7 +370,7 @@ class AllConfig implements \OCP\IConfig {
 
 		$sql  = 'DELETE FROM `*PREFIX*preferences` '.
 			'WHERE `userid` = ?';
-		$this->connection->executeUpdate($sql, array($userId));
+		$this->connection->executeUpdate($sql, [$userId]);
 
 		unset($this->userCache[$userId]);
 	}
@@ -379,7 +386,7 @@ class AllConfig implements \OCP\IConfig {
 
 		$sql  = 'DELETE FROM `*PREFIX*preferences` '.
 				'WHERE `appid` = ?';
-		$this->connection->executeUpdate($sql, array($appName));
+		$this->connection->executeUpdate($sql, [$appName]);
 
 		foreach ($this->userCache as &$userCache) {
 			unset($userCache[$appName]);
@@ -400,20 +407,20 @@ class AllConfig implements \OCP\IConfig {
 			return $this->userCache[$userId];
 		}
 		if ($userId === null || $userId === '') {
-			$this->userCache[$userId]=array();
+			$this->userCache[$userId]=[];
 			return $this->userCache[$userId];
 		}
 
 		// TODO - FIXME
 		$this->fixDIInit();
 
-		$data = array();
+		$data = [];
 		$query = 'SELECT `appid`, `configkey`, `configvalue` FROM `*PREFIX*preferences` WHERE `userid` = ?';
-		$result = $this->connection->executeQuery($query, array($userId));
+		$result = $this->connection->executeQuery($query, [$userId]);
 		while ($row = $result->fetch()) {
 			$appId = $row['appid'];
 			if (!isset($data[$appId])) {
-				$data[$appId] = array();
+				$data[$appId] = [];
 			}
 			$data[$appId][$row['configkey']] = $row['configvalue'];
 		}
@@ -434,13 +441,13 @@ class AllConfig implements \OCP\IConfig {
 		$this->fixDIInit();
 
 		if (empty($userIds) || !is_array($userIds)) {
-			return array();
+			return [];
 		}
 
 		$chunkedUsers = array_chunk($userIds, 50, true);
 		$placeholders50 = implode(',', array_fill(0, 50, '?'));
 
-		$userValues = array();
+		$userValues = [];
 		foreach ($chunkedUsers as $chunk) {
 			$queryParams = $chunk;
 			// create [$app, $key, $chunkedUsers]
@@ -485,9 +492,9 @@ class AllConfig implements \OCP\IConfig {
 			$sql .= 'AND `configvalue` = ?';
 		}
 
-		$result = $this->connection->executeQuery($sql, array($appName, $key, $value));
+		$result = $this->connection->executeQuery($sql, [$appName, $key, $value]);
 
-		$userIDs = array();
+		$userIDs = [];
 		while ($row = $result->fetch()) {
 			$userIDs[] = $row['userid'];
 		}
@@ -517,9 +524,9 @@ class AllConfig implements \OCP\IConfig {
 			$sql .= 'AND LOWER(`configvalue`) = LOWER(?)';
 		}
 
-		$result = $this->connection->executeQuery($sql, array($appName, $key, $value));
+		$result = $this->connection->executeQuery($sql, [$appName, $key, $value]);
 
-		$userIDs = array();
+		$userIDs = [];
 		while ($row = $result->fetch()) {
 			$userIDs[] = $row['userid'];
 		}

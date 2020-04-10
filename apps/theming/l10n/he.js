@@ -27,6 +27,7 @@ OC.L10N.register(
     "Legal notice" : "הצהרה משפטית",
     "Privacy policy" : "מדיניות פרטיות",
     "Adjust the Nextcloud theme" : "התאמת ערכת העיצוב של Nextcloud",
+    "Open documentation" : "פתיחת תיעוד",
     "Theming makes it possible to easily customize the look and feel of your instance and supported clients. This will be visible for all users." : "עם ערכות עיצוב ניתן להתאים את המראה והתחושה של המערכת ושל הלקוחות הנתמכים שלך. אלו תהיינה גלויות לכל המשתמשים.",
     "Name" : "שם",
     "Reset to default" : "איפוס לבררת מחדל",

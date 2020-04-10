@@ -24,7 +24,7 @@ namespace Test\App\AppStore\Fetcher;
 use OC\App\AppStore\Fetcher\CategoryFetcher;
 
 class CategoryFetcherTest extends FetcherBase {
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->fileName = 'categories.json';
 		$this->endpoint = 'https://apps.nextcloud.com/api/v1/categories.json';
@@ -41,12 +41,12 @@ class CategoryFetcherTest extends FetcherBase {
 	public function testAppstoreDisabled() {
 		$this->config
 			->method('getSystemValue')
-			->will($this->returnCallback(function($var, $default) {
+			->willReturnCallback(function ($var, $default) {
 				if ($var === 'appstoreenabled') {
 					return false;
 				}
 				return $default;
-			}));
+			});
 		$this->appData
 			->expects($this->never())
 			->method('getFolder');
@@ -57,12 +57,12 @@ class CategoryFetcherTest extends FetcherBase {
 	public function testNoInternet() {
 		$this->config
 			->method('getSystemValue')
-			->will($this->returnCallback(function($var, $default) {
+			->willReturnCallback(function ($var, $default) {
 				if ($var === 'has_internet_connection') {
 					return false;
 				}
 				return $default;
-			}));
+			});
 		$this->appData
 			->expects($this->never())
 			->method('getFolder');

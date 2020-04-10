@@ -5,7 +5,10 @@
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christian Jürges <christian@eqipe.ch>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author sammo2828 <sammo2828@gmail.com>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @license AGPL-3.0
@@ -20,16 +23,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
-
 
 namespace OC\Encryption;
 
 use OC\Encryption\Exceptions\DecryptionFailedException;
 use OC\Files\View;
-use \OCP\Encryption\IEncryptionModule;
+use OCP\Encryption\IEncryptionModule;
 use OCP\IUserManager;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -208,7 +210,7 @@ class DecryptAll {
 	protected function decryptUsersFiles($uid, ProgressBar $progress, $userCount) {
 
 		$this->setupUserFS($uid);
-		$directories = array();
+		$directories = [];
 		$directories[] = '/' . $uid . '/files';
 
 		while ($root = array_pop($directories)) {
@@ -266,6 +268,7 @@ class DecryptAll {
 
 		try {
 			$this->rootView->copy($source, $target);
+			$this->rootView->touch($target, $fileInfo->getMTime());
 			$this->rootView->rename($target, $source);
 		} catch (DecryptionFailedException $e) {
 			if ($this->rootView->file_exists($target)) {

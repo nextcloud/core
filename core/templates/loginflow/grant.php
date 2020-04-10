@@ -31,9 +31,9 @@ $urlGenerator = $_['urlGenerator'];
 	<h2><?php p($l->t('Account access')) ?></h2>
 	<p class="info">
 		<?php print_unescaped($l->t('You are about to grant %1$s access to your %2$s account.', [
-								'<strong>' . \OCP\Util::sanitizeHTML($_['client']) . '</strong>',
-								\OCP\Util::sanitizeHTML($_['instanceName'])
-							])) ?>
+			'<strong>' . \OCP\Util::sanitizeHTML($_['client']) . '</strong>',
+			\OCP\Util::sanitizeHTML($_['instanceName'])
+		])) ?>
 	</p>
 
 	<br/>
@@ -45,8 +45,7 @@ $urlGenerator = $_['urlGenerator'];
 			<input type="hidden" name="stateToken" value="<?php p($_['stateToken']) ?>" />	
 			<input type="hidden" name="oauthState" value="<?php p($_['oauthState']) ?>" />	
 			<div id="submit-wrapper">
-				<input type="submit" id="submit" class="login primary" title="" value="<?php p($l->t('Grant access')); ?>" />
-				<div class="submit-icon icon-confirm-white"></div>
+				<input type="submit" class="login primary icon-confirm-white" title="" value="<?php p($l->t('Grant access')); ?>" />
 			</div>	
 		</form>
 	</p>

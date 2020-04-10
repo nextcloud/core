@@ -8,7 +8,6 @@
 
 namespace Test\Archive;
 
-
 use OC\Archive\TAR;
 
 class TARTest extends TestBase {

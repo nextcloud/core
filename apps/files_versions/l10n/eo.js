@@ -7,9 +7,6 @@ OC.L10N.register(
     "Failed to revert {file} to revision {timestamp}." : "Malsukcesis remeti {file} al la revizio {timestamp}.",
     "_%n byte_::_%n bytes_" : ["%n bajto","%n bajtoj"],
     "Restore" : "Restaŭri",
-    "No other versions available" : "Neniu alia versio disponeblas",
-    "Could not revert: %s" : "Ne eblas malfari: %s",
-    "No earlier versions available" : "Neniu antaŭa versio disponeblas",
-    "More versions …" : "Pli da versioj..."
+    "No other versions available" : "Neniu alia versio disponeblas"
 },
 "nplurals=2; plural=(n != 1);");

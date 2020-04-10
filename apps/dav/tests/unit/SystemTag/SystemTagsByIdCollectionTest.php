@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -19,12 +20,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\DAV\Tests\unit\SystemTag;
-
 
 use OC\SystemTag\SystemTag;
 use OCP\IGroupManager;
@@ -45,7 +45,7 @@ class SystemTagsByIdCollectionTest extends \Test\TestCase {
 	 */
 	private $user;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->tagManager = $this->getMockBuilder(ISystemTagManager::class)
@@ -57,18 +57,18 @@ class SystemTagsByIdCollectionTest extends \Test\TestCase {
 			->getMock();
 		$this->user->expects($this->any())
 			->method('getUID')
-			->will($this->returnValue('testuser'));
+			->willReturn('testuser');
 		$userSession = $this->getMockBuilder(IUserSession::class)
 			->getMock();
 		$userSession->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($this->user));
+			->willReturn($this->user);
 		$groupManager = $this->getMockBuilder(IGroupManager::class)
 			->getMock();
 		$groupManager->expects($this->any())
 			->method('isAdmin')
 			->with('testuser')
-			->will($this->returnValue($isAdmin));
+			->willReturn($isAdmin);
 		return new \OCA\DAV\SystemTag\SystemTagsByIdCollection(
 			$this->tagManager,
 			$userSession,
@@ -80,17 +80,17 @@ class SystemTagsByIdCollectionTest extends \Test\TestCase {
 		return [[true], [false]];
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+	
 	public function testForbiddenCreateFile() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$this->getNode()->createFile('555');
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\Forbidden
-	 */
+	
 	public function testForbiddenCreateDirectory() {
+		$this->expectException(\Sabre\DAV\Exception\Forbidden::class);
+
 		$this->getNode()->createDirectory('789');
 	}
 
@@ -99,12 +99,12 @@ class SystemTagsByIdCollectionTest extends \Test\TestCase {
 		$this->tagManager->expects($this->once())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['123'])
-			->will($this->returnValue([$tag]));
+			->willReturn([$tag]);
 
 		$childNode = $this->getNode()->getChild('123');
 
@@ -113,10 +113,10 @@ class SystemTagsByIdCollectionTest extends \Test\TestCase {
 		$this->assertEquals($tag, $childNode->getSystemTag());
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\BadRequest
-	 */
+	
 	public function testGetChildInvalidName() {
+		$this->expectException(\Sabre\DAV\Exception\BadRequest::class);
+
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['invalid'])
@@ -125,10 +125,10 @@ class SystemTagsByIdCollectionTest extends \Test\TestCase {
 		$this->getNode()->getChild('invalid');
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotFound
-	 */
+	
 	public function testGetChildNotFound() {
+		$this->expectException(\Sabre\DAV\Exception\NotFound::class);
+
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['444'])
@@ -137,16 +137,16 @@ class SystemTagsByIdCollectionTest extends \Test\TestCase {
 		$this->getNode()->getChild('444');
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\NotFound
-	 */
+	
 	public function testGetChildUserNotVisible() {
+		$this->expectException(\Sabre\DAV\Exception\NotFound::class);
+
 		$tag = new SystemTag(123, 'Test', false, false);
 
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['123'])
-			->will($this->returnValue([$tag]));
+			->willReturn([$tag]);
 
 		$this->getNode(false)->getChild('123');
 	}
@@ -158,7 +158,7 @@ class SystemTagsByIdCollectionTest extends \Test\TestCase {
 		$this->tagManager->expects($this->once())
 			->method('getAllTags')
 			->with(null)
-			->will($this->returnValue([$tag1, $tag2]));
+			->willReturn([$tag1, $tag2]);
 
 		$children = $this->getNode(true)->getChildren();
 
@@ -177,7 +177,7 @@ class SystemTagsByIdCollectionTest extends \Test\TestCase {
 		$this->tagManager->expects($this->once())
 			->method('getAllTags')
 			->with(true)
-			->will($this->returnValue([$tag1, $tag2]));
+			->willReturn([$tag1, $tag2]);
 
 		$children = $this->getNode(false)->getChildren();
 
@@ -193,7 +193,7 @@ class SystemTagsByIdCollectionTest extends \Test\TestCase {
 		$this->tagManager->expects($this->once())
 			->method('getAllTags')
 			->with(null)
-			->will($this->returnValue([]));
+			->willReturn([]);
 		$this->assertCount(0, $this->getNode()->getChildren());
 	}
 
@@ -212,12 +212,12 @@ class SystemTagsByIdCollectionTest extends \Test\TestCase {
 		$this->tagManager->expects($this->once())
 			->method('canUserSeeTag')
 			->with($tag)
-			->will($this->returnValue($userVisible));
+			->willReturn($userVisible);
 
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['123'])
-			->will($this->returnValue([$tag]));
+			->willReturn([$tag]);
 
 		$this->assertEquals($expectedResult, $this->getNode()->childExists('123'));
 	}
@@ -231,10 +231,10 @@ class SystemTagsByIdCollectionTest extends \Test\TestCase {
 		$this->assertFalse($this->getNode()->childExists('123'));
 	}
 
-	/**
-	 * @expectedException \Sabre\DAV\Exception\BadRequest
-	 */
+	
 	public function testChildExistsBadRequest() {
+		$this->expectException(\Sabre\DAV\Exception\BadRequest::class);
+
 		$this->tagManager->expects($this->once())
 			->method('getTagsByIds')
 			->with(['invalid'])

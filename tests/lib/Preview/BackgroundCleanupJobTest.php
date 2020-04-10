@@ -25,7 +25,6 @@ namespace Test\Preview;
 use OC\Files\AppData\Factory;
 use OC\Preview\BackgroundCleanupJob;
 use OC\PreviewManager;
-use OC\SystemConfig;
 use OCP\Files\IRootFolder;
 use OCP\IDBConnection;
 use Test\Traits\MountProviderTrait;
@@ -61,7 +60,7 @@ class BackgroundCleanupJobTest extends \Test\TestCase {
 	/** @var IRootFolder */
 	private $rootFolder;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userId = $this->getUniqueID();
@@ -87,7 +86,7 @@ class BackgroundCleanupJobTest extends \Test\TestCase {
 		$this->rootFolder = \OC::$server->getRootFolder();
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		if ($this->trashEnabled) {
 			$appManager = \OC::$server->getAppManager();
 			$appManager->enableApp('files_trashbin');
@@ -95,7 +94,7 @@ class BackgroundCleanupJobTest extends \Test\TestCase {
 
 		$this->logout();
 
-		return parent::tearDown();
+		parent::tearDown();
 	}
 
 	private function setup11Previews(): array {

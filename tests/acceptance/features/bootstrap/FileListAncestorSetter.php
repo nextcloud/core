@@ -21,7 +21,6 @@
  *
  */
 
-use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 
 /**

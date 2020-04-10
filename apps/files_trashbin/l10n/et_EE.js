@@ -12,10 +12,8 @@ OC.L10N.register(
     "No entries found in this folder" : "Selles kaustas ei leitud kirjeid",
     "Select all" : "Vali kõik",
     "Name" : "Nimi",
+    "Actions" : "Tegevused",
     "Deleted" : "Kustutatud",
-    "Delete" : "Kustuta",
-    "Couldn't delete %s permanently" : "%s jäädavalt kustutamine ebaõnnestus",
-    "Couldn't restore %s" : "%s ei saa taastada",
-    "Error" : "Viga"
+    "Delete" : "Kustuta"
 },
 "nplurals=2; plural=(n != 1);");

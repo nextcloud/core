@@ -3,10 +3,12 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Olivier Paroz <github@oparoz.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Sebastian Steinmetz <462714+steiny2k@users.noreply.github.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -21,9 +23,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OC;
 
 use OC\Preview\Generator;
@@ -146,34 +149,6 @@ class PreviewManager implements IPreview {
 	public function hasProviders() {
 		$this->registerCoreProviders();
 		return !empty($this->providers);
-	}
-
-	/**
-	 * return a preview of a file
-	 *
-	 * @param string $file The path to the file where you want a thumbnail from
-	 * @param int $maxX The maximum X size of the thumbnail. It can be smaller depending on the shape of the image
-	 * @param int $maxY The maximum Y size of the thumbnail. It can be smaller depending on the shape of the image
-	 * @param boolean $scaleUp Scale smaller images up to the thumbnail size or not. Might look ugly
-	 * @return \OCP\IImage
-	 * @deprecated 11 Use getPreview
-	 */
-	public function createPreview($file, $maxX = 100, $maxY = 75, $scaleUp = false) {
-		try {
-			$userRoot = $this->rootFolder->getUserFolder($this->userId)->getParent();
-			$node = $userRoot->get($file);
-			if (!($file instanceof File)) {
-				throw new NotFoundException();
-			}
-
-			$preview = $this->getPreview($node, $maxX, $maxY);
-		} catch (\Exception $e) {
-			return new \OC_Image();
-		}
-
-		$previewImage = new \OC_Image();
-		$previewImage->loadFromData($preview->getContent());
-		return $previewImage;
 	}
 
 	/**
@@ -318,13 +293,15 @@ class PreviewManager implements IPreview {
 			Preview\GIF::class,
 			Preview\BMP::class,
 			Preview\HEIC::class,
-			Preview\XBitmap::class
+			Preview\XBitmap::class,
+			Preview\Krita::class,
 		];
 
 		$this->defaultProviders = $this->config->getSystemValue('enabledPreviewProviders', array_merge([
 			Preview\MarkDown::class,
 			Preview\MP3::class,
 			Preview\TXT::class,
+			Preview\OpenDocument::class,
 		], $imageProviders));
 
 		if (in_array(Preview\Image::class, $this->defaultProviders)) {
@@ -364,7 +341,9 @@ class PreviewManager implements IPreview {
 		$this->registerCoreProvider(Preview\GIF::class, '/image\/gif/');
 		$this->registerCoreProvider(Preview\BMP::class, '/image\/bmp/');
 		$this->registerCoreProvider(Preview\XBitmap::class, '/image\/x-xbitmap/');
+		$this->registerCoreProvider(Preview\Krita::class, '/application\/x-krita/');
 		$this->registerCoreProvider(Preview\MP3::class, '/audio\/mpeg/');
+		$this->registerCoreProvider(Preview\OpenDocument::class, '/application\/vnd.oasis.opendocument.*/');
 
 		// SVG, Office and Bitmap require imagick
 		if (extension_loaded('imagick')) {

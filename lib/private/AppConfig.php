@@ -8,6 +8,7 @@
  * @author Jakob Sack <mail@jakobsack.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author michaelletzgus <michaelletzgus@users.noreply.github.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
@@ -24,7 +25,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -43,8 +44,21 @@ class AppConfig implements IAppConfig {
 
 	/** @var array[] */
 	protected $sensitiveValues = [
+		'external' => [
+			'/^sites$/',
+		],
 		'spreed' => [
+			'/^signaling_ticket_secret$/',
 			'/^turn_server_secret$/',
+			'/^stun_servers$/',
+			'/^turn_servers$/',
+			'/^signaling_servers$/',
+		],
+		'theming' => [
+			'/^imprintUrl$/',
+			'/^privacyUrl$/',
+			'/^slogan$/',
+			'/^url$/',
 		],
 		'user_ldap' => [
 			'/^(s..)?ldap_agent_password$/',
@@ -270,7 +284,7 @@ class AppConfig implements IAppConfig {
 			return $this->getAppValues($app);
 		} else {
 			$appIds = $this->getApps();
-			$values = array_map(function($appId) use ($key) {
+			$values = array_map(function ($appId) use ($key) {
 				return isset($this->cache[$appId][$key]) ? $this->cache[$appId][$key] : null;
 			}, $appIds);
 			$result = array_combine($appIds, $values);

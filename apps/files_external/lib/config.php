@@ -6,10 +6,12 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Frank Karlitschek <frank@karlitschek.de>
  * @author Jesús Macias <jmacias@solidgear.es>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Juan Pablo Villafáñez <jvillafanez@solidgear.es>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Michael Gapczynski <GapczynskiM@gmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -32,24 +34,25 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
+use OCA\Files_External\AppInfo\Application;
 use OCA\Files_External\Config\IConfigHandler;
+use OCA\Files_External\Config\UserContext;
 use OCA\Files_External\Config\UserPlaceholderHandler;
-use phpseclib\Crypt\AES;
-use \OCA\Files_External\AppInfo\Application;
-use \OCA\Files_External\Lib\Backend\LegacyBackend;
-use \OCA\Files_External\Lib\StorageConfig;
-use \OCA\Files_External\Lib\Backend\Backend;
-use \OCP\Files\StorageNotAvailableException;
-use OCA\Files_External\Service\BackendService;
 use OCA\Files_External\Lib\Auth\Builtin;
-use OCA\Files_External\Service\UserGlobalStoragesService;
-use OCP\IUserManager;
+use OCA\Files_External\Lib\Backend\Backend;
+use OCA\Files_External\Lib\Backend\LegacyBackend;
+use OCA\Files_External\Lib\StorageConfig;
+use OCA\Files_External\Service\BackendService;
 use OCA\Files_External\Service\GlobalStoragesService;
+use OCA\Files_External\Service\UserGlobalStoragesService;
 use OCA\Files_External\Service\UserStoragesService;
+use OCP\Files\StorageNotAvailableException;
+use OCP\IUserManager;
+use phpseclib\Crypt\AES;
 
 /**
  * Class to configure mount.json globally and for users
@@ -93,7 +96,7 @@ class OC_Mount_Config {
 	 * @deprecated 8.2.0 use UserGlobalStoragesService::getStorages() and UserStoragesService::getStorages()
 	 */
 	public static function getAbsoluteMountPoints($uid) {
-		$mountPoints = array();
+		$mountPoints = [];
 
 		$userGlobalStoragesService = self::$app->getContainer()->query(UserGlobalStoragesService::class);
 		$userStoragesService = self::$app->getContainer()->query(UserStoragesService::class);
@@ -107,7 +110,7 @@ class OC_Mount_Config {
 			$mountPoint = '/'.$uid.'/files'.$storage->getMountPoint();
 			$mountEntry = self::prepareMountPointEntry($storage, false);
 			foreach ($mountEntry['options'] as &$option) {
-				$option = self::substitutePlaceholdersInConfig($option);
+				$option = self::substitutePlaceholdersInConfig($option, $uid);
 			}
 			$mountPoints[$mountPoint] = $mountEntry;
 		}
@@ -116,7 +119,7 @@ class OC_Mount_Config {
 			$mountPoint = '/'.$uid.'/files'.$storage->getMountPoint();
 			$mountEntry = self::prepareMountPointEntry($storage, true);
 			foreach ($mountEntry['options'] as &$option) {
-				$option = self::substitutePlaceholdersInConfig($uid, $option);
+				$option = self::substitutePlaceholdersInConfig($option, $uid);
 			}
 			$mountPoints[$mountPoint] = $mountEntry;
 		}
@@ -211,16 +214,20 @@ class OC_Mount_Config {
 
 	/**
 	 * @param mixed $input
+	 * @param string|null $userId
 	 * @return mixed
 	 * @throws \OCP\AppFramework\QueryException
 	 * @since 16.0.0
 	 */
-	public static function substitutePlaceholdersInConfig($input) {
+	public static function substitutePlaceholdersInConfig($input, string $userId = null) {
 		/** @var BackendService $backendService */
 		$backendService = self::$app->getContainer()->query(BackendService::class);
 		/** @var IConfigHandler[] $handlers */
 		$handlers = $backendService->getConfigHandlers();
 		foreach ($handlers as $handler) {
+			if ($handler instanceof UserContext && $userId !== null) {
+				$handler->setUserId($userId);
+			}
 			$input = $handler->handle($input);
 		}
 		return $input;
@@ -245,20 +252,6 @@ class OC_Mount_Config {
 				continue;
 			}
 			$option = self::substitutePlaceholdersInConfig($option);
-			if(!self::arePlaceholdersSubstituted($option)) {
-				\OC::$server->getLogger()->error(
-					'A placeholder was not substituted: {option} for mount type {class}',
-					[
-						'app' => 'files_external',
-						'option' => $option,
-						'class' => $class,
-					]
-				);
-				throw new StorageNotAvailableException(
-					'Mount configuration incomplete',
-					StorageNotAvailableException::STATUS_INCOMPLETE_CONF
-				);
-			}
 		}
 		if (class_exists($class)) {
 			try {
@@ -283,20 +276,6 @@ class OC_Mount_Config {
 		return StorageNotAvailableException::STATUS_ERROR;
 	}
 
-	public static function arePlaceholdersSubstituted($option):bool {
-		$result = true;
-		if(is_array($option)) {
-			foreach ($option as $optionItem) {
-				$result = $result && self::arePlaceholdersSubstituted($optionItem);
-			}
-		} else if (is_string($option)) {
-			if (strpos(rtrim($option, '$'), '$') !== false) {
-				$result = false;
-			}
-		}
-		return $result;
-	}
-
 	/**
 	 * Read the mount points in the config file into an array
 	 *
@@ -317,7 +296,7 @@ class OC_Mount_Config {
 				return $mountPoints;
 			}
 		}
-		return array();
+		return [];
 	}
 
 	/**
@@ -343,7 +322,7 @@ class OC_Mount_Config {
 		}
 
 		foreach ($dependencyGroups as $module => $dependants) {
-			$backends = implode(', ', array_map(function($backend) {
+			$backends = implode(', ', array_map(function ($backend) {
 				return '"' . $backend->getText() . '"';
 			}, $dependants));
 			$message .= '<p>' . OC_Mount_Config::getSingleDependencyMessage($l, $module, $backends) . '</p>';
@@ -451,14 +430,14 @@ class OC_Mount_Config {
 	 */
 	public static function makeConfigHash($config) {
 		$data = json_encode(
-			array(
+			[
 				'c' => $config['backend'],
 				'a' => $config['authMechanism'],
 				'm' => $config['mountpoint'],
 				'o' => $config['options'],
 				'p' => isset($config['priority']) ? $config['priority'] : -1,
 				'mo' => isset($config['mountOptions']) ? $config['mountOptions'] : [],
-			)
+			]
 		);
 		return hash('md5', $data);
 	}

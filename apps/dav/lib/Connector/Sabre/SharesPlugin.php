@@ -2,13 +2,12 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Joas Schilling <coding@schilljs.com>
- * @author Maxence Lange <maxence@nextcloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Tobias Kaminsky <tobias@kaminsky.me>
  * @author Vincent Petry <pvince81@owncloud.com>
- * @author Vinicius Cubas Brand <vinicius@eita.org.br>
- * @author Daniel Tygel <dtygel@eita.org.br>
  *
  * @license AGPL-3.0
  *
@@ -22,14 +21,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\DAV\Connector\Sabre;
 
-use \Sabre\DAV\PropFind;
 use OCP\IUserSession;
 use OCP\Share\IShare;
+use Sabre\DAV\PropFind;
 
 /**
  * Sabre Plugin to provide share-related properties
@@ -37,7 +37,9 @@ use OCP\Share\IShare;
 class SharesPlugin extends \Sabre\DAV\ServerPlugin {
 
 	const NS_OWNCLOUD = 'http://owncloud.org/ns';
+	const NS_NEXTCLOUD = 'http://nextcloud.org/ns';
 	const SHARETYPES_PROPERTYNAME = '{http://owncloud.org/ns}share-types';
+	const SHAREES_PROPERTYNAME = '{http://nextcloud.org/ns}sharees';
 
 	/**
 	 * Reference to main server object
@@ -66,10 +68,8 @@ class SharesPlugin extends \Sabre\DAV\ServerPlugin {
 	 */
 	private $userFolder;
 
-	/**
-	 * @var IShare[]
-	 */
-	private $cachedShareTypes;
+	/** @var IShare[] */
+	private $cachedShares = [];
 
 	private $cachedFolders = [];
 
@@ -89,7 +89,6 @@ class SharesPlugin extends \Sabre\DAV\ServerPlugin {
 		$this->shareManager = $shareManager;
 		$this->userFolder = $userFolder;
 		$this->userId = $userSession->getUser()->getUID();
-		$this->cachedShareTypes = [];
 	}
 
 	/**
@@ -106,20 +105,14 @@ class SharesPlugin extends \Sabre\DAV\ServerPlugin {
 		$server->xml->namespacesMap[self::NS_OWNCLOUD] = 'oc';
 		$server->xml->elementMap[self::SHARETYPES_PROPERTYNAME] = ShareTypeList::class;
 		$server->protectedProperties[] = self::SHARETYPES_PROPERTYNAME;
+		$server->protectedProperties[] = self::SHAREES_PROPERTYNAME;
 
 		$this->server = $server;
-		$this->server->on('propFind', array($this, 'handleGetProperties'));
+		$this->server->on('propFind', [$this, 'handleGetProperties']);
 	}
 
-	/**
-	 * Return a list of share types for outgoing shares
-	 *
-	 * @param \OCP\Files\Node $node file node
-	 *
-	 * @return int[] array of share types
-	 */
-	private function getShareTypes(\OCP\Files\Node $node) {
-		$shareTypes = [];
+	private function getShare(\OCP\Files\Node $node): array {
+		$result = [];
 		$requestedShareTypes = [
 			\OCP\Share::SHARE_TYPE_USER,
 			\OCP\Share::SHARE_TYPE_GROUP,
@@ -130,40 +123,47 @@ class SharesPlugin extends \Sabre\DAV\ServerPlugin {
 			\OCP\Share::SHARE_TYPE_CIRCLE,
 		];
 		foreach ($requestedShareTypes as $requestedShareType) {
-			// one of each type is enough to find out about the types
 			$shares = $this->shareManager->getSharesBy(
 				$this->userId,
 				$requestedShareType,
 				$node,
 				false,
-				1
+				-1
 			);
-			if (!empty($shares)) {
-				$shareTypes[] = $requestedShareType;
+			foreach ($shares as $share) {
+				$result[] = $share;
 			}
 		}
-		return $shareTypes;
+		return $result;
 	}
 
-	private function getSharesTypesInFolder(\OCP\Files\Folder $node) {
-		$shares = $this->shareManager->getSharesInFolder(
+	private function getSharesFolder(\OCP\Files\Folder $node): array {
+		return $this->shareManager->getSharesInFolder(
 			$this->userId,
 			$node,
 			true
 		);
+	}
 
-		$shareTypesByFileId = [];
-
-		foreach($shares as $fileId => $sharesForFile) {
-			$types = array_map(function(IShare $share) {
-				return $share->getShareType();
-			}, $sharesForFile);
-			$types = array_unique($types);
-			sort($types);
-			$shareTypesByFileId[$fileId] = $types;
+	private function getShares(\Sabre\DAV\INode $sabreNode): array {
+		if (isset($this->cachedShares[$sabreNode->getId()])) {
+			$shares = $this->cachedShares[$sabreNode->getId()];
+		} else {
+			list($parentPath,) = \Sabre\Uri\split($sabreNode->getPath());
+			if ($parentPath === '') {
+				$parentPath = '/';
+			}
+			// if we already cached the folder this file is in we know there are no shares for this file
+			if (array_search($parentPath, $this->cachedFolders) === false) {
+				$node = $this->userFolder->get($sabreNode->getPath());
+				$shares = $this->getShare($node);
+				$this->cachedShares[$sabreNode->getId()] = $shares;
+			} else {
+				return [];
+			}
 		}
 
-		return $shareTypesByFileId;
+		return $shares;
 	}
 
 	/**
@@ -183,36 +183,34 @@ class SharesPlugin extends \Sabre\DAV\ServerPlugin {
 		// need prefetch ?
 		if ($sabreNode instanceof \OCA\DAV\Connector\Sabre\Directory
 			&& $propFind->getDepth() !== 0
-			&& !is_null($propFind->getStatus(self::SHARETYPES_PROPERTYNAME))
+			&& (
+				!is_null($propFind->getStatus(self::SHARETYPES_PROPERTYNAME)) ||
+				!is_null($propFind->getStatus(self::SHAREES_PROPERTYNAME))
+			)
 		) {
 			$folderNode = $this->userFolder->get($sabreNode->getPath());
 
-			$childShares = $this->getSharesTypesInFolder($folderNode);
 			$this->cachedFolders[] = $sabreNode->getPath();
-			$this->cachedShareTypes[$folderNode->getId()] = $this->getShareTypes($folderNode);
+			$childShares = $this->getSharesFolder($folderNode);
 			foreach ($childShares as $id => $shares) {
-				$this->cachedShareTypes[$id] = $shares;
+				$this->cachedShares[$id] = $shares;
 			}
 		}
 
 		$propFind->handle(self::SHARETYPES_PROPERTYNAME, function () use ($sabreNode) {
-			if (isset($this->cachedShareTypes[$sabreNode->getId()])) {
-				$shareTypes = $this->cachedShareTypes[$sabreNode->getId()];
-			} else {
-				list($parentPath,) = \Sabre\Uri\split($sabreNode->getPath());
-				if ($parentPath === '') {
-					$parentPath = '/';
-				}
-				// if we already cached the folder this file is in we know there are no shares for this file
-				if (array_search($parentPath, $this->cachedFolders) === false) {
-					$node = $this->userFolder->get($sabreNode->getPath());
-					$shareTypes = $this->getShareTypes($node);
-				} else {
-					return [];
-				}
-			}
+			$shares = $this->getShares($sabreNode);
+
+			$shareTypes = array_unique(array_map(function (IShare $share) {
+				return $share->getShareType();
+			}, $shares));
 
 			return new ShareTypeList($shareTypes);
+		});
+
+		$propFind->handle(self::SHAREES_PROPERTYNAME, function () use ($sabreNode) {
+			$shares = $this->getShares($sabreNode);
+
+			return new ShareeList($shares);
 		});
 	}
 }

@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Donquixote <marjunebatac@gmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -23,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -34,11 +35,10 @@
 
 namespace OCP\AppFramework;
 
-use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\IRequest;
-
 
 /**
  * Base class to inherit your controllers from
@@ -73,12 +73,12 @@ abstract class Controller {
 	 * @since 6.0.0 - parameter $appName was added in 7.0.0 - parameter $app was removed in 7.0.0
 	 */
 	public function __construct($appName,
-	                            IRequest $request) {
+								IRequest $request) {
 		$this->appName = $appName;
 		$this->request = $request;
 
 		// default responders
-		$this->responders = array(
+		$this->responders = [
 			'json' => function ($data) {
 				if ($data instanceof DataResponse) {
 					$response = new JSONResponse(
@@ -96,7 +96,7 @@ abstract class Controller {
 				}
 				return new JSONResponse($data);
 			}
-		);
+		];
 	}
 
 

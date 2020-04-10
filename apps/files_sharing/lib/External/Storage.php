@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -24,7 +25,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -85,13 +86,13 @@ class Storage extends DAV implements ISharedStorage, IDisableEncryptionStorage {
 		$this->mountPoint = $options['mountpoint'];
 		$this->token = $options['token'];
 
-		parent::__construct(array(
+		parent::__construct([
 			'secure' => $secure,
 			'host' => $host,
 			'root' => $root,
 			'user' => $options['token'],
 			'password' => (string)$options['password']
-		));
+		]);
 	}
 
 	public function getWatcher($path = '', $storage = null) {

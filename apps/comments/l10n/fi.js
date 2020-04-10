@@ -27,7 +27,6 @@ OC.L10N.register(
     "Error occurred while posting comment" : "Virhe kommenttia lähettäessä",
     "_%n unread comment_::_%n unread comments_" : ["%n lukematon kommentti","%n lukematonta kommenttia"],
     "_1 new comment_::_{unread} new comments_" : ["1 uusi kommentti","{unread} uutta kommenttia"],
-    "Comment" : "Kommentti",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s mainitsi sinut kommentissa “%2$s”"
+    "Comment" : "Kommentti"
 },
 "nplurals=2; plural=(n != 1);");

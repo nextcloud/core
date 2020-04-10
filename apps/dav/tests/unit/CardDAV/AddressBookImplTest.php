@@ -20,13 +20,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\DAV\Tests\unit\CardDAV;
-
 
 use OCA\DAV\CardDAV\AddressBook;
 use OCA\DAV\CardDAV\AddressBookImpl;
@@ -56,7 +54,7 @@ class AddressBookImplTest extends TestCase {
 	/** @var  VCard | \PHPUnit_Framework_MockObject_MockObject */
 	private $vCard;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->addressBookInfo = [
@@ -282,7 +280,7 @@ class AddressBookImplTest extends TestCase {
 		// simulate that 'uid0' already exists, so the second uid will be returned
 		$this->backend->expects($this->exactly(2))->method('getContact')
 			->willReturnCallback(
-				function($id, $uid) {
+				function ($id, $uid) {
 					return ($uid === 'uid0.vcf');
 				}
 			);

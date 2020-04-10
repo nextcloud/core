@@ -47,18 +47,6 @@
     "Share provider which allows you to share files by mail" : "Proveedor que permite compartir archivos por correo",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Permite a los usuarios compartir un enlace personalizado a un archivo o carpeta enviándolo a una dirección de correo electrónico",
     "Send password by mail" : "Enviar contraseñas por email",
-    "Enforce password protection" : "Imponer la protección de contraseña",
-    "Sharing %s failed, this item is already shared with %s" : "Fallo al compartir %s, ya que este elemento ya estaba compartido con %s",
-    "%s shared »%s« with you" : "%s compartió »%s« contigo",
-    "%s shared »%s« with you." : "%s compartió »%s« contigo.",
-    "%s via %s" : "%s por %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s compartió »%s« contigo.\nDeberías haber recibido ya un correo por separado con un enlace para acceder.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s compartió »%s« con usted. Debería haber recibido un mensaje de correo separado con un enlace para abrirlo.",
-    "Password to access »%s« shared to you by %s" : "Contraseña para acceder »%s« compartida contigo por %s",
-    "It is protected with the following password: %s" : "Está protegido con la siguiente contraseña: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Acabas de compartir »%s« con %s. El recurso compartido ya ha sido enviado al destinatario. Debido a las reglas de seguridad definidas por el administrador de %s cada recurso compartido necesita ser protegido con contraseña y no está permitido que mandes la contraseña directamente al destinatario. Por eso, necesitas mandar la contraseña al destinatario por tu cuenta.",
-    "Password to access »%s« shared with %s" : "Se ha compartido con %s una contraseña para acceder a »%s«",
-    "This is the password: %s" : "Esta es la contraseña: %s",
-    "Password to access »%1$s« shared with %2$s" : "Se ha compartido la contraseña para acceder a «%1$s» con %2$s"
+    "Enforce password protection" : "Imponer la protección de contraseña"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

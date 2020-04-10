@@ -4,6 +4,8 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -22,11 +24,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
-namespace OCA\FederatedFileSharing\Tests;
 
+namespace OCA\FederatedFileSharing\Tests;
 
 use OC\Federation\CloudIdManager;
 use OCA\FederatedFileSharing\AddressHandler;
@@ -84,7 +86,7 @@ class FederatedShareProviderTest extends \Test\TestCase {
 	/** @var \PHPUnit_Framework_MockObject_MockObject|ICloudFederationProviderManager */
 	private $cloudFederationProviderManager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->connection = \OC::$server->getDatabaseConnection();
@@ -96,9 +98,9 @@ class FederatedShareProviderTest extends \Test\TestCase {
 			->getMock();
 		$this->l = $this->getMockBuilder(IL10N::class)->getMock();
 		$this->l->method('t')
-			->will($this->returnCallback(function($text, $parameters = []) {
+			->willReturnCallback(function ($text, $parameters = []) {
 				return vsprintf($text, $parameters);
-			}));
+			});
 		$this->logger = $this->getMockBuilder(ILogger::class)->getMock();
 		$this->rootFolder = $this->getMockBuilder('OCP\Files\IRootFolder')->getMock();
 		$this->config = $this->getMockBuilder(IConfig::class)->getMock();
@@ -130,10 +132,10 @@ class FederatedShareProviderTest extends \Test\TestCase {
 		$this->shareManager = \OC::$server->getShareManager();
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		$this->connection->getQueryBuilder()->delete('share')->execute();
 
-		return parent::tearDown();
+		parent::tearDown();
 	}
 
 	public function testCreate() {
@@ -777,7 +779,7 @@ class FederatedShareProviderTest extends \Test\TestCase {
 		$this->gsConfig->expects($this->once())->method('isGlobalScaleEnabled')
 			->willReturn($gsEnabled);
 		$this->config->expects($this->any())->method('getAppValue')
-			->with('files_sharing', 'lookupServerEnabled', 'no')
+			->with('files_sharing', 'lookupServerEnabled', 'yes')
 			->willReturn($isEnabled);
 
 		$this->assertSame($expected,

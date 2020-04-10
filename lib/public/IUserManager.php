@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -23,12 +24,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCP;
-
 
 /**
  * Class Manager
@@ -49,11 +49,11 @@ namespace OCP;
  */
 interface IUserManager {
 		/**
-	 * register a user backend
-	 *
-	 * @param \OCP\UserInterface $backend
-	 * @since 8.0.0
-	 */
+		 * register a user backend
+		 *
+		 * @param \OCP\UserInterface $backend
+		 * @since 8.0.0
+		 */
 	public function registerBackend($backend);
 
 	/**

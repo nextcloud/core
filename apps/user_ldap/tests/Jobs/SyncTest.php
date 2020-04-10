@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2017 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -37,7 +38,6 @@ use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\IUserManager;
 use OCP\Notification\IManager;
-use function Sodium\memcmp;
 use Test\TestCase;
 
 class SyncTest extends TestCase {
@@ -69,7 +69,7 @@ class SyncTest extends TestCase {
 	/** @var AccessFactory|\PHPUnit_Framework_MockObject_MockObject */
 	protected $accessFactory;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->helper = $this->createMock(Helper::class);
@@ -128,7 +128,7 @@ class SyncTest extends TestCase {
 		$this->config->expects($this->once())
 			->method('setAppValue')
 			->with('user_ldap', 'background_sync_interval', $this->anything())
-			->willReturnCallback(function($a, $k, $interval) {
+			->willReturnCallback(function ($a, $k, $interval) {
 				$this->assertTrue($interval >= SYNC::MIN_INTERVAL);
 				$this->assertTrue($interval <= SYNC::MAX_INTERVAL);
 				return true;
@@ -294,7 +294,7 @@ class SyncTest extends TestCase {
 	public function testRun($runData) {
 		$this->config->expects($this->any())
 			->method('getAppValue')
-			->willReturnCallback(function($app, $key, $default) use ($runData) {
+			->willReturnCallback(function ($app, $key, $default) use ($runData) {
 				if($app === 'core' && $key === 'backgroundjobs_mode') {
 					return 'cron';
 				}

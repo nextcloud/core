@@ -3,6 +3,9 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  *
  * @license AGPL-3.0
@@ -17,14 +20,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_Trashbin;
 
-use \OCP\IConfig;
-use \OCP\AppFramework\Utility\ITimeFactory;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IConfig;
 
 class Expiration {
 
@@ -47,9 +50,13 @@ class Expiration {
 	/** @var bool */
 	private $canPurgeToSaveSpace;
 
-	public function __construct(IConfig $config,ITimeFactory $timeFactory){
+	public function __construct(IConfig $config,ITimeFactory $timeFactory) {
 		$this->timeFactory = $timeFactory;
-		$this->retentionObligation = $config->getSystemValue('trashbin_retention_obligation', 'auto');
+		$this->setRetentionObligation($config->getSystemValue('trashbin_retention_obligation', 'auto'));
+	}
+
+	public function setRetentionObligation(string $obligation) {
+		$this->retentionObligation = $obligation;
 
 		if ($this->retentionObligation !== 'disabled') {
 			$this->parseRetentionObligation();
@@ -60,7 +67,7 @@ class Expiration {
 	 * Is trashbin expiration enabled
 	 * @return bool
 	 */
-	public function isEnabled(){
+	public function isEnabled() {
 		return $this->retentionObligation !== 'disabled';
 	}
 
@@ -70,7 +77,7 @@ class Expiration {
 	 * @param bool $quotaExceeded
 	 * @return bool
 	 */
-	public function isExpired($timestamp, $quotaExceeded = false){
+	public function isExpired($timestamp, $quotaExceeded = false) {
 		// No expiration if disabled
 		if (!$this->isEnabled()) {
 			return false;
@@ -119,7 +126,7 @@ class Expiration {
 		return $maxAge;
 	}
 
-	private function parseRetentionObligation(){
+	private function parseRetentionObligation() {
 		$splitValues = explode(',', $this->retentionObligation);
 		if (!isset($splitValues[0])) {
 			$minValue = self::DEFAULT_RETENTION_OBLIGATION;

@@ -2,12 +2,16 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Piotr M <mrow4a@yahoo.com>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
@@ -23,7 +27,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -41,10 +45,10 @@ use OCP\Encryption\Exceptions\GenericEncryptionException;
 use OCP\Encryption\IFile;
 use OCP\Encryption\IManager;
 use OCP\Encryption\Keys\IStorage;
+use OCP\Files\Cache\ICacheEntry;
 use OCP\Files\Mount\IMountPoint;
 use OCP\Files\Storage;
 use OCP\ILogger;
-use OCP\Files\Cache\ICacheEntry;
 
 class Encryption extends Wrapper {
 
@@ -84,7 +88,7 @@ class Encryption extends Wrapper {
 	private $mountManager;
 
 	/** @var array remember for which path we execute the repair step to avoid recursions */
-	private $fixUnencryptedSizeOf = array();
+	private $fixUnencryptedSizeOf = [];
 
 	/** @var  ArrayCache */
 	private $arrayCache;
@@ -122,7 +126,7 @@ class Encryption extends Wrapper {
 		$this->uid = $uid;
 		$this->fileHelper = $fileHelper;
 		$this->keyStorage = $keyStorage;
-		$this->unencryptedSize = array();
+		$this->unencryptedSize = [];
 		$this->update = $update;
 		$this->mountManager = $mountManager;
 		$this->arrayCache = $arrayCache;
@@ -889,7 +893,7 @@ class Encryption extends Wrapper {
 	 * @return array
 	 */
 	protected function parseRawHeader($rawHeader) {
-		$result = array();
+		$result = [];
 		if (substr($rawHeader, 0, strlen(Util::HEADER_START)) === Util::HEADER_START) {
 			$header = $rawHeader;
 			$endAt = strpos($header, Util::HEADER_END);

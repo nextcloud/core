@@ -24,9 +24,8 @@ OC.L10N.register(
     "Sharing %1$s failed, could not find %2$s, maybe the server is currently unreachable or uses a self-signed certificate." : "Ha fallat la compartició %1$s, no s'ha pogut trobar %2$s, potser el servidor és inaccessible actualment o fa servir un certificat auto-signat.",
     "Could not find share" : "No s'ha pogut trobar la compartició",
     "Federated sharing" : "Compartició federada",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Heu rebut \"/%3$s\" com una compartició remota des de %1$s (de part de %2$s)",
+    "You received \"%3$s\" as a remote share from %4$s (%1$s) (on behalf of %5$s (%2$s))" : "Has rebut \"%3$s\" com a compartició remota de %4$s (%1$s) (en nom de %5$s (%2$s))",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "Heu rebut {share} com un recompte remot de {user} (en nom de {nom})",
-    "You received \"%3$s\" as a remote share from %1$s" : "Heu rebut \"/%3$s\" com una compartició remota de %1$s",
     "You received {share} as a remote share from {user}" : "Heu rebut {share} com a recompte remot de {user}",
     "Accept" : "Accepta",
     "Decline" : "Denega",
@@ -51,7 +50,7 @@ OC.L10N.register(
     "Add to your website" : "Afegiu a la vostra pàgina web",
     "Share with me via Nextcloud" : "Comparteix amb mi mitjançant Nextcloud",
     "HTML Code:" : "Codi HTML:",
-    "Sharing %s failed, because this item is already shared with %s" : "No s'ha pogut compartir %s, perquè l'element ja està compartit amb %s",
-    "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate." : "Ha fallat la compartició %s, no s'ha pogut trobar%s, potser el servidor és inaccessible actualment o fa servir un certificat auto-signat."
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Heu rebut \"/%3$s\" com una compartició remota des de %1$s (de part de %2$s)",
+    "You received \"%3$s\" as a remote share from %1$s" : "Heu rebut \"/%3$s\" com una compartició remota de %1$s"
 },
 "nplurals=2; plural=(n != 1);");

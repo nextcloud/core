@@ -3,7 +3,9 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -50,8 +52,8 @@ class DataResponse extends Response {
 	 * @param array $headers additional key value based headers
 	 * @since 8.0.0
 	 */
-	public function __construct($data=array(), $statusCode=Http::STATUS_OK,
-	                            array $headers=array()) {
+	public function __construct($data=[], $statusCode=Http::STATUS_OK,
+								array $headers=[]) {
 		parent::__construct();
 
 		$this->data = $data;
@@ -66,7 +68,7 @@ class DataResponse extends Response {
 	 * @return DataResponse Reference to this object
 	 * @since 8.0.0
 	 */
-	public function setData($data){
+	public function setData($data) {
 		$this->data = $data;
 
 		return $this;
@@ -78,7 +80,7 @@ class DataResponse extends Response {
 	 * @return array the data
 	 * @since 8.0.0
 	 */
-	public function getData(){
+	public function getData() {
 		return $this->data;
 	}
 

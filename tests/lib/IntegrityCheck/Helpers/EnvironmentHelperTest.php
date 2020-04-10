@@ -28,9 +28,9 @@ class EnvironmentHelperTest extends TestCase {
 	/** @var EnvironmentHelper */
 	private $environmentHelper;
 
-	public function setUp() {
+	protected function setUp(): void {
 		$this->environmentHelper = new EnvironmentHelper();
-		return parent::setUp();
+		parent::setUp();
 	}
 
 	public function testGetServerRoot() {

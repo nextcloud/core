@@ -3,8 +3,10 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -18,12 +20,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\User_LDAP\Tests\Integration;
-
 
 use OC\ServerNotAvailableException;
 use OCA\User_LDAP\LDAP;
@@ -35,7 +36,7 @@ use OCA\User_LDAP\LDAP;
  *
  * LDAP must be available via toxiproxy.
  *
- * This test must be run manually. 
+ * This test must be run manually.
  *
  */
 class ExceptionOnLostConnection {
@@ -94,7 +95,7 @@ class ExceptionOnLostConnection {
 	 *
 	 * @throws \Exception
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		require_once __DIR__  . '/../../../../lib/base.php';
 		\OC_App::loadApps(['user_ldap']);
 
@@ -128,12 +129,12 @@ class ExceptionOnLostConnection {
 		//host contains port, 2nd parameter will be ignored
 		$cr = $this->ldap->connect($this->ldapHost, 0);
 		$this->ldap->bind($cr, $this->ldapBindDN, $this->ldapBindPwd);
-		$this->ldap->search($cr, $this->ldapBase, 'objectClass=*', array('dn'), true, 5);
+		$this->ldap->search($cr, $this->ldapBase, 'objectClass=*', ['dn'], true, 5);
 
 		// disable LDAP, will cause lost connection
 		$this->setProxyState(false);
 		try {
-			$this->ldap->search($cr, $this->ldapBase, 'objectClass=*', array('dn'), true, 5);
+			$this->ldap->search($cr, $this->ldapBase, 'objectClass=*', ['dn'], true, 5);
 		} catch (ServerNotAvailableException $e) {
 			print("Test PASSED" . PHP_EOL);
 			exit(0);
@@ -172,9 +173,9 @@ class ExceptionOnLostConnection {
 		$ch = $this->getCurl();
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'Content-Type: application/json',
-				'Content-Length: ' . strlen($postData))
+		curl_setopt($ch, CURLOPT_HTTPHEADER, [
+			'Content-Type: application/json',
+			'Content-Length: ' . strlen($postData)]
 		);
 		$recvd = curl_exec($ch);
 		$this->checkCurlResult($ch, $recvd);
@@ -195,4 +196,3 @@ class ExceptionOnLostConnection {
 
 $test = new ExceptionOnLostConnection('http://localhost:8474', 'ldap', 'dc=owncloud,dc=bzoc');
 $test->run();
-

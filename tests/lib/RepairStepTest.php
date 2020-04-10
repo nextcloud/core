@@ -39,7 +39,7 @@ class RepairTest extends TestCase {
 	/** @var string[] */
 	private $outputArray;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$dispatcher = new EventDispatcher();
 		$this->repair = new \OC\Repair([], $dispatcher);
@@ -64,10 +64,10 @@ class RepairTest extends TestCase {
 		$this->repair->run();
 
 		$this->assertEquals(
-			array(
+			[
 				'step: Test Name',
 				'info: Simulated info',
-			),
+			],
 			$this->outputArray
 		);
 	}
@@ -78,10 +78,10 @@ class RepairTest extends TestCase {
 		$this->repair->run();
 
 		$this->assertEquals(
-			array(
+			[
 				'step: Test Name',
 				'warning: Simulated warning',
-			),
+			],
 			$this->outputArray
 		);
 	}
@@ -93,7 +93,7 @@ class RepairTest extends TestCase {
 			->will($this->throwException(new \Exception()));
 		$mock->expects($this->any())
 			->method('getName')
-			->will($this->returnValue('Exception Test'));
+			->willReturn('Exception Test');
 
 		$this->repair->addStep($mock);
 		$this->repair->addStep(new TestRepairStep(false));
@@ -109,9 +109,9 @@ class RepairTest extends TestCase {
 		$this->assertTrue($thrown);
 		// jump out after exception
 		$this->assertEquals(
-			array(
+			[
 				'step: Exception Test',
-			),
+			],
 			$this->outputArray
 		);
 	}
@@ -122,12 +122,12 @@ class RepairTest extends TestCase {
 		$this->repair->run();
 
 		$this->assertEquals(
-			array(
+			[
 				'step: Test Name',
 				'warning: Simulated warning',
 				'step: Test Name',
 				'info: Simulated info',
-			),
+			],
 			$this->outputArray
 		);
 	}

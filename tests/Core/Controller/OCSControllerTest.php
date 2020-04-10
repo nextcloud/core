@@ -20,10 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OC\Core\Controller;
 
 use OC\CapabilitiesManager;
-use OC\Security\Bruteforce\Throttler;
 use OC\Security\IdentityProof\Key;
 use OC\Security\IdentityProof\Manager;
 use OCP\AppFramework\Http\DataResponse;
@@ -47,7 +47,7 @@ class OCSControllerTest extends TestCase {
 	/** @var OCSController */
 	private $controller;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->createMock(IRequest::class);
@@ -91,14 +91,14 @@ class OCSControllerTest extends TestCase {
 		list($major, $minor, $micro) = \OCP\Util::getVersion();
 
 		$result = [];
-		$result['version'] = array(
+		$result['version'] = [
 			'major' => $major,
 			'minor' => $minor,
 			'micro' => $micro,
 			'string' => \OC_Util::getVersionString(),
 			'edition' => '',
 			'extendedSupport' => false
-		);
+		];
 
 		$capabilities = [
 			'foo' => 'bar',
@@ -123,14 +123,14 @@ class OCSControllerTest extends TestCase {
 		list($major, $minor, $micro) = \OCP\Util::getVersion();
 
 		$result = [];
-		$result['version'] = array(
+		$result['version'] = [
 			'major' => $major,
 			'minor' => $minor,
 			'micro' => $micro,
 			'string' => \OC_Util::getVersionString(),
 			'edition' => '',
 			'extendedSupport' => false
-		);
+		];
 
 		$capabilities = [
 			'foo' => 'bar',

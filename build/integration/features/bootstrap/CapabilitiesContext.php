@@ -3,6 +3,8 @@
  *
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Sergio Bertolin <sbertolin@solidgear.es>
  *
@@ -19,15 +21,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use GuzzleHttp\Client;
-use GuzzleHttp\Message\ResponseInterface;
 use PHPUnit\Framework\Assert;
 
 require __DIR__ . '/../../vendor/autoload.php';
@@ -44,7 +42,7 @@ class CapabilitiesContext implements Context, SnippetAcceptingContext {
 	 * @Then /^fields of capabilities match with$/
 	 * @param \Behat\Gherkin\Node\TableNode|null $formData
 	 */
-	public function checkCapabilitiesResponse(\Behat\Gherkin\Node\TableNode $formData){
+	public function checkCapabilitiesResponse(\Behat\Gherkin\Node\TableNode $formData) {
 		$capabilitiesXML = simplexml_load_string($this->response->getBody())->data->capabilities;
 
 		foreach ($formData->getHash() as $row) {

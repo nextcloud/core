@@ -4,6 +4,9 @@
  * @copyright Copyright (c) 2017, ownCloud GmbH
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -30,6 +33,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Schema\Sequence;
 use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Types\Type;
 use OC\App\InfoParser;
 use OC\IntegrityCheck\Helpers\AppLocator;
 use OC\Migration\SimpleOutput;
@@ -38,7 +42,6 @@ use OCP\AppFramework\QueryException;
 use OCP\IDBConnection;
 use OCP\Migration\IMigrationStep;
 use OCP\Migration\IOutput;
-use Doctrine\DBAL\Types\Type;
 
 class MigrationService {
 
@@ -465,12 +468,12 @@ class MigrationService {
 		$instance = $this->createInstance($version);
 
 		if (!$schemaOnly) {
-			$instance->preSchemaChange($this->output, function() {
+			$instance->preSchemaChange($this->output, function () {
 				return new SchemaWrapper($this->connection);
 			}, ['tablePrefix' => $this->connection->getPrefix()]);
 		}
 
-		$toSchema = $instance->changeSchema($this->output, function() {
+		$toSchema = $instance->changeSchema($this->output, function () {
 			return new SchemaWrapper($this->connection);
 		}, ['tablePrefix' => $this->connection->getPrefix()]);
 
@@ -485,7 +488,7 @@ class MigrationService {
 		}
 
 		if (!$schemaOnly) {
-			$instance->postSchemaChange($this->output, function() {
+			$instance->postSchemaChange($this->output, function () {
 				return new SchemaWrapper($this->connection);
 			}, ['tablePrefix' => $this->connection->getPrefix()]);
 		}
@@ -535,7 +538,7 @@ class MigrationService {
 
 					if ($isUsingDefaultName) {
 						$sequenceName = $table->getName() . '_' . implode('_', $primaryKey->getColumns()) . '_seq';
-						$sequences = array_filter($sequences, function(Sequence $sequence) use ($sequenceName) {
+						$sequences = array_filter($sequences, function (Sequence $sequence) use ($sequenceName) {
 							return $sequence->getName() !== $sequenceName;
 						});
 					}
@@ -547,7 +550,7 @@ class MigrationService {
 				if (!$isUsingDefaultName && \strlen($indexName) > 30) {
 					throw new \InvalidArgumentException('Primary index name  on "'  . $table->getName() . '" is too long.');
 				}
-				if ($isUsingDefaultName && \strlen($table->getName()) - $prefixLength > 23) {
+				if ($isUsingDefaultName && \strlen($table->getName()) - $prefixLength >= 23) {
 					throw new \InvalidArgumentException('Primary index name  on "'  . $table->getName() . '" is too long.');
 				}
 			}

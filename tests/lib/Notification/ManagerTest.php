@@ -23,10 +23,8 @@ namespace Test\Notification;
 
 use OC\Notification\Manager;
 use OCP\ILogger;
-use OCP\Notification\IApp;
 use OCP\Notification\IManager;
 use OCP\Notification\INotification;
-use OCP\Notification\INotifier;
 use OCP\RichObjectStrings\IValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
@@ -40,7 +38,7 @@ class ManagerTest extends TestCase {
 	/** @var ILogger|MockObject */
 	protected $logger;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->validator = $this->createMock(IValidator::class);
 		$this->logger = $this->createMock(ILogger::class);
@@ -119,10 +117,10 @@ class ManagerTest extends TestCase {
 		$manager->notify($notification);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 */
+	
 	public function testNotifyInvalid() {
+		$this->expectException(\InvalidArgumentException::class);
+
 		/** @var \OCP\Notification\INotification|\PHPUnit_Framework_MockObject_MockObject $notification */
 		$notification = $this->getMockBuilder(INotification::class)
 			->disableOriginalConstructor()

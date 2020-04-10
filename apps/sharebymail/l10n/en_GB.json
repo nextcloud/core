@@ -22,19 +22,9 @@
     "You can choose a different password at any time in the share dialog." : "You can choose a different password at any time in the share dialog.",
     "Could not find share" : "Could not find share",
     "Share by mail" : "Share by mail",
+    "Share provider which allows you to share files by mail" : "Share provider which allows you to share files by mail",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Allows users to share a personalised link to a file or folder by putting in an email address.",
     "Send password by mail" : "Send password by mail",
-    "Enforce password protection" : "Enforce password protection",
-    "Sharing %s failed, this item is already shared with %s" : "Sharing %s failed, this item is already shared with %s",
-    "%s shared »%s« with you" : "%s shared »%s« with you",
-    "%s shared »%s« with you." : "%s shared »%s« with you.",
-    "%s via %s" : "%s via %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s shared »%s« with you. You should have already received a separate mail with a link to access it.",
-    "Password to access »%s« shared to you by %s" : "Password to access »%s« shared to you by %s",
-    "It is protected with the following password: %s" : "It is protected with the following password: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient.",
-    "Password to access »%s« shared with %s" : "Password to access »%s« shared with %s",
-    "This is the password: %s" : "This is the password: %s"
+    "Enforce password protection" : "Enforce password protection"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

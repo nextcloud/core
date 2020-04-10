@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2018 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -48,7 +49,7 @@ class DeletedUsersIndexTest extends \Test\TestCase {
 	/** @var UserMapping|\PHPUnit_Framework_MockObject_MockObject */
 	protected $mapping;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		// no mocks for those as tests go against DB
@@ -63,9 +64,9 @@ class DeletedUsersIndexTest extends \Test\TestCase {
 		$this->dui = new DeletedUsersIndex($this->config, $this->db, $this->mapping);
 	}
 
-	public function tearDown() {
+	protected function tearDown(): void {
 		$this->config->deleteAppFromAllUsers('user_ldap');
-		return parent::tearDown();
+		parent::tearDown();
 	}
 
 	public function testMarkAndFetchUser() {

@@ -5,6 +5,7 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -19,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -27,10 +28,12 @@ namespace OC\Core\Command\App;
 
 use OC\App\CodeChecker\CodeChecker;
 use OC\App\CodeChecker\DatabaseSchemaChecker;
+use OC\App\CodeChecker\DeprecationCheck;
 use OC\App\CodeChecker\EmptyCheck;
 use OC\App\CodeChecker\InfoChecker;
 use OC\App\CodeChecker\LanguageParseChecker;
-use OC\App\InfoParser;
+use OC\App\CodeChecker\PrivateCheck;
+use OC\App\CodeChecker\StrongComparisonCheck;
 use Stecman\Component\Symfony\Console\BashCompletion\Completion\CompletionAwareInterface;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionContext;
 use Symfony\Component\Console\Command\Command;
@@ -38,9 +41,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use OC\App\CodeChecker\StrongComparisonCheck;
-use OC\App\CodeChecker\DeprecationCheck;
-use OC\App\CodeChecker\PrivateCheck;
 
 class CheckCode extends Command implements CompletionAwareInterface  {
 
@@ -94,12 +94,12 @@ class CheckCode extends Command implements CompletionAwareInterface  {
 
 		$codeChecker = new CodeChecker($checkList, !$input->getOption('skip-validate-info'));
 
-		$codeChecker->listen('CodeChecker', 'analyseFileBegin', function($params) use ($output) {
+		$codeChecker->listen('CodeChecker', 'analyseFileBegin', function ($params) use ($output) {
 			if(OutputInterface::VERBOSITY_VERBOSE <= $output->getVerbosity()) {
 				$output->writeln("<info>Analysing {$params}</info>");
 			}
 		});
-		$codeChecker->listen('CodeChecker', 'analyseFileFinished', function($filename, $errors) use ($output) {
+		$codeChecker->listen('CodeChecker', 'analyseFileFinished', function ($filename, $errors) use ($output) {
 			$count = count($errors);
 
 			// show filename if the verbosity is low, but there are errors in a file
@@ -111,7 +111,7 @@ class CheckCode extends Command implements CompletionAwareInterface  {
 			if($count > 0 || OutputInterface::VERBOSITY_VERBOSE <= $output->getVerbosity()) {
 				$output->writeln(" {$count} errors");
 			}
-			usort($errors, function($a, $b) {
+			usort($errors, function ($a, $b) {
 				return $a['line'] >$b['line'];
 			});
 
@@ -127,7 +127,7 @@ class CheckCode extends Command implements CompletionAwareInterface  {
 
 		if(!$input->getOption('skip-validate-info')) {
 			$infoChecker = new InfoChecker();
-			$infoChecker->listen('InfoChecker', 'parseError', function($error) use ($output) {
+			$infoChecker->listen('InfoChecker', 'parseError', function ($error) use ($output) {
 				$output->writeln("<error>Invalid appinfo.xml file found: $error</error>");
 			});
 

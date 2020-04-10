@@ -2,6 +2,9 @@
 /**
  * @copyright 2016 Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -17,14 +20,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OC\AppFramework\OCS;
 
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\EmptyContentSecurityPolicy;
 use OCP\AppFramework\Http\Response;
 
 abstract class BaseResponse extends Response   {
@@ -46,7 +49,7 @@ abstract class BaseResponse extends Response   {
 	/**
 	 * BaseResponse constructor.
 	 *
-	 * @param DataResponse|null $dataResponse
+	 * @param DataResponse $dataResponse
 	 * @param string $format
 	 * @param string|null $statusMessage
 	 * @param int|null $itemsCount
@@ -57,6 +60,8 @@ abstract class BaseResponse extends Response   {
 								$statusMessage = null,
 								$itemsCount = null,
 								$itemsPerPage = null) {
+		parent::__construct();
+
 		$this->format = $format;
 		$this->statusMessage = $statusMessage;
 		$this->itemsCount = $itemsCount;
@@ -69,7 +74,6 @@ abstract class BaseResponse extends Response   {
 		$this->setETag($dataResponse->getETag());
 		$this->setLastModified($dataResponse->getLastModified());
 		$this->setCookies($dataResponse->getCookies());
-		$this->setContentSecurityPolicy(new EmptyContentSecurityPolicy());
 
 		if ($format === 'json') {
 			$this->addHeader(
@@ -123,7 +127,7 @@ abstract class BaseResponse extends Response   {
 	 */
 	protected function toXML(array $array, \XMLWriter $writer) {
 		foreach ($array as $k => $v) {
-			if ($k[0] === '@') {
+			if (\is_string($k) && strpos($k, '@') === 0) {
 				$writer->writeAttribute(substr($k, 1), $v);
 				continue;
 			}

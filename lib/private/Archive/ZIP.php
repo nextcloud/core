@@ -2,8 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Christopher Schäpers <kondou@ts.unde.re>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -24,7 +26,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -112,7 +114,7 @@ class ZIP extends Archive{
 	 */
 	public function getFolder($path) {
 		$files=$this->getFiles();
-		$folderContent=array();
+		$folderContent=[];
 		$pathLength=strlen($path);
 		foreach($files as $file) {
 			if(substr($file, 0, $pathLength)==$path and $file!=$path) {
@@ -129,7 +131,7 @@ class ZIP extends Archive{
 	 */
 	public function getFiles() {
 		$fileCount=$this->zip->numFiles;
-		$files=array();
+		$files=[];
 		for($i=0;$i<$fileCount;$i++) {
 			$files[]=$this->zip->getNameIndex($i);
 		}

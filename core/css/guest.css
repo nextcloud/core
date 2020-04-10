@@ -17,16 +17,18 @@ ul { list-style:none; }
 body {
 	background-color: #ffffff;
 	font-weight: normal;
-	font-size: .8em;
+	/* bring the default font size up to 14px */
+	font-size: .875em;
 	line-height: 1.6em;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 	color: #000;
 	text-align: center;
 	background-color: #0082c9;
 	background-image: url('../img/background.png?v=2');
+	background-image: url('../img/background.png?v=2'), linear-gradient(40deg, #0082c9 0%, rgba(28,175,255,1) 100%);
 	background-position: 50% 50%;
-	background-repeat: no-repeat;
-	background-size: cover;
+	background-repeat: repeat;
+	background-size: 275px, contain;
 	background-attachment: fixed; /* fix background gradient */
 	min-height: 100%; /* fix sticky footer */
 	height: auto;
@@ -95,21 +97,22 @@ body {
 	max-width: 100%;
 	max-height: 200px;
 }
+
 .wrapper {
-	width: 300px;
+	width: 100%;
+	max-width: 700px;
 	margin-top: 10vh;
 }
 
 /* Default FORM */
 form {
 	position: relative;
-	width: 280px;
 	margin: auto;
 	padding: 0;
 }
 form fieldset {
-	margin-bottom: 20px;
-	text-align: left;
+	width: 260px;
+	margin: auto auto 20px;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
@@ -143,13 +146,57 @@ form #datadirField legend {
 
 /* Buttons and input */
 #submit-wrapper,
-#reset-password-wrapper {
+#reset-password-wrapper,
+#alternative-logins {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	position: relative; /* Make the wrapper the containing block of its
 						   absolutely positioned descendant icons */
 }
+
+#alternative-logins {
+	margin: auto;
+	display: block;
+	min-width: 260px;
+	max-width: 400px;
+	overflow: hidden;
+}
+
+#alternative-logins a {
+	margin: 10px 5px;
+	display: block;
+	font-size: 15px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#alternative-logins a.button::before {
+	content: "";
+	background-repeat: no-repeat;
+	background-size: contain;
+	width: 0;
+	margin-right: 0;
+	height: 18px;
+	display: inline-block;
+	vertical-align: bottom;
+}
+
+#alternative-logins .button {
+	color: #0082c9;
+	padding: 12px 20px;
+}
+
+@media only screen and (max-width: 1024px) {
+	.wrapper {
+		margin-top: 0;
+	}
+	#alternative-logins {
+		margin: auto;
+	}
+}
+
 
 #submit-wrapper .submit-icon,
 #reset-password-wrapper .submit-icon {
@@ -161,6 +208,10 @@ form #datadirField legend {
 							 From the user point of view the icon is part of the
 							 button, so the clicks on the icon have to be
 							 applied to the button instead. */
+}
+
+#submit-wrapper {
+	margin: 0 auto;
 }
 
 #submit-wrapper input.login:hover ~ .submit-icon.icon-confirm-white,
@@ -247,6 +298,8 @@ input[type='submit'].icon-confirm,
 input.updateButton,
 input.update-continue {
 	padding: 10px 20px; /* larger log in and installation buttons */
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .updateAnyways a.updateAnywaysButton {
 	font-size: 14px;
@@ -418,6 +471,10 @@ form .warning input[type='checkbox']+label {
 	color: #fff !important;
 }
 
+.body-login-container.two-factor {
+	max-width: 290px;
+	margin: 15px auto 0;
+}
 .two-factor-provider {
 	display: flex;
 	border-radius: 3px; /* --border-radius */
@@ -473,22 +530,24 @@ form .warning input[type='checkbox']+label {
 #remember_login {
 	margin: 18px 5px 0 16px !important;
 }
-.remember-login-container,
 .lost-password-container {
 	display: inline-block;
 	margin: 10px 0;
 	text-align: center;
 	width: 100%;
-	text-shadow: 0 0 2px rgba(0, 0, 0, .4); /* better readability on bright background */
 }
-.lost-password-container #lost-password,
-.lost-password-container #lost-password-back {
+#lost-password,
+#lost-password-back,
+#reset-password-wrapper + a {
 	display: inline-block;
-	font-weight: normal;
+	font-weight: normal !important;
 	padding: 12px;
-	margin-top: -6px;
 	color: #fff;
 	cursor: pointer;
+	text-shadow: 0 0 2px rgba(0, 0, 0, .4); /* better readability on bright background */
+}
+#lost-password {
+	margin-top: -6px;
 }
 #forgot-password {
 	padding: 11px;
@@ -590,6 +649,11 @@ form #selectDbType label span {
 	box-shadow: none !important;
 }
 
+#install-recommended-apps + label span {
+	display: inline-block;
+	opacity: .7;
+}
+
 /* Errors */
 /* Warnings and errors are the same */
 .body-login-container,
@@ -654,7 +718,6 @@ form #selectDbType label span {
 }
 .error-wide {
 	width: 700px;
-	margin-left: -200px !important;
 	margin-top: 35px;
 }
 .error-wide .button {

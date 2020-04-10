@@ -18,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -93,8 +93,8 @@ class Config extends Base {
 			$value = $mount->getBackendOption($key);
 		}
 		if (!is_string($value) && json_decode(json_encode($value)) === $value) { // show bools and objects correctly
- 			$value = json_encode($value);
- 		}
+			$value = json_encode($value);
+		}
 		$output->writeln($value);
 	}
 
@@ -106,9 +106,9 @@ class Config extends Base {
 	 */
 	protected function setOption(StorageConfig $mount, $key, $value, OutputInterface $output) {
 		$decoded = json_decode($value, true);
- 		if (!is_null($decoded) && json_encode($decoded) === $value) {
- 			$value = $decoded;
- 		}
+		if (!is_null($decoded) && json_encode($decoded) === $value) {
+			$value = $decoded;
+		}
 		if ($key === 'mountpoint' || $key === 'mount_point') {
 			$mount->setMountPoint($value);
 		} else {

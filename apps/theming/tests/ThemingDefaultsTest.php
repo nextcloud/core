@@ -4,12 +4,16 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Guillaume COMPAGNON <gcompagnon@outlook.com>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Michael Weimann <mail@michael-weimann.eu>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -24,19 +28,19 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OCA\Theming\Tests;
 
 use OCA\Theming\ImageManager;
 use OCA\Theming\ThemingDefaults;
+use OCA\Theming\Util;
 use OCP\App\IAppManager;
 use OCP\Files\IAppData;
-use OCA\Theming\Util;
 use OCP\Files\NotFoundException;
 use OCP\Files\SimpleFS\ISimpleFile;
-use OCP\Files\SimpleFS\ISimpleFolder;
 use OCP\ICache;
 use OCP\ICacheFactory;
 use OCP\IConfig;
@@ -71,7 +75,7 @@ class ThemingDefaultsTest extends TestCase {
 	/** @var INavigationManager|\PHPUnit_Framework_MockObject_MockObject */
 	private $navigationManager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->config = $this->createMock(IConfig::class);
 		$this->l10n = $this->createMock(IL10N::class);
@@ -680,8 +684,8 @@ class ThemingDefaultsTest extends TestCase {
 			'color-primary-element' => '#aaaaaa',
 			'theming-logoheader-mime' => '\'jpeg\'',
 			'theming-favicon-mime' => '\'jpeg\'',
-			'image-logoheader' => '\'custom-logoheader?v=0\'',
-			'image-favicon' => '\'custom-favicon?v=0\'',
+			'image-logoheader' => "url('custom-logoheader?v=0')",
+			'image-favicon' => "url('custom-favicon?v=0')",
 			'has-legal-links' => 'false'
 		];
 		$this->assertEquals($expected, $this->template->getScssVariables());

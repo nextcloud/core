@@ -21,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -35,6 +35,7 @@ use OCA\Files_Sharing\Tests\TestCase;
 use OCP\Federation\ICloudFederationFactory;
 use OCP\Federation\ICloudFederationProviderManager;
 use OCP\Http\Client\IClientService;
+use OCP\Http\Client\IResponse;
 use OCP\IGroupManager;
 use OCP\IUserManager;
 use Test\Traits\UserTrait;
@@ -78,7 +79,7 @@ class ManagerTest extends TestCase {
 	private $user;
 	private $testMountProvider;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->uid = $this->getUniqueID('user');
@@ -109,7 +110,7 @@ class ManagerTest extends TestCase {
 				]
 			)->setMethods(['tryOCMEndPoint'])->getMock();
 
-		$this->testMountProvider = new MountProvider(\OC::$server->getDatabaseConnection(), function() {
+		$this->testMountProvider = new MountProvider(\OC::$server->getDatabaseConnection(), function () {
 			return $this->manager;
 		}, new CloudIdManager());
 	}
@@ -172,8 +173,15 @@ class ManagerTest extends TestCase {
 		$this->clientService->expects($this->at(0))
 			->method('newClient')
 			->willReturn($client);
-		$response = $this->getMockBuilder('OCP\Http\Client\IResponse')
-			->disableOriginalConstructor()->getMock();
+		$response = $this->createMock(IResponse::class);
+		$response->method('getBody')
+			->willReturn(json_encode([
+				'ocs' => [
+					'meta' => [
+						'statuscode' => 200,
+					]
+				]
+			]));
 		$client->expects($this->once())
 			->method('post')
 			->with($this->stringStartsWith('http://localhost/ocs/v2.php/cloud/shares/' . $openShares[0]['remote_id']), $this->anything())
@@ -215,8 +223,15 @@ class ManagerTest extends TestCase {
 		$this->clientService->expects($this->at(0))
 			->method('newClient')
 			->willReturn($client);
-		$response = $this->getMockBuilder('OCP\Http\Client\IResponse')
-			->disableOriginalConstructor()->getMock();
+		$response = $this->createMock(IResponse::class);
+		$response->method('getBody')
+			->willReturn(json_encode([
+				'ocs' => [
+					'meta' => [
+						'statuscode' => 200,
+					]
+				]
+			]));
 		$client->expects($this->once())
 			->method('post')
 			->with($this->stringStartsWith('http://localhost/ocs/v2.php/cloud/shares/' . $openShares[1]['remote_id'] . '/decline'), $this->anything())
@@ -255,8 +270,15 @@ class ManagerTest extends TestCase {
 		$this->clientService->expects($this->at(1))
 			->method('newClient')
 			->willReturn($client2);
-		$response = $this->getMockBuilder('OCP\Http\Client\IResponse')
-			->disableOriginalConstructor()->getMock();
+		$response = $this->createMock(IResponse::class);
+		$response->method('getBody')
+			->willReturn(json_encode([
+				'ocs' => [
+					'meta' => [
+						'statuscode' => 200,
+					]
+				]
+			]));
 		$client1->expects($this->once())
 			->method('post')
 			->with($this->stringStartsWith('http://localhost/ocs/v2.php/cloud/shares/' . $openShares[0]['remote_id'] . '/decline'), $this->anything())

@@ -3,6 +3,8 @@
  * @copyright 2017, Georg Ehrke <oc.list@georgehrke.com>
  *
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -48,6 +50,8 @@ class CalDAVSettings implements ISettings {
 		$parameters = [
 			'send_invitations' => $this->config->getAppValue('dav', 'sendInvitations', 'yes'),
 			'generate_birthday_calendar' => $this->config->getAppValue('dav', 'generateBirthdayCalendar', 'yes'),
+			'send_reminders_notifications' => $this->config->getAppValue('dav', 'sendEventReminders', 'yes'),
+			'send_reminders_notifications_push' => $this->config->getAppValue('dav', 'sendEventRemindersPush', 'no'),
 		];
 
 		return new TemplateResponse('dav', 'settings-admin-caldav', $parameters);

@@ -45,10 +45,10 @@ class NodeVisitorTest extends TestCase {
 			], 'test-deprecated-function-sub-alias.php'],
 
 			// TODO Failing to resolve variables to classes
-//			[[['OCP\NamespaceName\ClassName::methodName', 1007]], 'test-deprecated-method.php'],
-//			[[['Alias::methodName', 1002]], 'test-deprecated-method-alias.php'],
-//			[[['NamespaceName\ClassName::methodName', 1002]], 'test-deprecated-method-sub.php'],
-//			[[['SubAlias\ClassName::methodName', 1002]], 'test-deprecated-method-sub-alias.php'],
+			//			[[['OCP\NamespaceName\ClassName::methodName', 1007]], 'test-deprecated-method.php'],
+			//			[[['Alias::methodName', 1002]], 'test-deprecated-method-alias.php'],
+			//			[[['NamespaceName\ClassName::methodName', 1002]], 'test-deprecated-method-sub.php'],
+			//			[[['SubAlias\ClassName::methodName', 1002]], 'test-deprecated-method-sub-alias.php'],
 		];
 	}
 

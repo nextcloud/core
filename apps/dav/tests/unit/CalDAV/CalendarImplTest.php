@@ -2,7 +2,9 @@
 /**
  * @copyright 2017, Georg Ehrke <oc.list@georgehrke.com>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -41,7 +43,7 @@ class CalendarImplTest extends \Test\TestCase {
 	/** @var CalDavBackend | \PHPUnit_Framework_MockObject_MockObject */
 	private $backend;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->calendar = $this->createMock(Calendar::class);
@@ -73,7 +75,7 @@ class CalendarImplTest extends \Test\TestCase {
 		$this->backend->expects($this->once())
 			->method('search')
 			->with($this->calendarInfo, 'abc', ['def'], ['ghi'], 42, 1337)
-			->will($this->returnValue(['SEARCHRESULTS']));
+			->willReturn(['SEARCHRESULTS']);
 
 		$result = $this->calendarImpl->search('abc', ['def'], ['ghi'], 42, 1337);
 		$this->assertEquals($result, ['SEARCHRESULTS']);
@@ -83,9 +85,9 @@ class CalendarImplTest extends \Test\TestCase {
 		$this->calendar->expects($this->once())
 			->method('getACL')
 			->with()
-			->will($this->returnValue([
+			->willReturn([
 				['privilege' => '{DAV:}read']
-			]));
+			]);
 
 		$this->assertEquals(1, $this->calendarImpl->getPermissions());
 	}
@@ -94,9 +96,9 @@ class CalendarImplTest extends \Test\TestCase {
 		$this->calendar->expects($this->once())
 			->method('getACL')
 			->with()
-			->will($this->returnValue([
+			->willReturn([
 				['privilege' => '{DAV:}write']
-			]));
+			]);
 
 		$this->assertEquals(6, $this->calendarImpl->getPermissions());
 	}
@@ -105,10 +107,10 @@ class CalendarImplTest extends \Test\TestCase {
 		$this->calendar->expects($this->once())
 			->method('getACL')
 			->with()
-			->will($this->returnValue([
+			->willReturn([
 				['privilege' => '{DAV:}read'],
 				['privilege' => '{DAV:}write']
-			]));
+			]);
 
 		$this->assertEquals(7, $this->calendarImpl->getPermissions());
 	}
@@ -117,9 +119,9 @@ class CalendarImplTest extends \Test\TestCase {
 		$this->calendar->expects($this->once())
 			->method('getACL')
 			->with()
-			->will($this->returnValue([
+			->willReturn([
 				['privilege' => '{DAV:}all']
-			]));
+			]);
 
 		$this->assertEquals(31, $this->calendarImpl->getPermissions());
 	}

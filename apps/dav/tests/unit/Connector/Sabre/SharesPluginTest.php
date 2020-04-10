@@ -2,6 +2,8 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Maxence Lange <maxence@nextcloud.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -21,9 +23,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\DAV\Tests\unit\Connector\Sabre;
 
 use OCA\DAV\Connector\Sabre\Directory;
@@ -65,31 +68,20 @@ class SharesPluginTest extends \Test\TestCase {
 	 */
 	private $plugin;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->server = new \Sabre\DAV\Server();
-		$this->tree = $this->getMockBuilder(Tree::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$this->shareManager = $this->getMockBuilder(IManager::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$user = $this->getMockBuilder(IUser::class)
-			->disableOriginalConstructor()
-			->getMock();
+		$this->tree = $this->createMock(Tree::class);
+		$this->shareManager = $this->createMock(IManager::class);
+		$user = $this->createMock(IUser::class);
 		$user->expects($this->once())
 			->method('getUID')
-			->will($this->returnValue('user1'));
-		$userSession = $this->getMockBuilder(IUserSession::class)
-			->disableOriginalConstructor()
-			->getMock();
+			->willReturn('user1');
+		$userSession = $this->createMock(IUserSession::class);
 		$userSession->expects($this->once())
 			->method('getUser')
-			->will($this->returnValue($user));
-
-		$this->userFolder = $this->getMockBuilder(Folder::class)
-			->disableOriginalConstructor()
-			->getMock();
+			->willReturn($user);
+		$this->userFolder = $this->createMock(Folder::class);
 
 		$this->plugin = new \OCA\DAV\Connector\Sabre\SharesPlugin(
 			$this->tree,
@@ -109,10 +101,10 @@ class SharesPluginTest extends \Test\TestCase {
 			->getMock();
 		$sabreNode->expects($this->any())
 			->method('getId')
-			->will($this->returnValue(123));
+			->willReturn(123);
 		$sabreNode->expects($this->any())
 			->method('getPath')
-			->will($this->returnValue('/subdir'));
+			->willReturn('/subdir');
 
 		// node API nodes
 		$node = $this->getMockBuilder(Folder::class)
@@ -122,7 +114,7 @@ class SharesPluginTest extends \Test\TestCase {
 		$this->userFolder->expects($this->once())
 			->method('get')
 			->with('/subdir')
-			->will($this->returnValue($node));
+			->willReturn($node);
 
 		$this->shareManager->expects($this->any())
 			->method('getSharesBy')
@@ -131,14 +123,17 @@ class SharesPluginTest extends \Test\TestCase {
 				$this->anything(),
 				$this->anything(),
 				$this->equalTo(false),
-				$this->equalTo(1)
+				$this->equalTo(-1)
 			)
-			->will($this->returnCallback(function($userId, $requestedShareType, $node, $flag, $limit) use ($shareTypes){
+			->willReturnCallback(function ($userId, $requestedShareType, $node, $flag, $limit) use ($shareTypes) {
 				if (in_array($requestedShareType, $shareTypes)) {
-					return ['dummyshare'];
+					$share = $this->createMock(IShare::class);
+					$share->method('getShareType')
+						->willReturn($requestedShareType);
+					return [$share];
 				}
 				return [];
-			}));
+			});
 
 		$propFind = new \Sabre\DAV\PropFind(
 			'/dummyPath',
@@ -162,67 +157,45 @@ class SharesPluginTest extends \Test\TestCase {
 	 * @dataProvider sharesGetPropertiesDataProvider
 	 */
 	public function testPreloadThenGetProperties($shareTypes) {
-		$sabreNode1 = $this->getMockBuilder(File::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$sabreNode1->expects($this->any())
-			->method('getId')
-			->will($this->returnValue(111));
-		$sabreNode1->expects($this->any())
-			->method('getPath');
-		$sabreNode2 = $this->getMockBuilder(File::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$sabreNode2->expects($this->any())
-			->method('getId')
-			->will($this->returnValue(222));
-		$sabreNode2->expects($this->any())
-			->method('getPath')
-			->will($this->returnValue('/subdir/foo'));
+		$sabreNode1 = $this->createMock(File::class);
+		$sabreNode1->method('getId')
+			->willReturn(111);
+		$sabreNode2 = $this->createMock(File::class);
+		$sabreNode2->method('getId')
+			->willReturn(222);
+		$sabreNode2->method('getPath')
+			->willReturn('/subdir/foo');
 
-		$sabreNode = $this->getMockBuilder(Directory::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$sabreNode->expects($this->any())
-			->method('getId')
-			->will($this->returnValue(123));
+		$sabreNode = $this->createMock(Directory::class);
+		$sabreNode->method('getId')
+			->willReturn(123);
 		// never, because we use getDirectoryListing from the Node API instead
 		$sabreNode->expects($this->never())
 			->method('getChildren');
 		$sabreNode->expects($this->any())
 			->method('getPath')
-			->will($this->returnValue('/subdir'));
+			->willReturn('/subdir');
 
 		// node API nodes
-		$node = $this->getMockBuilder(Folder::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$node->expects($this->any())
-			->method('getId')
-			->will($this->returnValue(123));
-		$node1 = $this->getMockBuilder(File::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$node1->expects($this->any())
-			->method('getId')
-			->will($this->returnValue(111));
-		$node2 = $this->getMockBuilder(File::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$node2->expects($this->any())
-			->method('getId')
-			->will($this->returnValue(222));
+		$node = $this->createMock(Folder::class);
+		$node->method('getId')
+			->willReturn(123);
+		$node1 = $this->createMock(File::class);
+		$node1->method('getId')
+			->willReturn(111);
+		$node2 = $this->createMock(File::class);
+		$node2->method('getId')
+			->willReturn(222);
 
-		$this->userFolder->expects($this->once())
-			->method('get')
+		$this->userFolder->method('get')
 			->with('/subdir')
-			->will($this->returnValue($node));
+			->willReturn($node);
 		
-		$dummyShares = array_map(function($type) {
+		$dummyShares = array_map(function ($type) {
 			$share = $this->getMockBuilder(IShare::class)->getMock();
 			$share->expects($this->any())
 				->method('getShareType')
-				->will($this->returnValue($type));
+				->willReturn($type);
 			return $share;
 		}, $shareTypes);
 
@@ -233,15 +206,19 @@ class SharesPluginTest extends \Test\TestCase {
 				$this->anything(),
 				$this->anything(),
 				$this->equalTo(false),
-				$this->equalTo(1)
+				$this->equalTo(-1)
 			)
-			->will($this->returnCallback(function($userId, $requestedShareType, $node, $flag, $limit) use ($shareTypes){
+			->willReturnCallback(function ($userId, $requestedShareType, $node, $flag, $limit) use ($shareTypes, $dummyShares) {
 				if ($node->getId() === 111 && in_array($requestedShareType, $shareTypes)) {
-					return ['dummyshare'];
+					foreach ($dummyShares as $dummyShare) {
+						if ($dummyShare->getShareType() === $requestedShareType) {
+							return [$dummyShare];
+						}
+					}
 				}
 
 				return [];
-			}));
+			});
 
 		$this->shareManager->expects($this->any())
 			->method('getSharesInFolder')
@@ -250,9 +227,9 @@ class SharesPluginTest extends \Test\TestCase {
 				$this->anything(),
 				$this->equalTo(true)
 			)
-			->will($this->returnCallback(function ($userId, $node, $flag) use ($shareTypes, $dummyShares) {
+			->willReturnCallback(function ($userId, $node, $flag) use ($shareTypes, $dummyShares) {
 				return [111 => $dummyShares];
-			}));
+			});
 
 		// simulate sabre recursive PROPFIND traversal
 		$propFindRoot = new \Sabre\DAV\PropFind(

@@ -2,12 +2,14 @@
 /**
  * @copyright Copyright (c) 2016, John Molakvoæ (skjnldsv@protonmail.com)
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
- * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Roland Tapken <roland@bitarbeiter.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -22,16 +24,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OC\Template;
 
-use Leafo\ScssPhp\Compiler;
-use Leafo\ScssPhp\Exception\ParserException;
-use Leafo\ScssPhp\Formatter\Crunched;
-use Leafo\ScssPhp\Formatter\Expanded;
+use OC\Files\AppData\Factory;
 use OC\Memcache\NullCache;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\IAppData;
@@ -45,8 +44,10 @@ use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IMemcache;
 use OCP\IURLGenerator;
-use OC\Files\AppData\Factory;
-use OC\Template\IconsCacher;
+use ScssPhp\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Exception\ParserException;
+use ScssPhp\ScssPhp\Formatter\Crunched;
+use ScssPhp\ScssPhp\Formatter\Expanded;
 
 class SCSSCacher {
 
@@ -117,7 +118,7 @@ class SCSSCacher {
 		$this->serverRoot   = $serverRoot;
 		$this->cacheFactory = $cacheFactory;
 		$this->depsCache    = $cacheFactory->createDistributed('SCSS-deps-' . md5($this->urlGenerator->getBaseUrl()));
-		$this->isCachedCache = $cacheFactory->createLocal('SCSS-cached-' . md5($this->urlGenerator->getBaseUrl()));
+		$this->isCachedCache = $cacheFactory->createDistributed('SCSS-cached-' . md5($this->urlGenerator->getBaseUrl()));
 		$lockingCache = $cacheFactory->createDistributed('SCSS-locks-' . md5($this->urlGenerator->getBaseUrl()));
 		if (!($lockingCache instanceof IMemcache)) {
 			$lockingCache = new NullCache();
@@ -269,8 +270,8 @@ class SCSSCacher {
 	private function variablesChanged(): bool {
 		$injectedVariables = $this->getInjectedVariables();
 		if ($this->config->getAppValue('core', 'theming.variables') !== md5($injectedVariables)) {
-			$this->resetCache();
 			$this->config->setAppValue('core', 'theming.variables', md5($injectedVariables));
+			$this->resetCache();
 			return true;
 		}
 		return false;
@@ -364,6 +365,9 @@ class SCSSCacher {
 	 * We need to regenerate all files when variables change
 	 */
 	public function resetCache() {
+		if (!$this->lockingCache->add('resetCache', 'locked!', 120)) {
+			return;
+		}
 		$this->injectedVariables = null;
 
 		// do not clear locks
@@ -381,6 +385,7 @@ class SCSSCacher {
 			}
 		}
 		$this->logger->debug('SCSSCacher: css cache cleared!');
+		$this->lockingCache->remove('resetCache');
 	}
 
 	/**
@@ -494,7 +499,7 @@ class SCSSCacher {
 	}
 
 	/**
-	 * Add the icons css cache in the header if needed 
+	 * Add the icons css cache in the header if needed
 	 *
 	 * @return boolean true
 	 */

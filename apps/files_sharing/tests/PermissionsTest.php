@@ -21,16 +21,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
-
 
 namespace OCA\Files_Sharing\Tests;
 
 use OC\Files\Cache\Cache;
 use OC\Files\Storage\Storage;
 use OC\Files\View;
+use OCP\Share\IShare;
 
 /**
  * Class PermissionsTest
@@ -60,7 +60,7 @@ class PermissionsTest extends TestCase {
 	/** @var Cache */
 	private $ownerCache;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
@@ -89,7 +89,9 @@ class PermissionsTest extends TestCase {
 			->setSharedWith(self::TEST_FILES_SHARING_API_USER2)
 			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL);
-		$this->shareManager->createShare($share);
+		$share = $this->shareManager->createShare($share);
+		$share->setStatus(IShare::STATUS_ACCEPTED);
+		$this->shareManager->updateShare($share);
 
 		$node = $rootFolder->get('container/shareddirrestricted');
 		$share = $this->shareManager->newShare();
@@ -98,7 +100,9 @@ class PermissionsTest extends TestCase {
 			->setSharedWith(self::TEST_FILES_SHARING_API_USER2)
 			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_READ | \OCP\Constants::PERMISSION_CREATE | \OCP\Constants::PERMISSION_UPDATE);
-		$this->shareManager->createShare($share);
+		$share = $this->shareManager->createShare($share);
+		$share->setStatus(IShare::STATUS_ACCEPTED);
+		$this->shareManager->updateShare($share);
 
 		// login as user2
 		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
@@ -111,7 +115,7 @@ class PermissionsTest extends TestCase {
 		$this->sharedCacheRestrictedShare = $this->sharedStorageRestrictedShare->getCache();
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		if ($this->sharedCache) {
 			$this->sharedCache->clear();
 		}

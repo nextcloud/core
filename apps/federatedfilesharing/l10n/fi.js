@@ -22,9 +22,7 @@ OC.L10N.register(
     "File is already shared with %s" : "Tiedosto on jo jaettu kohteen %s kanssa",
     "Could not find share" : "Ei löytynyt jakoa",
     "Federated sharing" : "Federoitu jakaminen",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Vastaanotit \"%3$s\":n etäjakona käyttäjältä %1$s (%2$s:n puolesta)",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "Vastaanotit jaon {share} etäjakona käyttäjältä {user} ({behalf}:n puolesta)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Vastaanotit \"%3$s\":n etäjakona käyttäjältä %1$s",
     "You received {share} as a remote share from {user}" : "Vastaanotit jaon {share} etäjakona käyttäjältä {user}",
     "Accept" : "Hyväksy",
     "Decline" : "Kieltäydy",
@@ -48,7 +46,7 @@ OC.L10N.register(
     "Add to your website" : "Lisää verkkosivuillesi",
     "Share with me via Nextcloud" : "Jaa kanssani Nextcloudin kautta",
     "HTML Code:" : "HTML-koodi:",
-    "Sharing %s failed, because this item is already shared with %s" : "Kohteen %s jakaminen epäonnistui, koska kohde on jo jaettu käyttäjälle %s",
-    "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate." : "Kohteen %s jakaminen epäonnistui, kohdetta %s ei löytynyt. Palvelin ei ehkä ole juuri nyt tavoitettavissa tai käyttää itse allekirjoitettua sertifikaattia."
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Vastaanotit \"%3$s\":n etäjakona käyttäjältä %1$s (%2$s:n puolesta)",
+    "You received \"%3$s\" as a remote share from %1$s" : "Vastaanotit \"%3$s\":n etäjakona käyttäjältä %1$s"
 },
 "nplurals=2; plural=(n != 1);");

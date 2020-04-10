@@ -8,7 +8,6 @@
 
 namespace Test\Archive;
 
-
 use OC\Archive\ZIP;
 
 class ZIPTest extends TestBase {

@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Noveen Sachdeva <noveen.sachdeva@research.iiit.ac.in>
@@ -20,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -63,7 +64,7 @@ abstract class Job implements IJob {
 
 			$logger->debug('Finished ' . get_class($this) . ' job with ID ' . $this->getId() . ' in ' . $timeTaken . ' seconds', ['app' => 'cron']);
 			$jobList->setExecutionTime($this, $timeTaken);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			if ($logger) {
 				$logger->logException($e, [
 					'app' => 'core',

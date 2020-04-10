@@ -19,9 +19,7 @@
  *
  */
 
-
 namespace Test\Accounts;
-
 
 use OC\Accounts\AccountManager;
 use OC\Accounts\Hooks;
@@ -46,7 +44,7 @@ class HooksTest extends TestCase  {
 	/** @var  Hooks | \PHPUnit_Framework_MockObject_MockObject */
 	private $hooks;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->logger = $this->createMock(ILogger::class);

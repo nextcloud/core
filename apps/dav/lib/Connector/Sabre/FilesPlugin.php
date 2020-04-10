@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Michael Jobst <mjobst+github@tecratech.de>
@@ -12,6 +13,7 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Tobias Kaminsky <tobias@kaminsky.me>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @license AGPL-3.0
@@ -26,7 +28,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -35,19 +37,19 @@ namespace OCA\DAV\Connector\Sabre;
 use OC\AppFramework\Http\Request;
 use OCP\Constants;
 use OCP\Files\ForbiddenException;
+use OCP\Files\StorageNotAvailableException;
+use OCP\IConfig;
 use OCP\IPreview;
+use OCP\IRequest;
 use Sabre\DAV\Exception\Forbidden;
 use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\IFile;
-use \Sabre\DAV\PropFind;
-use \Sabre\DAV\PropPatch;
+use Sabre\DAV\PropFind;
+use Sabre\DAV\PropPatch;
 use Sabre\DAV\ServerPlugin;
 use Sabre\DAV\Tree;
-use \Sabre\HTTP\RequestInterface;
-use \Sabre\HTTP\ResponseInterface;
-use OCP\Files\StorageNotAvailableException;
-use OCP\IConfig;
-use OCP\IRequest;
+use Sabre\HTTP\RequestInterface;
+use Sabre\HTTP\ResponseInterface;
 
 class FilesPlugin extends ServerPlugin {
 
@@ -70,6 +72,9 @@ class FilesPlugin extends ServerPlugin {
 	const HAS_PREVIEW_PROPERTYNAME = '{http://nextcloud.org/ns}has-preview';
 	const MOUNT_TYPE_PROPERTYNAME = '{http://nextcloud.org/ns}mount-type';
 	const IS_ENCRYPTED_PROPERTYNAME = '{http://nextcloud.org/ns}is-encrypted';
+	const METADATA_ETAG_PROPERTYNAME = '{http://nextcloud.org/ns}metadata_etag';
+	const UPLOAD_TIME_PROPERTYNAME = '{http://nextcloud.org/ns}upload_time';
+	const CREATION_TIME_PROPERTYNAME = '{http://nextcloud.org/ns}creation_time';
 	const SHARE_NOTE = '{http://nextcloud.org/ns}note';
 
 	/**
@@ -169,13 +174,13 @@ class FilesPlugin extends ServerPlugin {
 		$server->protectedProperties = array_diff($server->protectedProperties, $allowedProperties);
 
 		$this->server = $server;
-		$this->server->on('propFind', array($this, 'handleGetProperties'));
-		$this->server->on('propPatch', array($this, 'handleUpdateProperties'));
-		$this->server->on('afterBind', array($this, 'sendFileIdHeader'));
-		$this->server->on('afterWriteContent', array($this, 'sendFileIdHeader'));
+		$this->server->on('propFind', [$this, 'handleGetProperties']);
+		$this->server->on('propPatch', [$this, 'handleUpdateProperties']);
+		$this->server->on('afterBind', [$this, 'sendFileIdHeader']);
+		$this->server->on('afterWriteContent', [$this, 'sendFileIdHeader']);
 		$this->server->on('afterMethod:GET', [$this,'httpGet']);
-		$this->server->on('afterMethod:GET', array($this, 'handleDownloadToken'));
-		$this->server->on('afterResponse', function($request, ResponseInterface $response) {
+		$this->server->on('afterMethod:GET', [$this, 'handleDownloadToken']);
+		$this->server->on('afterResponse', function ($request, ResponseInterface $response) {
 			$body = $response->getBody();
 			if (is_resource($body)) {
 				fclose($body);
@@ -204,7 +209,7 @@ class FilesPlugin extends ServerPlugin {
 			$sourceNodeFileInfo = $sourceNode->getFileInfo();
 			if ($sourceNodeFileInfo === null) {
 				throw new NotFound($source . ' does not exist');
- 			}
+			}
 
 			if (!$sourceNodeFileInfo->isDeletable()) {
 				throw new Forbidden($source . " cannot be deleted");
@@ -294,21 +299,21 @@ class FilesPlugin extends ServerPlugin {
 			 * so users were unable to navigate into folders where one subitem
 			 * is blocked by the files_accesscontrol app, see:
 			 * https://github.com/nextcloud/files_accesscontrol/issues/65
-			if (!$node->getFileInfo()->isReadable()) {
-				// avoid detecting files through this means
-				throw new NotFound();
-			}
+			 * if (!$node->getFileInfo()->isReadable()) {
+			 *     // avoid detecting files through this means
+			 *     throw new NotFound();
+			 * }
 			 */
 
-			$propFind->handle(self::FILEID_PROPERTYNAME, function() use ($node) {
+			$propFind->handle(self::FILEID_PROPERTYNAME, function () use ($node) {
 				return $node->getFileId();
 			});
 
-			$propFind->handle(self::INTERNAL_FILEID_PROPERTYNAME, function() use ($node) {
+			$propFind->handle(self::INTERNAL_FILEID_PROPERTYNAME, function () use ($node) {
 				return $node->getInternalFileId();
 			});
 
-			$propFind->handle(self::PERMISSIONS_PROPERTYNAME, function() use ($node) {
+			$propFind->handle(self::PERMISSIONS_PROPERTYNAME, function () use ($node) {
 				$perms = $node->getDavPermissions();
 				if ($this->isPublic) {
 					// remove mount information
@@ -317,13 +322,13 @@ class FilesPlugin extends ServerPlugin {
 				return $perms;
 			});
 
-			$propFind->handle(self::SHARE_PERMISSIONS_PROPERTYNAME, function() use ($node, $httpRequest) {
+			$propFind->handle(self::SHARE_PERMISSIONS_PROPERTYNAME, function () use ($node, $httpRequest) {
 				return $node->getSharePermissions(
 					$httpRequest->getRawServerValue('PHP_AUTH_USER')
 				);
 			});
 
-			$propFind->handle(self::OCM_SHARE_PERMISSIONS_PROPERTYNAME, function() use ($node, $httpRequest) {
+			$propFind->handle(self::OCM_SHARE_PERMISSIONS_PROPERTYNAME, function () use ($node, $httpRequest) {
 				$ncPermissions = $node->getSharePermissions(
 					$httpRequest->getRawServerValue('PHP_AUTH_USER')
 				);
@@ -331,11 +336,11 @@ class FilesPlugin extends ServerPlugin {
 				return json_encode($ocmPermissions);
 			});
 
-			$propFind->handle(self::GETETAG_PROPERTYNAME, function() use ($node) {
+			$propFind->handle(self::GETETAG_PROPERTYNAME, function () use ($node) {
 				return $node->getETag();
 			});
 
-			$propFind->handle(self::OWNER_ID_PROPERTYNAME, function() use ($node) {
+			$propFind->handle(self::OWNER_ID_PROPERTYNAME, function () use ($node) {
 				$owner = $node->getOwner();
 				if (!$owner) {
 					return null;
@@ -343,7 +348,7 @@ class FilesPlugin extends ServerPlugin {
 					return $owner->getUID();
 				}
 			});
-			$propFind->handle(self::OWNER_DISPLAY_NAME_PROPERTYNAME, function() use ($node) {
+			$propFind->handle(self::OWNER_DISPLAY_NAME_PROPERTYNAME, function () use ($node) {
 				$owner = $node->getOwner();
 				if (!$owner) {
 					return null;
@@ -355,14 +360,14 @@ class FilesPlugin extends ServerPlugin {
 			$propFind->handle(self::HAS_PREVIEW_PROPERTYNAME, function () use ($node) {
 				return json_encode($this->previewManager->isAvailable($node->getFileInfo()));
 			});
-			$propFind->handle(self::SIZE_PROPERTYNAME, function() use ($node) {
+			$propFind->handle(self::SIZE_PROPERTYNAME, function () use ($node) {
 				return $node->getSize();
 			});
 			$propFind->handle(self::MOUNT_TYPE_PROPERTYNAME, function () use ($node) {
 				return $node->getFileInfo()->getMountPoint()->getMountType();
 			});
 
-			$propFind->handle(self::SHARE_NOTE, function() use ($node, $httpRequest) {
+			$propFind->handle(self::SHARE_NOTE, function () use ($node, $httpRequest) {
 				return $node->getNoteFromShare(
 					$httpRequest->getRawServerValue('PHP_AUTH_USER')
 				);
@@ -370,13 +375,13 @@ class FilesPlugin extends ServerPlugin {
 		}
 
 		if ($node instanceof \OCA\DAV\Connector\Sabre\Node) {
-			$propFind->handle(self::DATA_FINGERPRINT_PROPERTYNAME, function() use ($node) {
+			$propFind->handle(self::DATA_FINGERPRINT_PROPERTYNAME, function () use ($node) {
 				return $this->config->getSystemValue('data-fingerprint', '');
 			});
 		}
 
 		if ($node instanceof \OCA\DAV\Connector\Sabre\File) {
-			$propFind->handle(self::DOWNLOADURL_PROPERTYNAME, function() use ($node) {
+			$propFind->handle(self::DOWNLOADURL_PROPERTYNAME, function () use ($node) {
 				/** @var $node \OCA\DAV\Connector\Sabre\File */
 				try {
 					$directDownloadUrl = $node->getDirectDownload();
@@ -391,23 +396,31 @@ class FilesPlugin extends ServerPlugin {
 				return false;
 			});
 
-			$propFind->handle(self::CHECKSUMS_PROPERTYNAME, function() use ($node) {
+			$propFind->handle(self::CHECKSUMS_PROPERTYNAME, function () use ($node) {
 				$checksum = $node->getChecksum();
-				if ($checksum === NULL || $checksum === '') {
+				if ($checksum === null || $checksum === '') {
 					return null;
 				}
 
 				return new ChecksumList($checksum);
 			});
 
+			$propFind->handle(self::CREATION_TIME_PROPERTYNAME, function () use ($node) {
+				return $node->getFileInfo()->getCreationTime();
+			});
+
+			$propFind->handle(self::UPLOAD_TIME_PROPERTYNAME, function () use ($node) {
+				return $node->getFileInfo()->getUploadTime();
+			});
+
 		}
 
 		if ($node instanceof \OCA\DAV\Connector\Sabre\Directory) {
-			$propFind->handle(self::SIZE_PROPERTYNAME, function() use ($node) {
+			$propFind->handle(self::SIZE_PROPERTYNAME, function () use ($node) {
 				return $node->getSize();
 			});
 
-			$propFind->handle(self::IS_ENCRYPTED_PROPERTYNAME, function() use ($node) {
+			$propFind->handle(self::IS_ENCRYPTED_PROPERTYNAME, function () use ($node) {
 				return $node->getFileInfo()->isEncrypted() ? '1' : '0';
 			});
 		}
@@ -454,14 +467,14 @@ class FilesPlugin extends ServerPlugin {
 			return;
 		}
 
-		$propPatch->handle(self::LASTMODIFIED_PROPERTYNAME, function($time) use ($node) {
+		$propPatch->handle(self::LASTMODIFIED_PROPERTYNAME, function ($time) use ($node) {
 			if (empty($time)) {
 				return false;
 			}
 			$node->touch($time);
 			return true;
 		});
-		$propPatch->handle(self::GETETAG_PROPERTYNAME, function($etag) use ($node) {
+		$propPatch->handle(self::GETETAG_PROPERTYNAME, function ($etag) use ($node) {
 			if (empty($etag)) {
 				return false;
 			}
@@ -469,6 +482,13 @@ class FilesPlugin extends ServerPlugin {
 				return true;
 			}
 			return false;
+		});
+		$propPatch->handle(self::CREATION_TIME_PROPERTYNAME, function ($time) use ($node) {
+			if (empty($time)) {
+				return false;
+			}
+			$node->setCreationTime((int) $time);
+			return true;
 		});
 	}
 

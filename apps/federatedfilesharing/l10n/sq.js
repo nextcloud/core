@@ -20,15 +20,14 @@ OC.L10N.register(
     "File is already shared with %s" : "Skedari është ndarë tashmë me %s",
     "Could not find share" : "Nuk mund të gjenim ndarjen",
     "Federated sharing" : "Ndarje e federuar",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Ju pranuat \"%3$s\" si një shpërndarje në distancë nga %1$s (në emër të %2$s)",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "Ju ",
-    "You received \"%3$s\" as a remote share from %1$s" : "Ju pranuat \"%3$s\" si një shpërndarje në distancë nga %1$s",
     "You received {share} as a remote share from {user}" : "Ju morët {share} si një ndarje të largët nga {user}",
     "Accept" : "Pranoje",
     "Decline" : "Hidhe poshtë",
     "Share with me through my #Nextcloud Federated Cloud ID, see %s" : "Ndani me mua përmes ID-së time për #Nextcloud Federated Cloud, shihni %s",
     "Share with me through my #Nextcloud Federated Cloud ID" : "Ndani me mua përmes ID-së time për #Nextcloud Federated Cloud",
     "Sharing" : "Ndarje",
+    "Federated file sharing" : "Shpërndarja e skedarëve të federuar",
     "Federated Cloud Sharing" : "Ndarje Në Re të Federuar ",
     "Open documentation" : "Hap dokumentimin",
     "Adjust how people can share between servers." : "Përshtatni mënyrën se si njerëzit mund të ndajnë midis serverëve.",
@@ -42,7 +41,7 @@ OC.L10N.register(
     "Add to your website" : "Shtojeni te sajti juaj",
     "Share with me via Nextcloud" : "Ndani me mua përmes Nextcloud-it",
     "HTML Code:" : "Kod HTML:",
-    "Sharing %s failed, because this item is already shared with %s" : "Ndarja për %s dështoi, ngaqë ky objekt është ndarë një herë me %s",
-    "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate." : "Ndarja e %s dështoi, nuk mund të gjendet %s, ndoshta serveri është për momentin i paaksesueshëm ose përdor një çertifikatë të vetë-nënshkruar"
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Ju pranuat \"%3$s\" si një shpërndarje në distancë nga %1$s (në emër të %2$s)",
+    "You received \"%3$s\" as a remote share from %1$s" : "Ju pranuat \"%3$s\" si një shpërndarje në distancë nga %1$s"
 },
 "nplurals=2; plural=(n != 1);");

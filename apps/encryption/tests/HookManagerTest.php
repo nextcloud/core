@@ -19,13 +19,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Encryption\Tests;
-
 
 use OCA\Encryption\HookManager;
 use OCA\Encryption\Hooks\Contracts\IHook;
@@ -39,9 +37,7 @@ class HookManagerTest extends TestCase {
 	 */
 	private static $instance;
 
-	/**
-	 *
-	 */
+	
 	public function testRegisterHookWithArray() {
 		self::$instance->registerHook([
 			$this->getMockBuilder(IHook::class)->disableOriginalConstructor()->getMock(),
@@ -55,19 +51,15 @@ class HookManagerTest extends TestCase {
 	}
 
 
-	/**
-	 *
-	 */
-	public static function setUpBeforeClass() {
+	
+	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 		// have to make instance static to preserve data between tests
 		self::$instance = new HookManager();
 
 	}
 
-	/**
-	 *
-	 */
+	
 	public function testRegisterHooksWithInstance() {
 		$mock = $this->getMockBuilder(IHook::class)->disableOriginalConstructor()->getMock();
 		/** @var \OCA\Encryption\Hooks\Contracts\IHook $mock */

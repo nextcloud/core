@@ -22,9 +22,7 @@
     "Sharing %1$s failed, could not find %2$s, maybe the server is currently unreachable or uses a self-signed certificate." : "%1$s 공유 실패. %2$s을(를) 찾을 수 없습니다. 서버에 접근할 수 없거나 자가 서명된 인증서를 사용하고 있을 수도 있습니다.",
     "Could not find share" : "공유를 찾을 수 없음",
     "Federated sharing" : "연합 공유",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "%1$s(%2$s 대신) 님으로부터 \"%3$s\"을(를) 원격 공유로 받음",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "{user}({behalf} 대신) 님으로부터 {share}을(를) 원격 공유로 받음",
-    "You received \"%3$s\" as a remote share from %1$s" : "%1$s 님으로부터 \"%3$s\"을(를) 원격 공유로 받음",
     "You received {share} as a remote share from {user}" : "{user} 님으로부터 {share}을(를) 원격 공유로 받음",
     "Accept" : "수락",
     "Decline" : "거절",
@@ -49,7 +47,7 @@
     "Add to your website" : "내 웹 사이트에 추가",
     "Share with me via Nextcloud" : "Nextcloud로 나와 공유하기",
     "HTML Code:" : "HTML 코드:",
-    "Sharing %s failed, because this item is already shared with %s" : "%s을(를) 공유할 수 없습니다. 이미 %s 님과 공유되어 있습니다",
-    "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate." : "%s을(를) 공유할 수 없습니다. %s을(를) 찾을 수 없습니다. 서버에 접근할 수 없거나 자가 서명된 인증서를 사용하고 있을 수도 있습니다."
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "%1$s(%2$s 대신) 님으로부터 \"%3$s\"을(를) 원격 공유로 받음",
+    "You received \"%3$s\" as a remote share from %1$s" : "%1$s 님으로부터 \"%3$s\"을(를) 원격 공유로 받음"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

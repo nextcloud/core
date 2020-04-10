@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*
  * Copyright (c) 2015
  *
@@ -11,7 +12,7 @@
 (function(OC) {
 
 	function filterFunction(model, term) {
-		return model.get('name').substr(0, term.length).toLowerCase() === term.toLowerCase();
+		return model.get('name').substr(0, term.length).toLowerCase() === term.toLowerCase()
 	}
 
 	/**
@@ -24,26 +25,26 @@
 	var SystemTagsCollection = OC.Backbone.Collection.extend(
 		/** @lends OC.SystemTags.SystemTagsCollection.prototype */ {
 
-		sync: OC.Backbone.davSync,
+			sync: OC.Backbone.davSync,
 
-		model: OC.SystemTags.SystemTagModel,
+			model: OC.SystemTags.SystemTagModel,
 
-		url: function() {
-			return OC.linkToRemote('dav') + '/systemtags/';
-		},
+			url: function() {
+				return OC.linkToRemote('dav') + '/systemtags/'
+			},
 
-		filterByName: function(name) {
-			return this.filter(function(model) {
-				return filterFunction(model, name);
-			});
-		},
+			filterByName: function(name) {
+				return this.filter(function(model) {
+					return filterFunction(model, name)
+				})
+			},
 
-		reset: function() {
-			this.fetched = false;
-			return OC.Backbone.Collection.prototype.reset.apply(this, arguments);
-		},
+			reset: function() {
+				this.fetched = false
+				return OC.Backbone.Collection.prototype.reset.apply(this, arguments)
+			},
 
-		/**
+			/**
 		 * Lazy fetch.
 		 * Only fetches once, subsequent calls will directly call the success handler.
 		 *
@@ -52,38 +53,37 @@
 		 *
 		 * @see Backbone.Collection#fetch
 		 */
-		fetch: function(options) {
-			var self = this;
-			options = options || {};
-			if (this.fetched || options.force) {
+			fetch: function(options) {
+				var self = this
+				options = options || {}
+				if (this.fetched || options.force) {
 				// directly call handler
-				if (options.success) {
-					options.success(this, null, options);
+					if (options.success) {
+						options.success(this, null, options)
+					}
+					// trigger sync event
+					this.trigger('sync', this, null, options)
+					return Promise.resolve()
 				}
-				// trigger sync event
-				this.trigger('sync', this, null, options);
-				return Promise.resolve();
+
+				var success = options.success
+				options = _.extend({}, options)
+				options.success = function() {
+					self.fetched = true
+					if (success) {
+						return success.apply(this, arguments)
+					}
+				}
+
+				return OC.Backbone.Collection.prototype.fetch.call(this, options)
 			}
+		})
 
-			var success = options.success;
-			options = _.extend({}, options);
-			options.success = function() {
-				self.fetched = true;
-				if (success) {
-					return success.apply(this, arguments);
-				}
-			};
-
-			return OC.Backbone.Collection.prototype.fetch.call(this, options);
-		}
-	});
-
-	OC.SystemTags = OC.SystemTags || {};
-	OC.SystemTags.SystemTagsCollection = SystemTagsCollection;
+	OC.SystemTags = OC.SystemTags || {}
+	OC.SystemTags.SystemTagsCollection = SystemTagsCollection
 
 	/**
 	 * @type OC.SystemTags.SystemTagsCollection
 	 */
-	OC.SystemTags.collection = new OC.SystemTags.SystemTagsCollection();
-})(OC);
-
+	OC.SystemTags.collection = new OC.SystemTags.SystemTagsCollection()
+})(OC)

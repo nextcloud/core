@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -66,4 +66,12 @@ interface ISearchQuery {
 	 * @since 12.0.0
 	 */
 	public function getUser();
+
+	/**
+	 * Whether or not the search should be limited to the users home storage
+	 *
+	 * @return bool
+	 * @since 18.0.0
+	 */
+	public function limitToHome(): bool;
 }

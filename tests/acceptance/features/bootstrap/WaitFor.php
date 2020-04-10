@@ -39,7 +39,7 @@ class WaitFor {
 	 *         the timeout expires, false otherwise.
 	 */
 	public static function elementToBeEventuallyShown(Actor $actor, Locator $elementLocator, $timeout = 10, $timeoutStep = 1) {
-		$elementShownCallback = function() use ($actor, $elementLocator) {
+		$elementShownCallback = function () use ($actor, $elementLocator) {
 			try {
 				return $actor->find($elementLocator)->isVisible();
 			} catch (NoSuchElementException $exception) {
@@ -64,7 +64,7 @@ class WaitFor {
 	 *         the timeout expires, false otherwise.
 	 */
 	public static function elementToBeEventuallyNotShown(Actor $actor, Locator $elementLocator, $timeout = 10, $timeoutStep = 1) {
-		$elementNotShownCallback = function() use ($actor, $elementLocator) {
+		$elementNotShownCallback = function () use ($actor, $elementLocator) {
 			try {
 				return !$actor->find($elementLocator)->isVisible();
 			} catch (NoSuchElementException $exception) {

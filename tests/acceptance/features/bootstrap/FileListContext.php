@@ -44,7 +44,7 @@ class FileListContext implements Context, ActorAwareInterface {
 	 * @BeforeScenario
 	 */
 	public function initializeFileListAncestors() {
-		$this->fileListAncestorsByActor = array();
+		$this->fileListAncestorsByActor = [];
 		$this->fileListAncestor = null;
 	}
 

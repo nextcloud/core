@@ -4,6 +4,7 @@
  *
  * @author Andreas Fischer <bantu@owncloud.com>
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -25,7 +26,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -140,7 +141,7 @@ class Memcached extends Cache implements IMemcache {
 			self::$cache->flush();
 			return true;
 		}
-		$keys = array();
+		$keys = [];
 		$prefixLength = strlen($prefix);
 		foreach ($allKeys as $key) {
 			if (substr($key, 0, $prefixLength) === $prefix) {

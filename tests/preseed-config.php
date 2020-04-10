@@ -1,4 +1,5 @@
 <?php
+
 $CONFIG = [
 	'appstoreenabled' => false,
 	'apps_paths' => [
@@ -21,7 +22,7 @@ if (is_dir(OC::$SERVERROOT.'/apps2')) {
 if (getenv('OBJECT_STORE') === 's3') {
 	$CONFIG['objectstore'] = [
 		'class' => 'OC\\Files\\ObjectStore\\S3',
-		'arguments' => array(
+		'arguments' => [
 			'bucket' => 'nextcloud',
 			'autocreate' => true,
 			'key' => 'dummy',
@@ -31,7 +32,7 @@ if (getenv('OBJECT_STORE') === 's3') {
 			'use_ssl' => false,
 			// required for some non amazon s3 implementations
 			'use_path_style' => true
-		)
+		]
 	];
 }
 if (getenv('OBJECT_STORE') === 'swift') {
@@ -40,7 +41,7 @@ if (getenv('OBJECT_STORE') === 'swift') {
 	if (getenv('SWIFT-AUTH') === 'v2.0') {
 		$CONFIG['objectstore'] = [
 			'class' => 'OC\\Files\\ObjectStore\\Swift',
-			'arguments' => array(
+			'arguments' => [
 				'autocreate' => true,
 				'username' => 'swift',
 				'tenantName' => 'service',
@@ -49,12 +50,12 @@ if (getenv('OBJECT_STORE') === 'swift') {
 				'region' => 'regionOne',
 				'url' => "http://$swiftHost:5000/v2.0",
 				'bucket' => 'nextcloud'
-			)
+			]
 		];
 	} else {
 		$CONFIG['objectstore'] = [
 			'class' => 'OC\\Files\\ObjectStore\\Swift',
-			'arguments' => array(
+			'arguments' => [
 				'autocreate' => true,
 				'user' => [
 					'name' => 'swift',
@@ -76,19 +77,19 @@ if (getenv('OBJECT_STORE') === 'swift') {
 				'region' => 'regionOne',
 				'url' => "http://$swiftHost:5000/v3",
 				'bucket' => 'nextcloud'
-			)
+			]
 		];
 	}
 }
 if (getenv('OBJECT_STORE') === 'azure') {
 	$CONFIG['objectstore'] = [
 		'class' => 'OC\\Files\\ObjectStore\\Azure',
-		'arguments' => array(
+		'arguments' => [
 			'container' => 'test',
 			'account_name' => 'devstoreaccount1',
 			'account_key' => 'Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==',
 			'endpoint' => 'http://' . (getenv('DRONE') === 'true' ? 'azurite' : 'localhost') . ':10000/devstoreaccount1',
 			'autocreate' => true
-		)
+		]
 	];
 }

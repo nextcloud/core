@@ -12,10 +12,8 @@ OC.L10N.register(
     "No entries found in this folder" : "Tidak ada entri yang ditemukan dalam folder ini",
     "Select all" : "Pilih Semua",
     "Name" : "Nama",
+    "Actions" : "Tindakan",
     "Deleted" : "Dihapus",
-    "Delete" : "Hapus",
-    "Couldn't delete %s permanently" : "Tidak dapat menghapus permanen %s",
-    "Couldn't restore %s" : "Tidak dapat memulihkan %s",
-    "Error" : "Galat"
+    "Delete" : "Hapus"
 },
 "nplurals=1; plural=0;");

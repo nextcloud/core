@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -17,9 +18,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\DAV\Upload;
 
 use OCA\DAV\Connector\Sabre\Directory;
@@ -84,7 +86,7 @@ class FutureFile implements \Sabre\DAV\IFile {
 	 */
 	function getSize() {
 		$children = $this->root->getChildren();
-		$sizes = array_map(function($node) {
+		$sizes = array_map(function ($node) {
 			/** @var IFile $node */
 			return $node->getSize();
 		}, $children);

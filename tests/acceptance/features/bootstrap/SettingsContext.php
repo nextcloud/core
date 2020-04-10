@@ -30,6 +30,44 @@ class SettingsContext implements Context, ActorAwareInterface {
 	/**
 	 * @return Locator
 	 */
+	public static function acceptSharesByDefaultCheckbox() {
+		// forThe()->checkbox("Accept user...") can not be used here; that would
+		// return the checkbox itself, but the element that the user interacts
+		// with is the label.
+		return Locator::forThe()->xpath("//label[normalize-space() = 'Accept user and group shares by default']")->
+				describedAs("Accept shares by default checkbox in Sharing section in Personal Sharing Settings");
+	}
+
+	/**
+	 * @return Locator
+	 */
+	public static function acceptSharesByDefaultCheckboxInput() {
+		return Locator::forThe()->checkbox("Accept user and group shares by default")->
+				describedAs("Accept shares by default checkbox input in Sharing section in Personal Sharing Settings");
+	}
+
+	/**
+	 * @return Locator
+	 */
+	public static function restrictUsernameAutocompletionToGroupsCheckbox() {
+		// forThe()->checkbox("Restrict username...") can not be used here; that
+		// would return the checkbox itself, but the element that the user
+		// interacts with is the label.
+		return Locator::forThe()->xpath("//label[normalize-space() = 'Restrict username autocompletion to users within the same groups']")->
+				describedAs("Restrict username autocompletion to groups checkbox in Sharing section in Administration Sharing Settings");
+	}
+
+	/**
+	 * @return Locator
+	 */
+	public static function restrictUsernameAutocompletionToGroupsCheckboxInput() {
+		return Locator::forThe()->checkbox("Restrict username autocompletion to users within the same groups")->
+				describedAs("Restrict username autocompletion to groups checkbox input in Sharing section in Administration Sharing Settings");
+	}
+
+	/**
+	 * @return Locator
+	 */
 	public static function systemTagsSelectTagButton() {
 		return Locator::forThe()->id("s2id_systemtag")->
 				describedAs("Select tag button in system tags section in Administration Settings");
@@ -85,12 +123,62 @@ class SettingsContext implements Context, ActorAwareInterface {
 	}
 
 	/**
+	 * @When I disable accepting the shares by default
+	 */
+	public function iDisableAcceptingTheSharesByDefault() {
+		$this->iSeeThatSharesAreAcceptedByDefault();
+
+		$this->actor->find(self::acceptSharesByDefaultCheckbox(), 2)->click();
+	}
+
+	/**
+	 * @When I enable restricting username autocompletion to groups
+	 */
+	public function iEnableRestrictingUsernameAutocompletionToGroups() {
+		$this->iSeeThatUsernameAutocompletionIsNotRestrictedToGroups();
+
+		$this->actor->find(self::restrictUsernameAutocompletionToGroupsCheckbox(), 2)->click();
+	}
+
+	/**
 	 * @When I create the tag :tag in the settings
 	 */
 	public function iCreateTheTagInTheSettings($tag) {
 		$this->actor->find(self::systemTagsResetButton(), 10)->click();
 		$this->actor->find(self::systemTagsTagNameInput())->setValue($tag);
 		$this->actor->find(self::systemTagsCreateOrUpdateButton())->click();
+	}
+
+	/**
+	 * @Then I see that shares are accepted by default
+	 */
+	public function iSeeThatSharesAreAcceptedByDefault() {
+		PHPUnit_Framework_Assert::assertTrue(
+				$this->actor->find(self::acceptSharesByDefaultCheckboxInput(), 10)->isChecked());
+	}
+
+	/**
+	 * @Then I see that username autocompletion is restricted to groups
+	 */
+	public function iSeeThatUsernameAutocompletionIsRestrictedToGroups() {
+		PHPUnit_Framework_Assert::assertTrue(
+				$this->actor->find(self::restrictUsernameAutocompletionToGroupsCheckboxInput(), 10)->isChecked());
+	}
+
+	/**
+	 * @Then I see that username autocompletion is not restricted to groups
+	 */
+	public function iSeeThatUsernameAutocompletionIsNotRestrictedToGroups() {
+		PHPUnit_Framework_Assert::assertFalse(
+				$this->actor->find(self::restrictUsernameAutocompletionToGroupsCheckboxInput(), 10)->isChecked());
+	}
+
+	/**
+	 * @Then I see that shares are not accepted by default
+	 */
+	public function iSeeThatSharesAreNotAcceptedByDefault() {
+		PHPUnit_Framework_Assert::assertFalse(
+				$this->actor->find(self::acceptSharesByDefaultCheckboxInput(), 10)->isChecked());
 	}
 
 	/**
@@ -116,7 +204,7 @@ class SettingsContext implements Context, ActorAwareInterface {
 
 		$actor = $this->actor;
 
-		$tagFoundInDropdownCallback = function() use($actor, $tag) {
+		$tagFoundInDropdownCallback = function () use ($actor, $tag) {
 			// Open the dropdown to look for the tag.
 			$actor->find(self::systemTagsSelectTagButton())->click();
 

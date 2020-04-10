@@ -1,14 +1,20 @@
 OC.L10N.register(
     "oauth2",
     {
+    "Your client is not authorized to connect. Please inform the administrator of your client." : "Ο εφαρμογή σας δεν είναι εξουσιοδοτημένη να συνδεθεί. Ενημερώστε τον διαχειριστή σας.",
+    "Your redirect URL needs to be a full URL for example: https://yourdomain.com/path" : "Η διεύθυνση URL ανακατεύθυνσης πρέπει να είναι μια πλήρη διεύθυνση URL, για παράδειγμα: https://yourdomain.com/path",
     "OAuth 2.0" : "OAuth 2.0",
+    "Allows OAuth2 compatible authentication from other web applications." : "Επιτρέπει τον συμβατό έλεγχο ταυτότητας OAuth2 από άλλες εφαρμογές ιστού.",
+    "The OAuth2 app allows administrators to configure the built-in authentication workflow to also allow OAuth2 compatible authentication from other web applications." : "Η εφαρμογή OAuth2 επιτρέπει στους διαχειριστές να ρυθμίζουν τις παραμέτρους της ενσωματωμένης ροής εργασιών ελέγχου ταυτότητας για να επιτρέπουν επίσης τον έλεγχο ταυτότητας OAuth2 από άλλες εφαρμογές ιστού.",
     "OAuth 2.0 clients" : "Πελάτες OAuth 2.0",
+    "OAuth 2.0 allows external services to request access to {instanceName}." : "Το OAuth 2.0 επιτρέπει στις εξωτερικές υπηρεσίες να ζητούν πρόσβαση στο {instanceName}.",
     "Name" : "Όνομα",
     "Redirection URI" : "URI ανακατεύθυνσης",
     "Client Identifier" : "Αναγνωριστικό πελάτη",
     "Secret" : "Μυστικό",
     "Add client" : "Προσθήκη πελάτη",
     "Add" : "Προσθήκη",
+    "Show client secret" : "Εμφάνιση μυστικού εφαρμογής υπολογιστή",
     "Delete" : "Διαγραφή"
 },
 "nplurals=2; plural=(n != 1);");

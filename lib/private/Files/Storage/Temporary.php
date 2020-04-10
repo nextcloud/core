@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -19,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -30,7 +31,7 @@ namespace OC\Files\Storage;
  */
 class Temporary extends Local{
 	public function __construct($arguments = null) {
-		parent::__construct(array('datadir' => \OC::$server->getTempManager()->getTemporaryFolder()));
+		parent::__construct(['datadir' => \OC::$server->getTempManager()->getTemporaryFolder()]);
 	}
 
 	public function cleanUp() {

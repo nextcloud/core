@@ -4,6 +4,7 @@
  *
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Ross Nicoll <jrn@jrn.me.uk>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Viktor Szépe <viktor@szepe.net>
@@ -20,13 +21,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_External\Tests\Storage;
 
-use \OCA\Files_External\Lib\Storage\SFTP_Key;
+use OCA\Files_External\Lib\Storage\SFTP_Key;
 
 /**
  * Class SFTP_KeyTest
@@ -38,12 +39,12 @@ use \OCA\Files_External\Lib\Storage\SFTP_Key;
 class SFTP_KeyTest extends \Test\Files\Storage\Storage {
 	private $config;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$id = $this->getUniqueID();
 		$this->config = include('files_external/tests/config.php');
-		if ( ! is_array($this->config) or ! isset($this->config['sftp_key']) or ! $this->config['sftp_key']['run']) {
+		if (! is_array($this->config) or ! isset($this->config['sftp_key']) or ! $this->config['sftp_key']['run']) {
 			$this->markTestSkipped('SFTP with key backend not configured');
 		}
 		// Make sure we have an new empty folder to work in
@@ -52,7 +53,7 @@ class SFTP_KeyTest extends \Test\Files\Storage\Storage {
 		$this->instance->mkdir('/');
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		if ($this->instance) {
 			$this->instance->rmdir('/');
 		}
@@ -60,10 +61,10 @@ class SFTP_KeyTest extends \Test\Files\Storage\Storage {
 		parent::tearDown();
 	}
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
+	
 	public function testInvalidAddressShouldThrowException() {
+		$this->expectException(\InvalidArgumentException::class);
+
 		// I'd use example.com for this, but someone decided to break the spec and make it resolve
 		$this->instance->assertHostAddressValid('notarealaddress...');
 	}
@@ -72,24 +73,24 @@ class SFTP_KeyTest extends \Test\Files\Storage\Storage {
 		$this->assertTrue($this->instance->assertHostAddressValid('localhost'));
 	}
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
+	
 	public function testNegativePortNumberShouldThrowException() {
+		$this->expectException(\InvalidArgumentException::class);
+
 		$this->instance->assertPortNumberValid('-1');
 	}
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
+	
 	public function testNonNumericalPortNumberShouldThrowException() {
+		$this->expectException(\InvalidArgumentException::class);
+
 		$this->instance->assertPortNumberValid('a');
 	}
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testHighPortNumberShouldThrowException() { 
+	
+	public function testHighPortNumberShouldThrowException() {
+		$this->expectException(\InvalidArgumentException::class);
+ 
 		$this->instance->assertPortNumberValid('65536');
 	}
 

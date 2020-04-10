@@ -1,13 +1,17 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Xheni Myrtaj <myrtajxheni@gmail.com>
  *
  * @license AGPL-3.0
  *
@@ -21,7 +25,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -235,10 +239,10 @@ class Checker {
 		$signature = $privateKey->sign(json_encode($hashes));
 
 		return [
-				'hashes' => $hashes,
-				'signature' => base64_encode($signature),
-				'certificate' => $certificate->saveX509($certificate->currentCert),
-			];
+			'hashes' => $hashes,
+			'signature' => base64_encode($signature),
+			'certificate' => $certificate->saveX509($certificate->currentCert),
+		];
 	}
 
 	/**
@@ -505,10 +509,10 @@ class Checker {
 			);
 		} catch (\Exception $e) {
 			$result = [
-					'EXCEPTION' => [
-							'class' => \get_class($e),
-							'message' => $e->getMessage(),
-					],
+				'EXCEPTION' => [
+					'class' => \get_class($e),
+					'message' => $e->getMessage(),
+				],
 			];
 		}
 		$this->storeResults($appId, $result);
@@ -555,10 +559,10 @@ class Checker {
 			);
 		} catch (\Exception $e) {
 			$result = [
-					'EXCEPTION' => [
-							'class' => \get_class($e),
-							'message' => $e->getMessage(),
-					],
+				'EXCEPTION' => [
+					'class' => \get_class($e),
+					'message' => $e->getMessage(),
+				],
 			];
 		}
 		$this->storeResults('core', $result);

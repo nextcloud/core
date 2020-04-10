@@ -49,18 +49,6 @@ OC.L10N.register(
     "Share provider which allows you to share files by mail" : "Anbieter zum Teilen. Ermöglicht das Teilen von Dateien per E-Mail",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Ermöglicht Benutzern eine personalisierte Verknüpfung zu einer Datei oder einem Ordner durch Eingabe einer E-Mail-Adresse zu teilen.",
     "Send password by mail" : "Passwort per Mail senden",
-    "Enforce password protection" : "Passwortschutz erzwingen",
-    "Sharing %s failed, this item is already shared with %s" : "Freigabe von %s fehlgeschlagen, da dieses Objekt schon mit %s geteilt wird",
-    "%s shared »%s« with you" : "%s hat „%s“ mit Dir geteilt",
-    "%s shared »%s« with you." : "%s hat mit Dir »%s« geteilt.",
-    "%s via %s" : "%s via %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s hat  »%s« mit Dir geteilt.\nDu solltest bereits eine weitere E-Mail mit einem Link für den Zugriff erhalten haben.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s hat »%s« mit Dir geteilt. Du solltest bereits eine weitere E-Mail mit einem Link für den Zugriff erhalten haben. ",
-    "Password to access »%s« shared to you by %s" : "Das Passwort zum Zugriff auf %s wurde durch %s mit Dir geteilt.",
-    "It is protected with the following password: %s" : "Dies ist mit dem folgendem Passwort geschützt: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Du hast »%s« mit %s geteilt. Die Freigabe wurde an den Empfänger gesandt. Aufgrund der Sicherheits-Richtlinien, die der Administrator von %s vorgegeben hat, benötigt jede Freigabe einen Passwortschutz und es ist nicht zulässig, ein Passwort direkt an den Empfänger zu versenden. Aus diesem Grund musst Du das Passwort selbst an den Empfänger senden.",
-    "Password to access »%s« shared with %s" : "Passwort für den Zugriff auf %s, geteilt mit %s",
-    "This is the password: %s" : "Das Passwort lautet: %s",
-    "Password to access »%1$s« shared with %2$s" : "Passwort für den Zugriff auf %1$s, geteilt mit %2$s"
+    "Enforce password protection" : "Passwortschutz erzwingen"
 },
 "nplurals=2; plural=(n != 1);");

@@ -4,6 +4,7 @@
  * @copyright Copyright (c) 2016, Lukas Reschke <lukas@statuscode.ch>
  *
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -23,13 +24,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\App;
 
-use OCP\IConfig;
 use OCP\IL10N;
 
 class DependencyAnalyzer {
@@ -188,7 +188,7 @@ class DependencyAnalyzer {
 			return $missing;
 		}
 		if (!is_array($supportedDatabases)) {
-			$supportedDatabases = array($supportedDatabases);
+			$supportedDatabases = [$supportedDatabases];
 		}
 		$supportedDatabases = array_map(function ($db) {
 			return $this->getValue($db);
@@ -212,7 +212,7 @@ class DependencyAnalyzer {
 
 		$commands = $dependencies['command'];
 		if (!is_array($commands)) {
-			$commands = array($commands);
+			$commands = [$commands];
 		}
 		if (isset($commands['@value'])) {
 			$commands = [$commands];
@@ -242,7 +242,7 @@ class DependencyAnalyzer {
 
 		$libs = $dependencies['lib'];
 		if (!is_array($libs)) {
-			$libs = array($libs);
+			$libs = [$libs];
 		}
 		if (isset($libs['@value'])) {
 			$libs = [$libs];
@@ -294,7 +294,7 @@ class DependencyAnalyzer {
 				return $this->getValue($os);
 			}, $oss);
 		} else {
-			$oss = array($oss);
+			$oss = [$oss];
 		}
 		$currentOS = $this->platform->getOS();
 		if (!in_array($currentOS, $oss)) {

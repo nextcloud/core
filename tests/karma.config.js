@@ -53,10 +53,14 @@ module.exports = function(config) {
 					// only test these files, others are not ready and mess
 					// up with the global namespace/classes/state
 					'apps/files_sharing/js/app.js',
-					'apps/files_sharing/js/sharedfilelist.js',
 					'apps/files_sharing/js/dist/additionalScripts.js',
-					'apps/files_sharing/js/public.js',
+					'apps/files_sharing/js/dist/files_sharing_tab.js',
+					'apps/files_sharing/js/dist/files_sharing.js',
+					'apps/files_sharing/js/dist/main.js',
+					'apps/files_sharing/js/dist/sidebar.js',
 					'apps/files_sharing/js/files_drop.js',
+					'apps/files_sharing/js/public.js',
+					'apps/files_sharing/js/sharedfilelist.js',
 					'apps/files_sharing/js/templates.js',
 				],
 				testFiles: ['apps/files_sharing/tests/js/*.js']

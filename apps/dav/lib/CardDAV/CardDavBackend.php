@@ -2,17 +2,20 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arne Hamann <kontakt+github@arne.email>
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Stefan Weil <sw@weilnetz.de>
- * @author Thomas Citharel <tcit@tcit.fr>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -27,16 +30,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\DAV\CardDAV;
 
 use OCA\DAV\Connector\Sabre\Principal;
-use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCA\DAV\DAV\Sharing\Backend;
 use OCA\DAV\DAV\Sharing\IShareable;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IGroupManager;
 use OCP\IUser;
@@ -72,9 +75,9 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 	private $sharingBackend;
 
 	/** @var array properties to index */
-	public static $indexProperties = array(
-			'BDAY', 'UID', 'N', 'FN', 'TITLE', 'ROLE', 'NOTE', 'NICKNAME',
-			'ORG', 'CATEGORIES', 'EMAIL', 'TEL', 'IMPP', 'ADR', 'URL', 'GEO', 'CLOUD');
+	public static $indexProperties = [
+		'BDAY', 'UID', 'N', 'FN', 'TITLE', 'ROLE', 'NOTE', 'NICKNAME',
+		'ORG', 'CATEGORIES', 'EMAIL', 'TEL', 'IMPP', 'ADR', 'URL', 'GEO', 'CLOUD'];
 
 	/**
 	 * @var string[] Map of uid => display name
@@ -171,7 +174,7 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 		$principals = $this->principalBackend->getGroupMembership($principalUriOriginal, true);
 		$principals = array_merge($principals, $this->principalBackend->getCircleMembership($principalUriOriginal));
 
-		$principals = array_map(function($principal) {
+		$principals = array_map(function ($principal) {
 			return urldecode($principal);
 		}, $principals);
 		$principals[]= $principalUri;
@@ -360,16 +363,16 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 		/**
 		 * @suppress SqlInjectionChecker
 		 */
-		$propPatch->handle($supportedProperties, function($mutations) use ($addressBookId) {
+		$propPatch->handle($supportedProperties, function ($mutations) use ($addressBookId) {
 
 			$updates = [];
 			foreach($mutations as $property=>$newValue) {
 
 				switch($property) {
-					case '{DAV:}displayname' :
+					case '{DAV:}displayname':
 						$updates['displayname'] = $newValue;
 						break;
-					case '{' . Plugin::NS_CARDDAV . '}addressbook-description' :
+					case '{' . Plugin::NS_CARDDAV . '}addressbook-description':
 						$updates['description'] = $newValue;
 						break;
 				}
@@ -411,13 +414,13 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 		foreach($properties as $property=>$newValue) {
 
 			switch($property) {
-				case '{DAV:}displayname' :
+				case '{DAV:}displayname':
 					$values['displayname'] = $newValue;
 					break;
-				case '{' . Plugin::NS_CARDDAV . '}addressbook-description' :
+				case '{' . Plugin::NS_CARDDAV . '}addressbook-description':
 					$values['description'] = $newValue;
 					break;
-				default :
+				default:
 					throw new BadRequest('Unknown property: ' . $property);
 			}
 
@@ -907,7 +910,7 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 	 * 	- 'escape_like_param' - If set to false wildcards _ and % are not escaped, otherwise they are
 	 * @return array an array of contacts which are arrays of key-value-pairs
 	 */
-	public function search($addressBookId, $pattern, $searchProperties, $options = array()) {
+	public function search($addressBookId, $pattern, $searchProperties, $options = []) {
 		$query = $this->db->getQueryBuilder();
 		$query2 = $this->db->getQueryBuilder();
 
@@ -936,7 +939,7 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 
 		$result->closeCursor();
 
-		return array_map(function($array) {
+		return array_map(function ($array) {
 			$array['carddata'] = $this->readBlob($array['carddata']);
 			return $array;
 		}, $cards);
@@ -1061,7 +1064,7 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 				}
 			}
 			$query->setParameter('name', $property->name);
-			$query->setParameter('value', substr($property->getValue(), 0, 254));
+			$query->setParameter('value', mb_substr($property->getValue(), 0, 254));
 			$query->setParameter('preferred', $preferred);
 			$query->execute();
 		}

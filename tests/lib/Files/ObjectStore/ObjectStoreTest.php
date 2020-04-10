@@ -31,7 +31,7 @@ abstract class ObjectStoreTest extends TestCase {
 	 */
 	abstract protected function getInstance();
 
-	private function stringToStream($data) {
+	protected function stringToStream($data) {
 		$stream = fopen('php://temp', 'w+');
 		fwrite($stream, $data);
 		rewind($stream);

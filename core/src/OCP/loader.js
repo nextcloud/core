@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright Copyright (c) 2018 Julius Härtl <jus@bitgrid.net>
  *
  * @author Julius Härtl <jus@bitgrid.net>
@@ -20,61 +20,60 @@
  *
  */
 
-let loadedScripts = {};
-let loadedStylesheets = {};
+const loadedScripts = {}
+const loadedStylesheets = {}
 /**
  * @namespace OCP
  * @class Loader
  */
 export default {
 
-
 	/**
 	 * Load a script asynchronously
 	 *
-	 * @param {string} app
-	 * @param {string} file
+	 * @param {string} app the app name
+	 * @param {string} file the script file name
 	 * @returns {Promise}
 	 */
 	loadScript: function(app, file) {
-		const key = app + file;
-		if (loadedScripts.hasOwnProperty(key)) {
-			return Promise.resolve();
+		const key = app + file
+		if (Object.prototype.hasOwnProperty.call(loadedScripts, key)) {
+			return Promise.resolve()
 		}
-		loadedScripts[key] = true;
-		return new Promise(function (resolve, reject) {
-			var scriptPath = OC.filePath(app, 'js', file);
-			var script = document.createElement('script');
-			script.src = scriptPath;
-			script.setAttribute('nonce', btoa(OC.requestToken));
-			script.onload = () => resolve();
-			script.onerror = () => reject(`Failed to load script from ${scriptPath}`);
-			document.head.appendChild(script);
-		});
+		loadedScripts[key] = true
+		return new Promise(function(resolve, reject) {
+			const scriptPath = OC.filePath(app, 'js', file)
+			const script = document.createElement('script')
+			script.src = scriptPath
+			script.setAttribute('nonce', btoa(OC.requestToken))
+			script.onload = () => resolve()
+			script.onerror = () => reject(new Error(`Failed to load script from ${scriptPath}`))
+			document.head.appendChild(script)
+		})
 	},
 
 	/**
 	 * Load a stylesheet file asynchronously
 	 *
-	 * @param {string} app
-	 * @param {string} file
+	 * @param {string} app the app name
+	 * @param {string} file the script file name
 	 * @returns {Promise}
 	 */
 	loadStylesheet: function(app, file) {
-		const key = app + file;
-		if (loadedStylesheets.hasOwnProperty(key)) {
-			return Promise.resolve();
+		const key = app + file
+		if (Object.prototype.hasOwnProperty.call(loadedStylesheets, key)) {
+			return Promise.resolve()
 		}
-		loadedStylesheets[key] = true;
-		return new Promise(function (resolve, reject) {
-			var stylePath = OC.filePath(app, 'css', file);
-			var link = document.createElement('link');
-			link.href = stylePath;
-			link.type = 'text/css';
-			link.rel = 'stylesheet';
-			link.onload = () => resolve();
-			link.onerror = () => reject(`Failed to load stylesheet from ${stylePath}`);
-			document.head.appendChild(link);
-		});
+		loadedStylesheets[key] = true
+		return new Promise(function(resolve, reject) {
+			const stylePath = OC.filePath(app, 'css', file)
+			const link = document.createElement('link')
+			link.href = stylePath
+			link.type = 'text/css'
+			link.rel = 'stylesheet'
+			link.onload = () => resolve()
+			link.onerror = () => reject(new Error(`Failed to load stylesheet from ${stylePath}`))
+			document.head.appendChild(link)
+		})
 	},
 }

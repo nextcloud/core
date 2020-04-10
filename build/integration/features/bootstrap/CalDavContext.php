@@ -2,9 +2,11 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Phil Davis <phil.davis@inf.org>
+ * @author Robin Appelman <robin@icewind.nl>
  *
  * @license AGPL-3.0
  *
@@ -18,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -78,7 +80,7 @@ class CalDavContext implements \Behat\Behat\Context\Context {
 	 * @param string $calendar
 	 * @param string $endpoint
 	 */
-	public function requestsCalendar($user, $calendar, $endpoint)  {
+	public function requestsCalendar($user, $calendar, $endpoint) {
 		$davUrl = $this->baseUrl . $endpoint . $calendar;
 
 		$password = ($user === 'admin') ? 'admin' : '123456';

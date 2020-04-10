@@ -48,21 +48,21 @@ class FileTest extends NodeTest {
 		$this->view->expects($this->once())
 			->method('file_get_contents')
 			->with('/bar/foo')
-			->will($this->returnValue('bar'));
+			->willReturn('bar');
 
 		$this->view->expects($this->once())
 			->method('getFileInfo')
 			->with('/bar/foo')
-			->will($this->returnValue($this->getFileInfo(array('permissions' => \OCP\Constants::PERMISSION_READ))));
+			->willReturn($this->getFileInfo(['permissions' => \OCP\Constants::PERMISSION_READ]));
 
 		$node = new \OC\Files\Node\File($root, $this->view, '/bar/foo');
 		$this->assertEquals('bar', $node->getContent());
 	}
 
-	/**
-	 * @expectedException \OCP\Files\NotPermittedException
-	 */
+	
 	public function testGetContentNotPermitted() {
+		$this->expectException(\OCP\Files\NotPermittedException::class);
+
 		/** @var \OC\Files\Node\Root|\PHPUnit_Framework_MockObject_MockObject $root */
 		$root = $this->getMockBuilder('\OC\Files\Node\Root')
 			->setConstructorArgs([$this->manager, $this->view, $this->user, $this->userMountCache, $this->logger, $this->userManager])
@@ -70,12 +70,12 @@ class FileTest extends NodeTest {
 
 		$root->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($this->user));
+			->willReturn($this->user);
 
 		$this->view->expects($this->once())
 			->method('getFileInfo')
 			->with('/bar/foo')
-			->will($this->returnValue($this->getFileInfo(array('permissions' => 0))));
+			->willReturn($this->getFileInfo(['permissions' => 0]));
 
 		$node = new \OC\Files\Node\File($root, $this->view, '/bar/foo');
 		$node->getContent();
@@ -89,26 +89,26 @@ class FileTest extends NodeTest {
 
 		$root->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($this->user));
+			->willReturn($this->user);
 
 		$this->view->expects($this->once())
 			->method('getFileInfo')
 			->with('/bar/foo')
-			->will($this->returnValue($this->getFileInfo(array('permissions' => \OCP\Constants::PERMISSION_ALL))));
+			->willReturn($this->getFileInfo(['permissions' => \OCP\Constants::PERMISSION_ALL]));
 
 		$this->view->expects($this->once())
 			->method('file_put_contents')
 			->with('/bar/foo', 'bar')
-			->will($this->returnValue(true));
+			->willReturn(true);
 
 		$node = new \OC\Files\Node\File($root, $this->view, '/bar/foo');
 		$node->putContent('bar');
 	}
 
-	/**
-	 * @expectedException \OCP\Files\NotPermittedException
-	 */
+	
 	public function testPutContentNotPermitted() {
+		$this->expectException(\OCP\Files\NotPermittedException::class);
+
 		/** @var \OC\Files\Node\Root|\PHPUnit_Framework_MockObject_MockObject $root */
 		$root = $this->getMockBuilder('\OC\Files\Node\Root')
 			->setConstructorArgs([$this->manager, $this->view, $this->user, $this->userMountCache, $this->logger, $this->userManager])
@@ -117,7 +117,7 @@ class FileTest extends NodeTest {
 		$this->view->expects($this->once())
 			->method('getFileInfo')
 			->with('/bar/foo')
-			->will($this->returnValue($this->getFileInfo(array('permissions' => \OCP\Constants::PERMISSION_READ))));
+			->willReturn($this->getFileInfo(['permissions' => \OCP\Constants::PERMISSION_READ]));
 
 		$node = new \OC\Files\Node\File($root, $this->view, '/bar/foo');
 		$node->putContent('bar');
@@ -132,7 +132,7 @@ class FileTest extends NodeTest {
 		$this->view->expects($this->once())
 			->method('getFileInfo')
 			->with('/bar/foo')
-			->will($this->returnValue($this->getFileInfo(array('mimetype' => 'text/plain'))));
+			->willReturn($this->getFileInfo(['mimetype' => 'text/plain']));
 
 		$node = new \OC\Files\Node\File($root, $this->view, '/bar/foo');
 		$this->assertEquals('text/plain', $node->getMimeType());
@@ -162,12 +162,12 @@ class FileTest extends NodeTest {
 		$this->view->expects($this->once())
 			->method('fopen')
 			->with('/bar/foo', 'r')
-			->will($this->returnValue($stream));
+			->willReturn($stream);
 
 		$this->view->expects($this->once())
 			->method('getFileInfo')
 			->with('/bar/foo')
-			->will($this->returnValue($this->getFileInfo(array('permissions' => \OCP\Constants::PERMISSION_ALL))));
+			->willReturn($this->getFileInfo(['permissions' => \OCP\Constants::PERMISSION_ALL]));
 
 		$node = new \OC\Files\Node\File($root, $this->view, '/bar/foo');
 		$fh = $node->fopen('r');
@@ -197,12 +197,12 @@ class FileTest extends NodeTest {
 		$this->view->expects($this->once())
 			->method('fopen')
 			->with('/bar/foo', 'w')
-			->will($this->returnValue($stream));
+			->willReturn($stream);
 
 		$this->view->expects($this->once())
 			->method('getFileInfo')
 			->with('/bar/foo')
-			->will($this->returnValue($this->getFileInfo(array('permissions' => \OCP\Constants::PERMISSION_ALL))));
+			->willReturn($this->getFileInfo(['permissions' => \OCP\Constants::PERMISSION_ALL]));
 
 		$node = new \OC\Files\Node\File($root, $this->view, '/bar/foo');
 		$fh = $node->fopen('w');
@@ -213,10 +213,10 @@ class FileTest extends NodeTest {
 		$this->assertEquals(2, $hooksCalled);
 	}
 
-	/**
-	 * @expectedException \OCP\Files\NotPermittedException
-	 */
+	
 	public function testFOpenReadNotPermitted() {
+		$this->expectException(\OCP\Files\NotPermittedException::class);
+
 		$root = new \OC\Files\Node\Root(
 			$this->manager,
 			$this->view,
@@ -232,16 +232,16 @@ class FileTest extends NodeTest {
 		$this->view->expects($this->once())
 			->method('getFileInfo')
 			->with('/bar/foo')
-			->will($this->returnValue($this->getFileInfo(array('permissions' => 0))));
+			->willReturn($this->getFileInfo(['permissions' => 0]));
 
 		$node = new \OC\Files\Node\File($root, $this->view, '/bar/foo');
 		$node->fopen('r');
 	}
 
-	/**
-	 * @expectedException \OCP\Files\NotPermittedException
-	 */
+	
 	public function testFOpenReadWriteNoReadPermissions() {
+		$this->expectException(\OCP\Files\NotPermittedException::class);
+
 		$root = new \OC\Files\Node\Root(
 			$this->manager,
 			$this->view,
@@ -257,16 +257,16 @@ class FileTest extends NodeTest {
 		$this->view->expects($this->once())
 			->method('getFileInfo')
 			->with('/bar/foo')
-			->will($this->returnValue($this->getFileInfo(array('permissions' => \OCP\Constants::PERMISSION_UPDATE))));
+			->willReturn($this->getFileInfo(['permissions' => \OCP\Constants::PERMISSION_UPDATE]));
 
 		$node = new \OC\Files\Node\File($root, $this->view, '/bar/foo');
 		$node->fopen('w');
 	}
 
-	/**
-	 * @expectedException \OCP\Files\NotPermittedException
-	 */
+	
 	public function testFOpenReadWriteNoWritePermissions() {
+		$this->expectException(\OCP\Files\NotPermittedException::class);
+
 		$root = new \OC\Files\Node\Root(
 			$this->manager,
 			new $this->view,
@@ -282,7 +282,7 @@ class FileTest extends NodeTest {
 		$this->view->expects($this->once())
 			->method('getFileInfo')
 			->with('/bar/foo')
-			->will($this->returnValue($this->getFileInfo(array('permissions' => \OCP\Constants::PERMISSION_READ))));
+			->willReturn($this->getFileInfo(['permissions' => \OCP\Constants::PERMISSION_READ]));
 
 		$node = new \OC\Files\Node\File($root, $this->view, '/bar/foo');
 		$node->fopen('w');

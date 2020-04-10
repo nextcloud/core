@@ -7,6 +7,7 @@
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -20,10 +21,9 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
-
 
 namespace OCA\FederatedFileSharing\Tests\Controller;
 
@@ -85,7 +85,7 @@ class MountPublicLinkControllerTest extends \Test\TestCase {
 	/** @var  ICloudIdManager */
 	private $cloudIdManager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->request = $this->getMockBuilder(IRequest::class)->disableOriginalConstructor()->getMock();
@@ -143,7 +143,7 @@ class MountPublicLinkControllerTest extends \Test\TestCase {
 		$this->addressHandler->expects($this->any())->method('splitUserRemote')
 			->with($shareWith)
 			->willReturnCallback(
-				function($shareWith) use ($validShareWith, $expectedReturnData) {
+				function ($shareWith) use ($validShareWith, $expectedReturnData) {
 					if ($validShareWith) {
 						return ['user', 'server'];
 					}

@@ -5,7 +5,7 @@
 	<name>Files</name>
 	<summary>File Management</summary>
 	<description>File Management</description>
-	<version>1.12.0</version>
+	<version>1.14.0</version>
 	<licence>agpl</licence>
 	<author>Robin Appelman</author>
 	<author>Vincent Petry</author>
@@ -19,13 +19,14 @@
 	<category>files</category>
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 	<dependencies>
-		<nextcloud min-version="17" max-version="17"/>
+		<nextcloud min-version="19" max-version="19"/>
 	</dependencies>
 
 	<background-jobs>
 		<job>OCA\Files\BackgroundJob\ScanFiles</job>
 		<job>OCA\Files\BackgroundJob\DeleteOrphanedItems</job>
 		<job>OCA\Files\BackgroundJob\CleanupFileLocks</job>
+		<job>OCA\Files\BackgroundJob\CleanupDirectEditingTokens</job>
 	</background-jobs>
 
 	<commands>
@@ -63,5 +64,9 @@
 			<order>0</order>
 		</navigation>
 	</navigations>
+
+	<settings>
+		<personal>OCA\Files\Settings\PersonalSettings</personal>
+	</settings>
 
 </info>

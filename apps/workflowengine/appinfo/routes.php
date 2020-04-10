@@ -21,10 +21,10 @@
 
 return [
 	'routes' => [
-		['name' => 'flowOperations#getOperations', 'url' => '/operations', 'verb' => 'GET'],
-		['name' => 'flowOperations#addOperation', 'url' => '/operations', 'verb' => 'POST'],
-		['name' => 'flowOperations#updateOperation', 'url' => '/operations/{id}', 'verb' => 'PUT'],
-		['name' => 'flowOperations#deleteOperation', 'url' => '/operations/{id}', 'verb' => 'DELETE'],
 		['name' => 'requestTime#getTimezones', 'url' => '/timezones', 'verb' => 'GET'],
-	]
+	],
+	'ocs-resources' => [
+		'global_workflows' => ['url' => '/api/v1/workflows/global'],
+		'user_workflows' => ['url' => '/api/v1/workflows/user'],
+	],
 ];

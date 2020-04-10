@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
@@ -20,17 +21,18 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Files_External\Tests\Service;
 
-use \OC\Files\Filesystem;
+use OC\Files\Filesystem;
 
+use OCA\Files_External\Lib\StorageConfig;
 use OCA\Files_External\Service\GlobalStoragesService;
 use OCA\Files_External\Service\StoragesService;
 use OCA\Files_External\Service\UserStoragesService;
-use OCA\Files_External\Lib\StorageConfig;
 use OCP\IUserSession;
 use Test\Traits\UserTrait;
 
@@ -49,7 +51,7 @@ class UserStoragesServiceTest extends StoragesServiceTest {
 	 */
 	protected $globalStoragesService;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->globalStoragesService = new GlobalStoragesService($this->backendService, $this->dbConfig, $this->mountCache);
@@ -63,7 +65,7 @@ class UserStoragesServiceTest extends StoragesServiceTest {
 		$userSession
 			->expects($this->any())
 			->method('getUser')
-			->will($this->returnValue($this->user));
+			->willReturn($this->user);
 
 		$this->service = new UserStoragesService($this->backendService, $this->dbConfig, $userSession, $this->mountCache);
 	}
@@ -188,10 +190,10 @@ class UserStoragesServiceTest extends StoragesServiceTest {
 		);
 	}
 
-	/**
-	 * @expectedException \OCA\Files_External\NotFoundException
-	 */
+	
 	public function testGetAdminStorage() {
+		$this->expectException(\OCA\Files_External\NotFoundException::class);
+
 		$backend = $this->backendService->getBackend('identifier:\OCA\Files_External\Lib\Backend\SMB');
 		$authMechanism = $this->backendService->getAuthMechanism('identifier:\Auth\Mechanism');
 

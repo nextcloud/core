@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Robin Appelman <robin@icewind.nl>
  *
  * @license AGPL-3.0
@@ -16,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -52,10 +53,10 @@ class PublicLinkCheckPlugin extends ServerPlugin {
 	 * @return void
 	 */
 	public function initialize(\Sabre\DAV\Server $server) {
-		$server->on('beforeMethod', [$this, 'beforeMethod']);
+		$server->on('beforeMethod:*', [$this, 'beforeMethod']);
 	}
 
-	public function beforeMethod(RequestInterface $request, ResponseInterface $response){
+	public function beforeMethod(RequestInterface $request, ResponseInterface $response) {
 		// verify that the owner didn't have his share permissions revoked
 		if ($this->fileInfo && !$this->fileInfo->isShareable()) {
 			throw new NotFound();

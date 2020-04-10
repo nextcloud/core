@@ -2,21 +2,24 @@
 /**
  * @copyright Copyright (c) 2017, Georg Ehrke
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
- * @license AGPL-3.0
+ * @license GNU AGPL version 3 or any later version
  *
- * This code is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License, version 3,
- * as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -38,7 +41,7 @@ class GenerateBirthdayCalendarBackgroundJobTest extends TestCase {
 	/** @var \OCA\DAV\BackgroundJob\GenerateBirthdayCalendarBackgroundJob */
 	private $backgroundJob;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->birthdayService = $this->createMock(BirthdayService::class);
@@ -52,12 +55,12 @@ class GenerateBirthdayCalendarBackgroundJobTest extends TestCase {
 		$this->config->expects($this->once())
 			->method('getAppValue')
 			->with('dav', 'generateBirthdayCalendar', 'yes')
-			->will($this->returnValue('yes'));
+			->willReturn('yes');
 
 		$this->config->expects($this->once())
 			->method('getUserValue')
 			->with('user123', 'dav', 'generateBirthdayCalendar', 'yes')
-			->will($this->returnValue('yes'));
+			->willReturn('yes');
 
 		$this->birthdayService->expects($this->never())
 			->method('resetForUser')
@@ -74,12 +77,12 @@ class GenerateBirthdayCalendarBackgroundJobTest extends TestCase {
 		$this->config->expects($this->once())
 			->method('getAppValue')
 			->with('dav', 'generateBirthdayCalendar', 'yes')
-			->will($this->returnValue('yes'));
+			->willReturn('yes');
 
 		$this->config->expects($this->once())
 			->method('getUserValue')
 			->with('user123', 'dav', 'generateBirthdayCalendar', 'yes')
-			->will($this->returnValue('yes'));
+			->willReturn('yes');
 
 		$this->birthdayService->expects($this->once())
 			->method('resetForUser')
@@ -96,7 +99,7 @@ class GenerateBirthdayCalendarBackgroundJobTest extends TestCase {
 		$this->config->expects($this->once())
 			->method('getAppValue')
 			->with('dav', 'generateBirthdayCalendar', 'yes')
-			->will($this->returnValue('no'));
+			->willReturn('no');
 
 		$this->config->expects($this->never())
 			->method('getUserValue');
@@ -111,12 +114,12 @@ class GenerateBirthdayCalendarBackgroundJobTest extends TestCase {
 		$this->config->expects($this->once())
 			->method('getAppValue')
 			->with('dav', 'generateBirthdayCalendar', 'yes')
-			->will($this->returnValue('yes'));
+			->willReturn('yes');
 
 		$this->config->expects($this->once())
 			->method('getUserValue')
 			->with('user123', 'dav', 'generateBirthdayCalendar', 'yes')
-			->will($this->returnValue('no'));
+			->willReturn('no');
 
 		$this->birthdayService->expects($this->never())
 			->method('syncUser');

@@ -40,6 +40,7 @@ OC.L10N.register(
     "%1$s shared »%2$s« with you and wants to add:" : "%1$s предоставил(а) вам доступ к «%2$s» и хочет добавить:",
     "%1$s shared »%2$s« with you and wants to add" : "%1$s предоставил(а) вам доступ к «%2$s» и хочет добавить",
     "»%s« added a note to a file shared with you" : "%s добавил(а) примечание к файлу, к которому вам открыт доступ",
+    "You just shared »%1$s« with %2$s. The share was already sent to the recipient. Due to the security policies defined by the administrator of %3$s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Вы только что предоставили общий доступ к «%1$s» пользователю %2$s. Уведомление о предоставлении доступа было отправлено получателю. В соответствии с политиками безопасности, заданными администратором %3$s, каждый общий ресурс должен быть защищён паролем, а также не допускается непосредственное отправление пароля получателю, поэтому вам потребуется самостоятельно перенаправить получателю пароль для доступа.",
     "Password to access »%1$s« shared by you with %2$s" : "Пароль для доступа к «%1$s»,  общий доступ к которому предоставлен вами пользователю %2$s",
     "This is the password:" : "Пароль: ",
     "You can choose a different password at any time in the share dialog." : "В любой момент можно выбрать другой пароль в диалоге «Общий доступ».",
@@ -48,18 +49,6 @@ OC.L10N.register(
     "Share provider which allows you to share files by mail" : "Приложение для обмена файлами с помощью электронной почты",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Позволяет пользователям делиться персонализированной ссылкой на файл или каталог, указав адрес электронной почты.",
     "Send password by mail" : "Отправлять пароль по электронной почте",
-    "Enforce password protection" : "Требовать защиту паролем",
-    "Sharing %s failed, this item is already shared with %s" : "Не удалось открыть общий доступ к «%s», общий доступ для %s уже предоставлен",
-    "%s shared »%s« with you" : "%s предоставил(а) Вам доступ к «%s»",
-    "%s shared »%s« with you." : "%s предоставил(а) Вам доступ к «%s».",
-    "%s via %s" : "%s через %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s предоставил(а) Вам общий доступ к «%s».\nВы, скорее всего, уже получили отдельное письмо, содержащую ссылку для получения доступа.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s предоставил(а) Вам доступ к «%s». Вы, скорее всего, уже получили отдельное письмо, содержащее ссылку для получения доступа.",
-    "Password to access »%s« shared to you by %s" : "Пароль для  «%s»,  общий доступ к которому предоставлен Вам пользователем %s",
-    "It is protected with the following password: %s" : "Доступ защищён следующим паролем: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Вы только что предоставили общий доступ к «%s» пользователю %s. Уведомление о предоставлении доступа было отправлено получателю. В соответствии с политиками безопасности, заданными администратором %s, каждый общий ресурс должен быть защищён паролем, а так же не допускается непосредственное отправление пароля получателю, поэтому Вам потребуется самостоятельно перенаправить получателю пароль для доступа.",
-    "Password to access »%s« shared with %s" : "Паролем для доступа к «%s» поделились с %s",
-    "This is the password: %s" : "Пароль: %s",
-    "Password to access »%1$s« shared with %2$s" : "Пароль для доступа пользователя %2$s к ресурсу «%1$s»"
+    "Enforce password protection" : "Требовать защиту паролем"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

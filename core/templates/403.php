@@ -11,7 +11,7 @@ if(!isset($_)) {//standalone  page is not supported anymore - redirect to /
 ?>
 <ul>
 	<li class='error'>
-		<?php p($l->t( 'Access forbidden' )); ?><br>
+		<?php p($l->t('Access forbidden')); ?><br>
 		<p class='hint'><?php if(isset($_['message'])) p($_['message'])?></p>
 	</li>
 </ul>

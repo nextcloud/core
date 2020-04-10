@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  *
@@ -18,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -105,7 +106,7 @@ class OfflineUser {
 	 * @return array
 	 */
 	public function export() {
-		$data = array();
+		$data = [];
 		$data['ocName'] = $this->getOCName();
 		$data['dn'] = $this->getDN();
 		$data['uid'] = $this->getUID();
@@ -223,7 +224,7 @@ class OfflineUser {
 			FROM `*PREFIX*share`
 			WHERE `uid_owner` = ?
 		', 1);
-		$query->execute(array($this->ocName));
+		$query->execute([$this->ocName]);
 		$sResult = $query->fetchColumn(0);
 		if((int)$sResult === 1) {
 			$this->hasActiveShares = true;
@@ -235,7 +236,7 @@ class OfflineUser {
 			FROM `*PREFIX*share_external`
 			WHERE `owner` = ?
 		', 1);
-		$query->execute(array($this->ocName));
+		$query->execute([$this->ocName]);
 		$sResult = $query->fetchColumn(0);
 		if((int)$sResult === 1) {
 			$this->hasActiveShares = true;

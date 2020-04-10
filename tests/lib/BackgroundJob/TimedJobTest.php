@@ -44,7 +44,7 @@ class TimedJobTest extends \Test\TestCase {
 	/** @var ITimeFactory */
 	private $time;
 
-	protected function setup() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->jobList = new DummyJobList();

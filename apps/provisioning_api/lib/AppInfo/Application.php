@@ -2,9 +2,11 @@
 /**
  *
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author zulan <git@zulan.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,28 +21,29 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OCA\Provisioning_API\AppInfo;
 
 use OC\AppFramework\Utility\SimpleContainer;
 use OC\AppFramework\Utility\TimeFactory;
-use OC\Settings\Mailer\NewUserMailHelper;
 use OCA\Provisioning_API\Middleware\ProvisioningApiMiddleware;
+use OCA\Settings\Mailer\NewUserMailHelper;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\Defaults;
 use OCP\Util;
 
 class Application extends App {
-	public function __construct(array $urlParams = array()) {
+	public function __construct(array $urlParams = []) {
 		parent::__construct('provisioning_api', $urlParams);
 
 		$container = $this->getContainer();
 		$server = $container->getServer();
 
-		$container->registerService(NewUserMailHelper::class, function(SimpleContainer $c) use ($server) {
+		$container->registerService(NewUserMailHelper::class, function (SimpleContainer $c) use ($server) {
 			return new NewUserMailHelper(
 				$server->query(Defaults::class),
 				$server->getURLGenerator(),
@@ -53,7 +56,7 @@ class Application extends App {
 				Util::getDefaultEmailAddress('no-reply')
 			);
 		});
-		$container->registerService('ProvisioningApiMiddleware', function(SimpleContainer $c) use ($server) {
+		$container->registerService('ProvisioningApiMiddleware', function (SimpleContainer $c) use ($server) {
 			$user = $server->getUserManager()->get($c['UserId']);
 			$isAdmin = $user !== null ? $server->getGroupManager()->isAdmin($user->getUID()) : false;
 			$isSubAdmin = $user !== null ? $server->getGroupManager()->getSubAdmin()->isSubAdmin($user) : false;

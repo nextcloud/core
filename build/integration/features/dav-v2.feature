@@ -77,6 +77,7 @@ Feature: dav-v2
 		  | shareType | 0 |
 		  | permissions | 31 |
 		  | shareWith | user0 |
+        And user "user0" accepts last share
 		And As an "user0"
 		When User "user0" uploads file "data/textfile.txt" to "/testquota/asdf.txt"
 		Then the HTTP status code should be "201"

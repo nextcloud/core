@@ -2,13 +2,14 @@ OC.L10N.register(
     "updatenotification",
     {
     "{version} is available. Get more information on how to update." : "{version} er tilgængelig. Få mere information om hvordan du opdaterer.",
-    "Update notifications" : "Opdaterings notifikationer",
     "Channel updated" : "Kanal opdateret",
+    "Update notifications" : "Opdaterings notifikationer",
     "The update server could not be reached since %d days to check for new updates." : "Har ikke været forbundet til opdateringsserveren i %d dage for at tjekke efter nye opdateringer.",
     "Please check the Nextcloud and server log files for errors." : "Tjek venligst Nextcloud server log for fejl.",
     "Update to %1$s is available." : "Opdatering til %1$s er tilgængelig.",
     "Update for %1$s to version %2$s is available." : "Opdatering af %1$s til version %2$s er tilgængelig.",
     "Update for {app} to version %s is available." : "Opdatering af {app} til version %s er tilgængelig.",
+    "View in store" : "Se i butik",
     "Apps with available updates" : "Apps med opdateringer",
     "Open updater" : "Åbn for opdatering",
     "Download now" : "Hent nu",
@@ -21,9 +22,7 @@ OC.L10N.register(
     "Only notification for app updates are available." : "Kun notifikation for app opdateringer tilgængelige.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "Den valgte kanal lave dedikerede notifikationer for serveren ligegyldige.",
     "The selected update channel does not support updates of the server." : "Den valgte opdateringskanal understøtter ikke opdatering af serveren.",
-    "Could not start updater, please try the manual update" : "Kunne ikke starte opdateringen, prøv venligst med en manual opdatering",
-    "A new version is available: %s" : "Der er en ny version tligængelig: %s",
-    "Checked on %s" : "Tjekket per %s",
-    "You can always update to a newer version / experimental channel. But you can never downgrade to a more stable channel." : "Du kan altid opdatere til en nyere version / eksperimentel kanal. Men du kan aldrig nedgradere til en mere stabil kanal"
+    "View changelog" : "Se ændringslog",
+    "Beta" : "Beta"
 },
 "nplurals=2; plural=(n != 1);");

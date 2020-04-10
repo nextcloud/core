@@ -21,52 +21,49 @@
  *
  */
 
-
 namespace Test\AppFramework\Http;
 
-
 use OCP\AppFramework\Http\OCSResponse;
-
 
 class OCSResponseTest extends \Test\TestCase {
 
 
-    public function testHeadersJSON() {
-        $response = new OCSResponse('json', 1, 2, 3);
-        $type = $response->getHeaders()['Content-Type'];
-        $this->assertEquals('application/json; charset=utf-8', $type);
-    }
+	public function testHeadersJSON() {
+		$response = new OCSResponse('json', 1, 2, 3);
+		$type = $response->getHeaders()['Content-Type'];
+		$this->assertEquals('application/json; charset=utf-8', $type);
+	}
 
 
-    public function testHeadersXML() {
-        $response = new OCSResponse('xml', 1, 2, 3);
-        $type = $response->getHeaders()['Content-Type'];
-        $this->assertEquals('application/xml; charset=utf-8', $type);
-    }
+	public function testHeadersXML() {
+		$response = new OCSResponse('xml', 1, 2, 3);
+		$type = $response->getHeaders()['Content-Type'];
+		$this->assertEquals('application/xml; charset=utf-8', $type);
+	}
 
 
-    public function testRender() {
-        $response = new OCSResponse(
-            'xml', 2, 'message', ['test' => 'hi'], 3, 4
-        );
-        $out = $response->render();
-        $expected = "<?xml version=\"1.0\"?>\n" .
-        "<ocs>\n" .
-        " <meta>\n" .
-        "  <status>failure</status>\n" .
-        "  <statuscode>2</statuscode>\n" .
-        "  <message>message</message>\n" .
-        "  <totalitems>3</totalitems>\n" .
-        "  <itemsperpage>4</itemsperpage>\n" .
-        " </meta>\n" .
-        " <data>\n" .
-        "  <test>hi</test>\n" .
-        " </data>\n" .
-        "</ocs>\n";
+	public function testRender() {
+		$response = new OCSResponse(
+			'xml', 2, 'message', ['test' => 'hi'], 3, 4
+		);
+		$out = $response->render();
+		$expected = "<?xml version=\"1.0\"?>\n" .
+		"<ocs>\n" .
+		" <meta>\n" .
+		"  <status>failure</status>\n" .
+		"  <statuscode>2</statuscode>\n" .
+		"  <message>message</message>\n" .
+		"  <totalitems>3</totalitems>\n" .
+		"  <itemsperpage>4</itemsperpage>\n" .
+		" </meta>\n" .
+		" <data>\n" .
+		"  <test>hi</test>\n" .
+		" </data>\n" .
+		"</ocs>\n";
 
-        $this->assertEquals($expected, $out);
+		$this->assertEquals($expected, $out);
 
-    }
+	}
 
 
 }

@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -119,7 +119,6 @@ class DeprecationCheck extends AbstractCheck {
 			'OCP\App::getAppInfo' => '14.0.0',
 			'OC_App::getAppVersion' => '14.0.0',
 			'OCP\App::getAppVersion' => '14.0.0',
-			'OCP\App::registerPersonal' => '14.0.0',
 
 			'OCP\AppFramework\Controller::params' => '7.0.0',
 			'OCP\AppFramework\Controller::getParams' => '7.0.0',

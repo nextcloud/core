@@ -38,6 +38,7 @@ OC.L10N.register(
     "<strong>System tags</strong> for a file have been modified" : "<strong>תגיות מערכת</strong> שהשתנו עבור קובץ",
     "Collaborative tags" : "תגיות שיתופיות",
     "Collaborative tagging functionality which shares tags among users." : "תכונת תיוג שיתופים שמשתפת תגיות בין המשתמשים.",
+    "Collaborative tagging functionality which shares tags among users. Great for teams.\n\t(If you are a provider with a multi-tenancy installation, it is advised to deactivate this app as tags are shared.)" : "תכונת התיוג השיתופי שמשתפת תגיות בין משתמשים. מעולה לעבודת צוות.\n\t(אם בבעלותך התקנה עם מגוון מערכות נפרדות, מוטב להשבית את היישומון הזה כיוון שהתגיות משותפות.)",
     "Tagged files" : "קבצים שתויגו",
     "Select tags to filter by" : "תגיות נבחרות מסוננות על ידי",
     "No tags found" : "לא נמצאו תגיות",

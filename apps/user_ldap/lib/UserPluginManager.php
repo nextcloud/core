@@ -2,6 +2,8 @@
 /**
  * @copyright Copyright (c) 2017 EITA Cooperative (eita.org.br)
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Filis Futsarov <filisko@users.noreply.github.com>
  * @author Vinicius Cubas Brand <vinicius@eita.org.br>
  *
  * @license GNU AGPL version 3 or any later version
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -31,7 +33,7 @@ class UserPluginManager {
 
 	private $respondToActions = 0;
 
-	private $which = array(
+	private $which = [
 		Backend::CREATE_USER => null,
 		Backend::SET_PASSWORD => null,
 		Backend::GET_HOME => null,
@@ -40,7 +42,7 @@ class UserPluginManager {
 		Backend::PROVIDE_AVATAR => null,
 		Backend::COUNT_USERS => null,
 		'deleteUser' => null
-	);
+	];
 
 	/**
 	 * @return int All implemented actions, except for 'deleteUser'
@@ -207,4 +209,3 @@ class UserPluginManager {
 		throw new \Exception('No plugin implements deleteUser in this LDAP Backend.');
 	}
 }
-

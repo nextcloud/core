@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,7 +20,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -91,6 +91,15 @@ class ProviderUserAssignmentDao {
 			$updateQuery->execute();
 		}
 
+	}
+
+	public function deleteByUser(string $uid) {
+		$qb = $this->conn->getQueryBuilder();
+
+		$deleteQuery = $qb->delete(self::TABLE_NAME)
+			->where($qb->expr()->eq('uid', $qb->createNamedParameter($uid)));
+
+		$deleteQuery->execute();
 	}
 
 	public function deleteAll(string $providerId) {

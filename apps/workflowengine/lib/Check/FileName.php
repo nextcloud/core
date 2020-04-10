@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2018 Daniel Kesselberg <mail@danielkesselberg.de>
@@ -22,20 +23,16 @@ declare(strict_types=1);
 
 namespace OCA\WorkflowEngine\Check;
 
-use OCP\Files\Storage\IStorage;
+use OCA\WorkflowEngine\Entity\File;
 use OCP\IL10N;
 use OCP\IRequest;
+use OCP\WorkflowEngine\IFileCheck;
 
-class FileName extends AbstractStringCheck {
+class FileName extends AbstractStringCheck implements IFileCheck {
+	use TFileCheck;
 
 	/** @var IRequest */
 	protected $request;
-
-	/** @var IStorage */
-	protected $storage;
-
-	/** @var string */
-	protected $path;
 
 	/**
 	 * @param IL10N $l
@@ -47,19 +44,10 @@ class FileName extends AbstractStringCheck {
 	}
 
 	/**
-	 * @param IStorage $storage
-	 * @param string $path
-	 */
-	public function setFileInfo(IStorage $storage, $path) {
-		$this->storage = $storage;
-		$this->path = $path;
-	}
-
-	/**
 	 * @return string
 	 */
 	protected function getActualValue(): string {
-		return basename($this->path);
+		return $this->path === null ? '' : basename($this->path);
 	}
 
 	/**
@@ -74,5 +62,13 @@ class FileName extends AbstractStringCheck {
 			$actualValue = mb_strtolower($actualValue);
 		}
 		return parent::executeStringCheck($operator, $checkValue, $actualValue);
+	}
+
+	public function supportedEntities(): array {
+		return [ File::class ];
+	}
+
+	public function isAvailableForScope(int $scope): bool {
+		return true;
 	}
 }

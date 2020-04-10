@@ -19,12 +19,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\DAV\DAV;
 
+use OCA\DAV\Connector\Sabre\Node;
 use OCP\IDBConnection;
 use OCP\IUser;
 use Sabre\DAV\PropertyStorage\Backend\BackendInterface;
@@ -39,7 +40,7 @@ class CustomPropertiesBackend implements BackendInterface {
 	 *
 	 * @var array
 	 */
-	private $ignoredProperties = array(
+	private $ignoredProperties = [
 		'{DAV:}getcontentlength',
 		'{DAV:}getcontenttype',
 		'{DAV:}getetag',
@@ -50,7 +51,7 @@ class CustomPropertiesBackend implements BackendInterface {
 		'{http://owncloud.org/ns}dDC',
 		'{http://owncloud.org/ns}size',
 		'{http://nextcloud.org/ns}is-encrypted',
-	);
+	];
 
 	/**
 	 * @var Tree
@@ -63,7 +64,7 @@ class CustomPropertiesBackend implements BackendInterface {
 	private $connection;
 
 	/**
-	 * @var string
+	 * @var IUser
 	 */
 	private $user;
 
@@ -85,7 +86,7 @@ class CustomPropertiesBackend implements BackendInterface {
 		IUser $user) {
 		$this->tree = $tree;
 		$this->connection = $connection;
-		$this->user = $user->getUID();
+		$this->user = $user;
 	}
 
 	/**
@@ -96,7 +97,6 @@ class CustomPropertiesBackend implements BackendInterface {
 	 * @return void
 	 */
 	public function propFind($path, PropFind $propFind) {
-
 		$requestedProps = $propFind->get404Properties();
 
 		// these might appear
@@ -144,7 +144,7 @@ class CustomPropertiesBackend implements BackendInterface {
 	 * @return void
 	 */
 	public function propPatch($path, PropPatch $propPatch) {
-		$propPatch->handleRemaining(function($changedProps) use ($path) {
+		$propPatch->handleRemaining(function ($changedProps) use ($path) {
 			return $this->updateProperties($path, $changedProps);
 		});
 	}
@@ -158,7 +158,7 @@ class CustomPropertiesBackend implements BackendInterface {
 		$statement = $this->connection->prepare(
 			'DELETE FROM `*PREFIX*properties` WHERE `userid` = ? AND `propertypath` = ?'
 		);
-		$statement->execute(array($this->user, $path));
+		$statement->execute([$this->user->getUID(), $this->formatPath($path)]);
 		$statement->closeCursor();
 
 		unset($this->cache[$path]);
@@ -177,12 +177,13 @@ class CustomPropertiesBackend implements BackendInterface {
 			'UPDATE `*PREFIX*properties` SET `propertypath` = ?' .
 			' WHERE `userid` = ? AND `propertypath` = ?'
 		);
-		$statement->execute(array($destination, $this->user, $source));
+		$statement->execute([$this->formatPath($destination), $this->user->getUID(), $this->formatPath($source)]);
 		$statement->closeCursor();
 	}
 
 	/**
 	 * Returns a list of properties for this nodes.;
+	 *
 	 * @param string $path
 	 * @param array $requestedProperties requested properties or empty array for "all"
 	 * @return array
@@ -191,7 +192,7 @@ class CustomPropertiesBackend implements BackendInterface {
 	 * http://www.example.org/namespace#author If the array is empty, all
 	 * properties should be returned
 	 */
-	private function getProperties($path, array $requestedProperties) {
+	private function getProperties(string $path, array $requestedProperties) {
 		if (isset($this->cache[$path])) {
 			return $this->cache[$path];
 		}
@@ -199,8 +200,8 @@ class CustomPropertiesBackend implements BackendInterface {
 		// TODO: chunking if more than 1000 properties
 		$sql = 'SELECT * FROM `*PREFIX*properties` WHERE `userid` = ? AND `propertypath` = ?';
 
-		$whereValues = array($this->user, $path);
-		$whereTypes = array(null, null);
+		$whereValues = [$this->user->getUID(), $this->formatPath($path)];
+		$whereTypes = [null, null];
 
 		if (!empty($requestedProperties)) {
 			// request only a subset
@@ -229,12 +230,12 @@ class CustomPropertiesBackend implements BackendInterface {
 	/**
 	 * Update properties
 	 *
-	 * @param string $path node for which to update properties
+	 * @param string $path path for which to update properties
 	 * @param array $properties array of properties to update
 	 *
 	 * @return bool
 	 */
-	private function updateProperties($path, $properties) {
+	private function updateProperties(string $path, array $properties) {
 
 		$deleteStatement = 'DELETE FROM `*PREFIX*properties`' .
 			' WHERE `userid` = ? AND `propertypath` = ? AND `propertyname` = ?';
@@ -246,38 +247,38 @@ class CustomPropertiesBackend implements BackendInterface {
 			' WHERE `userid` = ? AND `propertypath` = ? AND `propertyname` = ?';
 
 		// TODO: use "insert or update" strategy ?
-		$existing = $this->getProperties($path, array());
+		$existing = $this->getProperties($path, []);
 		$this->connection->beginTransaction();
 		foreach ($properties as $propertyName => $propertyValue) {
 			// If it was null, we need to delete the property
 			if (is_null($propertyValue)) {
 				if (array_key_exists($propertyName, $existing)) {
 					$this->connection->executeUpdate($deleteStatement,
-						array(
-							$this->user,
-							$path,
-							$propertyName
-						)
+						[
+							$this->user->getUID(),
+							$this->formatPath($path),
+							$propertyName,
+						]
 					);
 				}
 			} else {
 				if (!array_key_exists($propertyName, $existing)) {
 					$this->connection->executeUpdate($insertStatement,
-						array(
-							$this->user,
-							$path,
+						[
+							$this->user->getUID(),
+							$this->formatPath($path),
 							$propertyName,
-							$propertyValue
-						)
+							$propertyValue,
+						]
 					);
 				} else {
 					$this->connection->executeUpdate($updateStatement,
-						array(
+						[
 							$propertyValue,
-							$this->user,
-							$path,
-							$propertyName
-						)
+							$this->user->getUID(),
+							$this->formatPath($path),
+							$propertyName,
+						]
 					);
 				}
 			}
@@ -289,4 +290,17 @@ class CustomPropertiesBackend implements BackendInterface {
 		return true;
 	}
 
+	/**
+	 * long paths are hashed to ensure they fit in the database
+	 *
+	 * @param string $path
+	 * @return string
+	 */
+	private function formatPath(string $path): string {
+		if (strlen($path) > 250) {
+			return sha1($path);
+		} else {
+			return $path;
+		}
+	}
 }

@@ -32,9 +32,6 @@
     "Could not connect to the appstore or the appstore returned no updates at all. Search manually for updates or make sure your server has access to the internet and can connect to the appstore." : "Nem lehet csatlakozni az alkalmazásbolthoz, vagy az nem adott vissza frissítéseket egyáltalán. Keress frissítéseket kézzel, vagy győződj meg arról, hogy a szervered hozzáfér az internethez és eléri az alkalmazásboltot.",
     "<strong>All</strong> apps have an update for this version available" : "<strong>Minden</strong> alkalmazás felfrissítve a legújabb verzióra.",
     "View changelog" : "Változásnapló megjelenítése",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong>  alkalmazásnak nincs elérhető frissítése ehhez a verzióhoz","<strong>%n</strong> alkalmazásnak nincs elérhető frissítése ehhez a verzióhoz"],
-    "You can always update to a newer version / experimental channel. But you can never downgrade to a more stable channel." : "Mindig frissíthetsz az újabb verzióra vagy kísérleti csatornára, de visszafelé sosem frissíthetsz egy jóval stabilabb verzióra.",
-    "<strong>beta</strong> is a pre-release version only for testing new features, not for production environments." : "<strong>Béta</strong>, egy előzetes verzió kizárólag az új funkciók tesztelésére, nem élő környezetbe.",
-    "Could not start updater, please try the manual update" : "Nem sikerült elindítani a frissítőt, kérlek próbáld a manuális frissítést"
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong>  alkalmazásnak nincs elérhető frissítése ehhez a verzióhoz","<strong>%n</strong> alkalmazásnak nincs elérhető frissítése ehhez a verzióhoz"]
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

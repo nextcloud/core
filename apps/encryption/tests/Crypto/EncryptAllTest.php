@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Kenneth Newwood <kenneth@newwood.name>
@@ -20,13 +21,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Encryption\Tests\Crypto;
-
 
 use OC\Files\View;
 use OCA\Encryption\Crypto\EncryptAll;
@@ -91,7 +90,7 @@ class EncryptAllTest extends TestCase {
 	/** @var  EncryptAll */
 	protected $encryptAll;
 
-	function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->setupUser = $this->getMockBuilder(Setup::class)
 			->disableOriginalConstructor()->getMock();
@@ -323,7 +322,7 @@ class EncryptAllTest extends TestCase {
 
 		$this->view->expects($this->any())->method('is_dir')
 			->willReturnCallback(
-				function($path) {
+				function ($path) {
 					if ($path === '/user1/files/foo') {
 						return true;
 					}

@@ -47,18 +47,6 @@
     "Share provider which allows you to share files by mail" : "Provedor que permite compartirficheiros por correo",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Permite que os usuarios compartan unha ligazón personalizada ou un ficheiro ou cartafol enviándoo a un enderezo de correo.",
     "Send password by mail" : "Enviar contrasinal por correo",
-    "Enforce password protection" : "Forzar a protección por contrasinal",
-    "Sharing %s failed, this item is already shared with %s" : "Fallou a compartición de %s, este elemento xa está compartido con %s",
-    "%s shared »%s« with you" : "%s compartiu «%s» con vostede",
-    "%s shared »%s« with you." : "%s compartiu «%s» con vostede.",
-    "%s via %s" : "%s mediante %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s compartiu «%s» con vostede.\nDebería ter recibido un correo por separado cunha ligazón acceder.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s compartiu «%s» con vostede. Debería ter recibido un correo por separado cunha ligazón acceder.",
-    "Password to access »%s« shared to you by %s" : "O contrasinal para acceder a «%s» foi compartido con vostede por %s",
-    "It is protected with the following password: %s" : "Está protexido co seguinte contrasinal: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Ven de de compartir «%s» con %s. O recurso compartido xa foi enviado ao destinatario. Por mor das regras de seguridade definidas polo administrador de %s cada recurso compartido necesita ser protexido por un contrasinal e non está permitido que vostede envíe o contrasinal directamente ao destinatario. Polo tanto, necesita enviar manualmente o contrasinal ao destinatario.",
-    "Password to access »%s« shared with %s" : "Contrasinal para acceder a «%s» compartida con %s",
-    "This is the password: %s" : "Este é o contrasinal: %s",
-    "Password to access »%1$s« shared with %2$s" : "Contrasinal para acceder a «%1$s» compartida con %2$s"
+    "Enforce password protection" : "Forzar a protección por contrasinal"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

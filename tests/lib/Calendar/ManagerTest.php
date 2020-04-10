@@ -23,16 +23,16 @@
 
 namespace Test\Calendar;
 
-use \OC\Calendar\Manager;
+use OC\Calendar\Manager;
 use OCP\Calendar\ICalendar;
-use \Test\TestCase;
+use Test\TestCase;
 
 class ManagerTest extends TestCase {
 
 	/** @var Manager */
 	private $manager;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->manager = new Manager();
@@ -44,19 +44,19 @@ class ManagerTest extends TestCase {
 	public function testSearch($search1, $search2, $expected) {
 		/** @var ICalendar | \PHPUnit_Framework_MockObject_MockObject $calendar1 */
 		$calendar1 = $this->createMock(ICalendar::class);
-		$calendar1->method('getKey')->will($this->returnValue('simple:1'));
+		$calendar1->method('getKey')->willReturn('simple:1');
 		$calendar1->expects($this->once())
 			->method('search')
 			->with('', [], [], null, null)
-			->will($this->returnValue($search1));
+			->willReturn($search1);
 
 		/** @var ICalendar | PHPUnit_Framework_MockObject_MockObject $calendar2 */
 		$calendar2 = $this->createMock(ICalendar::class);
-		$calendar2->method('getKey')->will($this->returnValue('simple:2'));
+		$calendar2->method('getKey')->willReturn('simple:2');
 		$calendar2->expects($this->once())
 			->method('search')
 			->with('', [], [], null, null)
-			->will($this->returnValue($search2));
+			->willReturn($search2);
 
 		$this->manager->registerCalendar($calendar1);
 		$this->manager->registerCalendar($calendar2);
@@ -71,21 +71,21 @@ class ManagerTest extends TestCase {
 	public function testSearchOptions($search1, $search2, $expected) {
 		/** @var ICalendar | \PHPUnit_Framework_MockObject_MockObject $calendar1 */
 		$calendar1 = $this->createMock(ICalendar::class);
-		$calendar1->method('getKey')->will($this->returnValue('simple:1'));
+		$calendar1->method('getKey')->willReturn('simple:1');
 		$calendar1->expects($this->once())
 			->method('search')
 			->with('searchTerm', ['SUMMARY', 'DESCRIPTION'],
 				['timerange' => ['start' => null, 'end' => null]], 5, 20)
-			->will($this->returnValue($search1));
+			->willReturn($search1);
 
 		/** @var ICalendar | PHPUnit_Framework_MockObject_MockObject $calendar2 */
 		$calendar2 = $this->createMock(ICalendar::class);
-		$calendar2->method('getKey')->will($this->returnValue('simple:2'));
+		$calendar2->method('getKey')->willReturn('simple:2');
 		$calendar2->expects($this->once())
 			->method('search')
 			->with('searchTerm', ['SUMMARY', 'DESCRIPTION'],
 				['timerange' => ['start' => null, 'end' => null]], 5, 20)
-			->will($this->returnValue($search2));
+			->willReturn($search2);
 
 		$this->manager->registerCalendar($calendar1);
 		$this->manager->registerCalendar($calendar2);
@@ -152,11 +152,11 @@ class ManagerTest extends TestCase {
 	public function testRegisterUnregister() {
 		/** @var ICalendar | \PHPUnit_Framework_MockObject_MockObject $calendar1 */
 		$calendar1 = $this->createMock(ICalendar::class);
-		$calendar1->method('getKey')->will($this->returnValue('key1'));
+		$calendar1->method('getKey')->willReturn('key1');
 
 		/** @var ICalendar | \PHPUnit_Framework_MockObject_MockObject $calendar2 */
 		$calendar2 = $this->createMock(ICalendar::class);
-		$calendar2->method('getKey')->will($this->returnValue('key2'));
+		$calendar2->method('getKey')->willReturn('key2');
 
 		$this->manager->registerCalendar($calendar1);
 		$this->manager->registerCalendar($calendar2);
@@ -176,11 +176,11 @@ class ManagerTest extends TestCase {
 	public function testGetCalendars() {
 		/** @var ICalendar | \PHPUnit_Framework_MockObject_MockObject $calendar1 */
 		$calendar1 = $this->createMock(ICalendar::class);
-		$calendar1->method('getKey')->will($this->returnValue('key1'));
+		$calendar1->method('getKey')->willReturn('key1');
 
 		/** @var ICalendar | \PHPUnit_Framework_MockObject_MockObject $calendar2 */
 		$calendar2 = $this->createMock(ICalendar::class);
-		$calendar2->method('getKey')->will($this->returnValue('key2'));
+		$calendar2->method('getKey')->willReturn('key2');
 
 		$this->manager->registerCalendar($calendar1);
 		$this->manager->registerCalendar($calendar2);

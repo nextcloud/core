@@ -7,6 +7,7 @@
  */
 
 namespace Test\Repair;
+
 use OCP\Migration\IOutput;
 
 /**
@@ -36,7 +37,7 @@ class RepairSqliteAutoincrementTest extends \Test\TestCase {
 	 */
 	private $config;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->connection = \OC::$server->getDatabaseConnection();
@@ -52,7 +53,7 @@ class RepairSqliteAutoincrementTest extends \Test\TestCase {
 		$this->repair = new \OC\Repair\SqliteAutoincrement($this->connection);
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$this->connection->getSchemaManager()->dropTable($this->tableName);
 		parent::tearDown();
 	}
@@ -65,7 +66,7 @@ class RepairSqliteAutoincrementTest extends \Test\TestCase {
 	protected function checkAutoincrement() {
 		$this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' ("text") VALUES ("test")');
 		$insertId = $this->connection->lastInsertId();
-		$this->connection->executeUpdate('DELETE FROM ' . $this->tableName . ' WHERE "someid" = ?', array($insertId));
+		$this->connection->executeUpdate('DELETE FROM ' . $this->tableName . ' WHERE "someid" = ?', [$insertId]);
 
 		// insert again
 		$this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' ("text") VALUES ("test2")');

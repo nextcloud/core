@@ -17,11 +17,12 @@
     "Check for changes" : "檢查變動",
     "Never" : "絕不",
     "Once every direct access" : "在每次進行存取動作時",
+    "Read only" : "唯讀",
     "Delete" : "刪除",
     "Admin defined" : "管理者定義",
     "Delete storage?" : "刪除空間",
     "Saved" : "已儲存",
-    "Saving..." : "儲存中...",
+    "Saving …" : "儲存中 ...",
     "Save" : "儲存",
     "Empty response from the server" : "服務器没有回應",
     "Couldn't access. Please log out and in again to activate this mount point" : "無法存取，請登出後重新登入來啟用這個掛載點。",
@@ -64,7 +65,10 @@
     "Domain" : "網域名稱",
     "Rackspace" : "Rackspace",
     "API key" : "API金鑰",
+    "Log-in credentials, save in database" : "登入憑證，儲存於資料庫",
     "Username and password" : "使用者帳號和密碼",
+    "Log-in credentials, save in session" : "登入憑證，儲存於工作階段",
+    "User entered, store in database" : "使用者登入，儲存於資料庫",
     "RSA public key" : "RSA 公開金鑰",
     "Public key" : "公開金鑰",
     "Amazon S3" : "Amazon S3",
@@ -89,6 +93,7 @@
     "SFTP with secret key login" : "以密碼金鑰登入SFTP",
     "SMB / CIFS" : "伺服器訊息區塊-SMB/網路文件共享系統 (CIFS)",
     "Share" : "分享",
+    "Show hidden files" : "顯示隱藏的檔案",
     "SMB / CIFS using OC login" : "SMB / CIFS 使用 OC 登入",
     "Username as share" : "以使用者名稱分享",
     "OpenStack Object Storage" : "OpenStack 物件儲存",
@@ -97,6 +102,7 @@
     "Name" : "名稱",
     "Storage type" : "儲存類型",
     "Scope" : "範圍",
+    "Open documentation" : "開啟說明文件",
     "Folder name" : "資料夾名稱",
     "External storage" : "外部儲存",
     "Authentication" : "驗證",
@@ -105,6 +111,6 @@
     "Add storage" : "增加儲存區",
     "Advanced settings" : "進階設定",
     "Allow users to mount external storage" : "允許使用者能自行掛載外部儲存",
-    "Some of the configured external mount points are not connected. Please click on the red row(s) for more information" : "有些外部掛載位置設定無法連線，請點(多個)紅色橫幅了解詳情。"
+    "Saving..." : "儲存中..."
 },"pluralForm" :"nplurals=1; plural=0;"
 }

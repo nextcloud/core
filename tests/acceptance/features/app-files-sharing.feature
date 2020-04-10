@@ -20,6 +20,33 @@ Feature: app-files-sharing
     And I see that the "Sharing" tab in the details view is eventually loaded
     And I see that the file is shared with me by "admin"
 
+  Scenario: share a file with another user that needs to accept shares
+    Given I act as John
+    And I am logged in as the admin
+    And I act as Jane
+    And I am logged in
+    And I visit the settings page
+    And I open the "Sharing" section
+    And I disable accepting the shares by default
+    And I see that shares are not accepted by default
+    And I act as John
+    And I rename "welcome.txt" to "farewell.txt"
+    And I see that the file list contains a file named "farewell.txt"
+    When I share "farewell.txt" with "user0"
+    And I see that the file is shared with "user0"
+    And I act as Jane
+    And I open the Files app
+    And I see that the file list does not contain a file named "farewell.txt"
+    And I accept the share for "/farewell.txt" in the notifications
+    # The Files app is open again to reload the file list
+    And I open the Files app
+    Then I see that the file list contains a file named "farewell.txt"
+    And I open the details view for "farewell.txt"
+    And I see that the details view is open
+    And I open the "Sharing" tab in the details view
+    And I see that the "Sharing" tab in the details view is eventually loaded
+    And I see that the file is shared with me by "admin"
+
   Scenario: share a file with another user who already has a file with that name
     Given I act as John
     And I am logged in as the admin

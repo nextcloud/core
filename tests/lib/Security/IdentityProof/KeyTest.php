@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\Security\IdentityProof;
 
 use OC\Security\IdentityProof\Key;
@@ -29,7 +30,7 @@ class KeyTest extends TestCase {
 	/** @var Key */
 	private $key;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->key = new Key('public', 'private');

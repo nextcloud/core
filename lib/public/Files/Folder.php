@@ -4,6 +4,7 @@
  *
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @license AGPL-3.0
@@ -18,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -29,7 +30,9 @@
 
 // use OCP namespace for all classes that are considered public.
 // This means that they should be used by apps instead of the internal ownCloud classes
+
 namespace OCP\Files;
+
 use OCP\Files\Search\ISearchQuery;
 
 /**
@@ -107,11 +110,12 @@ interface Folder extends Node {
 	 * Create a new file
 	 *
 	 * @param string $path relative path of the new file
+	 * @param string|resource|null $content content for the new file, since 19.0.0
 	 * @return \OCP\Files\File
 	 * @throws \OCP\Files\NotPermittedException
 	 * @since 6.0.0
 	 */
-	public function newFile($path);
+	public function newFile($path, $content = null);
 
 	/**
 	 * search for files with the name matching $query

@@ -19,9 +19,7 @@
  *
  */
 
-
 namespace Test\OCS;
-
 
 use OC\OCS\DiscoveryService;
 use OCP\Http\Client\IClientService;
@@ -40,7 +38,7 @@ class DiscoveryServiceTest extends TestCase {
 	/** @var  IDiscoveryService */
 	private $discoveryService;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->cacheFactory = $this->getMockBuilder(ICacheFactory::class)->getMock();

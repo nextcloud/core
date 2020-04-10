@@ -21,13 +21,10 @@
  *
  */
 
-
 namespace Test\AppFramework\Http;
 
-
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http;
-
+use OCP\AppFramework\Http\DataResponse;
 
 class DataResponseTest extends \Test\TestCase {
 
@@ -36,22 +33,22 @@ class DataResponseTest extends \Test\TestCase {
 	 */
 	private $response;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->response = new DataResponse();
 	}
 
 
 	public function testSetData() {
-		$params = array('hi', 'yo');
+		$params = ['hi', 'yo'];
 		$this->response->setData($params);
 
-		$this->assertEquals(array('hi', 'yo'), $this->response->getData());
+		$this->assertEquals(['hi', 'yo'], $this->response->getData());
 	}
 
 
 	public function testConstructorAllowsToSetData() {
-		$data = array('hi');
+		$data = ['hi'];
 		$code = 300;
 		$response = new DataResponse($data, $code);
 
@@ -61,14 +58,15 @@ class DataResponseTest extends \Test\TestCase {
 
 
 	public function testConstructorAllowsToSetHeaders() {
-		$data = array('hi');
+		$data = ['hi'];
 		$code = 300;
-		$headers = array('test' => 'something');
+		$headers = ['test' => 'something'];
 		$response = new DataResponse($data, $code, $headers);
 
 		$expectedHeaders = [
 			'Cache-Control' => 'no-cache, no-store, must-revalidate',
 			'Content-Security-Policy' => "default-src 'none';base-uri 'none';manifest-src 'self'",
+			'Feature-Policy' => "autoplay 'none';camera 'none';fullscreen 'none';geolocation 'none';microphone 'none';payment 'none'",
 		];
 		$expectedHeaders = array_merge($expectedHeaders, $headers);
 
@@ -79,12 +77,12 @@ class DataResponseTest extends \Test\TestCase {
 
 
 	public function testChainability() {
-		$params = array('hi', 'yo');
+		$params = ['hi', 'yo'];
 		$this->response->setData($params)
 			->setStatus(Http::STATUS_NOT_FOUND);
 
 		$this->assertEquals(Http::STATUS_NOT_FOUND, $this->response->getStatus());
-		$this->assertEquals(array('hi', 'yo'), $this->response->getData());
+		$this->assertEquals(['hi', 'yo'], $this->response->getData());
 	}
 
 

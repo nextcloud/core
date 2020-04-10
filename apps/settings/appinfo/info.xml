@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>settings</id>
+	<name>Nextcloud settings</name>
+	<summary>Nextcloud settings</summary>
+	<description>Nextcloud settings</description>
+	<version>1.1.0</version>
+	<licence>agpl</licence>
+	<author>Nextcloud</author>
+	<namespace>Settings</namespace>
+	<default_enable/>
+
+	<category>customization</category>
+	<bugs>https://github.com/nextcloud/server/issues</bugs>
+	<dependencies>
+		<nextcloud min-version="19" max-version="19"/>
+	</dependencies>
+
+	<settings>
+		<admin>OCA\Settings\Settings\Admin\Mail</admin>
+		<admin>OCA\Settings\Settings\Admin\Overview</admin>
+		<admin>OCA\Settings\Settings\Admin\Security</admin>
+		<admin>OCA\Settings\Settings\Admin\Server</admin>
+		<admin>OCA\Settings\Settings\Admin\Sharing</admin>
+		<admin-section>OCA\Settings\Sections\Admin\Additional</admin-section>
+		<admin-section>OCA\Settings\Sections\Admin\Groupware</admin-section>
+		<admin-section>OCA\Settings\Sections\Admin\Overview</admin-section>
+		<admin-section>OCA\Settings\Sections\Admin\Security</admin-section>
+		<admin-section>OCA\Settings\Sections\Admin\Server</admin-section>
+		<admin-section>OCA\Settings\Sections\Admin\Sharing</admin-section>
+		<personal>OCA\Settings\Settings\Personal\Additional</personal>
+		<personal>OCA\Settings\Settings\Personal\PersonalInfo</personal>
+		<personal>OCA\Settings\Settings\Personal\ServerDevNotice</personal>
+		<personal>OCA\Settings\Settings\Personal\Security\Authtokens</personal>
+		<personal>OCA\Settings\Settings\Personal\Security\Password</personal>
+		<personal>OCA\Settings\Settings\Personal\Security\TwoFactor</personal>
+		<personal>OCA\Settings\Settings\Personal\Security\WebAuthn</personal>
+		<personal-section>OCA\Settings\Sections\Personal\PersonalInfo</personal-section>
+		<personal-section>OCA\Settings\Sections\Personal\Security</personal-section>
+		<personal-section>OCA\Settings\Sections\Personal\SyncClients</personal-section>
+	</settings>
+
+	<activity>
+		<settings>
+			<setting>OCA\Settings\Activity\GroupSetting</setting>
+			<setting>OCA\Settings\Activity\SecuritySetting</setting>
+			<setting>OCA\Settings\Activity\Setting</setting>
+		</settings>
+		<filter>
+			<filter>OCA\Settings\Activity\SecurityFilter</filter>
+		</filter>
+		<providers>
+			<provider>OCA\Settings\Activity\GroupProvider</provider>
+			<provider>OCA\Settings\Activity\Provider</provider>
+			<provider>OCA\Settings\Activity\SecurityProvider</provider>
+		</providers>
+
+	</activity>
+</info>

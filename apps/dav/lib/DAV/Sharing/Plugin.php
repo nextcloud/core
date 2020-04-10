@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -148,7 +149,7 @@ class Plugin extends ServerPlugin {
 
 			// Dealing with the 'share' document, which modified invitees on a
 			// calendar.
-			case '{' . self::NS_OWNCLOUD . '}share' :
+			case '{' . self::NS_OWNCLOUD . '}share':
 
 				// We can only deal with IShareableCalendar objects
 				if (!$node instanceof IShareable) {
@@ -191,7 +192,7 @@ class Plugin extends ServerPlugin {
 	function propFind(PropFind $propFind, INode $node) {
 		if ($node instanceof IShareable) {
 
-			$propFind->handle('{' . Plugin::NS_OWNCLOUD . '}invite', function() use ($node) {
+			$propFind->handle('{' . Plugin::NS_OWNCLOUD . '}invite', function () use ($node) {
 				return new Invite(
 					$node->getShares()
 				);

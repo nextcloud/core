@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Philippe Jung <phil.jung@free.fr>
@@ -22,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -86,7 +87,7 @@ class ManagerTest extends \Test\TestCase {
 	/** @var Manager */
 	protected $manager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->access = $this->createMock(Access::class);
@@ -104,7 +105,7 @@ class ManagerTest extends \Test\TestCase {
 
 		$this->access->expects($this->any())
 			->method('getConnection')
-			->will($this->returnValue($this->connection));
+			->willReturn($this->connection);
 
 		/** @noinspection PhpUnhandledExceptionInspection */
 		$this->manager = new Manager(
@@ -138,11 +139,11 @@ class ManagerTest extends \Test\TestCase {
 		$this->access->expects($this->once())
 			->method('stringResemblesDN')
 			->with($this->equalTo($inputDN))
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->access->expects($this->once())
 			->method('dn2username')
 			->with($this->equalTo($inputDN))
-			->will($this->returnValue($uid));
+			->willReturn($uid);
 		$this->access->expects($this->never())
 			->method('username2dn');
 
@@ -163,15 +164,15 @@ class ManagerTest extends \Test\TestCase {
 		$this->access->expects($this->once())
 			->method('stringResemblesDN')
 			->with($this->equalTo($inputDN))
-			->will($this->returnValue(true));
+			->willReturn(true);
 		$this->access->expects($this->once())
 			->method('dn2username')
 			->with($this->equalTo($inputDN))
-			->will($this->returnValue(false));
+			->willReturn(false);
 		$this->access->expects($this->once())
 			->method('username2dn')
 			->with($this->equalTo($inputDN))
-			->will($this->returnValue(false));
+			->willReturn(false);
 
 		/** @noinspection PhpUnhandledExceptionInspection */
 		$user = $this->manager->get($inputDN);
@@ -188,11 +189,11 @@ class ManagerTest extends \Test\TestCase {
 		$this->access->expects($this->once())
 			->method('username2dn')
 			->with($this->equalTo($uid))
-			->will($this->returnValue($dn));
+			->willReturn($dn);
 		$this->access->expects($this->once())
 			->method('stringResemblesDN')
 			->with($this->equalTo($uid))
-			->will($this->returnValue(false));
+			->willReturn(false);
 
 		/** @noinspection PhpUnhandledExceptionInspection */
 		$this->manager->get($uid);
@@ -213,7 +214,7 @@ class ManagerTest extends \Test\TestCase {
 		$this->access->expects($this->exactly(1))
 			->method('username2dn')
 			->with($this->equalTo($uid))
-			->will($this->returnValue(false));
+			->willReturn(false);
 
 		/** @noinspection PhpUnhandledExceptionInspection */
 		$user = $this->manager->get($uid);

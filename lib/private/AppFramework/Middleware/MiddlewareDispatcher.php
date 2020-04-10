@@ -1,11 +1,14 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Stefan Weil <sw@weilnetz.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Tanghus <thomas@tanghus.net>
@@ -22,10 +25,9 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
-
 
 namespace OC\AppFramework\Middleware;
 
@@ -53,7 +55,7 @@ class MiddlewareDispatcher {
 	/**
 	 * Constructor
 	 */
-	public function __construct(){
+	public function __construct() {
 		$this->middlewares = [];
 		$this->middlewareCounter = 0;
 	}
@@ -63,7 +65,7 @@ class MiddlewareDispatcher {
 	 * Adds a new middleware
 	 * @param Middleware $middleWare the middleware which will be added
 	 */
-	public function registerMiddleware(Middleware $middleWare){
+	public function registerMiddleware(Middleware $middleWare) {
 		$this->middlewares[] = $middleWare;
 	}
 
@@ -85,7 +87,7 @@ class MiddlewareDispatcher {
 	 * @param string $methodName the name of the method that will be called on
 	 *                           the controller
 	 */
-	public function beforeController(Controller $controller, string $methodName){
+	public function beforeController(Controller $controller, string $methodName) {
 		// we need to count so that we know which middlewares we have to ask in
 		// case there is an exception
 		$middlewareCount = \count($this->middlewares);

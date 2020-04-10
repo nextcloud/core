@@ -2,7 +2,7 @@
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -114,7 +114,7 @@ class Entry implements IEntry {
 	 * sort the actions by priority and name
 	 */
 	private function sortActions() {
-		usort($this->actions, function(IAction $action1, IAction $action2) {
+		usort($this->actions, function (IAction $action1, IAction $action2) {
 			$prio1 = $action1->getPriority();
 			$prio2 = $action2->getPriority();
 
@@ -151,7 +151,7 @@ class Entry implements IEntry {
 	 */
 	public function jsonSerialize() {
 		$topAction = !empty($this->actions) ? $this->actions[0]->jsonSerialize() : null;
-		$otherActions = array_map(function(IAction $action) {
+		$otherActions = array_map(function (IAction $action) {
 			return $action->jsonSerialize();
 		}, array_slice($this->actions, 1));
 

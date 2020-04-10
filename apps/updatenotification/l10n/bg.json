@@ -27,6 +27,7 @@
     "The selected update channel does not support updates of the server." : "Избрания канал за актуализации не поддържа сървърни актуализации.",
     "A new version is available: <strong>{newVersionString}</strong>" : "Налична е нова версия: <strong>{newVersionString}</strong>",
     "Checking apps for compatible updates" : "Проверка на приложенията за съвместими актуализации",
+    "Please make sure your config.php does not set <samp>appstoreenabled</samp> to false." : "Моля, уверете се, че в config.php не е зададено <samp>appstoreenabled</samp> на false.",
     "Could not connect to the appstore or the appstore returned no updates at all. Search manually for updates or make sure your server has access to the internet and can connect to the appstore." : "Свързването с магазина за приложения не е възможно или няма актуализации. Потърсете ръчно за актуализации или се уверете, че сървъра има връзка с Интернет и може да се свързва с магазина за приложения.",
     "<strong>All</strong> apps have an update for this version available" : "<strong>Всички</strong> приложения имат актуализация за наличната версия",
     "View changelog" : "Преглед на списъка с промени",
@@ -35,11 +36,6 @@
     "Beta" : "Бета",
     "A pre-release version only for testing new features, not for production environments." : "Версия само за тестване на нови функционалности, която не е подходяща за ползване в производствена среда.",
     "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> приложение няма актуализация за тази версия","<strong>%n</strong> приложения нямат актуализация за тази версия"],
-    "You can always update to a newer version / experimental channel. But you can never downgrade to a more stable channel." : "Винаги може да актуализирате до по-нова версия / експериментален канал. Но не можете да се върнете до по-стабилен канал.",
-    "<strong>production</strong> will always provide the latest patch level, but not update to the next major release immediately. That update usually happens with the second minor release (x.0.2)." : "<strong>производствена</strong> осигурява последните пачове, но не се актуализира, веднага, до последната главна версия. Актуализацията става на втората малка версия (х.0.2).",
-    "<strong>stable</strong> is the most recent stable version. It is suited for regular use and will always update to the latest major version." : "<strong>стабилна</strong> е последната стабилна версия. Подходяща е за ежедневно ползване и се актуализации до последната главна версия.",
-    "<strong>beta</strong> is a pre-release version only for testing new features, not for production environments." : "<strong>бета</strong> е за тестване на нови функционалности. Не е подходяща за ползване в производствена среда.",
-    "Could not start updater, please try the manual update" : "Актуализиращата програма не беше стартирана. Моля, опитайте ръчно обновление",
     "Production" : "Производствена ",
     "Will always provide the latest patch level, but not update to the next major release immediately. That update usually happens with the second minor release (x.0.2) and only if the instance is already on the latest minor version." : "Осигурява последните пачове, но не се актуализиране, веднага, до следваща главна версия. Актуализирането става на втората малка версия (x0.2), само при условие, че е инсталирана последната малка версия."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

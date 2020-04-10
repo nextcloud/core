@@ -47,18 +47,6 @@
     "Share provider which allows you to share files by mail" : "Fournisseur de partage qui vous permet de partager des fichiers par courrier électronique.",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Autoriser les utilisateurs de partager un lien personnalisé vers un fichier ou un dossier en renseignant une adresse e-mail.",
     "Send password by mail" : "Envoyer le mot de passe par e-mail",
-    "Enforce password protection" : "Imposer la protection par mot de passe",
-    "Sharing %s failed, this item is already shared with %s" : "Le partage de %s a échoué, cet élément est déjà partagé avec %s",
-    "%s shared »%s« with you" : "%s a partagé «%s» avec vous",
-    "%s shared »%s« with you." : "%s a partagé «%s» avec vous.",
-    "%s via %s" : "%s via %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s a partagé «%s» avec vous.\nVous avez normalement déjà reçu un autre e-mail avec un lien pour y accéder.\n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s a partagé «%s» avec vous. Vous avez normalement déjà reçu un autre e-mail avec un lien pour y accéder.",
-    "Password to access »%s« shared to you by %s" : "Mot de passe pour accéder à  «%s» partagé avec vous par %s",
-    "It is protected with the following password: %s" : "Il est protégé avec le mot de passe suivant : %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Vous venez de partager «%s» avec %s. Le partage a déjà été envoyé au destinataire. En raison de la politique de sécurité définie par l'administrateur de %s, chaque partage a besoin d'être protégé par mot de passe et il n'est pas autorisé d'envoyer le mot de passe directement au destinataire. C'est pourquoi vous devez transmettre le mot de passe manuellement au destinataire.",
-    "Password to access »%s« shared with %s" : "Mot de passe pour accèder à  «%s» partagé avec %s",
-    "This is the password: %s" : "Voici le mot de passe : %s",
-    "Password to access »%1$s« shared with %2$s" : "Mot de passe pour accéder à  «%1$s» partagé avec %2$s"
+    "Enforce password protection" : "Imposer la protection par mot de passe"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

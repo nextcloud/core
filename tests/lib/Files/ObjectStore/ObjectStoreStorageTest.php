@@ -20,7 +20,6 @@
 
 namespace Test\Files\ObjectStore;
 
-use OC\Files\ObjectStore\ObjectStoreStorage;
 use OC\Files\ObjectStore\StorageObjectStore;
 use OC\Files\Storage\Temporary;
 use OCP\Files\ObjectStore\IObjectStore;
@@ -38,7 +37,7 @@ class ObjectStoreStorageTest extends Storage {
 	 */
 	private $objectStorage;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$baseStorage = new Temporary();
@@ -47,7 +46,7 @@ class ObjectStoreStorageTest extends Storage {
 		$this->instance = new ObjectStoreStorageOverwrite($config);
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		if (is_null($this->instance)) {
 			return;
 		}
@@ -180,5 +179,30 @@ class ObjectStoreStorageTest extends Storage {
 			$this->assertStringStartsWith('Object not found after writing', $e->getMessage());
 		}
 		$this->assertFalse($this->instance->file_exists('test.txt'));
+	}
+
+	public function testDeleteObjectFailureKeepCache() {
+		$objectStore = $this->instance->getObjectStore();
+		$this->instance->setObjectStore(new FailDeleteObjectStore($objectStore));
+		$cache = $this->instance->getCache();
+
+		$this->instance->file_put_contents('test.txt', 'foo');
+
+		$this->assertTrue($cache->inCache('test.txt'));
+
+		$this->assertFalse($this->instance->unlink('test.txt'));
+
+		$this->assertTrue($cache->inCache('test.txt'));
+
+		$this->instance->mkdir('foo');
+		$this->instance->file_put_contents('foo/test.txt', 'foo');
+
+		$this->assertTrue($cache->inCache('foo'));
+		$this->assertTrue($cache->inCache('foo/test.txt'));
+
+		$this->instance->rmdir('foo');
+
+		$this->assertTrue($cache->inCache('foo'));
+		$this->assertTrue($cache->inCache('foo/test.txt'));
 	}
 }

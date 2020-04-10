@@ -1,6 +1,10 @@
-/* Copyright (c) 2011, Jan-Christoph Borchardt, http://jancborchardt.net
- This file is licensed under the Affero General Public License version 3 or later.
- See the COPYING-README file. */
+/**
+ * Copyright (c) 2011, Jan-Christoph Borchardt, http://jancborchardt.net
+ * @copyright Copyright (c) 2019, Fabian Dreßler <nudelsalat@clouz.de>
+ *
+ * This file is licensed under the Affero General Public License version 3 or later.
+ * See the COPYING-README file.
+ */
 
 /* SETTINGS */
 #files-setting-showhidden {
@@ -55,34 +59,42 @@
 	position: relative;
 	width: 100%;
 	min-width: 250px;
-	display: flex;
+	display: block;
 	flex-direction: column;
 	// hide table if emptycontent is not hidden
 	#emptycontent:not(.hidden) ~ & {
 		display: none;
 	}
-}
+	// floating header
+	thead {
+		position: -webkit-sticky;
+		position: sticky;
+		@include position('sticky');
+		// header + breadcrumbs
+		top: $header-height;
+		// under breadcrumbs, over file list
+		z-index: 60;
+		display: block;
+		background-color: var(--color-main-background-translucent);
+	}
 
-@media only screen and (min-width: $breakpoint-mobile + 1) {
-	#filestable {
-		// floating header
-		thead {
-			position: -webkit-sticky;
-			position: sticky;
-			// header + breadcrumbs
-			top: $header-height;
-			padding-top: 40px;
-			// under breadcrumbs, over file list
-			z-index: 55;
-			display: block;
-			background-color: var(--color-main-background-translucent);
-		}
+	/**
+	 * This is a dirty hack as the sticky header requires us to use a different display type on the table element
+	 */
+	tbody {
+		display: table;
+		width: 100%;
 	}
 }
 
+#filestable.hidden {
+	display: none;
+}
+
 /* fit app list view heights */
-.app-files #app-content>.viewcontainer {
+.app-files #app-content > .viewcontainer {
 	min-height: 0%;
+	width: 100%;
 }
 
 .app-files #app-content {
@@ -94,7 +106,7 @@
 
 .file-drag, .file-drag #filestable tbody tr, .file-drag #filestable tbody tr:hover {
 	transition: background-color 0.3s ease!important;
-	background-color: rgb(179, 230, 255) !important;
+	background-color: var(--color-primary-light) !important;
 }
 
 .app-files #app-content.dir-drop {
@@ -106,7 +118,7 @@
 }
 
 .app-files #app-content.dir-drop #filestable tbody tr.dropping-to-dir{
-	background-color: rgb(179, 230, 255) !important;
+	background-color: var(--color-primary-light) !important;
 }
 
 /* icons for sidebar */
@@ -121,6 +133,7 @@
 }
 .nav-icon-sharingin,
 .nav-icon-sharingout,
+.nav-icon-pendingshares,
 .nav-icon-shareoverview {
 	@include icon-color('share', 'files', $color-black);
 }
@@ -280,14 +293,8 @@ table th.column-last, table td.column-last {
 	max-width: 130px;
 }
 
-/* Multiselect bar */
-table.multiselect thead {
-	@include position('sticky');
+#app-content-files thead {
 	top: 94px;
-	z-index: 55;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	left: $navigation-width;
 }
 
 table.multiselect thead th {
@@ -313,7 +320,8 @@ table td.fileaction {
 	width: 32px;
 	text-align: center;
 }
-table td.filename a.name {
+table td.filename a.name,
+table td.filename p.name {
 	display: flex;
 	position:relative; /* Firefox needs to explicitly have this default set … */
 	-moz-box-sizing: border-box;
@@ -348,6 +356,9 @@ table td.filename .thumbnail {
 	cursor: pointer;
 	position: absolute;
 	z-index: 4;
+}
+table td.filename p.name .thumbnail {
+	cursor: default;
 }
 
 // Show slight border around previews for images, txt, etc.
@@ -384,13 +395,12 @@ table {
 			width: 0;
 			flex-grow: 1;
 			display: flex;
-			padding: 0;
 			overflow: hidden;
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			height: 100%;
 			z-index: 10;
-			padding-right: 20px;
+			padding: 0 20px 0 0;
 		}
 	}
 
@@ -471,7 +481,8 @@ table td.selection {
 	-webkit-transition:background-image 500ms; -moz-transition:background-image 500ms; -o-transition:background-image 500ms; transition:background-image 500ms;
 }
 
-#fileList tr td.filename a.name label {
+#fileList tr td.filename a.name label,
+#fileList tr td.filename p.name label {
 	position: absolute;
 	width: 80%;
 	height: 50px;
@@ -651,6 +662,9 @@ a.action > img {
 	/* add whitespace to bottom of files list to correctly show dropdowns */
 	height: 250px;
 }
+#filestable .filesummary {
+	width: 100%;
+}
 /* Less whitespace needed on link share page
  * as there is a footer and action menus have fewer entries.
  */
@@ -669,7 +683,10 @@ table tr.summary td {
 	padding-top: 20px;
 }
 .summary .info {
-	margin-left: 35px; /* td has padding of 15, col width is 50 */
+	margin-left: 2px;
+}
+.hiddeninfo {
+	white-space: pre-line;
 }
 
 table.dragshadow {
@@ -771,6 +788,11 @@ table.dragshadow td.size {
 	}
 }
 
+.notCreatable {
+	padding-left: 12px;
+	padding-top: 12px;
+	color: var(--color-text-lighter);
+}
 
 #quota {
 	margin: 0 !important;
@@ -1080,9 +1102,15 @@ table.dragshadow td.size {
 		opacity: 1;
 	}
 }
-/* Make sure the hidden input is not rendered at all to avoid scrolling to top */
+
+/**
+ * Make sure the hidden input is always
+ * on the visible scrolled area of the
+ * page to avoid scrolling to top when focusing
+ */
 #showgridview {
-	display: none;
+	position: fixed;
+	top: 0;
 }
 
 /* Adjustments for link share page */

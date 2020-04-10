@@ -19,11 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Tests\Core\Controller;
 
 use OC\HintException;
-use OC\Settings\Controller\ChangePasswordController;
 use OC\User\Session;
+use OCA\Settings\Controller\ChangePasswordController;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
@@ -48,7 +49,7 @@ class ChangePasswordControllerTest extends \Test\TestCase {
 	/** @var ChangePasswordController */
 	private $controller;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userManager = $this->createMock(\OC\User\Manager::class);
@@ -56,7 +57,7 @@ class ChangePasswordControllerTest extends \Test\TestCase {
 		$this->groupManager = $this->createMock(\OC\Group\Manager::class);
 		$this->appManager = $this->createMock(IAppManager::class);
 		$this->l = $this->createMock(IL10N::class);
-		$this->l->method('t')->will($this->returnArgument(0));
+		$this->l->method('t')->willReturnArgument(0);
 
 		/** @var IRequest|\PHPUnit_Framework_MockObject_MockObject $request */
 		$request = $this->createMock(IRequest::class);

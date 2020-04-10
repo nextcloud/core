@@ -2,9 +2,11 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -19,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -39,9 +41,9 @@ use OC\DB\QueryBuilder\FunctionBuilder\OCIFunctionBuilder;
 use OC\DB\QueryBuilder\FunctionBuilder\PgSqlFunctionBuilder;
 use OC\DB\QueryBuilder\FunctionBuilder\SqliteFunctionBuilder;
 use OC\SystemConfig;
+use OCP\DB\QueryBuilder\IParameter;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\DB\QueryBuilder\IQueryFunction;
-use OCP\DB\QueryBuilder\IParameter;
 use OCP\IDBConnection;
 use OCP\ILogger;
 
@@ -245,7 +247,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param mixed $value The parameter value.
 	 * @param string|null|int $type One of the IQueryBuilder::PARAM_* constants.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function setParameter($key, $value, $type = null) {
 		$this->queryBuilder->setParameter($key, $value, $type);
@@ -270,9 +272,9 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param array $params The query parameters to set.
 	 * @param array $types The query parameters types to set.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
-	public function setParameters(array $params, array $types = array()) {
+	public function setParameters(array $params, array $types = []) {
 		$this->queryBuilder->setParameters($params, $types);
 
 		return $this;
@@ -323,7 +325,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param integer $firstResult The first result to return.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function setFirstResult($firstResult) {
 		$this->queryBuilder->setFirstResult($firstResult);
@@ -350,7 +352,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param integer $maxResults The maximum number of results to retrieve.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function setMaxResults($maxResults) {
 		$this->queryBuilder->setMaxResults($maxResults);
@@ -381,7 +383,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param mixed ...$selects The selection expressions.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * '@return $this This QueryBuilder instance.
 	 */
 	public function select(...$selects) {
 		if (count($selects) === 1 && is_array($selects[0])) {
@@ -408,7 +410,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param mixed $select The selection expressions.
 	 * @param string $alias The column alias used in the constructed query.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function selectAlias($select, $alias) {
 
@@ -430,7 +432,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param mixed $select The selection expressions.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function selectDistinct($select) {
 
@@ -454,7 +456,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param mixed ...$selects The selection expression.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function addSelect(...$selects) {
 		if (count($selects) === 1 && is_array($selects[0])) {
@@ -482,7 +484,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param string $delete The table whose rows are subject to the deletion.
 	 * @param string $alias The table alias used in the constructed query.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function delete($delete = null, $alias = null) {
 		$this->queryBuilder->delete(
@@ -507,7 +509,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param string $update The table whose rows are subject to the update.
 	 * @param string $alias The table alias used in the constructed query.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function update($update = null, $alias = null) {
 		$this->queryBuilder->update(
@@ -535,7 +537,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param string $insert The table into which the rows should be inserted.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function insert($insert = null) {
 		$this->queryBuilder->insert(
@@ -560,7 +562,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param string $from The table.
 	 * @param string|null $alias The alias of the table.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function from($from, $alias = null) {
 		$this->queryBuilder->from(
@@ -586,7 +588,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param string $alias The alias of the join table.
 	 * @param string $condition The condition for the join.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function join($fromAlias, $join, $alias, $condition = null) {
 		$this->queryBuilder->join(
@@ -614,7 +616,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param string $alias The alias of the join table.
 	 * @param string $condition The condition for the join.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function innerJoin($fromAlias, $join, $alias, $condition = null) {
 		$this->queryBuilder->innerJoin(
@@ -642,7 +644,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param string $alias The alias of the join table.
 	 * @param string $condition The condition for the join.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function leftJoin($fromAlias, $join, $alias, $condition = null) {
 		$this->queryBuilder->leftJoin(
@@ -670,7 +672,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param string $alias The alias of the join table.
 	 * @param string $condition The condition for the join.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function rightJoin($fromAlias, $join, $alias, $condition = null) {
 		$this->queryBuilder->rightJoin(
@@ -696,7 +698,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param string $key The column to set.
 	 * @param string $value The value, expression, placeholder, etc.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function set($key, $value) {
 		$this->queryBuilder->set(
@@ -731,7 +733,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param mixed ...$predicates The restriction predicates.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function where(...$predicates) {
 		call_user_func_array(
@@ -756,7 +758,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param mixed ...$where The query restrictions.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 *
 	 * @see where()
 	 */
@@ -783,7 +785,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param mixed ...$where The WHERE statement.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 *
 	 * @see where()
 	 */
@@ -809,7 +811,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param mixed ...$groupBys The grouping expression.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function groupBy(...$groupBys) {
 		if (count($groupBys) === 1 && is_array($groupBys[0])) {
@@ -837,7 +839,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param mixed ...$groupBy The grouping expression.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function addGroupBy(...$groupBys) {
 		if (count($groupBys) === 1 && is_array($groupBys[0])) {
@@ -869,7 +871,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param string $column The column into which the value should be inserted.
 	 * @param string $value The value that should be inserted into the column.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function setValue($column, $value) {
 		$this->queryBuilder->setValue(
@@ -897,7 +899,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param array $values The values to specify for the insert query indexed by column names.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function values(array $values) {
 		$quotedValues = [];
@@ -916,7 +918,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param mixed ...$having The restriction over the groups.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function having(...$having) {
 		call_user_func_array(
@@ -933,7 +935,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param mixed ...$having The restriction to append.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function andHaving(...$having) {
 		call_user_func_array(
@@ -950,7 +952,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param mixed ...$having The restriction to add.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function orHaving(...$having) {
 		call_user_func_array(
@@ -968,7 +970,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param string $sort The ordering expression.
 	 * @param string $order The ordering direction.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function orderBy($sort, $order = null) {
 		$this->queryBuilder->orderBy(
@@ -985,7 +987,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * @param string $sort The ordering expression.
 	 * @param string $order The ordering direction.
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function addOrderBy($sort, $order = null) {
 		$this->queryBuilder->addOrderBy(
@@ -1021,7 +1023,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param array|null $queryPartNames
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function resetQueryParts($queryPartNames = null) {
 		$this->queryBuilder->resetQueryParts($queryPartNames);
@@ -1034,7 +1036,7 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param string $queryPartName
 	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder This QueryBuilder instance.
+	 * @return $this This QueryBuilder instance.
 	 */
 	public function resetQueryPart($queryPartName) {
 		$this->queryBuilder->resetQueryPart($queryPartName);

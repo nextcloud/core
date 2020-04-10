@@ -1,9 +1,13 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,25 +21,24 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\UpdateNotification\Tests\Notification;
 
-
 use OC\Installer;
+use OC\Updater\VersionCheck;
 use OCA\UpdateNotification\Notification\BackgroundJob;
 use OCP\App\IAppManager;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
+use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\Notification\IManager;
-use Test\TestCase;
-use OC\Updater\VersionCheck;
 use OCP\Notification\INotification;
-use OCP\IGroup;
+use Test\TestCase;
 
 class BackgroundJobTest extends TestCase {
 
@@ -52,7 +55,7 @@ class BackgroundJobTest extends TestCase {
 	/** @var Installer|\PHPUnit_Framework_MockObject_MockObject */
 	protected $installer;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);

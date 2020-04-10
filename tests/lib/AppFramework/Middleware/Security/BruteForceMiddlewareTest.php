@@ -26,7 +26,6 @@ use OC\AppFramework\Utility\ControllerMethodReflector;
 use OC\Security\Bruteforce\Throttler;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Response;
-use OCP\Http\Client\IResponse;
 use OCP\IRequest;
 use Test\TestCase;
 
@@ -40,7 +39,7 @@ class BruteForceMiddlewareTest extends TestCase {
 	/** @var BruteForceMiddleware */
 	private $bruteForceMiddleware;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->reflector = $this->createMock(ControllerMethodReflector::class);

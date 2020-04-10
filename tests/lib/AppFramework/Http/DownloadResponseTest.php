@@ -21,9 +21,7 @@
  *
  */
 
-
 namespace Test\AppFramework\Http;
-
 
 use OCP\AppFramework\Http\DownloadResponse;
 
@@ -39,7 +37,7 @@ class DownloadResponseTest extends \Test\TestCase {
 	 */
 	protected $response;
 
-	protected function setUp(){
+	protected function setUp(): void {
 		parent::setUp();
 		$this->response = new ChildDownloadResponse('file', 'content');
 	}

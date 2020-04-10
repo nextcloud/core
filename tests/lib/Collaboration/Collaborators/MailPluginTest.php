@@ -23,7 +23,6 @@
 
 namespace Test\Collaboration\Collaborators;
 
-
 use OC\Collaboration\Collaborators\MailPlugin;
 use OC\Collaboration\Collaborators\SearchResult;
 use OC\Federation\CloudIdManager;
@@ -59,7 +58,7 @@ class MailPluginTest extends TestCase {
 	/** @var  IUserSession|\PHPUnit_Framework_MockObject_MockObject */
 	protected $userSession;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);
@@ -87,8 +86,7 @@ class MailPluginTest extends TestCase {
 		$this->config->expects($this->any())
 			->method('getAppValue')
 			->willReturnCallback(
-				function($appName, $key, $default)
-				use ($shareeEnumeration)
+				function ($appName, $key, $default) use ($shareeEnumeration)
 				{
 					if ($appName === 'core' && $key === 'shareapi_allow_share_dialog_user_enumeration') {
 						return $shareeEnumeration ? 'yes' : 'no';
@@ -535,7 +533,7 @@ class MailPluginTest extends TestCase {
 		$this->config->expects($this->any())
 			->method('getAppValue')
 			->willReturnCallback(
-				function($appName, $key, $default) {
+				function ($appName, $key, $default) {
 					if ($appName === 'core' && $key === 'shareapi_allow_share_dialog_user_enumeration') {
 						return 'yes';
 					} else if ($appName === 'core' && $key === 'shareapi_only_share_with_group_members') {
@@ -565,13 +563,13 @@ class MailPluginTest extends TestCase {
 
 		$this->groupManager->expects($this->any())
 			->method('getUserGroupIds')
-			->willReturnCallback(function(\OCP\IUser $user) use ($userToGroupMapping) {
+			->willReturnCallback(function (\OCP\IUser $user) use ($userToGroupMapping) {
 				return $userToGroupMapping[$user->getUID()];
 			});
 
 		$this->groupManager->expects($this->any())
 			->method('isInGroup')
-			->willReturnCallback(function($userId, $group) use ($userToGroupMapping) {
+			->willReturnCallback(function ($userId, $group) use ($userToGroupMapping) {
 				return in_array($group, $userToGroupMapping[$userId]);
 			});
 
@@ -607,7 +605,7 @@ class MailPluginTest extends TestCase {
 			],
 			// The user `User` cannot share with the current user
 			[
-			'test',
+				'test',
 				[
 					[
 						'FN' => 'User',
@@ -627,7 +625,7 @@ class MailPluginTest extends TestCase {
 			],
 			// The user `User` cannot share with the current user, but there is an exact match on the e-mail address -> share by e-mail
 			[
-			'test@example.com',
+				'test@example.com',
 				[
 					[
 						'FN' => 'User',

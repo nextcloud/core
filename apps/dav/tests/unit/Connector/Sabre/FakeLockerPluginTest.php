@@ -2,6 +2,8 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -20,9 +22,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\DAV\Tests\unit\Connector\Sabre;
 
 use OCA\DAV\Connector\Sabre\FakeLockerPlugin;
@@ -43,7 +46,7 @@ class FakeLockerPluginTest extends TestCase {
 	/** @var FakeLockerPlugin */
 	private $fakeLockerPlugin;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->fakeLockerPlugin = new FakeLockerPlugin();
 	}
@@ -167,11 +170,11 @@ class FakeLockerPluginTest extends TestCase {
 
 		$request->expects($this->exactly(2))
 			->method('getPath')
-			->will($this->returnValue('MyPath'));
+			->willReturn('MyPath');
 
 		$this->assertSame(false, $this->fakeLockerPlugin->fakeLockProvider($request, $response));
 
-		$expectedXml = '<?xml version="1.0" encoding="utf-8"?><d:prop xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns"><d:lockdiscovery><d:activelock><d:lockscope><d:exclusive/></d:lockscope><d:locktype><d:write/></d:locktype><d:lockroot><d:href>MyPath</d:href></d:lockroot><d:depth>infinity</d:depth><d:timeout>Second-1800</d:timeout><d:locktoken><d:href>opaquelocktoken:fe4f7f2437b151fbcb4e9f5c8118c6b1</d:href></d:locktoken><d:owner/></d:activelock></d:lockdiscovery></d:prop>';
+		$expectedXml = '<?xml version="1.0" encoding="utf-8"?><d:prop xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns"><d:lockdiscovery><d:activelock><d:lockscope><d:exclusive/></d:lockscope><d:locktype><d:write/></d:locktype><d:lockroot><d:href>MyPath</d:href></d:lockroot><d:depth>infinity</d:depth><d:timeout>Second-1800</d:timeout><d:locktoken><d:href>opaquelocktoken:fe4f7f2437b151fbcb4e9f5c8118c6b1</d:href></d:locktoken></d:activelock></d:lockdiscovery></d:prop>';
 
 		$this->assertXmlStringEqualsXmlString($expectedXml, $response->getBody());
 	}

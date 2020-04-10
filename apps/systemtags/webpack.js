@@ -5,6 +5,7 @@ module.exports = {
 	output: {
 		path: path.resolve(__dirname, './js'),
 		publicPath: '/js/',
-		filename: 'systemtags.js'
+		filename: 'systemtags.js',
+		jsonpFunction: 'webpackJsonpSystemtags'
 	}
 }

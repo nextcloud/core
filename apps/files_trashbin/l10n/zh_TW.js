@@ -20,9 +20,6 @@ OC.L10N.register(
     "Name" : "名稱",
     "Actions" : "動作",
     "Deleted" : "已刪除",
-    "Delete" : "刪除",
-    "Couldn't delete %s permanently" : "無法永久刪除 %s",
-    "Couldn't restore %s" : "無法還原 %s",
-    "Error" : "錯誤"
+    "Delete" : "刪除"
 },
 "nplurals=1; plural=0;");

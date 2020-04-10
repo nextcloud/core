@@ -2,8 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
@@ -19,9 +21,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\DAV\Tests\unit\Connector\Sabre;
 
 use OCA\DAV\Connector\Sabre\CopyEtagHeaderPlugin;
@@ -44,7 +47,7 @@ class CopyEtagHeaderPluginTest extends TestCase {
 	/** @var Server */
 	private $server;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->server = new \Sabre\DAV\Server();
 		$this->plugin = new CopyEtagHeaderPlugin();
@@ -52,7 +55,7 @@ class CopyEtagHeaderPluginTest extends TestCase {
 	}
 
 	public function testCopyEtag() {
-		$request = new \Sabre\Http\Request();
+		$request = new \Sabre\Http\Request('GET', 'dummy.file');
 		$response = new \Sabre\Http\Response();
 		$response->setHeader('Etag', 'abcd');
 
@@ -62,7 +65,7 @@ class CopyEtagHeaderPluginTest extends TestCase {
 	}
 
 	public function testNoopWhenEmpty() {
-		$request = new \Sabre\Http\Request();
+		$request = new \Sabre\Http\Request('GET', 'dummy.file');
 		$response = new \Sabre\Http\Response();
 
 		$this->plugin->afterMethod($request, $response);

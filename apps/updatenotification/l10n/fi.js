@@ -24,11 +24,13 @@ OC.L10N.register(
     "The selected update channel does not support updates of the server." : "Valittu päivityskanava ei tue palvelimen päivityksiä.",
     "A new version is available: <strong>{newVersionString}</strong>" : "Uusi versio on saatavilla: <strong>{newVersionString}</strong>",
     "Checked on {lastCheckedDate}" : "Tarkistettu {lastCheckedDate}",
+    "Please make sure your config.php does not set <samp>appstoreenabled</samp> to false." : "Varmista, ettei config.php-tiedosto aseta valintaa <samp>appstoreenabled</samp> arvoon false.",
+    "Could not connect to the appstore or the appstore returned no updates at all. Search manually for updates or make sure your server has access to the internet and can connect to the appstore." : "Yhteyttä sovelluskauppaan ei voitu muodostaa tai sovelluskauppa ei ilmoittanut päivityksistä. Etsi päivityksiä manuaalisesti tai varmista, että palvelimellasi on yhteys internetiin ja se voi yhdistää sovelluskauppaan.",
+    "<strong>All</strong> apps have an update for this version available" : "<strong>Kaikilla</strong> sovelluksilla on päivitys tähän versioon saatavilla",
     "View changelog" : "Näytä muutosloki",
     "Stable" : "Vakaa",
     "Beta" : "Beta",
-    "You can always update to a newer version / experimental channel. But you can never downgrade to a more stable channel." : "Voit aina päivittää uudempaan versioon tai kokeellisen jakelukanavan versioon. Et voi kuitenkaan palata aiempaan, vakaan julkaisukanavan versioon.",
-    "Could not start updater, please try the manual update" : "Ei voitu aloittaa päivitystä, kokeile päivittämistä manuaalisesti",
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> sovelluksella ei ole päivitystä tähän versioon saatavilla","<strong>%n</strong> sovelluksella ei ole päivitystä tähän versioon saatavilla"],
     "Production" : "Tuotanto"
 },
 "nplurals=2; plural=(n != 1);");

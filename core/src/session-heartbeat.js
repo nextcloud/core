@@ -20,14 +20,15 @@
  */
 
 import $ from 'jquery'
+import { emit } from '@nextcloud/event-bus'
 
-import {generateUrl} from './OC/routing'
+import { generateUrl } from './OC/routing'
 import OC from './OC'
-import {setToken as setRequestToken} from './OC/requesttoken'
+import { setToken as setRequestToken } from './OC/requesttoken'
 
 /**
  * session heartbeat (defaults to enabled)
- * @return {boolean}
+ * @returns {boolean}
  */
 const keepSessionAlive = () => {
 	return OC.config.session_keepalive === undefined
@@ -36,7 +37,7 @@ const keepSessionAlive = () => {
 
 /**
  * get interval in seconds
- * @return {Number}
+ * @returns {Number}
  */
 const getInterval = () => {
 	let interval = NaN
@@ -54,6 +55,34 @@ const getInterval = () => {
 	)
 }
 
+const getToken = async() => {
+	const url = generateUrl('/csrftoken')
+
+	// Not using Axios here as Axios is not stubbable with the sinon fake server
+	// see https://stackoverflow.com/questions/41516044/sinon-mocha-test-with-async-ajax-calls-didnt-return-promises
+	// see js/tests/specs/coreSpec.js for the tests
+	const resp = await $.get(url)
+
+	return resp.token
+}
+
+const poll = async() => {
+	try {
+		const token = await getToken()
+		setRequestToken(token)
+	} catch (e) {
+		console.error('session heartbeat failed', e)
+	}
+}
+
+const startPolling = () => {
+	const interval = setInterval(poll, getInterval() * 1000)
+
+	console.info('session heartbeat polling started')
+
+	return interval
+}
+
 /**
  * Calls the server periodically to ensure that session and CSRF
  * token doesn't expire
@@ -61,14 +90,37 @@ const getInterval = () => {
 export const initSessionHeartBeat = () => {
 	if (!keepSessionAlive()) {
 		console.info('session heartbeat disabled')
-		return;
+		return
 	}
+	let interval = startPolling()
 
-	setInterval(() => {
-		$.ajax(generateUrl('/csrftoken'))
-			.then(resp => setRequestToken(resp.token))
-			.fail(e => {
-				console.error('session heartbeat failed', e)
+	window.addEventListener('online', async() => {
+		console.info('browser is online again, resuming heartbeat')
+		interval = startPolling()
+		try {
+			await poll()
+			console.info('session token successfully updated after resuming network')
+
+			// Let apps know we're online and requests will have the new token
+			emit('networkOnline', {
+				success: true,
 			})
-	}, getInterval() * 1000)
+		} catch (e) {
+			console.error('could not update session token after resuming network', e)
+
+			// Let apps know we're online but requests might have an outdated token
+			emit('networkOnline', {
+				success: false,
+			})
+		}
+	})
+	window.addEventListener('offline', () => {
+		console.info('browser is offline, stopping heartbeat')
+
+		// Let apps know we're offline
+		emit('networkOffline', {})
+
+		clearInterval(interval)
+		console.info('session heartbeat polling stopped')
+	})
 }

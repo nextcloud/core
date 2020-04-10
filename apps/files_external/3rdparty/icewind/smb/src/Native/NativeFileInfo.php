@@ -7,11 +7,10 @@
 
 namespace Icewind\SMB\Native;
 
+use Icewind\SMB\ACL;
 use Icewind\SMB\IFileInfo;
 
 class NativeFileInfo implements IFileInfo {
-	const MODE_FILE = 0100000;
-
 	/**
 	 * @var string
 	 */
@@ -30,10 +29,7 @@ class NativeFileInfo implements IFileInfo {
 	/**
 	 * @var array|null
 	 */
-	protected $statCache = null;
-
-	/** @var callable|null */
-	protected $statCallback = null;
+	protected $attributeCache = null;
 
 	/**
 	 * @var int
@@ -44,20 +40,11 @@ class NativeFileInfo implements IFileInfo {
 	 * @param NativeShare $share
 	 * @param string $path
 	 * @param string $name
-	 * @param array|callable $stat
 	 */
-	public function __construct($share, $path, $name, $stat) {
+	public function __construct($share, $path, $name) {
 		$this->share = $share;
 		$this->path = $path;
 		$this->name = $name;
-
-		if (is_array($stat)) {
-			$this->statCache = $stat;
-		} elseif (is_callable($stat)) {
-			$this->statCallback = $stat;
-		} else {
-			throw new \InvalidArgumentException('$stat needs to be an array or callback');
-		}
 	}
 
 	/**
@@ -78,10 +65,20 @@ class NativeFileInfo implements IFileInfo {
 	 * @return array
 	 */
 	protected function stat() {
-		if (is_null($this->statCache)) {
-			$this->statCache = call_user_func($this->statCallback);
+		if (is_null($this->attributeCache)) {
+			$rawAttributes = explode(',', $this->share->getAttribute($this->path, 'system.dos_attr.*'));
+			$this->attributeCache = [];
+			foreach ($rawAttributes as $rawAttribute) {
+				[$name, $value] = explode(':', $rawAttribute);
+				$name = strtolower($name);
+				if ($name == 'mode') {
+					$this->attributeCache[$name] = (int)hexdec(substr($value, 2));
+				} else {
+					$this->attributeCache[$name] = (int)$value;
+				}
+			}
 		}
-		return $this->statCache;
+		return $this->attributeCache;
 	}
 
 	/**
@@ -97,27 +94,22 @@ class NativeFileInfo implements IFileInfo {
 	 */
 	public function getMTime() {
 		$stat = $this->stat();
-		return $stat['mtime'];
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isDirectory() {
-		$stat = $this->stat();
-		return !($stat['mode'] & self::MODE_FILE);
+		return $stat['change_time'];
 	}
 
 	/**
 	 * @return int
 	 */
 	protected function getMode() {
-		if (!$this->modeCache) {
-			$attribute = $this->share->getAttribute($this->path, 'system.dos_attr.mode');
-			// parse hex string
-			$this->modeCache = (int)hexdec(substr($attribute, 2));
-		}
-		return $this->modeCache;
+		return $this->stat()['mode'];
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isDirectory() {
+		$mode = $this->getMode();
+		return (bool)($mode & IFileInfo::MODE_DIRECTORY);
 	}
 
 	/**
@@ -150,5 +142,23 @@ class NativeFileInfo implements IFileInfo {
 	public function isArchived() {
 		$mode = $this->getMode();
 		return (bool)($mode & IFileInfo::MODE_ARCHIVE);
+	}
+
+	/**
+	 * @return ACL[]
+	 */
+	public function getAcls(): array {
+		$acls = [];
+		$attribute = $this->share->getAttribute($this->path, 'system.nt_sec_desc.acl.*+');
+
+		foreach (explode(',', $attribute) as $acl) {
+			[$user, $permissions] = explode(':', $acl, 2);
+			[$type, $flags, $mask] = explode('/', $permissions);
+			$mask = hexdec($mask);
+
+			$acls[$user] = new ACL($type, $flags, $mask);
+		}
+
+		return $acls;
 	}
 }

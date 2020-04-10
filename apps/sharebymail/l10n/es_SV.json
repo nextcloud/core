@@ -24,17 +24,6 @@
     "Share by mail" : "Compartir por correo",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Le permite a los usuarios compartir una liga personalizada a un archivo o carpeta colocando una dirección de correo eletrónico. ",
     "Send password by mail" : "La contraseña ha sido enviada por correo",
-    "Enforce password protection" : "Forzar protección con contraseña",
-    "Sharing %s failed, this item is already shared with %s" : "Se presentó una falla al compartir %s, este elemento ya ha sido compartido con %s",
-    "%s shared »%s« with you" : "%s ha compartido »%s« contigo",
-    "%s shared »%s« with you." : "%s ha compartido »%s« contigo",
-    "%s via %s" : "%s vía %s",
-    "%s shared »%s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%s compartió »%s« contigo.\nDeberías haber recibido ya un correo por separado con la liga para accederlo. \n",
-    "%s shared »%s« with you. You should have already received a separate mail with a link to access it." : "%s compartió »%s« contigo. Ya deberías haber recibido un correo aparte con la liga para accederlo. ",
-    "Password to access »%s« shared to you by %s" : "Contraseña para acceder  »%s« compartido contigo por %s ",
-    "It is protected with the following password: %s" : "Está protegido con la siguiente contraseña: %s",
-    "You just shared »%s« with %s. The share was already send to the recipient. Due to the security policies defined by the administrator of %s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Acabas de compartir »%s« con %s. El elemento compartido ya ha sido enviado al destinatario. Debido a las políticas de seguridad definidas por el administrador de %s cada elelento compartido debe ser protegido por una contraseña y no se permite enviar la contraseña directamente al destinatario. Por lo tanto necesitas reenviar la contaseña manualmente al destinatario. ",
-    "Password to access »%s« shared with %s" : "La contraseña para acceder »%s« ha sido compartida con %s",
-    "This is the password: %s" : "Esta es la contraseña: %s"
+    "Enforce password protection" : "Forzar protección con contraseña"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

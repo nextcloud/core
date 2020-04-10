@@ -2,7 +2,11 @@
 /**
  * @copyright Copyright (c) 2017 Joas Schilling <coding@schilljs.com>
  *
+ * @author Alecks Gates <alecks.g@gmail.com>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -56,8 +60,13 @@ class ConvertFilecacheBigInt extends Command {
 		return [
 			'activity' => ['activity_id', 'object_id'],
 			'activity_mq' => ['mail_id'],
+			'authtoken' => ['id'],
+			'bruteforce_attempts' => ['id'],
 			'filecache' => ['fileid', 'storage', 'parent', 'mimetype', 'mimepart', 'mtime', 'storage_mtime'],
+			'file_locks' => ['id'],
+			'jobs' => ['id'],
 			'mimetypes' => ['id'],
+			'mounts' => ['id', 'storage_id', 'root_id', 'mount_id'],
 			'storages' => ['numeric_id'],
 		];
 	}

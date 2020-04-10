@@ -2,7 +2,9 @@
 /**
  * @copyright Copyright (c) 2016, Roger Szabo (roger.szabo@web.de)
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roger Szabo <roger.szabo@web.de>
  * @author root <root@localhost.localdomain>
  * @author Vinicius Cubas Brand <vinicius@eita.org.br>
@@ -20,17 +22,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\User_LDAP;
 
-
-use OCP\LDAP\ILDAPProvider;
-use OCP\LDAP\IDeletionFlagSupport;
-use OCP\IServerContainer;
 use OCA\User_LDAP\User\DeletedUsersIndex;
+use OCP\IServerContainer;
+use OCP\LDAP\IDeletionFlagSupport;
+use OCP\LDAP\ILDAPProvider;
 
 /**
  * LDAP provider for pulic access to the LDAP backend.
@@ -63,7 +64,7 @@ class LDAPProvider implements ILDAPProvider, IDeletionFlagSupport {
 				$userBackendFound = true;
 				break;
 			}
-        }
+		}
 		foreach ($serverContainer->getGroupManager()->getBackends() as $backend){
 			$this->logger->debug('instance '.get_class($backend).' group backend.', ['app' => 'user_ldap']);
 			if ($backend instanceof IGroupLDAP) {
@@ -73,7 +74,7 @@ class LDAPProvider implements ILDAPProvider, IDeletionFlagSupport {
 			}
 		}
 
-        if (!$userBackendFound or !$groupBackendFound) {
+		if (!$userBackendFound or !$groupBackendFound) {
 			throw new \Exception('To use the LDAPProvider, user_ldap app must be enabled');
 		}
 	}
@@ -109,11 +110,11 @@ class LDAPProvider implements ILDAPProvider, IDeletionFlagSupport {
 		if(!$result){
 			throw new \Exception('Translation to LDAP DN unsuccessful');
 		}
-		return $result;	
+		return $result;
 	}
 
 	/**
-	 * Translate a LDAP DN to an internal user name. If there is no mapping between 
+	 * Translate a LDAP DN to an internal user name. If there is no mapping between
 	 * the DN and the user name, a new one will be created.
 	 * @param string $dn LDAP DN
 	 * @return string with the internal user name
@@ -146,7 +147,7 @@ class LDAPProvider implements ILDAPProvider, IDeletionFlagSupport {
 	}
 	
 	/**
-	 * Return a new LDAP connection resource for the specified user. 
+	 * Return a new LDAP connection resource for the specified user.
 	 * The connection must be closed manually.
 	 * @param string $uid user id
 	 * @return resource of the LDAP connection

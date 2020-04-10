@@ -69,7 +69,7 @@
 			apppath=appfolder.substring(1, appfolder.length);
 		}
 
-		$(listULElements).find('[data-dir="' + apppath + '"]').remove();
+		$(listULElements).find('[data-dir="' + _.escape(apppath) + '"]').remove();
 
 		if (listULElements.childElementCount === 0) {
 			var collapsibleButton = $(listULElements).parent().find('button.collapse');
@@ -98,7 +98,6 @@
 			apppath = appfolder.substring(1, appfolder.length);
 		}
 		var url = OC.generateUrl('/apps/files/?dir=' + apppath + '&view=files');
-		
 
 		var innerTagA = document.createElement('A');
 		innerTagA.setAttribute("href", url);

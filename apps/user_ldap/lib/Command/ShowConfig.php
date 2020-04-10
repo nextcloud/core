@@ -3,9 +3,11 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Laurens Post <Crote@users.noreply.github.com>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -19,20 +21,20 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\User_LDAP\Command;
 
+use OCA\User_LDAP\Configuration;
+use OCA\User_LDAP\Helper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use OCA\User_LDAP\Helper;
-use OCA\User_LDAP\Configuration;
 
 class ShowConfig extends Command {
 	/** @var \OCA\User_LDAP\Helper */
@@ -54,13 +56,13 @@ class ShowConfig extends Command {
 					'configID',
 					InputArgument::OPTIONAL,
 					'will show the configuration of the specified id'
-				     )
+					 )
 			->addOption(
 					'show-password',
 					null,
 					InputOption::VALUE_NONE,
 					'show ldap bind password'
-				     )
+					 )
 		;
 	}
 
@@ -93,8 +95,8 @@ class ShowConfig extends Command {
 			ksort($configuration);
 
 			$table = new Table($output);
-			$table->setHeaders(array('Configuration', $id));
-			$rows = array();
+			$table->setHeaders(['Configuration', $id]);
+			$rows = [];
 			foreach($configuration as $key => $value) {
 				if($key === 'ldapAgentPassword' && !$withPassword) {
 					$value = '***';
@@ -102,7 +104,7 @@ class ShowConfig extends Command {
 				if(is_array($value)) {
 					$value = implode(';', $value);
 				}
-				$rows[] = array($key, $value);
+				$rows[] = [$key, $value];
 			}
 			$table->setRows($rows);
 			$table->render($output);

@@ -2,22 +2,21 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Andreas Fischer <bantu@owncloud.com>
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author duritong <peter.meier+github@immerda.ch>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
- * @author Juan Pablo Villafáñez <jvillafanez@solidgear.es>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Michael Gapczynski <GapczynskiM@gmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
- * @author Phiber2000 <phiber2000@gmx.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Roger Szabo <roger.szabo@web.de>
+ * @author Roland Tapken <roland@bitarbeiter.net>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Pulzer <t.pulzer@kniel.de>
- * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @license AGPL-3.0
  *
@@ -31,15 +30,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Log;
+
 use OC\SystemConfig;
+use OCP\ILogger;
 use OCP\Log\IFileBased;
 use OCP\Log\IWriter;
-use OCP\ILogger;
 
 /**
  * logging utilities
@@ -108,7 +108,7 @@ class File extends LogDetails implements IWriter, IFileBased {
 	 */
 	public function getEntries(int $limit=50, int $offset=0):array {
 		$minLevel = $this->config->getValue("loglevel", ILogger::WARN);
-		$entries = array();
+		$entries = [];
 		$handle = @fopen($this->logFile, 'rb');
 		if ($handle) {
 			fseek($handle, 0, SEEK_END);

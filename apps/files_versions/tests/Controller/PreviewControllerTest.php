@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -17,13 +18,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\Files_Versions\Tests\Controller;
 
-use OC\User\User;
 use OCA\Files_Versions\Controller\PreviewController;
 use OCA\Files_Versions\Versions\IVersionManager;
 use OCP\AppFramework\Http;
@@ -64,7 +64,7 @@ class PreviewControllerTest extends TestCase {
 	/** @var IVersionManager|\PHPUnit_Framework_MockObject_MockObject */
 	private $versionManager;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->rootFolder = $this->createMock(IRootFolder::class);

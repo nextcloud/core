@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace Test\Core\Command\Group;
 
 use OC\Core\Command\Group\Delete;
@@ -43,7 +44,7 @@ class DeleteTest extends TestCase {
 	/** @var OutputInterface|\PHPUnit_Framework_MockObject_MockObject */
 	private $output;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->groupManager = $this->createMock(IGroupManager::class);
@@ -56,7 +57,7 @@ class DeleteTest extends TestCase {
 	public function testDoesNotExists() {
 		$gid = 'myGroup';
 		$this->input->method('getArgument')
-			->willReturnCallback(function($arg) use ($gid) {
+			->willReturnCallback(function ($arg) use ($gid) {
 				if ($arg === 'groupid') {
 					return $gid;
 				}
@@ -78,7 +79,7 @@ class DeleteTest extends TestCase {
 	public function testDeleteAdmin() {
 		$gid = 'admin';
 		$this->input->method('getArgument')
-			->willReturnCallback(function($arg) use ($gid) {
+			->willReturnCallback(function ($arg) use ($gid) {
 				if ($arg === 'groupid') {
 					return $gid;
 				}
@@ -97,7 +98,7 @@ class DeleteTest extends TestCase {
 	public function testDeleteFailed() {
 		$gid = 'myGroup';
 		$this->input->method('getArgument')
-			->willReturnCallback(function($arg) use ($gid) {
+			->willReturnCallback(function ($arg) use ($gid) {
 				if ($arg === 'groupid') {
 					return $gid;
 				}
@@ -123,7 +124,7 @@ class DeleteTest extends TestCase {
 	public function testDelete() {
 		$gid = 'myGroup';
 		$this->input->method('getArgument')
-			->willReturnCallback(function($arg) use ($gid) {
+			->willReturnCallback(function ($arg) use ($gid) {
 				if ($arg === 'groupid') {
 					return $gid;
 				}

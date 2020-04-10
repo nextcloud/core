@@ -16,7 +16,7 @@ namespace Test\Hooks;
  * @package Test\Hooks
  */
 class DummyEmitter extends \OC\Hooks\BasicEmitter {
-	public function emitEvent($scope, $method, $arguments = array()) {
+	public function emitEvent($scope, $method, $arguments = []) {
 		$this->emit($scope, $method, $arguments);
 	}
 }
@@ -37,7 +37,7 @@ class BasicEmitterTest extends \Test\TestCase {
 	 */
 	protected $emitter;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->emitter = new DummyEmitter();
 	}
@@ -50,29 +50,29 @@ class BasicEmitterTest extends \Test\TestCase {
 		throw new EmittedException;
 	}
 
-	/**
-	 * @expectedException \Test\Hooks\EmittedException
-	 */
+	
 	public function testAnonymousFunction() {
+		$this->expectException(\Test\Hooks\EmittedException::class);
+
 		$this->emitter->listen('Test', 'test', function () {
 			throw new EmittedException;
 		});
 		$this->emitter->emitEvent('Test', 'test');
 	}
 
-	/**
-	 * @expectedException \Test\Hooks\EmittedException
-	 */
+	
 	public function testStaticCallback() {
-		$this->emitter->listen('Test', 'test', array('\Test\Hooks\BasicEmitterTest', 'staticCallBack'));
+		$this->expectException(\Test\Hooks\EmittedException::class);
+
+		$this->emitter->listen('Test', 'test', ['\Test\Hooks\BasicEmitterTest', 'staticCallBack']);
 		$this->emitter->emitEvent('Test', 'test');
 	}
 
-	/**
-	 * @expectedException \Test\Hooks\EmittedException
-	 */
+	
 	public function testNonStaticCallback() {
-		$this->emitter->listen('Test', 'test', array($this, 'nonStaticCallBack'));
+		$this->expectException(\Test\Hooks\EmittedException::class);
+
+		$this->emitter->listen('Test', 'test', [$this, 'nonStaticCallBack']);
 		$this->emitter->emitEvent('Test', 'test');
 	}
 
@@ -125,28 +125,28 @@ class BasicEmitterTest extends \Test\TestCase {
 		$this->assertEquals(2, $count, 'Listener called an invalid number of times (' . $count . ') expected 2');
 	}
 
-	/**
-	 * @expectedException \Test\Hooks\EmittedException
-	 */
+	
 	public function testArguments() {
+		$this->expectException(\Test\Hooks\EmittedException::class);
+
 		$this->emitter->listen('Test', 'test', function ($foo, $bar) {
 			if ($foo == 'foo' and $bar == 'bar') {
 				throw new EmittedException;
 			}
 		});
-		$this->emitter->emitEvent('Test', 'test', array('foo', 'bar'));
+		$this->emitter->emitEvent('Test', 'test', ['foo', 'bar']);
 	}
 
-	/**
-	 * @expectedException \Test\Hooks\EmittedException
-	 */
+	
 	public function testNamedArguments() {
+		$this->expectException(\Test\Hooks\EmittedException::class);
+
 		$this->emitter->listen('Test', 'test', function ($foo, $bar) {
 			if ($foo == 'foo' and $bar == 'bar') {
 				throw new EmittedException;
 			}
 		});
-		$this->emitter->emitEvent('Test', 'test', array('foo' => 'foo', 'bar' => 'bar'));
+		$this->emitter->emitEvent('Test', 'test', ['foo' => 'foo', 'bar' => 'bar']);
 	}
 
 	public function testRemoveAllSpecified() {
@@ -216,10 +216,10 @@ class BasicEmitterTest extends \Test\TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	/**
-	 * @expectedException \Test\Hooks\EmittedException
-	 */
+	
 	public function testRemoveKeepOtherCallback() {
+		$this->expectException(\Test\Hooks\EmittedException::class);
+
 		$listener1 = function () {
 			throw new EmittedException;
 		};
@@ -234,10 +234,10 @@ class BasicEmitterTest extends \Test\TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	/**
-	 * @expectedException \Test\Hooks\EmittedException
-	 */
+	
 	public function testRemoveKeepOtherMethod() {
+		$this->expectException(\Test\Hooks\EmittedException::class);
+
 		$listener = function () {
 			throw new EmittedException;
 		};
@@ -249,10 +249,10 @@ class BasicEmitterTest extends \Test\TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	/**
-	 * @expectedException \Test\Hooks\EmittedException
-	 */
+	
 	public function testRemoveKeepOtherScope() {
+		$this->expectException(\Test\Hooks\EmittedException::class);
+
 		$listener = function () {
 			throw new EmittedException;
 		};
@@ -264,10 +264,10 @@ class BasicEmitterTest extends \Test\TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	/**
-	 * @expectedException \Test\Hooks\EmittedException
-	 */
+	
 	public function testRemoveNonExistingName() {
+		$this->expectException(\Test\Hooks\EmittedException::class);
+
 		$listener = function () {
 			throw new EmittedException;
 		};

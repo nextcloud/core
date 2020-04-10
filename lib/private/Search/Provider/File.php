@@ -4,6 +4,7 @@
  *
  * @author Andrew Brown <andrew@casabrown.com>
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jakob Sack <mail@jakobsack.de>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -21,11 +22,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Search\Provider;
+
 use OC\Files\Filesystem;
 
 /**
@@ -40,7 +42,7 @@ class File extends \OCP\Search\Provider {
 	 */
 	public function search($query) {
 		$files = Filesystem::search($query);
-		$results = array();
+		$results = [];
 		// edit results
 		foreach ($files as $fileData) {
 			// skip versions

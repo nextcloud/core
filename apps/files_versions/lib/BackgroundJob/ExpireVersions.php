@@ -4,6 +4,7 @@
  *
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  *
  * @license AGPL-3.0
@@ -18,17 +19,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_Versions\BackgroundJob;
 
+use OCA\Files_Versions\Expiration;
+use OCA\Files_Versions\Storage;
 use OCP\IUser;
 use OCP\IUserManager;
-use OCA\Files_Versions\AppInfo\Application;
-use OCA\Files_Versions\Storage;
-use OCA\Files_Versions\Expiration;
 
 class ExpireVersions extends \OC\BackgroundJob\TimedJob {
 
@@ -58,7 +58,7 @@ class ExpireVersions extends \OC\BackgroundJob\TimedJob {
 			return;
 		}
 
-		$this->userManager->callForSeenUsers(function(IUser $user) {
+		$this->userManager->callForSeenUsers(function (IUser $user) {
 			$uid = $user->getUID();
 			if (!$this->setupFS($uid)) {
 				return;

@@ -8,6 +8,7 @@ OC.L10N.register(
     "Client Identifier" : "Identificador del veceru",
     "Secret" : "Secretu",
     "Add client" : "Amestar veceru",
-    "Add" : "Amestar"
+    "Add" : "Amestar",
+    "Delete" : "Desaniciar"
 },
 "nplurals=2; plural=(n != 1);");

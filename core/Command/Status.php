@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  *
@@ -18,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -38,12 +39,12 @@ class Status extends Base {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$values = array(
+		$values = [
 			'installed' => (bool) \OC::$server->getConfig()->getSystemValue('installed', false),
 			'version' => implode('.', \OCP\Util::getVersion()),
 			'versionstring' => \OC_Util::getVersionString(),
 			'edition' => '',
-		);
+		];
 
 		$this->writeArrayInOutputFormat($input, $output, $values);
 	}

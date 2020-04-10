@@ -22,7 +22,6 @@
     "Error occurred while updating comment with id {id}" : "Kļūda atjauninot komentāru ar id {id}",
     "Error occurred while posting comment" : "Notika kļūda pievienojot komentāru",
     "_%n unread comment_::_%n unread comments_" : ["%n nelasīti komentāri","%n nelasīti komentāri","%n nelasīti komentāri"],
-    "Comment" : "Komentārs",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s minēja jūs komentārā “%2$s”"
+    "Comment" : "Komentārs"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
 }

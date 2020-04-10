@@ -24,7 +24,6 @@
 
 namespace Tests\Contacts\ContactsMenu;
 
-use Exception;
 use OC\App\AppManager;
 use OC\Contacts\ContactsMenu\ActionProviderStore;
 use OC\Contacts\ContactsMenu\Providers\EMailProvider;
@@ -51,7 +50,7 @@ class ActionProviderStoreTest extends TestCase {
 	/** @var ActionProviderStore */
 	private $actionProviderStore;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->serverContainer = $this->createMock(IServerContainer::class);
@@ -77,13 +76,13 @@ class ActionProviderStoreTest extends TestCase {
 				'contactsmenu' => [
 					'OCA\Contacts\Provider1',
 				],
-		]);
+			]);
 		$this->serverContainer->expects($this->exactly(2))
 			->method('query')
-			->will($this->returnValueMap([
-					[EMailProvider::class, true, $provider1],
-					['OCA\Contacts\Provider1', true, $provider2]
-		]));
+			->willReturnMap([
+				[EMailProvider::class, true, $provider1],
+				['OCA\Contacts\Provider1', true, $provider2]
+			]);
 
 		$providers = $this->actionProviderStore->getProviders($user);
 
@@ -105,9 +104,9 @@ class ActionProviderStoreTest extends TestCase {
 			->willReturn([/* Empty info.xml */]);
 		$this->serverContainer->expects($this->once())
 			->method('query')
-			->will($this->returnValueMap([
-					[EMailProvider::class, true, $provider1],
-		]));
+			->willReturnMap([
+				[EMailProvider::class, true, $provider1],
+			]);
 
 		$providers = $this->actionProviderStore->getProviders($user);
 
@@ -115,10 +114,10 @@ class ActionProviderStoreTest extends TestCase {
 		$this->assertInstanceOf(EMailProvider::class, $providers[0]);
 	}
 
-	/**
-	 * @expectedException Exception
-	 */
+	
 	public function testGetProvidersWithQueryException() {
+		$this->expectException(\Exception::class);
+
 		$user = $this->createMock(IUser::class);
 		$this->appManager->expects($this->once())
 			->method('getEnabledAppsForUser')

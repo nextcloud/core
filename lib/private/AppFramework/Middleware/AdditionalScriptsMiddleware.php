@@ -1,8 +1,11 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2019, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -18,7 +21,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -29,6 +32,7 @@ use OCP\AppFramework\Http\StandaloneTemplateResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\PublicShareController;
+use OCP\EventDispatcher\GenericEvent;
 use OCP\IUserSession;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -53,10 +57,10 @@ class AdditionalScriptsMiddleware extends Middleware {
 		}
 
 		if ($response instanceof TemplateResponse) {
-			$this->dispatcher->dispatch(TemplateResponse::EVENT_LOAD_ADDITIONAL_SCRIPTS);
+			$this->dispatcher->dispatch(TemplateResponse::EVENT_LOAD_ADDITIONAL_SCRIPTS, new GenericEvent());
 
 			if (!($response instanceof StandaloneTemplateResponse) && $this->userSession->isLoggedIn()) {
-				$this->dispatcher->dispatch(TemplateResponse::EVENT_LOAD_ADDITIONAL_SCRIPTS_LOGGEDIN);
+				$this->dispatcher->dispatch(TemplateResponse::EVENT_LOAD_ADDITIONAL_SCRIPTS_LOGGEDIN, new GenericEvent());
 			}
 		}
 

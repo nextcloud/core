@@ -352,6 +352,8 @@
             <xs:enumeration value="social"/>
             <xs:enumeration value="tools"/>
             <xs:enumeration value="games"/>
+            <xs:enumeration value="search"/>
+            <xs:enumeration value="workflow"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -504,6 +506,8 @@
         <xs:sequence>
             <xs:element name="collections" type="sabre-collections" minOccurs="0" maxOccurs="1"/>
             <xs:element name="plugins" type="sabre-plugins" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="address-book-plugins" type="sabre-plugins" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="calendar-plugins" type="sabre-plugins" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 

@@ -6,10 +6,8 @@
  * See the COPYING-README file.
  */
 
-
 namespace Test\AppFramework\Http;
 
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 
 /**
@@ -22,7 +20,7 @@ class ContentSecurityPolicyTest extends \Test\TestCase {
 	/** @var ContentSecurityPolicy */
 	private $contentSecurityPolicy;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->contentSecurityPolicy = new ContentSecurityPolicy();
 	}

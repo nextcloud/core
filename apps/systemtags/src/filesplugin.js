@@ -9,12 +9,12 @@
  */
 
 (function() {
-	OCA.SystemTags = _.extend({}, OCA.SystemTags);
+	OCA.SystemTags = _.extend({}, OCA.SystemTags)
 	if (!OCA.SystemTags) {
 		/**
 		 * @namespace
 		 */
-		OCA.SystemTags = {};
+		OCA.SystemTags = {}
 	}
 
 	/**
@@ -23,42 +23,20 @@
 	OCA.SystemTags.FilesPlugin = {
 		ignoreLists: [
 			'trashbin',
-			'files.public'
+			'files.public',
 		],
 
 		attach: function(fileList) {
 			if (this.ignoreLists.indexOf(fileList.id) >= 0) {
-				return;
+				return
 			}
 
-			var systemTagsInfoView = new OCA.SystemTags.SystemTagsInfoView();
-			fileList.registerDetailView(systemTagsInfoView);
+			const systemTagsInfoView = new OCA.SystemTags.SystemTagsInfoView()
+			fileList.registerDetailView(systemTagsInfoView)
+			OCA.SystemTags.View = systemTagsInfoView
+		},
+	}
 
-			_.each(fileList.getRegisteredDetailViews(), function(detailView) {
-				if (detailView instanceof OCA.Files.MainFileInfoDetailView) {
-					var systemTagsInfoViewToggleView =
-						new OCA.SystemTags.SystemTagsInfoViewToggleView({
-							systemTagsInfoView: systemTagsInfoView
-						});
-					systemTagsInfoViewToggleView.render();
+})()
 
-					// The toggle view element is detached before the
-					// MainFileInfoDetailView is rendered to prevent its event
-					// handlers from being removed.
-					systemTagsInfoViewToggleView.listenTo(detailView, 'pre-render', function() {
-						systemTagsInfoViewToggleView.$el.detach();
-					});
-					systemTagsInfoViewToggleView.listenTo(detailView, 'post-render', function() {
-						detailView.$el.find('.file-details').append(systemTagsInfoViewToggleView.$el);
-					});
-
-					return;
-				}
-			});
-		}
-	};
-
-})();
-
-OC.Plugins.register('OCA.Files.FileList', OCA.SystemTags.FilesPlugin);
-
+OC.Plugins.register('OCA.Files.FileList', OCA.SystemTags.FilesPlugin)

@@ -22,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -43,7 +43,7 @@ class CommonTest extends \OC\Files\Storage\Common{
 		$this->storage=new \OC\Files\Storage\Local($params);
 	}
 
-	public function getId(){
+	public function getId() {
 		return 'test::'.$this->storage->getId();
 	}
 	public function mkdir($path) {

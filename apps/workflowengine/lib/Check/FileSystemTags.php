@@ -21,17 +21,18 @@
 
 namespace OCA\WorkflowEngine\Check;
 
-
+use OCA\WorkflowEngine\Entity\File;
 use OCP\Files\Cache\ICache;
 use OCP\Files\IHomeStorage;
-use OCP\Files\Storage\IStorage;
 use OCP\IL10N;
 use OCP\SystemTag\ISystemTagManager;
 use OCP\SystemTag\ISystemTagObjectMapper;
 use OCP\SystemTag\TagNotFoundException;
 use OCP\WorkflowEngine\ICheck;
+use OCP\WorkflowEngine\IFileCheck;
 
-class FileSystemTags implements ICheck {
+class FileSystemTags implements ICheck, IFileCheck {
+	use TFileCheck;
 
 	/** @var array */
 	protected $fileIds;
@@ -48,12 +49,6 @@ class FileSystemTags implements ICheck {
 	/** @var ISystemTagObjectMapper */
 	protected $systemTagObjectMapper;
 
-	/** @var IStorage */
-	protected $storage;
-
-	/** @var string */
-	protected $path;
-
 	/**
 	 * @param IL10N $l
 	 * @param ISystemTagManager $systemTagManager
@@ -63,15 +58,6 @@ class FileSystemTags implements ICheck {
 		$this->l = $l;
 		$this->systemTagManager = $systemTagManager;
 		$this->systemTagObjectMapper = $systemTagObjectMapper;
-	}
-
-	/**
-	 * @param IStorage $storage
-	 * @param string $path
-	 */
-	public function setFileInfo(IStorage $storage, $path) {
-		$this->storage = $storage;
-		$this->path = $path;
 	}
 
 	/**
@@ -165,5 +151,13 @@ class FileSystemTags implements ICheck {
 	protected function dirname($path) {
 		$dir = dirname($path);
 		return $dir === '.' ? '' : $dir;
+	}
+
+	public function supportedEntities(): array {
+		return [ File::class ];
+	}
+
+	public function isAvailableForScope(int $scope): bool {
+		return true;
 	}
 }

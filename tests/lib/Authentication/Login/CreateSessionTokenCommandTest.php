@@ -39,7 +39,7 @@ class CreateSessionTokenCommandTest extends ALoginCommandTest {
 	/** @var Session|MockObject */
 	private $userSession;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);
@@ -76,7 +76,7 @@ class CreateSessionTokenCommandTest extends ALoginCommandTest {
 			->method('updateTokens')
 			->with(
 				$this->username,
-				$this->username
+				$this->password
 			);
 
 		$result = $this->cmd->process($data);
@@ -109,7 +109,7 @@ class CreateSessionTokenCommandTest extends ALoginCommandTest {
 			->method('updateTokens')
 			->with(
 				$this->username,
-				$this->username
+				$this->password
 			);
 
 		$result = $this->cmd->process($data);

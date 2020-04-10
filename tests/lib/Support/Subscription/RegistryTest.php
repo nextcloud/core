@@ -23,8 +23,10 @@
 namespace Test\Support\Subscription;
 
 use OC\Support\Subscription\Registry;
+use OCP\IConfig;
 use OCP\Support\Subscription\ISubscription;
 use OCP\Support\Subscription\ISupportedApps;
+use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
 
 class RegistryTest extends TestCase {
@@ -32,10 +34,14 @@ class RegistryTest extends TestCase {
 	/** @var Registry */
 	private $registry;
 
-	protected function setUp() {
+	/** @var MockObject|IConfig */
+	private $config;
+
+	protected function setUp(): void {
 		parent::setUp();
 
-		$this->registry = new Registry();
+		$this->config = $this->createMock(IConfig::class);
+		$this->registry = new Registry($this->config);
 	}
 
 	/**
@@ -46,10 +52,10 @@ class RegistryTest extends TestCase {
 		$this->addToAssertionCount(1);
 	}
 
-	/**
-	 * @expectedException \OCP\Support\Subscription\Exception\AlreadyRegisteredException
-	 */
+	
 	public function testDoubleRegistration() {
+		$this->expectException(\OCP\Support\Subscription\Exception\AlreadyRegisteredException::class);
+
 		/* @var ISubscription $subscription1 */
 		$subscription1 = $this->createMock(ISubscription::class);
 		/* @var ISubscription $subscription2 */
@@ -70,6 +76,16 @@ class RegistryTest extends TestCase {
 			->method('hasValidSubscription')
 			->willReturn(true);
 		$this->registry->register($subscription);
+
+		$this->assertSame(true, $this->registry->delegateHasValidSubscription());
+	}
+
+	public function testDelegateHasValidSubscriptionConfig() {
+		/* @var ISubscription|\PHPUnit_Framework_MockObject_MockObject $subscription */
+		$this->config->expects($this->once())
+			->method('getSystemValueBool')
+			->with('has_valid_subscription')
+			->willReturn(true);
 
 		$this->assertSame(true, $this->registry->delegateHasValidSubscription());
 	}

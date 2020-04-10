@@ -2,6 +2,8 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -18,9 +20,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Files_External\Tests\Service;
 
 use OCA\Files_External\Config\IConfigHandler;
@@ -36,7 +39,7 @@ class BackendServiceTest extends \Test\TestCase {
 	/** @var \OCP\IConfig|\PHPUnit_Framework_MockObject_MockObject */
 	protected $config;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		$this->config = $this->createMock(IConfig::class);
 	}
 
@@ -49,8 +52,8 @@ class BackendServiceTest extends \Test\TestCase {
 		$backend = $this->getMockBuilder(Backend::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$backend->method('getIdentifier')->will($this->returnValue('identifier:'.$class));
-		$backend->method('getIdentifierAliases')->will($this->returnValue(['identifier:'.$class]));
+		$backend->method('getIdentifier')->willReturn('identifier:'.$class);
+		$backend->method('getIdentifierAliases')->willReturn(['identifier:'.$class]);
 		return $backend;
 	}
 
@@ -63,8 +66,8 @@ class BackendServiceTest extends \Test\TestCase {
 		$backend = $this->getMockBuilder(AuthMechanism::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$backend->method('getIdentifier')->will($this->returnValue('identifier:'.$class));
-		$backend->method('getIdentifierAliases')->will($this->returnValue(['identifier:'.$class]));
+		$backend->method('getIdentifier')->willReturn('identifier:'.$class);
+		$backend->method('getIdentifierAliases')->willReturn(['identifier:'.$class]);
 		return $backend;
 	}
 
@@ -165,10 +168,10 @@ class BackendServiceTest extends \Test\TestCase {
 	public function testUserMountingBackends() {
 		$this->config->expects($this->exactly(2))
 			->method('getAppValue')
-			->will($this->returnValueMap([
+			->willReturnMap([
 				['files_external', 'allow_user_mounting', 'yes', 'yes'],
 				['files_external', 'user_mounting_backends', '', 'identifier:\User\Mount\Allowed,identifier_alias']
-			]));
+			]);
 
 		$service = new BackendService($this->config);
 
@@ -199,15 +202,15 @@ class BackendServiceTest extends \Test\TestCase {
 		$backendAvailable = $this->getBackendMock('\Backend\Available');
 		$backendAvailable->expects($this->once())
 			->method('checkDependencies')
-			->will($this->returnValue([]));
+			->willReturn([]);
 		$backendNotAvailable = $this->getBackendMock('\Backend\NotAvailable');
 		$backendNotAvailable->expects($this->once())
 			->method('checkDependencies')
-			->will($this->returnValue([
+			->willReturn([
 				$this->getMockBuilder('\OCA\Files_External\Lib\MissingDependency')
 					->disableOriginalConstructor()
 					->getMock()
-			]));
+			]);
 
 		$service->registerBackend($backendAvailable);
 		$service->registerBackend($backendNotAvailable);
@@ -233,9 +236,10 @@ class BackendServiceTest extends \Test\TestCase {
 
 	/**
 	 * @dataProvider invalidConfigPlaceholderProvider
-	 * @expectedException \RuntimeException
 	 */
 	public function testRegisterConfigHandlerInvalid(array $placeholders) {
+		$this->expectException(\RuntimeException::class);
+
 		$service = new BackendService($this->config);
 		$mock = $this->createMock(IConfigHandler::class);
 		$cb = function () use ($mock) { return $mock; };
@@ -263,4 +267,3 @@ class BackendServiceTest extends \Test\TestCase {
 	}
 
 }
-

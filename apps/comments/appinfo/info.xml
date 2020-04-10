@@ -5,7 +5,7 @@
 	<name>Comments</name>
 	<summary>Files app plugin to add comments to files</summary>
 	<description>Files app plugin to add comments to files</description>
-	<version>1.7.0</version>
+	<version>1.9.0</version>
 	<licence>agpl</licence>
 	<author>Arthur Schiwon</author>
 	<author>Vincent Petry</author>
@@ -17,7 +17,7 @@
 	<category>social</category>
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 	<dependencies>
-		<nextcloud min-version="17" max-version="17"/>
+		<nextcloud min-version="19" max-version="19"/>
 	</dependencies>
 
 	<activity>

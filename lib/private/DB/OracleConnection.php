@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -20,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -46,7 +47,7 @@ class OracleConnection extends Connection {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function insert($tableName, array $data, array $types = array()) {
+	public function insert($tableName, array $data, array $types = []) {
 		if ($tableName[0] !== $this->getDatabasePlatform()->getIdentifierQuoteCharacter()) {
 			$tableName = $this->quoteIdentifier($tableName);
 		}
@@ -57,7 +58,7 @@ class OracleConnection extends Connection {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function update($tableName, array $data, array $identifier, array $types = array()) {
+	public function update($tableName, array $data, array $identifier, array $types = []) {
 		if ($tableName[0] !== $this->getDatabasePlatform()->getIdentifierQuoteCharacter()) {
 			$tableName = $this->quoteIdentifier($tableName);
 		}
@@ -69,7 +70,7 @@ class OracleConnection extends Connection {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function delete($tableExpression, array $identifier, array $types = array()) {
+	public function delete($tableExpression, array $identifier, array $types = []) {
 		if ($tableExpression[0] !== $this->getDatabasePlatform()->getIdentifierQuoteCharacter()) {
 			$tableExpression = $this->quoteIdentifier($tableExpression);
 		}
@@ -86,7 +87,7 @@ class OracleConnection extends Connection {
 		$table = $this->tablePrefix . trim($table);
 		$table = $this->quoteIdentifier($table);
 		$schema = $this->getSchemaManager();
-		if($schema->tablesExist(array($table))) {
+		if($schema->tablesExist([$table])) {
 			$schema->dropTable($table);
 		}
 	}
@@ -97,10 +98,10 @@ class OracleConnection extends Connection {
 	 * @param string $table table name without the prefix
 	 * @return bool
 	 */
-	public function tableExists($table){
+	public function tableExists($table) {
 		$table = $this->tablePrefix . trim($table);
 		$table = $this->quoteIdentifier($table);
 		$schema = $this->getSchemaManager();
-		return $schema->tablesExist(array($table));
+		return $schema->tablesExist([$table]);
 	}
 }

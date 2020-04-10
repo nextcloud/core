@@ -2,6 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  *
@@ -17,31 +21,45 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_Versions\AppInfo;
 
+use OCA\DAV\CalDAV\Proxy\ProxyMapper;
 use OCA\DAV\Connector\Sabre\Principal;
+use OCA\Files\Event\LoadAdditionalScriptsEvent;
+use OCA\Files\Event\LoadSidebar;
+use OCA\Files_Versions\Capabilities;
+use OCA\Files_Versions\Hooks;
+use OCA\Files_Versions\Listener\LoadAdditionalListener;
+use OCA\Files_Versions\Listener\LoadSidebarListener;
 use OCA\Files_Versions\Versions\IVersionManager;
 use OCA\Files_Versions\Versions\VersionManager;
 use OCP\AppFramework\App;
 use OCP\AppFramework\IAppContainer;
-use OCA\Files_Versions\Capabilities;
+use OCP\EventDispatcher\IEventDispatcher;
 
 class Application extends App {
-	public function __construct(array $urlParams = array()) {
-		parent::__construct('files_versions', $urlParams);
+
+	const APP_ID = 'files_versions';
+
+	public function __construct(array $urlParams = []) {
+		parent::__construct(self::APP_ID, $urlParams);
 
 		$container = $this->getContainer();
+		$server = $container->getServer();
 
-		/*
+		/** @var IEventDispatcher $newDispatcher */
+		$dispatcher = $server->query(IEventDispatcher::class);
+
+		/**
 		 * Register capabilities
 		 */
 		$container->registerCapability(Capabilities::class);
 
-		/*
+		/**
 		 * Register $principalBackend for the DAV collection
 		 */
 		$container->registerService('principalBackend', function (IAppContainer $c) {
@@ -51,16 +69,27 @@ class Application extends App {
 				$server->getGroupManager(),
 				$server->getShareManager(),
 				$server->getUserSession(),
-				$server->getConfig(),
-				$server->getAppManager()
+				$server->getAppManager(),
+				$server->query(ProxyMapper::class),
+				\OC::$server->getConfig()
 			);
 		});
 
-		$container->registerService(IVersionManager::class, function(IAppContainer $c) {
+		$container->registerService(IVersionManager::class, function (IAppContainer $c) {
 			return new VersionManager();
 		});
 
 		$this->registerVersionBackends();
+
+		/**
+		 * Register Events
+		 */
+		$this->registerEvents($dispatcher);
+
+		/**
+		 * Register hooks
+		 */
+		Hooks::connectHooks();
 	}
 
 	public function registerVersionBackends() {
@@ -97,4 +126,10 @@ class Application extends App {
 			$logger->logException($e);
 		}
 	}
+
+	protected function registerEvents(IEventDispatcher $dispatcher) {
+		$dispatcher->addServiceListener(LoadAdditionalScriptsEvent::class, LoadAdditionalListener::class);
+		$dispatcher->addServiceListener(LoadSidebar::class, LoadSidebarListener::class);
+	}
+
 }

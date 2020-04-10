@@ -2,6 +2,7 @@ OC.L10N.register(
     "systemtags",
     {
     "Tags" : "Etikedoj",
+    "Tag name is empty" : "Etikednomo malplenas",
     "Update" : "Ĝisdatigi",
     "Create" : "Krei",
     "Select tag…" : "Elekti etikedon…",

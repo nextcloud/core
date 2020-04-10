@@ -3,7 +3,10 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Brandon Kirsch <brandonkirsch@github.com>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -23,13 +26,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\DAV\Connector\Sabre;
 
 use OC\Files\Node\Folder;
+use OCA\DAV\AppInfo\PluginManager;
 use OCA\DAV\Files\BrowserErrorPagePlugin;
 use OCP\Files\Mount\IMountManager;
 use OCP\IConfig;
@@ -39,7 +43,9 @@ use OCP\IPreview;
 use OCP\IRequest;
 use OCP\ITagManager;
 use OCP\IUserSession;
+use OCP\SabrePluginEvent;
 use Sabre\DAV\Auth\Plugin;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ServerFactory {
 	/** @var IConfig */
@@ -58,6 +64,8 @@ class ServerFactory {
 	private $request;
 	/** @var IPreview  */
 	private $previewManager;
+	/** @var EventDispatcherInterface */
+	private $eventDispatcher;
 
 	/**
 	 * @param IConfig $config
@@ -77,7 +85,8 @@ class ServerFactory {
 		IMountManager $mountManager,
 		ITagManager $tagManager,
 		IRequest $request,
-		IPreview $previewManager
+		IPreview $previewManager,
+		EventDispatcherInterface $eventDispatcher
 	) {
 		$this->config = $config;
 		$this->logger = $logger;
@@ -87,6 +96,7 @@ class ServerFactory {
 		$this->tagManager = $tagManager;
 		$this->request = $request;
 		$this->previewManager = $previewManager;
+		$this->eventDispatcher = $eventDispatcher;
 	}
 
 	/**
@@ -119,9 +129,9 @@ class ServerFactory {
 		// Some WebDAV clients do require Class 2 WebDAV support (locking), since
 		// we do not provide locking we emulate it using a fake locking plugin.
 		if($this->request->isUserAgent([
-				'/WebDAVFS/',
-				'/OneNote/',
-				'/Microsoft-WebDAV-MiniRedir/',
+			'/WebDAVFS/',
+			'/OneNote/',
+			'/Microsoft-WebDAV-MiniRedir/',
 		])) {
 			$server->addPlugin(new \OCA\DAV\Connector\Sabre\FakeLockerPlugin());
 		}
@@ -131,10 +141,10 @@ class ServerFactory {
 		}
 
 		// wait with registering these until auth is handled and the filesystem is setup
-		$server->on('beforeMethod', function () use ($server, $objectTree, $viewCallBack) {
+		$server->on('beforeMethod:*', function () use ($server, $objectTree, $viewCallBack) {
 			// ensure the skeleton is copied
 			$userFolder = \OC::$server->getUserFolder();
-			
+
 			/** @var \OC\Files\View $view */
 			$view = $viewCallBack($server);
 			if ($userFolder instanceof Folder && $userFolder->getPath() === $view->getRoot()) {
@@ -186,7 +196,7 @@ class ServerFactory {
 				// custom properties plugin must be the last one
 				$server->addPlugin(
 					new \Sabre\DAV\PropertyStorage\Plugin(
-						new \OCA\DAV\Connector\Sabre\CustomPropertiesBackend(
+						new \OCA\DAV\DAV\CustomPropertiesBackend(
 							$objectTree,
 							$this->databaseConnection,
 							$this->userSession->getUser()
@@ -195,6 +205,18 @@ class ServerFactory {
 				);
 			}
 			$server->addPlugin(new \OCA\DAV\Connector\Sabre\CopyEtagHeaderPlugin());
+
+			// Load dav plugins from apps
+			$event = new SabrePluginEvent($server);
+			$this->eventDispatcher->dispatch($event);
+			$pluginManager = new PluginManager(
+				\OC::$server,
+				\OC::$server->getAppManager()
+			);
+			foreach ($pluginManager->getAppPlugins() as $appPlugin) {
+				$server->addPlugin($appPlugin);
+			}
+
 		}, 30); // priority 30: after auth (10) and acl(20), before lock(50) and handling the request
 		return $server;
 	}

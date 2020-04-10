@@ -115,6 +115,9 @@
 .ui-state-error-text .ui-icon {
 	background-image: url('images/ui-icons_ffd27a_256x240.png');
 }
+.ui-icon.ui-icon-none {
+	display: none;
+}
 
 /* Misc visuals
 ----------------------------------*/
@@ -185,7 +188,7 @@
 			padding: 4px 4px 4px 14px;
 
 			&.ui-state-focus, &.ui-state-active {
-				box-shadow: inset 4px 0 var(--color-primary);
+				box-shadow: inset 4px 0 var(--color-primary-element);
 				color: var(--color-main-text);
 			}
 		}

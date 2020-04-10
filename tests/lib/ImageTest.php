@@ -12,7 +12,7 @@ use OC;
 use OCP\IConfig;
 
 class ImageTest extends \Test\TestCase {
-	public static function tearDownAfterClass() {
+	public static function tearDownAfterClass(): void {
 		@unlink(OC::$SERVERROOT.'/tests/data/testimage2.png');
 		@unlink(OC::$SERVERROOT.'/tests/data/testimage2.jpg');
 
@@ -345,11 +345,11 @@ class ImageTest extends \Test\TestCase {
 	}
 
 	function convertDataProvider() {
-		return array(
-			array( 'image/gif'),
-			array( 'image/jpeg'),
-			array( 'image/png'),
-		);
+		return [
+			[ 'image/gif'],
+			[ 'image/jpeg'],
+			[ 'image/png'],
+		];
 	}
 
 	/**

@@ -24,9 +24,9 @@ OC.L10N.register(
     "Sharing %1$s failed, could not find %2$s, maybe the server is currently unreachable or uses a self-signed certificate." : "Deiling %1$s mistókst, gat ekki fundið %2$s, hugsanlega er þjónninn ekki tiltækur í augnablikinu eða að hann notar sjálfundirritað skilríki.",
     "Could not find share" : "Gat ekki fundið sameign",
     "Federated sharing" : "Deiling milli þjóna (skýjasambandssameign)",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Þú tókst við \"%3$s\" sem fjartengdri sameign frá %1$s (fyrir hönd %2$s)",
+    "You received \"%3$s\" as a remote share from %4$s (%1$s) (on behalf of %5$s (%2$s))" : "Þú tókst við \"%3$s\" sem fjartengdri sameign frá %4$s (%1$s) (fyrir hönd %5$s)",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "Þú tókst við {share} sem fjartengdri sameign frá {user} (fyrir hönd {behalf})",
-    "You received \"%3$s\" as a remote share from %1$s" : "Þú tókst við \"%3$s\" sem fjartengdri sameign frá %1$s",
+    "You received \"%3$s\" as a remote share from %4$s (%1$s)" : "Þú tókst við \"%3$s\" sem fjartengdri sameign frá %4$s (%1$s)",
     "You received {share} as a remote share from {user}" : "Þú tókst við {share} sem fjartengdri sameign frá {user}",
     "Accept" : "Samþykkja",
     "Decline" : "Hafna",
@@ -51,7 +51,7 @@ OC.L10N.register(
     "Add to your website" : "Bæta við vefsvæðið þitt",
     "Share with me via Nextcloud" : "Deila með mér í gegnum Nextcloud",
     "HTML Code:" : "HTML-kóði:",
-    "Sharing %s failed, because this item is already shared with %s" : "Deiling %s mistókst, því þessu atriði er þegar deilt með %s",
-    "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate." : "Deiling %s mistókst, gat ekki fundið %s, hugsanlega er þjónninn ekki tiltækur í augnablikinu eða að hann notar sjálfundirritað skilríki."
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Þú tókst við \"%3$s\" sem fjartengdri sameign frá %1$s (fyrir hönd %2$s)",
+    "You received \"%3$s\" as a remote share from %1$s" : "Þú tókst við \"%3$s\" sem fjartengdri sameign frá %1$s"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

@@ -23,10 +23,10 @@
 
 namespace Test\Calendar\Room;
 
-use \OC\Calendar\Room\Manager;
-use \OCP\Calendar\Room\IBackend;
+use OC\Calendar\Room\Manager;
+use OCP\Calendar\Room\IBackend;
 use OCP\IServerContainer;
-use \Test\TestCase;
+use Test\TestCase;
 
 class ManagerTest extends TestCase {
 
@@ -36,7 +36,7 @@ class ManagerTest extends TestCase {
 	/** @var IServerContainer */
 	private $server;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->server = $this->createMock(IServerContainer::class);
@@ -45,18 +45,18 @@ class ManagerTest extends TestCase {
 
 	public function testRegisterUnregisterBackend() {
 		$backend1 = $this->createMock(IBackend::class);
-		$backend1->method('getBackendIdentifier')->will($this->returnValue('backend_1'));
+		$backend1->method('getBackendIdentifier')->willReturn('backend_1');
 		$this->server->expects($this->at(0))
 			->method('query')
 			->with('calendar_room_backend1')
-			->will($this->returnValue($backend1));
+			->willReturn($backend1);
 
 		$backend2 = $this->createMock(IBackend::class);
-		$backend2->method('getBackendIdentifier')->will($this->returnValue('backend_2'));
+		$backend2->method('getBackendIdentifier')->willReturn('backend_2');
 		$this->server->expects($this->at(1))
 			->method('query')
 			->with('calendar_room_backend2')
-			->will($this->returnValue($backend2));
+			->willReturn($backend2);
 
 		$this->manager->registerBackend('calendar_room_backend1');
 		$this->manager->registerBackend('calendar_room_backend2');
@@ -74,18 +74,18 @@ class ManagerTest extends TestCase {
 
 	public function testGetBackend() {
 		$backend1 = $this->createMock(IBackend::class);
-		$backend1->method('getBackendIdentifier')->will($this->returnValue('backend_1'));
+		$backend1->method('getBackendIdentifier')->willReturn('backend_1');
 		$this->server->expects($this->at(0))
 			->method('query')
 			->with('calendar_room_backend1')
-			->will($this->returnValue($backend1));
+			->willReturn($backend1);
 
 		$backend2 = $this->createMock(IBackend::class);
-		$backend2->method('getBackendIdentifier')->will($this->returnValue('backend_2'));
+		$backend2->method('getBackendIdentifier')->willReturn('backend_2');
 		$this->server->expects($this->at(1))
 			->method('query')
 			->with('calendar_room_backend2')
-			->will($this->returnValue($backend2));
+			->willReturn($backend2);
 
 		$this->manager->registerBackend('calendar_room_backend1');
 		$this->manager->registerBackend('calendar_room_backend2');
@@ -96,18 +96,18 @@ class ManagerTest extends TestCase {
 
 	public function testClear() {
 		$backend1 = $this->createMock(IBackend::class);
-		$backend1->method('getBackendIdentifier')->will($this->returnValue('backend_1'));
+		$backend1->method('getBackendIdentifier')->willReturn('backend_1');
 		$this->server->expects($this->at(0))
 			->method('query')
 			->with('calendar_room_backend1')
-			->will($this->returnValue($backend1));
+			->willReturn($backend1);
 
 		$backend2 = $this->createMock(IBackend::class);
-		$backend2->method('getBackendIdentifier')->will($this->returnValue('backend_2'));
+		$backend2->method('getBackendIdentifier')->willReturn('backend_2');
 		$this->server->expects($this->at(1))
 			->method('query')
 			->with('calendar_room_backend2')
-			->will($this->returnValue($backend2));
+			->willReturn($backend2);
 
 		$this->manager->registerBackend('calendar_room_backend1');
 		$this->manager->registerBackend('calendar_room_backend2');

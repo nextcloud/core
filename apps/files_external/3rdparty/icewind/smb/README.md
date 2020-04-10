@@ -26,7 +26,7 @@ use Icewind\SMB\BasicAuth;
 require('vendor/autoload.php');
 
 $serverFactory = new ServerFactory();
-$auth = new BasicAuth('test', 'workgroup', 'test');
+$auth = new BasicAuth('user', 'workgroup', 'password');
 $server = $serverFactory->createServer('localhost', $auth);
 
 $share = $server->getShare('test');

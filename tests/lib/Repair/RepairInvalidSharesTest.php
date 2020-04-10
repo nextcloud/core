@@ -8,7 +8,6 @@
 
 namespace Test\Repair;
 
-
 use OC\Repair\RepairInvalidShares;
 use OC\Share\Constants;
 use OCP\IConfig;
@@ -31,7 +30,7 @@ class RepairInvalidSharesTest extends TestCase {
 	/** @var \OCP\IDBConnection */
 	private $connection;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$config = $this->getMockBuilder(IConfig::class)
@@ -40,7 +39,7 @@ class RepairInvalidSharesTest extends TestCase {
 		$config->expects($this->any())
 			->method('getSystemValue')
 			->with('version')
-			->will($this->returnValue('12.0.0.0'));
+			->willReturn('12.0.0.0');
 
 		$this->connection = \OC::$server->getDatabaseConnection();
 		$this->deleteAllShares();
@@ -49,7 +48,7 @@ class RepairInvalidSharesTest extends TestCase {
 		$this->repair = new RepairInvalidShares($config, $this->connection);
 	}
 
-	protected function tearDown() {
+	protected function tearDown(): void {
 		$this->deleteAllShares();
 
 		parent::tearDown();
@@ -202,4 +201,3 @@ class RepairInvalidSharesTest extends TestCase {
 		return $this->connection->lastInsertId('*PREFIX*share');
 	}
 }
-

@@ -3,7 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
- * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Oliver Gasser <oliver.gasser@gmail.com>
  * @author Robin Appelman <robin@icewind.nl>
@@ -24,7 +24,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -155,7 +155,7 @@ class MDB2SchemaReader {
 	 * @throws \DomainException
 	 */
 	private function loadField($table, $xml) {
-		$options = array( 'notnull' => false );
+		$options = [ 'notnull' => false ];
 		foreach ($xml->children() as $child) {
 			/**
 			 * @var \SimpleXMLElement $child
@@ -262,7 +262,7 @@ class MDB2SchemaReader {
 
 			$table->addColumn($name, $type, $options);
 			if (!empty($options['primary']) && $options['primary']) {
-				$table->setPrimaryKey(array($name));
+				$table->setPrimaryKey([$name]);
 			}
 		}
 	}
@@ -274,7 +274,7 @@ class MDB2SchemaReader {
 	 */
 	private function loadIndex($table, $xml) {
 		$name = null;
-		$fields = array();
+		$fields = [];
 		foreach ($xml->children() as $child) {
 			/**
 			 * @var \SimpleXMLElement $child

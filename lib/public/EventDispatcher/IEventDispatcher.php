@@ -5,7 +5,8 @@ declare(strict_types=1);
 /**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,7 +21,8 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace OCP\EventDispatcher;
@@ -42,6 +44,14 @@ interface IEventDispatcher {
 	public function addListener(string $eventName, callable $listener, int $priority = 0): void;
 
 	/**
+	 * @param string $eventName preferably the fully-qualified class name of the Event sub class
+	 * @param callable $listener the object that is invoked when a matching event is dispatched
+	 *
+	 * @since 19.0.0
+	 */
+	public function removeListener(string $eventName, callable $listener): void;
+
+	/**
 	 * @param string $eventName preferably the fully-qualified class name of the Event sub class to listen for
 	 * @param string $className fully qualified class name (or ::class notation) of a \OCP\EventDispatcher\IEventListener that can be built by the DI container
 	 * @param int $priority
@@ -57,5 +67,17 @@ interface IEventDispatcher {
 	 * @since 17.0.0
 	 */
 	public function dispatch(string $eventName, Event $event): void;
+
+	/**
+	 * Dispatch a typed event
+	 *
+	 * Only use this with subclasses of ``\OCP\EventDispatcher\Event``.
+	 * The object's class will determine the event name.
+	 *
+	 * @param Event $event
+	 *
+	 * @since 18.0.0
+	 */
+	public function dispatchTyped(Event $event): void;
 
 }

@@ -43,6 +43,7 @@ OC.L10N.register(
     "Please select tags to filter by" : "ფილტრაციისთვის გთხოვთ აირჩიოთ ტეგები",
     "No files found for the selected tags" : "არჩეული ტეგების მიხედვით ფაილების პოვნა ვერ მოხერხდა",
     "Select tag …" : "ტეგის არჩევა …",
+    "Create a new tag" : "ახალი ტეგის შექმნა",
     "Name" : "სახელი",
     "Public" : "ღია",
     "Restricted" : "აკრძალული",

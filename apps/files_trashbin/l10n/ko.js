@@ -21,9 +21,6 @@ OC.L10N.register(
     "Name" : "이름",
     "Actions" : "동작",
     "Deleted" : "삭제됨",
-    "Delete" : "삭제",
-    "Couldn't delete %s permanently" : "%s을(를) 영구적으로 삭제할 수 없습니다",
-    "Couldn't restore %s" : "%s을(를) 복원할 수 없습니다",
-    "Error" : "오류"
+    "Delete" : "삭제"
 },
 "nplurals=1; plural=0;");

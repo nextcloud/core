@@ -2,6 +2,12 @@
 /**
  * @copyright Copyright (c) 2018 Robin Appelman <robin@icewind.nl>
  *
+ * @author Bastien Durel <bastien@durel.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Robin Appelman <robin@icewind.nl>
+ *
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -42,14 +48,14 @@ class AnonymousOptionsPlugin extends ServerPlugin {
 	public function initialize(\Sabre\DAV\Server $server) {
 		$this->server = $server;
 		// before auth
-		$this->server->on('beforeMethod', [$this, 'handleAnonymousOptions'], 9);
+		$this->server->on('beforeMethod:*', [$this, 'handleAnonymousOptions'], 9);
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function isRequestInRoot($path) {
-		return $path === '' || (is_string($path) && strpos($path, '/') === FALSE);
+		return $path === '' || (is_string($path) && strpos($path, '/') === false);
 	}
 
 	/**
@@ -57,7 +63,13 @@ class AnonymousOptionsPlugin extends ServerPlugin {
 	 * @return bool
 	 */
 	public function handleAnonymousOptions(RequestInterface $request, ResponseInterface $response) {
-		if ($request->getHeader('Authorization') === null && $request->getMethod() === 'OPTIONS' && $this->isRequestInRoot($request->getPath())) {
+		$isOffice = preg_match('/Microsoft Office/i', $request->getHeader('User-Agent'));
+		$emptyAuth = $request->getHeader('Authorization') === null
+			|| $request->getHeader('Authorization') === ''
+			|| trim($request->getHeader('Authorization')) === 'Bearer';
+		$isAnonymousOption = $request->getMethod() === 'OPTIONS' && $emptyAuth;
+		$isOfficeHead = $request->getMethod() === 'HEAD' && $isOffice && $emptyAuth;
+		if ($isAnonymousOption || $isOfficeHead) {
 			/** @var CorePlugin $corePlugin */
 			$corePlugin = $this->server->getPlugin('core');
 			// setup a fake tree for anonymous access

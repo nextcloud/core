@@ -1,9 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @copyright Copyright (c) 2016, Roeland Jago Douma <roeland@famdouma.nl>
  *
- * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
@@ -18,14 +20,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-namespace OCA\Files_Trashbin\AppInfo;
-
-$application = new Application();
-$application->registerRoutes($this, [
+return [
 	'routes' => [
 		[
 			'name' => 'Preview#getPreview',
@@ -33,4 +32,4 @@ $application->registerRoutes($this, [
 			'verb' => 'GET',
 		],
 	],
-]);
+];

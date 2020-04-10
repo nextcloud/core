@@ -2,8 +2,8 @@ OC.L10N.register(
     "comments",
     {
     "Comments" : "留言",
-    "You commented" : "你已留言",
-    "%1$s commented" : "%1$s 留言",
+    "You commented" : "您已留言",
+    "%1$s commented" : "%1$s 個留言",
     "{author} commented" : "{author} 已留言",
     "You commented on %1$s" : "你對 %1$s 留言",
     "You commented on {file}" : "你對 {file} 留言",
@@ -15,7 +15,7 @@ OC.L10N.register(
     "Files app plugin to add comments to files" : "檔案插件程式插件，用於為檔案增加註釋",
     "Edit comment" : "編輯留言",
     "Delete comment" : "刪除留言",
-    "New comment …" : "新留言…",
+    "New comment …" : "新增留言",
     "Post" : "送出",
     "Cancel" : "取消",
     "[Deleted user]" : "[已刪除的使用者]",
@@ -27,8 +27,7 @@ OC.L10N.register(
     "Error occurred while updating comment with id {id}" : "編輯留言 {id} 發生錯誤",
     "Error occurred while posting comment" : "張貼留言出錯",
     "_%n unread comment_::_%n unread comments_" : ["%n 未讀留言"],
-    "Comment" : "留言",
-    "You were mentioned on “%s”, in a comment by a user that has since been deleted" : "一個已被刪除的用戶在 “%s” 的留言中提到你",
-    "%1$s mentioned you in a comment on “%2$s”" : "%1$s 在 “%2$s” 的留言中提到你"
+    "_1 new comment_::_{unread} new comments_" : ["{unread} 個新留言"],
+    "Comment" : "留言"
 },
 "nplurals=1; plural=0;");

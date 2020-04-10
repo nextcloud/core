@@ -3,7 +3,10 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Tanghus <thomas@tanghus.net>
  *
@@ -19,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -29,7 +32,6 @@
  */
 
 namespace OCP\AppFramework\Http;
-
 
 /**
  * Response for a normal template
@@ -73,8 +75,8 @@ class TemplateResponse extends Response {
 	 * @param string $renderAs how the page should be rendered, defaults to user
 	 * @since 6.0.0 - parameters $params and $renderAs were added in 7.0.0
 	 */
-	public function __construct($appName, $templateName, array $params=array(),
-	                            $renderAs='user') {
+	public function __construct($appName, $templateName, array $params=[],
+								$renderAs='user') {
 		parent::__construct();
 
 		$this->templateName = $templateName;
@@ -83,6 +85,7 @@ class TemplateResponse extends Response {
 		$this->renderAs = $renderAs;
 
 		$this->setContentSecurityPolicy(new ContentSecurityPolicy());
+		$this->setFeaturePolicy(new FeaturePolicy());
 	}
 
 
@@ -93,7 +96,7 @@ class TemplateResponse extends Response {
 	 * @return TemplateResponse Reference to this object
 	 * @since 6.0.0 - return value was added in 7.0.0
 	 */
-	public function setParams(array $params){
+	public function setParams(array $params) {
 		$this->params = $params;
 
 		return $this;
@@ -105,7 +108,7 @@ class TemplateResponse extends Response {
 	 * @return array the params
 	 * @since 6.0.0
 	 */
-	public function getParams(){
+	public function getParams() {
 		return $this->params;
 	}
 
@@ -115,7 +118,7 @@ class TemplateResponse extends Response {
 	 * @return string the name of the used template
 	 * @since 6.0.0
 	 */
-	public function getTemplateName(){
+	public function getTemplateName() {
 		return $this->templateName;
 	}
 
@@ -129,7 +132,7 @@ class TemplateResponse extends Response {
 	 * @return TemplateResponse Reference to this object
 	 * @since 6.0.0 - return value was added in 7.0.0
 	 */
-	public function renderAs($renderAs){
+	public function renderAs($renderAs) {
 		$this->renderAs = $renderAs;
 
 		return $this;
@@ -141,7 +144,7 @@ class TemplateResponse extends Response {
 	 * @return string the renderAs value
 	 * @since 6.0.0
 	 */
-	public function getRenderAs(){
+	public function getRenderAs() {
 		return $this->renderAs;
 	}
 
@@ -151,7 +154,7 @@ class TemplateResponse extends Response {
 	 * @return string the rendered html
 	 * @since 6.0.0
 	 */
-	public function render(){
+	public function render() {
 		// \OCP\Template needs an empty string instead of 'blank' for an unwrapped response
 		$renderAs = $this->renderAs === 'blank' ? '' : $this->renderAs;
 

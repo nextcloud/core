@@ -43,7 +43,7 @@ class EMailproviderTest extends TestCase {
 	/** @var EMailProvider */
 	private $provider;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->actionFactory = $this->createMock(IActionFactory::class);
@@ -67,7 +67,7 @@ class EMailproviderTest extends TestCase {
 			->method('getEMailAddresses')
 			->willReturn([
 				'user@example.com',
-		]);
+			]);
 		$this->actionFactory->expects($this->once())
 			->method('newEMailAction')
 			->with($this->equalTo($iconUrl), $this->equalTo('user@example.com'), $this->equalTo('user@example.com'))
@@ -94,7 +94,7 @@ class EMailproviderTest extends TestCase {
 			->method('getEMailAddresses')
 			->willReturn([
 				'',
-		]);
+			]);
 		$this->actionFactory->expects($this->never())
 			->method('newEMailAction');
 		$entry->expects($this->never())

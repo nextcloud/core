@@ -2,7 +2,9 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @copyright Copyright (c) 2017, Georg Ehrke
+ * @copyright Copyright (c) 2020, Gary Kim <gary@garykim.dev>
  *
+ * @author Gary Kim <gary@garykim.dev>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -18,34 +20,40 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\DAV\CalDAV;
 
-
+use OCP\IL10N;
 use Sabre\VObject\Component;
 use Sabre\VObject\Property;
 use Sabre\VObject\Reader;
 
 class CalendarObject extends \Sabre\CalDAV\CalendarObject {
 
+	/** @var IL10N */
+	protected $l10n;
+
 	/**
 	 * CalendarObject constructor.
 	 *
 	 * @param CalDavBackend $caldavBackend
+	 * @param IL10N $l10n
 	 * @param array $calendarInfo
 	 * @param array $objectData
 	 */
-	public function __construct(CalDavBackend $caldavBackend, array $calendarInfo,
+	public function __construct(CalDavBackend $caldavBackend, IL10N $l10n,
+								array $calendarInfo,
 								array $objectData) {
 		parent::__construct($caldavBackend, $calendarInfo, $objectData);
 
 		if ($this->isShared()) {
 			unset($this->objectData['size']);
 		}
+
+		$this->l10n = $l10n;
 	}
 
 	/**
@@ -85,7 +93,7 @@ class CalendarObject extends \Sabre\CalDAV\CalendarObject {
 	 * @param Component\VCalendar $vObject
 	 * @return void
 	 */
-	private static function createConfidentialObject(Component\VCalendar $vObject) {
+	private function createConfidentialObject(Component\VCalendar $vObject) {
 		/** @var Component $vElement */
 		$vElement = null;
 		if(isset($vObject->VEVENT)) {
@@ -110,7 +118,7 @@ class CalendarObject extends \Sabre\CalDAV\CalendarObject {
 					case 'UID':
 						break;
 					case 'SUMMARY':
-						$property->setValue('Busy');
+						$property->setValue($this->l10n->t('Busy'));
 						break;
 					default:
 						$vElement->__unset($property->name);

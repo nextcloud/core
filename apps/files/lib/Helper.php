@@ -4,6 +4,8 @@
  *
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author brumsel <brumsel@losecatcher.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Michael Jobst <mjobst+github@tecratech.de>
@@ -26,7 +28,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -50,7 +52,7 @@ class Helper {
 		$l = \OC::$server->getL10N('files');
 		$maxUploadFileSize = \OCP\Util::maxUploadFilesize($dir, $storageInfo['free']);
 		$maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
-		$maxHumanFileSize = $l->t('Upload (max. %s)', array($maxHumanFileSize));
+		$maxHumanFileSize = $l->t('Upload (max. %s)', [$maxHumanFileSize]);
 
 		return [
 			'uploadMaxFilesize' => $maxUploadFileSize,
@@ -139,7 +141,7 @@ class Helper {
 	 * @return array formatted file info
 	 */
 	public static function formatFileInfo(FileInfo $i) {
-		$entry = array();
+		$entry = [];
 
 		$entry['id'] = $i['fileid'];
 		$entry['parentId'] = $i['parent'];
@@ -181,7 +183,7 @@ class Helper {
 	 * @return array
 	 */
 	public static function formatFileInfos($fileInfos) {
-		$files = array();
+		$files = [];
 		foreach ($fileInfos as $i) {
 			$files[] = self::formatFileInfo($i);
 		}
@@ -261,7 +263,7 @@ class Helper {
 		} else if ($sortAttribute === 'size') {
 			$sortFunc = 'compareSize';
 		}
-		usort($files, array(Helper::class, $sortFunc));
+		usort($files, [Helper::class, $sortFunc]);
 		if ($sortDescending) {
 			$files = array_reverse($files);
 		}
