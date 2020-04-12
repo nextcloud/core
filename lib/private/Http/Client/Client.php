@@ -31,6 +31,7 @@ declare(strict_types=1);
 namespace OC\Http\Client;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\RequestOptions;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IResponse;
@@ -49,20 +50,25 @@ class Client implements IClient {
 	private $config;
 	/** @var ICertificateManager */
 	private $certificateManager;
+	/** @var CookieJarInterface */
+	private $cookieJar;
 
 	/**
 	 * @param IConfig $config
 	 * @param ICertificateManager $certificateManager
 	 * @param GuzzleClient $client
+	 * @param CookieJarInterface $cookieJar
 	 */
 	public function __construct(
 		IConfig $config,
 		ICertificateManager $certificateManager,
-		GuzzleClient $client
+		GuzzleClient $client,
+		?CookieJarInterface $cookieJar
 	) {
 		$this->config = $config;
 		$this->client = $client;
 		$this->certificateManager = $certificateManager;
+		$this->cookieJar = $cookieJar;
 	}
 
 	private function buildRequestOptions(array $options): array {
@@ -84,6 +90,10 @@ class Client implements IClient {
 
 		if (!isset($options[RequestOptions::HEADERS]['User-Agent'])) {
 			$options[RequestOptions::HEADERS]['User-Agent'] = 'Nextcloud Server Crawler';
+		}
+
+		if (!isset($options[RequestOptions::COOKIES]) && !is_null($this->getCookieJar())) {
+			$options[RequestOptions::COOKIES] = $this->getCookieJar();
 		}
 
 		return $options;
@@ -346,5 +356,14 @@ class Client implements IClient {
 	public function options(string $uri, array $options = []): IResponse {
 		$response = $this->client->request('options', $uri, $this->buildRequestOptions($options));
 		return new Response($response);
+	}
+
+	/**
+	 * Returns
+	 *
+	 * @return CookieJarInterface
+	 */
+	public function getCookieJar(): ?CookieJarInterface {
+		return $this->cookieJar;
 	}
 }

@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace OC\Http\Client;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Cookie\CookieJarInterface;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\ICertificateManager;
@@ -55,9 +56,17 @@ class ClientService implements IClientService {
 	}
 
 	/**
+	 * @param CookieJarInterface $cookieJar
 	 * @return Client
 	 */
-	public function newClient(): IClient {
-		return new Client($this->config, $this->certificateManager, new GuzzleClient());
+	public function newClient(?CookieJarInterface $cookieJar): IClient {
+		return new Client($this->config, $this->certificateManager, new GuzzleClient(), $cookieJar);
+	}
+
+	/**
+	 * @return CookieJarInterface
+	 */
+	public function newCookieJar(): CookieJarInterface {
+		return new \GuzzleHttp\Cookie\CookieJar();
 	}
 }

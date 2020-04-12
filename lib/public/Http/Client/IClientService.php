@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace OCP\Http\Client;
 
+use GuzzleHttp\Cookie\CookieJarInterface;
+
 /**
  * Interface IClientService
  *
@@ -35,8 +37,14 @@ namespace OCP\Http\Client;
  */
 interface IClientService {
 	/**
+	 * @param CookieJarInterface $cookieJar
 	 * @return IClient
 	 * @since 8.1.0
 	 */
-	public function newClient(): IClient;
+	public function newClient(?CookieJarInterface $cookieJar): IClient;
+
+	/**
+	 * @return void
+	 */
+	public function newCookieJar(): void;
 }
