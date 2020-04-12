@@ -44,7 +44,7 @@ interface IClientService {
 	public function newClient(?CookieJarInterface $cookieJar): IClient;
 
 	/**
-	 * @return void
+	 * @return CookieJarInterface
 	 */
-	public function newCookieJar(): void;
+	public function newCookieJar(): CookieJarInterface;
 }
