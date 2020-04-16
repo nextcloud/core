@@ -213,7 +213,8 @@ interface IClient {
 	public function options(string $uri, array $options = []): IResponse;
 
 	/**
-	 * @return CookieJarInterface
+	 * @return CookieJarInterface|null
+	 * @since 19.0.0
 	 */
 	public function getCookieJar(): ?CookieJarInterface;
 }

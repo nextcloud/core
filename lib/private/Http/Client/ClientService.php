@@ -59,7 +59,7 @@ class ClientService implements IClientService {
 	 * @param CookieJarInterface $cookieJar
 	 * @return Client
 	 */
-	public function newClient(?CookieJarInterface $cookieJar): IClient {
+	public function newClient(?CookieJarInterface $cookieJar = null): IClient {
 		return new Client($this->config, $this->certificateManager, new GuzzleClient(), $cookieJar);
 	}
 
