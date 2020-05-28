@@ -126,9 +126,22 @@ class OC {
 	public static $server = null;
 
 	/**
+	 * @var \OC\Server
+	 */
+	private static $serverContainer = null;
+
+	/**
 	 * @var \OC\Config
 	 */
 	private static $config = null;
+
+	/**
+	 * @return \OC\Server
+	 */
+	public static function server()
+	{
+		return self::$serverContainer;
+	}
 
 	/**
 	 * @throws \RuntimeException when the 3rdparty directory is missing or
@@ -596,7 +609,8 @@ class OC {
 		}
 
 		// setup the basic server
-		self::$server = new \OC\Server(\OC::$WEBROOT, self::$config);
+		self::$serverContainer = new \OC\Server(self::$WEBROOT, self::$config);
+		self::$server = self::$serverContainer;
 		\OC::$server->getEventLogger()->log('autoloader', 'Autoloader', $loaderStart, $loaderEnd);
 		\OC::$server->getEventLogger()->start('boot', 'Initialize');
 
