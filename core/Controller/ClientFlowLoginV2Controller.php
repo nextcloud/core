@@ -109,16 +109,17 @@ class ClientFlowLoginV2Controller extends Controller {
 		$this->session->set(self::TOKEN_NAME, $token);
 
 		return new RedirectResponse(
-			$this->urlGenerator->linkToRouteAbsolute('core.ClientFlowLoginV2.showAuthPickerPage')
+			$this->urlGenerator->linkToRouteAbsolute('core.ClientFlowLoginV2.grantPage')
 		);
 	}
 
 	/**
-	 * @NoCSRFRequired
-	 * @PublicPage
+	 * @NoAdminRequired
 	 * @UseSession
+	 * @NoCSRFRequired
+	 * @NoSameSiteCookieRequired
 	 */
-	public function showAuthPickerPage(): StandaloneTemplateResponse {
+	public function grantPage(): StandaloneTemplateResponse {
 		try {
 			$flow = $this->getFlowByLoginToken();
 		} catch (LoginFlowV2NotFoundException $e) {
@@ -130,36 +131,6 @@ class ClientFlowLoginV2Controller extends Controller {
 			ISecureRandom::CHAR_LOWER.ISecureRandom::CHAR_UPPER.ISecureRandom::CHAR_DIGITS
 		);
 		$this->session->set(self::STATE_NAME, $stateToken);
-
-		return new StandaloneTemplateResponse(
-			$this->appName,
-			'loginflowv2/authpicker',
-			[
-				'client' => $flow->getClientName(),
-				'instanceName' => $this->defaults->getName(),
-				'urlGenerator' => $this->urlGenerator,
-				'stateToken' => $stateToken,
-			],
-			'guest'
-		);
-	}
-
-	/**
-	 * @NoAdminRequired
-	 * @UseSession
-	 * @NoCSRFRequired
-	 * @NoSameSiteCookieRequired
-	 */
-	public function grantPage(string $stateToken): StandaloneTemplateResponse {
-		if (!$this->isValidStateToken($stateToken)) {
-			return $this->stateTokenForbiddenResponse();
-		}
-
-		try {
-			$flow = $this->getFlowByLoginToken();
-		} catch (LoginFlowV2NotFoundException $e) {
-			return $this->loginTokenForbiddenResponse();
-		}
 
 		return new StandaloneTemplateResponse(
 			$this->appName,

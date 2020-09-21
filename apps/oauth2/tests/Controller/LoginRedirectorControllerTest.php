@@ -90,7 +90,7 @@ class LoginRedirectorControllerTest extends TestCase {
 			->expects($this->once())
 			->method('linkToRouteAbsolute')
 			->with(
-				'core.ClientFlowLogin.showAuthPickerPage',
+				'core.ClientFlowLogin.grantPage',
 				[
 					'clientIdentifier' => 'MyClientIdentifier',
 				]

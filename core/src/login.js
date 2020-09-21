@@ -52,6 +52,7 @@ const fromStateOr = (key, orValue) => {
 const View = Vue.extend(LoginView)
 new View({
 	propsData: {
+		grantParams: fromStateOr('loginGrantParams', null),
 		errors: fromStateOr('loginErrors', []),
 		messages: fromStateOr('loginMessages', []),
 		redirectUrl: fromStateOr('loginRedirectUrl', undefined),

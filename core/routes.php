@@ -54,15 +54,13 @@ $application->registerRoutes($this, [
 		['name' => 'login#showLoginForm', 'url' => '/login', 'verb' => 'GET'],
 		['name' => 'login#logout', 'url' => '/logout', 'verb' => 'GET'],
 		// Original login flow used by all clients
-		['name' => 'ClientFlowLogin#showAuthPickerPage', 'url' => '/login/flow', 'verb' => 'GET'],
+		['name' => 'ClientFlowLogin#grantPage', 'url' => '/login/flow', 'verb' => 'GET'],
 		['name' => 'ClientFlowLogin#generateAppPassword', 'url' => '/login/flow', 'verb' => 'POST'],
-		['name' => 'ClientFlowLogin#grantPage', 'url' => '/login/flow/grant', 'verb' => 'GET'],
 		['name' => 'ClientFlowLogin#apptokenRedirect', 'url' => '/login/flow/apptoken', 'verb' => 'POST'],
 		// NG login flow used by desktop client in case of Kerberos/fancy 2fa (smart cards for example)
 		['name' => 'ClientFlowLoginV2#poll', 'url' => '/login/v2/poll', 'verb' => 'POST'],
-		['name' => 'ClientFlowLoginV2#showAuthPickerPage', 'url' => '/login/v2/flow', 'verb' => 'GET'],
+		['name' => 'ClientFlowLoginV2#grantPage', 'url' => '/login/v2/flow', 'verb' => 'GET'],
 		['name' => 'ClientFlowLoginV2#landing', 'url' => '/login/v2/flow/{token}', 'verb' => 'GET'],
-		['name' => 'ClientFlowLoginV2#grantPage', 'url' => '/login/v2/grant', 'verb' => 'GET'],
 		['name' => 'ClientFlowLoginV2#generateAppPassword', 'url' => '/login/v2/grant', 'verb' => 'POST'],
 		['name' => 'ClientFlowLoginV2#init', 'url' => '/login/v2', 'verb' => 'POST'],
 		['name' => 'TwoFactorChallenge#selectChallenge', 'url' => '/login/selectchallenge', 'verb' => 'GET'],

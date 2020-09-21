@@ -101,7 +101,7 @@ class LoginRedirectorController extends Controller {
 		$this->session->set('oauth.state', $state);
 
 		$targetUrl = $this->urlGenerator->linkToRouteAbsolute(
-			'core.ClientFlowLogin.showAuthPickerPage',
+			'core.ClientFlowLogin.grantPage',
 			[
 				'clientIdentifier' => $client->getClientIdentifier(),
 			]

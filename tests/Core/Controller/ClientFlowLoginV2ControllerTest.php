@@ -129,7 +129,7 @@ class ClientFlowLoginV2ControllerTest extends TestCase {
 			->willReturn(true);
 
 		$this->urlGenerator->method('linkToRouteAbsolute')
-			->with('core.ClientFlowLoginV2.showAuthPickerPage')
+			->with('core.ClientFlowLoginV2.grantPage')
 			->willReturn('https://server/path');
 
 		$result = $this->controller->landing('token');
@@ -137,49 +137,6 @@ class ClientFlowLoginV2ControllerTest extends TestCase {
 		$this->assertInstanceOf(Http\RedirectResponse::class, $result);
 		$this->assertSame(Http::STATUS_SEE_OTHER, $result->getStatus());
 		$this->assertSame('https://server/path', $result->getRedirectURL());
-	}
-
-	public function testShowAuthPickerNoLoginToken() {
-		$this->session->method('get')
-			->willReturn(null);
-
-		$result = $this->controller->showAuthPickerPage();
-
-		$this->assertSame(Http::STATUS_FORBIDDEN, $result->getStatus());
-	}
-
-	public function testShowAuthPickerInvalidLoginToken() {
-		$this->session->method('get')
-			->with('client.flow.v2.login.token')
-			->willReturn('loginToken');
-
-		$this->loginFlowV2Service->method('getByLoginToken')
-			->with('loginToken')
-			->willThrowException(new LoginFlowV2NotFoundException());
-
-		$result = $this->controller->showAuthPickerPage();
-
-		$this->assertSame(Http::STATUS_FORBIDDEN, $result->getStatus());
-	}
-
-	public function testShowAuthPickerValidLoginToken() {
-		$this->session->method('get')
-			->with('client.flow.v2.login.token')
-			->willReturn('loginToken');
-
-		$flow = new LoginFlowV2();
-		$this->loginFlowV2Service->method('getByLoginToken')
-			->with('loginToken')
-			->willReturn($flow);
-
-		$this->random->method('generate')
-			->with(64, ISecureRandom::CHAR_LOWER.ISecureRandom::CHAR_UPPER.ISecureRandom::CHAR_DIGITS)
-			->willReturn('random');
-		$this->session->expects($this->once())
-			->method('set')
-			->with('client.flow.v2.state.token', 'random');
-
-		$this->controller->showAuthPickerPage();
 	}
 
 	public function testGrantPageInvalidStateToken() {

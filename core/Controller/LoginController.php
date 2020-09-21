@@ -36,10 +36,12 @@ use OC\AppFramework\Http\Request;
 use OC\Authentication\Login\Chain;
 use OC\Authentication\Login\LoginData;
 use OC\Authentication\WebAuthn\Manager as WebAuthnManager;
+use OC\Core\Service\LoginFlowV2Service;
 use OC\Security\Bruteforce\Throttler;
 use OC\User\Session;
 use OC_App;
 use OC_Util;
+use OCA\OAuth2\Db\ClientMapper;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -83,6 +85,10 @@ class LoginController extends Controller {
 	private $initialStateService;
 	/** @var WebAuthnManager */
 	private $webAuthnManager;
+	/** @var ClientMapper */
+	private $clientMapper;
+	/** @var LoginFlowV2Service */
+	private $loginFlowV2Service;
 
 	public function __construct(?string $appName,
 								IRequest $request,
@@ -96,7 +102,9 @@ class LoginController extends Controller {
 								Throttler $throttler,
 								Chain $loginChain,
 								IInitialStateService $initialStateService,
-								WebAuthnManager $webAuthnManager) {
+								WebAuthnManager $webAuthnManager,
+								ClientMapper $clientMapper,
+								LoginFlowV2Service $loginFlowV2Service) {
 		parent::__construct($appName, $request);
 		$this->userManager = $userManager;
 		$this->config = $config;
@@ -109,6 +117,8 @@ class LoginController extends Controller {
 		$this->loginChain = $loginChain;
 		$this->initialStateService = $initialStateService;
 		$this->webAuthnManager = $webAuthnManager;
+		$this->clientMapper = $clientMapper;
+		$this->loginFlowV2Service = $loginFlowV2Service;
 	}
 
 	/**
@@ -174,8 +184,35 @@ class LoginController extends Controller {
 			$this->config->getSystemValue('login_form_autocomplete', true) === true
 		);
 
+		$csp = new Http\ContentSecurityPolicy();
+
 		if (!empty($redirect_url)) {
 			$this->initialStateService->provideInitialState('core', 'loginRedirectUrl', $redirect_url);
+
+			$clientName = null;
+			if (strpos($redirect_url, $this->urlGenerator->linkToRoute('core.ClientFlowLogin.grantPage')) === 0) {
+				parse_str(parse_url($redirect_url, PHP_URL_QUERY), $clientFlowQuery);
+				if (isset($clientFlowQuery['clientIdentifier'])) {
+					$client = $this->clientMapper->getByIdentifier($clientFlowQuery['clientIdentifier']);
+					$clientName = $client->getName();
+					$csp->addAllowedFormActionDomain($client->getRedirectUri());
+				} else {
+					$userAgent = $this->request->getHeader('USER_AGENT');
+					$clientName = $userAgent !== '' ? $userAgent : 'unknown';
+					$csp->addAllowedFormActionDomain('nc://*');
+				}
+			} elseif (strpos($redirect_url, $this->urlGenerator->linkToRoute('core.ClientFlowLoginV2.grantPage')) === 0) {
+				$flowV2Token = $this->session->get(ClientFlowLoginV2Controller::TOKEN_NAME);
+				$flowV2 = $this->loginFlowV2Service->getByLoginToken($flowV2Token);
+				$clientName = $flowV2->getClientName();
+			}
+
+			if ($clientName) {
+				$this->initialStateService->provideInitialState('core', 'loginGrantParams', [
+					'client' => Util::sanitizeHTML($clientName),
+					'instanceName' => Util::sanitizeHTML($this->defaults->getName()),
+				]);
+			}
 		}
 
 		$this->initialStateService->provideInitialState(
@@ -199,9 +236,11 @@ class LoginController extends Controller {
 		$parameters = [
 			'alt_login' => OC_App::getAlternativeLogIns(),
 		];
-		return new TemplateResponse(
+		$response = new TemplateResponse(
 			$this->appName, 'login', $parameters, 'guest'
 		);
+		$response->setContentSecurityPolicy($csp);
+		return $response;
 	}
 
 	/**
