@@ -111,6 +111,7 @@
 					<div>
 						<input id="showLanguages"
 							v-model="showLanguages"
+							:disabled="loadingShowLanguages"
 							type="checkbox"
 							class="checkbox">
 						<label for="showLanguages">{{ t('settings', 'Show Languages') }}</label>
@@ -118,6 +119,7 @@
 					<div>
 						<input id="showLastLogin"
 							v-model="showLastLogin"
+							:disabled="loadingShowLastLogin"
 							type="checkbox"
 							class="checkbox">
 						<label for="showLastLogin">{{ t('settings', 'Show last login') }}</label>
@@ -125,6 +127,7 @@
 					<div>
 						<input id="showUserBackend"
 							v-model="showUserBackend"
+							:disabled="loadingShowUserBackend"
 							type="checkbox"
 							class="checkbox">
 						<label for="showUserBackend">{{ t('settings', 'Show user backend') }}</label>
@@ -132,6 +135,7 @@
 					<div>
 						<input id="showStoragePath"
 							v-model="showStoragePath"
+							:disabled="loadingShowStoragePath"
 							type="checkbox"
 							class="checkbox">
 						<label for="showStoragePath">{{ t('settings', 'Show storage path') }}</label>
@@ -207,6 +211,10 @@ export default {
 			externalActions: [],
 			loadingAddGroup: false,
 			loadingSendMail: false,
+			loadingShowLanguages: false,
+			loadingShowLastLogin: false,
+			loadingShowStoragePath: false,
+			loadingShowUserBackend: false,
 			showConfig: {
 				showStoragePath: false,
 				showUserBackend: false,
@@ -237,25 +245,25 @@ export default {
 		showLanguages: {
 			get() { return this.getLocalstorage('showLanguages') },
 			set(status) {
-				this.setLocalStorage('showLanguages', status)
+				this.updateSettings(status, 'showLanguages', 'showlanguages', 'loadingShowLanguages')
 			},
 		},
 		showLastLogin: {
 			get() { return this.getLocalstorage('showLastLogin') },
 			set(status) {
-				this.setLocalStorage('showLastLogin', status)
+				this.updateSettings(status, 'showLastLogin', 'showlastlogin', 'loadingShowLastLogin')
 			},
 		},
 		showUserBackend: {
 			get() { return this.getLocalstorage('showUserBackend') },
 			set(status) {
-				this.setLocalStorage('showUserBackend', status)
+				this.updateSettings(status, 'showUserBackend', 'showuserbackend', 'loadingShowUserBackend')
 			},
 		},
 		showStoragePath: {
 			get() { return this.getLocalstorage('showStoragePath') },
 			set(status) {
-				this.setLocalStorage('showStoragePath', status)
+				this.updateSettings(status, 'showStoragePath', 'showstoragepath', 'loadingShowStoragePath')
 			},
 		},
 
@@ -296,19 +304,8 @@ export default {
 			get() {
 				return this.settings.newUserSendEmail
 			},
-			async set(value) {
-				try {
-					this.loadingSendMail = true
-					this.$store.commit('setServerData', {
-						...this.settings,
-						newUserSendEmail: value,
-					})
-					await axios.post(generateUrl('/settings/users/preferences/newUser.sendEmail'), { value: value ? 'yes' : 'no' })
-				} catch (e) {
-					console.error('could not update newUser.sendEmail preference: ' + e.message, e)
-				} finally {
-					this.loadingSendMail = false
-				}
+			set(value) {
+				this.updateSettings(value, 'newUserSendEmail', 'newUser.sendEmail', 'loadingSendMail')
 			},
 		},
 
@@ -360,13 +357,33 @@ export default {
 			// force initialization
 			const localConfig = this.$localStorage.get(key)
 			// if localstorage is null, fallback to original values
-			this.showConfig[key] = localConfig !== null ? localConfig === 'true' : this.showConfig[key]
+			this.showConfig[key] = localConfig !== null ? localConfig === 'true' : this.settings[key]
 			return this.showConfig[key]
 		},
 		setLocalStorage(key, status) {
 			this.showConfig[key] = status
 			this.$localStorage.set(key, status)
 			return status
+		},
+		updateSettings(value, key, addToURL, loadingData) {
+			let shouldUpdate = true
+			try {
+				this[loadingData] = true
+				axios.post(generateUrl('/settings/users/preferences/' + addToURL), { value: value ? 'yes' : 'no' })
+			} catch (e) {
+				document.getElementById(key).checked = !value
+				shouldUpdate = false
+			} finally {
+				this[loadingData] = false
+
+				if (shouldUpdate) {
+					this.$store.commit('setServerData', {
+						...this.settings,
+						key: value,
+					})
+					this.setLocalStorage(key, value)
+				}
+			}
 		},
 		removeGroup(groupid) {
 			const self = this

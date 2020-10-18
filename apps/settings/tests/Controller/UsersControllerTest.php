@@ -572,4 +572,29 @@ class UsersControllerTest extends \Test\TestCase {
 			[false, false, false, true],
 		];
 	}
+
+	public function dataSetPreference() {
+		return [
+			['newUser.sendEmail', 'yes', ['status' => 200]],
+			['showlastlogin', 'yes', ['status' => 200]],
+			['showlanguages', 'yes', ['status' => 200]],
+			['showuserbackend', 'yes', ['status' => 200]],
+			['showuserbackend', 'yes', ['status' => 200]],
+			['foobar', 'yes', ['status' => 403]],
+		];
+	}
+
+	/**
+	 * @dataProvider dataSetPreference
+	 * @param string $key the key to store the value for appconfig
+	 * @param string $val the value associated with the key
+	 * @param array $expectedResult the status result is stored in this array
+	 */
+	public function testSetPreference(string $key, string $val, array $expectedResult) {
+		$controller = $this->getController();
+
+		$result = $controller->setPreference($key, $val);
+
+		$this->assertEquals($expectedResult['status'], $result->getStatus());
+	}
 }

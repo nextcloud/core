@@ -260,6 +260,10 @@ class UsersController extends Controller {
 		$serverData['newUserGenerateUserID'] = $this->config->getAppValue('core', 'newUser.generateUserID', 'no') === 'yes';
 		$serverData['newUserRequireEmail'] = $this->config->getAppValue('core', 'newUser.requireEmail', 'no') === 'yes';
 		$serverData['newUserSendEmail'] = $this->config->getAppValue('core', 'newUser.sendEmail', 'yes') === 'yes';
+		$serverData['showLastLogin'] = $this->config->getAppValue('core', 'users-showlastlogin', 'no') === 'yes';
+		$serverData['showLanguages'] = $this->config->getAppValue('core', 'users-showlanguages', 'no') === 'yes';
+		$serverData['showUserBackend'] = $this->config->getAppValue('core', 'users-showuserbackend', 'no') === 'yes';
+		$serverData['showStoragePath'] = $this->config->getAppValue('core', 'users-showstoragepath', 'no') === 'yes';
 
 		return new TemplateResponse('settings', 'settings-vue', ['serverData' => $serverData]);
 	}
@@ -271,12 +275,12 @@ class UsersController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function setPreference(string $key, string $value): JSONResponse {
-		$allowed = ['newUser.sendEmail'];
+		$allowed = ['newUser.sendEmail', 'showlastlogin', 'showlanguages', 'showuserbackend', 'showstoragepath'];
 		if (!in_array($key, $allowed, true)) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$this->config->setAppValue('core', $key, $value);
+		$this->config->setAppValue('core', 'users-'.$key, $value);
 
 		return new JSONResponse([]);
 	}
