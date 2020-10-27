@@ -42,7 +42,7 @@
 				<a v-else-if="canResetPassword && !resetPassword"
 					id="lost-password"
 					:href="resetPasswordLink"
-					@click.prevent="resetPassword = true">
+					@click.prevent="resetPassword = true; user=''">
 					{{ t('core', 'Forgot password?') }}
 				</a>
 				<br>
