@@ -147,7 +147,8 @@
 				iconClass: action.iconClass,
 				permissions: action.permissions,
 				type: action.type || FileActions.TYPE_DROPDOWN,
-				altText: action.altText || ''
+				altText: action.altText || '',
+				deleteAlert: action.deleteAlert || ''
 			};
 			if (_.isUndefined(action.displayName)) {
 				actionSpec.displayName = t('files', name);
@@ -694,16 +695,31 @@
 				name: 'Delete',
 				displayName: function(context) {
 					var mountType = context.$file.attr('data-mounttype');
+          var noTrashbin = context.$file.attr('no-trashbin');
 					var type = context.$file.attr('data-type');
-					var deleteTitle = (type && type === 'file')
-						? t('files', 'Delete file')
-						: t('files', 'Delete folder')
+					if (noTrashbin && noTrashbin == 'true'){
+						var deleteTitle = (type && type === 'file')
+							? t('files', 'Delete file permanently')
+							: t('files', 'Delete folder permanently');
+					} else {
+						var deleteTitle = (type && type === 'file')
+							? t('files', 'Delete file')
+							: t('files', 'Delete folder');
+          }
 					if (mountType === 'external-root') {
 						deleteTitle = t('files', 'Disconnect storage');
 					} else if (mountType === 'shared-root') {
 						deleteTitle = t('files', 'Leave this share');
 					}
 					return deleteTitle;
+				},
+				deleteAlert: function(context) {
+					var noTrashbin = context.$file.attr('no-trashbin')
+					if (noTrashbin && noTrashbin == 'true') {
+						return "permanent-delete"
+					} else {
+						return ""
+					}
 				},
 				mime: 'all',
 				order: 1000,

@@ -156,7 +156,9 @@ templates['fileactionsmenu'] = template({"1":function(container,depth0,helpers,p
     + ((stack1 = lookupProperty(helpers,"if").call(alias1,(depth0 != null ? lookupProperty(depth0,"inline") : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":3,"column":13},"end":{"line":3,"column":40}}})) != null ? stack1 : "")
     + " action-"
     + alias4(((helper = (helper = lookupProperty(helpers,"nameLowerCase") || (depth0 != null ? lookupProperty(depth0,"nameLowerCase") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"nameLowerCase","hash":{},"data":data,"loc":{"start":{"line":3,"column":48},"end":{"line":3,"column":65}}}) : helper)))
-    + "-container\">\n			<a href=\"#\" class=\"menuitem action action-"
+    + "-container "
+    + alias4(((helper = (helper = lookupProperty(helpers,"deleteAlert") || (depth0 != null ? lookupProperty(depth0,"deleteAlert") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"deleteAlert","hash":{},"data":data,"loc":{"start":{"line":3,"column":76},"end":{"line":3,"column":91}}}) : helper)))
+    + "\">\n			<a href=\"#\" class=\"menuitem action action-"
     + alias4(((helper = (helper = lookupProperty(helpers,"nameLowerCase") || (depth0 != null ? lookupProperty(depth0,"nameLowerCase") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"nameLowerCase","hash":{},"data":data,"loc":{"start":{"line":4,"column":45},"end":{"line":4,"column":62}}}) : helper)))
     + " permanent\" data-action=\""
     + alias4(((helper = (helper = lookupProperty(helpers,"name") || (depth0 != null ? lookupProperty(depth0,"name") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data,"loc":{"start":{"line":4,"column":87},"end":{"line":4,"column":95}}}) : helper)))
@@ -222,6 +224,8 @@ templates['filemultiselectmenu'] = template({"1":function(container,depth0,helpe
 
   return "		<li class=\"item-"
     + alias4(((helper = (helper = lookupProperty(helpers,"name") || (depth0 != null ? lookupProperty(depth0,"name") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data,"loc":{"start":{"line":3,"column":18},"end":{"line":3,"column":26}}}) : helper)))
+    + " "
+    + alias4(((helper = (helper = lookupProperty(helpers,"deleteAlert") || (depth0 != null ? lookupProperty(depth0,"deleteAlert") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"deleteAlert","hash":{},"data":data,"loc":{"start":{"line":3,"column":27},"end":{"line":3,"column":42}}}) : helper)))
     + "\">\n			<a href=\"#\" class=\"menuitem action "
     + alias4(((helper = (helper = lookupProperty(helpers,"name") || (depth0 != null ? lookupProperty(depth0,"name") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data,"loc":{"start":{"line":4,"column":38},"end":{"line":4,"column":46}}}) : helper)))
     + " permanent\" data-action=\""

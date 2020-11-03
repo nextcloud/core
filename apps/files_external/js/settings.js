@@ -479,6 +479,7 @@ MountOptionsDropdown.prototype = {
 			mountOptionsFilesystemCheckOnce: t('files_external', 'Never'),
 			mountOptionsFilesystemCheckDA: t('files_external', 'Once every direct access'),
 			mountOptionsReadOnlyLabel: t('files_external', 'Read only'),
+			mountOptionsNoTrashbinLabel: t('files_external','Deletion without trashbin'),
 			deleteLabel: t('files_external', 'Delete')
 		}));
 		this.$el = $el;
@@ -1288,6 +1289,7 @@ MountConfigListView.prototype = _.extend({
 			'enable_sharing',
 			'encoding_compatibility',
 			'readonly',
+			'no_trashbin',
 			'delete'
 		];
 		if (this._encryptionEnabled) {

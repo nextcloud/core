@@ -476,7 +476,7 @@ import escapeHTML from 'escape-html'
 		 *
 		 * @returns {Promise} promise
 		 */
-		getFolderContents: function(path, options) {
+		getFolderContents: function(path, options,storageStatus) {
 			if (!path) {
 				path = ''
 			}
@@ -502,10 +502,10 @@ import escapeHTML from 'escape-html'
 						// remove root dir, the first entry
 						results.shift()
 					}
-					deferred.resolve(result.status, results)
+					deferred.resolve(result.status, results,storageStatus)
 				} else {
 					result = _.extend(result, self._getSabreException(result))
-					deferred.reject(result.status, result)
+					deferred.reject(result.status, result,storageStatus)
 				}
 			})
 			return promise

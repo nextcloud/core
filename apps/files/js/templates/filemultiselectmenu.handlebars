@@ -1,6 +1,6 @@
 <ul>
 	{{#each items}}
-		<li class="item-{{name}}">
+		<li class="item-{{name}} {{deleteAlert}}">
 			<a href="#" class="menuitem action {{name}} permanent" data-action="{{name}}">
 				{{#if iconClass}}
 					<span class="icon {{iconClass}}"></span>

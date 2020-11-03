@@ -13,7 +13,17 @@
 		tagName: 'div',
 		className: 'filesSelectMenu popovermenu bubble menu-center',
 		_scopes: null,
-		initialize: function(menuItems) {
+		initialize: function(menuItems,storageStatus) {
+			if (storageStatus && storageStatus.data.noTrashbin) {
+				menuItems =  menuItems.map(function(el) {
+						var o = Object.assign({}, el); 
+						if (o.name == "delete") {
+							o.deleteAlert = "permanent-delete";
+							o.displayName = "delete permanently";
+						}
+						return o;
+				});
+			}
 			this._scopes = menuItems;
 		},
 		events: {

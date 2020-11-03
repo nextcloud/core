@@ -97,6 +97,10 @@
 					item = _.extend({}, item);
 					item.icon = item.icon(fileName, self._context);
 				}
+				if (_.isFunction(item.deleteAlert)) {
+					item = _.extend({}, item);
+					item.deleteAlert = item.deleteAlert(self._context);
+				}
 				item.inline = item.type === OCA.Files.FileActions.TYPE_INLINE
 				return item;
 			});

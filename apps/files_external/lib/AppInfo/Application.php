@@ -66,6 +66,7 @@ use OCP\AppFramework\App;
 use OCP\IGroup;
 use OCP\IUser;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use OCA\Files_External\Listener\MoveToTrashListener;
 
 /**
  * @package OCA\Files_External\AppInfo
@@ -116,7 +117,10 @@ class Application extends App implements IBackendProvider, IAuthMechanismProvide
 				$config = $this->getContainer()->query(DBConfigService::class);
 				$config->modifyMountsOnGroupDelete($group->getGID());
 			}
-		);
+	);
+		$container = $this->getContainer();
+		$moveToTrashListener = $container->query(MoveToTrashListener::class);
+		$dispatcher->addListener('OCA\Files_Trashbin::moveToTrash',[$moveToTrashListener,'handle']);
 	}
 
 	/**

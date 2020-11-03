@@ -1,6 +1,6 @@
 <ul>
 	{{#each items}}
-		<li class="{{#if inline}}hidden{{/if}} action-{{nameLowerCase}}-container">
+		<li class="{{#if inline}}hidden{{/if}} action-{{nameLowerCase}}-container {{deleteAlert}}">
 			<a href="#" class="menuitem action action-{{nameLowerCase}} permanent" data-action="{{name}}">
 				{{#if icon}}<img class="icon" src="{{icon}}"/>
 				{{else}}

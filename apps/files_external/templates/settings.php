@@ -12,7 +12,8 @@ $canCreateMounts = $_['visibilityType'] === BackendService::VISIBILITY_ADMIN || 
 	$l->t("Check for changes");
 	$l->t("Never");
 	$l->t("Once every direct access");
-	$l->t('Read only');
+  $l->t('Read only');
+  $l->t('Delete Without Trashbin');
 
 	script('files_external', [
 		'settings',

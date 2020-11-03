@@ -31,6 +31,14 @@
 				Files.updateMaxUploadFilesize(response);
 			});
 		},
+		_getStorageStatistics: function(currentDir) {
+			var deferred = $.Deferred();
+			var promise = deferred.promise();
+			$.getJSON(OC.filePath('files','ajax','getstoragestats.php') + '?dir=' + encodeURIComponent(currentDir),function(response) {
+			  deferred.resolve(response);
+			});
+			return promise;
+		},
 		// update quota
 		updateStorageQuotas: function() {
 			Files._updateStorageQuotasThrottled();
@@ -62,6 +70,13 @@
 			else {
 				Files._updateStorageStatisticsDebounced(dir);
 			}
+		},
+
+		getStorageStatistics: function(dir) {
+			if (!OC.currentUser) {
+				return;
+			}
+			return Files._getStorageStatistics(dir);
 		},
 
 		updateMaxUploadFilesize:function(response) {
