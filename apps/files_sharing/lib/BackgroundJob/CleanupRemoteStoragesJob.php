@@ -38,7 +38,7 @@ class CleanupRemoteStoragesJob extends TimedJob
     /**
      * @var CleanupRemoteStorages
      */
-    private CleanupRemoteStorages $remoteStorages;
+    private $remoteStorages;
 
     /**
      * CleanupRemoteStoragesJob constructor.
