@@ -19,7 +19,7 @@ return array(
     'OCA\\Files_Sharing\\Activity\\Settings\\Shared' => $baseDir . '/../lib/Activity/Settings/Shared.php',
     'OCA\\Files_Sharing\\AppInfo\\Application' => $baseDir . '/../lib/AppInfo/Application.php',
     'OCA\\Files_Sharing\\BackgroundJob\\FederatedSharesDiscoverJob' => $baseDir . '/../lib/BackgroundJob/FederatedSharesDiscoverJob.php',
-	'OCA\\Files_Sharing\\BackgroundJob\\CleanupRemoteStoragesJob' => $baseDir . '/../lib/BackgroundJob/CleanupRemoteStoragesJob.php',
+    'OCA\\Files_Sharing\\BackgroundJob\\CleanupRemoteStoragesJob' => $baseDir . '/../lib/BackgroundJob/CleanupRemoteStoragesJob.php',
     'OCA\\Files_Sharing\\Cache' => $baseDir . '/../lib/Cache.php',
     'OCA\\Files_Sharing\\Capabilities' => $baseDir . '/../lib/Capabilities.php',
     'OCA\\Files_Sharing\\Collaboration\\ShareRecipientSorter' => $baseDir . '/../lib/Collaboration/ShareRecipientSorter.php',
