@@ -33,38 +33,35 @@ use Symfony\Component\Console\Output\NullOutput;
 /**
  * Background job for the Command CleanupRemoteStorages
  */
-class CleanupRemoteStoragesJob extends TimedJob
-{
-    /**
-     * @var CleanupRemoteStorages
-     */
-    private $remoteStorages;
+class CleanupRemoteStoragesJob extends TimedJob {
+	/**
+	 * @var CleanupRemoteStorages
+	 */
+	private $remoteStorages;
 
-    /**
-     * CleanupRemoteStoragesJob constructor.
-     * @param ITimeFactory $time
-     * @param CleanupRemoteStorages $remoteStorages
-     */
-    private function __construct(ITimeFactory $time, CleanupRemoteStorages $remoteStorages)
-    {
-        parent::__construct($time);
-        $this->remoteStorages = $remoteStorages;
+	/**
+	 * CleanupRemoteStoragesJob constructor.
+	 * @param ITimeFactory $time
+	 * @param CleanupRemoteStorages $remoteStorages
+	 */
+	private function __construct(ITimeFactory $time, CleanupRemoteStorages $remoteStorages) {
+		parent::__construct($time);
+		$this->remoteStorages = $remoteStorages;
 
-        // Only once a week
-        parent::setInterval(604800);
-    }
+		// Only once a week
+		parent::setInterval(604800);
+	}
 
-    /**
-     * @param $argument
-     * @return void
-     */
-    protected function run($argument)
-    {
-        $input = new ArrayInput(array(
-            'command' => 'sharing:cleanup-remote-storages',
-            '--dry-run' => ""
-        ));
-        $output = new NullOutput();
-        $this->remoteStorages->execute($input, $output);
-    }
+	/**
+	 * @param $argument
+	 * @return void
+	 */
+	protected function run($argument) {
+		$input = new ArrayInput(array(
+			'command' => 'sharing:cleanup-remote-storages',
+			'--dry-run' => ""
+		));
+		$output = new NullOutput();
+		$this->remoteStorages->execute($input, $output);
+	}
 }
