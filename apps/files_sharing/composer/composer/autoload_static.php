@@ -7,14 +7,14 @@ namespace Composer\Autoload;
 class ComposerStaticInitFiles_Sharing
 {
     public static $prefixLengthsPsr4 = array (
-        'O' => 
+        'O' =>
         array (
             'OCA\\Files_Sharing\\' => 18,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'OCA\\Files_Sharing\\' => 
+        'OCA\\Files_Sharing\\' =>
         array (
             0 => __DIR__ . '/..' . '/../lib',
         ),
@@ -34,6 +34,7 @@ class ComposerStaticInitFiles_Sharing
         'OCA\\Files_Sharing\\Activity\\Settings\\Shared' => __DIR__ . '/..' . '/../lib/Activity/Settings/Shared.php',
         'OCA\\Files_Sharing\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
         'OCA\\Files_Sharing\\BackgroundJob\\FederatedSharesDiscoverJob' => __DIR__ . '/..' . '/../lib/BackgroundJob/FederatedSharesDiscoverJob.php',
+        'OCA\\Files_Sharing\\BackgroundJob\\CleanupRemoteStoragesJob' => __DIR__ . '/..' . '/../lib/BackgroundJob/CleanupRemoteStoragesJob.php',
         'OCA\\Files_Sharing\\Cache' => __DIR__ . '/..' . '/../lib/Cache.php',
         'OCA\\Files_Sharing\\Capabilities' => __DIR__ . '/..' . '/../lib/Capabilities.php',
         'OCA\\Files_Sharing\\Collaboration\\ShareRecipientSorter' => __DIR__ . '/..' . '/../lib/Collaboration/ShareRecipientSorter.php',
