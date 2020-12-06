@@ -13,6 +13,7 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roger Szabo <roger.szabo@web.de>
+ * @author Vincent Van Houtte <vvh@aplusv.be>
  *
  * @license AGPL-3.0
  *
@@ -72,7 +73,7 @@ class LDAP implements ILDAPWrapper {
 		if (strpos($host, '://') === false) {
 			$host = 'ldap://' . $host;
 		}
-		if (strpos($host, ':', strpos($host, '://') + 1) === false) {
+		if (strpos($host, ':', strpos($host, '://') + 1) === false && !empty($port)) {
 			//ldap_connect ignores port parameter when URLs are passed
 			$host .= ':' . $port;
 		}

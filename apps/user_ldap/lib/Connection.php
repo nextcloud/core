@@ -18,6 +18,7 @@
  * @author root <root@localhost.localdomain>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  * @author Xuanwo <xuanwo@yunify.com>
+ * @author Vincent Van Houtte <vvh@aplusv.be>
  *
  * @license AGPL-3.0
  *
@@ -424,8 +425,14 @@ class Connection extends LDAPUtility {
 			(string)$this->configPrefix .'): ';
 
 		//options that shall not be empty
-		$options = ['ldapHost', 'ldapPort', 'ldapUserDisplayName',
+		$options = ['ldapHost', 'ldapUserDisplayName',
 			'ldapGroupDisplayName', 'ldapLoginFilter'];
+
+		//ldapPort should not be empty either unless ldapHost is pointing to a socket
+		if(substr($this->configuration->ldapHost, 0, strlen('ldapi://')) != 'ldapi://') {
+			$options[] = 'ldapPort';
+		}
+
 		foreach ($options as $key) {
 			$val = $this->configuration->$key;
 			if (empty($val)) {
