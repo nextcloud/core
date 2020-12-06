@@ -86,7 +86,8 @@ OCA = OCA || {};
 			var agent = view.configModel.configuration.ldap_dn;
 			var pwd   = view.configModel.configuration.ldap_agent_password;
 
-			if((host && port  && base) && ((!agent && !pwd) || (agent && pwd))) {
+			if(((host && port && base) || (host && base && host.indexOf('ldapi://') > -1 ))
+        && ((!agent && !pwd) || (agent && pwd))) {
 				view.enableTabs();
 			} else {
 				view.disableTabs();
@@ -107,7 +108,8 @@ OCA = OCA || {};
 			var userFilter  = this.configModel.configuration.ldap_userlist_filter;
 			var loginFilter = this.configModel.configuration.ldap_login_filter;
 
-			if(host && port && base && userFilter && loginFilter) {
+			if((host && port && base && userFilter && loginFilter) ||
+        (host && base && host.indexOf('ldapi://') > -1 && userFilter && loginFilter)) {
 				this.configModel.requestConfigurationTest();
 			} else {
 				this._updateStatusIndicator(this.STATUS_INCOMPLETE);
