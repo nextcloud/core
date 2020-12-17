@@ -64,6 +64,8 @@ interface IPreview {
 	 * @param \Closure $callable
 	 * @return void
 	 * @since 8.1.0
+	 *
+	 * @deprecated 21 Regsiter your provider via the IRegistration context when booting the app
 	 */
 	public function registerProvider($mimeTypeRegex, \Closure $callable);
 

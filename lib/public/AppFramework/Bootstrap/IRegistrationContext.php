@@ -181,4 +181,18 @@ interface IRegistrationContext {
 	 * @since 21.0.0
 	 */
 	public function registerInitialStateProvider(string $class): void;
+
+	/**
+	 * Register a preview provider
+	 *
+	 * It is allowed to register more than one provider per app.
+	 *
+	 * @param string $class
+	 * @param string $mimeTypeRegex
+	 *
+	 * @return void
+	 *
+	 * @since 21.0.0
+	 */
+	public function registerPreviewProvider(string $class, string $mimeTypeRegex): void;
 }
