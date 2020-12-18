@@ -16,7 +16,7 @@ use OCP\Files\NotFoundException;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\IConfig;
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class UserAvatarTest extends \Test\TestCase {
 	/** @var Folder | \PHPUnit\Framework\MockObject\MockObject */
@@ -309,7 +309,7 @@ class UserAvatarTest extends \Test\TestCase {
 			$this->folder,
 			$l,
 			$user,
-			$this->createMock(ILogger::class),
+			$this->createMock(LoggerInterface::class),
 			$this->config
 		);
 	}

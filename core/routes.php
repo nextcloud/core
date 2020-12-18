@@ -103,6 +103,9 @@ $application->registerRoutes($this, [
 		['root' => '/core', 'name' => 'AppPassword#getAppPassword', 'url' => '/getapppassword', 'verb' => 'GET'],
 		['root' => '/core', 'name' => 'AppPassword#rotateAppPassword', 'url' => '/apppassword/rotate', 'verb' => 'POST'],
 		['root' => '/core', 'name' => 'AppPassword#deleteAppPassword', 'url' => '/apppassword', 'verb' => 'DELETE'],
+		['root' => '/core', 'name' => 'GenericAvatar#getAvatar', 'url' => '/avatar/{avatarType}/{avatarId}/{size}', 'verb' => 'GET'],
+		['root' => '/core', 'name' => 'GenericAvatar#setAvatar', 'url' => '/avatar/{avatarType}/{avatarId}', 'verb' => 'POST'],
+		['root' => '/core', 'name' => 'GenericAvatar#deleteAvatar', 'url' => '/avatar/{avatarType}/{avatarId}', 'verb' => 'DELETE'],
 
 		['root' => '/collaboration', 'name' => 'CollaborationResources#searchCollections', 'url' => '/resources/collections/search/{filter}', 'verb' => 'GET'],
 		['root' => '/collaboration', 'name' => 'CollaborationResources#listCollection', 'url' => '/resources/collections/{collectionId}', 'verb' => 'GET'],

@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace OC\AppFramework\Bootstrap;
 
+use OC\Avatar\GuestAvatarProvider;
+use OC\Avatar\UserAvatarProvider;
 use OC\Support\CrashReport\Registry;
 use OC_App;
 use OCP\AppFramework\App;
@@ -79,6 +81,11 @@ class Coordinator {
 	}
 
 	public function runInitialRegistration(): void {
+		if ($this->registrationContext === null) {
+			$this->registrationContext = new RegistrationContext($this->logger);
+		}
+
+		$this->registerCore();
 		$this->registerApps(OC_App::getEnabledApps());
 	}
 
@@ -86,13 +93,15 @@ class Coordinator {
 		$this->registerApps([$appId]);
 	}
 
+	private function registerCore(): void {
+		$this->registrationContext->registerAvatarProvider('', 'user', UserAvatarProvider::class);
+		$this->registrationContext->registerAvatarProvider('', 'guest', GuestAvatarProvider::class);
+	}
+
 	/**
 	 * @param string[] $appIds
 	 */
 	private function registerApps(array $appIds): void {
-		if ($this->registrationContext === null) {
-			$this->registrationContext = new RegistrationContext($this->logger);
-		}
 		$apps = [];
 		foreach ($appIds as $appId) {
 			/*

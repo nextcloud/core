@@ -34,57 +34,61 @@ declare(strict_types=1);
 
 namespace OC\Avatar;
 
-use OC\User\Manager;
+use OC\AppFramework\Bootstrap\Coordinator;
 use OC\User\NoUserException;
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IAvatar;
 use OCP\IAvatarManager;
+use OCP\IAvatarProvider;
 use OCP\IConfig;
-use OCP\IL10N;
-use OCP\ILogger;
+use OCP\IServerContainer;
+use Psr\Log\LoggerInterface;
 
 /**
  * This class implements methods to access Avatar functionality
  */
 class AvatarManager implements IAvatarManager {
 
-	/** @var Manager */
-	private $userManager;
-
 	/** @var IAppData */
 	private $appData;
 
-	/** @var IL10N */
-	private $l;
-
-	/** @var ILogger  */
+	/** @var LoggerInterface  */
 	private $logger;
 
 	/** @var IConfig */
 	private $config;
 
+	/** @var IServerContainer */
+	private $serverContainer;
+
+	/** @var Coordinator */
+	private $bootstrapCoordinator;
+
+	/** @var IAvatarProvider[] */
+	private $providers = [];
+
 	/**
 	 * AvatarManager constructor.
 	 *
-	 * @param Manager $userManager
 	 * @param IAppData $appData
-	 * @param IL10N $l
-	 * @param ILogger $logger
+	 * @param LoggerInterface $logger
 	 * @param IConfig $config
+	 * @param IServerContainer $serverContainer
+	 * @param Coordinator $bootstrapCoordinator
 	 */
 	public function __construct(
-			Manager $userManager,
 			IAppData $appData,
-			IL10N $l,
-			ILogger $logger,
-			IConfig $config) {
-		$this->userManager = $userManager;
+			LoggerInterface $logger,
+			IConfig $config,
+			IServerContainer $serverContainer,
+			Coordinator $bootstrapCoordinator) {
 		$this->appData = $appData;
-		$this->l = $l;
 		$this->logger = $logger;
 		$this->config = $config;
+		$this->serverContainer = $serverContainer;
+		$this->bootstrapCoordinator = $bootstrapCoordinator;
 	}
 
 	/**
@@ -96,21 +100,7 @@ class AvatarManager implements IAvatarManager {
 	 * @throws NotFoundException In case there is no user folder yet
 	 */
 	public function getAvatar(string $userId) : IAvatar {
-		$user = $this->userManager->get($userId);
-		if ($user === null) {
-			throw new \Exception('user does not exist');
-		}
-
-		// sanitize userID - fixes casing issue (needed for the filesystem stuff that is done below)
-		$userId = $user->getUID();
-
-		try {
-			$folder = $this->appData->getFolder($userId);
-		} catch (NotFoundException $e) {
-			$folder = $this->appData->newFolder($userId);
-		}
-
-		return new UserAvatar($folder, $this->l, $user, $this->logger, $this->config);
+		return $this->getAvatarProvider('user')->getAvatar($userId);
 	}
 
 	/**
@@ -150,6 +140,26 @@ class AvatarManager implements IAvatarManager {
 	 * @return IAvatar
 	 */
 	public function getGuestAvatar(string $name): IAvatar {
-		return new GuestAvatar($name, $this->logger);
+		return $this->getAvatarProvider('guest')->getAvatar($name);
+	}
+
+	public function getAvatarProvider(string $type): IAvatarProvider {
+		$context = $this->bootstrapCoordinator->getRegistrationContext();
+
+		if ($context === null) {
+			throw new \RuntimeException("Avatar provider requested before the apps had been fully registered");
+		}
+
+		$providerClasses = $context->getAvatarProviders();
+
+		if (!array_key_exists($type, $providerClasses)) {
+			throw new \InvalidArgumentException('Unknown avatar type: ' . $type);
+		}
+
+		if (!array_key_exists($type, $this->providers)) {
+			$this->providers[$type] = $this->serverContainer->get($providerClasses[$type]);
+		}
+
+		return $this->providers[$type];
 	}
 }

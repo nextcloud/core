@@ -188,6 +188,8 @@ trait BasicStructure {
 		if ($body instanceof TableNode) {
 			$fd = $body->getRowsHash();
 			$options['form_params'] = $fd;
+		} elseif ($body) {
+			$options = array_merge($options, $body);
 		}
 
 		// TODO: Fix this hack!

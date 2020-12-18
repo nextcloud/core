@@ -45,6 +45,111 @@ trait Avatar {
 		}
 		$body->close();
 	}
+	/**
+	 * @When user :user gets avatar for type :type and id :id
+	 *
+	 * @param string $user
+	 * @param string $type
+	 * @param string $id
+	 */
+	public function userGetsAvatarForTypeAndId(string $user, string $type, string $id) {
+		$this->userGetsAvatarForTypeAndIdWithSize($user, $type, $id, '128');
+	}
+
+	/**
+	 * @When user :user gets avatar for type :type and id :id with size :size
+	 *
+	 * @param string $user
+	 * @param string $type
+	 * @param string $id
+	 * @param string $size
+	 */
+	public function userGetsAvatarForTypeAndIdWithSize(string $user, string $type, string $id, string $size) {
+		$this->userGetsAvatarForTypeAndIdWithSizeWith($user, $type, $id, $size, '200');
+	}
+
+	/**
+	 * @When user :user gets avatar for type :type and id :id with size :size with :statusCode
+	 *
+	 * @param string $user
+	 * @param string $type
+	 * @param string $id
+	 * @param string $size
+	 * @param string $statusCode
+	 */
+	public function userGetsAvatarForTypeAndIdWithSizeWith(string $user, string $type, string $id, string $size, string $statusCode) {
+		$this->asAn($user);
+		$this->sendingToWith('GET', '/core/avatar/' . $type . '/' . $id . '/' . $size, null);
+		$this->theHTTPStatusCodeShouldBe($statusCode);
+
+		if ($statusCode !== '200') {
+			return;
+		}
+
+		$this->getLastAvatar();
+	}
+
+	/**
+	 * @When user :user sets avatar for type :type and id :id from file :source
+	 *
+	 * @param string $user
+	 * @param string $type
+	 * @param string $id
+	 * @param string $source
+	 */
+	public function userSetsAvatarForTypeAndIdFromFile(string $user, string $type, string $id, string $source) {
+		$this->userSetsAvatarForTypeAndIdFromFileWith($user, $type, $id, $source, '200');
+	}
+
+	/**
+	 * @When user :user sets avatar for type :type and id :id from file :source with :statusCode
+	 *
+	 * @param string $user
+	 * @param string $type
+	 * @param string $id
+	 * @param string $source
+	 * @param string $statusCode
+	 */
+	public function userSetsAvatarForTypeAndIdFromFileWith(string $user, string $type, string $id, string $source, string $statusCode) {
+		$file = \GuzzleHttp\Psr7\stream_for(fopen($source, 'r'));
+
+		$this->asAn($user);
+		$this->sendingToWith('POST', '/core/avatar/' . $type . '/' . $id,
+			[
+				'multipart' => [
+					[
+						'name' => 'files[]',
+						'contents' => $file
+					]
+				]
+			]);
+		$this->theHTTPStatusCodeShouldBe($statusCode);
+	}
+
+	/**
+	 * @When user :user deletes avatar for type :type and id :id
+	 *
+	 * @param string $user
+	 * @param string $type
+	 * @param string $id
+	 */
+	public function userDeletesAvatarForTypeAndId(string $user, string $type, string $id) {
+		$this->userDeletesAvatarForTypeAndIdWith($user, $type, $id, '200');
+	}
+
+	/**
+	 * @When user :user deletes avatar for type :type and id :id with :statusCode
+	 *
+	 * @param string $user
+	 * @param string $type
+	 * @param string $id
+	 * @param string $statusCode
+	 */
+	public function userDeletesAvatarForTypeAndIdWith(string $user, string $type, string $id, string $statusCode) {
+		$this->asAn($user);
+		$this->sendingToWith('DELETE', '/core/avatar/' . $type . '/' . $id, null);
+		$this->theHTTPStatusCodeShouldBe($statusCode);
+	}
 
 	/**
 	 * @When user :user gets avatar for user :userAvatar

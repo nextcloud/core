@@ -181,4 +181,18 @@ interface IRegistrationContext {
 	 * @since 21.0.0
 	 */
 	public function registerInitialStateProvider(string $class): void;
+
+	/**
+	 * Register an avatar provider
+	 *
+	 * It is allowed to register more than one provider per app.
+	 *
+	 * @param string $class
+	 * @psalm-param class-string<\OCP\IAvatarProvider> $class
+	 *
+	 * @return void
+	 *
+	 * @since 21.0.0
+	 */
+	public function registerAvatarProvider(string $type, string $class): void;
 }

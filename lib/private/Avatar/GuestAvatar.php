@@ -27,7 +27,7 @@ declare(strict_types=1);
 namespace OC\Avatar;
 
 use OCP\Files\SimpleFS\InMemoryFile;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 /**
  * This class represents a guest user's avatar.
@@ -44,9 +44,9 @@ class GuestAvatar extends Avatar {
 	 * GuestAvatar constructor.
 	 *
 	 * @param string $userDisplayName The guest user display name
-	 * @param ILogger $logger The logger
+	 * @param LoggerInterface $logger The logger
 	 */
-	public function __construct(string $userDisplayName, ILogger $logger) {
+	public function __construct(string $userDisplayName, LoggerInterface $logger) {
 		parent::__construct($logger);
 		$this->userDisplayName = $userDisplayName;
 	}
