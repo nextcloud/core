@@ -274,6 +274,8 @@ class Local extends \OC\Files\Storage\Common {
 	}
 
 	public function file_put_contents($path, $data) {
+		// support Write-Once-Read-Many filesystems
+		$this->unlink($path);
 		return file_put_contents($this->getSourcePath($path), $data);
 	}
 
@@ -353,6 +355,10 @@ class Local extends \OC\Files\Storage\Common {
 	}
 
 	public function fopen($path, $mode) {
+		if ($mode === 'w') {
+			// support Write-Once-Read-Many filesystems
+			$this->unlink($path);
+		}
 		return fopen($this->getSourcePath($path), $mode);
 	}
 
