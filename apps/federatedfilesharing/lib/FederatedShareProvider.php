@@ -183,11 +183,15 @@ class FederatedShareProvider implements IShareProvider {
 			throw new \Exception($message_t);
 		}
 
+		$cloudId = $this->cloudIdManager->resolveCloudId($shareWith);
+		$currentServer = $this->addressHandler->generateRemoteURL();
+		$currentUser = $sharedBy;
+
 		/*
 		 * Check if file is not already shared with the remote user
 		 */
-		$alreadyShared = $this->getSharedWith($shareWith, IShare::TYPE_REMOTE, $share->getNode(), 1, 0);
-		$alreadySharedGroup = $this->getSharedWith($shareWith, IShare::TYPE_REMOTE_GROUP, $share->getNode(), 1, 0);
+		$alreadyShared = $this->getSharedWith($cloudId->getId(), IShare::TYPE_REMOTE, $share->getNode(), 1, 0);
+		$alreadySharedGroup = $this->getSharedWith($cloudId->getId(), IShare::TYPE_REMOTE_GROUP, $share->getNode(), 1, 0);
 		if (!empty($alreadyShared) || !empty($alreadySharedGroup)) {
 			$message = 'Sharing %1$s failed, because this item is already shared with %2$s';
 			$message_t = $this->l->t('Sharing %1$s failed, because this item is already shared with %2$s', [$share->getNode()->getName(), $shareWith]);
@@ -197,9 +201,6 @@ class FederatedShareProvider implements IShareProvider {
 
 
 		// don't allow federated shares if source and target server are the same
-		$cloudId = $this->cloudIdManager->resolveCloudId($shareWith);
-		$currentServer = $this->addressHandler->generateRemoteURL();
-		$currentUser = $sharedBy;
 		if ($this->addressHandler->compareAddresses($cloudId->getUser(), $cloudId->getRemote(), $currentUser, $currentServer)) {
 			$message = 'Not allowed to create a federated share with the same user.';
 			$message_t = $this->l->t('Not allowed to create a federated share with the same user');
@@ -216,12 +217,16 @@ class FederatedShareProvider implements IShareProvider {
 			$remoteShare = null;
 		}
 
-		if ($remoteShare) {
+		// Only use reshare notification if we are actually trying to go to a different server
+		$ownerCloudId = $remoteShare ? $this->cloudIdManager->getCloudId($remoteShare['owner'], $remoteShare['remote']) : null;
+		$isReshareOnSameInstance = $ownerCloudId
+			&& $this->addressHandler->compareAddresses('', $cloudId->getRemote(), '', $ownerCloudId->getRemote())
+			&& $this->addressHandler->compareAddresses('', $ownerCloudId->getRemote(), '', $currentServer);
+		if ($remoteShare && !$isReshareOnSameInstance) {
 			try {
-				$ownerCloudId = $this->cloudIdManager->getCloudId($remoteShare['owner'], $remoteShare['remote']);
-				$shareId = $this->addShareToDB($itemSource, $itemType, $shareWith, $sharedBy, $ownerCloudId->getId(), $permissions, 'tmp_token_' . time(), $shareType);
+				$shareId = $this->addShareToDB($itemSource, $itemType, $cloudId->getId(), $sharedBy, $ownerCloudId->getId(), $permissions, 'tmp_token_' . time(), $shareType);
 				$share->setId($shareId);
-				list($token, $remoteId) = $this->askOwnerToReShare($shareWith, $share, $shareId);
+				list($token, $remoteId) = $this->askOwnerToReShare($shareWith, $share, $shareId, $shareType);
 				// remote share was create successfully if we get a valid token as return
 				$send = is_string($token) && $token !== '';
 			} catch (\Exception $e) {
@@ -239,6 +244,9 @@ class FederatedShareProvider implements IShareProvider {
 				throw new \Exception($message_t);
 			}
 		} else {
+			if ($isReshareOnSameInstance) {
+				$share->setShareOwner($ownerCloudId->getUser());
+			}
 			$shareId = $this->createFederatedShare($share);
 		}
 
@@ -317,7 +325,7 @@ class FederatedShareProvider implements IShareProvider {
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected function askOwnerToReShare($shareWith, IShare $share, $shareId) {
+	protected function askOwnerToReShare($shareWith, IShare $share, $shareId, $shareType) {
 		$remoteShare = $this->getShareFromExternalShareTable($share);
 		$token = $remoteShare['share_token'];
 		$remoteId = $remoteShare['remote_id'];
@@ -330,7 +338,8 @@ class FederatedShareProvider implements IShareProvider {
 			$remote,
 			$shareWith,
 			$share->getPermissions(),
-			$share->getNode()->getName()
+			$share->getNode()->getName(),
+			$shareType
 		);
 
 		return [$token, $remoteId];

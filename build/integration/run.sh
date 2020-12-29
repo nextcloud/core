@@ -9,7 +9,7 @@ if [ "$1" = "--tags" ]; then
 	shift 2
 fi
 SCENARIO_TO_RUN=$1
-HIDE_OC_LOGS=$2
+SHOW_LOGS=$2
 
 INSTALLED=$($OCC status | grep installed: | cut -d " " -f 5)
 
@@ -34,13 +34,13 @@ if [ -z "$EXECUTOR_NUMBER" ]; then
 fi
 PORT=$((8080 + $EXECUTOR_NUMBER))
 echo $PORT
-php -S localhost:$PORT -t ../.. &
+PHP_CLI_SERVER_WORKERS=20 php -S 0.0.0.0:$PORT -t ../.. &
 PHPPID=$!
 echo $PHPPID
 
 PORT_FED=$((8180 + $EXECUTOR_NUMBER))
 echo $PORT_FED
-php -S localhost:$PORT_FED -t ../.. &
+PHP_CLI_SERVER_WORKERS=20 php -S 0.0.0.0:$PORT_FED -t ../.. &
 PHPPID_FED=$!
 echo $PHPPID_FED
 
@@ -75,7 +75,7 @@ if [ "$INSTALLED" == "true" ]; then
     $OCC app:disable files_external user_ldap
 fi
 
-if [ -z $HIDE_OC_LOGS ]; then
+if [ -z $SHOW_LOGS ]; then
 	tail "${NC_DATADIR}/nextcloud.log"
 fi
 

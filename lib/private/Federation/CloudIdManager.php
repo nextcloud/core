@@ -76,7 +76,7 @@ class CloudIdManager implements ICloudIdManager {
 			$user = substr($id, 0, $lastValidAtPos);
 			$remote = substr($id, $lastValidAtPos + 1);
 			if (!empty($user) && !empty($remote)) {
-				return new CloudId($id, $user, $remote, $this->getDisplayNameFromContact($id));
+				return new CloudId($id, $user, rtrim($remote, '/') . '/', $this->getDisplayNameFromContact($id));
 			}
 		}
 		throw new \InvalidArgumentException('Invalid cloud id');

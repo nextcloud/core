@@ -82,7 +82,7 @@ trait BasicStructure {
 		$this->adminUser = $admin;
 		$this->regularUser = $regular_user_password;
 		$this->localBaseUrl = $this->baseUrl;
-		$this->remoteBaseUrl = $this->baseUrl;
+		$this->remoteBaseUrl = str_replace('8080', '8180', $this->baseUrl);
 		$this->currentServer = 'LOCAL';
 		$this->cookieJar = new CookieJar();
 
