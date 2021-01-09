@@ -77,6 +77,9 @@ $color-loading-dark: #444 !default;
 
 $color-box-shadow: transparentize(nc-darken($color-main-background, 70%), 0.5) !default;
 
+// Our length base unit
+$base-unit: 4px;
+
 // light border like file table or app-content list
 $color-border: nc-darken($color-main-background, 7%) !default;
 // darker border like inputs or very visible elements
