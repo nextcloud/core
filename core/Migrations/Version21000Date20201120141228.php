@@ -63,6 +63,8 @@ class Version21000Date20201120141228 extends SimpleMigrationStep {
 		if ($schema->hasTable('systemtag')) {
 			$table = $schema->getTable('systemtag');
 			if ($table->hasColumn('assignable')) {
+				$table->dropIndex('tag_ident');
+				$table->addUniqueIndex(['name', 'visibility', 'editable'], 'tag_ident');
 				$table->dropColumn('assignable');
 			}
 		}
