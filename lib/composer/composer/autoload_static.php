@@ -1185,6 +1185,7 @@ class ComposerStaticInit53792487c5a8370acc0b06b1a864ff4c
         'OC\\IntegrityCheck\\Helpers\\AppLocator' => __DIR__ . '/../../..' . '/lib/private/IntegrityCheck/Helpers/AppLocator.php',
         'OC\\IntegrityCheck\\Helpers\\EnvironmentHelper' => __DIR__ . '/../../..' . '/lib/private/IntegrityCheck/Helpers/EnvironmentHelper.php',
         'OC\\IntegrityCheck\\Helpers\\FileAccessHelper' => __DIR__ . '/../../..' . '/lib/private/IntegrityCheck/Helpers/FileAccessHelper.php',
+        'OC\\IntegrityCheck\\Helpers\\InfoParser' => __DIR__ . '/../../..' . '/lib/private/IntegrityCheck/Helpers/InfoParser.php',
         'OC\\IntegrityCheck\\Iterator\\ExcludeFileByNameFilterIterator' => __DIR__ . '/../../..' . '/lib/private/IntegrityCheck/Iterator/ExcludeFileByNameFilterIterator.php',
         'OC\\IntegrityCheck\\Iterator\\ExcludeFoldersByPathFilterIterator' => __DIR__ . '/../../..' . '/lib/private/IntegrityCheck/Iterator/ExcludeFoldersByPathFilterIterator.php',
         'OC\\L10N\\Factory' => __DIR__ . '/../../..' . '/lib/private/L10N/Factory.php',

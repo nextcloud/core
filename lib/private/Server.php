@@ -103,6 +103,7 @@ use OC\IntegrityCheck\Checker;
 use OC\IntegrityCheck\Helpers\AppLocator;
 use OC\IntegrityCheck\Helpers\EnvironmentHelper;
 use OC\IntegrityCheck\Helpers\FileAccessHelper;
+use OC\IntegrityCheck\Helpers\InfoParser;
 use OC\Lock\DBLockingProvider;
 use OC\Lock\MemcacheLockingProvider;
 use OC\Lock\NoopLockingProvider;
@@ -938,6 +939,7 @@ class Server extends ServerContainer implements IServerContainer {
 			return new Checker(
 				new EnvironmentHelper(),
 				new FileAccessHelper(),
+				new InfoParser(),
 				new AppLocator(),
 				$config,
 				$c->get(ICacheFactory::class),

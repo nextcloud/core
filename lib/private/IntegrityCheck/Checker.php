@@ -37,6 +37,7 @@ use OC\IntegrityCheck\Exceptions\InvalidSignatureException;
 use OC\IntegrityCheck\Helpers\AppLocator;
 use OC\IntegrityCheck\Helpers\EnvironmentHelper;
 use OC\IntegrityCheck\Helpers\FileAccessHelper;
+use OC\IntegrityCheck\Helpers\InfoParser;
 use OC\IntegrityCheck\Iterator\ExcludeFileByNameFilterIterator;
 use OC\IntegrityCheck\Iterator\ExcludeFoldersByPathFilterIterator;
 use OCP\App\IAppManager;
@@ -76,6 +77,8 @@ class Checker {
 	private $tempManager;
 	/** @var IMimeTypeDetector */
 	private $mimeTypeDetector;
+	/** @var InfoParser */
+	private $infoParser;
 
 	/**
 	 * @param EnvironmentHelper $environmentHelper
@@ -89,6 +92,7 @@ class Checker {
 	 */
 	public function __construct(EnvironmentHelper $environmentHelper,
 								FileAccessHelper $fileAccessHelper,
+								InfoParser $infoParser,
 								AppLocator $appLocator,
 								IConfig $config = null,
 								ICacheFactory $cacheFactory,
@@ -103,6 +107,7 @@ class Checker {
 		$this->appManager = $appManager;
 		$this->tempManager = $tempManager;
 		$this->mimeTypeDetector = $mimeTypeDetector;
+		$this->infoParser = $infoParser;
 	}
 
 	/**
@@ -235,13 +240,21 @@ class Checker {
 
 		$privateKey->setSignatureMode(RSA::SIGNATURE_PSS);
 		$privateKey->setMGFHash('sha512');
+		$privateKey->setHash('sha1');
 		// See https://tools.ietf.org/html/rfc3447#page-38
 		$privateKey->setSaltLength(0);
-		$signature = $privateKey->sign(json_encode($hashes));
+		$sha1signature = $privateKey->sign(json_encode($hashes));
+
+		$privateKey->setHash('sha512');
+		$sha512signature = $privateKey->sign(json_encode($hashes));
 
 		return [
 			'hashes' => $hashes,
-			'signature' => base64_encode($signature),
+			'signature' => base64_encode($sha1signature),
+			'signatures' => [
+				'sha1' => base64_encode($sha1signature),
+				'sha512' => base64_encode($sha512signature),
+			],
 			'certificate' => $certificate->saveX509($certificate->currentCert),
 		];
 	}
@@ -311,11 +324,12 @@ class Checker {
 	 * @param string $signaturePath
 	 * @param string $basePath
 	 * @param string $certificateCN
+	 * @param string|null $forceHash
 	 * @return array
 	 * @throws InvalidSignatureException
 	 * @throws \Exception
 	 */
-	private function verify(string $signaturePath, string $basePath, string $certificateCN): array {
+	private function verify(string $signaturePath, string $basePath, string $certificateCN, ?string $forceHash = null): array {
 		if (!$this->isCodeCheckEnforced()) {
 			return [];
 		}
@@ -332,7 +346,6 @@ class Checker {
 
 		$expectedHashes = $signatureData['hashes'];
 		ksort($expectedHashes);
-		$signature = base64_decode($signatureData['signature']);
 		$certificate = $signatureData['certificate'];
 
 		// Check if certificate is signed by Nextcloud Root Authority
@@ -357,8 +370,19 @@ class Checker {
 		$rsa->setMGFHash('sha512');
 		// See https://tools.ietf.org/html/rfc3447#page-38
 		$rsa->setSaltLength(0);
-		if (!$rsa->verify(json_encode($expectedHashes), $signature)) {
-			throw new InvalidSignatureException('Signature could not get verified.');
+
+		if ($forceHash && isset($signatureData['signatures'][$forceHash])) {
+			// Check the sha512 hash
+			$rsa->setHash($forceHash);
+			if (!$rsa->verify(json_encode($expectedHashes), base64_decode($signatureData['signatures'][$forceHash]))) {
+				throw new InvalidSignatureException('Signature could not get verified.');
+			}
+		} else {
+			// The default fallback with the sha1 hash
+			$rsa->setHash('sha1');
+			if (!$rsa->verify(json_encode($expectedHashes), base64_decode($signatureData['signature']))) {
+				throw new InvalidSignatureException('Signature could not get verified.');
+			}
 		}
 
 		// Fixes for the updater as shipped with ownCloud 9.0.x: The updater is
@@ -502,10 +526,18 @@ class Checker {
 			if ($path === '') {
 				$path = $this->appLocator->getAppPath($appId);
 			}
+
+			$minVersion = $this->infoParser->getMinVersion($path . '/appinfo/info.xml');
+			$forceHash = null;
+			if ($minVersion >= 22) {
+				$forceHash = 'sha512';
+			}
+
 			$result = $this->verify(
-					$path . '/appinfo/signature.json',
-					$path,
-					$appId
+				$path . '/appinfo/signature.json',
+				$path,
+				$appId,
+				$forceHash
 			);
 		} catch (\Exception $e) {
 			$result = [
@@ -553,9 +585,10 @@ class Checker {
 	public function verifyCoreSignature(): array {
 		try {
 			$result = $this->verify(
-					$this->environmentHelper->getServerRoot() . '/core/signature.json',
-					$this->environmentHelper->getServerRoot(),
-					'core'
+				$this->environmentHelper->getServerRoot() . '/core/signature.json',
+				$this->environmentHelper->getServerRoot(),
+				'core',
+				'sha512'
 			);
 		} catch (\Exception $e) {
 			$result = [

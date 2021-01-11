@@ -1156,6 +1156,7 @@ return array(
     'OC\\IntegrityCheck\\Helpers\\AppLocator' => $baseDir . '/lib/private/IntegrityCheck/Helpers/AppLocator.php',
     'OC\\IntegrityCheck\\Helpers\\EnvironmentHelper' => $baseDir . '/lib/private/IntegrityCheck/Helpers/EnvironmentHelper.php',
     'OC\\IntegrityCheck\\Helpers\\FileAccessHelper' => $baseDir . '/lib/private/IntegrityCheck/Helpers/FileAccessHelper.php',
+    'OC\\IntegrityCheck\\Helpers\\InfoParser' => $baseDir . '/lib/private/IntegrityCheck/Helpers/InfoParser.php',
     'OC\\IntegrityCheck\\Iterator\\ExcludeFileByNameFilterIterator' => $baseDir . '/lib/private/IntegrityCheck/Iterator/ExcludeFileByNameFilterIterator.php',
     'OC\\IntegrityCheck\\Iterator\\ExcludeFoldersByPathFilterIterator' => $baseDir . '/lib/private/IntegrityCheck/Iterator/ExcludeFoldersByPathFilterIterator.php',
     'OC\\L10N\\Factory' => $baseDir . '/lib/private/L10N/Factory.php',
