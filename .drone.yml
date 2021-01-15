@@ -764,8 +764,9 @@ steps:
   commands:
     - git submodule update --init
 - name: integration-federation_features
-  image: nextcloudci/integration-php7.3:integration-php7.3-2
+  image: nextcloudci/php7.4:php7.4-3
   commands:
+    - composer global require hirak/prestissimo
     - bash tests/drone-run-integration-tests.sh || exit 0
     - ./occ maintenance:install --admin-pass=admin
     - cd build/integration

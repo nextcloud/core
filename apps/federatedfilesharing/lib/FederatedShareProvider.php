@@ -219,9 +219,9 @@ class FederatedShareProvider implements IShareProvider {
 		if ($remoteShare) {
 			try {
 				$ownerCloudId = $this->cloudIdManager->getCloudId($remoteShare['owner'], $remoteShare['remote']);
-				$shareId = $this->addShareToDB($itemSource, $itemType, $shareWith, $sharedBy, $ownerCloudId->getId(), $permissions, 'tmp_token_' . time(), $shareType);
+				$shareId = $this->addShareToDB($itemSource, $itemType, $cloudId->getId(), $sharedBy, $ownerCloudId->getId(), $permissions, 'tmp_token_' . time(), $shareType);
 				$share->setId($shareId);
-				list($token, $remoteId) = $this->askOwnerToReShare($shareWith, $share, $shareId);
+				list($token, $remoteId) = $this->askOwnerToReShare($shareWith, $share, $shareId, $shareType);
 				// remote share was create successfully if we get a valid token as return
 				$send = is_string($token) && $token !== '';
 			} catch (\Exception $e) {
@@ -317,7 +317,7 @@ class FederatedShareProvider implements IShareProvider {
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected function askOwnerToReShare($shareWith, IShare $share, $shareId) {
+	protected function askOwnerToReShare($shareWith, IShare $share, $shareId, $shareType) {
 		$remoteShare = $this->getShareFromExternalShareTable($share);
 		$token = $remoteShare['share_token'];
 		$remoteId = $remoteShare['remote_id'];
@@ -330,7 +330,8 @@ class FederatedShareProvider implements IShareProvider {
 			$remote,
 			$shareWith,
 			$share->getPermissions(),
-			$share->getNode()->getName()
+			$share->getNode()->getName(),
+			$shareType
 		);
 
 		return [$token, $remoteId];

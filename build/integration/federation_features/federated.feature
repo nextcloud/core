@@ -190,29 +190,30 @@ Feature: federated
 		And User "user1" from server "REMOTE" accepts last pending share
 		And Using server "REMOTE"
 		And As an "user1"
+    # FIXME this step causes issues in case there is already another incoming share with the (2) suffix
 		When creating a share with
 			| path | /textfile0 (2).txt |
 			| shareType | 0 |
 			| shareWith | user2 |
 			| permissions | 19 |
-		#Then the OCS status code should be "100"
-		#And the HTTP status code should be "200"
-		#And Share fields of last share match with
-		#	| id | A_NUMBER |
-		#	| item_type | file |
-		#	| item_source | A_NUMBER |
-		#	| share_type | 0 |
-		#	| file_source | A_NUMBER |
-		#	| path | /textfile0 (2).txt |
-		#	| permissions | 19 |
-		#	| stime | A_NUMBER |
-		#	| storage | A_NUMBER |
-		#	| mail_send | 1 |
-		#	| uid_owner | user1 |
-		#	| file_parent | A_NUMBER |
-		#	| displayname_owner | user1 |
-		#	| share_with | user2 |
-		#	| share_with_displayname | user2 |
+		Then the OCS status code should be "100"
+		And the HTTP status code should be "200"
+		And Share fields of last share match with
+			| id | A_NUMBER |
+			| item_type | file |
+			| item_source | A_NUMBER |
+			| share_type | 0 |
+			| file_source | A_NUMBER |
+			| path | /textfile0 (2).txt |
+			| permissions | 19 |
+			| stime | A_NUMBER |
+			| storage | A_NUMBER |
+			| mail_send | 1 |
+			| uid_owner | user1 |
+			| file_parent | A_NUMBER |
+			| displayname_owner | user1 |
+			| share_with | user2 |
+			| share_with_displayname | user2 |
 
 	Scenario: Overwrite a federated shared file as recipient
 		Given Using server "REMOTE"
@@ -240,9 +241,9 @@ Feature: federated
 		And Using server "REMOTE"
 		And As an "user1"
 		And User "user1" modifies text of "/textfile0.txt" with text "BLABLABLA"
-		#When User "user1" uploads file "../../data/user1/files/textfile0.txt" to "/PARENT (2)/textfile0.txt"
-		#And Downloading file "/PARENT (2)/textfile0.txt" with range "bytes=0-8"
-		#Then Downloaded content should be "BLABLABLA"
+		When User "user1" uploads file "../../data/user1/files/textfile0.txt" to "/PARENT (2)/textfile0.txt"
+		And Downloading file "/PARENT (2)/textfile0.txt" with range "bytes=0-8"
+		Then Downloaded content should be "BLABLABLA"
 
 	Scenario: Overwrite a federated shared file as recipient using old chunking
 		Given Using server "REMOTE"
@@ -254,11 +255,11 @@ Feature: federated
 		And User "user1" from server "REMOTE" accepts last pending share
 		And Using server "REMOTE"
 		And As an "user1"
-		#And user "user1" uploads chunk file "1" of "3" with "AAAAA" to "/textfile0 (2).txt"
-		#And user "user1" uploads chunk file "2" of "3" with "BBBBB" to "/textfile0 (2).txt"
-		#And user "user1" uploads chunk file "3" of "3" with "CCCCC" to "/textfile0 (2).txt"
-		#When Downloading file "/textfile0 (2).txt" with range "bytes=0-4"
-		#Then Downloaded content should be "AAAAA"
+		And user "user1" uploads chunk file "1" of "3" with "AAAAA" to "/textfile0 (2).txt"
+		And user "user1" uploads chunk file "2" of "3" with "BBBBB" to "/textfile0 (2).txt"
+		And user "user1" uploads chunk file "3" of "3" with "CCCCC" to "/textfile0 (2).txt"
+		When Downloading file "/textfile0 (2).txt" with range "bytes=0-4"
+		Then Downloaded content should be "AAAAA"
 
 	Scenario: Overwrite a federated shared folder as recipient using old chunking
 		Given Using server "REMOTE"
@@ -270,11 +271,11 @@ Feature: federated
 		And User "user1" from server "REMOTE" accepts last pending share
 		And Using server "REMOTE"
 		And As an "user1"
-		#And user "user1" uploads chunk file "1" of "3" with "AAAAA" to "/PARENT (2)/textfile0.txt"
-		#And user "user1" uploads chunk file "2" of "3" with "BBBBB" to "/PARENT (2)/textfile0.txt"
-		#And user "user1" uploads chunk file "3" of "3" with "CCCCC" to "/PARENT (2)/textfile0.txt"
-		#When Downloading file "/PARENT (2)/textfile0.txt" with range "bytes=3-13"
-		#Then Downloaded content should be "AABBBBBCCCC"
+		And user "user1" uploads chunk file "1" of "3" with "AAAAA" to "/PARENT (2)/textfile0.txt"
+		And user "user1" uploads chunk file "2" of "3" with "BBBBB" to "/PARENT (2)/textfile0.txt"
+		And user "user1" uploads chunk file "3" of "3" with "CCCCC" to "/PARENT (2)/textfile0.txt"
+		When Downloading file "/PARENT (2)/textfile0.txt" with range "bytes=3-13"
+		Then Downloaded content should be "AABBBBBCCCC"
 
 
 
