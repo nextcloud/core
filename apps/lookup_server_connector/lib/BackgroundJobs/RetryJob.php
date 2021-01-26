@@ -194,30 +194,25 @@ class RetryJob extends Job {
 		$publicData = [];
 		foreach ($account->getProperties() as $property) {
 			if ($property->getScope() === IAccountManager::VISIBILITY_PUBLIC) {
-				$publicData[$property->getName()] = $property->getValue();
+				$publicData[$property->getName()] = [
+					'value'    => $property->getValue(),
+					'verified' => $property->getVerified()
+				];
 			}
 		}
 
 		$data = ['federationId' => $user->getCloudId()];
 		if (!empty($publicData)) {
-			$data['name'] = $publicData[IAccountManager::PROPERTY_DISPLAYNAME] ?? '';
-			$data['email'] = $publicData[IAccountManager::PROPERTY_EMAIL] ?? '';
-			$data['address'] = $publicData[IAccountManager::PROPERTY_ADDRESS] ?? '';
-			$data['website'] = $publicData[IAccountManager::PROPERTY_WEBSITE] ?? '';
-			$data['twitter'] = $publicData[IAccountManager::PROPERTY_TWITTER] ?? '';
-			$data['phone'] = $publicData[IAccountManager::PROPERTY_PHONE] ?? '';
-			
-			/**
-			/* @todo Signature and verification status are currently removed,
-			/*       since those information are not provided by the Account
-			/*       or AccountProperties class.
-			*/
-			//$data['twitter_signature'] = $publicData[IAccountManager::PROPERTY_TWITTER]['signature'] ?? '';
-			//$data['website_signature'] = $publicData[IAccountManager::PROPERTY_WEBSITE]['signature'] ?? '';
-			//$data['verificationStatus'] = [
-			//	IAccountManager::PROPERTY_WEBSITE => $publicData[IAccountManager::PROPERTY_WEBSITE]['verified'] ?? '',
-			//	IAccountManager::PROPERTY_TWITTER => $publicData[IAccountManager::PROPERTY_TWITTER]['verified'] ?? '',
-			//];
+			$data['name']    = $publicData[IAccountManager::PROPERTY_DISPLAYNAME]['value'] ?? '';
+			$data['email']   = $publicData[IAccountManager::PROPERTY_EMAIL]['value'] ?? '';
+			$data['address'] = $publicData[IAccountManager::PROPERTY_ADDRESS]['value'] ?? '';
+			$data['website'] = $publicData[IAccountManager::PROPERTY_WEBSITE]['value'] ?? '';
+			$data['twitter'] = $publicData[IAccountManager::PROPERTY_TWITTER]['value'] ?? '';
+			$data['phone']   = $publicData[IAccountManager::PROPERTY_PHONE]['value'] ?? '';
+			$data['verificationStatus'] = [
+				IAccountManager::PROPERTY_WEBSITE => $publicData[IAccountManager::PROPERTY_WEBSITE]['verified'] ?? '',
+				IAccountManager::PROPERTY_TWITTER => $publicData[IAccountManager::PROPERTY_TWITTER]['verified'] ?? '',
+			];
 		}
 
 		return $data;
