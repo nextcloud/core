@@ -203,12 +203,14 @@ class RetryJob extends Job {
 
 		$data = ['federationId' => $user->getCloudId()];
 		if (!empty($publicData)) {
-			$data['name']    = $publicData[IAccountManager::PROPERTY_DISPLAYNAME]['value'] ?? '';
-			$data['email']   = $publicData[IAccountManager::PROPERTY_EMAIL]['value'] ?? '';
+			$data['name'] = $publicData[IAccountManager::PROPERTY_DISPLAYNAME]['value'] ?? '';
+			$data['email'] = $publicData[IAccountManager::PROPERTY_EMAIL]['value'] ?? '';
 			$data['address'] = $publicData[IAccountManager::PROPERTY_ADDRESS]['value'] ?? '';
 			$data['website'] = $publicData[IAccountManager::PROPERTY_WEBSITE]['value'] ?? '';
 			$data['twitter'] = $publicData[IAccountManager::PROPERTY_TWITTER]['value'] ?? '';
-			$data['phone']   = $publicData[IAccountManager::PROPERTY_PHONE]['value'] ?? '';
+			$data['phone'] = $publicData[IAccountManager::PROPERTY_PHONE]['value'] ?? '';
+			$data['twitter_signature'] = $publicData[IAccountManager::PROPERTY_TWITTER]['signature'] ?? '';
+			$data['website_signature'] = $publicData[IAccountManager::PROPERTY_WEBSITE]['signature'] ?? '';
 			$data['verificationStatus'] = [
 				IAccountManager::PROPERTY_WEBSITE => $publicData[IAccountManager::PROPERTY_WEBSITE]['verified'] ?? '',
 				IAccountManager::PROPERTY_TWITTER => $publicData[IAccountManager::PROPERTY_TWITTER]['verified'] ?? '',
