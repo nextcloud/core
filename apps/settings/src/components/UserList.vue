@@ -471,8 +471,13 @@ export default {
 				group: this.selectedGroup !== 'disabled' ? this.selectedGroup : '',
 				search: this.searchQuery,
 			})
-				.then((response) => {
-					response ? $state.loaded() : $state.complete()
+				.then((usersCount) => {
+					if (usersCount > 0) {
+						$state.loaded()
+					}
+					if (usersCount < this.usersLimit) {
+						$state.complete()
+					}
 				})
 		},
 
