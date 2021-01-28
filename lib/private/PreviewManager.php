@@ -187,7 +187,14 @@ class PreviewManager implements IPreview {
 	 * @since 11.0.0 - \InvalidArgumentException was added in 12.0.0
 	 */
 	public function getPreview(File $file, $width = -1, $height = -1, $crop = false, $mode = IPreview::MODE_FILL, $mimeType = null) {
-		return $this->getGenerator()->getPreview($file, $width, $height, $crop, $mode, $mimeType);
+		$previewConcurrency = $this->getGenerator()->getNumConcurrentPreviews('preview_concurrency_all');
+ 		$sem = Generator::guardWithSemaphore(Generator::SEMAPHORE_ID_ALL, $previewConcurrency);
+
+ 		$preview = $this->getGenerator()->getPreview($file, $width, $height, $crop, $mode, $mimeType);
+
+ 		Generator::unguardWithSemaphore($sem);
+
+ 		return $preview;
 	}
 
 	/**
