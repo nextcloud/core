@@ -161,14 +161,14 @@ interface IRegistrationContext {
 	 *
 	 * It is allowed to register more than one option per app.
 	 *
-	 * @param string $class
+	 * @param string|\OCP\Authentication\IAlternativeLogin $class
 	 * @psalm-param class-string<\OCP\Authentication\IAlternativeLogin> $class
 	 *
 	 * @return void
 	 *
 	 * @since 20.0.0
 	 */
-	public function registerAlternativeLogin(string $class): void;
+	public function registerAlternativeLogin($class): void;
 
 	/**
 	 * Register an initialstate provider

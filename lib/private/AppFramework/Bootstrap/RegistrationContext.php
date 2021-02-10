@@ -169,7 +169,7 @@ class RegistrationContext {
 				);
 			}
 
-			public function registerAlternativeLogin(string $class): void {
+			public function registerAlternativeLogin($class): void {
 				$this->context->registerAlternativeLogin(
 					$this->appId,
 					$class
@@ -268,7 +268,7 @@ class RegistrationContext {
 		];
 	}
 
-	public function registerAlternativeLogin(string $appId, string $class): void {
+	public function registerAlternativeLogin(string $appId, $class): void {
 		$this->alternativeLogins[] = [
 			'appId' => $appId,
 			'class' => $class,

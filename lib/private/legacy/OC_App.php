@@ -700,7 +700,7 @@ class OC_App {
 		foreach ($bootstrapCoordinator->getRegistrationContext()->getAlternativeLogins() as $registration) {
 			if (!in_array(IAlternativeLogin::class, class_implements($registration['class']), true)) {
 				\OC::$server->getLogger()->error('Alternative login option {option} does not implement {interface} and is therefore ignored.', [
-					'option' => $registration['class'],
+					'option' => is_string($registration['class']) ? $registration['class'] : get_class($registration['class']),
 					'interface' => IAlternativeLogin::class,
 					'app' => $registration['app'],
 				]);
@@ -709,11 +709,11 @@ class OC_App {
 
 			try {
 				/** @var IAlternativeLogin $provider */
-				$provider = \OC::$server->query($registration['class']);
+				$provider = is_string($registration['class']) ? \OC::$server->query($registration['class']) : $registration['class'];
 			} catch (QueryException $e) {
 				\OC::$server->getLogger()->logException($e, [
 					'message' => 'Alternative login option {option} can not be initialised.',
-					'option' => $registration['class'],
+					'option' => is_string($registration['class']) ? $registration['class'] : get_class($registration['class']),
 					'app' => $registration['app'],
 				]);
 			}
@@ -729,7 +729,7 @@ class OC_App {
 			} catch (Throwable $e) {
 				\OC::$server->getLogger()->logException($e, [
 					'message' => 'Alternative login option {option} had an error while loading.',
-					'option' => $registration['class'],
+					'option' => is_string($registration['class']) ? $registration['class'] : get_class($registration['class']),
 					'app' => $registration['app'],
 				]);
 			}
