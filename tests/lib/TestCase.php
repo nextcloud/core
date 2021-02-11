@@ -27,6 +27,7 @@ use DOMNode;
 use OC\Command\QueueBus;
 use OC\Files\Filesystem;
 use OC\Template\Base;
+use OCP\Command\IBus;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\Defaults;
 use OCP\IDBConnection;
@@ -119,6 +120,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 		// overwrite the command bus with one we can run ourselves
 		$this->commandBus = new QueueBus();
 		$this->overwriteService('AsyncCommandBus', $this->commandBus);
+		$this->overwriteService(IBus::class, $this->commandBus);
 
 		// detect database access
 		self::$wasDatabaseAllowed = true;
@@ -224,7 +226,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 				$property->setValue($object, array_pop($parameters));
 			}
 
-			return $property->getValue($object);
+			if (is_object($object)) {
+				return $property->getValue($object);
+			}
+
+			return $property->getValue();
 		}
 
 		return false;
@@ -255,7 +261,12 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase {
 		}
 		$dataDir = \OC::$server->getConfig()->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data-autotest');
 		if (self::$wasDatabaseAllowed && \OC::$server->getDatabaseConnection()) {
-			$queryBuilder = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+			$db = \OC::$server->getDatabaseConnection();
+			if ($db->inTransaction()) {
+				$db->rollBack();
+				throw new \Exception('There was a transaction still in progress and needed to be rolled back. Please fix this in your test.');
+			}
+			$queryBuilder = $db->getQueryBuilder();
 
 			self::tearDownAfterClassCleanShares($queryBuilder);
 			self::tearDownAfterClassCleanStorages($queryBuilder);

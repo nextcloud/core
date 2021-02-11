@@ -51,7 +51,6 @@
     "Set an admin username." : "Задайте потребителско име за администратор.",
     "Set an admin password." : "Задай парола за администратор.",
     "Can't create or write into the data directory %s" : "Неуспешно създаване или записване в \"data\" папката %s",
-    "Invalid Federated Cloud ID" : "Невалиден Federated Cloud ID",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "Споделянето на сървърния %s трябва да поддържа OCP\\Share_Backend интерфейс.",
     "Sharing backend %s not found" : "Споделянето на сървърния %s не е открито.",
     "Sharing backend for %s not found" : "Споделянето на сървъра за %s не е открито.",
@@ -134,9 +133,6 @@
     "Storage is temporarily not available" : "Временно хранилището не е налично",
     "Following databases are supported: %s" : "Следните бази данни са поддържани: %s",
     "Following platforms are supported: %s" : "Поддържани са следните платформи: %s",
-    "Basic settings" : "Основни настройки",
-    "Sharing" : "Споделяне",
-    "Security" : "Сигурност",
-    "Personal info" : "Лични данни"
+    "Invalid Federated Cloud ID" : "Невалиден Federated Cloud ID"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

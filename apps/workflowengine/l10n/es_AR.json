@@ -57,22 +57,6 @@
     "Request user agent" : "Solicitar agente de usuario",
     "User group membership" : "Membresia al grupo de usuarios",
     "is member of" : "es miembro de",
-    "is not member of" : "no es miembro de",
-    "Example: {placeholder}" : "Ejemplo: {placeholder}",
-    "Select tag…" : "Seleccionar etiqueta...",
-    "Start" : "Inicio",
-    "End" : "Fin",
-    "Select timezone…" : "Seleccionar zona horaria...",
-    "Sync clients" : "Sincronizar clientes",
-    "Short rule description" : "Descripción corta de regla",
-    "Add rule" : "Agregar regla",
-    "Reset" : "Restablecer",
-    "Saving…" : "Guardando...",
-    "Saved" : "Guardado",
-    "Saving failed:" : "Falla al guardar:",
-    "Add rule group" : "Agregar regla de grupo",
-    "Files workflow engine" : "Motor de flujo de trabajo de archivos",
-    "Open documentation" : "Abrir documentación",
-    "Loading…" : "Cargando..."
+    "is not member of" : "no es miembro de"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

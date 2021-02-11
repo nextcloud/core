@@ -1,7 +1,7 @@
 <?php
-/** @var $l \OCP\IL10N */
-/** @var $_ array */
-/* @var $error boolean */
+/** @var \OCP\IL10N $l */
+/** @var array $_*/
+/** @var boolean $error */
 $error = $_['error'];
 /* @var $error_message string */
 $error_message = $_['error_message'];

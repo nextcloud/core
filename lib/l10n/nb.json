@@ -75,7 +75,6 @@
     "Set an admin username." : "Sett et admin-brukernavn.",
     "Set an admin password." : "Sett et admin-passord.",
     "Can't create or write into the data directory %s" : "Kan ikke opprette eller skrive i datamappen %s",
-    "Invalid Federated Cloud ID" : "Ugyldig ID for sammenknyttet sky",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "Delings-server %s må implementere grensesnittet OCP\\Share_Backend",
     "Sharing backend %s not found" : "Delings-server %s ikke funnet",
     "Sharing backend for %s not found" : "Delings-server for %s ikke funnet",
@@ -192,12 +191,6 @@
     "Storage connection timeout. %s" : "Tidsavbrudd ved tilkobling av lager: %s",
     "Following databases are supported: %s" : "Følgende databaser støttes: %s",
     "Following platforms are supported: %s" : "Følgende plattformer støttes: %s",
-    "Overview" : "Oversikt",
-    "Basic settings" : "Grunninnstillinger",
-    "Sharing" : "Deling",
-    "Security" : "Sikkerhet",
-    "Groupware" : "Gruppevare",
-    "Personal info" : "Personlig informasjon",
-    "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s" : "Dette kan vanligvis ordnes ved å gi webserveren skrivetilgang til apps-mappen eller ved å skru av app-butikken i config-filen. Se %s"
+    "Invalid Federated Cloud ID" : "Ugyldig ID for sammenknyttet sky"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

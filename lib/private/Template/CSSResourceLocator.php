@@ -66,7 +66,7 @@ class CSSResourceLocator extends ResourceLocator {
 		) {
 			return;
 		}
-		$style = substr($style, strpos($style, '/')+1);
+		$style = substr($style, strpos($style, '/') + 1);
 		$app_path = \OC_App::getAppPath($app);
 		$app_url = \OC_App::getAppWebPath($app);
 
@@ -109,7 +109,7 @@ class CSSResourceLocator extends ResourceLocator {
 		if (is_file($root.'/'.$file)) {
 			if ($this->scssCacher !== null) {
 				if ($this->scssCacher->process($root, $file, $app)) {
-					$this->append($root, $this->scssCacher->getCachedSCSS($app, $file), \OC::$WEBROOT, true, true);
+					$this->append($this->serverroot, $this->scssCacher->getCachedSCSS($app, $file), \OC::$WEBROOT, true, true);
 					return true;
 				} else {
 					$this->logger->warning('Failed to compile and/or save '.$root.'/'.$file, ['app' => 'core']);
@@ -145,7 +145,7 @@ class CSSResourceLocator extends ResourceLocator {
 				}
 			}
 
-			$this->resources[] = [$webRoot? : \OC::$WEBROOT, $webRoot, $file];
+			$this->resources[] = [$webRoot ?: \OC::$WEBROOT, $webRoot, $file];
 		}
 	}
 }

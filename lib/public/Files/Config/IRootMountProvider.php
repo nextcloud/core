@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2020, Morris Jobke <hey@morrisjobke.de>
  *
@@ -32,7 +33,7 @@ use OCP\Files\Storage\IStorageFactory;
  */
 interface IRootMountProvider {
 	/**
-	 * Get all root mountpoints
+	 * Get all root mountpoints of this provider
 	 *
 	 * @return \OCP\Files\Mount\IMountPoint[]
 	 * @since 20.0.0

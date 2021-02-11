@@ -7,6 +7,7 @@ declare(strict_types=1);
  *
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -35,11 +36,13 @@ namespace OC\AppFramework\Http;
 use OC\AppFramework\Http;
 use OC\AppFramework\Middleware\MiddlewareDispatcher;
 use OC\AppFramework\Utility\ControllerMethodReflector;
-
+use OC\DB\ConnectionAdapter;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\IConfig;
 use OCP\IRequest;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class to dispatch the request to the middleware dispatcher
@@ -58,6 +61,15 @@ class Dispatcher {
 	/** @var IRequest */
 	private $request;
 
+	/** @var IConfig */
+	private $config;
+
+	/** @var ConnectionAdapter */
+	private $connection;
+
+	/** @var LoggerInterface */
+	private $logger;
+
 	/**
 	 * @param Http $protocol the http protocol with contains all status headers
 	 * @param MiddlewareDispatcher $middlewareDispatcher the dispatcher which
@@ -65,15 +77,24 @@ class Dispatcher {
 	 * @param ControllerMethodReflector $reflector the reflector that is used to inject
 	 * the arguments for the controller
 	 * @param IRequest $request the incoming request
+	 * @param IConfig $config
+	 * @param ConnectionAdapter $connection
+	 * @param LoggerInterface $logger
 	 */
 	public function __construct(Http $protocol,
 								MiddlewareDispatcher $middlewareDispatcher,
 								ControllerMethodReflector $reflector,
-								IRequest $request) {
+								IRequest $request,
+								IConfig $config,
+								ConnectionAdapter $connection,
+								LoggerInterface $logger) {
 		$this->protocol = $protocol;
 		$this->middlewareDispatcher = $middlewareDispatcher;
 		$this->reflector = $reflector;
 		$this->request = $request;
+		$this->config = $config;
+		$this->connection = $connection;
+		$this->logger = $logger;
 	}
 
 
@@ -97,7 +118,35 @@ class Dispatcher {
 
 			$this->middlewareDispatcher->beforeController($controller,
 				$methodName);
+
+			$databaseStatsBefore = [];
+			if ($this->config->getSystemValueBool('debug', false)) {
+				$databaseStatsBefore = $this->connection->getInner()->getStats();
+			}
+
 			$response = $this->executeController($controller, $methodName);
+
+			if (!empty($databaseStatsBefore)) {
+				$databaseStatsAfter = $this->connection->getInner()->getStats();
+				$numBuilt = $databaseStatsAfter['built'] - $databaseStatsBefore['built'];
+				$numExecuted = $databaseStatsAfter['executed'] - $databaseStatsBefore['executed'];
+
+				if ($numBuilt > 50) {
+					$this->logger->debug('Controller {class}::{method} created {count} QueryBuilder objects, please check if they are created inside a loop by accident.' , [
+						'class' => get_class($controller),
+						'method' => $methodName,
+						'count' => $numBuilt,
+					]);
+				}
+
+				if ($numExecuted > 100) {
+					$this->logger->warning('Controller {class}::{method} executed {count} queries.' , [
+						'class' => get_class($controller),
+						'method' => $methodName,
+						'count' => $numExecuted,
+					]);
+				}
+			}
 
 			// if an exception appears, the middleware checks if it can handle the
 			// exception and creates a response. If no response is created, it is

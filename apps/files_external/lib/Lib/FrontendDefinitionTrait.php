@@ -107,16 +107,6 @@ trait FrontendDefinitionTrait {
 	}
 
 	/**
-	 * @param string $custom
-	 * @return self
-	 * @deprecated 9.1.0, use addCustomJs() instead
-	 */
-	public function setCustomJs($custom) {
-		$this->customJs = [$custom];
-		return $this;
-	}
-
-	/**
 	 * Serialize into JSON for client-side JS
 	 *
 	 * @return array

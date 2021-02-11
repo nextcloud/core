@@ -64,7 +64,6 @@
     "Set an admin username." : "Angiv et admin brugernavn.",
     "Set an admin password." : "Angiv et admin kodeord.",
     "Can't create or write into the data directory %s" : "Kan ikke oprette eller skrive ind i datamappen %s",
-    "Invalid Federated Cloud ID" : "Ugyldigt Federated Cloud ID",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "Delingsbackend'en %s skal implementere grænsefladen OCP\\Share_Backend",
     "Sharing backend %s not found" : "Delingsbackend'en %s blev ikke fundet",
     "Sharing backend for %s not found" : "Delingsbackend'en for %s blev ikke fundet",
@@ -157,11 +156,6 @@
     "Storage is temporarily not available" : "Lagerplads er midlertidigt ikke tilgængeligt",
     "Following databases are supported: %s" : "Følgende databaser understøttes: %s",
     "Following platforms are supported: %s" : "Følgende platforme understøttes: %s",
-    "Overview" : "Overblik",
-    "Basic settings" : "Grundlæggende Indstillinger",
-    "Sharing" : "Deling",
-    "Security" : "Sikkerhed",
-    "Personal info" : "Personlige oplysninger",
-    "Mobile & desktop" : "Mobil & desktop"
+    "Invalid Federated Cloud ID" : "Ugyldigt Federated Cloud ID"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

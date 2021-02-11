@@ -9,6 +9,7 @@ OC.L10N.register(
     "Federation allows you to connect with other trusted servers to exchange the user directory." : "Udruženje vam omogućuje povezivanje s drugim pouzdanim poslužiteljima i razmjenu korisničkih imenika.",
     "Federation allows you to connect with other trusted servers to exchange the user directory. For example this will be used to auto-complete external users for federated sharing." : "Udruženje vam omogućuje povezivanje s drugim pouzdanim poslužiteljima i razmjenu korisničkih imenika. Primjerice, može se koristiti za automatsko dovršavanje imena vanjskih korisnika za udruženo dijeljenje.",
     "Trusted servers" : "Pouzdani poslužitelji",
+    "Federation allows you to connect with other trusted servers to exchange the user directory. For example this will be used to auto-complete external users for federated sharing. It is not necessary to add a server as trusted server in order to create a federated share." : "Udruženje vam omogućuje povezivanje s drugim pouzdanim poslužiteljima i razmjenu korisničkih imenika. Primjerice, može se upotrijebiti za automatsko dovršavanje imena vanjskih korisnika za udruženo dijeljenje. Za stvaranje udruženog dijeljenja nije potrebno dodati poslužitelj kao pouzdani poslužitelj.",
     "Add server automatically once a federated share was created successfully" : "Dodaj poslužitelj automatski nakon što je uspješno stvoreno udruženo dijeljenje",
     "+ Add trusted server" : "+ Dodaj pouzdani poslužitelj",
     "Trusted server" : "Pouzdan poslužitelj",

@@ -43,14 +43,18 @@ class UserLoggedInEvent extends Event {
 	/** @var bool */
 	private $isTokenLogin;
 
+	/** @var string */
+	private $loginName;
+
 	/**
 	 * @since 18.0.0
 	 */
-	public function __construct(IUser $user, string $password, bool $isTokenLogin) {
+	public function __construct(IUser $user, string $loginName, string $password, bool $isTokenLogin) {
 		parent::__construct();
 		$this->user = $user;
 		$this->password = $password;
 		$this->isTokenLogin = $isTokenLogin;
+		$this->loginName = $loginName;
 	}
 
 	/**
@@ -58,6 +62,13 @@ class UserLoggedInEvent extends Event {
 	 */
 	public function getUser(): IUser {
 		return $this->user;
+	}
+
+	/**
+	 * @since 21.0.0
+	 */
+	public function getLoginName(): string {
+		return $this->loginName;
 	}
 
 	/**

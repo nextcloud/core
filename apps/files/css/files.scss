@@ -539,6 +539,23 @@ table td.selection {
 	cursor: default !important;
 }
 
+/*
+ * Make the disabled link look not like a link in file list rows
+ */
+#fileList a.name.disabled {
+	* {
+		cursor: default;
+	}
+
+	a, a * {
+		cursor: pointer;
+	}
+
+	&:focus {
+		background: none;
+	}
+}
+
 a.action > img {
 	height: 16px;
 	width: 16px;

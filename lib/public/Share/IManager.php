@@ -39,7 +39,6 @@ use OCP\Share\Exceptions\ShareNotFound;
 /**
  * Interface IManager
  *
- * @package OCP\Share
  * @since 9.0.0
  */
 interface IManager {
@@ -416,6 +415,12 @@ interface IManager {
 	 * @since 11.0.0
 	 */
 	public function shareProviderExists($shareType);
+
+	/**
+	 * @param string $shareProviderClass
+	 * @since 21.0.0
+	 */
+	public function registerShareProvider(string $shareProviderClass): void;
 
 	/**
 	 * @Internal

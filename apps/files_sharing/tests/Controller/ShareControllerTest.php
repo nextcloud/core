@@ -211,6 +211,7 @@ class ShareControllerTest extends \Test\TestCase {
 
 	public function testShowShare() {
 		$note = 'personal note';
+		$filename = 'file1.txt';
 
 		$this->shareController->setToken('token');
 
@@ -225,7 +226,7 @@ class ShareControllerTest extends \Test\TestCase {
 		$initiator->method('isEnabled')->willReturn(true);
 
 		$file = $this->createMock(File::class);
-		$file->method('getName')->willReturn('file1.txt');
+		$file->method('getName')->willReturn($filename);
 		$file->method('getMimetype')->willReturn('text/plain');
 		$file->method('getSize')->willReturn(33);
 		$file->method('isReadable')->willReturn(true);
@@ -250,14 +251,14 @@ class ShareControllerTest extends \Test\TestCase {
 			->setSharedBy('initiatorUID')
 			->setNode($file)
 			->setNote($note)
-			->setTarget('/file1.txt');
+			->setTarget("/$filename");
 
 		$this->session->method('exists')->with('public_link_authenticated')->willReturn(true);
 		$this->session->method('get')->with('public_link_authenticated')->willReturn('42');
 
 		$this->urlGenerator->expects($this->at(0))
 			->method('linkToRouteAbsolute')
-			->with('files_sharing.sharecontroller.downloadShare', ['token' => 'token'])
+			->with('files_sharing.sharecontroller.downloadShare', ['token' => 'token', 'filename' => $filename])
 			->willReturn('downloadURL');
 
 		$this->previewManager->method('isMimeSupported')->with('text/plain')->willReturn(true);
@@ -312,8 +313,8 @@ class ShareControllerTest extends \Test\TestCase {
 		$response = $this->shareController->showShare();
 		$sharedTmplParams = [
 			'owner' => 'ownerUID',
-			'filename' => 'file1.txt',
-			'directory_path' => '/file1.txt',
+			'filename' => $filename,
+			'directory_path' => "/$filename",
 			'mimetype' => 'text/plain',
 			'dirToken' => 'token',
 			'sharingToken' => 'token',
@@ -357,6 +358,7 @@ class ShareControllerTest extends \Test\TestCase {
 
 	public function testShowShareWithPrivateName() {
 		$note = 'personal note';
+		$filename = 'file1.txt';
 
 		$this->shareController->setToken('token');
 
@@ -371,7 +373,7 @@ class ShareControllerTest extends \Test\TestCase {
 		$initiator->method('isEnabled')->willReturn(true);
 
 		$file = $this->createMock(File::class);
-		$file->method('getName')->willReturn('file1.txt');
+		$file->method('getName')->willReturn($filename);
 		$file->method('getMimetype')->willReturn('text/plain');
 		$file->method('getSize')->willReturn(33);
 		$file->method('isReadable')->willReturn(true);
@@ -396,14 +398,14 @@ class ShareControllerTest extends \Test\TestCase {
 			->setSharedBy('initiatorUID')
 			->setNode($file)
 			->setNote($note)
-			->setTarget('/file1.txt');
+			->setTarget("/$filename");
 
 		$this->session->method('exists')->with('public_link_authenticated')->willReturn(true);
 		$this->session->method('get')->with('public_link_authenticated')->willReturn('42');
 
 		$this->urlGenerator->expects($this->at(0))
 			->method('linkToRouteAbsolute')
-			->with('files_sharing.sharecontroller.downloadShare', ['token' => 'token'])
+			->with('files_sharing.sharecontroller.downloadShare', ['token' => 'token', 'filename' => $filename])
 			->willReturn('downloadURL');
 
 		$this->previewManager->method('isMimeSupported')->with('text/plain')->willReturn(true);
@@ -458,8 +460,8 @@ class ShareControllerTest extends \Test\TestCase {
 		$response = $this->shareController->showShare();
 		$sharedTmplParams = [
 			'owner' => '',
-			'filename' => 'file1.txt',
-			'directory_path' => '/file1.txt',
+			'filename' => $filename,
+			'directory_path' => "/$filename",
 			'mimetype' => 'text/plain',
 			'dirToken' => 'token',
 			'sharingToken' => 'token',
@@ -503,6 +505,7 @@ class ShareControllerTest extends \Test\TestCase {
 
 	public function testShowShareHideDownload() {
 		$note = 'personal note';
+		$filename = 'file1.txt';
 
 		$this->shareController->setToken('token');
 
@@ -517,7 +520,7 @@ class ShareControllerTest extends \Test\TestCase {
 		$initiator->method('isEnabled')->willReturn(true);
 
 		$file = $this->getMockBuilder('OCP\Files\File')->getMock();
-		$file->method('getName')->willReturn('file1.txt');
+		$file->method('getName')->willReturn($filename);
 		$file->method('getMimetype')->willReturn('text/plain');
 		$file->method('getSize')->willReturn(33);
 		$file->method('isReadable')->willReturn(true);
@@ -542,7 +545,7 @@ class ShareControllerTest extends \Test\TestCase {
 			->setSharedBy('initiatorUID')
 			->setNode($file)
 			->setNote($note)
-			->setTarget('/file1.txt')
+			->setTarget("/$filename")
 			->setHideDownload(true);
 
 		$this->session->method('exists')->with('public_link_authenticated')->willReturn(true);
@@ -553,7 +556,7 @@ class ShareControllerTest extends \Test\TestCase {
 		// files.
 		$this->urlGenerator->expects($this->at(0))
 			->method('linkToRouteAbsolute')
-			->with('files_sharing.sharecontroller.downloadShare', ['token' => 'token'])
+			->with('files_sharing.sharecontroller.downloadShare', ['token' => 'token', 'filename' => $filename])
 			->willReturn('downloadURL');
 
 		$this->previewManager->method('isMimeSupported')->with('text/plain')->willReturn(true);
@@ -608,8 +611,8 @@ class ShareControllerTest extends \Test\TestCase {
 		$response = $this->shareController->showShare();
 		$sharedTmplParams = [
 			'owner' => 'ownerUID',
-			'filename' => 'file1.txt',
-			'directory_path' => '/file1.txt',
+			'filename' => $filename,
+			'directory_path' => "/$filename",
 			'mimetype' => 'text/plain',
 			'dirToken' => 'token',
 			'sharingToken' => 'token',
@@ -774,6 +777,7 @@ class ShareControllerTest extends \Test\TestCase {
 	public function testShowShareInvalid() {
 		$this->expectException(\OCP\Files\NotFoundException::class);
 
+		$filename = 'file1.txt';
 		$this->shareController->setToken('token');
 
 		$owner = $this->getMockBuilder(IUser::class)->getMock();
@@ -781,7 +785,7 @@ class ShareControllerTest extends \Test\TestCase {
 		$owner->method('getUID')->willReturn('ownerUID');
 
 		$file = $this->getMockBuilder('OCP\Files\File')->getMock();
-		$file->method('getName')->willReturn('file1.txt');
+		$file->method('getName')->willReturn($filename);
 		$file->method('getMimetype')->willReturn('text/plain');
 		$file->method('getSize')->willReturn(33);
 		$file->method('isShareable')->willReturn(false);
@@ -792,7 +796,7 @@ class ShareControllerTest extends \Test\TestCase {
 		$share->setPassword('password')
 			->setShareOwner('ownerUID')
 			->setNode($file)
-			->setTarget('/file1.txt');
+			->setTarget("/$filename");
 
 		$this->session->method('exists')->with('public_link_authenticated')->willReturn(true);
 		$this->session->method('get')->with('public_link_authenticated')->willReturn('42');
@@ -836,7 +840,7 @@ class ShareControllerTest extends \Test\TestCase {
 
 		// Test with a password protected share and no authentication
 		$response = $this->shareController->downloadShare('validtoken');
-		$expectedResponse = new DataResponse('Share is read-only');
+		$expectedResponse = new DataResponse('Share has no read permission');
 		$this->assertEquals($expectedResponse, $response);
 	}
 

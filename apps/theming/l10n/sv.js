@@ -24,7 +24,6 @@ OC.L10N.register(
     "Could not write file to disk" : "Kunde inte skriva fil till disk",
     "A PHP extension stopped the file upload" : "Ett PHP-tillägg stoppade filuppladdning",
     "No file uploaded" : "Ingen fil uppladdad",
-    "Unsupported image type" : "Filtyp stöds inte",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "Du använder redan ett anpassat tema. Dessa appinställningar kan skrivas över.",
     "Theming" : "Teman",
     "Legal notice" : "Rättsligt meddelande",

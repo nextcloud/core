@@ -25,8 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\WorkflowEngine\Migration;
 
-use Doctrine\DBAL\Driver\Statement;
-use OCA\WorkflowEngine\Entity\File;
+use OCP\DB\IResult;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
@@ -51,30 +50,19 @@ class PopulateNewlyIntroducedDatabaseFields implements IRepairStep {
 		$this->populateScopeTable($result);
 
 		$result->closeCursor();
-
-		$this->populateEntityCol();
 	}
 
-	protected function populateEntityCol() {
-		$qb = $this->dbc->getQueryBuilder();
-
-		$qb->update('flow_operations')
-			->set('entity', $qb->createNamedParameter(File::class))
-			->where($qb->expr()->emptyString('entity'))
-			->execute();
-	}
-
-	protected function populateScopeTable(Statement $ids): void {
+	protected function populateScopeTable(IResult $ids): void {
 		$qb = $this->dbc->getQueryBuilder();
 
 		$insertQuery = $qb->insert('flow_operations_scope');
-		while ($id = $ids->fetchColumn(0)) {
+		while ($id = $ids->fetchOne()) {
 			$insertQuery->values(['operation_id' => $qb->createNamedParameter($id), 'type' => IManager::SCOPE_ADMIN]);
 			$insertQuery->execute();
 		}
 	}
 
-	protected function getIdsWithoutScope(): Statement {
+	protected function getIdsWithoutScope(): IResult {
 		$qb = $this->dbc->getQueryBuilder();
 		$selectQuery = $qb->select('o.id')
 			->from('flow_operations', 'o')
@@ -83,6 +71,8 @@ class PopulateNewlyIntroducedDatabaseFields implements IRepairStep {
 		// The left join operation is not necessary, usually, but it's a safe-guard
 		// in case the repair step is executed multiple times for whatever reason.
 
-		return $selectQuery->execute();
+		/** @var IResult $result */
+		$result = $selectQuery->execute();
+		return $result;
 	}
 }

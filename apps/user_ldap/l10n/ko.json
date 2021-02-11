@@ -182,7 +182,6 @@
     "UUID Attribute for Groups:" : "그룹 UUID 속성:",
     "Username-LDAP User Mapping" : "사용자 이름-LDAP 사용자 매핑",
     "Clear Username-LDAP User Mapping" : "사용자 이름-LDAP 사용자 매핑 비우기",
-    "Clear Groupname-LDAP Group Mapping" : "그룹 이름-LDAP 그룹 매핑 비우기",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "사용자 이름을 사용하려면 비워 두십시오(기본값). 기타 경우 LDAP/AD 속성을 지정하십시오."
+    "Clear Groupname-LDAP Group Mapping" : "그룹 이름-LDAP 그룹 매핑 비우기"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

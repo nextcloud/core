@@ -5,6 +5,7 @@
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -251,6 +252,12 @@ class Version1004Date20170825134824 extends SimpleMigrationStep {
 			]);
 			$table->setPrimaryKey(['id']);
 			$table->addUniqueIndex(['principaluri', 'uri'], 'calendars_index');
+		} else {
+			$table = $schema->getTable('calendars');
+			$table->changeColumn('components', [
+				'notnull' => false,
+				'length' => 64,
+			]);
 		}
 
 		if (!$schema->hasTable('calendarchanges')) {
@@ -335,6 +342,12 @@ class Version1004Date20170825134824 extends SimpleMigrationStep {
 			]);
 			$table->setPrimaryKey(['id']);
 			$table->addUniqueIndex(['principaluri', 'uri'], 'calsub_index');
+		} else {
+			$table = $schema->getTable('calendarsubscriptions');
+			$table->changeColumn('lastmodified', [
+				'notnull' => false,
+				'unsigned' => true,
+			]);
 		}
 
 		if (!$schema->hasTable('schedulingobjects')) {

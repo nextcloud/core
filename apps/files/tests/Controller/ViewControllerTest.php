@@ -12,7 +12,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -36,10 +36,12 @@ use OCA\Files\Activity\Helper;
 use OCA\Files\Controller\ViewController;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Services\IInitialState;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
+use OCP\Files\Template\ITemplateManager;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -78,6 +80,10 @@ class ViewControllerTest extends TestCase {
 	private $rootFolder;
 	/** @var Helper|\PHPUnit\Framework\MockObject\MockObject */
 	private $activityHelper;
+	/** @var IInitialState|\PHPUnit\Framework\MockObject\MockObject */
+	private $initialState;
+	/** @var ITemplateManager|\PHPUnit\Framework\MockObject\MockObject */
+	private $templateManager;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -97,6 +103,8 @@ class ViewControllerTest extends TestCase {
 			->willReturn($this->user);
 		$this->rootFolder = $this->getMockBuilder('\OCP\Files\IRootFolder')->getMock();
 		$this->activityHelper = $this->createMock(Helper::class);
+		$this->initialState = $this->createMock(IInitialState::class);
+		$this->templateManager = $this->createMock(ITemplateManager::class);
 		$this->viewController = $this->getMockBuilder('\OCA\Files\Controller\ViewController')
 			->setConstructorArgs([
 				'files',
@@ -109,6 +117,8 @@ class ViewControllerTest extends TestCase {
 				$this->appManager,
 				$this->rootFolder,
 				$this->activityHelper,
+				$this->initialState,
+				$this->templateManager,
 			])
 		->setMethods([
 			'getStorageInfo',
@@ -135,6 +145,7 @@ class ViewControllerTest extends TestCase {
 				[$this->user->getUID(), 'files', 'file_sorting', 'name', 'name'],
 				[$this->user->getUID(), 'files', 'file_sorting_direction', 'asc', 'asc'],
 				[$this->user->getUID(), 'files', 'show_hidden', false, false],
+				[$this->user->getUID(), 'files', 'crop_image_previews', true, true],
 				[$this->user->getUID(), 'files', 'show_grid', true],
 			]);
 
@@ -316,6 +327,7 @@ class ViewControllerTest extends TestCase {
 				'defaultFileSorting' => 'name',
 				'defaultFileSortingDirection' => 'asc',
 				'showHiddenFiles' => 0,
+				'cropImagePreviews' => 1,
 				'fileNotFound' => 0,
 				'allowShareWithLink' => 'yes',
 				'appNavigation' => $nav,

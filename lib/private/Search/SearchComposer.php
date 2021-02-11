@@ -5,7 +5,9 @@ declare(strict_types=1);
 /**
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,7 +22,8 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace OC\Search;
@@ -93,13 +96,14 @@ class SearchComposer {
 		foreach ($registrations as $registration) {
 			try {
 				/** @var IProvider $provider */
-				$provider = $this->container->query($registration['class']);
+				$provider = $this->container->query($registration->getService());
 				$this->providers[$provider->getId()] = $provider;
 			} catch (QueryException $e) {
 				// Log an continue. We can be fault tolerant here.
 				$this->logger->logException($e, [
 					'message' => 'Could not load search provider dynamically: ' . $e->getMessage(),
 					'level' => ILogger::ERROR,
+					'app' => $registration->getAppId(),
 				]);
 			}
 		}

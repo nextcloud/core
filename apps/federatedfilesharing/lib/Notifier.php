@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
@@ -150,14 +151,14 @@ class Notifier implements INotifier {
 					switch ($action->getLabel()) {
 						case 'accept':
 							$action->setParsedLabel(
-								(string)$l->t('Accept')
+								$l->t('Accept')
 							)
 								->setPrimary(true);
 							break;
 
 						case 'decline':
 							$action->setParsedLabel(
-								(string)$l->t('Decline')
+								$l->t('Decline')
 							);
 							break;
 					}

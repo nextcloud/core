@@ -39,7 +39,14 @@ use OCP\IUser;
  * @since 14.0.0
  */
 interface IRegistry {
+	/**
+	 * @deprecated 22.0.0
+	 */
 	public const EVENT_PROVIDER_ENABLED = self::class . '::enable';
+
+	/**
+	 * @deprecated 22.0.0
+	 */
 	public const EVENT_PROVIDER_DISABLED = self::class . '::disable';
 
 	/**

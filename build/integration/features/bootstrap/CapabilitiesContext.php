@@ -3,6 +3,7 @@
  *
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Robin Appelman <robin@icewind.nl>
@@ -53,7 +54,7 @@ class CapabilitiesContext implements Context, SnippetAcceptingContext {
 			}
 			$answeredValue = (string)$answeredValue;
 			Assert::assertEquals(
-				$row['value']==="EMPTY" ? '' : $row['value'],
+				$row['value'] === "EMPTY" ? '' : $row['value'],
 				$answeredValue,
 				"Failed field " . $row['capability'] . " " . $row['path_to_element']
 			);
@@ -61,16 +62,16 @@ class CapabilitiesContext implements Context, SnippetAcceptingContext {
 	}
 
 	protected function resetAppConfigs() {
-		$this->modifyServerConfig('core', 'shareapi_enabled', 'yes');
-		$this->modifyServerConfig('core', 'shareapi_allow_links', 'yes');
-		$this->modifyServerConfig('core', 'shareapi_allow_public_upload', 'yes');
-		$this->modifyServerConfig('core', 'shareapi_allow_resharing', 'yes');
-		$this->modifyServerConfig('files_sharing', 'outgoing_server2server_share_enabled', 'yes');
-		$this->modifyServerConfig('files_sharing', 'incoming_server2server_share_enabled', 'yes');
-		$this->modifyServerConfig('core', 'shareapi_enforce_links_password', 'no');
-		$this->modifyServerConfig('core', 'shareapi_allow_public_notification', 'no');
-		$this->modifyServerConfig('core', 'shareapi_default_expire_date', 'no');
-		$this->modifyServerConfig('core', 'shareapi_enforce_expire_date', 'no');
-		$this->modifyServerConfig('core', 'shareapi_allow_group_sharing', 'yes');
+		$this->deleteServerConfig('core', 'shareapi_enabled');
+		$this->deleteServerConfig('core', 'shareapi_allow_links');
+		$this->deleteServerConfig('core', 'shareapi_allow_public_upload');
+		$this->deleteServerConfig('core', 'shareapi_allow_resharing');
+		$this->deleteServerConfig('files_sharing', 'outgoing_server2server_share_enabled');
+		$this->deleteServerConfig('files_sharing', 'incoming_server2server_share_enabled');
+		$this->deleteServerConfig('core', 'shareapi_enforce_links_password');
+		$this->deleteServerConfig('core', 'shareapi_allow_public_notification');
+		$this->deleteServerConfig('core', 'shareapi_default_expire_date');
+		$this->deleteServerConfig('core', 'shareapi_enforce_expire_date');
+		$this->deleteServerConfig('core', 'shareapi_allow_group_sharing');
 	}
 }

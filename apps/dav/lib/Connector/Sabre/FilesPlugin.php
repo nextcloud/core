@@ -14,7 +14,7 @@
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Tobias Kaminsky <tobias@kaminsky.me>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -276,7 +276,6 @@ class FilesPlugin extends ServerPlugin {
 
 		if ($node instanceof \OCA\DAV\Connector\Sabre\File) {
 			//Add OC-Checksum header
-			/** @var $node File */
 			$checksum = $node->getChecksum();
 			if ($checksum !== null && $checksum !== '') {
 				$response->addHeader('OC-Checksum', $checksum);
@@ -383,7 +382,6 @@ class FilesPlugin extends ServerPlugin {
 
 		if ($node instanceof \OCA\DAV\Connector\Sabre\File) {
 			$propFind->handle(self::DOWNLOADURL_PROPERTYNAME, function () use ($node) {
-				/** @var $node \OCA\DAV\Connector\Sabre\File */
 				try {
 					$directDownloadUrl = $node->getDirectDownload();
 					if (isset($directDownloadUrl['url'])) {

@@ -13,17 +13,17 @@ OC.L10N.register(
     "{user} mentioned you in a comment on “{file}”" : "{user} ඔබව {file} තුලදී මතක් කර ඇත",
     "Edit comment" : "අදහස වෙනස් කරන්න",
     "Delete comment" : "අදහස් දැක්වීම මකන්න",
+    "No comments yet, start the conversation!" : "තවම අදහස් නැත. ආරම්බක අදහස ඇතුළු කරන්න !",
+    "Comment" : "අදහස",
     "New comment …" : "අලුත් අදහස් දැක්වීමක් ...",
     "Post" : "ලිපියක්",
     "Cancel" : "එපා",
     "[Deleted user]" : "[ඉවත්කළ සේවාදායකයා]",
-    "No comments yet, start the conversation!" : "තවම අදහස් නැත. ආරම්බක අදහස ඇතුළු කරන්න !",
     "More comments …" : "තවත් අදහස් ...",
     "Save" : "සුරකින්න",
     "Allowed characters {count} of {max}" : "අකුරු {max} න් {count} බාවිතා කර ඇත",
     "Error occurred while retrieving comment with ID {id}" : "ID {id} සමග විවරණයක් ලබාගැනීමේදී දෝශයක් ඇති විය.",
     "Error occurred while updating comment with id {id}" : "{id} අදහස වෙනස් කිරීමේ දෝෂයක් ඇත",
-    "Error occurred while posting comment" : "අදහස්ගැ දැක්වීමේ ගැටළුවක් ඇත",
-    "Comment" : "අදහස"
+    "Error occurred while posting comment" : "අදහස්ගැ දැක්වීමේ ගැටළුවක් ඇත"
 },
 "nplurals=2; plural=(n != 1);");

@@ -31,6 +31,7 @@ use OCP\Security\ICrypto;
 use OCP\Security\ISecureRandom;
 use OCP\User\Events\PostLoginEvent;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -1246,7 +1247,7 @@ class SessionTest extends \Test\TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$crypto = $this->createMock(ICrypto::class);
-		$logger = $this->createMock(ILogger::class);
+		$logger = $this->createMock(LoggerInterface::class);
 		$tokenProvider = new DefaultTokenProvider($mapper, $crypto, $this->config, $logger, $this->timeFactory);
 
 		/** @var \OC\User\Session $userSession */
@@ -1264,12 +1265,8 @@ class SessionTest extends \Test\TestCase {
 		$this->throttler
 			->expects($this->once())
 			->method('sleepDelay')
-			->with('192.168.0.1');
-		$this->throttler
-			->expects($this->any())
-			->method('getDelay')
 			->with('192.168.0.1')
-			->willReturn(0);
+			->willReturn(5);
 		$this->timeFactory
 			->expects($this->any())
 			->method('getTime')
@@ -1300,7 +1297,7 @@ class SessionTest extends \Test\TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$crypto = $this->createMock(ICrypto::class);
-		$logger = $this->createMock(ILogger::class);
+		$logger = $this->createMock(LoggerInterface::class);
 		$tokenProvider = new DefaultTokenProvider($mapper, $crypto, $this->config, $logger, $this->timeFactory);
 
 		/** @var \OC\User\Session $userSession */
@@ -1318,12 +1315,8 @@ class SessionTest extends \Test\TestCase {
 		$this->throttler
 			->expects($this->once())
 			->method('sleepDelay')
-			->with('192.168.0.1');
-		$this->throttler
-			->expects($this->any())
-			->method('getDelay')
 			->with('192.168.0.1')
-			->willReturn(0);
+			->willReturn(5);
 		$this->timeFactory
 			->expects($this->any())
 			->method('getTime')

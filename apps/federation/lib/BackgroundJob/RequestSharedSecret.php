@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -30,13 +31,11 @@ namespace OCA\Federation\BackgroundJob;
 
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Ring\Exception\RingException;
-use OC\BackgroundJob\Job;
-use OC\BackgroundJob\JobList;
 use OCA\Federation\TrustedServers;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
+use OCP\BackgroundJob\Job;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\ILogger;
@@ -70,9 +69,6 @@ class RequestSharedSecret extends Job {
 	/** @var ILogger */
 	private $logger;
 
-	/** @var ITimeFactory */
-	private $timeFactory;
-
 	/** @var bool */
 	protected $retainJob = false;
 
@@ -101,23 +97,23 @@ class RequestSharedSecret extends Job {
 		ILogger $logger,
 		ITimeFactory $timeFactory
 	) {
+		parent::__construct($timeFactory);
 		$this->httpClient = $httpClientService->newClient();
 		$this->jobList = $jobList;
 		$this->urlGenerator = $urlGenerator;
 		$this->logger = $logger;
 		$this->ocsDiscoveryService = $ocsDiscoveryService;
 		$this->trustedServers = $trustedServers;
-		$this->timeFactory = $timeFactory;
 	}
 
 
 	/**
 	 * run the job, then remove it from the joblist
 	 *
-	 * @param JobList $jobList
+	 * @param IJobList $jobList
 	 * @param ILogger|null $logger
 	 */
-	public function execute($jobList, ILogger $logger = null) {
+	public function execute(IJobList $jobList, ILogger $logger = null) {
 		$target = $this->argument['url'];
 		// only execute if target is still in the list of trusted domains
 		if ($this->trustedServers->isTrustedServer($target)) {
@@ -134,7 +130,7 @@ class RequestSharedSecret extends Job {
 	/**
 	 * call execute() method of parent
 	 *
-	 * @param JobList $jobList
+	 * @param IJobList $jobList
 	 * @param ILogger $logger
 	 */
 	protected function parentExecute($jobList, $logger) {
@@ -143,8 +139,8 @@ class RequestSharedSecret extends Job {
 
 	protected function run($argument) {
 		$target = $argument['url'];
-		$created = isset($argument['created']) ? (int)$argument['created'] : $this->timeFactory->getTime();
-		$currentTime = $this->timeFactory->getTime();
+		$created = isset($argument['created']) ? (int)$argument['created'] : $this->time->getTime();
+		$currentTime = $this->time->getTime();
 		$source = $this->urlGenerator->getAbsoluteURL('/');
 		$source = rtrim($source, '/');
 		$token = $argument['token'];
@@ -188,10 +184,7 @@ class RequestSharedSecret extends Job {
 		} catch (RequestException $e) {
 			$status = -1; // There is no status code if we could not connect
 			$this->logger->info('Could not connect to ' . $target, ['app' => 'federation']);
-		} catch (RingException $e) {
-			$status = -1; // There is no status code if we could not connect
-			$this->logger->info('Could not connect to ' . $target, ['app' => 'federation']);
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			$status = Http::STATUS_INTERNAL_SERVER_ERROR;
 			$this->logger->logException($e, ['app' => 'federation']);
 		}
@@ -212,7 +205,7 @@ class RequestSharedSecret extends Job {
 	 */
 	protected function reAddJob(array $argument) {
 		$url = $argument['url'];
-		$created = isset($argument['created']) ? (int)$argument['created'] : $this->timeFactory->getTime();
+		$created = isset($argument['created']) ? (int)$argument['created'] : $this->time->getTime();
 		$token = $argument['token'];
 
 		$this->jobList->add(

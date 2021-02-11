@@ -32,7 +32,6 @@ use OCP\Files\NotPermittedException;
 /**
  * This class represents a file that is only hold in memory.
  *
- * @package OC\Files\SimpleFS
  * @since 16.0.0
  */
 class InMemoryFile implements ISimpleFile {

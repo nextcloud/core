@@ -75,7 +75,7 @@ class JSResourceLocator extends ResourceLocator {
 		}
 
 		$app = substr($script, 0, strpos($script, '/'));
-		$script = substr($script, strpos($script, '/')+1);
+		$script = substr($script, strpos($script, '/') + 1);
 		$app_path = \OC_App::getAppPath($app);
 		$app_url = \OC_App::getAppWebPath($app);
 

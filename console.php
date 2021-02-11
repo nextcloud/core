@@ -4,14 +4,14 @@
  *
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Estelle Poulin <dev@inspiredby.es>
+ * @author hoellen <dev@hoellen.eu>
+ * @author J0WI <J0WI@users.noreply.github.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Ko- <k.stoffelen@cs.ru.nl>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Michael Weimann <mail@michael-weimann.eu>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Patrick Paysant <patrick.paysant@linagora.com>
- * @author RealRancor <fisch.666@gmx.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
@@ -61,17 +61,17 @@ try {
 	set_exception_handler('exceptionHandler');
 
 	if (!function_exists('posix_getuid')) {
-		echo "The posix extensions are required - see http://php.net/manual/en/book.posix.php" . PHP_EOL;
+		echo "The posix extensions are required - see https://www.php.net/manual/en/book.posix.php" . PHP_EOL;
 		exit(1);
 	}
-	$user = posix_getpwuid(posix_getuid());
-	$configUser = posix_getpwuid(fileowner(OC::$configDir . 'config.php'));
-	if ($user['name'] !== $configUser['name']) {
+	$user = posix_getuid();
+	$configUser = fileowner(OC::$configDir . 'config.php');
+	if ($user !== $configUser) {
 		echo "Console has to be executed with the user that owns the file config/config.php" . PHP_EOL;
-		echo "Current user: " . $user['name'] . PHP_EOL;
-		echo "Owner of config.php: " . $configUser['name'] . PHP_EOL;
-		echo "Try adding 'sudo -u " . $configUser['name'] . " ' to the beginning of the command (without the single quotes)" . PHP_EOL;
-		echo "If running with 'docker exec' try adding the option '-u " . $configUser['name'] . "' to the docker command (without the single quotes)" . PHP_EOL;
+		echo "Current user id: " . $user . PHP_EOL;
+		echo "Owner id of config.php: " . $configUser . PHP_EOL;
+		echo "Try adding 'sudo -u #" . $configUser . "' to the beginning of the command (without the single quotes)" . PHP_EOL;
+		echo "If running with 'docker exec' try adding the option '-u " . $configUser . "' to the docker command (without the single quotes)" . PHP_EOL;
 		exit(1);
 	}
 
@@ -86,7 +86,7 @@ try {
 	}
 
 	if (!function_exists('pcntl_signal') && !in_array('--no-warnings', $argv)) {
-		echo "The process control (PCNTL) extensions are required in case you want to interrupt long running commands - see http://php.net/manual/en/book.pcntl.php" . PHP_EOL;
+		echo "The process control (PCNTL) extensions are required in case you want to interrupt long running commands - see https://www.php.net/manual/en/book.pcntl.php" . PHP_EOL;
 	}
 
 	$application = new Application(

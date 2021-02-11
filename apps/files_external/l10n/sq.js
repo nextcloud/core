@@ -114,7 +114,6 @@ OC.L10N.register(
     "Available for" : "E gatshme për",
     "Add storage" : "Shtoni depozitë",
     "Advanced settings" : "Rregullime të mëtejshme",
-    "Allow users to mount external storage" : "Lejoju përdoruesve të montojnë depozita të jashtme",
-    "Saving..." : "Po ruhet …"
+    "Allow users to mount external storage" : "Lejoju përdoruesve të montojnë depozita të jashtme"
 },
 "nplurals=2; plural=(n != 1);");

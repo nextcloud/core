@@ -5,15 +5,16 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author nik gaffney <nik@fo.am>
  * @author Olivier Paroz <github@oparoz.com>
  * @author Rello <Rello@users.noreply.github.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Stefan Weil <sw@weilnetz.de>
  * @author Thomas Ebert <thomas.ebert@usability.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Victor Dubiniuk <dubiniuk@owncloud.com>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -33,84 +34,74 @@
 
 namespace OC\Repair;
 
+use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\IConfig;
+use OCP\IDBConnection;
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
 
 class RepairMimeTypes implements IRepairStep {
-	/**
-	 * @var \OCP\IConfig
-	 */
+	/** @var IConfig */
 	protected $config;
+	/** @var IDBConnection */
+	protected $connection;
 
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	protected $folderMimeTypeId;
 
-	/**
-	 * @param \OCP\IConfig $config
-	 */
-	public function __construct($config) {
+	public function __construct(IConfig $config,
+								IDBConnection $connection) {
 		$this->config = $config;
+		$this->connection = $connection;
 	}
 
 	public function getName() {
 		return 'Repair mime types';
 	}
 
-	private static function existsStmt() {
-		return \OC_DB::prepare('
-			SELECT count(`mimetype`)
-			FROM   `*PREFIX*mimetypes`
-			WHERE  `mimetype` = ?
-		');
-	}
-
-	private static function getIdStmt() {
-		return \OC_DB::prepare('
-			SELECT `id`
-			FROM   `*PREFIX*mimetypes`
-			WHERE  `mimetype` = ?
-		');
-	}
-
-	private static function insertStmt() {
-		return \OC_DB::prepare('
-			INSERT INTO `*PREFIX*mimetypes` ( `mimetype` )
-			VALUES ( ? )
-		');
-	}
-
-	private static function updateByNameStmt() {
-		return \OC_DB::prepare('
-			UPDATE `*PREFIX*filecache`
-			SET `mimetype` = ?
-			WHERE `mimetype` <> ? AND `mimetype` <> ? AND `name` ILIKE ?
-		');
-	}
-
 	private function updateMimetypes($updatedMimetypes) {
+		$query = $this->connection->getQueryBuilder();
+		$query->select('id')
+			->from('mimetypes')
+			->where($query->expr()->eq('mimetype', $query->createParameter('mimetype'), IQueryBuilder::PARAM_INT));
+		$insert = $this->connection->getQueryBuilder();
+		$insert->insert('mimetypes')
+			->setValue('mimetype', $insert->createParameter('mimetype'));
+
 		if (empty($this->folderMimeTypeId)) {
-			$result = \OC_DB::executeAudited(self::getIdStmt(), ['httpd/unix-directory']);
+			$query->setParameter('mimetype', 'httpd/unix-directory');
+			$result = $query->execute();
 			$this->folderMimeTypeId = (int)$result->fetchOne();
+			$result->closeCursor();
 		}
+
+		$update = $this->connection->getQueryBuilder();
+		$update->update('filecache')
+			->set('mimetype', $update->createParameter('mimetype'))
+			->where($update->expr()->neq('mimetype', $update->createParameter('mimetype'), IQueryBuilder::PARAM_INT))
+			->andWhere($update->expr()->neq('mimetype', $update->createParameter('folder'), IQueryBuilder::PARAM_INT))
+			->andWhere($update->expr()->iLike('name', $update->createParameter('name')))
+			->setParameter('folder', $this->folderMimeTypeId);
 
 		$count = 0;
 		foreach ($updatedMimetypes as $extension => $mimetype) {
-			$result = \OC_DB::executeAudited(self::existsStmt(), [$mimetype]);
-			$exists = $result->fetchOne();
+			// get target mimetype id
+			$query->setParameter('mimetype', $mimetype);
+			$result = $query->execute();
+			$mimetypeId = (int)$result->fetchOne();
+			$result->closeCursor();
 
-			if (!$exists) {
+			if (!$mimetypeId) {
 				// insert mimetype
-				\OC_DB::executeAudited(self::insertStmt(), [$mimetype]);
+				$insert->setParameter('mimetype', $mimetype);
+				$insert->execute();
+				$mimetypeId = $insert->getLastInsertId();
 			}
 
-			// get target mimetype id
-			$result = \OC_DB::executeAudited(self::getIdStmt(), [$mimetype]);
-			$mimetypeId = $result->fetchOne();
-
 			// change mimetype for files with x extension
-			$count += \OC_DB::executeAudited(self::updateByNameStmt(), [$mimetypeId, $this->folderMimeTypeId, $mimetypeId, '%.' . $extension]);
+			$update->setParameter('mimetype', $mimetypeId)
+				->setParameter('name', '%' . $this->connection->escapeLikeParameter('.' . $extension));
+			$count += $update->execute();
 		}
 
 		return $count;
@@ -191,6 +182,26 @@ class RepairMimeTypes implements IRepairStep {
 		return $this->updateMimetypes($updatedMimetypes);
 	}
 
+	private function introduceOpenDocumentTemplates() {
+		$updatedMimetypes = [
+			'ott' => 'application/vnd.oasis.opendocument.text-template',
+			'ots' => 'application/vnd.oasis.opendocument.spreadsheet-template',
+			'otp' => 'application/vnd.oasis.opendocument.presentation-template',
+			'otg' => 'application/vnd.oasis.opendocument.graphics-template',
+		];
+
+		return $this->updateMimetypes($updatedMimetypes);
+	}
+
+	private function introduceOrgModeType() {
+		$updatedMimetypes = [
+			'org' => 'text/org'
+		];
+
+		return $this->updateMimetypes($updatedMimetypes);
+	}
+
+
 	/**
 	 * Fix mime types
 	 */
@@ -226,6 +237,14 @@ class RepairMimeTypes implements IRepairStep {
 
 		if (version_compare($ocVersionFromBeforeUpdate, '14.0.0.10', '<') && $this->introduceComicbookTypes()) {
 			$out->info('Fixed comicbook mime types');
+		}
+
+		if (version_compare($ocVersionFromBeforeUpdate, '20.0.0.5', '<') && $this->introduceOpenDocumentTemplates()) {
+			$out->info('Fixed OpenDocument template mime types');
+		}
+
+		if (version_compare($ocVersionFromBeforeUpdate, '21.0.0.7', '<') && $this->introduceOrgModeType()) {
+			$out->info('Fixed orgmode mime types');
 		}
 	}
 }

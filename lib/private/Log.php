@@ -36,10 +36,9 @@ declare(strict_types=1);
 
 namespace OC;
 
+use Nextcloud\LogNormalizer\Normalizer;
 use OCP\Log\IDataLogger;
 use function array_merge;
-use InterfaSys\LogNormalizer\Normalizer;
-
 use OC\Log\ExceptionSerializer;
 use OCP\ILogger;
 use OCP\Log\IFileBased;
@@ -315,7 +314,7 @@ class Log implements ILogger, IDataLogger {
 		$app = $context['app'] ?? 'no app in context';
 		$level = $context['level'] ?? ILogger::ERROR;
 
-		$serializer = new ExceptionSerializer();
+		$serializer = new ExceptionSerializer($this->config);
 		$data = $serializer->serializeException($exception);
 		$data['CustomMessage'] = $context['message'] ?? '--';
 

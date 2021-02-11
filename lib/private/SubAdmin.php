@@ -6,8 +6,10 @@
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Mikael Hammarin <mikael@try2.se>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -30,6 +32,9 @@
 namespace OC;
 
 use OC\Hooks\PublicEmitter;
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Group\Events\SubAdminAddedEvent;
+use OCP\Group\Events\SubAdminRemovedEvent;
 use OCP\Group\ISubAdmin;
 use OCP\IDBConnection;
 use OCP\IGroup;
@@ -48,6 +53,9 @@ class SubAdmin extends PublicEmitter implements ISubAdmin {
 	/** @var IDBConnection */
 	private $dbConn;
 
+	/** @var IEventDispatcher */
+	private $eventDispatcher;
+
 	/**
 	 * @param IUserManager $userManager
 	 * @param IGroupManager $groupManager
@@ -55,10 +63,12 @@ class SubAdmin extends PublicEmitter implements ISubAdmin {
 	 */
 	public function __construct(IUserManager $userManager,
 								IGroupManager $groupManager,
-								IDBConnection $dbConn) {
+								IDBConnection $dbConn,
+								IEventDispatcher $eventDispatcher) {
 		$this->userManager = $userManager;
 		$this->groupManager = $groupManager;
 		$this->dbConn = $dbConn;
+		$this->eventDispatcher = $eventDispatcher;
 
 		$this->userManager->listen('\OC\User', 'postDelete', function ($user) {
 			$this->post_deleteUser($user);
@@ -83,8 +93,10 @@ class SubAdmin extends PublicEmitter implements ISubAdmin {
 			])
 			->execute();
 
+		/** @deprecated 21.0.0 - use type SubAdminAddedEvent instead  */
 		$this->emit('\OC\SubAdmin', 'postCreateSubAdmin', [$user, $group]);
-		\OC_Hook::emit("OC_SubAdmin", "post_createSubAdmin", ["gid" => $group->getGID()]);
+		$event = new SubAdminAddedEvent($group, $user);
+		$this->eventDispatcher->dispatchTyped($event);
 	}
 
 	/**
@@ -100,8 +112,10 @@ class SubAdmin extends PublicEmitter implements ISubAdmin {
 			->andWhere($qb->expr()->eq('uid', $qb->createNamedParameter($user->getUID())))
 			->execute();
 
+		/** @deprecated 21.0.0 - use type SubAdminRemovedEvent instead  */
 		$this->emit('\OC\SubAdmin', 'postDeleteSubAdmin', [$user, $group]);
-		\OC_Hook::emit("OC_SubAdmin", "post_deleteSubAdmin", ["gid" => $group->getGID()]);
+		$event = new SubAdminRemovedEvent($group, $user);
+		$this->eventDispatcher->dispatchTyped($event);
 	}
 
 	/**
@@ -198,7 +212,7 @@ class SubAdmin extends PublicEmitter implements ISubAdmin {
 			$group = $this->groupManager->get($row['gid']);
 			if (!is_null($user) && !is_null($group)) {
 				$subadmins[] = [
-					'user'  => $user,
+					'user' => $user,
 					'group' => $group
 				];
 			}
@@ -226,7 +240,7 @@ class SubAdmin extends PublicEmitter implements ISubAdmin {
 			->andWhere($qb->expr()->eq('uid', $qb->createNamedParameter($user->getUID())))
 			->execute();
 
-		$fetch =  $result->fetch();
+		$fetch = $result->fetch();
 		$result->closeCursor();
 		$result = !empty($fetch) ? true : false;
 

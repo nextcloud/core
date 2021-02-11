@@ -97,6 +97,10 @@
             <xs:selector xpath="dependencies/database"/>
             <xs:field xpath="."/>
         </xs:unique>
+        <xs:unique name="uniqueArchitecture">
+            <xs:selector xpath="dependencies/architecture"/>
+            <xs:field xpath="."/>
+        </xs:unique>
         <xs:unique name="uniqueLib">
             <xs:selector xpath="dependencies/lib"/>
             <xs:field xpath="."/>
@@ -552,6 +556,8 @@
                         maxOccurs="1"/>
             <xs:element name="nextcloud" type="nextcloud" minOccurs="1"
                         maxOccurs="1"/>
+            <xs:element name="architecture" type="architecture" minOccurs="0"
+                        maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -610,6 +616,15 @@
         <xs:restriction base="xs:int">
             <xs:enumeration value="32"/>
             <xs:enumeration value="64"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="architecture">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="x86"/>
+            <xs:enumeration value="x86_64"/>
+            <xs:enumeration value="aarch"/>
+            <xs:enumeration value="aarch64"/>
         </xs:restriction>
     </xs:simpleType>
 

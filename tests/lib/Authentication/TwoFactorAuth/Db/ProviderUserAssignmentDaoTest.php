@@ -136,14 +136,29 @@ class ProviderUserAssignmentDaoTest extends TestCase {
 		$this->dao->persist('twofactor_fail', 'user1', 1);
 		$this->dao->persist('twofactor_u2f', 'user1', 1);
 		$this->dao->persist('twofactor_fail', 'user2', 0);
-		$this->dao->persist('twofactor_u2f', 'user1', 0);
+		$this->dao->persist('twofactor_u2f', 'user2', 0);
 
-		$this->dao->deleteByUser('user1');
+		$deleted = $this->dao->deleteByUser('user1');
 
+		$this->assertEquals(
+			[
+				[
+					'uid' => 'user1',
+					'provider_id' => 'twofactor_fail',
+					'enabled' => true,
+				],
+				[
+					'uid' => 'user1',
+					'provider_id' => 'twofactor_u2f',
+					'enabled' => true,
+				],
+			],
+			$deleted
+		);
 		$statesUser1 = $this->dao->getState('user1');
 		$statesUser2 = $this->dao->getState('user2');
 		$this->assertCount(0, $statesUser1);
-		$this->assertCount(1, $statesUser2);
+		$this->assertCount(2, $statesUser2);
 	}
 
 	public function testDeleteAll() {

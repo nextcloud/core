@@ -133,6 +133,11 @@ class PublishPlugin extends ServerPlugin {
 				$canShare = (!$node->isSubscription() && $node->canWrite());
 				$canPublish = (!$node->isSubscription() && $node->canWrite());
 
+				if ($this->config->getAppValue('dav', 'limitAddressBookAndCalendarSharingToOwner', 'no') === 'yes') {
+					$canShare &= ($node->getOwner() === $node->getPrincipalURI());
+					$canPublish &= ($node->getOwner() === $node->getPrincipalURI());
+				}
+
 				return new AllowedSharingModes($canShare, $canPublish);
 			});
 		}
@@ -190,7 +195,14 @@ class PublishPlugin extends ServerPlugin {
 
 			// If there's no ACL support, we allow everything
 			if ($acl) {
+				/** @var \Sabre\DAVACL\Plugin $acl */
 				$acl->checkPrivileges($path, '{DAV:}write');
+
+				$limitSharingToOwner = $this->config->getAppValue('dav', 'limitAddressBookAndCalendarSharingToOwner', 'no') === 'yes';
+				$isOwner = $acl->getCurrentUserPrincipal() === $node->getOwner();
+				if ($limitSharingToOwner && !$isOwner) {
+					return;
+				}
 			}
 
 			$node->setPublishStatus(true);
@@ -218,7 +230,14 @@ class PublishPlugin extends ServerPlugin {
 
 			// If there's no ACL support, we allow everything
 			if ($acl) {
+				/** @var \Sabre\DAVACL\Plugin $acl */
 				$acl->checkPrivileges($path, '{DAV:}write');
+
+				$limitSharingToOwner = $this->config->getAppValue('dav', 'limitAddressBookAndCalendarSharingToOwner', 'no') === 'yes';
+				$isOwner = $acl->getCurrentUserPrincipal() === $node->getOwner();
+				if ($limitSharingToOwner && !$isOwner) {
+					return;
+				}
 			}
 
 			$node->setPublishStatus(false);

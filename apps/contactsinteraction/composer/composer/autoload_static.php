@@ -21,6 +21,7 @@ class ComposerStaticInitContactsInteraction
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\ContactsInteraction\\AddressBook' => __DIR__ . '/..' . '/../lib/AddressBook.php',
         'OCA\\ContactsInteraction\\AddressBookProvider' => __DIR__ . '/..' . '/../lib/AddressBookProvider.php',
         'OCA\\ContactsInteraction\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',

@@ -42,6 +42,10 @@ export default {
 			type: Share,
 			default: null,
 		},
+		isUnique: {
+			type: Boolean,
+			default: true,
+		},
 	},
 
 	data() {

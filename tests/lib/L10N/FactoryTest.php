@@ -611,7 +611,7 @@ class FactoryTest extends TestCase {
 		$factory = $this->getFactory();
 
 		if ($iUserMock === null) {
-			$matcher  = $this->userSession->expects($this->once())
+			$matcher = $this->userSession->expects($this->once())
 				->method('getUser');
 
 			if ($hasSession) {

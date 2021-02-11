@@ -22,7 +22,6 @@
     "Could not write file to disk" : "Nije moguće zapisati datoteku na disk",
     "A PHP extension stopped the file upload" : "Proširenje PHP-a zaustavilo je otpremanje datoteke",
     "No file uploaded" : "Nije otpremljena nijedna datoteka",
-    "Unsupported image type" : "Nepodržana vrsta slike",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "Već koristite prilagođenu temu. Te postavke mogu biti zamijenjene postavkama aplikacije za upravljanje temama.",
     "Theming" : "Upravljanje temama",
     "Legal notice" : "Pravna obavijest",

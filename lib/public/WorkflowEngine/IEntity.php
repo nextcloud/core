@@ -37,7 +37,6 @@ use OCP\EventDispatcher\Event;
  * Ensure to listen to 'OCP/WorkflowEngine::loadEntities' for registering your
  * entities.
  *
- * @package OCP\WorkflowEngine
  * @since 18.0.0
  */
 interface IEntity {

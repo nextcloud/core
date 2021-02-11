@@ -4,6 +4,7 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
@@ -64,8 +65,8 @@ class UserProvided extends AuthMechanism implements IUserProvided {
 		return self::CREDENTIALS_IDENTIFIER_PREFIX . $storageId;
 	}
 
-	public function saveBackendOptions(IUser $user, $id, array $options) {
-		$this->credentialsManager->store($user->getUID(), $this->getCredentialsIdentifier($id), [
+	public function saveBackendOptions(IUser $user, $mountId, array $options) {
+		$this->credentialsManager->store($user->getUID(), $this->getCredentialsIdentifier($mountId), [
 			'user' => $options['user'], // explicitly copy the fields we want instead of just passing the entire $options array
 			'password' => $options['password'] // this way we prevent users from being able to modify any other field
 		]);

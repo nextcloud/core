@@ -59,6 +59,7 @@ use OCP\IServerContainer;
 use OCP\Share\Events\ShareCreatedEvent;
 use OCP\Util;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Application extends App {
@@ -74,6 +75,7 @@ class Application extends App {
 
 		/** @var IEventDispatcher $dispatcher */
 		$dispatcher = $container->query(IEventDispatcher::class);
+		$oldDispatcher = $container->getServer()->getEventDispatcher();
 		$mountProviderCollection = $server->getMountProviderCollection();
 		$notifications = $server->getNotificationManager();
 
@@ -124,7 +126,7 @@ class Application extends App {
 		$notifications->registerNotifierService(Notifier::class);
 
 		$this->registerMountProviders($mountProviderCollection);
-		$this->registerEventsScripts($dispatcher);
+		$this->registerEventsScripts($dispatcher, $oldDispatcher);
 		$this->setupSharingMenus();
 
 		/**
@@ -138,7 +140,7 @@ class Application extends App {
 		$mountProviderCollection->registerProvider($this->getContainer()->query('ExternalMountProvider'));
 	}
 
-	protected function registerEventsScripts(IEventDispatcher $dispatcher) {
+	protected function registerEventsScripts(IEventDispatcher $dispatcher, EventDispatcherInterface $oldDispatcher) {
 		// sidebar and files scripts
 		$dispatcher->addServiceListener(LoadAdditionalScriptsEvent::class, LoadAdditionalListener::class);
 		$dispatcher->addServiceListener(BeforeTemplateRenderedEvent::class, LegacyBeforeTemplateRenderedListener::class);
@@ -151,12 +153,12 @@ class Application extends App {
 		$dispatcher->addServiceListener(UserAddedEvent::class, UserAddedToGroupListener::class);
 
 		// notifications api to accept incoming user shares
-		$dispatcher->addListener('OCP\Share::postShare', function (GenericEvent $event) {
+		$oldDispatcher->addListener('OCP\Share::postShare', function (GenericEvent $event) {
 			/** @var Listener $listener */
 			$listener = $this->getContainer()->query(Listener::class);
 			$listener->shareNotification($event);
 		});
-		$dispatcher->addListener(IGroup::class . '::postAddUser', function (GenericEvent $event) {
+		$oldDispatcher->addListener(IGroup::class . '::postAddUser', function (GenericEvent $event) {
 			/** @var Listener $listener */
 			$listener = $this->getContainer()->query(Listener::class);
 			$listener->userAddedToGroup($event);
@@ -166,7 +168,7 @@ class Application extends App {
 	protected function setupSharingMenus() {
 		$config = \OC::$server->getConfig();
 
-		if ($config->getAppValue('core', 'shareapi_enabled', 'yes') !== 'yes') {
+		if ($config->getAppValue('core', 'shareapi_enabled', 'yes') !== 'yes' || !class_exists('\OCA\Files\App')) {
 			return;
 		}
 

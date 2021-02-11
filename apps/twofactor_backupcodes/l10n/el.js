@@ -18,9 +18,6 @@ OC.L10N.register(
     "An error occurred while generating your backup codes" : "Ένα σφάλμα προέκυψε κατά τη δημιουργία των εφεδρικών κωδικών.",
     "{name} backup codes" : "{name} εφεδρικοί κωδικοί",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Χρησιμοποιήστε έναν από τους εφεδρικούς κωδικούς που αποθηκεύσατε όταν ρυθμίζετε τον έλεγχο ταυτότητας δύο παραγόντων.",
-    "Submit" : "Υποβολή",
-    "function" : "λειτουργία",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["εικονίδιο-φόρτωση-μικρό","δημιουργία-εφεδρικό-κωδικών"]
+    "Submit" : "Υποβολή"
 },
 "nplurals=2; plural=(n != 1);");

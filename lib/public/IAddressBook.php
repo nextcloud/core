@@ -4,6 +4,7 @@
  *
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -39,7 +40,6 @@ namespace OCP {
 	/**
 	 * Interface IAddressBook
 	 *
-	 * @package OCP
 	 * @since 5.0.0
 	 */
 	interface IAddressBook {

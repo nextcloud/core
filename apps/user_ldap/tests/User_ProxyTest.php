@@ -5,6 +5,7 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roger Szabo <roger.szabo@web.de>
  * @author Vinicius Cubas Brand <vinicius@eita.org.br>
@@ -28,6 +29,7 @@
 
 namespace OCA\User_LDAP\Tests;
 
+use OCA\User_LDAP\Helper;
 use OCA\User_LDAP\ILDAPWrapper;
 use OCA\User_LDAP\User_Proxy;
 use OCA\User_LDAP\UserPluginManager;
@@ -37,6 +39,8 @@ use OCP\Notification\IManager as INotificationManager;
 use Test\TestCase;
 
 class User_ProxyTest extends TestCase {
+	/** @var Helper|\PHPUnit\Framework\MockObject\MockObject */
+	protected $helper;
 	/** @var ILDAPWrapper|\PHPUnit\Framework\MockObject\MockObject */
 	private $ldapWrapper;
 	/** @var IConfig|\PHPUnit\Framework\MockObject\MockObject */
@@ -53,6 +57,7 @@ class User_ProxyTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
+		$this->helper = $this->createMock(Helper::class);
 		$this->ldapWrapper = $this->createMock(ILDAPWrapper::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->notificationManager = $this->createMock(INotificationManager::class);
@@ -60,7 +65,7 @@ class User_ProxyTest extends TestCase {
 		$this->userPluginManager = $this->createMock(UserPluginManager::class);
 		$this->proxy = $this->getMockBuilder(User_Proxy::class)
 			->setConstructorArgs([
-				[],
+				$this->helper,
 				$this->ldapWrapper,
 				$this->config,
 				$this->notificationManager,

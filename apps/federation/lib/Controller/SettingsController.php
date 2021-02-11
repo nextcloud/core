@@ -71,7 +71,7 @@ class SettingsController extends Controller {
 			[
 				'url' => $url,
 				'id' => $id,
-				'message' => (string) $this->l->t('Added to the list of trusted servers')
+				'message' => $this->l->t('Added to the list of trusted servers')
 			]
 		);
 	}

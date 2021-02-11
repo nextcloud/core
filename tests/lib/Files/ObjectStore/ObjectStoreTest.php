@@ -108,4 +108,20 @@ abstract class ObjectStoreTest extends TestCase {
 
 		$this->assertFalse($instance->objectExists('2'));
 	}
+
+	public function testCopy() {
+		$stream = $this->stringToStream('foobar');
+
+		$instance = $this->getInstance();
+
+		$instance->writeObject('source', $stream);
+
+		$this->assertFalse($instance->objectExists('target'));
+
+		$instance->copyObject('source', 'target');
+
+		$this->assertTrue($instance->objectExists('target'));
+
+		$this->assertEquals('foobar', stream_get_contents($instance->readObject('target')));
+	}
 }

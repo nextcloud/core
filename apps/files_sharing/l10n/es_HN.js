@@ -55,6 +55,7 @@ OC.L10N.register(
     "{user} unshared {file} from you" : "{user} ha dejado de compartir {file} contigo",
     "Shared with {user}" : "Compartido con {user}",
     "Removed share for {user}" : "Se eliminó el elemento compartido para {user}",
+    "{actor} removed themselves" : "{actor} se ha eliminado",
     "{actor} shared with {user}" : "{actor} compartió con {user}",
     "{actor} removed share for {user}" : "{actor} eliminó el elemento compartido para {user}",
     "Shared by {actor}" : "Compartido por {actor}",
@@ -66,6 +67,7 @@ OC.L10N.register(
     "{actor} shared {file} with you" : "{actor} ha compartido {file} contigo",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "Un archivo o carpeta comparitdo por correo o por liga pública ha sido <strong>descargado</strong>",
     "A file or folder was shared from <strong>another server</strong>" : "Un archivo o carpeta fue compartido desde <strong>otro servidor</strong>",
+    "Files" : "Archivos",
     "A file or folder has been <strong>shared</strong>" : "Un archivo o carpeta ha sido <strong>compartido</strong>",
     "Wrong share ID, share doesn't exist" : "ID del elemento compartido equivocado, el elemento compartido no existe",
     "Could not delete share" : "No fue posible borrar el elemento compartido",
@@ -127,8 +129,6 @@ OC.L10N.register(
     "Download %s" : "Descargar %s",
     "Upload files to %s" : "Cargar archivos a %s",
     "Select or drop files" : "Selecciona o suelta los archivos",
-    "Uploaded files:" : "Archivos cargados:",
-    "could not delete share" : "no fue posible borrar el elemento compartido",
-    "Uploading files…" : "Cargando archivos..."
+    "Uploaded files:" : "Archivos cargados:"
 },
 "nplurals=2; plural=(n != 1);");

@@ -3,11 +3,12 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bernhard Reiter <ockham@raz.or.at>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Tanghus <thomas@tanghus.net>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -168,7 +169,7 @@ interface ITags {
 	 * @return bool Returns false on error.
 	 * @since 6.0.0
 	 */
-	public function addMultiple($names, $sync=false, $id = null);
+	public function addMultiple($names, $sync = false, $id = null);
 
 	/**
 	 * Delete tag/object relations from the db

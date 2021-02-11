@@ -69,38 +69,38 @@
 			<div v-if="app.error" class="warning">
 				{{ app.error }}
 			</div>
-			<div v-if="loading(app.id)" class="icon icon-loading-small" />
+			<div v-if="isLoading" class="icon icon-loading-small" />
 			<input v-if="app.update"
 				class="update primary"
 				type="button"
 				:value="t('settings', 'Update to {update}', {update:app.update})"
-				:disabled="installing || loading(app.id)"
+				:disabled="installing || isLoading"
 				@click.stop="update(app.id)">
 			<input v-if="app.canUnInstall"
 				class="uninstall"
 				type="button"
 				:value="t('settings', 'Remove')"
-				:disabled="installing || loading(app.id)"
+				:disabled="installing || isLoading"
 				@click.stop="remove(app.id)">
 			<input v-if="app.active"
 				class="enable"
 				type="button"
 				:value="t('settings','Disable')"
-				:disabled="installing || loading(app.id)"
+				:disabled="installing || isLoading"
 				@click.stop="disable(app.id)">
 			<input v-if="!app.active && (app.canInstall || app.isCompatible)"
 				v-tooltip.auto="enableButtonTooltip"
 				class="enable"
 				type="button"
 				:value="enableButtonText"
-				:disabled="!app.canInstall || installing || loading(app.id)"
+				:disabled="!app.canInstall || installing || isLoading"
 				@click.stop="enable(app.id)">
 			<input v-else-if="!app.active"
 				v-tooltip.auto="forceEnableButtonTooltip"
 				class="enable force"
 				type="button"
 				:value="forceEnableButtonText"
-				:disabled="installing || loading(app.id)"
+				:disabled="installing || isLoading"
 				@click.stop="forceEnable(app.id)">
 		</div>
 	</div>
@@ -108,7 +108,7 @@
 
 <script>
 import AppScore from './AppScore'
-import AppManagement from '../AppManagement'
+import AppManagement from '../../mixins/AppManagement'
 import SvgFilterMixin from '../SvgFilterMixin'
 
 export default {

@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -113,7 +114,7 @@ class SizePropagationTest extends TestCase {
 
 		// but the size including mountpoints increases
 		$newRecipientRootInfo = $recipientView->getFileInfo('', true);
-		$this->assertEquals($oldRecipientSize +3, $newRecipientRootInfo->getSize());
+		$this->assertEquals($oldRecipientSize + 3, $newRecipientRootInfo->getSize());
 
 		// size of owner's root increases
 		$this->loginAsUser(self::TEST_FILES_SHARING_API_USER2);

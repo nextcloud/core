@@ -18,8 +18,6 @@ OC.L10N.register(
     "An error occurred while generating your backup codes" : "Eraro okazis dum generado de viaj rezervkodoj",
     "{name} backup codes" : "{name} rezervkodoj",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Uzu unu el viaj rezervkodoj, kiujn vi konservis dum agordo de dufaza aŭtentigo.",
-    "Submit" : "Sendi",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["icon-loading-small","generate-backup-codes"]
+    "Submit" : "Sendi"
 },
 "nplurals=2; plural=(n != 1);");

@@ -281,7 +281,7 @@ class ClientTest extends \Test\TestCase {
 		$this->certificateManager
 			->expects($this->once())
 			->method('getAbsoluteBundlePath')
-			->with(null)
+			->with()
 			->willReturn('/my/path.crt');
 
 		$this->defaultRequestOptions = [
@@ -493,7 +493,7 @@ class ClientTest extends \Test\TestCase {
 		$this->certificateManager
 			->expects($this->once())
 			->method('getAbsoluteBundlePath')
-			->with(null)
+			->with()
 			->willReturn('/my/path.crt');
 
 		$this->assertEquals([
@@ -529,7 +529,7 @@ class ClientTest extends \Test\TestCase {
 		$this->certificateManager
 			->expects($this->once())
 			->method('getAbsoluteBundlePath')
-			->with(null)
+			->with()
 			->willReturn('/my/path.crt');
 
 		$this->assertEquals([

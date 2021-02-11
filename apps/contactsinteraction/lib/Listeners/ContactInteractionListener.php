@@ -156,9 +156,6 @@ class ContactInteractionListener implements IEventListener {
 			'CATEGORIES' => $this->l10n->t('Recently contacted'),
 		];
 
-		if ($contact->getUid() !== null) {
-			$props['X-NEXTCLOUD-UID'] = $contact->getUid();
-		}
 		if ($contact->getEmail() !== null) {
 			$props['EMAIL'] = $contact->getEmail();
 		}

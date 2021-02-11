@@ -8,7 +8,7 @@
 		This application automatically maintains older versions of files that are changed. When enabled, a hidden versions folder is provisioned in every user’s directory and is used to store old file versions. A user can revert to an older version through the web interface at any time, with the replaced file becoming a version. The app automatically manages the versions folder to ensure the user doesn’t run out of Quota because of versions.
 		In addition to the expiry of versions, the versions app makes certain never to use more than 50% of the user’s currently available free space. If stored versions exceed this limit, the app will delete the oldest versions first until it meets this limit. More information is available in the Versions documentation.
 	</description>
-	<version>1.13.0</version>
+	<version>1.14.0</version>
 	<licence>agpl</licence>
 	<author>Frank Karlitschek</author>
 	<author>Bjoern Schiessle</author>
@@ -24,7 +24,7 @@
 	<category>files</category>
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 	<dependencies>
-		<nextcloud min-version="20" max-version="20"/>
+		<nextcloud min-version="22" max-version="22"/>
 	</dependencies>
 
 	<background-jobs>

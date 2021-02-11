@@ -281,4 +281,23 @@ abstract class AbstractMappingTest extends \Test\TestCase {
 		$results = $mapper->getList(1, 1);
 		$this->assertSame(1, count($results));
 	}
+
+	public function testGetListOfIdsByDn() {
+		/** @var AbstractMapping $mapper */
+		list($mapper,) = $this->initTest();
+
+		$listOfDNs = [];
+		for ($i = 0; $i < 66640; $i++) {
+			// Postgres has a limit of 65535 values in a single IN list
+			$name = 'as_' . $i;
+			$dn = 'uid=' . $name . ',dc=example,dc=org';
+			$listOfDNs[] = $dn;
+			if ($i % 20 === 0) {
+				$mapper->map($dn, $name, 'fake-uuid-' . $i);
+			}
+		}
+
+		$result = $mapper->getListOfIdsByDn($listOfDNs);
+		$this->assertSame(66640 / 20, count($result));
+	}
 }

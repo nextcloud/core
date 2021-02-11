@@ -64,6 +64,10 @@ export default {
 			type: String,
 			default: '',
 		},
+		isUnique: {
+			type: Boolean,
+			default: true,
+		},
 	},
 
 }

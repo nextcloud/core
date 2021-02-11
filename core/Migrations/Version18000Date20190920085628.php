@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2019 Joas Schilling <coding@schilljs.com>
  *
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -28,7 +29,7 @@ declare(strict_types=1);
 namespace OC\Core\Migrations;
 
 use Closure;
-use Doctrine\DBAL\Types\Types;
+use OCP\DB\Types;
 use OCP\DB\ISchemaWrapper;
 use OCP\IDBConnection;
 use OCP\Migration\IOutput;
@@ -59,7 +60,9 @@ class Version18000Date20190920085628 extends SimpleMigrationStep {
 			$table->addColumn('displayname', Types::STRING, [
 				'notnull' => true,
 				'length' => 255,
-				'default' => '',
+				// Will be overwritten in postSchemaChange, but Oracle can not save
+				// empty strings in notnull columns
+				'default' => 'name',
 			]);
 		}
 

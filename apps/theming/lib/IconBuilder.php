@@ -164,7 +164,7 @@ class IconBuilder {
 			$res = $tmp->getImageResolution();
 			$tmp->destroy();
 
-			if ($x>$y) {
+			if ($x > $y) {
 				$max = $x;
 			} else {
 				$max = $y;
@@ -198,8 +198,8 @@ class IconBuilder {
 		// offset for icon positioning
 		$border_w = (int)($appIconFile->getImageWidth() * 0.05);
 		$border_h = (int)($appIconFile->getImageHeight() * 0.05);
-		$innerWidth = (int)($appIconFile->getImageWidth() - $border_w * 2);
-		$innerHeight = (int)($appIconFile->getImageHeight() - $border_h * 2);
+		$innerWidth = ($appIconFile->getImageWidth() - $border_w * 2);
+		$innerHeight = ($appIconFile->getImageHeight() - $border_h * 2);
 		$appIconFile->adaptiveResizeImage($innerWidth, $innerHeight);
 		// center icon
 		$offset_w = 512 / 2 - $innerWidth / 2;

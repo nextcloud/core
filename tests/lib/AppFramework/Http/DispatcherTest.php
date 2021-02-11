@@ -33,6 +33,9 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\IConfig;
+use OCP\IRequest;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class TestController extends Controller {
 	/**
@@ -50,7 +53,7 @@ class TestController extends Controller {
 	 * @param int $test2
 	 * @return array
 	 */
-	public function exec($int, $bool, $test=4, $test2=1) {
+	public function exec($int, $bool, $test = 4, $test2 = 1) {
 		$this->registerResponder('text', function ($in) {
 			return new JSONResponse(['text' => $in]);
 		});
@@ -65,14 +68,19 @@ class TestController extends Controller {
 	 * @param int $test2
 	 * @return DataResponse
 	 */
-	public function execDataResponse($int, $bool, $test=4, $test2=1) {
+	public function execDataResponse($int, $bool, $test = 4, $test2 = 1) {
 		return new DataResponse([
 			'text' => [$int, $bool, $test, $test2]
 		]);
 	}
 }
 
-
+/**
+ * Class DispatcherTest
+ *
+ * @package Test\AppFramework\Http
+ * @group DB
+ */
 class DispatcherTest extends \Test\TestCase {
 	/** @var MiddlewareDispatcher */
 	private $middlewareDispatcher;
@@ -80,16 +88,24 @@ class DispatcherTest extends \Test\TestCase {
 	private $dispatcher;
 	private $controllerMethod;
 	private $response;
+	/** @var IRequest|MockObject  */
 	private $request;
 	private $lastModified;
 	private $etag;
+	/** @var Http|MockObject  */
 	private $http;
 	private $reflector;
+	/** @var IConfig|MockObject  */
+	private $config;
+	/** @var LoggerInterface|MockObject  */
+	private $logger;
 
 	protected function setUp(): void {
 		parent::setUp();
 		$this->controllerMethod = 'test';
 
+		$this->config = $this->createMock(IConfig::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$app = $this->getMockBuilder(
 			'OC\AppFramework\DependencyInjection\DIContainer')
 			->disableOriginalConstructor()
@@ -99,7 +115,7 @@ class DispatcherTest extends \Test\TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$this->http = $this->getMockBuilder(
-			'\OC\AppFramework\Http')
+			\OC\AppFramework\Http::class)
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -124,7 +140,10 @@ class DispatcherTest extends \Test\TestCase {
 			$this->http,
 			$this->middlewareDispatcher,
 			$this->reflector,
-			$this->request
+			$this->request,
+			$this->config,
+			\OC::$server->getDatabaseConnection(),
+			$this->logger
 		);
 
 		$this->response = $this->createMock(Response::class);
@@ -138,9 +157,9 @@ class DispatcherTest extends \Test\TestCase {
 	 * @param string $out
 	 * @param string $httpHeaders
 	 */
-	private function setMiddlewareExpectations($out=null,
-		$httpHeaders=null, $responseHeaders=[],
-		$ex=false, $catchEx=true) {
+	private function setMiddlewareExpectations($out = null,
+		$httpHeaders = null, $responseHeaders = [],
+		$ex = false, $catchEx = true) {
 		if ($ex) {
 			$exception = new \Exception();
 			$this->middlewareDispatcher->expects($this->once())
@@ -299,7 +318,10 @@ class DispatcherTest extends \Test\TestCase {
 		);
 		$this->dispatcher = new Dispatcher(
 			$this->http, $this->middlewareDispatcher, $this->reflector,
-			$this->request
+			$this->request,
+			$this->config,
+			\OC::$server->getDatabaseConnection(),
+			$this->logger
 		);
 		$controller = new TestController('app', $this->request);
 
@@ -330,7 +352,10 @@ class DispatcherTest extends \Test\TestCase {
 		);
 		$this->dispatcher = new Dispatcher(
 			$this->http, $this->middlewareDispatcher, $this->reflector,
-			$this->request
+			$this->request,
+			$this->config,
+			\OC::$server->getDatabaseConnection(),
+			$this->logger
 		);
 		$controller = new TestController('app', $this->request);
 
@@ -364,7 +389,10 @@ class DispatcherTest extends \Test\TestCase {
 		);
 		$this->dispatcher = new Dispatcher(
 			$this->http, $this->middlewareDispatcher, $this->reflector,
-			$this->request
+			$this->request,
+			$this->config,
+			\OC::$server->getDatabaseConnection(),
+			$this->logger
 		);
 		$controller = new TestController('app', $this->request);
 
@@ -397,7 +425,10 @@ class DispatcherTest extends \Test\TestCase {
 		);
 		$this->dispatcher = new Dispatcher(
 			$this->http, $this->middlewareDispatcher, $this->reflector,
-			$this->request
+			$this->request,
+			$this->config,
+			\OC::$server->getDatabaseConnection(),
+			$this->logger
 		);
 		$controller = new TestController('app', $this->request);
 
@@ -431,7 +462,10 @@ class DispatcherTest extends \Test\TestCase {
 		);
 		$this->dispatcher = new Dispatcher(
 			$this->http, $this->middlewareDispatcher, $this->reflector,
-			$this->request
+			$this->request,
+			$this->config,
+			\OC::$server->getDatabaseConnection(),
+			$this->logger
 		);
 		$controller = new TestController('app', $this->request);
 
@@ -467,7 +501,10 @@ class DispatcherTest extends \Test\TestCase {
 		);
 		$this->dispatcher = new Dispatcher(
 			$this->http, $this->middlewareDispatcher, $this->reflector,
-			$this->request
+			$this->request,
+			$this->config,
+			\OC::$server->getDatabaseConnection(),
+			$this->logger
 		);
 		$controller = new TestController('app', $this->request);
 

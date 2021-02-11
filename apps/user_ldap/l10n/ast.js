@@ -154,7 +154,6 @@ OC.L10N.register(
     "UUID Attribute for Groups:" : "Atributu UUID pa Grupos:",
     "Username-LDAP User Mapping" : "Asignación del Nome d'usuariu LDAP",
     "Clear Username-LDAP User Mapping" : "Llimpiar l'asignación de los Nomes d'usuariu de los usuarios LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Llimpiar l'asignación de los Nomes de grupu de los grupos de LDAP",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Baleru pal nome d'usuariu (por defeutu). N'otru casu, especifica un atributu LDAP/AD."
+    "Clear Groupname-LDAP Group Mapping" : "Llimpiar l'asignación de los Nomes de grupu de los grupos de LDAP"
 },
 "nplurals=2; plural=(n != 1);");

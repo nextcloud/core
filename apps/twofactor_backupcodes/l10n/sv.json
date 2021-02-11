@@ -16,9 +16,6 @@
     "An error occurred while generating your backup codes" : "Ett fel uppstod vid skapandet av nya återställningsnycklar",
     "{name} backup codes" : "{name} återställningsnycklar",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Använd en av återställningsnycklarna du sparade när du konfigurerar tvåfaktorsautentisering.",
-    "Submit" : "Skicka",
-    "function" : "funktion",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["icon-loading-small","Generera återställningsnycklar"]
+    "Submit" : "Skicka"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

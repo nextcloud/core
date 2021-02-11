@@ -32,7 +32,7 @@ declare(strict_types=1);
 namespace OC\AppFramework\Routing;
 
 use OC\AppFramework\DependencyInjection\DIContainer;
-use OCP\Route\IRouter;
+use OC\Route\Router;
 
 /**
  * Class RouteConfig
@@ -42,7 +42,7 @@ class RouteConfig {
 	/** @var DIContainer */
 	private $container;
 
-	/** @var IRouter */
+	/** @var Router */
 	private $router;
 
 	/** @var array */
@@ -65,11 +65,11 @@ class RouteConfig {
 
 	/**
 	 * @param \OC\AppFramework\DependencyInjection\DIContainer $container
-	 * @param \OCP\Route\IRouter $router
+	 * @param \OC\Route\Router $router
 	 * @param array $routes
 	 * @internal param $appName
 	 */
-	public function __construct(DIContainer $container, IRouter $router, $routes) {
+	public function __construct(DIContainer $container, Router $router, $routes) {
 		$this->routes = $routes;
 		$this->container = $container;
 		$this->router = $router;
@@ -231,7 +231,7 @@ class RouteConfig {
 				$controllerName = $this->buildControllerName($controller);
 				$actionName = $this->buildActionName($method);
 
-				$routeName = $routeNamePrefix . $this->appName . '.' . strtolower($resource) . '.' . strtolower($method);
+				$routeName = $routeNamePrefix . $this->appName . '.' . strtolower($resource) . '.' . $method;
 
 				$route = $this->router->create($routeName, $url)
 					->method($verb);

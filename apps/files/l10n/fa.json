@@ -32,7 +32,6 @@
     "Delete file" : "حذف فایل",
     "Delete folder" : "حذف پوشه",
     "Disconnect storage" : "فضای ذخیره را جدا کنید",
-    "Unshare" : "لغو اشتراک",
     "Could not load info for file \"{file}\"" : "بارگیری اطلاعات برای پرونده امکان پذیر نیست \"{file}\"",
     "Files" : "پرونده‌ها",
     "Details" : "جزئیات",
@@ -72,8 +71,6 @@
     "\"{name}\" is not an allowed filetype" : "\"{name}\" یک نوع پرونده مجاز نیست",
     "Storage of {owner} is full, files can not be updated or synced anymore!" : "فضای ذخیر‌سازی {owner}  پر شده است، امکان بروزرسانی یا هم‌گام‌سازی بیشتر وجود ندارد!",
     "Your storage is full, files can not be updated or synced anymore!" : "فضای ذخیره ی شما کاملا پر است، بیش از این فایلها بهنگام یا همگام سازی نمی توانند بشوند!",
-    "Storage of {owner} is almost full ({usedSpacePercent}%)" : "فضای  {owner} تقریبا پر شده است ({usedSpacePercent}%)",
-    "Your storage is almost full ({usedSpacePercent}%)" : "فضای ذخیره ی شما تقریبا پر است ({usedSpacePercent}%)",
     "_matches '{filter}'_::_match '{filter}'_" : ["تطبیق '{filter}'","تطبیق '{filter}'"],
     "View in folder" : "مشاهده در پوشه",
     "Copied!" : "کپی انجام شد!",
@@ -96,9 +93,7 @@
     "Changed by {user}" : "{user} تغییر داد",
     "Deleted by {user}" : " {user} حذف کرد",
     "\"remote user\"" : "\"کاربران از راه‌ دور\"",
-    "A new file or folder has been <strong>created</strong>" : "فایل یا پوشه ای <strong>ایجاد</strong> شد",
-    "A file or folder has been <strong>deleted</strong>" : "فایل یا پوشه ای به <strong>حذف</strong> شد",
-    "A file or folder has been <strong>restored</strong>" : "یک فایل یا پوشه <strong>بازگردانی شد</strong>",
+    "A file or folder has been <strong>changed</strong>" : "فایل یا پوشه ای به <strong>تغییر</strong> یافت",
     "All files" : "تمامی فایل‌ها",
     "Unlimited" : "نامحدود",
     "Upload (max. %s)" : "آپلود (بیشترین سایز %s)",
@@ -128,6 +123,12 @@
     "Deleted shares" : "اشتراک گذاری های حذف شده",
     "Pending shares" : "اشتراک در حال انتظار ",
     "Text file" : "فایل متنی",
-    "New text file.txt" : "فایل متنی جدید .txt"
+    "New text file.txt" : "فایل متنی جدید .txt",
+    "Unshare" : "لغو اشتراک",
+    "Storage of {owner} is almost full ({usedSpacePercent}%)" : "فضای  {owner} تقریبا پر شده است ({usedSpacePercent}%)",
+    "Your storage is almost full ({usedSpacePercent}%)" : "فضای ذخیره ی شما تقریبا پر است ({usedSpacePercent}%)",
+    "A new file or folder has been <strong>created</strong>" : "فایل یا پوشه ای <strong>ایجاد</strong> شد",
+    "A file or folder has been <strong>deleted</strong>" : "فایل یا پوشه ای به <strong>حذف</strong> شد",
+    "A file or folder has been <strong>restored</strong>" : "یک فایل یا پوشه <strong>بازگردانی شد</strong>"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

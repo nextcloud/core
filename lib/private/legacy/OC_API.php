@@ -12,7 +12,6 @@
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Tom Needham <tom@owncloud.com>
- * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @license AGPL-3.0
  *
@@ -43,8 +42,9 @@ class OC_API {
 	 * respond to a call
 	 * @param \OC\OCS\Result $result
 	 * @param string $format the format xml|json
+	 * @psalm-taint-escape html
 	 */
-	public static function respond($result, $format='xml') {
+	public static function respond($result, $format = 'xml') {
 		$request = \OC::$server->getRequest();
 
 		// Send 401 headers if unauthorised

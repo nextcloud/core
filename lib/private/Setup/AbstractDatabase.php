@@ -29,6 +29,7 @@
 
 namespace OC\Setup;
 
+use OC\DB\Connection;
 use OC\DB\ConnectionFactory;
 use OC\DB\MigrationService;
 use OC\SystemConfig;
@@ -90,10 +91,10 @@ abstract class AbstractDatabase {
 		$dbTablePrefix = isset($config['dbtableprefix']) ? $config['dbtableprefix'] : 'oc_';
 
 		$this->config->setValues([
-			'dbname'		=> $dbName,
-			'dbhost'		=> $dbHost,
+			'dbname' => $dbName,
+			'dbhost' => $dbHost,
 			'dbport' => $dbPort,
-			'dbtableprefix'	=> $dbTablePrefix,
+			'dbtableprefix' => $dbTablePrefix,
 		]);
 
 		$this->dbUser = $dbUser;
@@ -108,7 +109,7 @@ abstract class AbstractDatabase {
 	 * @param array $configOverwrite
 	 * @return \OC\DB\Connection
 	 */
-	protected function connect(array $configOverwrite = []) {
+	protected function connect(array $configOverwrite = []): Connection {
 		$connectionParams = [
 			'host' => $this->dbHost,
 			'user' => $this->dbUser,
@@ -149,7 +150,7 @@ abstract class AbstractDatabase {
 		if (!is_dir(\OC::$SERVERROOT."/core/Migrations")) {
 			return;
 		}
-		$ms = new MigrationService('core', \OC::$server->getDatabaseConnection());
-		$ms->migrate();
+		$ms = new MigrationService('core', \OC::$server->get(Connection::class));
+		$ms->migrate('latest', true);
 	}
 }

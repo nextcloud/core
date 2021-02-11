@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -28,7 +29,6 @@ use OC\Share20\Exception\ProviderException;
 /**
  * Interface IProviderFactory
  *
- * @package OC\Share20
  * @since 9.0.0
  */
 interface IProviderFactory {
@@ -54,4 +54,10 @@ interface IProviderFactory {
 	 * @since 11.0.0
 	 */
 	public function getAllProviders();
+
+	/**
+	 * @since 21.0.0
+	 * @param string $shareProvier
+	 */
+	public function registerProvider(string $shareProvier): void;
 }

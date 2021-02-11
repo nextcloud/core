@@ -21,7 +21,6 @@
     "A non-default update server is in use to be checked for updates:" : "기본 업데이트 서버가 아닌 곳에서 업데이트를 확인하고 있음:",
     "Update channel:" : "업데이트 채널:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "항상 새 버전으로 업그레이드할 수 있지만, 더 안정적인 버전으로 다운그레이드할 수는 없습니다.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "새 릴리스가 발표된 후 여기에 표시되기까지 시간이 소요됩니다. 새 버전은 단계적으로 적용되고 있으며 문제가 발생한 경우 버전을 건너뛸 수도 있습니다.",
     "Notify members of the following groups about available updates:" : "다음 그룹 구성원에게 업데이트 알림 전달:",
     "Only notification for app updates are available." : "앱 업데이트 알림만 사용할 수 있습니다.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "선택한 업데이트 채널은 서버 알림을 사용하지 않습니다.",
@@ -37,6 +36,7 @@
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "최신 안정 버전입니다. 일반 사용에 적합하며 항상 최신 주 버전으로 업데이트됩니다.",
     "Beta" : "베타",
     "A pre-release version only for testing new features, not for production environments." : "새로운 기능을 테스트하는 출시 이전 버전이며, 프로덕션 환경에 적합하지 않습니다.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["앱 <strong>%n</strong>개는 이 버전과 호환되는 업데이트가 없음"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["앱 <strong>%n</strong>개는 이 버전과 호환되는 업데이트가 없음"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "새 릴리스가 발표된 후 여기에 표시되기까지 시간이 소요됩니다. 새 버전은 단계적으로 적용되고 있으며 문제가 발생한 경우 버전을 건너뛸 수도 있습니다."
 },"pluralForm" :"nplurals=1; plural=0;"
 }

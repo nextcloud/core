@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright 2018, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -38,8 +39,8 @@ use OC\Cache\CappedMemoryCache;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
-use OCP\ILogger;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
 
 class PublicKeyTokenProvider implements IProvider {
 	/** @var PublicKeyTokenMapper */
@@ -51,10 +52,10 @@ class PublicKeyTokenProvider implements IProvider {
 	/** @var IConfig */
 	private $config;
 
-	/** @var ILogger $logger */
+	/** @var LoggerInterface */
 	private $logger;
 
-	/** @var ITimeFactory $time */
+	/** @var ITimeFactory */
 	private $time;
 
 	/** @var CappedMemoryCache */
@@ -63,7 +64,7 @@ class PublicKeyTokenProvider implements IProvider {
 	public function __construct(PublicKeyTokenMapper $mapper,
 								ICrypto $crypto,
 								IConfig $config,
-								ILogger $logger,
+								LoggerInterface $logger,
 								ITimeFactory $time) {
 		$this->mapper = $mapper;
 		$this->crypto = $crypto;
@@ -214,9 +215,13 @@ class PublicKeyTokenProvider implements IProvider {
 		if (!($token instanceof PublicKeyToken)) {
 			throw new InvalidTokenException("Invalid token type");
 		}
-		/** @var DefaultToken $token */
+
+		$activityInterval = $this->config->getSystemValueInt('token_auth_activity_update', 60);
+		$activityInterval = min(max($activityInterval, 0), 300);
+
+		/** @var PublicKeyToken $token */
 		$now = $this->time->getTime();
-		if ($token->getLastActivity() < ($now - 60)) {
+		if ($token->getLastActivity() < ($now - $activityInterval)) {
 			// Update token only once per minute
 			$token->setLastActivity($now);
 			$this->mapper->update($token);
@@ -227,20 +232,20 @@ class PublicKeyTokenProvider implements IProvider {
 		return $this->mapper->getTokenByUser($uid);
 	}
 
-	public function getPassword(IToken $token, string $tokenId): string {
-		if (!($token instanceof PublicKeyToken)) {
+	public function getPassword(IToken $savedToken, string $tokenId): string {
+		if (!($savedToken instanceof PublicKeyToken)) {
 			throw new InvalidTokenException("Invalid token type");
 		}
 
-		if ($token->getPassword() === null) {
+		if ($savedToken->getPassword() === null) {
 			throw new PasswordlessTokenException();
 		}
 
 		// Decrypt private key with tokenId
-		$privateKey = $this->decrypt($token->getPrivateKey(), $tokenId);
+		$privateKey = $this->decrypt($savedToken->getPrivateKey(), $tokenId);
 
 		// Decrypt password with private key
-		return $this->decryptPassword($token->getPassword(), $privateKey);
+		return $this->decryptPassword($savedToken->getPassword(), $privateKey);
 	}
 
 	public function setPassword(IToken $token, string $tokenId, string $password) {
@@ -409,16 +414,12 @@ class PublicKeyTokenProvider implements IProvider {
 	public function updatePasswords(string $uid, string $password) {
 		$this->cache->clear();
 
-		if (!$this->mapper->hasExpiredTokens($uid)) {
-			// Nothing to do here
-			return;
-		}
-
 		// Update the password for all tokens
 		$tokens = $this->mapper->getTokenByUser($uid);
 		foreach ($tokens as $t) {
 			$publicKey = $t->getPublicKey();
 			$t->setPassword($this->encryptPassword($password, $publicKey));
+			$t->setPasswordInvalid(false);
 			$this->updateToken($t);
 		}
 	}

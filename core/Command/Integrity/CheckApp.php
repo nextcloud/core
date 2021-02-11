@@ -5,6 +5,7 @@
  * @author Carla Schroder <carla@owncloud.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
@@ -69,9 +70,9 @@ class CheckApp extends Base {
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$appid = $input->getArgument('appid');
 		$path = (string)$input->getOption('path');
-		$result = $this->checker->verifyAppSignature($appid, $path);
+		$result = $this->checker->verifyAppSignature($appid, $path, true);
 		$this->writeArrayInOutputFormat($input, $output, $result);
-		if (count($result)>0) {
+		if (count($result) > 0) {
 			return 1;
 		}
 		return 0;

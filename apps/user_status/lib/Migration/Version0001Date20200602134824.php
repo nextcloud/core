@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\UserStatus\Migration;
 
-use Doctrine\DBAL\Types\Types;
+use OCP\DB\Types;
 use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
@@ -69,7 +69,7 @@ class Version0001Date20200602134824 extends SimpleMigrationStep {
 			'unsigned' => true,
 		]);
 		$statusTable->addColumn('is_user_defined', Types::BOOLEAN, [
-			'notnull' => true,
+			'notnull' => false,
 		]);
 		$statusTable->addColumn('message_id', Types::STRING, [
 			'notnull' => false,

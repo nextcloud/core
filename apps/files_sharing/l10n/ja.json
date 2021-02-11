@@ -93,6 +93,7 @@
     "Share for file {file} expired" : "ファイル:{file}の共有が解除されました",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "メールまたは公開リンクにより共有されたファイルまたはフォルダーが<strong>ダウンロード</strong>されたとき",
     "A file or folder was shared from <strong>another server</strong>" : "ファイルまたはフォルダーが<strong>他のサーバー</strong>から共有されたとき",
+    "Files" : "ファイル",
     "A file or folder has been <strong>shared</strong>" : "ファイルまたはフォルダーが<strong>共有</strong>されたとき",
     "Shared link" : "共有リンク",
     "Wrong share ID, share doesn't exist" : "共有IDが間違っています。共有がありません。",
@@ -178,14 +179,11 @@
     "Add another link" : "別のリンクを追加",
     "Create a new share link" : "新しい共有リンクを作成する",
     "Shared via link by {initiator}" : "{initiator}がリンクで共有",
+    "Share link ({label})" : "リンク共有 ({label})",
     "Share link" : "URLで共有",
     "Error, please enter proper password and/or expiration date" : "エラー、正しいパスワードおよび/または有効期限を入力してください",
     "No recommendations. Start typing." : "推奨事項はありません。 入力を開始します。",
     "Resharing is not allowed" : "再共有は許可されていません",
-    "Name or email address …" : "名前またはメールアドレス",
-    "Name or federated cloud ID …" : "ユーザ名または連携クラウドID",
-    "Name, federated cloud ID or email address …" : "ユーザ名、連携クラウドIDまたはメールアドレス",
-    "Name …" : "名前",
     "Searching …" : "検索しています…",
     "No elements found." : "要素が見つかりませんでした。",
     "Search globally" : "グローバルに検索",
@@ -227,8 +225,6 @@
     "Select or drop files" : "ファイルを選択するか、ドラッグ&ドロップしてください",
     "Uploading files" : "ファイルをアップロード中",
     "Uploaded files:" : "アップロード済ファイル:",
-    "By uploading files, you agree to the %1$sterms of service%2$s." : "ファイルをアップロードすると、%1$s のサービス条件 %2$s に同意したことになります。",
-    "could not delete share" : "共有を削除できませんでした",
-    "Uploading files…" : "ファイルをアップロード中..."
+    "By uploading files, you agree to the %1$sterms of service%2$s." : "ファイルをアップロードすると、%1$s のサービス条件 %2$s に同意したことになります。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

@@ -42,7 +42,9 @@
 	button {
 	    white-space: nowrap;
 	    overflow: hidden;
-	    text-overflow: ellipsis;
+		text-overflow: ellipsis;
+		height: 44px;
+		min-width: 44px;
 	}
 }
 
@@ -72,7 +74,7 @@
 	height: 100%;
 }
 
-body.dark .oc-dialog-dim {
+body.theme--dark .oc-dialog-dim {
 	opacity: .8;
 }
 

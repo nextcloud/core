@@ -3,8 +3,8 @@
  *
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
- * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -36,8 +36,8 @@ class ShareesContext implements Context, SnippetAcceptingContext {
 	use AppConfiguration;
 
 	protected function resetAppConfigs() {
-		$this->modifyServerConfig('core', 'shareapi_only_share_with_group_members', 'no');
-		$this->modifyServerConfig('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes');
-		$this->modifyServerConfig('core', 'shareapi_allow_group_sharing', 'yes');
+		$this->deleteServerConfig('core', 'shareapi_only_share_with_group_members');
+		$this->deleteServerConfig('core', 'shareapi_allow_share_dialog_user_enumeration');
+		$this->deleteServerConfig('core', 'shareapi_allow_group_sharing');
 	}
 }

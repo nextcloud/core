@@ -11,6 +11,7 @@
  * @author enoch <lanxenet@hotmail.com>
  * @author Johan Björk <johanimon@gmail.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Martin Mattel <martin.mattel@diemattels.at>
  * @author Michael Gapczynski <GapczynskiM@gmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -19,7 +20,7 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -160,10 +161,17 @@ class AmazonS3 extends \OC\Files\Storage\Common {
 			try {
 				$result = $this->getConnection()->listObjects([
 					'Bucket' => $this->bucket,
-					'Prefix' => rtrim($path, '/') . '/',
+					'Prefix' => rtrim($path, '/'),
 					'MaxKeys' => 1,
+					'Delimiter' => '/',
 				]);
-				$this->directoryCache[$path] = $result['Contents'] || $result['CommonPrefixes'];
+
+				if ((isset($result['Contents'][0]['Key']) && $result['Contents'][0]['Key'] === rtrim($path, '/') . '/')
+					 || isset($result['CommonPrefixes'])) {
+					$this->directoryCache[$path] = true;
+				} else {
+					$this->directoryCache[$path] = false;
+				}
 			} catch (S3Exception $e) {
 				if ($e->getStatusCode() === 403) {
 					$this->directoryCache[$path] = false;
@@ -177,7 +185,7 @@ class AmazonS3 extends \OC\Files\Storage\Common {
 
 	/**
 	 * Updates old storage ids (v0.2.1 and older) that are based on key and secret to new ones based on the bucket name.
-	 * TODO Do this in an update.php. requires iterating over all users and loading the mount.json from their home
+	 * TODO Do this in a repair step. requires iterating over all users and loading the mount.json from their home
 	 *
 	 * @param array $params
 	 */
@@ -404,12 +412,12 @@ class AmazonS3 extends \OC\Files\Storage\Common {
 	 */
 	private function getContentLength($path) {
 		if (isset($this->filesCache[$path])) {
-			return $this->filesCache[$path]['ContentLength'];
+			return (int)$this->filesCache[$path]['ContentLength'];
 		}
 
 		$result = $this->headObject($path);
 		if (isset($result['ContentLength'])) {
-			return $result['ContentLength'];
+			return (int)$result['ContentLength'];
 		}
 
 		return 0;
@@ -506,6 +514,12 @@ class AmazonS3 extends \OC\Files\Storage\Common {
 		switch ($mode) {
 			case 'r':
 			case 'rb':
+				// Don't try to fetch empty files
+				$stat = $this->stat($path);
+				if (is_array($stat) && isset($stat['size']) && $stat['size'] === 0) {
+					return fopen('php://memory', $mode);
+				}
+
 				try {
 					return $this->readObject($path);
 				} catch (S3Exception $e) {
@@ -550,9 +564,6 @@ class AmazonS3 extends \OC\Files\Storage\Common {
 	}
 
 	public function touch($path, $mtime = null) {
-		$path = $this->normalizePath($path);
-
-		$metadata = [];
 		if (is_null($mtime)) {
 			$mtime = time();
 		}
@@ -560,21 +571,8 @@ class AmazonS3 extends \OC\Files\Storage\Common {
 			'lastmodified' => gmdate(\DateTime::RFC1123, $mtime)
 		];
 
-		$fileType = $this->filetype($path);
 		try {
-			if ($fileType !== false) {
-				if ($fileType === 'dir' && !$this->isRoot($path)) {
-					$path .= '/';
-				}
-				$this->getConnection()->copyObject([
-					'Bucket' => $this->bucket,
-					'Key' => $this->cleanKey($path),
-					'Metadata' => $metadata,
-					'CopySource' => $this->bucket . '/' . $path,
-					'MetadataDirective' => 'REPLACE',
-				]);
-				$this->testTimeout();
-			} else {
+			if (!$this->file_exists($path)) {
 				$mimeType = \OC::$server->getMimeTypeDetector()->detectPath($path);
 				$this->getConnection()->putObject([
 					'Bucket' => $this->bucket,

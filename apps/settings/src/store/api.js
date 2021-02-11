@@ -63,8 +63,8 @@ export default {
 	requireAdmin() {
 		return confirmPassword()
 	},
-	get(url) {
-		return axios.get(sanitize(url))
+	get(url, options) {
+		return axios.get(sanitize(url), options)
 	},
 	post(url, data) {
 		return axios.post(sanitize(url), data)
@@ -76,6 +76,6 @@ export default {
 		return axios.put(sanitize(url), data)
 	},
 	delete(url, data) {
-		return axios.delete(sanitize(url), { data })
+		return axios.delete(sanitize(url), { params: data })
 	},
 }

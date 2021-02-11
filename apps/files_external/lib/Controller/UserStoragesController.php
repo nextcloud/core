@@ -8,7 +8,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -35,6 +35,7 @@ use OCA\Files_External\NotFoundException;
 use OCA\Files_External\Service\UserStoragesService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IGroupManager;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
@@ -45,36 +46,34 @@ use OCP\IUserSession;
  */
 class UserStoragesController extends StoragesController {
 	/**
-	 * @var IUserSession
-	 */
-	private $userSession;
-
-	/**
 	 * Creates a new user storages controller.
 	 *
 	 * @param string $AppName application name
 	 * @param IRequest $request request object
 	 * @param IL10N $l10n l10n service
 	 * @param UserStoragesService $userStoragesService storage service
-	 * @param IUserSession $userSession
 	 * @param ILogger $logger
+	 * @param IUserSession $userSession
+	 * @param IGroupManager $groupManager
 	 */
 	public function __construct(
 		$AppName,
 		IRequest $request,
 		IL10N $l10n,
 		UserStoragesService $userStoragesService,
+		ILogger $logger,
 		IUserSession $userSession,
-		ILogger $logger
+		IGroupManager $groupManager
 	) {
 		parent::__construct(
 			$AppName,
 			$request,
 			$l10n,
 			$userStoragesService,
-			$logger
+			$logger,
+			$userSession,
+			$groupManager
 		);
-		$this->userSession = $userSession;
 	}
 
 	protected function manipulateStorageConfig(StorageConfig $storage) {
@@ -199,7 +198,7 @@ class UserStoragesController extends StoragesController {
 		} catch (NotFoundException $e) {
 			return new DataResponse(
 				[
-					'message' => (string)$this->l10n->t('Storage with ID "%d" not found', [$id])
+					'message' => $this->l10n->t('Storage with ID "%d" not found', [$id])
 				],
 				Http::STATUS_NOT_FOUND
 			);

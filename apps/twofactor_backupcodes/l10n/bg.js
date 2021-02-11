@@ -13,7 +13,6 @@ OC.L10N.register(
     "Regenerate backup codes" : "Регенериране на резервния код",
     "If you regenerate backup codes, you automatically invalidate old codes." : "При регенерирането на резервния код, стария код автоматично бива анулиран.",
     "An error occurred while generating your backup codes" : "Възникна грешка при генерирането на резервния код",
-    "Submit" : "Изпращане",
-    "_" : "_"
+    "Submit" : "Изпращане"
 },
 "nplurals=2; plural=(n != 1);");

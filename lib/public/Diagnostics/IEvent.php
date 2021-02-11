@@ -26,7 +26,6 @@ namespace OCP\Diagnostics;
 /**
  * Interface IEvent
  *
- * @package OCP\Diagnostics
  * @since 8.0.0
  */
 interface IEvent {

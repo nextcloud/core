@@ -4,6 +4,7 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
@@ -106,7 +107,9 @@ class SetPasswordColumnTest extends TestCase {
 		$query = $this->connection->getQueryBuilder();
 		$query->select('*')
 			->from('share');
-		$allShares = $query->execute()->fetchAll();
+		$result = $query->execute();
+		$allShares = $result->fetchAll();
+		$result->closeCursor();
 
 		foreach ($allShares as $share) {
 			if ((int)$share['share_type'] === IShare::TYPE_LINK) {

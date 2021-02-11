@@ -232,7 +232,6 @@ class OCSMiddlewareTest extends \Test\TestCase {
 			$this->assertSame($response, $newResponse);
 		} else {
 			$this->assertInstanceOf(BaseResponse::class, $newResponse);
-			/** @var Http\OCSResponse $newResponse */
 			$this->assertSame($response->getData()['message'], $this->invokePrivate($newResponse, 'statusMessage'));
 			$this->assertSame(\OCP\API::RESPOND_UNAUTHORISED, $newResponse->getOCSStatus());
 			$this->assertSame(Http::STATUS_UNAUTHORIZED, $newResponse->getStatus());

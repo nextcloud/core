@@ -30,6 +30,7 @@
     "{nthServer}. Server" : "{nthServer}. Server",
     "No object found in the given Base DN. Please revise." : "Intet objekt funnet i angitt base DN. Revider oppsettet.",
     "More than 1,000 directory entries available." : "Mer enn 1.000 oppføringer er tilgjengelig i katalog.",
+    "_{objectsFound} entry available within the provided Base DN_::_{objectsFound} entries available within the provided Base DN_" : ["{objectsFound} oppføring tilgjengelig i den angitte Base DN","{objectsFound} oppføringer tilgjengelig i den angitte Base DN"],
     "An error occurred. Please check the Base DN, as well as connection settings and credentials." : "Det oppstod en feil. Sjekk base-DN, tilkoblingsoppsett og påloggingsdetaljer.",
     "Do you really want to delete the current Server Configuration?" : "Er du sikker på at du vil slette den aktiver serverkonfigurasjon?",
     "Confirm Deletion" : "Bekreft sletting",
@@ -52,6 +53,7 @@
     "The group box was disabled, because the LDAP / AD server does not support memberOf." : "Gruppeboksen ble deaktivert fordi LDAP- / AD-serveren ikke støtter memberOf.",
     "Password change rejected. Hint: " : "Passordendring avslått. Hint:",
     "Please login with the new password" : "Logg inn med det nye passordet",
+    "LDAP User backend" : "LDAP-brukerbackend",
     "Your password will expire tomorrow." : "Passordet ditt utløper i morgen.",
     "Your password will expire today." : "Passordet ditt utløper i dag.",
     "_Your password will expire within %n day._::_Your password will expire within %n days._" : ["Passordet ditt utløper om %n dag.","Passordet ditt utløper om %n dager."],
@@ -62,6 +64,8 @@
     "Could not find the desired feature" : "Fant ikke den ønskede funksjonaliteten",
     "Invalid Host" : "Ugyldig server",
     "LDAP user and group backend" : "LDAP bruker- og gruppe tjeneste",
+    "This application enables administrators to connect Nextcloud to an LDAP-based user directory." : "Denne applikasjonen lar administratorer koble Nextcloud til en LDAP-basert brukerkatalog.",
+    "This application enables administrators to connect Nextcloud to an LDAP-based user directory for authentication and provisioning users, groups and user attributes. Admins can configure this application to connect to one or more LDAP directories or Active Directories via an LDAP interface. Attributes such as user quota, email, avatar pictures, group memberships and more can be pulled into Nextcloud from a directory with the appropriate queries and filters.\n\nA user logs into Nextcloud with their LDAP or AD credentials, and is granted access based on an authentication request handled by the LDAP or AD server. Nextcloud does not store LDAP or AD passwords, rather these credentials are used to authenticate a user and then Nextcloud uses a session for the user ID. More information is available in the LDAP User and Group Backend documentation." : "Denne applikasjonen lar administratorer koble Nextcloud til en LDAP-basert brukerkatalog for autentisering og klargjøring av brukere, grupper og brukerattributter. Administratorer kan konfigurere dette programmet for å koble til en eller flere LDAP-kataloger eller Active Directory via et LDAP-grensesnitt. Attributter som brukerkvote, e-post, avatarbilder, gruppemedlemskap og mer kan trekkes inn i Nextcloud fra en katalog med riktige spørsmål og filtre.\n\nEn bruker logger seg på Nextcloud med LDAP- eller AD-legitimasjon, og får tilgang basert på en autentiseringsforespørsel håndtert av LDAP- eller AD-serveren. Nextcloud lagrer ikke LDAP- eller AD-passord, men disse legitimasjonene brukes til å autentisere en bruker, og deretter bruker Nextcloud en økt for bruker-ID-en. Mer informasjon er tilgjengelig i LDAP User and Group Backend-dokumentasjonen.",
     "Test Configuration" : "Test oppsettet",
     "Help" : "Hjelp",
     "Groups meeting these criteria are available in %s:" : "Grupper som tilfredsstiller disse kriteriene er tilgjengelige i %s:",
@@ -170,6 +174,9 @@
     "Email Field" : "Felt med e-post adresse",
     "Set the user's email from their LDAP attribute. Leave it empty for default behaviour." : "Sett brukerens e-post fra deres LDAP attributt. La stå tom for forvalgt oppførsel.",
     "User Home Folder Naming Rule" : "Navneregel for brukers hjemmemappe",
+    "Leave empty for username (default). Otherwise, specify an LDAP/AD attribute." : "La det være tomt for brukernavnet (standard). Ellers spesifiserer du et LDAP/AD-attributt.",
+    "\"$home\" Placeholder Field" : "\"$home\" Plassholderfelt",
+    "$home in an external storage configuration will be replaced with the value of the specified attribute" : "$homei en ekstern lagringskonfigurasjon vil bli erstattet med verdien for det angitte attributtet",
     "Internal Username" : "Internt brukernavn",
     "By default the internal username will be created from the UUID attribute. It makes sure that the username is unique and characters do not need to be converted. The internal username has the restriction that only these characters are allowed: [ a-zA-Z0-9_.@- ].  Other characters are replaced with their ASCII correspondence or simply omitted. On collisions a number will be added/increased. The internal username is used to identify a user internally. It is also the default name for the user home folder. It is also a part of remote URLs, for instance for all *DAV services. With this setting, the default behavior can be overridden. Leave it empty for default behavior. Changes will have effect only on newly mapped (added) LDAP users." : "Som forvalg vil det interne brukernavnet opprettes fra UUID-attributten. Det sørger for at brukernavnet er unikt og at tegnene ikke må konverteres. Det interne brukernavnet har en begrensning i at bare disse tegnene tillates: [ a-zA-Z0-9_.@- ]. Andre tegn erstattes av deres motsatser i ASCII, eller blir sett bort fra. Ved kollisjoner vil et nummer bli lagt til/økt. Det interne brukernavnet brukes til å identifisere en bruker internt. Det er også forvalgt navn for brukerens hjemmemappe. Det er også en del av URL-er eksternt, for eksempel alle *DAV-tjenester. Med denne innstillingen, kan forvalgt oppførsel overstyres. La stå tom for forvalgt oppførsel. Endringer vil bare ha effekt på nylig knyttede (tillagte) LDAP brukere.",
     "Internal Username Attribute:" : "Attributt for internt brukernavn:",
@@ -178,8 +185,8 @@
     "UUID Attribute for Users:" : "UUID attributt for brukere:",
     "UUID Attribute for Groups:" : "UUID-attributt for grupper:",
     "Username-LDAP User Mapping" : "Tilknytning av brukernavn til LDAP bruker",
+    "Usernames are used to store and assign metadata. In order to precisely identify and recognize users, each LDAP user will have an internal username. This requires a mapping from username to LDAP user. The created username is mapped to the UUID of the LDAP user. Additionally the DN is cached as well to reduce LDAP interaction, but it is not used for identification. If the DN changes, the changes will be found. The internal username is used all over. Clearing the mappings will have leftovers everywhere. Clearing the mappings is not configuration sensitive, it affects all LDAP configurations! Never clear the mappings in a production environment, only in a testing or experimental stage." : "Brukernavn brukes til å lagre og tildele metadata. For å identifisere og gjenkjenne brukere nøyaktig, vil hver LDAP-bruker ha et internt brukernavn. Dette krever en kartlegging fra brukernavn til LDAP-bruker. Det opprettede brukernavnet tilordnes UUID for LDAP-brukeren. I tillegg er DN også hurtigbufret for å redusere LDAP-interaksjon, men den brukes ikke til identifikasjon. Hvis DN endres, vil endringene bli funnet. Det interne brukernavnet brukes overalt. Å rydde kartleggingen vil ha rester overalt. Å rydde tilordningene er ikke konfigurasjonsfølsom, det påvirker alle LDAP-konfigurasjoner! Tøm aldri kartleggingen i et produksjonsmiljø, bare i et test- eller eksperimentelt stadium.",
     "Clear Username-LDAP User Mapping" : "Nullstill tilknytning av brukernavn til LDAP bruker",
-    "Clear Groupname-LDAP Group Mapping" : "Nullstill tilknytning av gruppenavn til LDAP gruppe",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "La stå tom for brukernavn (forvalg). Ellers, spesifiser en LDAP/AD attributt."
+    "Clear Groupname-LDAP Group Mapping" : "Nullstill tilknytning av gruppenavn til LDAP gruppe"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

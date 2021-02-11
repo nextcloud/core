@@ -7,7 +7,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -199,14 +199,14 @@ class FilesReportPluginTest extends \Test\TestCase {
 
 		$parameters = [
 			[
-				'name'  => '{DAV:}prop',
+				'name' => '{DAV:}prop',
 				'value' => [
 					['name' => '{DAV:}getcontentlength', 'value' => ''],
 					['name' => '{http://owncloud.org/ns}size', 'value' => ''],
 				],
 			],
 			[
-				'name'  => '{http://owncloud.org/ns}filter-rules',
+				'name' => '{http://owncloud.org/ns}filter-rules',
 				'value' => [
 					['name' => '{http://owncloud.org/ns}systemtag', 'value' => '123'],
 					['name' => '{http://owncloud.org/ns}systemtag', 'value' => '456'],

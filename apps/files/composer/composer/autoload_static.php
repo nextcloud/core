@@ -21,6 +21,7 @@ class ComposerStaticInitFiles
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\Files\\Activity\\FavoriteProvider' => __DIR__ . '/..' . '/../lib/Activity/FavoriteProvider.php',
         'OCA\\Files\\Activity\\Filter\\Favorites' => __DIR__ . '/..' . '/../lib/Activity/Filter/Favorites.php',
         'OCA\\Files\\Activity\\Filter\\FileChanges' => __DIR__ . '/..' . '/../lib/Activity/Filter/FileChanges.php',
@@ -29,10 +30,7 @@ class ComposerStaticInitFiles
         'OCA\\Files\\Activity\\Settings\\FavoriteAction' => __DIR__ . '/..' . '/../lib/Activity/Settings/FavoriteAction.php',
         'OCA\\Files\\Activity\\Settings\\FileActivitySettings' => __DIR__ . '/..' . '/../lib/Activity/Settings/FileActivitySettings.php',
         'OCA\\Files\\Activity\\Settings\\FileChanged' => __DIR__ . '/..' . '/../lib/Activity/Settings/FileChanged.php',
-        'OCA\\Files\\Activity\\Settings\\FileCreated' => __DIR__ . '/..' . '/../lib/Activity/Settings/FileCreated.php',
-        'OCA\\Files\\Activity\\Settings\\FileDeleted' => __DIR__ . '/..' . '/../lib/Activity/Settings/FileDeleted.php',
-        'OCA\\Files\\Activity\\Settings\\FileFavorite' => __DIR__ . '/..' . '/../lib/Activity/Settings/FileFavorite.php',
-        'OCA\\Files\\Activity\\Settings\\FileRestored' => __DIR__ . '/..' . '/../lib/Activity/Settings/FileRestored.php',
+        'OCA\\Files\\Activity\\Settings\\FileFavoriteChanged' => __DIR__ . '/..' . '/../lib/Activity/Settings/FileFavoriteChanged.php',
         'OCA\\Files\\App' => __DIR__ . '/..' . '/../lib/App.php',
         'OCA\\Files\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
         'OCA\\Files\\BackgroundJob\\CleanupDirectEditingTokens' => __DIR__ . '/..' . '/../lib/BackgroundJob/CleanupDirectEditingTokens.php',
@@ -44,6 +42,7 @@ class ComposerStaticInitFiles
         'OCA\\Files\\Collaboration\\Resources\\Listener' => __DIR__ . '/..' . '/../lib/Collaboration/Resources/Listener.php',
         'OCA\\Files\\Collaboration\\Resources\\ResourceProvider' => __DIR__ . '/..' . '/../lib/Collaboration/Resources/ResourceProvider.php',
         'OCA\\Files\\Command\\DeleteOrphanedFiles' => __DIR__ . '/..' . '/../lib/Command/DeleteOrphanedFiles.php',
+        'OCA\\Files\\Command\\RepairTree' => __DIR__ . '/..' . '/../lib/Command/RepairTree.php',
         'OCA\\Files\\Command\\Scan' => __DIR__ . '/..' . '/../lib/Command/Scan.php',
         'OCA\\Files\\Command\\ScanAppData' => __DIR__ . '/..' . '/../lib/Command/ScanAppData.php',
         'OCA\\Files\\Command\\TransferOwnership' => __DIR__ . '/..' . '/../lib/Command/TransferOwnership.php',
@@ -51,6 +50,7 @@ class ComposerStaticInitFiles
         'OCA\\Files\\Controller\\ApiController' => __DIR__ . '/..' . '/../lib/Controller/ApiController.php',
         'OCA\\Files\\Controller\\DirectEditingController' => __DIR__ . '/..' . '/../lib/Controller/DirectEditingController.php',
         'OCA\\Files\\Controller\\DirectEditingViewController' => __DIR__ . '/..' . '/../lib/Controller/DirectEditingViewController.php',
+        'OCA\\Files\\Controller\\TemplateController' => __DIR__ . '/..' . '/../lib/Controller/TemplateController.php',
         'OCA\\Files\\Controller\\TransferOwnershipController' => __DIR__ . '/..' . '/../lib/Controller/TransferOwnershipController.php',
         'OCA\\Files\\Controller\\ViewController' => __DIR__ . '/..' . '/../lib/Controller/ViewController.php',
         'OCA\\Files\\Db\\TransferOwnership' => __DIR__ . '/..' . '/../lib/Db/TransferOwnership.php',

@@ -134,7 +134,6 @@ OC.L10N.register(
     "Add storage" : "Toevoegen opslag",
     "Advanced settings" : "Geavanceerde instellingen",
     "Allow users to mount external storage" : "Sta gebruikers toe om een externe opslag aan te koppelen",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globale inloggegevens kunnen worden gebruikt met meerdere externe opslagsystemen met dezelfde inloggegevens.",
-    "Saving..." : "Bewaren..."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globale inloggegevens kunnen worden gebruikt met meerdere externe opslagsystemen met dezelfde inloggegevens."
 },
 "nplurals=2; plural=(n != 1);");

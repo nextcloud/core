@@ -1,9 +1,11 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2020, Morris Jobke <hey@morrisjobke.de>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Morris Jobke <hey@morrisjobke.de>
  *
  * @license GNU AGPL version 3 or any later version
@@ -32,6 +34,8 @@ use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\IConfig;
 use OCP\ILogger;
+use OCP\Lock\ILockingProvider;
+use OCP\Lock\LockedException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,11 +57,14 @@ class Repair extends Command {
 	private $memoryLimit;
 	/** @var int */
 	private $memoryTreshold;
+	/** @var ILockingProvider */
+	private $lockingProvider;
 
-	public function __construct(IConfig $config, IRootFolder $rootFolder, ILogger $logger, IniGetWrapper $phpIni) {
+	public function __construct(IConfig $config, IRootFolder $rootFolder, ILogger $logger, IniGetWrapper $phpIni, ILockingProvider $lockingProvider) {
 		$this->config = $config;
 		$this->rootFolder = $rootFolder;
 		$this->logger = $logger;
+		$this->lockingProvider = $lockingProvider;
 
 		$this->memoryLimit = $phpIni->getBytes('memory_limit');
 		$this->memoryTreshold = $this->memoryLimit - 25 * 1024 * 1024;
@@ -75,8 +82,8 @@ class Repair extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		if ($this->memoryLimit !== -1) {
-			$limitInMiB = round($this->memoryLimit / 1024 /1024, 1);
-			$thresholdInMiB = round($this->memoryTreshold / 1024 /1024, 1);
+			$limitInMiB = round($this->memoryLimit / 1024 / 1024, 1);
+			$thresholdInMiB = round($this->memoryTreshold / 1024 / 1024, 1);
 			$output->writeln("Memory limit is $limitInMiB MiB");
 			$output->writeln("Memory threshold is $thresholdInMiB MiB");
 			$output->writeln("");
@@ -93,8 +100,6 @@ class Repair extends Command {
 			$output->writeln("INFO: The migration is run in dry mode and will not modify anything.");
 			$output->writeln("");
 		}
-
-		$verbose = $output->isVerbose();
 
 		$instanceId = $this->config->getSystemValueString('instanceid');
 
@@ -217,14 +222,21 @@ class Repair extends Command {
 				return 1;
 			}
 
+			$lockName = 'occ preview:repair lock ' . $oldPreviewFolder->getId();
+			try {
+				$section1->writeln("         Locking \"$lockName\" …", OutputInterface::VERBOSITY_VERBOSE);
+				$this->lockingProvider->acquireLock($lockName, ILockingProvider::LOCK_EXCLUSIVE);
+			} catch (LockedException $e) {
+				$section1->writeln("         Skipping because it is locked - another process seems to work on this …");
+				continue;
+			}
+
 			$previews = $oldPreviewFolder->getDirectoryListing();
 			if ($previews !== []) {
 				try {
 					$this->rootFolder->get("appdata_$instanceId/preview/$newFoldername");
 				} catch (NotFoundException $e) {
-					if ($verbose) {
-						$section1->writeln("         Create folder preview/$newFoldername");
-					}
+					$section1->writeln("         Create folder preview/$newFoldername", OutputInterface::VERBOSITY_VERBOSE);
 					if (!$dryMode) {
 						$this->rootFolder->newFolder("appdata_$instanceId/preview/$newFoldername");
 					}
@@ -239,9 +251,7 @@ class Repair extends Command {
 						$progressBar->advance();
 						continue;
 					}
-					if ($verbose) {
-						$section1->writeln("         Move preview/$name/$previewName to preview/$newFoldername");
-					}
+					$section1->writeln("         Move preview/$name/$previewName to preview/$newFoldername", OutputInterface::VERBOSITY_VERBOSE);
 					if (!$dryMode) {
 						try {
 							$preview->move("appdata_$instanceId/preview/$newFoldername/$previewName");
@@ -252,9 +262,7 @@ class Repair extends Command {
 				}
 			}
 			if ($oldPreviewFolder->getDirectoryListing() === []) {
-				if ($verbose) {
-					$section1->writeln("         Delete empty folder preview/$name");
-				}
+				$section1->writeln("         Delete empty folder preview/$name", OutputInterface::VERBOSITY_VERBOSE);
 				if (!$dryMode) {
 					try {
 						$oldPreviewFolder->delete();
@@ -263,6 +271,10 @@ class Repair extends Command {
 					}
 				}
 			}
+
+			$this->lockingProvider->releaseLock($lockName, ILockingProvider::LOCK_EXCLUSIVE);
+			$section1->writeln("         Unlocked", OutputInterface::VERBOSITY_VERBOSE);
+
 			$section1->writeln("         Finished migrating previews of file with fileId $name …");
 			$progressBar->advance();
 		}

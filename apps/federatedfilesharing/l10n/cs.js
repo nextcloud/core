@@ -20,7 +20,7 @@ OC.L10N.register(
     "It is not allowed to send federated group shares from this server." : "Z tohoto serveru není povoleno posílat federovaná skupinová sdílení.",
     "Sharing %1$s failed, because this item is already shared with %2$s" : "Sdílení %1$s se nezdařilo, protože tato položka už je sdílena s %2$s",
     "Not allowed to create a federated share with the same user" : "Není možné vytvářet federované sdílení mezi jedním a tím samým uživatelem",
-    "File is already shared with %s" : "Soubor je už sdílen s %s",
+    "File is already shared with %s" : "Soubor už je sdílen s %s",
     "Sharing %1$s failed, could not find %2$s, maybe the server is currently unreachable or uses a self-signed certificate." : "Sdílení %1$s se nezdařilo, %2$s se nepodařilo nalézt, server pravděpodobně právě není dostupný nebo používá self-signed certifikát.",
     "Could not find share" : "Nedaří se nalézt sdílení",
     "Federated sharing" : "Federované sdílení",
@@ -38,7 +38,7 @@ OC.L10N.register(
     "Federated Cloud Sharing" : "Sdílení v rámci federovaného cloudu",
     "Open documentation" : "Otevřít dokumentaci",
     "Adjust how people can share between servers." : "Upravte, jak mohou lidé mezi servery sdílet.",
-    "Allow users on this server to send shares to other servers" : "Povolit uživatelům z tohoto serveru zasílat sdílení na jiné servery",
+    "Allow users on this server to send shares to other servers (this option also allows WebDAV access to public shares)" : "Umožnit uživatelům na tomto serveru posílat sdílení na ostatní servery (tato volba také umožňuje WebDAV přístup k veřejným sdílením)",
     "Allow users on this server to receive shares from other servers" : "Povolit uživatelům na tomto serveru přijímat sdílení z jiných serverů",
     "Allow users on this server to send shares to groups on other servers" : "Povolit uživatelům na tomto serveru zasílat sdílení skupinám na ostatních serverech",
     "Allow users on this server to receive group shares from other servers" : "Povolit uživatelům na tomto serveru přijímat skupinová sdílení z jiných serverů",
@@ -49,9 +49,8 @@ OC.L10N.register(
     "Your Federated Cloud ID:" : "Váš identifikátor v rámci federovaného cloudu:",
     "Share it so your friends can share files with you:" : "Podělte se o to, aby mohli vaši přátelé s vámi mohli sdílet soubory:",
     "Add to your website" : "Přidat na svou webovou stránku",
-    "Share with me via Nextcloud" : "Sdíleno se mnou přes Nextcloud",
+    "Share with me via Nextcloud" : "Sdílet se mnou přes Nextcloud",
     "HTML Code:" : "HTML kód:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Obdrželi jste %3$s jako vzdálené sdílení od %1$s (jménem %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Obdrželi jste %3$s jako vzdálené sdílení od %1$s"
+    "Allow users on this server to send shares to other servers" : "Povolit uživatelům z tohoto serveru zasílat sdílení na jiné servery"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

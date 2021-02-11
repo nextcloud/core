@@ -4,6 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -29,16 +30,13 @@ use OC\ServerNotAvailableException;
 use OCA\User_LDAP\AccessFactory;
 use OCA\User_LDAP\Configuration;
 use OCA\User_LDAP\ConnectionFactory;
-use OCA\User_LDAP\FilesystemHelper;
 use OCA\User_LDAP\Helper;
 use OCA\User_LDAP\LDAP;
-use OCA\User_LDAP\LogWrapper;
 use OCA\User_LDAP\Mapping\UserMapping;
 use OCA\User_LDAP\User\Manager;
 use OCP\IAvatarManager;
 use OCP\IConfig;
 use OCP\IDBConnection;
-use OCP\Image;
 use OCP\IUserManager;
 use OCP\Notification\IManager;
 
@@ -68,7 +66,8 @@ class Sync extends TimedJob {
 	/** @var AccessFactory */
 	protected $accessFactory;
 
-	public function __construct() {
+	public function __construct(Manager  $userManager) {
+		$this->userManager = $userManager;
 		$this->setInterval(
 			\OC::$server->getConfig()->getAppValue(
 				'user_ldap',
@@ -310,7 +309,7 @@ class Sync extends TimedJob {
 		if (isset($argument['helper'])) {
 			$this->ldapHelper = $argument['helper'];
 		} else {
-			$this->ldapHelper = new Helper($this->config);
+			$this->ldapHelper = new Helper($this->config, \OC::$server->getDatabaseConnection());
 		}
 
 		if (isset($argument['ldapWrapper'])) {
@@ -345,17 +344,6 @@ class Sync extends TimedJob {
 
 		if (isset($argument['userManager'])) {
 			$this->userManager = $argument['userManager'];
-		} else {
-			$this->userManager = new Manager(
-				$this->config,
-				new FilesystemHelper(),
-				new LogWrapper(),
-				$this->avatarManager,
-				new Image(),
-				$this->dbc,
-				$this->ncUserManager,
-				$this->notificationManager
-			);
 		}
 
 		if (isset($argument['mapper'])) {
@@ -363,7 +351,7 @@ class Sync extends TimedJob {
 		} else {
 			$this->mapper = new UserMapping($this->dbc);
 		}
-		
+
 		if (isset($argument['connectionFactory'])) {
 			$this->connectionFactory = $argument['connectionFactory'];
 		} else {

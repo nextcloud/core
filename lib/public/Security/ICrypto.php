@@ -35,7 +35,6 @@ namespace OCP\Security;
  * $encryptWithDefaultPassword = \OC::$server->getCrypto()->encrypt('EncryptedText');
  * $encryptWithCustomPassword = \OC::$server->getCrypto()->encrypt('EncryptedText', 'password');
  *
- * @package OCP\Security
  * @since 8.0.0
  */
 interface ICrypto {

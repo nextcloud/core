@@ -53,7 +53,11 @@ use OCA\DAV\CardDAV\CardDavBackend;
 use OCA\DAV\CardDAV\ContactsManager;
 use OCA\DAV\CardDAV\PhotoCache;
 use OCA\DAV\CardDAV\SyncService;
+use OCA\DAV\Events\CalendarObjectCreatedEvent;
+use OCA\DAV\Events\CalendarObjectUpdatedEvent;
+use OCA\DAV\Events\CalendarShareUpdatedEvent;
 use OCA\DAV\HookManager;
+use OCA\DAV\Listener\CalendarContactInteractionListener;
 use OCA\DAV\Search\ContactsSearchProvider;
 use OCA\DAV\Search\EventsSearchProvider;
 use OCA\DAV\Search\TasksSearchProvider;
@@ -106,6 +110,13 @@ class Application extends App implements IBootstrap {
 		$context->registerSearchProvider(ContactsSearchProvider::class);
 		$context->registerSearchProvider(EventsSearchProvider::class);
 		$context->registerSearchProvider(TasksSearchProvider::class);
+
+		/**
+		 * Register event listeners
+		 */
+		$context->registerEventListener(CalendarObjectCreatedEvent::class, CalendarContactInteractionListener::class);
+		$context->registerEventListener(CalendarObjectUpdatedEvent::class, CalendarContactInteractionListener::class);
+		$context->registerEventListener(CalendarShareUpdatedEvent::class, CalendarContactInteractionListener::class);
 	}
 
 	public function boot(IBootContext $context): void {

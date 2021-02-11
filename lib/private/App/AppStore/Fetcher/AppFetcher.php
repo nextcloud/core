@@ -6,6 +6,7 @@
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -100,14 +101,32 @@ class AppFetcher extends Fetcher {
 					// Exclude all versions not compatible with the current version
 					try {
 						$versionParser = new VersionParser();
-						$version = $versionParser->getVersion($release['rawPlatformVersionSpec']);
+						$serverVersion = $versionParser->getVersion($release['rawPlatformVersionSpec']);
 						$ncVersion = $this->getVersion();
-						$min = $version->getMinimumVersion();
-						$max = $version->getMaximumVersion();
-						$minFulfilled = $this->compareVersion->isCompatible($ncVersion, $min, '>=');
-						$maxFulfilled = $max !== '' &&
-							$this->compareVersion->isCompatible($ncVersion, $max, '<=');
-						if ($minFulfilled && ($this->ignoreMaxVersion || $maxFulfilled)) {
+						$minServerVersion = $serverVersion->getMinimumVersion();
+						$maxServerVersion = $serverVersion->getMaximumVersion();
+						$minFulfilled = $this->compareVersion->isCompatible($ncVersion, $minServerVersion, '>=');
+						$maxFulfilled = $maxServerVersion !== '' &&
+							$this->compareVersion->isCompatible($ncVersion, $maxServerVersion, '<=');
+						$isPhpCompatible = true;
+						if (($release['rawPhpVersionSpec'] ?? '*') !== '*') {
+							$phpVersion = $versionParser->getVersion($release['rawPhpVersionSpec']);
+							$minPhpVersion = $phpVersion->getMinimumVersion();
+							$maxPhpVersion = $phpVersion->getMaximumVersion();
+							$minPhpFulfilled = $minPhpVersion === '' || $this->compareVersion->isCompatible(
+									PHP_VERSION,
+									$minPhpVersion,
+									'>='
+								);
+							$maxPhpFulfilled = $maxPhpVersion === '' || $this->compareVersion->isCompatible(
+									PHP_VERSION,
+									$maxPhpVersion,
+									'<='
+								);
+
+							$isPhpCompatible = $minPhpFulfilled && $maxPhpFulfilled;
+						}
+						if ($minFulfilled && ($this->ignoreMaxVersion || $maxFulfilled) && $isPhpCompatible) {
 							$releases[] = $release;
 						}
 					} catch (\InvalidArgumentException $e) {

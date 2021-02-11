@@ -224,7 +224,7 @@ class LDAPProviderTest extends \Test\TestCase {
 
 		$server = $this->getServerMock($userBackend, $this->getDefaultGroupBackendMock());
 
-		$helper = new \OCA\User_LDAP\Helper(\OC::$server->getConfig());
+		$helper = new \OCA\User_LDAP\Helper(\OC::$server->getConfig(), \OC::$server->getDatabaseConnection());
 
 		$ldapProvider = $this->getLDAPProvider($server);
 		$this->assertEquals(
@@ -240,7 +240,7 @@ class LDAPProviderTest extends \Test\TestCase {
 
 		$server = $this->getServerMock($userBackend, $this->getDefaultGroupBackendMock());
 
-		$helper = new \OCA\User_LDAP\Helper(\OC::$server->getConfig());
+		$helper = new \OCA\User_LDAP\Helper(\OC::$server->getConfig(), \OC::$server->getDatabaseConnection());
 
 		$ldapProvider = $this->getLDAPProvider($server);
 		$this->assertEquals(
@@ -600,7 +600,7 @@ class LDAPProviderTest extends \Test\TestCase {
 			->willReturn(true);
 		$userBackend->expects($this->at(3))
 			->method('getConfiguration')
-			->willReturn(['ldap_display_name'=>'displayName']);
+			->willReturn(['ldap_display_name' => 'displayName']);
 		$userBackend->expects($this->any())
 			->method($this->anything())
 			->willReturnSelf();
@@ -638,7 +638,7 @@ class LDAPProviderTest extends \Test\TestCase {
 			->willReturn(true);
 		$userBackend->expects($this->at(3))
 			->method('getConfiguration')
-			->willReturn(['ldap_email_attr'=>'mail']);
+			->willReturn(['ldap_email_attr' => 'mail']);
 		$userBackend->expects($this->any())
 			->method($this->anything())
 			->willReturnSelf();
@@ -686,7 +686,7 @@ class LDAPProviderTest extends \Test\TestCase {
 			->willReturn(true);
 		$groupBackend->expects($this->any())
 			->method('getConfiguration')
-			->willReturn(['ldap_group_member_assoc_attribute'=>'assoc_type']);
+			->willReturn(['ldap_group_member_assoc_attribute' => 'assoc_type']);
 		$groupBackend->expects($this->any())
 			->method($this->anything())
 			->willReturnSelf();

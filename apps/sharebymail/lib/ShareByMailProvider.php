@@ -7,6 +7,7 @@
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author comradekingu <epost@anotheragency.no>
  * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author exner104 <59639860+exner104@users.noreply.github.com>
  * @author Frederic Werner <frederic-github@werner-net.work>
  * @author Joas Schilling <coding@schilljs.com>

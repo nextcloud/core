@@ -1,4 +1,4 @@
-<?php /** @var $l \OCP\IL10N */ ?>
+<?php /** @var \OCP\IL10N $l */ ?>
 <?php $_['appNavigation']->printPage(); ?>
 <div id="app-content">
 
@@ -28,6 +28,7 @@
 <input type="hidden" name="defaultFileSorting" id="defaultFileSorting" value="<?php p($_['defaultFileSorting']) ?>" />
 <input type="hidden" name="defaultFileSortingDirection" id="defaultFileSortingDirection" value="<?php p($_['defaultFileSortingDirection']) ?>" />
 <input type="hidden" name="showHiddenFiles" id="showHiddenFiles" value="<?php p($_['showHiddenFiles']); ?>" />
+<input type="hidden" name="cropImagePreviews" id="cropImagePreviews" value="<?php p($_['cropImagePreviews']); ?>" />
 <?php endif;
 
 foreach ($_['hiddenFields'] as $name => $value) {?>

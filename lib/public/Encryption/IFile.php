@@ -27,7 +27,6 @@ namespace OCP\Encryption;
 /**
  * Interface IFile
  *
- * @package OCP\Encryption
  * @since 8.1.0
  */
 interface IFile {

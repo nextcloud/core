@@ -36,7 +36,7 @@
     "Federated Cloud Sharing" : "Compartició federada de núvol",
     "Open documentation" : "Obre la documentació",
     "Adjust how people can share between servers." : "Ajusteu com la gent pot compartir entre servidors.",
-    "Allow users on this server to send shares to other servers" : "Permet als usuaris d'aquest servidor enviar comparticions a d'altres servidors",
+    "Allow users on this server to send shares to other servers (this option also allows WebDAV access to public shares)" : "Permet als usuaris d'aquest servidor enviar comparticions a altres servidors (aquest paràmetre també permet accés WebDAV a comparticions públiques)",
     "Allow users on this server to receive shares from other servers" : "Permet als usuaris d'aquest servidor rebre comparticions a d'altres servidors",
     "Allow users on this server to send shares to groups on other servers" : "Permet als usuaris d'aquest servidor enviar comparticions a grups d'altres servidors",
     "Allow users on this server to receive group shares from other servers" : "Permet als usuaris d'aquest servidor rebre comparticions a grups d'altres servidors",
@@ -49,7 +49,6 @@
     "Add to your website" : "Afegiu a la vostra pàgina web",
     "Share with me via Nextcloud" : "Comparteix amb mi mitjançant Nextcloud",
     "HTML Code:" : "Codi HTML:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Heu rebut \"/%3$s\" com una compartició remota des de %1$s (de part de %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Heu rebut \"/%3$s\" com una compartició remota de %1$s"
+    "Allow users on this server to send shares to other servers" : "Permet als usuaris d'aquest servidor enviar comparticions a d'altres servidors"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

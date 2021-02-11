@@ -33,7 +33,6 @@ use OCP\IServerContainer;
  * This class is responsible for instantiating and returning an ILDAPProvider
  * instance.
  *
- * @package OCP\LDAP
  * @since 11.0.0
  */
 interface ILDAPProviderFactory {

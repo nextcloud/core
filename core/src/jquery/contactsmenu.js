@@ -82,9 +82,10 @@ $.fn.contactsMenu = function(shareWith, shareType, appendTo) {
 			}
 
 			actions.forEach(function(action) {
-				const template = entryTemplate
-				$list.find('ul').append(template(action))
+				$list.find('ul').append(entryTemplate(action))
 			})
+
+			$div.trigger('load')
 		}, function(jqXHR) {
 			$list.find('ul').find('li').addClass('hidden')
 
@@ -95,11 +96,12 @@ $.fn.contactsMenu = function(shareWith, shareType, appendTo) {
 				title = t('core', 'Error fetching contact actions')
 			}
 
-			const template = entryTemplate
-			$list.find('ul').append(template({
+			$list.find('ul').append(entryTemplate({
 				hyperlink: '#',
 				title,
 			}))
+
+			$div.trigger('loaderror', jqXHR)
 		})
 	})
 

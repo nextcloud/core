@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2018, John Molakvoæ (skjnldsv@protonmail.com)
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
@@ -62,7 +63,7 @@ class SvgController extends Controller {
 								IconsCacher $iconsCacher) {
 		parent::__construct($appName, $request);
 
-		$this->serverRoot  = \OC::$SERVERROOT;
+		$this->serverRoot = \OC::$SERVERROOT;
 		$this->timeFactory = $timeFactory;
 		$this->appManager = $appManager;
 		$this->iconsCacher = $iconsCacher;

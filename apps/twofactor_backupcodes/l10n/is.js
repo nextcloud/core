@@ -18,9 +18,6 @@ OC.L10N.register(
     "An error occurred while generating your backup codes" : "Villa kom upp við að búa til öryggisafritunarkóðana þína",
     "{name} backup codes" : "{name} öryggisafritunarkóðar",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Notaðu einn af öryggisafritunarkóðunum sem þú vistaðir þegar þú settir upp tveggja-þátta auðkenningu.",
-    "Submit" : "Senda inn",
-    "function" : "aðgerð",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["icon-loading-small","generate-backup-codes"]
+    "Submit" : "Senda inn"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

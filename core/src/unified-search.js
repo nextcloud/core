@@ -19,8 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getRequestToken } from '@nextcloud/auth'
 import { generateFilePath } from '@nextcloud/router'
+import { getLoggerBuilder } from '@nextcloud/logger'
+import { getRequestToken } from '@nextcloud/auth'
 import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import Vue from 'vue'
 
@@ -32,19 +33,17 @@ __webpack_nonce__ = btoa(getRequestToken())
 // eslint-disable-next-line camelcase
 __webpack_public_path__ = generateFilePath('core', '', 'js/')
 
-// TODO: remove with nc22
-if (!OCA.Search) {
-	class Search {
-
-		constructor() {
-			console.warn('OCA.Search is deprecated. Please use the unified search API instead')
-		}
-
-	}
-	OCA.Search = Search
-}
+const logger = getLoggerBuilder()
+	.setApp('unified-search')
+	.detectUser()
+	.build()
 
 Vue.mixin({
+	data() {
+		return {
+			logger,
+		}
+	},
 	methods: {
 		t,
 		n,

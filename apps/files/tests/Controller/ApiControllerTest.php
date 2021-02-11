@@ -7,7 +7,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -243,6 +243,19 @@ class ApiControllerTest extends TestCase {
 
 		$expected = new Http\Response();
 		$actual = $this->apiController->showHiddenFiles($show);
+
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testCropImagePreviews() {
+		$crop = true;
+
+		$this->config->expects($this->once())
+			->method('setUserValue')
+			->with($this->user->getUID(), 'files', 'crop_image_previews', $crop);
+
+		$expected = new Http\Response();
+		$actual = $this->apiController->cropImagePreviews($crop);
 
 		$this->assertEquals($expected, $actual);
 	}

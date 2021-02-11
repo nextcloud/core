@@ -16,9 +16,6 @@
     "An error occurred while generating your backup codes" : "Errorea gertatu da segurtasun kodeak sortzean",
     "{name} backup codes" : "{name} segurtasun kodeak",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Erabili bi faktoreko autentifikazioa aktibatu zenuenean sortutako segurtasun kodeetako bat",
-    "Submit" : "Bidali",
-    "function" : "funtzioa",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["icon-loading-small","segurtasun-kodeak-sortu"]
+    "Submit" : "Bidali"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

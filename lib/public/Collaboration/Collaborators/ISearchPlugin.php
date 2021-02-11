@@ -26,7 +26,6 @@ namespace OCP\Collaboration\Collaborators;
 /**
  * Interface ISearchPlugin
  *
- * @package OCP\Collaboration\Collaborators
  * @since 13.0.0
  */
 interface ISearchPlugin {

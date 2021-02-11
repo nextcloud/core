@@ -75,4 +75,24 @@ class CryptoTest extends \Test\TestCase {
 
 		$this->assertSame('legacy test', $this->crypto->decrypt($cipherText, $password));
 	}
+
+	public function testVersion2CiphertextDecryptsToCorrectPlaintext() {
+		$this->assertSame(
+			'This is a plaintext value that will be encrypted with version 2. Which addresses the reduced permutations on the IV.',
+			$this->crypto->decrypt(
+				'be006387f753e8728717e43cfc5526c37adf7b2c9b4a113ceec03b7b0bccfebee74e0acfa0015c5712b4376dacbd7bce26a8fbca916fdccee46203d8289f6b2e4c19318044d375edfc67c72e6c3ae329d4c276b8d866ac1b281844e81f7681fe83d90bc4b6fffa4f3cbc157d64257a493b67fd2af3c8976cb76df520f5739305|02e78ea7c73a32f3b407c54227a9d2ce|3e7a09628f818b7b1cd7724467f5b1b33135de6d2ec62d8c0361be4f2c5203385f10babdcae017d7b30abe5be2117803e3195fb6d9ef20949fe35dad5e9241ea|2',
+				'insecure-static-password'
+			)
+		);
+	}
+
+	public function testVersion3CiphertextDecryptsToCorrectPlaintext() {
+		$this->assertSame(
+			'Another plaintext value that will be encrypted with version 3. It addresses the related key issue. Old ciphertexts should be decrypted properly, but only use the better version for encryption.',
+			$this->crypto->decrypt(
+				'c99823461db746aa74f819c8640e9e3c367fa3bb9c21dff905b5dd14072c1d1b0da8b7e6b7307bf1561b6ba7aaa932a16c23b1fd5217dc019d55233ef0813c65fccaeabd6ea3a971ce1bbbdfda790ae00fb4442693cbb50072e02875b9f50591df74d00e96fd5b9bd13cb02a5f57b062ec98a4c64fc518ed325d097454883adbfc1687c2af995a392407c5e040a54afee4b2997ab158fe48ef67ccf721a6a7031fcb44d51170892ce7971021a7f3a00d19002eb9b007efe7aecf397ec0dc22064fb5d4a15ad83949f0804feca3c69cdd|8476f53c8d49a7e119798a70086d8911|ae3f7e23d469fbc791714ceb07d854624b1bbd39ac6a4edc05d552e10659adfdcada3a059fae737ffd7d842dd3fcc84bcc364cd298e814dd4967de4ad4a658eb|3',
+				'insecure-static-password'
+			)
+		);
+	}
 }

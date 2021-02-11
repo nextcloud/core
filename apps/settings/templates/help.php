@@ -1,5 +1,5 @@
 <?php
-\OC_Util::addStyle('settings', "settings");
+\OC_Util::addStyle('settings', 'help');
 ?>
 <div id="app-navigation">
 	<ul>

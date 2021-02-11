@@ -16,9 +16,6 @@
     "An error occurred while generating your backup codes" : "Yedek kodlar oluşturulurken bir sorun çıktı",
     "{name} backup codes" : "{name} yedek kodları",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "İki aşamalı kimlik doğrulamasını ayarlarken yedek kodlarından birini kullanın.",
-    "Submit" : "Gönder",
-    "function" : "işlev",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["simge-yukleniyor-kucuk","yedek-kodlari-olustur"]
+    "Submit" : "Gönder"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

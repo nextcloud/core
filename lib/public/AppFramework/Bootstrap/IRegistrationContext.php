@@ -5,7 +5,10 @@ declare(strict_types=1);
 /**
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,13 +23,16 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace OCP\AppFramework\Bootstrap;
 
 use OCP\AppFramework\IAppContainer;
+use OCP\Capabilities\ICapability;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Files\Template\ICustomTemplateProvider;
 use OCP\IContainer;
 
 /**
@@ -39,6 +45,7 @@ interface IRegistrationContext {
 
 	/**
 	 * @param string $capability
+	 * @psalm-param class-string<ICapability> $capability
 	 * @see IAppContainer::registerCapability
 	 *
 	 * @since 20.0.0
@@ -50,16 +57,18 @@ interface IRegistrationContext {
 	 * will receive unhandled exceptions and throwables
 	 *
 	 * @param string $reporterClass
+	 * @psalm-param class-string<\OCP\Support\CrashReport\IReporter> $reporterClass
 	 * @return void
 	 * @since 20.0.0
 	 */
 	public function registerCrashReporter(string $reporterClass): void;
 
 	/**
-	 * Register an implementation of \OCP\Dashboard\IPanel that
-	 * will handle the implementation of a dashboard panel
+	 * Register an implementation of \OCP\Dashboard\IWidget that
+	 * will handle the implementation of a dashboard widget
 	 *
 	 * @param string $widgetClass
+	 * @psalm-param class-string<\OCP\Dashboard\IWidget> $widgetClass
 	 * @return void
 	 * @since 20.0.0
 	 */
@@ -69,6 +78,7 @@ interface IRegistrationContext {
 	 *
 	 * @param string $name
 	 * @param callable $factory
+	 * @psalm-param callable(\Psr\Container\ContainerInterface): mixed $factory
 	 * @param bool $shared
 	 *
 	 * @return void
@@ -80,7 +90,9 @@ interface IRegistrationContext {
 
 	/**
 	 * @param string $alias
+	 * @psalm-param string|class-string $alias
 	 * @param string $target
+	 * @psalm-param string|class-string $target
 	 *
 	 * @return void
 	 * @see IContainer::registerAlias()
@@ -105,9 +117,13 @@ interface IRegistrationContext {
 	 *
 	 * This is equivalent to calling IEventDispatcher::addServiceListener
 	 *
+	 * @template T of \OCP\EventDispatcher\Event
 	 * @param string $event preferably the fully-qualified class name of the Event sub class to listen for
+	 * @psalm-param string|class-string<T> $event preferably the fully-qualified class name of the Event sub class to listen for
 	 * @param string $listener fully qualified class name (or ::class notation) of a \OCP\EventDispatcher\IEventListener that can be built by the DI container
-	 * @param int $priority
+	 * @psalm-param class-string<\OCP\EventDispatcher\IEventListener<T>> $listener fully qualified class name that can be built by the DI container
+	 * @param int $priority The higher this value, the earlier an event
+	 *                      listener will be triggered in the chain (defaults to 0)
 	 *
 	 * @see IEventDispatcher::addServiceListener()
 	 *
@@ -117,6 +133,7 @@ interface IRegistrationContext {
 
 	/**
 	 * @param string $class
+	 * @psalm-param class-string<\OCP\AppFramework\Middleware> $class
 	 *
 	 * @return void
 	 * @see IAppContainer::registerMiddleWare()
@@ -133,6 +150,7 @@ interface IRegistrationContext {
 	 * with you" in the Files app.
 	 *
 	 * @param string $class
+	 * @psalm-param class-string<\OCP\Search\IProvider> $class
 	 *
 	 * @return void
 	 *
@@ -146,10 +164,49 @@ interface IRegistrationContext {
 	 * It is allowed to register more than one option per app.
 	 *
 	 * @param string $class
+	 * @psalm-param class-string<\OCP\Authentication\IAlternativeLogin> $class
 	 *
 	 * @return void
 	 *
 	 * @since 20.0.0
 	 */
 	public function registerAlternativeLogin(string $class): void;
+
+	/**
+	 * Register an initialstate provider
+	 *
+	 * It is allowed to register more than one provider per app.
+	 *
+	 * @param string $class
+	 * @psalm-param class-string<\OCP\AppFramework\Services\InitialStateProvider> $class
+	 *
+	 * @return void
+	 *
+	 * @since 21.0.0
+	 */
+	public function registerInitialStateProvider(string $class): void;
+
+	/**
+	 * Register a well known protocol handler
+	 *
+	 * It is allowed to register more than one handler per app.
+	 *
+	 * @param string $class
+	 * @psalm-param class-string<\OCP\Http\WellKnown\IHandler> $class
+	 *
+	 * @return void
+	 *
+	 * @since 21.0.0
+	 */
+	public function registerWellKnownHandler(string $class): void;
+
+	/**
+	 * Register a custom template provider class that is able to inject custom templates
+	 * in addition to the user defined ones
+	 *
+	 * @param string $providerClass
+	 * @psalm-param class-string<ICustomTemplateProvider> $providerClass
+	 * @since 21.0.0
+	 */
+	public function registerTemplateProvider(string $providerClass): void;
 }

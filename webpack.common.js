@@ -16,6 +16,7 @@ const oauth2 = require('./apps/oauth2/webpack')
 const settings = require('./apps/settings/webpack')
 const systemtags = require('./apps/systemtags/webpack')
 const user_status = require('./apps/user_status/webpack')
+const weather_status = require('./apps/weather_status/webpack')
 const twofactor_backupscodes = require('./apps/twofactor_backupcodes/webpack')
 const updatenotification = require('./apps/updatenotification/webpack')
 const workflowengine = require('./apps/workflowengine/webpack')
@@ -33,6 +34,7 @@ const modules = {
 	settings,
 	systemtags,
 	user_status,
+	weather_status,
 	twofactor_backupscodes,
 	updatenotification,
 	workflowengine
@@ -58,11 +60,11 @@ module.exports = []
 			rules: [
 				{
 					test: /\.css$/,
-					use: ['vue-style-loader', 'css-loader'],
+					use: ['style-loader', 'css-loader'],
 				},
 				{
 					test: /\.scss$/,
-					use: ['vue-style-loader', 'css-loader', 'sass-loader'],
+					use: ['style-loader', 'css-loader', 'sass-loader'],
 				},
 				{
 					test: /\.(js|vue)$/,
@@ -93,6 +95,7 @@ module.exports = []
 					exclude: BabelLoaderExcludeNodeModulesExcept([
 						'@nextcloud/dialogs',
 						'@nextcloud/event-bus',
+						'@nextcloud/vue-dashboard',
 						'davclient.js',
 						'nextcloud-vue-collections',
 						'p-finally',
@@ -102,6 +105,7 @@ module.exports = []
 						'p-timeout',
 						'p-try',
 						'semver',
+						'striptags',
 						'toastify-js',
 						'v-tooltip',
 					]),

@@ -94,7 +94,8 @@ OCA.Files_External.StatusManager = {
 							id: mountData.id,
 							error: statusMessage,
 							userProvided: response.userProvided,
-							authMechanism: response.authMechanism
+							authMechanism: response.authMechanism,
+							canEdit: response.can_edit,
 						};
 					}
 					afterCallback(mountData, self.mountStatus[mountData.mount_point]);
@@ -182,12 +183,14 @@ OCA.Files_External.StatusManager = {
 					if (mountData.userProvided || mountData.authMechanism === 'password::global::user') {
 						// personal mount whit credentials problems
 						this.showCredentialsDialog(name, mountData);
-					} else {
+					} else if (mountData.canEdit) {
 						OC.dialogs.confirm(t('files_external', 'There was an error with message: ') + mountData.error + '. Do you want to review mount point config in admin settings page?', t('files_external', 'External mount error'), function (e) {
 							if (e === true) {
 								OC.redirect(OC.generateUrl('/settings/admin/externalstorages'));
 							}
 						});
+					} else {
+						OC.dialogs.info(t('files_external', 'There was an error with message: ') + mountData.error + '. Please contact your system administrator.', t('files_external', 'External mount error'), () => {});
 					}
 				} else {
 					OC.dialogs.confirm(t('files_external', 'There was an error with message: ') + mountData.error + '. Do you want to review mount point config in personal settings page?', t('files_external', 'External mount error'), function (e) {

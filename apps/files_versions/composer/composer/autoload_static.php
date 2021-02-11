@@ -21,6 +21,7 @@ class ComposerStaticInitFiles_Versions
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\Files_Versions\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
         'OCA\\Files_Versions\\BackgroundJob\\ExpireVersions' => __DIR__ . '/..' . '/../lib/BackgroundJob/ExpireVersions.php',
         'OCA\\Files_Versions\\Capabilities' => __DIR__ . '/..' . '/../lib/Capabilities.php',

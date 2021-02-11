@@ -4,6 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -52,7 +53,7 @@ class CommentersSorterTest extends TestCase {
 		$commentMocks = [];
 		foreach ($data['actors'] as $actorType => $actors) {
 			foreach ($actors as $actorId => $noOfComments) {
-				for ($i=0;$i<$noOfComments;$i++) {
+				for ($i = 0;$i < $noOfComments;$i++) {
 					$mock = $this->createMock(IComment::class);
 					$mock->expects($this->atLeastOnce())
 						->method('getActorType')

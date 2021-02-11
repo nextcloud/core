@@ -110,25 +110,6 @@
     "Request user agent" : "Кориснички агент захтева",
     "User group membership" : "Припадност групи",
     "is member of" : "је члан групе",
-    "is not member of" : "није члан групе",
-    "Example: {placeholder}" : "Пример: {placeholder}",
-    "Select tag…" : "Одаберите ознаку…",
-    "Start" : "Почетак",
-    "End" : "Крај",
-    "Select timezone…" : "Одаберите временску зону…",
-    "Sync clients" : "Синхронизовани клијенти",
-    "Short rule description" : "Кратки опис правила",
-    "Add rule" : "Додај правило",
-    "Reset" : "Ресетуј",
-    "Saving…" : "Чувам…",
-    "Group list is empty" : "Списак група је празан",
-    "Unable to retrieve the group list" : "Не могу да добавим списак група",
-    "Saved" : "Снимљено",
-    "Saving failed:" : "Снимање није успело:",
-    "Add rule group" : "Додај групу правила",
-    "Tag management" : "Управљање ознакама",
-    "Files workflow engine" : "Мотор за радни ток фајлова",
-    "Open documentation" : "Отвори документацију",
-    "Loading…" : "Учитавање…"
+    "is not member of" : "није члан групе"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

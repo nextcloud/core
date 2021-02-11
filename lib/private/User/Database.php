@@ -26,7 +26,7 @@ declare(strict_types=1);
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -293,14 +293,14 @@ class Database extends ABackend implements
 	/**
 	 * Check if the password is correct
 	 *
-	 * @param string $uid The username
+	 * @param string $loginName The loginname
 	 * @param string $password The password
 	 * @return string
 	 *
 	 * Check if the password is correct without logging in the user
 	 * returns the user id or false
 	 */
-	public function checkPassword(string $uid, string $password) {
+	public function checkPassword(string $loginName, string $password) {
 		$this->fixDI();
 
 		$qb = $this->dbConn->getQueryBuilder();
@@ -308,7 +308,7 @@ class Database extends ABackend implements
 			->from($this->table)
 			->where(
 				$qb->expr()->eq(
-					'uid_lower', $qb->createNamedParameter(mb_strtolower($uid))
+					'uid_lower', $qb->createNamedParameter(mb_strtolower($loginName))
 				)
 			);
 		$result = $qb->execute();
@@ -320,7 +320,7 @@ class Database extends ABackend implements
 			$newHash = '';
 			if (\OC::$server->getHasher()->verify($password, $storedHash, $newHash)) {
 				if (!empty($newHash)) {
-					$this->updatePassword($uid, $newHash);
+					$this->updatePassword($loginName, $newHash);
 				}
 				return (string)$row['uid'];
 			}
@@ -436,7 +436,7 @@ class Database extends ABackend implements
 			->from($this->table);
 		$result = $query->execute();
 
-		return $result->fetchColumn();
+		return $result->fetchOne();
 	}
 
 	/**

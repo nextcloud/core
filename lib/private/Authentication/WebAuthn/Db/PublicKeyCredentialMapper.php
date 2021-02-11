@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2020, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -30,6 +31,9 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
 
+/**
+ * @template-extends QBMapper<PublicKeyCredentialEntity>
+ */
 class PublicKeyCredentialMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'webauthn', PublicKeyCredentialEntity::class);

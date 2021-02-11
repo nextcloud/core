@@ -40,11 +40,6 @@ use OCP\Security\ISecureRandom;
  */
 class CertificateManager implements ICertificateManager {
 	/**
-	 * @var string
-	 */
-	protected $uid;
-
-	/**
 	 * @var \OC\Files\View
 	 */
 	protected $view;
@@ -63,18 +58,15 @@ class CertificateManager implements ICertificateManager {
 	protected $random;
 
 	/**
-	 * @param string $uid
 	 * @param \OC\Files\View $view relative to data/
 	 * @param IConfig $config
 	 * @param ILogger $logger
 	 * @param ISecureRandom $random
 	 */
-	public function __construct($uid,
-								\OC\Files\View $view,
+	public function __construct(\OC\Files\View $view,
 								IConfig $config,
 								ILogger $logger,
 								ISecureRandom $random) {
-		$this->uid = $uid;
 		$this->view = $view;
 		$this->config = $config;
 		$this->logger = $logger;
@@ -110,6 +102,29 @@ class CertificateManager implements ICertificateManager {
 		}
 		closedir($handle);
 		return $result;
+	}
+
+	private function hasCertificates(): bool {
+		if (!$this->config->getSystemValue('installed', false)) {
+			return false;
+		}
+
+		$path = $this->getPathToCertificates() . 'uploads/';
+		if (!$this->view->is_dir($path)) {
+			return false;
+		}
+		$result = [];
+		$handle = $this->view->opendir($path);
+		if (!is_resource($handle)) {
+			return false;
+		}
+		while (false !== ($file = readdir($handle))) {
+			if ($file !== '.' && $file !== '..') {
+				return true;
+			}
+		}
+		closedir($handle);
+		return false;
 	}
 
 	/**
@@ -148,7 +163,7 @@ class CertificateManager implements ICertificateManager {
 		fwrite($fhCerts, $defaultCertificates);
 
 		// Append the system certificate bundle
-		$systemBundle = $this->getCertificateBundle(null);
+		$systemBundle = $this->getCertificateBundle();
 		if ($systemBundle !== $certPath && $this->view->file_exists($systemBundle)) {
 			$systemCertificates = $this->view->file_get_contents($systemBundle);
 			fwrite($fhCerts, $systemCertificates);
@@ -207,73 +222,50 @@ class CertificateManager implements ICertificateManager {
 	}
 
 	/**
-	 * Get the path to the certificate bundle for this user
+	 * Get the path to the certificate bundle
 	 *
-	 * @param string|null $uid (optional) user to get the certificate bundle for, use `null` to get the system bundle
 	 * @return string
 	 */
-	public function getCertificateBundle($uid = '') {
-		if ($uid === '') {
-			$uid = $this->uid;
-		}
-		return $this->getPathToCertificates($uid) . 'rootcerts.crt';
+	public function getCertificateBundle() {
+		return $this->getPathToCertificates() . 'rootcerts.crt';
 	}
 
 	/**
-	 * Get the full local path to the certificate bundle for this user
+	 * Get the full local path to the certificate bundle
 	 *
-	 * @param string $uid (optional) user to get the certificate bundle for, use `null` to get the system bundle
 	 * @return string
 	 */
-	public function getAbsoluteBundlePath($uid = '') {
-		if ($uid === '') {
-			$uid = $this->uid;
+	public function getAbsoluteBundlePath() {
+		if (!$this->hasCertificates()) {
+			return \OC::$SERVERROOT . '/resources/config/ca-bundle.crt';
 		}
-		if ($this->needsRebundling($uid)) {
-			if (is_null($uid)) {
-				$manager = new CertificateManager(null, $this->view, $this->config, $this->logger, $this->random);
-				$manager->createCertificateBundle();
-			} else {
-				$this->createCertificateBundle();
-			}
+
+		if ($this->needsRebundling()) {
+			$this->createCertificateBundle();
 		}
-		return $this->view->getLocalFile($this->getCertificateBundle($uid));
+
+		return $this->view->getLocalFile($this->getCertificateBundle());
 	}
 
 	/**
-	 * @param string|null $uid (optional) user to get the certificate path for, use `null` to get the system path
 	 * @return string
 	 */
-	private function getPathToCertificates($uid = '') {
-		if ($uid === '') {
-			$uid = $this->uid;
-		}
-		return is_null($uid) ? '/files_external/' : '/' . $uid . '/files_external/';
+	private function getPathToCertificates() {
+		return '/files_external/';
 	}
 
 	/**
 	 * Check if we need to re-bundle the certificates because one of the sources has updated
 	 *
-	 * @param string $uid (optional) user to get the certificate path for, use `null` to get the system path
 	 * @return bool
 	 */
-	private function needsRebundling($uid = '') {
-		if ($uid === '') {
-			$uid = $this->uid;
-		}
-		$sourceMTimes = [$this->getFilemtimeOfCaBundle()];
-		$targetBundle = $this->getCertificateBundle($uid);
+	private function needsRebundling() {
+		$targetBundle = $this->getCertificateBundle();
 		if (!$this->view->file_exists($targetBundle)) {
 			return true;
 		}
 
-		if (!is_null($uid)) { // also depend on the system bundle
-			$sourceMTimes[] = $this->view->filemtime($this->getCertificateBundle(null));
-		}
-
-		$sourceMTime = array_reduce($sourceMTimes, function ($max, $mtime) {
-			return max($max, $mtime);
-		}, 0);
+		$sourceMTime = $this->getFilemtimeOfCaBundle();
 		return $sourceMTime > $this->view->filemtime($targetBundle);
 	}
 

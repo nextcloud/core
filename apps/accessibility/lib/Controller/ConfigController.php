@@ -7,6 +7,7 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2019 Janis Köhr <janiskoehr@icloud.com>
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Janis Köhr <janis.koehr@novatec-gmbh.de>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -37,6 +38,7 @@ use OCP\AppFramework\OCSController;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IUserSession;
+use OCP\PreConditionNotMetException;
 
 class ConfigController extends OCSController {
 
@@ -73,11 +75,11 @@ class ConfigController extends OCSController {
 								IUserSession $userSession,
 								AccessibilityProvider $accessibilityProvider) {
 		parent::__construct($appName, $request);
-		$this->appName               = $appName;
-		$this->config                = $config;
-		$this->userSession           = $userSession;
+		$this->appName = $appName;
+		$this->config = $config;
+		$this->userSession = $userSession;
 		$this->accessibilityProvider = $accessibilityProvider;
-		$this->userId				 = $userSession->getUser()->getUID();
+		$this->userId = $userSession->getUser()->getUID();
 	}
 
 	/**
@@ -103,7 +105,7 @@ class ConfigController extends OCSController {
 	 *
 	 * @param string $key theme or font
 	 * @return DataResponse
-	 * @throws Exception
+	 * @throws OCSBadRequestException|PreConditionNotMetException
 	 */
 	public function setConfig(string $key, $value): DataResponse {
 		if ($key === 'theme' || $key === 'font' || $key === 'highcontrast') {
@@ -113,7 +115,7 @@ class ConfigController extends OCSController {
 
 			$themes = $this->accessibilityProvider->getThemes();
 			$highcontrast = [$this->accessibilityProvider->getHighContrast()];
-			$fonts  = $this->accessibilityProvider->getFonts();
+			$fonts = $this->accessibilityProvider->getFonts();
 
 			$availableOptions = array_map(function ($option) {
 				return $option['id'];
@@ -137,7 +139,7 @@ class ConfigController extends OCSController {
 	 *
 	 * @param string $key theme or font
 	 * @return DataResponse
-	 * @throws Exception
+	 * @throws OCSBadRequestException
 	 */
 	public function deleteConfig(string $key): DataResponse {
 		if ($key === 'theme' || $key === 'font' || $key === 'highcontrast') {

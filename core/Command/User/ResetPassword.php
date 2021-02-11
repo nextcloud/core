@@ -70,7 +70,6 @@ class ResetPassword extends Command {
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$username = $input->getArgument('user');
 
-		/** @var $user \OCP\IUser */
 		$user = $this->userManager->get($username);
 		if (is_null($user)) {
 			$output->writeln('<error>User does not exist</error>');

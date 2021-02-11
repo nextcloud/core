@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = $vendorDir;
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'OCA\\TwoFactorBackupCodes\\Activity\\Provider' => $baseDir . '/../lib/Activity/Provider.php',
     'OCA\\TwoFactorBackupCodes\\AppInfo\\Application' => $baseDir . '/../lib/AppInfo/Application.php',
     'OCA\\TwoFactorBackupCodes\\BackgroundJob\\CheckBackupCodes' => $baseDir . '/../lib/BackgroundJob/CheckBackupCodes.php',

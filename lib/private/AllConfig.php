@@ -8,6 +8,7 @@
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Loki3000 <github@labcms.ru>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author MichaIng <micha@dietpi.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
@@ -316,7 +317,7 @@ class AllConfig implements \OCP\IConfig {
 	 */
 	public function getUserValue($userId, $appName, $key, $default = '') {
 		$data = $this->getUserValues($userId);
-		if (isset($data[$appName]) and isset($data[$appName][$key])) {
+		if (isset($data[$appName][$key])) {
 			return $data[$appName][$key];
 		} else {
 			return $default;
@@ -350,11 +351,11 @@ class AllConfig implements \OCP\IConfig {
 		// TODO - FIXME
 		$this->fixDIInit();
 
-		$sql  = 'DELETE FROM `*PREFIX*preferences` '.
+		$sql = 'DELETE FROM `*PREFIX*preferences` '.
 				'WHERE `userid` = ? AND `appid` = ? AND `configkey` = ?';
 		$this->connection->executeUpdate($sql, [$userId, $appName, $key]);
 
-		if (isset($this->userCache[$userId]) and isset($this->userCache[$userId][$appName])) {
+		if (isset($this->userCache[$userId][$appName])) {
 			unset($this->userCache[$userId][$appName][$key]);
 		}
 	}
@@ -368,7 +369,7 @@ class AllConfig implements \OCP\IConfig {
 		// TODO - FIXME
 		$this->fixDIInit();
 
-		$sql  = 'DELETE FROM `*PREFIX*preferences` '.
+		$sql = 'DELETE FROM `*PREFIX*preferences` '.
 			'WHERE `userid` = ?';
 		$this->connection->executeUpdate($sql, [$userId]);
 
@@ -384,7 +385,7 @@ class AllConfig implements \OCP\IConfig {
 		// TODO - FIXME
 		$this->fixDIInit();
 
-		$sql  = 'DELETE FROM `*PREFIX*preferences` '.
+		$sql = 'DELETE FROM `*PREFIX*preferences` '.
 				'WHERE `appid` = ?';
 		$this->connection->executeUpdate($sql, [$appName]);
 
@@ -407,7 +408,7 @@ class AllConfig implements \OCP\IConfig {
 			return $this->userCache[$userId];
 		}
 		if ($userId === null || $userId === '') {
-			$this->userCache[$userId]=[];
+			$this->userCache[$userId] = [];
 			return $this->userCache[$userId];
 		}
 
@@ -456,7 +457,7 @@ class AllConfig implements \OCP\IConfig {
 
 			$placeholders = (count($chunk) === 50) ? $placeholders50 :  implode(',', array_fill(0, count($chunk), '?'));
 
-			$query    = 'SELECT `userid`, `configvalue` ' .
+			$query = 'SELECT `userid`, `configvalue` ' .
 						'FROM `*PREFIX*preferences` ' .
 						'WHERE `appid` = ? AND `configkey` = ? ' .
 						'AND `userid` IN (' . $placeholders . ')';
@@ -482,7 +483,7 @@ class AllConfig implements \OCP\IConfig {
 		// TODO - FIXME
 		$this->fixDIInit();
 
-		$sql  = 'SELECT `userid` FROM `*PREFIX*preferences` ' .
+		$sql = 'SELECT `userid` FROM `*PREFIX*preferences` ' .
 				'WHERE `appid` = ? AND `configkey` = ? ';
 
 		if ($this->getSystemValue('dbtype', 'sqlite') === 'oci') {
@@ -514,7 +515,7 @@ class AllConfig implements \OCP\IConfig {
 		// TODO - FIXME
 		$this->fixDIInit();
 
-		$sql  = 'SELECT `userid` FROM `*PREFIX*preferences` ' .
+		$sql = 'SELECT `userid` FROM `*PREFIX*preferences` ' .
 			'WHERE `appid` = ? AND `configkey` = ? ';
 
 		if ($this->getSystemValue('dbtype', 'sqlite') === 'oci') {

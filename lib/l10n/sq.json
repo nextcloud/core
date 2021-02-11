@@ -65,7 +65,6 @@
     "Set an admin username." : "Caktoni një emër përdoruesi për përgjegjësin.",
     "Set an admin password." : "Caktoni një fjalëkalim për përgjegjësin.",
     "Can't create or write into the data directory %s" : "S’e krijon ose s’shkruan dot te drejtoria e të dhënave %s",
-    "Invalid Federated Cloud ID" : "ID Federated Cloud e pavlefshme",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "Mekanizmi i shërbimit për ndarje %s duhet të sendërtojë ndërfaqen OCP\\Share_Backend",
     "Sharing backend %s not found" : "S’u gjet mekanizmi i shërbimit për ndarje %s",
     "Sharing backend for %s not found" : "S’u gjet mekanizmi i shërbimit për ndarje për %s",
@@ -175,10 +174,6 @@
     "Storage connection timeout. %s" : "Mbarim kohe lidhjeje për depozitën. %s",
     "Following databases are supported: %s" : "Mbulohen bazat vijuese të të dhënave: %s",
     "Following platforms are supported: %s" : "Mbulohen platformat vijuese: %s",
-    "Basic settings" : "Konfigurime bazike",
-    "Sharing" : "Ndarja",
-    "Security" : "Siguria",
-    "Personal info" : "Informacion personal",
-    "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s" : "Zakonisht kjo mund të rregullohet duke i dhënë serverit të web-it akses shkrimi tek direktoria e aplikacioneve ose duke çaktivizuar appstore në skedarin config. Shih %s"
+    "Invalid Federated Cloud ID" : "ID Federated Cloud e pavlefshme"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

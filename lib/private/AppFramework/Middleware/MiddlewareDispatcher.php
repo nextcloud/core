@@ -116,7 +116,7 @@ class MiddlewareDispatcher {
 	 * @throws \Exception the passed in exception if it can't handle it
 	 */
 	public function afterException(Controller $controller, string $methodName, \Exception $exception): Response {
-		for ($i=$this->middlewareCounter-1; $i>=0; $i--) {
+		for ($i = $this->middlewareCounter - 1; $i >= 0; $i--) {
 			$middleware = $this->middlewares[$i];
 			try {
 				return $middleware->afterException($controller, $methodName, $exception);
@@ -139,7 +139,7 @@ class MiddlewareDispatcher {
 	 * @return Response a Response object
 	 */
 	public function afterController(Controller $controller, string $methodName, Response $response): Response {
-		for ($i= \count($this->middlewares)-1; $i>=0; $i--) {
+		for ($i = \count($this->middlewares) - 1; $i >= 0; $i--) {
 			$middleware = $this->middlewares[$i];
 			$response = $middleware->afterController($controller, $methodName, $response);
 		}
@@ -158,7 +158,7 @@ class MiddlewareDispatcher {
 	 * @return string the output that should be printed
 	 */
 	public function beforeOutput(Controller $controller, string $methodName, string $output): string {
-		for ($i= \count($this->middlewares)-1; $i>=0; $i--) {
+		for ($i = \count($this->middlewares) - 1; $i >= 0; $i--) {
 			$middleware = $this->middlewares[$i];
 			$output = $middleware->beforeOutput($controller, $methodName, $output);
 		}

@@ -174,7 +174,7 @@ class Util {
 				if ($c->getType() === 'dir') {
 					$dirList[] = $c->getPath();
 				} else {
-					$result[] =  $c->getPath();
+					$result[] = $c->getPath();
 				}
 			}
 		}
@@ -255,7 +255,7 @@ class Util {
 			// if path also contains a transaction id, we remove it too
 			$extension = pathinfo($fPath, PATHINFO_EXTENSION);
 			if (substr($extension, 0, 12) === 'ocTransferId') { // 12 = strlen("ocTransferId")
-				$newLength = strlen($fPath) - strlen($extension) -1;
+				$newLength = strlen($fPath) - strlen($extension) - 1;
 				$fPath = substr($fPath, 0, $newLength);
 			}
 			return $fPath;

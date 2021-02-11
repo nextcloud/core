@@ -39,7 +39,6 @@ namespace OCP\AppFramework\Http;
  * This class represents out strictest defaults. They may get change from release
  * to release if more strict CSP directives become available.
  *
- * @package OCP\AppFramework\Http
  * @since 14.0.0
  * @deprecated 17.0.0
  */

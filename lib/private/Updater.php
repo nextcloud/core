@@ -9,6 +9,7 @@
  * @author Frank Karlitschek <frank@karlitschek.de>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -16,7 +17,7 @@
  * @author Steffen Lindner <mail@steffen-lindner.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -36,6 +37,7 @@
 
 namespace OC;
 
+use OC\DB\Connection;
 use OC\DB\MigrationService;
 use OC\Hooks\BasicEmitter;
 use OC\IntegrityCheck\Checker;
@@ -192,8 +194,12 @@ class Updater extends BasicEmitter {
 		$currentVendor = $this->config->getAppValue('core', 'vendor', '');
 
 		// Vendor was not set correctly on install, so we have to white-list known versions
-		if ($currentVendor === '' && isset($allowedPreviousVersions['owncloud'][$oldVersion])) {
+		if ($currentVendor === '' && (
+			isset($allowedPreviousVersions['owncloud'][$oldVersion]) ||
+			isset($allowedPreviousVersions['owncloud'][$majorMinor])
+		)) {
 			$currentVendor = 'owncloud';
+			$this->config->setAppValue('core', 'vendor', $currentVendor);
 		}
 
 		if ($currentVendor === 'nextcloud') {
@@ -262,7 +268,6 @@ class Updater extends BasicEmitter {
 		$this->upgradeAppStoreApps($autoDisabledApps, true);
 
 		// install new shipped apps on upgrade
-		OC_App::loadApps(['authentication']);
 		$errors = Installer::installShippedApps(true);
 		foreach ($errors as $appId => $exception) {
 			/** @var \Exception $exception */
@@ -293,51 +298,10 @@ class Updater extends BasicEmitter {
 		$this->emit('\OC\Updater', 'dbUpgradeBefore');
 
 		// execute core migrations
-		$ms = new MigrationService('core', \OC::$server->getDatabaseConnection());
+		$ms = new MigrationService('core', \OC::$server->get(Connection::class));
 		$ms->migrate();
 
 		$this->emit('\OC\Updater', 'dbUpgrade');
-	}
-
-	/**
-	 * @param string $version the oc version to check app compatibility with
-	 */
-	protected function checkAppUpgrade($version) {
-		$apps = \OC_App::getEnabledApps();
-		$this->emit('\OC\Updater', 'appUpgradeCheckBefore');
-
-		$appManager = \OC::$server->getAppManager();
-		foreach ($apps as $appId) {
-			$info = \OC_App::getAppInfo($appId);
-			$compatible = \OC_App::isAppCompatible($version, $info);
-			$isShipped = $appManager->isShipped($appId);
-
-			if ($compatible && $isShipped && \OC_App::shouldUpgrade($appId)) {
-				/**
-				 * FIXME: The preupdate check is performed before the database migration, otherwise database changes
-				 * are not possible anymore within it. - Consider this when touching the code.
-				 * @link https://github.com/owncloud/core/issues/10980
-				 * @see \OC_App::updateApp
-				 */
-				if (file_exists(\OC_App::getAppPath($appId) . '/appinfo/preupdate.php')) {
-					$this->includePreUpdate($appId);
-				}
-				if (file_exists(\OC_App::getAppPath($appId) . '/appinfo/database.xml')) {
-					$this->emit('\OC\Updater', 'appSimulateUpdate', [$appId]);
-					\OC_DB::simulateUpdateDbFromStructure(\OC_App::getAppPath($appId) . '/appinfo/database.xml');
-				}
-			}
-		}
-
-		$this->emit('\OC\Updater', 'appUpgradeCheck');
-	}
-
-	/**
-	 * Includes the pre-update file. Done here to prevent namespace mixups.
-	 * @param string $appId
-	 */
-	private function includePreUpdate($appId) {
-		include \OC_App::getAppPath($appId) . '/appinfo/preupdate.php';
 	}
 
 	/**
@@ -368,7 +332,8 @@ class Updater extends BasicEmitter {
 				$stacks[$pseudoOtherType][] = $appId;
 			}
 		}
-		foreach ($stacks as $type => $stack) {
+		foreach (array_merge($priorityTypes, [$pseudoOtherType]) as $type) {
+			$stack = $stacks[$type];
 			foreach ($stack as $appId) {
 				if (\OC_App::shouldUpgrade($appId)) {
 					$this->emit('\OC\Updater', 'appUpgradeStarted', [$appId, \OC_App::getAppVersion($appId)]);
@@ -401,7 +366,7 @@ class Updater extends BasicEmitter {
 		$disabledApps = [];
 		$appManager = \OC::$server->getAppManager();
 		foreach ($apps as $app) {
-			// check if the app is compatible with this version of ownCloud
+			// check if the app is compatible with this version of Nextcloud
 			$info = OC_App::getAppInfo($app);
 			if ($info === null || !OC_App::isAppCompatible($version, $info)) {
 				if ($appManager->isShipped($app)) {

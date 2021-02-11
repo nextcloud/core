@@ -21,6 +21,7 @@ class ComposerStaticInitAccessibility
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\Accessibility\\AccessibilityProvider' => __DIR__ . '/..' . '/../lib/AccessibilityProvider.php',
         'OCA\\Accessibility\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
         'OCA\\Accessibility\\Controller\\AccessibilityController' => __DIR__ . '/..' . '/../lib/Controller/AccessibilityController.php',

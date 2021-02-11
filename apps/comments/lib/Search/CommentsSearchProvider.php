@@ -5,7 +5,9 @@ declare(strict_types=1);
 /**
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,7 +22,8 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace OCA\Comments\Search;
@@ -96,13 +99,13 @@ class CommentsSearchProvider implements IProvider {
 				$pathInfo = pathinfo($path);
 				$isUser = $this->userManager->userExists($result->authorId);
 				$avatarUrl = $isUser
-					? $this->urlGenerator->linkToRoute('core.avatar.getAvatar', ['userId' => $result->authorId, 'size' => 42])
-					: $this->urlGenerator->linkToRoute('core.GuestAvatar.getAvatar', ['guestName' => $result->authorId, 'size' => 42]);
+					? $this->urlGenerator->linkToRouteAbsolute('core.avatar.getAvatar', ['userId' => $result->authorId, 'size' => 42])
+					: $this->urlGenerator->linkToRouteAbsolute('core.GuestAvatar.getAvatar', ['guestName' => $result->authorId, 'size' => 42]);
 				return new SearchResultEntry(
 					$avatarUrl,
 					$result->name,
 					$path,
-					$this->urlGenerator->linkToRoute('files.view.index',[
+					$this->urlGenerator->linkToRouteAbsolute('files.view.index',[
 						'dir' => $pathInfo['dirname'],
 						'scrollto' => $pathInfo['basename'],
 					]),

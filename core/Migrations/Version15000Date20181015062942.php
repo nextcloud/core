@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2018 Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -45,7 +46,7 @@ class Version15000Date20181015062942 extends SimpleMigrationStep {
 
 		$table = $schema->getTable('share');
 		$table->addColumn('hide_download', 'smallint', [
-			'notnull' => true,
+			'notnull' => false,
 			'length' => 1,
 			'default' => 0,
 		]);

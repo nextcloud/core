@@ -22,6 +22,7 @@
 <template>
 	<HeaderMenu id="unified-search"
 		class="unified-search"
+		exclude-click-outside-classes="popover"
 		:open.sync="open"
 		@open="onOpen"
 		@close="onClose">
@@ -30,26 +31,48 @@
 			<Magnify class="unified-search__trigger" :size="20" fill-color="var(--color-primary-text)" />
 		</template>
 
-		<!-- Search input -->
+		<!-- Search form & filters wrapper -->
 		<div class="unified-search__input-wrapper">
-			<input ref="input"
-				v-model="query"
-				class="unified-search__input"
-				type="search"
-				:placeholder="t('core', 'Search {types} …', { types: typesNames.join(', ').toLowerCase() })"
-				@input="onInputDebounced"
-				@keypress.enter.prevent.stop="onInputEnter">
+			<form class="unified-search__form"
+				role="search"
+				:class="{'icon-loading-small': isLoading}"
+				@submit.prevent.stop="onInputEnter"
+				@reset.prevent.stop="onReset">
+				<!-- Search input -->
+				<input ref="input"
+					v-model="query"
+					class="unified-search__form-input"
+					type="search"
+					:class="{'unified-search__form-input--with-reset': !!query}"
+					:placeholder="t('core', 'Search {types} …', { types: typesNames.join(', ') })"
+					@input="onInputDebounced"
+					@keypress.enter.prevent.stop="onInputEnter">
+
+				<!-- Reset search button -->
+				<input v-if="!!query && !isLoading"
+					type="reset"
+					class="unified-search__form-reset icon-close"
+					:aria-label="t('core','Reset search')"
+					value="">
+			</form>
+
+			<!-- Search filters -->
+			<Actions v-if="availableFilters.length > 1" class="unified-search__filters" placement="bottom">
+				<ActionButton v-for="type in availableFilters"
+					:key="type"
+					icon="icon-filter"
+					:title="t('core', 'Search for {name} only', { name: typesMap[type] })"
+					@click="onClickFilter(`in:${type}`)">
+					{{ `in:${type}` }}
+				</ActionButton>
+			</Actions>
 		</div>
 
 		<template v-if="!hasResults">
 			<!-- Loading placeholders -->
-			<ul v-if="isLoading">
-				<li v-for="placeholder in [1, 2, 3]" :key="placeholder">
-					<SearchResultPlaceholder />
-				</li>
-			</ul>
+			<SearchResultPlaceholders v-if="isLoading" />
 
-			<EmptyContent v-else-if="isValidQuery && isDoneSearching" icon="icon-search">
+			<EmptyContent v-else-if="isValidQuery" icon="icon-search">
 				{{ t('core', 'No results for {query}', {query}) }}
 			</EmptyContent>
 
@@ -97,34 +120,51 @@
 </template>
 
 <script>
-import { minSearchLength, getTypes, search, defaultLimit } from '../services/UnifiedSearchService'
+import { emit } from '@nextcloud/event-bus'
+import { minSearchLength, getTypes, search, defaultLimit, regexFilterIn, regexFilterNot } from '../services/UnifiedSearchService'
+import { showError } from '@nextcloud/dialogs'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import debounce from 'debounce'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 import Magnify from 'vue-material-design-icons/Magnify'
-import debounce from 'debounce'
 
 import HeaderMenu from '../components/HeaderMenu'
 import SearchResult from '../components/UnifiedSearch/SearchResult'
-import SearchResultPlaceholder from '../components/UnifiedSearch/SearchResultPlaceholder'
+import SearchResultPlaceholders from '../components/UnifiedSearch/SearchResultPlaceholders'
+
+const REQUEST_FAILED = 0
+const REQUEST_OK = 1
+const REQUEST_CANCELED = 2
 
 export default {
 	name: 'UnifiedSearch',
 
 	components: {
+		ActionButton,
+		Actions,
 		EmptyContent,
 		HeaderMenu,
 		Magnify,
 		SearchResult,
-		SearchResultPlaceholder,
+		SearchResultPlaceholders,
 	},
 
 	data() {
 		return {
 			types: [],
 
+			// Cursors per types
 			cursors: {},
+			// Various search limits per types
 			limits: {},
+			// Loading types
 			loading: {},
+			// Reached search types
 			reached: {},
+			// Pending cancellable requests
+			requests: [],
+			// List of all results
 			results: {},
 
 			query: '',
@@ -161,15 +201,50 @@ export default {
 
 		/**
 		 * Return ordered results
-		 * @returns {Object}
+		 * @returns {Array}
 		 */
 		orderedResults() {
-			return Object.values(this.typesIDs)
+			return this.typesIDs
 				.filter(type => type in this.results)
 				.map(type => ({
 					type,
 					list: this.results[type],
 				}))
+		},
+
+		/**
+		 * Available filters
+		 * We only show filters that are available on the results
+		 * @returns {string[]}
+		 */
+		availableFilters() {
+			return Object.keys(this.results)
+		},
+
+		/**
+		 * Applied filters
+		 * @returns {string[]}
+		 */
+		usedFiltersIn() {
+			let match
+			const filters = []
+			while ((match = regexFilterIn.exec(this.query)) !== null) {
+				filters.push(match[1])
+			}
+			return filters
+		},
+
+		/**
+		 * Applied anti filters
+		 * @returns {string[]}
+		 */
+		usedFiltersNot() {
+			let match
+			const filters = []
+			while ((match = regexFilterNot.exec(this.query)) !== null) {
+				filters.push(match[1])
+			}
+			return filters
 		},
 
 		/**
@@ -207,7 +282,7 @@ export default {
 
 	async created() {
 		this.types = await getTypes()
-		console.debug('Unified Search initialized with the following providers', this.types)
+		this.logger.debug('Unified Search initialized with the following providers', this.types)
 	},
 
 	mounted() {
@@ -241,17 +316,38 @@ export default {
 			this.types = await getTypes()
 		},
 		onClose() {
-			this.resetState()
-			this.query = ''
+			emit('nextcloud:unified-search.close')
 		},
 
-		resetState() {
+		/**
+		 * Reset the search state
+		 */
+		onReset() {
+			emit('nextcloud:unified-search.reset')
+			this.logger.debug('Search reset')
+			this.query = ''
+			this.resetState()
+			this.focusInput()
+		},
+		async resetState() {
 			this.cursors = {}
 			this.limits = {}
-			this.loading = {}
 			this.reached = {}
 			this.results = {}
 			this.focused = null
+			await this.cancelPendingRequests()
+		},
+
+		/**
+		 * Cancel any ongoing searches
+		 */
+		async cancelPendingRequests() {
+			// Cloning so we can keep processing other requests
+			const requests = this.requests.slice(0)
+			this.requests = []
+
+			// Cancel all pending requests
+			await Promise.all(requests.map(cancel => cancel()))
 		},
 
 		/**
@@ -281,45 +377,89 @@ export default {
 		 * Start searching on input
 		 */
 		async onInput() {
+			// emit the search query
+			emit('nextcloud:unified-search.search', { query: this.query })
+
 			// Do not search if not long enough
 			if (this.query.trim() === '' || this.isShortQuery) {
 				return
 			}
 
-			// reset search if the query changed
-			this.resetState()
+			let types = this.typesIDs
+			let query = this.query
 
-			this.typesIDs.forEach(async type => {
-				this.$set(this.loading, type, true)
-				const request = await search(type, this.query)
+			// Filter out types
+			if (this.usedFiltersNot.length > 0) {
+				types = this.typesIDs.filter(type => this.usedFiltersNot.indexOf(type) === -1)
+			}
 
-				// Process results
-				if (request.data.entries.length > 0) {
-					this.$set(this.results, type, request.data.entries)
-				} else {
-					this.$delete(this.results, type)
-				}
+			// Only use those filters if any and check if they are valid
+			if (this.usedFiltersIn.length > 0) {
+				types = this.typesIDs.filter(type => this.usedFiltersIn.indexOf(type) > -1)
+			}
 
-				// Save cursor if any
-				if (request.data.cursor) {
-					this.$set(this.cursors, type, request.data.cursor)
-				} else if (!request.data.isPaginated) {
+			// Remove any filters from the query
+			query = query.replace(regexFilterIn, '').replace(regexFilterNot, '')
+
+			// Reset search if the query changed
+			await this.resetState()
+			this.$set(this.loading, 'all', true)
+			this.logger.debug(`Searching ${query} in`, types)
+
+			Promise.all(types.map(async type => {
+				try {
+					// Init cancellable request
+					const { request, cancel } = search({ type, query })
+					this.requests.push(cancel)
+
+					// Fetch results
+					const { data } = await request()
+
+					// Process results
+					if (data.ocs.data.entries.length > 0) {
+						this.$set(this.results, type, data.ocs.data.entries)
+					} else {
+						this.$delete(this.results, type)
+					}
+
+					// Save cursor if any
+					if (data.ocs.data.cursor) {
+						this.$set(this.cursors, type, data.ocs.data.cursor)
+					} else if (!data.ocs.data.isPaginated) {
 					// If no cursor and no pagination, we save the default amount
 					// provided by server's initial state `defaultLimit`
-					this.$set(this.limits, type, this.defaultLimit)
-				}
+						this.$set(this.limits, type, this.defaultLimit)
+					}
 
-				// Check if we reached end of pagination
-				if (request.data.entries.length < this.defaultLimit) {
-					this.$set(this.reached, type, true)
-				}
+					// Check if we reached end of pagination
+					if (data.ocs.data.entries.length < this.defaultLimit) {
+						this.$set(this.reached, type, true)
+					}
 
-				// If none already focused, focus the first rendered result
-				if (this.focused === null) {
-					this.focused = 0
-				}
+					// If none already focused, focus the first rendered result
+					if (this.focused === null) {
+						this.focused = 0
+					}
+					return REQUEST_OK
+				} catch (error) {
+					this.$delete(this.results, type)
 
-				this.$set(this.loading, type, false)
+					// If this is not a cancelled throw
+					if (error.response && error.response.status) {
+						this.logger.error(`Error searching for ${this.typesMap[type]}`, error)
+						showError(this.t('core', 'An error occurred while searching for {type}', { type: this.typesMap[type] }))
+						return REQUEST_FAILED
+					}
+					return REQUEST_CANCELED
+				}
+			})).then(results => {
+				// Do not declare loading finished if the request have been cancelled
+				// This means another search was triggered and we're therefore still loading
+				if (results.some(result => result === REQUEST_CANCELED)) {
+					return
+				}
+				// We finished all searches
+				this.loading = {}
 			})
 		},
 		onInputDebounced: debounce(function(e) {
@@ -335,22 +475,27 @@ export default {
 			if (this.loading[type]) {
 				return
 			}
-			this.$set(this.loading, type, true)
 
 			if (this.cursors[type]) {
-				const request = await search(type, this.query)
+				// Init cancellable request
+				const { request, cancel } = search({ type, query: this.query, cursor: this.cursors[type] })
+				this.requests.push(cancel)
+
+				// Fetch results
+				const { data } = await request()
 
 				// Save cursor if any
-				if (request.data.cursor) {
-					this.$set(this.cursors, type, request.data.cursor)
+				if (data.ocs.data.cursor) {
+					this.$set(this.cursors, type, data.ocs.data.cursor)
 				}
 
-				if (request.data.entries.length > 0) {
-					this.results[type].push(...request.data.entries)
+				// Process results
+				if (data.ocs.data.entries.length > 0) {
+					this.results[type].push(...data.ocs.data.entries)
 				}
 
 				// Check if we reached end of pagination
-				if (request.data.entries.length < this.defaultLimit) {
+				if (data.ocs.data.entries.length < this.defaultLimit) {
 					this.$set(this.reached, type, true)
 				}
 			} else
@@ -372,8 +517,6 @@ export default {
 					this.focusIndex(this.focused)
 				})
 			}
-
-			this.$set(this.loading, type, false)
 		},
 
 		/**
@@ -416,7 +559,7 @@ export default {
 		 */
 		focusNext(event) {
 			if (this.focused === null) {
-				this.focusFirst()
+				this.focusFirst(event)
 				return
 			}
 
@@ -473,12 +616,20 @@ export default {
 				this.focused = index
 			}
 		},
+
+		onClickFilter(filter) {
+			this.query = `${this.query} ${filter}`
+				.replace(/ {2}/g, ' ')
+				.trim()
+			this.onInput()
+		},
 	},
 }
 </script>
 
 <style lang="scss" scoped>
 $margin: 10px;
+$input-height: 34px;
 $input-padding: 6px;
 
 .unified-search {
@@ -492,23 +643,86 @@ $input-padding: 6px;
 		// above search results
 		z-index: 2;
 		top: 0;
+		display: inline-flex;
+		align-items: center;
+		width: 100%;
 		background-color: var(--color-main-background);
 	}
 
-	&__input {
-		// Minus margins
-		width: calc(100% - 2 * #{$margin});
-		height: 34px;
+	&__filters {
+		margin: $margin / 2 $margin;
+		ul {
+			display: inline-flex;
+			justify-content: space-between;
+		}
+	}
+
+	&__form {
+		position: relative;
+		width: 100%;
 		margin: $margin;
-		padding: $input-padding;
-		&,
-		&[placeholder],
-		&::placeholder {
-			overflow: hidden;
-			text-overflow:ellipsis;
-			white-space: nowrap;
+
+		// Loading spinner
+		&::after {
+			right: $input-padding;
+			left: auto;
 		}
 
+		&-input,
+		&-reset {
+			margin: $input-padding / 2;
+		}
+
+		&-input {
+			width: 100%;
+			height: $input-height;
+			padding: $input-padding;
+
+			&,
+			&[placeholder],
+			&::placeholder {
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+
+			// Hide webkit clear search
+			&::-webkit-search-decoration,
+			&::-webkit-search-cancel-button,
+			&::-webkit-search-results-button,
+			&::-webkit-search-results-decoration {
+				-webkit-appearance: none;
+			}
+
+			// Ellipsis earlier if reset button is here
+			.icon-loading-small &,
+			&--with-reset {
+				padding-right: $input-height;
+			}
+		}
+
+		&-reset {
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: $input-height - $input-padding;
+			height: $input-height - $input-padding;
+			padding: 0;
+			opacity: .5;
+			border: none;
+			background-color: transparent;
+			margin-right: 0;
+
+			&:hover,
+			&:focus,
+			&:active {
+				opacity: 1;
+			}
+		}
+	}
+
+	&__filters {
+		margin-right: $margin / 2;
 	}
 
 	&__results {
@@ -527,6 +741,13 @@ $input-padding: 6px;
 
 	.empty-content {
 		margin: 10vh 0;
+
+		::v-deep .empty-content__title {
+			font-weight: normal;
+            font-size: var(--default-font-size);
+			padding: 0 15px;
+			text-align: center;
+		}
 	}
 }
 

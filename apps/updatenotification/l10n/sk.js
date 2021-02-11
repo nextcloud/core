@@ -23,7 +23,6 @@ OC.L10N.register(
     "A non-default update server is in use to be checked for updates:" : "Pre kontrolu aktualizácií sa používa iný než predvolený server:",
     "Update channel:" : "Aktualizačný kanál:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Vždy môžete aktualizovať na novšiu verziu, ale nikdy nemôžete prejsť na nižšiu, stabilnejšiu verziu.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Upozorňujeme, že po oficiálnom vydaní novej verzie môže chvíľu trvať, než sa tu objaví. Nové verzie medzi našich používateľov distribuujeme priebežne rozložené v čase a ak sa nájdu chyby, niekedy danú verziu preskočíme.",
     "Notify members of the following groups about available updates:" : "Upozorňovať členov nasledujúcich skupín o dostupných aktualizáciach:",
     "Only notification for app updates are available." : "Sú dostupné upozornenia iba pre aktualizácie aplikácií.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "Pre vybraný aktualizačný kanál budú priradené upozornenia pre server zastarané.",
@@ -41,6 +40,7 @@ OC.L10N.register(
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "Najnovšia stabilná verzia. Je vhodná na bežné používanie a vždy sa aktualizuje na najnovšiu hlavnú verziu.",
     "Beta" : "Beta",
     "A pre-release version only for testing new features, not for production environments." : "Verzia pred vydaním iba na testovanie nových funkcií, nie pre praktické nasadenie.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> aplikácia nemá dostupnú aktualizáciu na túto verziu","<strong>%n</strong> aplikácie nemá dostupnú aktualizáciu na túto verziu ","<strong>%n</strong> aplikácií nemá dostupnú aktualizáciu na túto verziu","<strong>%n</strong>aplikácií nemá dostupnú aktualizáciu na túto verziu"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> aplikácia nemá dostupnú aktualizáciu na túto verziu","<strong>%n</strong> aplikácie nemá dostupnú aktualizáciu na túto verziu ","<strong>%n</strong> aplikácií nemá dostupnú aktualizáciu na túto verziu","<strong>%n</strong>aplikácií nemá dostupnú aktualizáciu na túto verziu"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Upozorňujeme, že po oficiálnom vydaní novej verzie môže chvíľu trvať, než sa tu objaví. Nové verzie medzi našich používateľov distribuujeme priebežne rozložené v čase a ak sa nájdu chyby, niekedy danú verziu preskočíme."
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

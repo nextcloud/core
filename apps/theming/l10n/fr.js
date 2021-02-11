@@ -24,7 +24,6 @@ OC.L10N.register(
     "Could not write file to disk" : "Impossible d'écrire le fichier sur le disque",
     "A PHP extension stopped the file upload" : "Une extension PHP a arrêté le téléversement du fichier",
     "No file uploaded" : "Aucun fichier téléversé",
-    "Unsupported image type" : "Ce type d'image n'est pas pris en charge",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "Vous utilisez déjà un thème personnalisé. Les paramètres de l'application Theming peuvent être remplacés par ceux-ci.",
     "Theming" : "Personnaliser l'apparence",
     "Legal notice" : "Notice légale",

@@ -20,6 +20,7 @@
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
+ * @author Lionel Elie Mamane <lionel@mamane.lu>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Maxence Lange <maxence@artificial-owl.com>
  * @author Michael Weimann <mail@michael-weimann.eu>
@@ -29,12 +30,10 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author root <root@localhost.localdomain>
- * @author Sander <brantje@gmail.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Tanghus <thomas@tanghus.net>
  * @author Tobia De Koninck <tobia@ledfan.be>
- * @author Vincent Petry <pvince81@owncloud.com>
- * @author Xheni Myrtaj <myrtajxheni@gmail.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -61,10 +60,10 @@ use OC\App\AppStore\Bundles\BundleFetcher;
 use OC\App\AppStore\Fetcher\AppFetcher;
 use OC\App\AppStore\Fetcher\CategoryFetcher;
 use OC\AppFramework\Http\Request;
-use OC\AppFramework\Utility\SimpleContainer;
 use OC\AppFramework\Utility\TimeFactory;
 use OC\Authentication\Events\LoginFailed;
 use OC\Authentication\Listeners\LoginFailedListener;
+use OC\Authentication\Listeners\UserLoggedInListener;
 use OC\Authentication\LoginCredentials\Store;
 use OC\Authentication\Token\IProvider;
 use OC\Avatar\AvatarManager;
@@ -78,8 +77,11 @@ use OC\Comments\ManagerFactory as CommentsManagerFactory;
 use OC\Contacts\ContactsMenu\ActionFactory;
 use OC\Contacts\ContactsMenu\ContactsStore;
 use OC\Dashboard\DashboardManager;
+use OC\DB\Connection;
+use OC\DB\ConnectionAdapter;
 use OC\Diagnostics\EventLogger;
 use OC\Diagnostics\QueryLogger;
+use OC\EventDispatcher\SymfonyAdapter;
 use OC\Federation\CloudFederationFactory;
 use OC\Federation\CloudFederationProviderManager;
 use OC\Federation\CloudIdManager;
@@ -93,6 +95,8 @@ use OC\Files\Node\HookConnector;
 use OC\Files\Node\LazyRoot;
 use OC\Files\Node\Root;
 use OC\Files\Storage\StorageFactory;
+use OC\Files\Template\TemplateManager;
+use OC\Files\Type\Loader;
 use OC\Files\View;
 use OC\FullTextSearch\FullTextSearchManager;
 use OC\Http\Client\ClientService;
@@ -115,13 +119,13 @@ use OC\Preview\GeneratorHelper;
 use OC\Remote\Api\ApiFactory;
 use OC\Remote\InstanceFactory;
 use OC\RichObjectStrings\Validator;
+use OC\Route\Router;
 use OC\Security\Bruteforce\Throttler;
 use OC\Security\CertificateManager;
 use OC\Security\CredentialsManager;
 use OC\Security\Crypto;
 use OC\Security\CSP\ContentSecurityPolicyManager;
 use OC\Security\CSP\ContentSecurityPolicyNonceManager;
-use OC\Security\CSRF\CsrfTokenGenerator;
 use OC\Security\CSRF\CsrfTokenManager;
 use OC\Security\CSRF\TokenStorage\SessionStorage;
 use OC\Security\Hasher;
@@ -132,9 +136,7 @@ use OC\Share20\ProviderFactory;
 use OC\Share20\ShareHelper;
 use OC\SystemTag\ManagerFactory as SystemTagManagerFactory;
 use OC\Tagging\TagMapper;
-use OC\Template\IconsCacher;
 use OC\Template\JSCombiner;
-use OC\Template\SCSSCacher;
 use OCA\Theming\ImageManager;
 use OCA\Theming\ThemingDefaults;
 use OCA\Theming\Util;
@@ -151,6 +153,8 @@ use OCP\Dashboard\IDashboardManager;
 use OCP\Defaults;
 use OCP\Diagnostics\IEventLogger;
 use OCP\Diagnostics\IQueryLogger;
+use OCP\Encryption\IFile;
+use OCP\Encryption\Keys\IStorage;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Federation\ICloudFederationFactory;
 use OCP\Federation\ICloudFederationProviderManager;
@@ -163,6 +167,7 @@ use OCP\Files\IRootFolder;
 use OCP\Files\Mount\IMountManager;
 use OCP\Files\NotFoundException;
 use OCP\Files\Storage\IStorageFactory;
+use OCP\Files\Template\ITemplateManager;
 use OCP\FullTextSearch\IFullTextSearchManager;
 use OCP\GlobalScale\IConfig;
 use OCP\Group\Events\BeforeGroupCreatedEvent;
@@ -179,6 +184,7 @@ use OCP\IAppConfig;
 use OCP\IAvatarManager;
 use OCP\ICache;
 use OCP\ICacheFactory;
+use OCP\ICertificateManager;
 use OCP\IDateTimeFormatter;
 use OCP\IDateTimeZone;
 use OCP\IDBConnection;
@@ -191,6 +197,7 @@ use OCP\IPreview;
 use OCP\IRequest;
 use OCP\ISearch;
 use OCP\IServerContainer;
+use OCP\ISession;
 use OCP\ITagManager;
 use OCP\ITempManager;
 use OCP\IURLGenerator;
@@ -220,8 +227,8 @@ use OCP\User\Events\BeforeUserLoggedInEvent;
 use OCP\User\Events\BeforeUserLoggedInWithCookieEvent;
 use OCP\User\Events\BeforeUserLoggedOutEvent;
 use OCP\User\Events\PasswordUpdatedEvent;
+use OCP\User\Events\PostLoginEvent;
 use OCP\User\Events\UserChangedEvent;
-use OCP\User\Events\UserCreatedEvent;
 use OCP\User\Events\UserDeletedEvent;
 use OCP\User\Events\UserLoggedInEvent;
 use OCP\User\Events\UserLoggedInWithCookieEvent;
@@ -258,6 +265,7 @@ class Server extends ServerContainer implements IServerContainer {
 
 		// To find out if we are running from CLI or not
 		$this->registerParameter('isCLI', \OC::$CLI);
+		$this->registerParameter('serverRoot', \OC::$SERVERROOT);
 
 		$this->registerService(ContainerInterface::class, function (ContainerInterface $c) {
 			return $c;
@@ -267,37 +275,52 @@ class Server extends ServerContainer implements IServerContainer {
 		});
 
 		$this->registerAlias(\OCP\Calendar\IManager::class, \OC\Calendar\Manager::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('CalendarManager', \OC\Calendar\Manager::class);
 
 		$this->registerAlias(\OCP\Calendar\Resource\IManager::class, \OC\Calendar\Resource\Manager::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('CalendarResourceBackendManager', \OC\Calendar\Resource\Manager::class);
 
 		$this->registerAlias(\OCP\Calendar\Room\IManager::class, \OC\Calendar\Room\Manager::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('CalendarRoomBackendManager', \OC\Calendar\Room\Manager::class);
 
 		$this->registerAlias(\OCP\Contacts\IManager::class, \OC\ContactsManager::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('ContactsManager', \OCP\Contacts\IManager::class);
 
 		$this->registerAlias(\OCP\DirectEditing\IManager::class, \OC\DirectEditing\Manager::class);
+		$this->registerAlias(ITemplateManager::class, TemplateManager::class);
 
 		$this->registerAlias(IActionFactory::class, ActionFactory::class);
 
+		$this->registerService(View::class, function (Server $c) {
+			return new View();
+		}, false);
 
-		$this->registerService(IPreview::class, function (Server $c) {
+		$this->registerService(IPreview::class, function (ContainerInterface $c) {
 			return new PreviewManager(
-				$c->getConfig(),
-				$c->getRootFolder(),
-				new \OC\Preview\Storage\Root($c->getRootFolder(), $c->getSystemConfig(), 'preview'),
-				$c->getEventDispatcher(),
-				$c->getGeneratorHelper(),
-				$c->getSession()->get('user_id')
+				$c->get(\OCP\IConfig::class),
+				$c->get(IRootFolder::class),
+				new \OC\Preview\Storage\Root(
+					$c->get(IRootFolder::class),
+					$c->get(SystemConfig::class)
+				),
+				$c->get(SymfonyAdapter::class),
+				$c->get(GeneratorHelper::class),
+				$c->get(ISession::class)->get('user_id')
 			);
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('PreviewManager', IPreview::class);
 
-		$this->registerService(\OC\Preview\Watcher::class, function (Server $c) {
+		$this->registerService(\OC\Preview\Watcher::class, function (ContainerInterface $c) {
 			return new \OC\Preview\Watcher(
-				new \OC\Preview\Storage\Root($c->getRootFolder(), $c->getSystemConfig(), 'preview')
+				new \OC\Preview\Storage\Root(
+					$c->get(IRootFolder::class),
+					$c->get(SystemConfig::class)
+				)
 			);
 		});
 
@@ -305,371 +328,351 @@ class Server extends ServerContainer implements IServerContainer {
 			$view = new View();
 			$util = new Encryption\Util(
 				$view,
-				$c->getUserManager(),
-				$c->getGroupManager(),
-				$c->getConfig()
+				$c->get(IUserManager::class),
+				$c->get(IGroupManager::class),
+				$c->get(\OCP\IConfig::class)
 			);
 			return new Encryption\Manager(
-				$c->getConfig(),
-				$c->getLogger(),
+				$c->get(\OCP\IConfig::class),
+				$c->get(ILogger::class),
 				$c->getL10N('core'),
 				new View(),
 				$util,
 				new ArrayCache()
 			);
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('EncryptionManager', \OCP\Encryption\IManager::class);
 
-		$this->registerService('EncryptionFileHelper', function (Server $c) {
+		/** @deprecated 21.0.0 */
+		$this->registerDeprecatedAlias('EncryptionFileHelper', IFile::class);
+		$this->registerService(IFile::class, function (ContainerInterface $c) {
 			$util = new Encryption\Util(
 				new View(),
-				$c->getUserManager(),
-				$c->getGroupManager(),
-				$c->getConfig()
+				$c->get(IUserManager::class),
+				$c->get(IGroupManager::class),
+				$c->get(\OCP\IConfig::class)
 			);
 			return new Encryption\File(
 				$util,
-				$c->getRootFolder(),
-				$c->getShareManager()
+				$c->get(IRootFolder::class),
+				$c->get(\OCP\Share\IManager::class)
 			);
 		});
 
-		$this->registerService('EncryptionKeyStorage', function (Server $c) {
+		/** @deprecated 21.0.0 */
+		$this->registerDeprecatedAlias('EncryptionKeyStorage', IStorage::class);
+		$this->registerService(IStorage::class, function (ContainerInterface $c) {
 			$view = new View();
 			$util = new Encryption\Util(
 				$view,
-				$c->getUserManager(),
-				$c->getGroupManager(),
-				$c->getConfig()
+				$c->get(IUserManager::class),
+				$c->get(IGroupManager::class),
+				$c->get(\OCP\IConfig::class)
 			);
 
-			return new Encryption\Keys\Storage($view, $util);
+			return new Encryption\Keys\Storage(
+				$view,
+				$util,
+				$c->get(ICrypto::class),
+				$c->get(\OCP\IConfig::class)
+			);
 		});
-		$this->registerService('TagMapper', function (Server $c) {
-			return new TagMapper($c->getDatabaseConnection());
-		});
+		/** @deprecated 20.0.0 */
+		$this->registerDeprecatedAlias('TagMapper', TagMapper::class);
 
-		$this->registerService(\OCP\ITagManager::class, function (Server $c) {
-			$tagMapper = $c->query('TagMapper');
-			return new TagManager($tagMapper, $c->getUserSession());
-		});
+		$this->registerAlias(\OCP\ITagManager::class, TagManager::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('TagManager', \OCP\ITagManager::class);
 
-		$this->registerService('SystemTagManagerFactory', function (Server $c) {
-			$config = $c->getConfig();
+		$this->registerService('SystemTagManagerFactory', function (ContainerInterface $c) {
+			/** @var \OCP\IConfig $config */
+			$config = $c->get(\OCP\IConfig::class);
 			$factoryClass = $config->getSystemValue('systemtags.managerFactory', SystemTagManagerFactory::class);
 			return new $factoryClass($this);
 		});
-		$this->registerService(ISystemTagManager::class, function (Server $c) {
-			return $c->query('SystemTagManagerFactory')->getManager();
+		$this->registerService(ISystemTagManager::class, function (ContainerInterface $c) {
+			return $c->get('SystemTagManagerFactory')->getManager();
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('SystemTagManager', ISystemTagManager::class);
 
-		$this->registerService(ISystemTagObjectMapper::class, function (Server $c) {
-			return $c->query('SystemTagManagerFactory')->getObjectMapper();
+		$this->registerService(ISystemTagObjectMapper::class, function (ContainerInterface $c) {
+			return $c->get('SystemTagManagerFactory')->getObjectMapper();
 		});
-		$this->registerService('RootFolder', function (Server $c) {
+		$this->registerService('RootFolder', function (ContainerInterface $c) {
 			$manager = \OC\Files\Filesystem::getMountManager(null);
 			$view = new View();
 			$root = new Root(
 				$manager,
 				$view,
 				null,
-				$c->getUserMountCache(),
-				$this->getLogger(),
-				$this->getUserManager()
+				$c->get(IUserMountCache::class),
+				$this->get(ILogger::class),
+				$this->get(IUserManager::class)
 			);
 
-			$previewConnector = new \OC\Preview\WatcherConnector($root, $c->getSystemConfig());
+			$previewConnector = new \OC\Preview\WatcherConnector(
+				$root,
+				$c->get(SystemConfig::class)
+			);
 			$previewConnector->connectWatcher();
 
 			return $root;
 		});
-		$this->registerService(HookConnector::class, function (Server $c) {
+		$this->registerService(HookConnector::class, function (ContainerInterface $c) {
 			return new HookConnector(
-				$c->query(IRootFolder::class),
+				$c->get(IRootFolder::class),
 				new View(),
-				$c->query(\OC\EventDispatcher\SymfonyAdapter::class),
-				$c->query(IEventDispatcher::class)
+				$c->get(\OC\EventDispatcher\SymfonyAdapter::class),
+				$c->get(IEventDispatcher::class)
 			);
 		});
 
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('SystemTagObjectMapper', ISystemTagObjectMapper::class);
 
-		$this->registerService(IRootFolder::class, function (Server $c) {
+		$this->registerService(IRootFolder::class, function (ContainerInterface $c) {
 			return new LazyRoot(function () use ($c) {
-				return $c->query('RootFolder');
+				return $c->get('RootFolder');
 			});
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('LazyRootFolder', IRootFolder::class);
 
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('UserManager', \OC\User\Manager::class);
 		$this->registerAlias(\OCP\IUserManager::class, \OC\User\Manager::class);
 
-		$this->registerService(\OCP\IGroupManager::class, function (Server $c) {
-			$groupManager = new \OC\Group\Manager($this->getUserManager(), $c->getEventDispatcher(), $this->getLogger());
+		$this->registerService(\OCP\IGroupManager::class, function (ContainerInterface $c) {
+			$groupManager = new \OC\Group\Manager($this->get(IUserManager::class), $c->get(SymfonyAdapter::class), $this->get(ILogger::class));
 			$groupManager->listen('\OC\Group', 'preCreate', function ($gid) {
-				\OC_Hook::emit('OC_Group', 'pre_createGroup', ['run' => true, 'gid' => $gid]);
-
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new BeforeGroupCreatedEvent($gid));
 			});
 			$groupManager->listen('\OC\Group', 'postCreate', function (\OC\Group\Group $group) {
-				\OC_Hook::emit('OC_User', 'post_createGroup', ['gid' => $group->getGID()]);
-
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new GroupCreatedEvent($group));
 			});
 			$groupManager->listen('\OC\Group', 'preDelete', function (\OC\Group\Group $group) {
-				\OC_Hook::emit('OC_Group', 'pre_deleteGroup', ['run' => true, 'gid' => $group->getGID()]);
-
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new BeforeGroupDeletedEvent($group));
 			});
 			$groupManager->listen('\OC\Group', 'postDelete', function (\OC\Group\Group $group) {
-				\OC_Hook::emit('OC_User', 'post_deleteGroup', ['gid' => $group->getGID()]);
-
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new GroupDeletedEvent($group));
 			});
 			$groupManager->listen('\OC\Group', 'preAddUser', function (\OC\Group\Group $group, \OC\User\User $user) {
-				\OC_Hook::emit('OC_Group', 'pre_addToGroup', ['run' => true, 'uid' => $user->getUID(), 'gid' => $group->getGID()]);
-
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new BeforeUserAddedEvent($group, $user));
 			});
 			$groupManager->listen('\OC\Group', 'postAddUser', function (\OC\Group\Group $group, \OC\User\User $user) {
-				\OC_Hook::emit('OC_Group', 'post_addToGroup', ['uid' => $user->getUID(), 'gid' => $group->getGID()]);
-				//Minimal fix to keep it backward compatible TODO: clean up all the GroupManager hooks
-				\OC_Hook::emit('OC_User', 'post_addToGroup', ['uid' => $user->getUID(), 'gid' => $group->getGID()]);
-
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new UserAddedEvent($group, $user));
 			});
 			$groupManager->listen('\OC\Group', 'preRemoveUser', function (\OC\Group\Group $group, \OC\User\User $user) {
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new BeforeUserRemovedEvent($group, $user));
 			});
 			$groupManager->listen('\OC\Group', 'postRemoveUser', function (\OC\Group\Group $group, \OC\User\User $user) {
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new UserRemovedEvent($group, $user));
 			});
 			return $groupManager;
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('GroupManager', \OCP\IGroupManager::class);
 
-		$this->registerService(Store::class, function (Server $c) {
-			$session = $c->getSession();
-			if (\OC::$server->getSystemConfig()->getValue('installed', false)) {
-				$tokenProvider = $c->query(IProvider::class);
+		$this->registerService(Store::class, function (ContainerInterface $c) {
+			$session = $c->get(ISession::class);
+			if (\OC::$server->get(SystemConfig::class)->getValue('installed', false)) {
+				$tokenProvider = $c->get(IProvider::class);
 			} else {
 				$tokenProvider = null;
 			}
-			$logger = $c->getLogger();
+			$logger = $c->get(LoggerInterface::class);
 			return new Store($session, $logger, $tokenProvider);
 		});
 		$this->registerAlias(IStore::class, Store::class);
-		$this->registerService(Authentication\Token\DefaultTokenMapper::class, function (Server $c) {
-			$dbConnection = $c->getDatabaseConnection();
-			return new Authentication\Token\DefaultTokenMapper($dbConnection);
-		});
 		$this->registerAlias(IProvider::class, Authentication\Token\Manager::class);
 
 		$this->registerService(\OC\User\Session::class, function (Server $c) {
-			$manager = $c->getUserManager();
+			$manager = $c->get(IUserManager::class);
 			$session = new \OC\Session\Memory('');
 			$timeFactory = new TimeFactory();
 			// Token providers might require a working database. This code
 			// might however be called when ownCloud is not yet setup.
-			if (\OC::$server->getSystemConfig()->getValue('installed', false)) {
-				$defaultTokenProvider = $c->query(IProvider::class);
+			if (\OC::$server->get(SystemConfig::class)->getValue('installed', false)) {
+				$defaultTokenProvider = $c->get(IProvider::class);
 			} else {
 				$defaultTokenProvider = null;
 			}
 
-			$legacyDispatcher = $c->getEventDispatcher();
+			$legacyDispatcher = $c->get(SymfonyAdapter::class);
 
 			$userSession = new \OC\User\Session(
 				$manager,
 				$session,
 				$timeFactory,
 				$defaultTokenProvider,
-				$c->getConfig(),
-				$c->getSecureRandom(),
+				$c->get(\OCP\IConfig::class),
+				$c->get(ISecureRandom::class),
 				$c->getLockdownManager(),
-				$c->getLogger(),
-				$c->query(IEventDispatcher::class)
+				$c->get(ILogger::class),
+				$c->get(IEventDispatcher::class)
 			);
+			/** @deprecated 21.0.0 use BeforeUserCreatedEvent event with the IEventDispatcher instead */
 			$userSession->listen('\OC\User', 'preCreateUser', function ($uid, $password) {
 				\OC_Hook::emit('OC_User', 'pre_createUser', ['run' => true, 'uid' => $uid, 'password' => $password]);
-
-				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
-				$dispatcher->dispatchTyped(new BeforeUserCreatedEvent($uid, $password));
 			});
+			/** @deprecated 21.0.0 use UserCreatedEvent event with the IEventDispatcher instead */
 			$userSession->listen('\OC\User', 'postCreateUser', function ($user, $password) {
-				/** @var $user \OC\User\User */
+				/** @var \OC\User\User $user */
 				\OC_Hook::emit('OC_User', 'post_createUser', ['uid' => $user->getUID(), 'password' => $password]);
-
-				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
-				$dispatcher->dispatchTyped(new UserCreatedEvent($user, $password));
 			});
+			/** @deprecated 21.0.0 use BeforeUserDeletedEvent event with the IEventDispatcher instead */
 			$userSession->listen('\OC\User', 'preDelete', function ($user) use ($legacyDispatcher) {
-				/** @var $user \OC\User\User */
+				/** @var \OC\User\User $user */
 				\OC_Hook::emit('OC_User', 'pre_deleteUser', ['run' => true, 'uid' => $user->getUID()]);
 				$legacyDispatcher->dispatch('OCP\IUser::preDelete', new GenericEvent($user));
-
-				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
-				$dispatcher->dispatchTyped(new BeforeUserDeletedEvent($user));
 			});
+			/** @deprecated 21.0.0 use UserDeletedEvent event with the IEventDispatcher instead */
 			$userSession->listen('\OC\User', 'postDelete', function ($user) {
-				/** @var $user \OC\User\User */
+				/** @var \OC\User\User $user */
 				\OC_Hook::emit('OC_User', 'post_deleteUser', ['uid' => $user->getUID()]);
-
-				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
-				$dispatcher->dispatchTyped(new UserDeletedEvent($user));
 			});
 			$userSession->listen('\OC\User', 'preSetPassword', function ($user, $password, $recoveryPassword) {
-				/** @var $user \OC\User\User */
+				/** @var \OC\User\User $user */
 				\OC_Hook::emit('OC_User', 'pre_setPassword', ['run' => true, 'uid' => $user->getUID(), 'password' => $password, 'recoveryPassword' => $recoveryPassword]);
 
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new BeforePasswordUpdatedEvent($user, $password, $recoveryPassword));
 			});
 			$userSession->listen('\OC\User', 'postSetPassword', function ($user, $password, $recoveryPassword) {
-				/** @var $user \OC\User\User */
+				/** @var \OC\User\User $user */
 				\OC_Hook::emit('OC_User', 'post_setPassword', ['run' => true, 'uid' => $user->getUID(), 'password' => $password, 'recoveryPassword' => $recoveryPassword]);
 
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new PasswordUpdatedEvent($user, $password, $recoveryPassword));
 			});
 			$userSession->listen('\OC\User', 'preLogin', function ($uid, $password) {
 				\OC_Hook::emit('OC_User', 'pre_login', ['run' => true, 'uid' => $uid, 'password' => $password]);
 
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new BeforeUserLoggedInEvent($uid, $password));
 			});
-			$userSession->listen('\OC\User', 'postLogin', function ($user, $password, $isTokenLogin) {
-				/** @var $user \OC\User\User */
-				\OC_Hook::emit('OC_User', 'post_login', ['run' => true, 'uid' => $user->getUID(), 'password' => $password, 'isTokenLogin' => $isTokenLogin]);
+			$userSession->listen('\OC\User', 'postLogin', function ($user, $loginName, $password, $isTokenLogin) {
+				/** @var \OC\User\User $user */
+				\OC_Hook::emit('OC_User', 'post_login', ['run' => true, 'uid' => $user->getUID(), 'loginName' => $loginName, 'password' => $password, 'isTokenLogin' => $isTokenLogin]);
 
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
-				$dispatcher->dispatchTyped(new UserLoggedInEvent($user, $password, $isTokenLogin));
+				$dispatcher = $this->get(IEventDispatcher::class);
+				$dispatcher->dispatchTyped(new UserLoggedInEvent($user, $loginName, $password, $isTokenLogin));
 			});
 			$userSession->listen('\OC\User', 'preRememberedLogin', function ($uid) {
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new BeforeUserLoggedInWithCookieEvent($uid));
 			});
 			$userSession->listen('\OC\User', 'postRememberedLogin', function ($user, $password) {
-				/** @var $user \OC\User\User */
+				/** @var \OC\User\User $user */
 				\OC_Hook::emit('OC_User', 'post_login', ['run' => true, 'uid' => $user->getUID(), 'password' => $password]);
 
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new UserLoggedInWithCookieEvent($user, $password));
 			});
 			$userSession->listen('\OC\User', 'logout', function ($user) {
 				\OC_Hook::emit('OC_User', 'logout', []);
 
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new BeforeUserLoggedOutEvent($user));
 			});
 			$userSession->listen('\OC\User', 'postLogout', function ($user) {
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new UserLoggedOutEvent($user));
 			});
 			$userSession->listen('\OC\User', 'changeUser', function ($user, $feature, $value, $oldValue) {
-				/** @var $user \OC\User\User */
+				/** @var \OC\User\User $user */
 				\OC_Hook::emit('OC_User', 'changeUser', ['run' => true, 'user' => $user, 'feature' => $feature, 'value' => $value, 'old_value' => $oldValue]);
 
 				/** @var IEventDispatcher $dispatcher */
-				$dispatcher = $this->query(IEventDispatcher::class);
+				$dispatcher = $this->get(IEventDispatcher::class);
 				$dispatcher->dispatchTyped(new UserChangedEvent($user, $feature, $value, $oldValue));
 			});
 			return $userSession;
 		});
 		$this->registerAlias(\OCP\IUserSession::class, \OC\User\Session::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('UserSession', \OC\User\Session::class);
 
 		$this->registerAlias(\OCP\Authentication\TwoFactorAuth\IRegistry::class, \OC\Authentication\TwoFactorAuth\Registry::class);
 
 		$this->registerAlias(INavigationManager::class, \OC\NavigationManager::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('NavigationManager', INavigationManager::class);
 
-		$this->registerService(\OC\AllConfig::class, function (Server $c) {
-			return new \OC\AllConfig(
-				$c->getSystemConfig()
-			);
-		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('AllConfig', \OC\AllConfig::class);
 		$this->registerAlias(\OCP\IConfig::class, \OC\AllConfig::class);
 
 		$this->registerService(\OC\SystemConfig::class, function ($c) use ($config) {
 			return new \OC\SystemConfig($config);
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('SystemConfig', \OC\SystemConfig::class);
 
-		$this->registerService(\OC\AppConfig::class, function (Server $c) {
-			return new \OC\AppConfig($c->getDatabaseConnection());
-		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('AppConfig', \OC\AppConfig::class);
 		$this->registerAlias(IAppConfig::class, \OC\AppConfig::class);
 
 		$this->registerService(IFactory::class, function (Server $c) {
 			return new \OC\L10N\Factory(
-				$c->getConfig(),
+				$c->get(\OCP\IConfig::class),
 				$c->getRequest(),
-				$c->getUserSession(),
+				$c->get(IUserSession::class),
 				\OC::$SERVERROOT
 			);
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('L10NFactory', IFactory::class);
 
-		$this->registerService(IURLGenerator::class, function (Server $c) {
-			$config = $c->getConfig();
-			$cacheFactory = $c->getMemCacheFactory();
-			$request = $c->getRequest();
-			return new \OC\URLGenerator(
-				$config,
-				$cacheFactory,
-				$request
-			);
-		});
+		$this->registerAlias(IURLGenerator::class, URLGenerator::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('URLGenerator', IURLGenerator::class);
 
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('AppFetcher', AppFetcher::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('CategoryFetcher', CategoryFetcher::class);
 
 		$this->registerService(ICache::class, function ($c) {
 			return new Cache\File();
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('UserCache', ICache::class);
 
 		$this->registerService(Factory::class, function (Server $c) {
-			$arrayCacheFactory = new \OC\Memcache\Factory('', $c->getLogger(),
+			$arrayCacheFactory = new \OC\Memcache\Factory('', $c->get(ILogger::class),
 				ArrayCache::class,
 				ArrayCache::class,
 				ArrayCache::class
 			);
-			$config = $c->getConfig();
+			/** @var \OCP\IConfig $config */
+			$config = $c->get(\OCP\IConfig::class);
 
 			if ($config->getSystemValue('installed', false) && !(defined('PHPUNIT_RUN') && PHPUNIT_RUN)) {
 				$v = \OC_App::getAppVersions();
@@ -678,7 +681,7 @@ class Server extends ServerContainer implements IServerContainer {
 				$instanceId = \OC_Util::getInstanceId();
 				$path = \OC::$SERVERROOT;
 				$prefix = md5($instanceId . '-' . $version . '-' . $path);
-				return new \OC\Memcache\Factory($prefix, $c->getLogger(),
+				return new \OC\Memcache\Factory($prefix, $c->get(ILogger::class),
 					$config->getSystemValue('memcache.local', null),
 					$config->getSystemValue('memcache.distributed', null),
 					$config->getSystemValue('memcache.locking', null)
@@ -686,24 +689,26 @@ class Server extends ServerContainer implements IServerContainer {
 			}
 			return $arrayCacheFactory;
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('MemCacheFactory', Factory::class);
 		$this->registerAlias(ICacheFactory::class, Factory::class);
 
 		$this->registerService('RedisFactory', function (Server $c) {
-			$systemConfig = $c->getSystemConfig();
+			$systemConfig = $c->get(SystemConfig::class);
 			return new RedisFactory($systemConfig);
 		});
 
 		$this->registerService(\OCP\Activity\IManager::class, function (Server $c) {
-			$l10n = $this->get(IFactory::class)->get('activity');
+			$l10n = $this->get(IFactory::class)->get('lib');
 			return new \OC\Activity\Manager(
 				$c->getRequest(),
-				$c->getUserSession(),
-				$c->getConfig(),
-				$c->query(IValidator::class),
+				$c->get(IUserSession::class),
+				$c->get(\OCP\IConfig::class),
+				$c->get(IValidator::class),
 				$l10n
 			);
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('ActivityManager', \OCP\Activity\IManager::class);
 
 		$this->registerService(\OCP\Activity\IEventMerger::class, function (Server $c) {
@@ -715,49 +720,45 @@ class Server extends ServerContainer implements IServerContainer {
 
 		$this->registerService(AvatarManager::class, function (Server $c) {
 			return new AvatarManager(
-				$c->query(\OC\User\Manager::class),
+				$c->get(\OC\User\Manager::class),
 				$c->getAppDataDir('avatar'),
 				$c->getL10N('lib'),
-				$c->getLogger(),
-				$c->getConfig()
+				$c->get(ILogger::class),
+				$c->get(\OCP\IConfig::class)
 			);
 		});
 		$this->registerAlias(IAvatarManager::class, AvatarManager::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('AvatarManager', AvatarManager::class);
 
 		$this->registerAlias(\OCP\Support\CrashReport\IRegistry::class, \OC\Support\CrashReport\Registry::class);
 		$this->registerAlias(\OCP\Support\Subscription\IRegistry::class, \OC\Support\Subscription\Registry::class);
 
 		$this->registerService(\OC\Log::class, function (Server $c) {
-			$logType = $c->query(AllConfig::class)->getSystemValue('log_type', 'file');
-			$factory = new LogFactory($c, $this->getSystemConfig());
+			$logType = $c->get(AllConfig::class)->getSystemValue('log_type', 'file');
+			$factory = new LogFactory($c, $this->get(SystemConfig::class));
 			$logger = $factory->get($logType);
-			$registry = $c->query(\OCP\Support\CrashReport\IRegistry::class);
+			$registry = $c->get(\OCP\Support\CrashReport\IRegistry::class);
 
-			return new Log($logger, $this->getSystemConfig(), null, $registry);
+			return new Log($logger, $this->get(SystemConfig::class), null, $registry);
 		});
 		$this->registerAlias(ILogger::class, \OC\Log::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('Logger', \OC\Log::class);
 		// PSR-3 logger
 		$this->registerAlias(LoggerInterface::class, PsrLoggerAdapter::class);
 
 		$this->registerService(ILogFactory::class, function (Server $c) {
-			return new LogFactory($c, $this->getSystemConfig());
+			return new LogFactory($c, $this->get(SystemConfig::class));
 		});
 
-		$this->registerService(IJobList::class, function (Server $c) {
-			$config = $c->getConfig();
-			return new \OC\BackgroundJob\JobList(
-				$c->getDatabaseConnection(),
-				$config,
-				new TimeFactory()
-			);
-		});
+		$this->registerAlias(IJobList::class, \OC\BackgroundJob\JobList::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('JobList', IJobList::class);
 
-		$this->registerService(IRouter::class, function (Server $c) {
-			$cacheFactory = $c->getMemCacheFactory();
-			$logger = $c->getLogger();
+		$this->registerService(Router::class, function (Server $c) {
+			$cacheFactory = $c->get(ICacheFactory::class);
+			$logger = $c->get(ILogger::class);
 			if ($cacheFactory->isLocalCacheAvailable()) {
 				$router = new \OC\Route\CachingRouter($cacheFactory->createLocal('route'), $logger);
 			} else {
@@ -765,42 +766,40 @@ class Server extends ServerContainer implements IServerContainer {
 			}
 			return $router;
 		});
+		$this->registerAlias(IRouter::class, Router::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('Router', IRouter::class);
 
-		$this->registerService(ISearch::class, function ($c) {
-			return new Search();
-		});
+		$this->registerAlias(ISearch::class, Search::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('Search', ISearch::class);
 
 		$this->registerService(\OC\Security\RateLimiting\Backend\IBackend::class, function ($c) {
 			return new \OC\Security\RateLimiting\Backend\MemoryCache(
-				$this->getMemCacheFactory(),
+				$this->get(ICacheFactory::class),
 				new \OC\AppFramework\Utility\TimeFactory()
 			);
 		});
 
-		$this->registerService(\OCP\Security\ISecureRandom::class, function ($c) {
-			return new SecureRandom();
-		});
+		$this->registerAlias(\OCP\Security\ISecureRandom::class, SecureRandom::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('SecureRandom', \OCP\Security\ISecureRandom::class);
 
-		$this->registerService(ICrypto::class, function (Server $c) {
-			return new Crypto($c->getConfig(), $c->getSecureRandom());
-		});
+		$this->registerAlias(ICrypto::class, Crypto::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('Crypto', ICrypto::class);
 
-		$this->registerService(IHasher::class, function (Server $c) {
-			return new Hasher($c->getConfig());
-		});
+		$this->registerAlias(IHasher::class, Hasher::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('Hasher', IHasher::class);
 
-		$this->registerService(ICredentialsManager::class, function (Server $c) {
-			return new CredentialsManager($c->getCrypto(), $c->getDatabaseConnection());
-		});
+		$this->registerAlias(ICredentialsManager::class, CredentialsManager::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('CredentialsManager', ICredentialsManager::class);
 
-		$this->registerService(IDBConnection::class, function (Server $c) {
-			$systemConfig = $c->getSystemConfig();
+		$this->registerAlias(IDBConnection::class, ConnectionAdapter::class);
+		$this->registerService(Connection::class, function (Server $c) {
+			$systemConfig = $c->get(SystemConfig::class);
 			$factory = new \OC\DB\ConnectionFactory($systemConfig);
 			$type = $systemConfig->getValue('dbtype', 'sqlite');
 			if (!$factory->isValidType($type)) {
@@ -811,103 +810,91 @@ class Server extends ServerContainer implements IServerContainer {
 			$connection->getConfiguration()->setSQLLogger($c->getQueryLogger());
 			return $connection;
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('DatabaseConnection', IDBConnection::class);
 
-
-		$this->registerService(IClientService::class, function (Server $c) {
-			$user = \OC_User::getUser();
-			$uid = $user ? $user : null;
-			return new ClientService(
-				$c->getConfig(),
-				$c->getLogger(),
-				new \OC\Security\CertificateManager(
-					$uid,
-					new View(),
-					$c->getConfig(),
-					$c->getLogger(),
-					$c->getSecureRandom()
-				)
-			);
-		});
+		$this->registerAlias(ICertificateManager::class, CertificateManager::class);
+		$this->registerAlias(IClientService::class, ClientService::class);
 		$this->registerDeprecatedAlias('HttpClientService', IClientService::class);
-		$this->registerService(IEventLogger::class, function (Server $c) {
+		$this->registerService(IEventLogger::class, function (ContainerInterface $c) {
 			$eventLogger = new EventLogger();
-			if ($c->getSystemConfig()->getValue('debug', false)) {
+			if ($c->get(SystemConfig::class)->getValue('debug', false)) {
 				// In debug mode, module is being activated by default
 				$eventLogger->activate();
 			}
 			return $eventLogger;
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('EventLogger', IEventLogger::class);
 
-		$this->registerService(IQueryLogger::class, function (Server $c) {
+		$this->registerService(IQueryLogger::class, function (ContainerInterface $c) {
 			$queryLogger = new QueryLogger();
-			if ($c->getSystemConfig()->getValue('debug', false)) {
+			if ($c->get(SystemConfig::class)->getValue('debug', false)) {
 				// In debug mode, module is being activated by default
 				$queryLogger->activate();
 			}
 			return $queryLogger;
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('QueryLogger', IQueryLogger::class);
 
-		$this->registerService(TempManager::class, function (Server $c) {
-			return new TempManager(
-				$c->getLogger(),
-				$c->getConfig()
-			);
-		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('TempManager', TempManager::class);
 		$this->registerAlias(ITempManager::class, TempManager::class);
 
-		$this->registerService(AppManager::class, function (Server $c) {
+		$this->registerService(AppManager::class, function (ContainerInterface $c) {
+			// TODO: use auto-wiring
 			return new \OC\App\AppManager(
-				$c->getUserSession(),
-				$c->getConfig(),
-				$c->query(\OC\AppConfig::class),
-				$c->getGroupManager(),
-				$c->getMemCacheFactory(),
-				$c->getEventDispatcher(),
-				$c->getLogger()
+				$c->get(IUserSession::class),
+				$c->get(\OCP\IConfig::class),
+				$c->get(\OC\AppConfig::class),
+				$c->get(IGroupManager::class),
+				$c->get(ICacheFactory::class),
+				$c->get(SymfonyAdapter::class),
+				$c->get(ILogger::class)
 			);
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('AppManager', AppManager::class);
 		$this->registerAlias(IAppManager::class, AppManager::class);
 
-		$this->registerService(IDateTimeZone::class, function (Server $c) {
-			return new DateTimeZone(
-				$c->getConfig(),
-				$c->getSession()
-			);
-		});
+		$this->registerAlias(IDateTimeZone::class, DateTimeZone::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('DateTimeZone', IDateTimeZone::class);
 
 		$this->registerService(IDateTimeFormatter::class, function (Server $c) {
-			$language = $c->getConfig()->getUserValue($c->getSession()->get('user_id'), 'core', 'lang', null);
+			$language = $c->get(\OCP\IConfig::class)->getUserValue($c->get(ISession::class)->get('user_id'), 'core', 'lang', null);
 
 			return new DateTimeFormatter(
-				$c->getDateTimeZone()->getTimeZone(),
+				$c->get(IDateTimeZone::class)->getTimeZone(),
 				$c->getL10N('lib', $language)
 			);
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('DateTimeFormatter', IDateTimeFormatter::class);
 
-		$this->registerService(IUserMountCache::class, function (Server $c) {
-			$mountCache = new UserMountCache($c->getDatabaseConnection(), $c->getUserManager(), $c->getLogger());
+		$this->registerService(IUserMountCache::class, function (ContainerInterface $c) {
+			$mountCache = new UserMountCache(
+				$c->get(IDBConnection::class),
+				$c->get(IUserManager::class),
+				$c->get(ILogger::class)
+			);
 			$listener = new UserMountCacheListener($mountCache);
-			$listener->listen($c->getUserManager());
+			$listener->listen($c->get(IUserManager::class));
 			return $mountCache;
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('UserMountCache', IUserMountCache::class);
 
-		$this->registerService(IMountProviderCollection::class, function (Server $c) {
+		$this->registerService(IMountProviderCollection::class, function (ContainerInterface $c) {
 			$loader = \OC\Files\Filesystem::getLoader();
-			$mountCache = $c->query(IUserMountCache::class);
+			$mountCache = $c->get(IUserMountCache::class);
 			$manager = new \OC\Files\Config\MountProviderCollection($loader, $mountCache);
 
 			// builtin providers
 
-			$config = $c->getConfig();
-			$logger = $c->getLogger();
+			$config = $c->get(\OCP\IConfig::class);
+			$logger = $c->get(ILogger::class);
 			$manager->registerProvider(new CacheMountProvider($config));
 			$manager->registerHomeProvider(new LocalHomeMountProvider());
 			$manager->registerHomeProvider(new ObjectHomeMountProvider($config));
@@ -915,45 +902,37 @@ class Server extends ServerContainer implements IServerContainer {
 
 			return $manager;
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('MountConfigManager', IMountProviderCollection::class);
 
-		$this->registerService('IniWrapper', function ($c) {
-			return new IniGetWrapper();
-		});
-		$this->registerService('AsyncCommandBus', function (Server $c) {
-			$busClass = $c->getConfig()->getSystemValue('commandbus');
+		/** @deprecated 20.0.0 */
+		$this->registerDeprecatedAlias('IniWrapper', IniGetWrapper::class);
+		$this->registerService(IBus::class, function (ContainerInterface $c) {
+			$busClass = $c->get(\OCP\IConfig::class)->getSystemValue('commandbus');
 			if ($busClass) {
 				[$app, $class] = explode('::', $busClass, 2);
-				if ($c->getAppManager()->isInstalled($app)) {
+				if ($c->get(IAppManager::class)->isInstalled($app)) {
 					\OC_App::loadApp($app);
-					return $c->query($class);
+					return $c->get($class);
 				} else {
 					throw new ServiceUnavailableException("The app providing the command bus ($app) is not enabled");
 				}
 			} else {
-				$jobList = $c->getJobList();
+				$jobList = $c->get(IJobList::class);
 				return new CronBus($jobList);
 			}
 		});
-		$this->registerAlias(IBus::class, 'AsyncCommandBus');
-		$this->registerService('TrustedDomainHelper', function ($c) {
-			return new TrustedDomainHelper($this->getConfig());
-		});
-		$this->registerService(Throttler::class, function (Server $c) {
-			return new Throttler(
-				$c->getDatabaseConnection(),
-				new TimeFactory(),
-				$c->getLogger(),
-				$c->getConfig()
-			);
-		});
+		$this->registerDeprecatedAlias('AsyncCommandBus', IBus::class);
+		/** @deprecated 20.0.0 */
+		$this->registerDeprecatedAlias('TrustedDomainHelper', TrustedDomainHelper::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('Throttler', Throttler::class);
-		$this->registerService('IntegrityCodeChecker', function (Server $c) {
+		$this->registerService('IntegrityCodeChecker', function (ContainerInterface $c) {
 			// IConfig and IAppManager requires a working database. This code
 			// might however be called when ownCloud is not yet setup.
-			if (\OC::$server->getSystemConfig()->getValue('installed', false)) {
-				$config = $c->getConfig();
-				$appManager = $c->getAppManager();
+			if (\OC::$server->get(SystemConfig::class)->getValue('installed', false)) {
+				$config = $c->get(\OCP\IConfig::class);
+				$appManager = $c->get(IAppManager::class);
 			} else {
 				$config = null;
 				$appManager = null;
@@ -964,13 +943,12 @@ class Server extends ServerContainer implements IServerContainer {
 				new FileAccessHelper(),
 				new AppLocator(),
 				$config,
-				$c->getMemCacheFactory(),
+				$c->get(ICacheFactory::class),
 				$appManager,
-				$c->getTempManager(),
-				$c->getMimeTypeDetector()
+				$c->get(IMimeTypeDetector::class)
 			);
 		});
-		$this->registerService(\OCP\IRequest::class, function ($c) {
+		$this->registerService(\OCP\IRequest::class, function (ContainerInterface $c) {
 			if (isset($this['urlParams'])) {
 				$urlParams = $this['urlParams'];
 			} else {
@@ -998,29 +976,31 @@ class Server extends ServerContainer implements IServerContainer {
 						: '',
 					'urlParams' => $urlParams,
 				],
-				$this->getSecureRandom(),
-				$this->getConfig(),
-				$this->getCsrfTokenManager(),
+				$this->get(ISecureRandom::class),
+				$this->get(\OCP\IConfig::class),
+				$this->get(CsrfTokenManager::class),
 				$stream
 			);
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('Request', \OCP\IRequest::class);
 
 		$this->registerService(IMailer::class, function (Server $c) {
 			return new Mailer(
-				$c->getConfig(),
-				$c->getLogger(),
-				$c->query(Defaults::class),
-				$c->getURLGenerator(),
+				$c->get(\OCP\IConfig::class),
+				$c->get(ILogger::class),
+				$c->get(Defaults::class),
+				$c->get(IURLGenerator::class),
 				$c->getL10N('lib'),
-				$c->query(IEventDispatcher::class),
-				$c->getL10NFactory()
+				$c->get(IEventDispatcher::class),
+				$c->get(IFactory::class)
 			);
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('Mailer', IMailer::class);
 
-		$this->registerService('LDAPProvider', function (Server $c) {
-			$config = $c->getConfig();
+		$this->registerService('LDAPProvider', function (ContainerInterface $c) {
+			$config = $c->get(\OCP\IConfig::class);
 			$factoryClass = $config->getSystemValue('ldapProviderFactory', null);
 			if (is_null($factoryClass)) {
 				throw new \Exception('ldapProviderFactory not set');
@@ -1029,20 +1009,20 @@ class Server extends ServerContainer implements IServerContainer {
 			$factory = new $factoryClass($this);
 			return $factory->getLDAPProvider();
 		});
-		$this->registerService(ILockingProvider::class, function (Server $c) {
-			$ini = $c->getIniWrapper();
-			$config = $c->getConfig();
+		$this->registerService(ILockingProvider::class, function (ContainerInterface $c) {
+			$ini = $c->get(IniGetWrapper::class);
+			$config = $c->get(\OCP\IConfig::class);
 			$ttl = $config->getSystemValue('filelocking.ttl', max(3600, $ini->getNumeric('max_execution_time')));
 			if ($config->getSystemValue('filelocking.enabled', true) or (defined('PHPUNIT_RUN') && PHPUNIT_RUN)) {
 				/** @var \OC\Memcache\Factory $memcacheFactory */
-				$memcacheFactory = $c->getMemCacheFactory();
+				$memcacheFactory = $c->get(ICacheFactory::class);
 				$memcache = $memcacheFactory->createLocking('lock');
 				if (!($memcache instanceof \OC\Memcache\NullCache)) {
 					return new MemcacheLockingProvider($memcache, $ttl);
 				}
 				return new DBLockingProvider(
-					$c->getDatabaseConnection(),
-					$c->getLogger(),
+					$c->get(IDBConnection::class),
+					$c->get(ILogger::class),
 					new TimeFactory(),
 					$ttl,
 					!\OC::$CLI
@@ -1050,61 +1030,56 @@ class Server extends ServerContainer implements IServerContainer {
 			}
 			return new NoopLockingProvider();
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('LockingProvider', ILockingProvider::class);
 
-		$this->registerService(IMountManager::class, function () {
-			return new \OC\Files\Mount\Manager();
-		});
+		$this->registerAlias(IMountManager::class, \OC\Files\Mount\Manager::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('MountManager', IMountManager::class);
 
-		$this->registerService(IMimeTypeDetector::class, function (Server $c) {
+		$this->registerService(IMimeTypeDetector::class, function (ContainerInterface $c) {
 			return new \OC\Files\Type\Detection(
-				$c->getURLGenerator(),
-				$c->getLogger(),
+				$c->get(IURLGenerator::class),
+				$c->get(ILogger::class),
 				\OC::$configDir,
 				\OC::$SERVERROOT . '/resources/config/'
 			);
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('MimeTypeDetector', IMimeTypeDetector::class);
 
-		$this->registerService(IMimeTypeLoader::class, function (Server $c) {
-			return new \OC\Files\Type\Loader(
-				$c->getDatabaseConnection()
-			);
-		});
+		$this->registerAlias(IMimeTypeLoader::class, Loader::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('MimeTypeLoader', IMimeTypeLoader::class);
 		$this->registerService(BundleFetcher::class, function () {
 			return new BundleFetcher($this->getL10N('lib'));
 		});
-		$this->registerService(\OCP\Notification\IManager::class, function (Server $c) {
-			return new Manager(
-				$c->query(IValidator::class),
-				$c->getLogger()
-			);
-		});
+		$this->registerAlias(\OCP\Notification\IManager::class, Manager::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('NotificationManager', \OCP\Notification\IManager::class);
 
-		$this->registerService(CapabilitiesManager::class, function (Server $c) {
-			$manager = new CapabilitiesManager($c->getLogger());
+		$this->registerService(CapabilitiesManager::class, function (ContainerInterface $c) {
+			$manager = new CapabilitiesManager($c->get(ILogger::class));
 			$manager->registerCapability(function () use ($c) {
-				return new \OC\OCS\CoreCapabilities($c->getConfig());
+				return new \OC\OCS\CoreCapabilities($c->get(\OCP\IConfig::class));
 			});
 			$manager->registerCapability(function () use ($c) {
-				return $c->query(\OC\Security\Bruteforce\Capabilities::class);
+				return $c->get(\OC\Security\Bruteforce\Capabilities::class);
 			});
 			return $manager;
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('CapabilitiesManager', CapabilitiesManager::class);
 
 		$this->registerService(ICommentsManager::class, function (Server $c) {
-			$config = $c->getConfig();
+			$config = $c->get(\OCP\IConfig::class);
 			$factoryClass = $config->getSystemValue('comments.managerFactory', CommentsManagerFactory::class);
 			/** @var \OCP\Comments\ICommentsManagerFactory $factory */
 			$factory = new $factoryClass($this);
 			$manager = $factory->getManager();
 
 			$manager->registerDisplayNameResolver('user', function ($id) use ($c) {
-				$manager = $c->getUserManager();
+				$manager = $c->get(IUserManager::class);
 				$user = $manager->get($id);
 				if (is_null($user)) {
 					$l = $c->getL10N('core');
@@ -1117,8 +1092,10 @@ class Server extends ServerContainer implements IServerContainer {
 
 			return $manager;
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('CommentsManager', ICommentsManager::class);
 
+		$this->registerAlias(\OC_Defaults::class, 'ThemingDefaults');
 		$this->registerService('ThemingDefaults', function (Server $c) {
 			/*
 			 * Dark magic for autoloader.
@@ -1133,47 +1110,42 @@ class Server extends ServerContainer implements IServerContainer {
 				$classExists = false;
 			}
 
-			if ($classExists && $c->getConfig()->getSystemValue('installed', false) && $c->getAppManager()->isInstalled('theming') && $c->getTrustedDomainHelper()->isTrustedDomain($c->getRequest()->getInsecureServerHost())) {
+			if ($classExists && $c->get(\OCP\IConfig::class)->getSystemValue('installed', false) && $c->get(IAppManager::class)->isInstalled('theming') && $c->getTrustedDomainHelper()->isTrustedDomain($c->getRequest()->getInsecureServerHost())) {
 				return new ThemingDefaults(
-					$c->getConfig(),
+					$c->get(\OCP\IConfig::class),
 					$c->getL10N('theming'),
-					$c->getURLGenerator(),
-					$c->getMemCacheFactory(),
-					new Util($c->getConfig(), $this->getAppManager(), $c->getAppDataDir('theming')),
-					new ImageManager($c->getConfig(), $c->getAppDataDir('theming'), $c->getURLGenerator(), $this->getMemCacheFactory(), $this->getLogger()),
-					$c->getAppManager(),
-					$c->getNavigationManager()
+					$c->get(IURLGenerator::class),
+					$c->get(ICacheFactory::class),
+					new Util($c->get(\OCP\IConfig::class), $this->get(IAppManager::class), $c->getAppDataDir('theming')),
+					new ImageManager(
+						$c->get(\OCP\IConfig::class),
+						$c->getAppDataDir('theming'),
+						$c->get(IURLGenerator::class),
+						$this->get(ICacheFactory::class),
+						$this->get(ILogger::class),
+						$this->get(ITempManager::class)
+					),
+					$c->get(IAppManager::class),
+					$c->get(INavigationManager::class)
 				);
 			}
 			return new \OC_Defaults();
 		});
-		$this->registerService(SCSSCacher::class, function (Server $c) {
-			return new SCSSCacher(
-				$c->getLogger(),
-				$c->query(\OC\Files\AppData\Factory::class),
-				$c->getURLGenerator(),
-				$c->getConfig(),
-				$c->getThemingDefaults(),
-				\OC::$SERVERROOT,
-				$this->getMemCacheFactory(),
-				$c->query(IconsCacher::class),
-				new TimeFactory()
-			);
-		});
 		$this->registerService(JSCombiner::class, function (Server $c) {
 			return new JSCombiner(
 				$c->getAppDataDir('js'),
-				$c->getURLGenerator(),
-				$this->getMemCacheFactory(),
-				$c->getSystemConfig(),
-				$c->getLogger()
+				$c->get(IURLGenerator::class),
+				$this->get(ICacheFactory::class),
+				$c->get(SystemConfig::class),
+				$c->get(ILogger::class)
 			);
 		});
 		$this->registerAlias(\OCP\EventDispatcher\IEventDispatcher::class, \OC\EventDispatcher\EventDispatcher::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('EventDispatcher', \OC\EventDispatcher\SymfonyAdapter::class);
 		$this->registerAlias(EventDispatcherInterface::class, \OC\EventDispatcher\SymfonyAdapter::class);
 
-		$this->registerService('CryptoWrapper', function (Server $c) {
+		$this->registerService('CryptoWrapper', function (ContainerInterface $c) {
 			// FIXME: Instantiiated here due to cyclic dependency
 			$request = new Request(
 				[
@@ -1187,66 +1159,54 @@ class Server extends ServerContainer implements IServerContainer {
 						? $_SERVER['REQUEST_METHOD']
 						: null,
 				],
-				$c->getSecureRandom(),
-				$c->getConfig()
+				$c->get(ISecureRandom::class),
+				$c->get(\OCP\IConfig::class)
 			);
 
 			return new CryptoWrapper(
-				$c->getConfig(),
-				$c->getCrypto(),
-				$c->getSecureRandom(),
+				$c->get(\OCP\IConfig::class),
+				$c->get(ICrypto::class),
+				$c->get(ISecureRandom::class),
 				$request
 			);
 		});
-		$this->registerService(CsrfTokenManager::class, function (Server $c) {
-			$tokenGenerator = new CsrfTokenGenerator($c->getSecureRandom());
-
-			return new CsrfTokenManager(
-				$tokenGenerator,
-				$c->query(SessionStorage::class)
-			);
-		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('CsrfTokenManager', CsrfTokenManager::class);
-		$this->registerService(SessionStorage::class, function (Server $c) {
-			return new SessionStorage($c->getSession());
+		$this->registerService(SessionStorage::class, function (ContainerInterface $c) {
+			return new SessionStorage($c->get(ISession::class));
 		});
 		$this->registerAlias(\OCP\Security\IContentSecurityPolicyManager::class, ContentSecurityPolicyManager::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('ContentSecurityPolicyManager', ContentSecurityPolicyManager::class);
 
-		$this->registerService('ContentSecurityPolicyNonceManager', function (Server $c) {
-			return new ContentSecurityPolicyNonceManager(
-				$c->getCsrfTokenManager(),
-				$c->getRequest()
-			);
-		});
-
-		$this->registerService(\OCP\Share\IManager::class, function (Server $c) {
-			$config = $c->getConfig();
+		$this->registerService(\OCP\Share\IManager::class, function (IServerContainer $c) {
+			$config = $c->get(\OCP\IConfig::class);
 			$factoryClass = $config->getSystemValue('sharing.managerFactory', ProviderFactory::class);
 			/** @var \OCP\Share\IProviderFactory $factory */
 			$factory = new $factoryClass($this);
 
 			$manager = new \OC\Share20\Manager(
-				$c->getLogger(),
-				$c->getConfig(),
-				$c->getSecureRandom(),
-				$c->getHasher(),
-				$c->getMountManager(),
-				$c->getGroupManager(),
+				$c->get(ILogger::class),
+				$c->get(\OCP\IConfig::class),
+				$c->get(ISecureRandom::class),
+				$c->get(IHasher::class),
+				$c->get(IMountManager::class),
+				$c->get(IGroupManager::class),
 				$c->getL10N('lib'),
-				$c->getL10NFactory(),
+				$c->get(IFactory::class),
 				$factory,
-				$c->getUserManager(),
-				$c->getLazyRootFolder(),
-				$c->getEventDispatcher(),
-				$c->getMailer(),
-				$c->getURLGenerator(),
-				$c->getThemingDefaults(),
-				$c->query(IEventDispatcher::class)
+				$c->get(IUserManager::class),
+				$c->get(IRootFolder::class),
+				$c->get(SymfonyAdapter::class),
+				$c->get(IMailer::class),
+				$c->get(IURLGenerator::class),
+				$c->get('ThemingDefaults'),
+				$c->get(IEventDispatcher::class)
 			);
 
 			return $manager;
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('ShareManager', \OCP\Share\IManager::class);
 
 		$this->registerService(\OCP\Collaboration\Collaborators\ISearch::class, function (Server $c) {
@@ -1261,6 +1221,7 @@ class Server extends ServerContainer implements IServerContainer {
 
 			return $instance;
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('CollaboratorSearch', \OCP\Collaboration\Collaborators\ISearch::class);
 		$this->registerAlias(\OCP\Collaboration\Collaborators\ISearchResult::class, \OC\Collaboration\Collaborators\SearchResult::class);
 
@@ -1269,40 +1230,41 @@ class Server extends ServerContainer implements IServerContainer {
 		$this->registerAlias(\OCP\Collaboration\Resources\IProviderManager::class, \OC\Collaboration\Resources\ProviderManager::class);
 		$this->registerAlias(\OCP\Collaboration\Resources\IManager::class, \OC\Collaboration\Resources\Manager::class);
 
-		$this->registerService('SettingsManager', function (Server $c) {
-			$manager = new \OC\Settings\Manager(
-				$c->getLogger(),
-				$c->getL10NFactory(),
-				$c->getURLGenerator(),
-				$c
-			);
-			return $manager;
-		});
-		$this->registerService(\OC\Files\AppData\Factory::class, function (Server $c) {
+		$this->registerDeprecatedAlias('SettingsManager', \OC\Settings\Manager::class);
+		$this->registerAlias(\OCP\Settings\IManager::class, \OC\Settings\Manager::class);
+		$this->registerService(\OC\Files\AppData\Factory::class, function (ContainerInterface $c) {
 			return new \OC\Files\AppData\Factory(
-				$c->getRootFolder(),
-				$c->getSystemConfig()
+				$c->get(IRootFolder::class),
+				$c->get(SystemConfig::class)
 			);
 		});
 
-		$this->registerService('LockdownManager', function (Server $c) {
+		$this->registerService('LockdownManager', function (ContainerInterface $c) {
 			return new LockdownManager(function () use ($c) {
-				return $c->getSession();
+				return $c->get(ISession::class);
 			});
 		});
 
-		$this->registerService(\OCP\OCS\IDiscoveryService::class, function (Server $c) {
-			return new DiscoveryService($c->getMemCacheFactory(), $c->getHTTPClientService());
+		$this->registerService(\OCP\OCS\IDiscoveryService::class, function (ContainerInterface $c) {
+			return new DiscoveryService(
+				$c->get(ICacheFactory::class),
+				$c->get(IClientService::class)
+			);
 		});
 
-		$this->registerService(ICloudIdManager::class, function (Server $c) {
-			return new CloudIdManager();
+		$this->registerService(ICloudIdManager::class, function (ContainerInterface $c) {
+			return new CloudIdManager($c->get(\OCP\Contacts\IManager::class));
 		});
 
 		$this->registerAlias(\OCP\GlobalScale\IConfig::class, \OC\GlobalScale\Config::class);
 
-		$this->registerService(ICloudFederationProviderManager::class, function (Server $c) {
-			return new CloudFederationProviderManager($c->getAppManager(), $c->getHTTPClientService(), $c->getCloudIdManager(), $c->getLogger());
+		$this->registerService(ICloudFederationProviderManager::class, function (ContainerInterface $c) {
+			return new CloudFederationProviderManager(
+				$c->get(IAppManager::class),
+				$c->get(IClientService::class),
+				$c->get(ICloudIdManager::class),
+				$c->get(ILogger::class)
+			);
 		});
 
 		$this->registerService(ICloudFederationFactory::class, function (Server $c) {
@@ -1310,9 +1272,11 @@ class Server extends ServerContainer implements IServerContainer {
 		});
 
 		$this->registerAlias(\OCP\AppFramework\Utility\IControllerMethodReflector::class, \OC\AppFramework\Utility\ControllerMethodReflector::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('ControllerMethodReflector', \OCP\AppFramework\Utility\IControllerMethodReflector::class);
 
 		$this->registerAlias(\OCP\AppFramework\Utility\ITimeFactory::class, \OC\AppFramework\Utility\TimeFactory::class);
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('TimeFactory', \OCP\AppFramework\Utility\ITimeFactory::class);
 
 		$this->registerService(Defaults::class, function (Server $c) {
@@ -1320,52 +1284,43 @@ class Server extends ServerContainer implements IServerContainer {
 				$c->getThemingDefaults()
 			);
 		});
+		/** @deprecated 19.0.0 */
 		$this->registerDeprecatedAlias('Defaults', \OCP\Defaults::class);
 
-		$this->registerService(\OCP\ISession::class, function (SimpleContainer $c) {
-			return $c->query(\OCP\IUserSession::class)->getSession();
-		});
+		$this->registerService(\OCP\ISession::class, function (ContainerInterface $c) {
+			return $c->get(\OCP\IUserSession::class)->getSession();
+		}, false);
 
-		$this->registerService(IShareHelper::class, function (Server $c) {
+		$this->registerService(IShareHelper::class, function (ContainerInterface $c) {
 			return new ShareHelper(
-				$c->query(\OCP\Share\IManager::class)
+				$c->get(\OCP\Share\IManager::class)
 			);
 		});
 
-		$this->registerService(Installer::class, function (Server $c) {
+		$this->registerService(Installer::class, function (ContainerInterface $c) {
 			return new Installer(
-				$c->getAppFetcher(),
-				$c->getHTTPClientService(),
-				$c->getTempManager(),
-				$c->getLogger(),
-				$c->getConfig(),
+				$c->get(AppFetcher::class),
+				$c->get(IClientService::class),
+				$c->get(ITempManager::class),
+				$c->get(ILogger::class),
+				$c->get(\OCP\IConfig::class),
 				\OC::$CLI
 			);
 		});
 
-		$this->registerService(IApiFactory::class, function (Server $c) {
-			return new ApiFactory($c->getHTTPClientService());
+		$this->registerService(IApiFactory::class, function (ContainerInterface $c) {
+			return new ApiFactory($c->get(IClientService::class));
 		});
 
-		$this->registerService(IInstanceFactory::class, function (Server $c) {
-			$memcacheFactory = $c->getMemCacheFactory();
-			return new InstanceFactory($memcacheFactory->createLocal('remoteinstance.'), $c->getHTTPClientService());
+		$this->registerService(IInstanceFactory::class, function (ContainerInterface $c) {
+			$memcacheFactory = $c->get(ICacheFactory::class);
+			return new InstanceFactory($memcacheFactory->createLocal('remoteinstance.'), $c->get(IClientService::class));
 		});
 
-		$this->registerService(IContactsStore::class, function (Server $c) {
-			return new ContactsStore(
-				$c->getContactsManager(),
-				$c->getConfig(),
-				$c->getUserManager(),
-				$c->getGroupManager()
-			);
-		});
 		$this->registerAlias(IContactsStore::class, ContactsStore::class);
 		$this->registerAlias(IAccountManager::class, AccountManager::class);
 
-		$this->registerService(IStorageFactory::class, function () {
-			return new StorageFactory();
-		});
+		$this->registerAlias(IStorageFactory::class, StorageFactory::class);
 
 		$this->registerAlias(IDashboardManager::class, DashboardManager::class);
 		$this->registerAlias(\OCP\Dashboard\IManager::class, \OC\Dashboard\Manager::class);
@@ -1382,40 +1337,40 @@ class Server extends ServerContainer implements IServerContainer {
 
 	public function boot() {
 		/** @var HookConnector $hookConnector */
-		$hookConnector = $this->query(HookConnector::class);
+		$hookConnector = $this->get(HookConnector::class);
 		$hookConnector->viewToNode();
 	}
 
 	/**
 	 * @return \OCP\Calendar\IManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCalendarManager() {
-		return $this->query(\OC\Calendar\Manager::class);
+		return $this->get(\OC\Calendar\Manager::class);
 	}
 
 	/**
 	 * @return \OCP\Calendar\Resource\IManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCalendarResourceBackendManager() {
-		return $this->query(\OC\Calendar\Resource\Manager::class);
+		return $this->get(\OC\Calendar\Resource\Manager::class);
 	}
 
 	/**
 	 * @return \OCP\Calendar\Room\IManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCalendarRoomBackendManager() {
-		return $this->query(\OC\Calendar\Room\Manager::class);
+		return $this->get(\OC\Calendar\Room\Manager::class);
 	}
 
 	private function connectDispatcher() {
-		$dispatcher = $this->getEventDispatcher();
+		$dispatcher = $this->get(SymfonyAdapter::class);
 
 		// Delete avatar on user deletion
 		$dispatcher->addListener('OCP\IUser::preDelete', function (GenericEvent $e) {
-			$logger = $this->getLogger();
+			$logger = $this->get(ILogger::class);
 			$manager = $this->getAvatarManager();
 			/** @var IUser $user */
 			$user = $e->getSubject();
@@ -1453,40 +1408,41 @@ class Server extends ServerContainer implements IServerContainer {
 		});
 
 		/** @var IEventDispatcher $eventDispatched */
-		$eventDispatched = $this->query(IEventDispatcher::class);
+		$eventDispatched = $this->get(IEventDispatcher::class);
 		$eventDispatched->addServiceListener(LoginFailed::class, LoginFailedListener::class);
+		$eventDispatched->addServiceListener(PostLoginEvent::class, UserLoggedInListener::class);
 	}
 
 	/**
 	 * @return \OCP\Contacts\IManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getContactsManager() {
-		return $this->query(\OCP\Contacts\IManager::class);
+		return $this->get(\OCP\Contacts\IManager::class);
 	}
 
 	/**
 	 * @return \OC\Encryption\Manager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getEncryptionManager() {
-		return $this->query(\OCP\Encryption\IManager::class);
+		return $this->get(\OCP\Encryption\IManager::class);
 	}
 
 	/**
 	 * @return \OC\Encryption\File
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getEncryptionFilesHelper() {
-		return $this->query('EncryptionFileHelper');
+		return $this->get(IFile::class);
 	}
 
 	/**
 	 * @return \OCP\Encryption\Keys\IStorage
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getEncryptionKeyStorage() {
-		return $this->query('EncryptionKeyStorage');
+		return $this->get(IStorage::class);
 	}
 
 	/**
@@ -1495,20 +1451,20 @@ class Server extends ServerContainer implements IServerContainer {
 	 * In case the current execution was not initiated by a web request null is returned
 	 *
 	 * @return \OCP\IRequest
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getRequest() {
-		return $this->query(IRequest::class);
+		return $this->get(IRequest::class);
 	}
 
 	/**
 	 * Returns the preview manager which can create preview images for a given file
 	 *
 	 * @return IPreview
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getPreviewManager() {
-		return $this->query(IPreview::class);
+		return $this->get(IPreview::class);
 	}
 
 	/**
@@ -1516,10 +1472,10 @@ class Server extends ServerContainer implements IServerContainer {
 	 *
 	 * @see \OCP\ITagManager::load()
 	 * @return ITagManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getTagManager() {
-		return $this->query(ITagManager::class);
+		return $this->get(ITagManager::class);
 	}
 
 	/**
@@ -1528,10 +1484,10 @@ class Server extends ServerContainer implements IServerContainer {
 	 * @return ISystemTagManager
 	 *
 	 * @since 9.0.0
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getSystemTagManager() {
-		return $this->query(ISystemTagManager::class);
+		return $this->get(ISystemTagManager::class);
 	}
 
 	/**
@@ -1540,30 +1496,30 @@ class Server extends ServerContainer implements IServerContainer {
 	 * @return ISystemTagObjectMapper
 	 *
 	 * @since 9.0.0
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getSystemTagObjectMapper() {
-		return $this->query(ISystemTagObjectMapper::class);
+		return $this->get(ISystemTagObjectMapper::class);
 	}
 
 	/**
 	 * Returns the avatar manager, used for avatar functionality
 	 *
 	 * @return IAvatarManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getAvatarManager() {
-		return $this->query(IAvatarManager::class);
+		return $this->get(IAvatarManager::class);
 	}
 
 	/**
 	 * Returns the root folder of ownCloud's data directory
 	 *
 	 * @return IRootFolder
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getRootFolder() {
-		return $this->query(IRootFolder::class);
+		return $this->get(IRootFolder::class);
 	}
 
 	/**
@@ -1572,9 +1528,10 @@ class Server extends ServerContainer implements IServerContainer {
 	 * is actually used.
 	 *
 	 * @return IRootFolder
+	 * @deprecated 20.0.0
 	 */
 	public function getLazyRootFolder() {
-		return $this->query(IRootFolder::class);
+		return $this->get(IRootFolder::class);
 	}
 
 	/**
@@ -1582,109 +1539,109 @@ class Server extends ServerContainer implements IServerContainer {
 	 *
 	 * @param string $userId user ID
 	 * @return \OCP\Files\Folder|null
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getUserFolder($userId = null) {
 		if ($userId === null) {
-			$user = $this->getUserSession()->getUser();
+			$user = $this->get(IUserSession::class)->getUser();
 			if (!$user) {
 				return null;
 			}
 			$userId = $user->getUID();
 		}
-		$root = $this->getRootFolder();
+		$root = $this->get(IRootFolder::class);
 		return $root->getUserFolder($userId);
 	}
 
 	/**
 	 * @return \OC\User\Manager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getUserManager() {
-		return $this->query(IUserManager::class);
+		return $this->get(IUserManager::class);
 	}
 
 	/**
 	 * @return \OC\Group\Manager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getGroupManager() {
-		return $this->query(IGroupManager::class);
+		return $this->get(IGroupManager::class);
 	}
 
 	/**
 	 * @return \OC\User\Session
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getUserSession() {
-		return $this->query(IUserSession::class);
+		return $this->get(IUserSession::class);
 	}
 
 	/**
 	 * @return \OCP\ISession
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getSession() {
-		return $this->getUserSession()->getSession();
+		return $this->get(IUserSession::class)->getSession();
 	}
 
 	/**
 	 * @param \OCP\ISession $session
 	 */
 	public function setSession(\OCP\ISession $session) {
-		$this->query(SessionStorage::class)->setSession($session);
-		$this->getUserSession()->setSession($session);
-		$this->query(Store::class)->setSession($session);
+		$this->get(SessionStorage::class)->setSession($session);
+		$this->get(IUserSession::class)->setSession($session);
+		$this->get(Store::class)->setSession($session);
 	}
 
 	/**
 	 * @return \OC\Authentication\TwoFactorAuth\Manager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getTwoFactorAuthManager() {
-		return $this->query(\OC\Authentication\TwoFactorAuth\Manager::class);
+		return $this->get(\OC\Authentication\TwoFactorAuth\Manager::class);
 	}
 
 	/**
 	 * @return \OC\NavigationManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getNavigationManager() {
-		return $this->query(INavigationManager::class);
+		return $this->get(INavigationManager::class);
 	}
 
 	/**
 	 * @return \OCP\IConfig
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getConfig() {
-		return $this->query(AllConfig::class);
+		return $this->get(AllConfig::class);
 	}
 
 	/**
 	 * @return \OC\SystemConfig
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getSystemConfig() {
-		return $this->query(SystemConfig::class);
+		return $this->get(SystemConfig::class);
 	}
 
 	/**
 	 * Returns the app config manager
 	 *
 	 * @return IAppConfig
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getAppConfig() {
-		return $this->query(IAppConfig::class);
+		return $this->get(IAppConfig::class);
 	}
 
 	/**
 	 * @return IFactory
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getL10NFactory() {
-		return $this->query(IFactory::class);
+		return $this->get(IFactory::class);
 	}
 
 	/**
@@ -1693,26 +1650,26 @@ class Server extends ServerContainer implements IServerContainer {
 	 * @param string $app appid
 	 * @param string $lang
 	 * @return IL10N
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getL10N($app, $lang = null) {
-		return $this->getL10NFactory()->get($app, $lang);
+		return $this->get(IFactory::class)->get($app, $lang);
 	}
 
 	/**
 	 * @return IURLGenerator
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getURLGenerator() {
-		return $this->query(IURLGenerator::class);
+		return $this->get(IURLGenerator::class);
 	}
 
 	/**
 	 * @return AppFetcher
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getAppFetcher() {
-		return $this->query(AppFetcher::class);
+		return $this->get(AppFetcher::class);
 	}
 
 	/**
@@ -1723,27 +1680,27 @@ class Server extends ServerContainer implements IServerContainer {
 	 * @deprecated 8.1.0 use getMemCacheFactory to obtain a proper cache
 	 */
 	public function getCache() {
-		return $this->query(ICache::class);
+		return $this->get(ICache::class);
 	}
 
 	/**
 	 * Returns an \OCP\CacheFactory instance
 	 *
 	 * @return \OCP\ICacheFactory
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getMemCacheFactory() {
-		return $this->query(Factory::class);
+		return $this->get(ICacheFactory::class);
 	}
 
 	/**
 	 * Returns an \OC\RedisFactory instance
 	 *
 	 * @return \OC\RedisFactory
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getGetRedisFactory() {
-		return $this->query('RedisFactory');
+		return $this->get('RedisFactory');
 	}
 
 
@@ -1751,151 +1708,135 @@ class Server extends ServerContainer implements IServerContainer {
 	 * Returns the current session
 	 *
 	 * @return \OCP\IDBConnection
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getDatabaseConnection() {
-		return $this->query(IDBConnection::class);
+		return $this->get(IDBConnection::class);
 	}
 
 	/**
 	 * Returns the activity manager
 	 *
 	 * @return \OCP\Activity\IManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getActivityManager() {
-		return $this->query(\OCP\Activity\IManager::class);
+		return $this->get(\OCP\Activity\IManager::class);
 	}
 
 	/**
 	 * Returns an job list for controlling background jobs
 	 *
 	 * @return IJobList
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getJobList() {
-		return $this->query(IJobList::class);
+		return $this->get(IJobList::class);
 	}
 
 	/**
 	 * Returns a logger instance
 	 *
 	 * @return ILogger
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getLogger() {
-		return $this->query(ILogger::class);
+		return $this->get(ILogger::class);
 	}
 
 	/**
 	 * @return ILogFactory
 	 * @throws \OCP\AppFramework\QueryException
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getLogFactory() {
-		return $this->query(ILogFactory::class);
+		return $this->get(ILogFactory::class);
 	}
 
 	/**
 	 * Returns a router for generating and matching urls
 	 *
 	 * @return IRouter
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getRouter() {
-		return $this->query(IRouter::class);
+		return $this->get(IRouter::class);
 	}
 
 	/**
 	 * Returns a search instance
 	 *
 	 * @return ISearch
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getSearch() {
-		return $this->query(ISearch::class);
+		return $this->get(ISearch::class);
 	}
 
 	/**
 	 * Returns a SecureRandom instance
 	 *
 	 * @return \OCP\Security\ISecureRandom
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getSecureRandom() {
-		return $this->query(ISecureRandom::class);
+		return $this->get(ISecureRandom::class);
 	}
 
 	/**
 	 * Returns a Crypto instance
 	 *
 	 * @return ICrypto
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCrypto() {
-		return $this->query(ICrypto::class);
+		return $this->get(ICrypto::class);
 	}
 
 	/**
 	 * Returns a Hasher instance
 	 *
 	 * @return IHasher
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getHasher() {
-		return $this->query(IHasher::class);
+		return $this->get(IHasher::class);
 	}
 
 	/**
 	 * Returns a CredentialsManager instance
 	 *
 	 * @return ICredentialsManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCredentialsManager() {
-		return $this->query(ICredentialsManager::class);
+		return $this->get(ICredentialsManager::class);
 	}
 
 	/**
-	 * Get the certificate manager for the user
+	 * Get the certificate manager
 	 *
-	 * @param string $userId (optional) if not specified the current loggedin user is used, use null to get the system certificate manager
-	 * @return \OCP\ICertificateManager | null if $uid is null and no user is logged in
-	 * @deprecated
+	 * @return \OCP\ICertificateManager
 	 */
-	public function getCertificateManager($userId = '') {
-		if ($userId === '') {
-			$userSession = $this->getUserSession();
-			$user = $userSession->getUser();
-			if (is_null($user)) {
-				return null;
-			}
-			$userId = $user->getUID();
-		}
-		return new CertificateManager(
-			$userId,
-			new View(),
-			$this->getConfig(),
-			$this->getLogger(),
-			$this->getSecureRandom()
-		);
+	public function getCertificateManager() {
+		return $this->get(ICertificateManager::class);
 	}
 
 	/**
 	 * Returns an instance of the HTTP client service
 	 *
 	 * @return IClientService
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getHTTPClientService() {
-		return $this->query(IClientService::class);
+		return $this->get(IClientService::class);
 	}
 
 	/**
 	 * Create a new event source
 	 *
 	 * @return \OCP\IEventSource
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function createEventSource() {
 		return new \OC_EventSource();
@@ -1907,10 +1848,10 @@ class Server extends ServerContainer implements IServerContainer {
 	 * The returned logger only logs data when debug mode is enabled
 	 *
 	 * @return IEventLogger
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getEventLogger() {
-		return $this->query(IEventLogger::class);
+		return $this->get(IEventLogger::class);
 	}
 
 	/**
@@ -1919,47 +1860,47 @@ class Server extends ServerContainer implements IServerContainer {
 	 * The returned logger only logs data when debug mode is enabled
 	 *
 	 * @return IQueryLogger
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getQueryLogger() {
-		return $this->query(IQueryLogger::class);
+		return $this->get(IQueryLogger::class);
 	}
 
 	/**
 	 * Get the manager for temporary files and folders
 	 *
 	 * @return \OCP\ITempManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getTempManager() {
-		return $this->query(ITempManager::class);
+		return $this->get(ITempManager::class);
 	}
 
 	/**
 	 * Get the app manager
 	 *
 	 * @return \OCP\App\IAppManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getAppManager() {
-		return $this->query(IAppManager::class);
+		return $this->get(IAppManager::class);
 	}
 
 	/**
 	 * Creates a new mailer
 	 *
 	 * @return IMailer
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getMailer() {
-		return $this->query(IMailer::class);
+		return $this->get(IMailer::class);
 	}
 
 	/**
 	 * Get the webroot
 	 *
 	 * @return string
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getWebRoot() {
 		return $this->webRoot;
@@ -1967,62 +1908,62 @@ class Server extends ServerContainer implements IServerContainer {
 
 	/**
 	 * @return \OC\OCSClient
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getOcsClient() {
-		return $this->query('OcsClient');
+		return $this->get('OcsClient');
 	}
 
 	/**
 	 * @return IDateTimeZone
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getDateTimeZone() {
-		return $this->query(IDateTimeZone::class);
+		return $this->get(IDateTimeZone::class);
 	}
 
 	/**
 	 * @return IDateTimeFormatter
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getDateTimeFormatter() {
-		return $this->query(IDateTimeFormatter::class);
+		return $this->get(IDateTimeFormatter::class);
 	}
 
 	/**
 	 * @return IMountProviderCollection
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getMountProviderCollection() {
-		return $this->query(IMountProviderCollection::class);
+		return $this->get(IMountProviderCollection::class);
 	}
 
 	/**
 	 * Get the IniWrapper
 	 *
 	 * @return IniGetWrapper
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getIniWrapper() {
-		return $this->query('IniWrapper');
+		return $this->get(IniGetWrapper::class);
 	}
 
 	/**
 	 * @return \OCP\Command\IBus
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCommandBus() {
-		return $this->query('AsyncCommandBus');
+		return $this->get(IBus::class);
 	}
 
 	/**
 	 * Get the trusted domain helper
 	 *
 	 * @return TrustedDomainHelper
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getTrustedDomainHelper() {
-		return $this->query('TrustedDomainHelper');
+		return $this->get(TrustedDomainHelper::class);
 	}
 
 	/**
@@ -2030,56 +1971,56 @@ class Server extends ServerContainer implements IServerContainer {
 	 *
 	 * @return ILockingProvider
 	 * @since 8.1.0
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getLockingProvider() {
-		return $this->query(ILockingProvider::class);
+		return $this->get(ILockingProvider::class);
 	}
 
 	/**
 	 * @return IMountManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 **/
 	public function getMountManager() {
-		return $this->query(IMountManager::class);
+		return $this->get(IMountManager::class);
 	}
 
 	/**
 	 * @return IUserMountCache
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getUserMountCache() {
-		return $this->query(IUserMountCache::class);
+		return $this->get(IUserMountCache::class);
 	}
 
 	/**
 	 * Get the MimeTypeDetector
 	 *
 	 * @return IMimeTypeDetector
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getMimeTypeDetector() {
-		return $this->query(IMimeTypeDetector::class);
+		return $this->get(IMimeTypeDetector::class);
 	}
 
 	/**
 	 * Get the MimeTypeLoader
 	 *
 	 * @return IMimeTypeLoader
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getMimeTypeLoader() {
-		return $this->query(IMimeTypeLoader::class);
+		return $this->get(IMimeTypeLoader::class);
 	}
 
 	/**
 	 * Get the manager of all the capabilities
 	 *
 	 * @return CapabilitiesManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCapabilitiesManager() {
-		return $this->query(CapabilitiesManager::class);
+		return $this->get(CapabilitiesManager::class);
 	}
 
 	/**
@@ -2090,7 +2031,7 @@ class Server extends ServerContainer implements IServerContainer {
 	 * @deprecated 18.0.0 use \OCP\EventDispatcher\IEventDispatcher
 	 */
 	public function getEventDispatcher() {
-		return $this->query(\OC\EventDispatcher\SymfonyAdapter::class);
+		return $this->get(\OC\EventDispatcher\SymfonyAdapter::class);
 	}
 
 	/**
@@ -2098,230 +2039,230 @@ class Server extends ServerContainer implements IServerContainer {
 	 *
 	 * @return \OCP\Notification\IManager
 	 * @since 8.2.0
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getNotificationManager() {
-		return $this->query(\OCP\Notification\IManager::class);
+		return $this->get(\OCP\Notification\IManager::class);
 	}
 
 	/**
 	 * @return ICommentsManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCommentsManager() {
-		return $this->query(ICommentsManager::class);
+		return $this->get(ICommentsManager::class);
 	}
 
 	/**
 	 * @return \OCA\Theming\ThemingDefaults
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getThemingDefaults() {
-		return $this->query('ThemingDefaults');
+		return $this->get('ThemingDefaults');
 	}
 
 	/**
 	 * @return \OC\IntegrityCheck\Checker
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getIntegrityCodeChecker() {
-		return $this->query('IntegrityCodeChecker');
+		return $this->get('IntegrityCodeChecker');
 	}
 
 	/**
 	 * @return \OC\Session\CryptoWrapper
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getSessionCryptoWrapper() {
-		return $this->query('CryptoWrapper');
+		return $this->get('CryptoWrapper');
 	}
 
 	/**
 	 * @return CsrfTokenManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCsrfTokenManager() {
-		return $this->query(CsrfTokenManager::class);
+		return $this->get(CsrfTokenManager::class);
 	}
 
 	/**
 	 * @return Throttler
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getBruteForceThrottler() {
-		return $this->query(Throttler::class);
+		return $this->get(Throttler::class);
 	}
 
 	/**
 	 * @return IContentSecurityPolicyManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getContentSecurityPolicyManager() {
-		return $this->query(ContentSecurityPolicyManager::class);
+		return $this->get(ContentSecurityPolicyManager::class);
 	}
 
 	/**
 	 * @return ContentSecurityPolicyNonceManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getContentSecurityPolicyNonceManager() {
-		return $this->query('ContentSecurityPolicyNonceManager');
+		return $this->get(ContentSecurityPolicyNonceManager::class);
 	}
 
 	/**
 	 * Not a public API as of 8.2, wait for 9.0
 	 *
 	 * @return \OCA\Files_External\Service\BackendService
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getStoragesBackendService() {
-		return $this->query(BackendService::class);
+		return $this->get(BackendService::class);
 	}
 
 	/**
 	 * Not a public API as of 8.2, wait for 9.0
 	 *
 	 * @return \OCA\Files_External\Service\GlobalStoragesService
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getGlobalStoragesService() {
-		return $this->query(GlobalStoragesService::class);
+		return $this->get(GlobalStoragesService::class);
 	}
 
 	/**
 	 * Not a public API as of 8.2, wait for 9.0
 	 *
 	 * @return \OCA\Files_External\Service\UserGlobalStoragesService
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getUserGlobalStoragesService() {
-		return $this->query(UserGlobalStoragesService::class);
+		return $this->get(UserGlobalStoragesService::class);
 	}
 
 	/**
 	 * Not a public API as of 8.2, wait for 9.0
 	 *
 	 * @return \OCA\Files_External\Service\UserStoragesService
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getUserStoragesService() {
-		return $this->query(UserStoragesService::class);
+		return $this->get(UserStoragesService::class);
 	}
 
 	/**
 	 * @return \OCP\Share\IManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getShareManager() {
-		return $this->query(\OCP\Share\IManager::class);
+		return $this->get(\OCP\Share\IManager::class);
 	}
 
 	/**
 	 * @return \OCP\Collaboration\Collaborators\ISearch
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCollaboratorSearch() {
-		return $this->query(\OCP\Collaboration\Collaborators\ISearch::class);
+		return $this->get(\OCP\Collaboration\Collaborators\ISearch::class);
 	}
 
 	/**
 	 * @return \OCP\Collaboration\AutoComplete\IManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getAutoCompleteManager() {
-		return $this->query(IManager::class);
+		return $this->get(IManager::class);
 	}
 
 	/**
 	 * Returns the LDAP Provider
 	 *
 	 * @return \OCP\LDAP\ILDAPProvider
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getLDAPProvider() {
-		return $this->query('LDAPProvider');
+		return $this->get('LDAPProvider');
 	}
 
 	/**
 	 * @return \OCP\Settings\IManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getSettingsManager() {
-		return $this->query('SettingsManager');
+		return $this->get(\OC\Settings\Manager::class);
 	}
 
 	/**
 	 * @return \OCP\Files\IAppData
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getAppDataDir($app) {
 		/** @var \OC\Files\AppData\Factory $factory */
-		$factory = $this->query(\OC\Files\AppData\Factory::class);
+		$factory = $this->get(\OC\Files\AppData\Factory::class);
 		return $factory->get($app);
 	}
 
 	/**
 	 * @return \OCP\Lockdown\ILockdownManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getLockdownManager() {
-		return $this->query('LockdownManager');
+		return $this->get('LockdownManager');
 	}
 
 	/**
 	 * @return \OCP\Federation\ICloudIdManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCloudIdManager() {
-		return $this->query(ICloudIdManager::class);
+		return $this->get(ICloudIdManager::class);
 	}
 
 	/**
 	 * @return \OCP\GlobalScale\IConfig
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getGlobalScaleConfig() {
-		return $this->query(IConfig::class);
+		return $this->get(IConfig::class);
 	}
 
 	/**
 	 * @return \OCP\Federation\ICloudFederationProviderManager
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCloudFederationProviderManager() {
-		return $this->query(ICloudFederationProviderManager::class);
+		return $this->get(ICloudFederationProviderManager::class);
 	}
 
 	/**
 	 * @return \OCP\Remote\Api\IApiFactory
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getRemoteApiFactory() {
-		return $this->query(IApiFactory::class);
+		return $this->get(IApiFactory::class);
 	}
 
 	/**
 	 * @return \OCP\Federation\ICloudFederationFactory
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getCloudFederationFactory() {
-		return $this->query(ICloudFederationFactory::class);
+		return $this->get(ICloudFederationFactory::class);
 	}
 
 	/**
 	 * @return \OCP\Remote\IInstanceFactory
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getRemoteInstanceFactory() {
-		return $this->query(IInstanceFactory::class);
+		return $this->get(IInstanceFactory::class);
 	}
 
 	/**
 	 * @return IStorageFactory
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getStorageFactory() {
-		return $this->query(IStorageFactory::class);
+		return $this->get(IStorageFactory::class);
 	}
 
 	/**
@@ -2329,10 +2270,10 @@ class Server extends ServerContainer implements IServerContainer {
 	 *
 	 * @return GeneratorHelper
 	 * @since 17.0.0
-	 * @deprecated
+	 * @deprecated 20.0.0
 	 */
 	public function getGeneratorHelper() {
-		return $this->query(\OC\Preview\GeneratorHelper::class);
+		return $this->get(\OC\Preview\GeneratorHelper::class);
 	}
 
 	private function registerDeprecatedAlias(string $alias, string $target) {
@@ -2340,7 +2281,7 @@ class Server extends ServerContainer implements IServerContainer {
 			try {
 				/** @var ILogger $logger */
 				$logger = $container->get(ILogger::class);
-				$logger->debug('The requested alias "' . $alias . '" is depreacted. Please request "' . $target . '" directly. This alias will be removed in a future Nextcloud version.', ['app' => 'serverDI']);
+				$logger->debug('The requested alias "' . $alias . '" is deprecated. Please request "' . $target . '" directly. This alias will be removed in a future Nextcloud version.', ['app' => 'serverDI']);
 			} catch (ContainerExceptionInterface $e) {
 				// Could not get logger. Continue
 			}

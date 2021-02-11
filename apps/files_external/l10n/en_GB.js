@@ -126,7 +126,6 @@ OC.L10N.register(
     "Click to recheck the configuration" : "Click to recheck the configuration",
     "Add storage" : "Add storage",
     "Advanced settings" : "Advanced settings",
-    "Allow users to mount external storage" : "Allow users to mount external storage",
-    "Saving..." : "Saving..."
+    "Allow users to mount external storage" : "Allow users to mount external storage"
 },
 "nplurals=2; plural=(n != 1);");

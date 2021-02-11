@@ -4,13 +4,14 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -31,6 +32,7 @@
 namespace OC\Files\Node;
 
 use OC\DB\QueryBuilder\Literal;
+use OC\Files\Storage\Wrapper\Jail;
 use OCA\Files_Sharing\SharedStorage;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\Files\Config\ICachedMountInfo;
@@ -188,7 +190,7 @@ class Folder extends Node implements \OCP\Files\Folder {
 			} else {
 				$result = $this->view->touch($fullPath);
 			}
-			if (!$result) {
+			if ($result === false) {
 				throw new NotPermittedException('Could not create path');
 			}
 			$node = new File($this->root, $this->view, $fullPath);
@@ -438,13 +440,33 @@ class Folder extends Node implements \OCP\Files\Folder {
 		$mountMap = array_combine($storageIds, $mounts);
 		$folderMimetype = $mimetypeLoader->getId(FileInfo::MIMETYPE_FOLDER);
 
+		/*
+		 * Construct an array of the storage id with their prefix path
+		 * This helps us to filter in the final query
+		 */
+		$filters = array_map(function (IMountPoint $mount) {
+			$storage = $mount->getStorage();
+
+			$storageId = $storage->getCache()->getNumericStorageId();
+			$prefix = '';
+
+			if ($storage->instanceOfStorage(Jail::class)) {
+				$prefix = $storage->getUnJailedPath('');
+			}
+
+			return [
+				'storageId' => $storageId,
+				'pathPrefix' => $prefix,
+			];
+		}, $mounts);
+
 		// Search in batches of 500 entries
 		$searchLimit = 500;
 		$results = [];
 		$searchResultCount = 0;
 		$count = 0;
 		do {
-			$searchResult = $this->recentSearch($searchLimit, $offset, $storageIds, $folderMimetype);
+			$searchResult = $this->recentSearch($searchLimit, $offset, $folderMimetype, $filters);
 
 			// Exit condition if there are no more results
 			if (count($searchResult) === 0) {
@@ -466,13 +488,36 @@ class Folder extends Node implements \OCP\Files\Folder {
 		return array_slice($results, 0, $limit);
 	}
 
-	private function recentSearch($limit, $offset, $storageIds, $folderMimetype) {
-		$builder = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+	private function recentSearch($limit, $offset, $folderMimetype, $filters) {
+		$dbconn = \OC::$server->getDatabaseConnection();
+		$builder = $dbconn->getQueryBuilder();
 		$query = $builder
 			->select('f.*')
-			->from('filecache', 'f')
-			->andWhere($builder->expr()->in('f.storage', $builder->createNamedParameter($storageIds, IQueryBuilder::PARAM_INT_ARRAY)))
-			->andWhere($builder->expr()->orX(
+			->from('filecache', 'f');
+
+		/*
+		 * Here is where we construct the filtering.
+		 * Note that this is expensive filtering as it is a lot of like queries.
+		 * However the alternative is we do this filtering and parsing later in php with the risk of looping endlessly
+		 */
+		$storageFilters = $builder->expr()->orX();
+		foreach ($filters as $filter) {
+			$storageFilter = $builder->expr()->andX(
+				$builder->expr()->eq('f.storage', $builder->createNamedParameter($filter['storageId']))
+			);
+
+			if ($filter['pathPrefix'] !== '') {
+				$storageFilter->add(
+					$builder->expr()->like('f.path', $builder->createNamedParameter($dbconn->escapeLikeParameter($filter['pathPrefix']) . '/%'))
+				);
+			}
+
+			$storageFilters->add($storageFilter);
+		}
+
+		$query->andWhere($storageFilters);
+
+		$query->andWhere($builder->expr()->orX(
 			// handle non empty folders separate
 				$builder->expr()->neq('f.mimetype', $builder->createNamedParameter($folderMimetype, IQueryBuilder::PARAM_INT)),
 				$builder->expr()->eq('f.size', new Literal(0))
@@ -482,7 +527,12 @@ class Folder extends Node implements \OCP\Files\Folder {
 			->orderBy('f.mtime', 'DESC')
 			->setMaxResults($limit)
 			->setFirstResult($offset);
-		return $query->execute()->fetchAll();
+
+		$result = $query->execute();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
+
+		return $rows;
 	}
 
 	private function recentParse($result, $mountMap, $mimetypeLoader) {

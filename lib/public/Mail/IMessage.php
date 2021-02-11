@@ -30,7 +30,6 @@ namespace OCP\Mail;
 /**
  * Interface IMessage
  *
- * @package OCP\Mail
  * @since 13.0.0
  */
 interface IMessage {

@@ -6,6 +6,7 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Brice Maron <brice@bmaron.net>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Frank Karlitschek <frank@karlitschek.de>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
@@ -42,7 +43,9 @@ namespace OC;
 use Doctrine\DBAL\Exception\TableExistsException;
 use OC\App\AppStore\Bundles\Bundle;
 use OC\App\AppStore\Fetcher\AppFetcher;
+use OC\AppFramework\Bootstrap\Coordinator;
 use OC\Archive\TAR;
+use OC\DB\Connection;
 use OC_App;
 use OC_DB;
 use OC_Helper;
@@ -138,6 +141,9 @@ class Installer {
 
 		// check for required dependencies
 		\OC_App::checkAppDependencies($this->config, $l, $info, $ignoreMax);
+		/** @var Coordinator $coordinator */
+		$coordinator = \OC::$server->get(Coordinator::class);
+		$coordinator->runLazyRegistration($appId);
 		\OC_App::registerAutoloading($appId, $basedir);
 
 		$previousVersion = $this->config->getAppValue($info['id'], 'installed_version', false);
@@ -153,8 +159,8 @@ class Installer {
 				OC_DB::updateDbFromStructure($basedir.'/appinfo/database.xml');
 			}
 		} else {
-			$ms = new \OC\DB\MigrationService($info['id'], \OC::$server->getDatabaseConnection());
-			$ms->migrate();
+			$ms = new \OC\DB\MigrationService($info['id'], \OC::$server->get(Connection::class));
+			$ms->migrate('latest', true);
 		}
 		if ($previousVersion) {
 			OC_App::executeRepairSteps($appId, $info['repair-steps']['post-migration']);
@@ -173,10 +179,10 @@ class Installer {
 		\OC::$server->getConfig()->setAppValue($info['id'], 'enabled', 'no');
 
 		//set remote/public handlers
-		foreach ($info['remote'] as $name=>$path) {
+		foreach ($info['remote'] as $name => $path) {
 			\OC::$server->getConfig()->setAppValue('core', 'remote_'.$name, $info['id'].'/'.$path);
 		}
-		foreach ($info['public'] as $name=>$path) {
+		foreach ($info['public'] as $name => $path) {
 			\OC::$server->getConfig()->setAppValue('core', 'public_'.$name, $info['id'].'/'.$path);
 		}
 
@@ -210,6 +216,18 @@ class Installer {
 	}
 
 	/**
+	 * Split the certificate file in individual certs
+	 *
+	 * @param string $cert
+	 * @return string[]
+	 */
+	private function splitCerts(string $cert): array {
+		preg_match_all('([\-]{3,}[\S\ ]+?[\-]{3,}[\S\s]+?[\-]{3,}[\S\ ]+?[\-]{3,})', $cert, $matches);
+
+		return $matches[0];
+	}
+
+	/**
 	 * Downloads an app and puts it into the app directory
 	 *
 	 * @param string $appId
@@ -225,12 +243,18 @@ class Installer {
 			if ($app['id'] === $appId) {
 				// Load the certificate
 				$certificate = new X509();
-				$certificate->loadCA(file_get_contents(__DIR__ . '/../../resources/codesigning/root.crt'));
+				$rootCrt = file_get_contents(__DIR__ . '/../../resources/codesigning/root.crt');
+				$rootCrts = $this->splitCerts($rootCrt);
+				foreach ($rootCrts as $rootCrt) {
+					$certificate->loadCA($rootCrt);
+				}
 				$loadedCertificate = $certificate->loadX509($app['certificate']);
 
 				// Verify if the certificate has been revoked
 				$crl = new X509();
-				$crl->loadCA(file_get_contents(__DIR__ . '/../../resources/codesigning/root.crt'));
+				foreach ($rootCrts as $rootCrt) {
+					$crl->loadCA($rootCrt);
+				}
 				$crl->loadCRL(file_get_contents(__DIR__ . '/../../resources/codesigning/root.crl'));
 				if ($crl->validateSignature() !== true) {
 					throw new \Exception('Could not validate CRL signature');
@@ -280,7 +304,7 @@ class Installer {
 				$tempFile = $this->tempManager->getTemporaryFile('.tar.gz');
 				$timeout = $this->isCLI ? 0 : 120;
 				$client = $this->clientService->newClient();
-				$client->get($app['releases'][0]['download'], ['save_to' => $tempFile, 'timeout' => $timeout]);
+				$client->get($app['releases'][0]['download'], ['sink' => $tempFile, 'timeout' => $timeout]);
 
 				// Check if the signature actually matches the downloaded content
 				$certificate = openssl_get_publickey($app['certificate']);
@@ -294,12 +318,14 @@ class Installer {
 
 					if ($archive) {
 						if (!$archive->extract($extractDir)) {
-							throw new \Exception(
-								sprintf(
-									'Could not extract app %s',
-									$appId
-								)
-							);
+							$errorMessage = 'Could not extract app ' . $appId;
+
+							$archiveError = $archive->getError();
+							if ($archiveError instanceof \PEAR_Error) {
+								$errorMessage .= ': ' . $archiveError->getMessage();
+							}
+
+							throw new \Exception($errorMessage);
 						}
 						$allFiles = scandir($extractDir);
 						$folders = array_diff($allFiles, ['.', '..']);
@@ -455,7 +481,7 @@ class Installer {
 	 */
 	public function isDownloaded($name) {
 		foreach (\OC::$APPSROOTS as $dir) {
-			$dirToTest  = $dir['path'];
+			$dirToTest = $dir['path'];
 			$dirToTest .= '/';
 			$dirToTest .= $name;
 			$dirToTest .= '/';
@@ -535,7 +561,7 @@ class Installer {
 					if ($filename[0] !== '.' and is_dir($app_dir['path']."/$filename")) {
 						if (file_exists($app_dir['path']."/$filename/appinfo/info.xml")) {
 							if ($config->getAppValue($filename, "installed_version", null) === null) {
-								$info=OC_App::getAppInfo($filename);
+								$info = OC_App::getAppInfo($filename);
 								$enabled = isset($info['default_enable']);
 								if (($enabled || in_array($filename, $appManager->getAlwaysEnabledApps()))
 									  && $config->getAppValue($filename, 'enabled') !== 'no') {
@@ -586,8 +612,8 @@ class Installer {
 				);
 			}
 		} else {
-			$ms = new \OC\DB\MigrationService($app, \OC::$server->getDatabaseConnection());
-			$ms->migrate();
+			$ms = new \OC\DB\MigrationService($app, \OC::$server->get(Connection::class));
+			$ms->migrate('latest', true);
 		}
 
 		//run appinfo/install.php
@@ -609,10 +635,10 @@ class Installer {
 		}
 
 		//set remote/public handlers
-		foreach ($info['remote'] as $name=>$path) {
+		foreach ($info['remote'] as $name => $path) {
 			$config->setAppValue('core', 'remote_'.$name, $app.'/'.$path);
 		}
-		foreach ($info['public'] as $name=>$path) {
+		foreach ($info['public'] as $name => $path) {
 			$config->setAppValue('core', 'public_'.$name, $app.'/'.$path);
 		}
 

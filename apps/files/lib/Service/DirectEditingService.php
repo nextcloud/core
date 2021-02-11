@@ -55,6 +55,10 @@ class DirectEditingService {
 			'creators' => []
 		];
 
+		if (!$this->directEditingManager->isEnabled()) {
+			return $capabilities;
+		}
+
 		/**
 		 * @var string $id
 		 * @var IEditor $editor

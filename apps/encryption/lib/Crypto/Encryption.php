@@ -8,6 +8,7 @@
  * @author Clark Tomlinson <fallen013@gmail.com>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -359,7 +360,7 @@ class Encryption implements IEncryptionModule {
 	 * decrypt data
 	 *
 	 * @param string $data you want to decrypt
-	 * @param int $position
+	 * @param int|string $position
 	 * @return string decrypted data
 	 * @throws DecryptionFailedException
 	 */

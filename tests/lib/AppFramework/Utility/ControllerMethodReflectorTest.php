@@ -189,7 +189,7 @@ class ControllerMethodReflectorTest extends \Test\TestCase {
 	}
 
 
-	public function arguments($arg, $arg2='hi') {
+	public function arguments($arg, $arg2 = 'hi') {
 	}
 	public function testReflectParameters() {
 		$reader = new ControllerMethodReflector();

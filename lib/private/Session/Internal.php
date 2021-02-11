@@ -104,7 +104,7 @@ class Internal extends Session {
 	public function clear() {
 		$this->invoke('session_unset');
 		$this->regenerateId();
-		$this->startSession();
+		$this->startSession(true);
 		$_SESSION = [];
 	}
 
@@ -213,11 +213,7 @@ class Internal extends Session {
 		}
 	}
 
-	private function startSession() {
-		if (PHP_VERSION_ID < 70300) {
-			$this->invoke('session_start');
-		} else {
-			$this->invoke('session_start', [['cookie_samesite' => 'Lax']]);
-		}
+	private function startSession(bool $silence = false) {
+		$this->invoke('session_start', [['cookie_samesite' => 'Lax']], $silence);
 	}
 }

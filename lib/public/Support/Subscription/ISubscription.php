@@ -45,4 +45,11 @@ interface ISubscription {
 	 * @since 17.0.0
 	 */
 	public function hasExtendedSupport(): bool;
+
+	/**
+	 * Indicates if a hard user limit is reached and no new users should be created
+	 *
+	 * @since 21.0.0
+	 */
+	public function isHardUserLimitReached(): bool;
 }

@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2018, Maxence Lange <maxence@artificial-owl.com>
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Maxence Lange <maxence@artificial-owl.com>
  *
  * @license GNU AGPL version 3 or any later version
@@ -47,7 +48,6 @@ use JsonSerializable;
  * @since 15.0.0
  * @deprecated 20.0.0
  *
- * @package OCP\Dashboard\Model
  */
 final class WidgetSetting implements JsonSerializable {
 	public const TYPE_INPUT = 'input';

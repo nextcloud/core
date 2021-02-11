@@ -26,7 +26,6 @@ namespace OCP\Activity;
 /**
  * Interface ISetting
  *
- * @package OCP\Activity
  * @since 11.0.0
  */
 interface ISetting {

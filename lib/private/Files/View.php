@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Ashod Nakashian <ashod.nakashian@collabora.co.uk>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -26,7 +27,7 @@
  * @author Scott Dutton <exussum12@users.noreply.github.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Tanghus <thomas@tanghus.net>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -239,7 +240,7 @@ class View {
 	public function getLocalFile($path) {
 		$parent = substr($path, 0, strrpos($path, '/'));
 		$path = $this->getAbsolutePath($path);
-		list($storage, $internalPath) = Filesystem::resolvePath($path);
+		[$storage, $internalPath] = Filesystem::resolvePath($path);
 		if (Filesystem::isValidPath($parent) and $storage) {
 			return $storage->getLocalFile($internalPath);
 		} else {
@@ -254,7 +255,7 @@ class View {
 	public function getLocalFolder($path) {
 		$parent = substr($path, 0, strrpos($path, '/'));
 		$path = $this->getAbsolutePath($path);
-		list($storage, $internalPath) = Filesystem::resolvePath($path);
+		[$storage, $internalPath] = Filesystem::resolvePath($path);
 		if (Filesystem::isValidPath($parent) and $storage) {
 			return $storage->getLocalFolder($internalPath);
 		} else {
@@ -665,13 +666,19 @@ class View {
 					return false;
 				}
 
-				$this->changeLock($path, ILockingProvider::LOCK_EXCLUSIVE);
+				try {
+					$this->changeLock($path, ILockingProvider::LOCK_EXCLUSIVE);
+				} catch (\Exception $e) {
+					// Release the shared lock before throwing.
+					$this->unlockFile($path, ILockingProvider::LOCK_SHARED);
+					throw $e;
+				}
 
 				/** @var \OC\Files\Storage\Storage $storage */
-				list($storage, $internalPath) = $this->resolvePath($path);
+				[$storage, $internalPath] = $this->resolvePath($path);
 				$target = $storage->fopen($internalPath, 'w');
 				if ($target) {
-					list(, $result) = \OC_Helper::streamCopy($data, $target);
+					[, $result] = \OC_Helper::streamCopy($data, $target);
 					fclose($target);
 					fclose($data);
 
@@ -1089,7 +1096,7 @@ class View {
 					[Filesystem::signal_param_path => $this->getHookPath($path)]
 				);
 			}
-			list($storage, $internalPath) = Filesystem::resolvePath($absolutePath . $postFix);
+			[$storage, $internalPath] = Filesystem::resolvePath($absolutePath . $postFix);
 			if ($storage) {
 				return $storage->hash($type, $internalPath, $raw);
 			}
@@ -1143,7 +1150,7 @@ class View {
 
 			$run = $this->runHooks($hooks, $path);
 			/** @var \OC\Files\Storage\Storage $storage */
-			list($storage, $internalPath) = Filesystem::resolvePath($absolutePath . $postFix);
+			[$storage, $internalPath] = Filesystem::resolvePath($absolutePath . $postFix);
 			if ($run and $storage) {
 				if (in_array('write', $hooks) || in_array('delete', $hooks)) {
 					try {
@@ -1568,7 +1575,7 @@ class View {
 		 * @var \OC\Files\Storage\Storage $storage
 		 * @var string $internalPath
 		 */
-		list($storage, $internalPath) = Filesystem::resolvePath($path);
+		[$storage, $internalPath] = Filesystem::resolvePath($path);
 		if ($storage) {
 			$cache = $storage->getCache($path);
 
@@ -1705,7 +1712,7 @@ class View {
 		 * @var Storage\Storage $storage
 		 * @var string $internalPath
 		 */
-		list($storage, $internalPath) = $this->resolvePath($path);
+		[$storage, $internalPath] = $this->resolvePath($path);
 		if ($storage) {
 			return $storage->getETag($internalPath);
 		} else {
@@ -1719,10 +1726,11 @@ class View {
 	 * Note that the resulting path is not guarantied to be unique for the id, multiple paths can point to the same file
 	 *
 	 * @param int $id
-	 * @throws NotFoundException
+	 * @param int|null $storageId
 	 * @return string
+	 * @throws NotFoundException
 	 */
-	public function getPath($id) {
+	public function getPath($id, int $storageId = null) {
 		$id = (int)$id;
 		$manager = Filesystem::getMountManager();
 		$mounts = $manager->findIn($this->fakeRoot);
@@ -1736,6 +1744,12 @@ class View {
 		usort($mounts, function (IMountPoint $a, IMountPoint $b) {
 			return $a instanceof SharedMount && (!$b instanceof SharedMount) ? 1 : -1;
 		});
+
+		if (!is_null($storageId)) {
+			$mounts = array_filter($mounts, function (IMountPoint $mount) use ($storageId) {
+				return $mount->getNumericStorageId() === $storageId;
+			});
+		}
 
 		foreach ($mounts as $mount) {
 			/**
@@ -1844,7 +1858,7 @@ class View {
 	public function verifyPath($path, $fileName) {
 		try {
 			/** @type \OCP\Files\Storage $storage */
-			list($storage, $internalPath) = $this->resolvePath($path);
+			[$storage, $internalPath] = $this->resolvePath($path);
 			$storage->verifyPath($internalPath, $fileName);
 		} catch (ReservedWordException $ex) {
 			$l = \OC::$server->getL10N('lib');

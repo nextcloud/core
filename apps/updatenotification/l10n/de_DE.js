@@ -23,12 +23,12 @@ OC.L10N.register(
     "A non-default update server is in use to be checked for updates:" : "Es wird ein Nicht-Standard-Aktualisierungsserver zum Prüfen auf Aktualisierungen verwendet:",
     "Update channel:" : "Update-Kanal:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Es kann immer auf eine neuere Version aktualisiert werden. Jedoch kann kein Downgrade auf eine stabilere Version erfolgen. ",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Nach Veröffentlichung einer neuen Version kann es einige Zeit dauern bis diese hier erscheint. Die neuen Versionen verteilen sich beim Ausrollen im Laufe der Zeit auf die Benutzer. Manchmal werden Versionen übersprungen, wenn Probleme gefunden wurden.",
     "Notify members of the following groups about available updates:" : "Informieren Sie die Mitglieder der folgenden Gruppen über verfügbare Updates:",
     "Only notification for app updates are available." : "Benachrichtigungen sind nur für Aktualisierungen von Apps verfügbar.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "Der gewählte Aktualisierungskanal macht dedizierte Benachrichtigungen für Server Aktualisierungen obsolet.",
     "The selected update channel does not support updates of the server." : "Der gewählte Aktualisierungskanal unterstützt keine Aktualisierungen für Server.",
     "A new version is available: <strong>{newVersionString}</strong>" : "Eine neue Version ist verfügbar: <strong>{newVersionString}</strong>",
+    "Note that after a new release the update only shows up after the first minor release or later. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found. Learn more about updates and release channels at {link}" : "Beachten Sie, dass die Aktualisierung nach einer neuen Version erst nach der ersten Unterversion (minor release) oder später angezeigt wird. Wir stellen unseren Benutzern im Laufe der Zeit neue Versionen zur Verfügung und überspringen manchmal eine Version, wenn Probleme auftreten. Weitere Informationen zu Aktualisierungen und Release-Kanälen finden Sie unter {link}",
     "Checked on {lastCheckedDate}" : "Geprüft am {lastCheckedDate}",
     "Checking apps for compatible updates" : "Es werden alle Apps auf kompatible Aktualisierungen geprüft",
     "Please make sure your config.php does not set <samp>appstoreenabled</samp> to false." : "Bitte stellen Sie sicher, dass in der \"config.php\"-Datei die Variable <samp>appstoreenabled</samp>nicht auf \"false\" steht.",
@@ -41,6 +41,7 @@ OC.L10N.register(
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "Die aktuellste stabile Version. Diese ist für den regelmäßigen Gebrauch geeignet und wird immer auf die letzte Hauptversion aktualisiert.",
     "Beta" : "Beta",
     "A pre-release version only for testing new features, not for production environments." : "Eine Vorabversion, die einzig zum Testen neuer Funktionen dient, nicht aber für den Einsatz in Produktivumgebungen geeignet ist.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["Für <strong>%n</strong> App steht keine Aktualisierung für diese Version zur Verfügung","Für <strong>%n</strong> Apps stehen keine Aktualisierungen für diese Version zur Verfügung"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["Für <strong>%n</strong> App steht keine Aktualisierung für diese Version zur Verfügung","Für <strong>%n</strong> Apps stehen keine Aktualisierungen für diese Version zur Verfügung"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Nach Veröffentlichung einer neuen Version kann es einige Zeit dauern bis diese hier erscheint. Die neuen Versionen verteilen sich beim Ausrollen im Laufe der Zeit auf die Benutzer. Manchmal werden Versionen übersprungen, wenn Probleme gefunden wurden."
 },
 "nplurals=2; plural=(n != 1);");

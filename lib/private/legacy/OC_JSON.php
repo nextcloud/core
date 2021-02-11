@@ -10,7 +10,7 @@
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Tanghus <thomas@tanghus.net>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -99,6 +99,7 @@ class OC_JSON {
 	 * Send json error msg
 	 * @deprecated Use a AppFramework JSONResponse instead
 	 * @suppress PhanDeprecatedFunction
+	 * @psalm-taint-escape html
 	 */
 	public static function error($data = []) {
 		$data['status'] = 'error';
@@ -110,6 +111,7 @@ class OC_JSON {
 	 * Send json success msg
 	 * @deprecated Use a AppFramework JSONResponse instead
 	 * @suppress PhanDeprecatedFunction
+	 * @psalm-taint-escape html
 	 */
 	public static function success($data = []) {
 		$data['status'] = 'success';

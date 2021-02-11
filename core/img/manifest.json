@@ -4,7 +4,7 @@
 	"icons": [{
 		"src": "favicon-touch.png",
 		"type": "image/png",
-		"sizes": "128x128"
+		"sizes": "180x180"
 	}, {
 		"src": "favicon-mask.svg",
 		"type": "image/svg+xml",

@@ -54,7 +54,7 @@ class JSONResponse extends Response {
 	 * @param int $statusCode the Http status code, defaults to 200
 	 * @since 6.0.0
 	 */
-	public function __construct($data=[], $statusCode=Http::STATUS_OK) {
+	public function __construct($data = [], $statusCode = Http::STATUS_OK) {
 		parent::__construct();
 
 		$this->data = $data;

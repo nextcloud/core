@@ -21,6 +21,7 @@ class ComposerStaticInitCloudFederationAPI
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\CloudFederationAPI\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
         'OCA\\CloudFederationAPI\\Capabilities' => __DIR__ . '/..' . '/../lib/Capabilities.php',
         'OCA\\CloudFederationAPI\\Config' => __DIR__ . '/..' . '/../lib/Config.php',

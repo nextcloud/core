@@ -63,7 +63,7 @@ class CreateJs extends Command implements CompletionAwareInterface {
 		}
 		$languages = $lang;
 		if (empty($lang)) {
-			$languages= $this->getAllLanguages($path);
+			$languages = $this->getAllLanguages($path);
 		}
 
 		foreach ($languages as $lang) {
@@ -84,7 +84,7 @@ class CreateJs extends Command implements CompletionAwareInterface {
 			if ($fileInfo->getExtension() !== 'php') {
 				continue;
 			}
-			$result[]= substr($fileInfo->getBasename(), 0, -4);
+			$result[] = substr($fileInfo->getBasename(), 0, -4);
 		}
 
 		return $result;

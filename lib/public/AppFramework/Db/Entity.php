@@ -110,7 +110,12 @@ abstract class Entity {
 
 			// if type definition exists, cast to correct type
 			if ($args[0] !== null && array_key_exists($name, $this->_fieldTypes)) {
-				settype($args[0], $this->_fieldTypes[$name]);
+				$type = $this->_fieldTypes[$name];
+				if ($type === 'blob') {
+					// (B)LOB is treated as string when we read from the DB
+					$type = 'string';
+				}
+				settype($args[0], $type);
 			}
 			$this->$name = $args[0];
 		} else {

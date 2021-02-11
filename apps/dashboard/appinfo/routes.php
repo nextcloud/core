@@ -28,5 +28,8 @@ return [
 	'routes' => [
 		['name' => 'dashboard#index', 'url' => '/', 'verb' => 'GET'],
 		['name' => 'dashboard#updateLayout', 'url' => '/layout', 'verb' => 'POST'],
+		['name' => 'dashboard#updateStatuses', 'url' => '/statuses', 'verb' => 'POST'],
+		['name' => 'dashboard#getBackground', 'url' => '/background', 'verb' => 'GET'],
+		['name' => 'dashboard#setBackground', 'url' => '/background/{type}', 'verb' => 'POST'],
 	]
 ];

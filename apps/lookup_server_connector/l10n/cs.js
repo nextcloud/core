@@ -1,0 +1,7 @@
+OC.L10N.register(
+    "lookup_server_connector",
+    {
+    "Lookup Server Connector" : "Napojení na lookup server",
+    "Sync public user information with the lookup server" : "Synchronizace veřejných informacích o uživateli s lookup serverem"
+},
+"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

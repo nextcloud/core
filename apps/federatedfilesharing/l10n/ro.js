@@ -23,12 +23,12 @@ OC.L10N.register(
     "Sharing" : "Partajare",
     "Federated Cloud Sharing" : "Partajare federalizata cloud",
     "Open documentation" : "Deschide documentația",
-    "Allow users on this server to send shares to other servers" : "Permite utilizatorilor de pe acest server să transmită partajări către alte servere",
     "Allow users on this server to receive shares from other servers" : "Permite utilizatorilor acestui server să primească partajări de la alte servere",
     "Federated Cloud" : "Cloud federalizat",
     "Your Federated Cloud ID:" : "ID Cloud federalizat:",
     "Add to your website" : "Adaugă la site-ul tău Web",
     "Share with me via Nextcloud" : "Partajează cu mine via Nextcloud",
-    "HTML Code:" : "Cod HTML:"
+    "HTML Code:" : "Cod HTML:",
+    "Allow users on this server to send shares to other servers" : "Permite utilizatorilor de pe acest server să transmită partajări către alte servere"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");

@@ -40,7 +40,6 @@ use OCP\FullTextSearch\Service\ISearchService;
  *
  * @since 15.0.0
  *
- * @package OCP\FullTextSearch
  */
 interface IFullTextSearchManager {
 

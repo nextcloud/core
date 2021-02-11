@@ -60,7 +60,7 @@ OC.L10N.register(
     "Invisible" : "Gizli",
     "Delete" : "Sil",
     "Reset" : "Sıfırla",
-    "No files in here" : "Burada herhangi bir dosya yok",
+    "No files in here" : "Burada henüz bir dosya yok",
     "No entries found in this folder" : "Bu klasörde herhangi bir kayıt bulunamadı",
     "Size" : "Boyut",
     "Modified" : "Değiştirilme"

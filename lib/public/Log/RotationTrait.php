@@ -26,7 +26,6 @@ namespace OCP\Log;
 /**
  * Trait RotationTrait
  *
- * @package OCP\Log
  *
  * @since 14.0.0
  */

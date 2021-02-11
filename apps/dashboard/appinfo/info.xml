@@ -5,7 +5,7 @@
 	<name>Dashboard</name>
 	<summary>Dashboard app</summary>
 	<description><![CDATA[Show something]]></description>
-	<version>7.0.0</version>
+	<version>7.1.0</version>
 	<licence>agpl</licence>
 	<author>Julius Härtl</author>
 	<namespace>Dashboard</namespace>
@@ -16,7 +16,7 @@
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 
 	<dependencies>
-		<nextcloud min-version="20" max-version="20"/>
+		<nextcloud min-version="22" max-version="22"/>
 	</dependencies>
 
 	<navigations>

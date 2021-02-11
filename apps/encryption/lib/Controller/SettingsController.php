@@ -142,11 +142,11 @@ class SettingsController extends Controller {
 		if ($result === true) {
 			$this->session->setStatus(Session::INIT_SUCCESSFUL);
 			return new DataResponse(
-				['message' => (string) $this->l->t('Private key password successfully updated.')]
+				['message' => $this->l->t('Private key password successfully updated.')]
 			);
 		} else {
 			return new DataResponse(
-				['message' => (string) $errorMessage],
+				['message' => $errorMessage],
 				Http::STATUS_BAD_REQUEST
 			);
 		}

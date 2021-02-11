@@ -33,7 +33,6 @@ namespace OCP\OCS;
  *
  * Allows you to discover OCS end-points on a remote server
  *
- * @package OCP\OCS
  * @since 12.0.0
  */
 interface IDiscoveryService {

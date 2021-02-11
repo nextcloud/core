@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Test;
 
+use OC\AppFramework\Bootstrap\Coordinator;
+use OCP\IServerContainer;
 use function json_encode;
 use JsonSerializable;
 use OC\InitialStateService;
@@ -40,7 +42,9 @@ class InitialStateServiceTest extends TestCase {
 		parent::setUp();
 
 		$this->service = new InitialStateService(
-			$this->createMock(ILogger::class)
+			$this->createMock(ILogger::class),
+			$this->createMock(Coordinator::class),
+			$this->createMock(IServerContainer::class)
 		);
 	}
 

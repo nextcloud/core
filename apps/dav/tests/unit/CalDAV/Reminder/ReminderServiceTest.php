@@ -397,7 +397,7 @@ EOD;
 					'is_relative' => false,
 					'notification_date' => 1465344000,
 					'is_repeat_based' => false,
-					'calendardata' =>  self::CALENDAR_DATA,
+					'calendardata' => self::CALENDAR_DATA,
 					'displayname' => 'Displayname 123',
 					'principaluri' => 'principals/users/user001',
 				],

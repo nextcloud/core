@@ -13,11 +13,7 @@ OC.L10N.register(
     "Accessibility" : "Aukið aðgengi",
     "Accessibility options for nextcloud" : "Valkostir fyrir auðveldað aðgengi í Nextcloud",
     "Provides multiple accessibilities options to ease your use of Nextcloud" : "Býður upp á marga valkosti fyrir auðveldað aðgengi í Nextcloud",
-    "High contrast theme" : "Þema með mikil birtuskil",
-    "A high contrast theme to ease your navigation. Visual quality will be reduced but clarity will be increased." : "Þema með mikil birtuskil til að auðvelda vafur. Sjónræn gæði minnka en skýrleiki eykst",
-    "Web Content Accessibility Guidelines" : "Leiðbeiningar fyrir aukið aðgengi vefefnis",
-    "our issue tracker" : "villuskráningin okkar",
-    "our design team" : "hönnunarteymið okkar",
-    "Enable" : "Virkja"
+    "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines}Web Content Accessibility Guidelines{linkend} 2.1 on AA level, with the high contrast theme even on AAA level." : "Aðgengi fyrir alla er okkur mikilvægt. Við fylgjum vefstöðlum oggöngum úr skugga um að allt sé nothæft án þess að nota tölvumús, auk þess að hjálpartæki á borð við skjálesara virki. Við miðum að samhæfni við {guidelines}Web Content Accessibility Guidelines{linkend} 2.1 á stigi AA, og höfum meira að segja háskerpuþemað miðað við stig AAA.",
+    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Ef þú rekst á einhver vandamál, ekki hika við að tilkynna þau á {issuetracker}verkbeiðnakerfinu okkar{linkend}. Og ef þig langar að taka þátt í þessu, gakktu þá til liðs við {designteam}hönnunarteymið okkar{linkend}!"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

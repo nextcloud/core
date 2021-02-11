@@ -4,6 +4,8 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
@@ -76,6 +78,11 @@ class LoginCredentials extends AuthMechanism {
 			// nothing saved in db, try to get it from the session and save it
 			try {
 				$sessionCredentials = $this->credentialsStore->getLoginCredentials();
+
+				if ($sessionCredentials->getUID() !== $user->getUID()) {
+					// Can't take the credentials from the session as they are not the same user
+					throw new CredentialsUnavailableException();
+				}
 
 				$credentials = [
 					'user' => $sessionCredentials->getLoginName(),

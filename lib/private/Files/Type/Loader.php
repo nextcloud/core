@@ -123,7 +123,10 @@ class Loader implements IMimeTypeLoader {
 			->where(
 				$fetch->expr()->eq('mimetype', $fetch->createNamedParameter($mimetype)
 			));
-		$row = $fetch->execute()->fetch();
+
+		$result = $fetch->execute();
+		$row = $result->fetch();
+		$result->closeCursor();
 
 		if (!$row) {
 			throw new \Exception("Failed to get mimetype id for $mimetype after trying to store it");
@@ -141,7 +144,10 @@ class Loader implements IMimeTypeLoader {
 		$qb = $this->dbConnection->getQueryBuilder();
 		$qb->select('id', 'mimetype')
 			->from('mimetypes');
-		$results = $qb->execute()->fetchAll();
+
+		$result = $qb->execute();
+		$results = $result->fetchAll();
+		$result->closeCursor();
 
 		foreach ($results as $row) {
 			$this->mimetypes[$row['id']] = $row['mimetype'];

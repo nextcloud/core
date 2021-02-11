@@ -17,5 +17,5 @@ window.addEventListener('DOMContentLoaded', function(){
 	var text = t('core', '{version} is available. Get more information on how to update.', {version: oc_updateState.updateVersion}),
 		element = $('<a>').attr('href', oc_updateState.updateLink).attr('target','_blank').text(text);
 
-	OC.Notification.showHtml(element, { type: 'error' });
+	OC.Notification.showHtml(element.prop('outerHTML'), { type: 'error' });
 });

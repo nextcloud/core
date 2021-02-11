@@ -19,7 +19,6 @@
     "Could not write file to disk" : "Kunne ikke skrive fil til disk",
     "A PHP extension stopped the file upload" : "A PHP-utvidelse stoppet filopplastingen",
     "No file uploaded" : "Ingen fil lastet opp",
-    "Unsupported image type" : "Filtypen støttes ikke",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "Du bruker et tilpasset tema. Innstillinger i app for tilpasning av tema kan bli overskrevet av disse.",
     "Theming" : "Temavalg",
     "Legal notice" : "Juridisk varsel",

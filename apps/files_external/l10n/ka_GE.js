@@ -120,7 +120,6 @@ OC.L10N.register(
     "Click to recheck the configuration" : "დააწკაპუნეთ კონფიგურაციის ხელახალი შემოწმებისთვის",
     "Add storage" : "საცავის დამატება",
     "Advanced settings" : "დამატებითი პარამეტრები",
-    "Allow users to mount external storage" : "მივცეთ მომხმარებლებს გარე საცავის მონტაჟის უფლება",
-    "Saving..." : "ინახება…"
+    "Allow users to mount external storage" : "მივცეთ მომხმარებლებს გარე საცავის მონტაჟის უფლება"
 },
 "nplurals=2; plural=(n!=1);");

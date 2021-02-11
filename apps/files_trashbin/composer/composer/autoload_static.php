@@ -21,6 +21,7 @@ class ComposerStaticInitFiles_Trashbin
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\Files_Trashbin\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
         'OCA\\Files_Trashbin\\BackgroundJob\\ExpireTrash' => __DIR__ . '/..' . '/../lib/BackgroundJob/ExpireTrash.php',
         'OCA\\Files_Trashbin\\Capabilities' => __DIR__ . '/..' . '/../lib/Capabilities.php',

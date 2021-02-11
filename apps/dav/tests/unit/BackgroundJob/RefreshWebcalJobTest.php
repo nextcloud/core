@@ -74,6 +74,7 @@ class RefreshWebcalJobTest extends TestCase {
 	 */
 	public function testRun(int $lastRun, int $time, bool $process) {
 		$backgroundJob = new RefreshWebcalJob($this->refreshWebcalService, $this->config, $this->logger, $this->timeFactory);
+		$backgroundJob->setId(42);
 
 		$backgroundJob->setArgument([
 			'principaluri' => 'principals/users/testuser',
@@ -99,8 +100,7 @@ class RefreshWebcalJobTest extends TestCase {
 			->with('dav', 'calendarSubscriptionRefreshRate', 'P1W')
 			->willReturn('P1W');
 
-		$this->timeFactory->expects($this->once())
-			->method('getTime')
+		$this->timeFactory->method('getTime')
 			->willReturn($time);
 
 		if ($process) {

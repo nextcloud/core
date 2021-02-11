@@ -5,6 +5,7 @@
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -27,7 +28,6 @@
 namespace OCA\Federation\Tests\BackgroundJob;
 
 use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Ring\Exception\RingException;
 use OCA\Federation\BackgroundJob\GetSharedSecret;
 use OCA\Federation\TrustedServers;
 use OCA\Files_Sharing\Tests\TestCase;
@@ -290,43 +290,6 @@ class GetSharedSecretTest extends TestCase {
 					'connect_timeout' => 3,
 				]
 			)->willThrowException($this->createMock(ConnectException::class));
-
-		$this->trustedServers->expects($this->never())->method('addSharedSecret');
-
-		$this->invokePrivate($this->getSharedSecret, 'run', [$argument]);
-
-		$this->assertTrue($this->invokePrivate($this->getSharedSecret, 'retainJob'));
-	}
-
-	public function testRunRingException() {
-		$target = 'targetURL';
-		$source = 'sourceURL';
-		$token = 'token';
-
-		$argument = ['url' => $target, 'token' => $token];
-
-		$this->timeFactory->method('getTime')
-			->willReturn(42);
-
-		$this->urlGenerator
-			->expects($this->once())
-			->method('getAbsoluteURL')
-			->with('/')
-			->willReturn($source);
-		$this->httpClient->expects($this->once())->method('get')
-			->with(
-				$target . '/ocs/v2.php/apps/federation/api/v1/shared-secret',
-				[
-					'query' =>
-						[
-							'url' => $source,
-							'token' => $token,
-							'format' => 'json',
-						],
-					'timeout' => 3,
-					'connect_timeout' => 3,
-				]
-			)->willThrowException($this->createMock(RingException::class));
 
 		$this->trustedServers->expects($this->never())->method('addSharedSecret');
 

@@ -24,12 +24,12 @@ OC.L10N.register(
     "Sharing" : "שיתוף",
     "Federated Cloud Sharing" : "ענן שיתוף מאוגד",
     "Open documentation" : "תיעוד פתוח",
-    "Allow users on this server to send shares to other servers" : "מאפשר למשתמשים בשרת זה לשלוח שיתופים לשרתים אחרים",
     "Allow users on this server to receive shares from other servers" : "מאפשר למשתמשים בשרת זה לקבל שיתופים משרתים אחרים",
     "Federated Cloud" : "ענן מאוגד",
     "Your Federated Cloud ID:" : "מספר זיהוי הענן המאוגד שלך:",
     "Add to your website" : "הוספה לאתר האינטרנט שלך",
     "Share with me via Nextcloud" : "שיתוף איתי באמצעות Nextcloud",
-    "HTML Code:" : "קוד HTML:"
+    "HTML Code:" : "קוד HTML:",
+    "Allow users on this server to send shares to other servers" : "מאפשר למשתמשים בשרת זה לשלוח שיתופים לשרתים אחרים"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;");

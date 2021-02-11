@@ -38,6 +38,7 @@ use OCP\IUserSession;
 use OCP\SystemTag\ISystemTagManager;
 use OCP\WorkflowEngine\ICheck;
 use OCP\WorkflowEngine\IEntity;
+use OCP\WorkflowEngine\IEntityEvent;
 use OCP\WorkflowEngine\IManager;
 use OCP\WorkflowEngine\IOperation;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -434,5 +435,163 @@ class ManagerTest extends TestCase {
 
 		$this->assertSame(1, $entityTypeCounts[0]);
 		$this->assertSame(1, $entityTypeCounts[1]);
+	}
+
+	public function testValidateOperationOK() {
+		$check = [
+			'class' => ICheck::class,
+			'operator' => 'is',
+			'value' => 'barfoo',
+		];
+
+		$operationMock = $this->createMock(IOperation::class);
+		$entityMock = $this->createMock(IEntity::class);
+		$eventEntityMock = $this->createMock(IEntityEvent::class);
+		$checkMock = $this->createMock(ICheck::class);
+
+		$operationMock->expects($this->once())
+			->method('validateOperation')
+			->with('test', [$check], 'operationData');
+
+		$entityMock->expects($this->any())
+			->method('getEvents')
+			->willReturn([$eventEntityMock]);
+
+		$eventEntityMock->expects($this->any())
+			->method('getEventName')
+			->willReturn('MyEvent');
+
+		$checkMock->expects($this->any())
+			->method('supportedEntities')
+			->willReturn([IEntity::class]);
+		$checkMock->expects($this->atLeastOnce())
+			->method('validateCheck');
+
+		$this->container->expects($this->any())
+			->method('query')
+			->willReturnCallback(function ($className) use ($operationMock, $entityMock, $eventEntityMock, $checkMock) {
+				switch ($className) {
+					case IOperation::class:
+						return $operationMock;
+					case IEntity::class:
+						return $entityMock;
+					case IEntityEvent::class:
+						return $eventEntityMock;
+					case ICheck::class:
+						return $checkMock;
+					default:
+						return $this->createMock($className);
+				}
+			});
+
+		$this->manager->validateOperation(IOperation::class, 'test', [$check], 'operationData', IEntity::class, ['MyEvent']);
+	}
+
+	public function testValidateOperationCheckInputLengthError() {
+		$check = [
+			'class' => ICheck::class,
+			'operator' => 'is',
+			'value' => str_pad('', IManager::MAX_CHECK_VALUE_BYTES + 1, 'FooBar'),
+		];
+
+		$operationMock = $this->createMock(IOperation::class);
+		$entityMock = $this->createMock(IEntity::class);
+		$eventEntityMock = $this->createMock(IEntityEvent::class);
+		$checkMock = $this->createMock(ICheck::class);
+
+		$operationMock->expects($this->once())
+			->method('validateOperation')
+			->with('test', [$check], 'operationData');
+
+		$entityMock->expects($this->any())
+			->method('getEvents')
+			->willReturn([$eventEntityMock]);
+
+		$eventEntityMock->expects($this->any())
+			->method('getEventName')
+			->willReturn('MyEvent');
+
+		$checkMock->expects($this->any())
+			->method('supportedEntities')
+			->willReturn([IEntity::class]);
+		$checkMock->expects($this->never())
+			->method('validateCheck');
+
+		$this->container->expects($this->any())
+			->method('query')
+			->willReturnCallback(function ($className) use ($operationMock, $entityMock, $eventEntityMock, $checkMock) {
+				switch ($className) {
+					case IOperation::class:
+						return $operationMock;
+					case IEntity::class:
+						return $entityMock;
+					case IEntityEvent::class:
+						return $eventEntityMock;
+					case ICheck::class:
+						return $checkMock;
+					default:
+						return $this->createMock($className);
+				}
+			});
+
+		try {
+			$this->manager->validateOperation(IOperation::class, 'test', [$check], 'operationData', IEntity::class, ['MyEvent']);
+		} catch (\UnexpectedValueException $e) {
+			$this->assertSame('The provided check value is too long', $e->getMessage());
+		}
+	}
+
+	public function testValidateOperationDataLengthError() {
+		$check = [
+			'class' => ICheck::class,
+			'operator' => 'is',
+			'value' => 'barfoo',
+		];
+		$operationData = str_pad('', IManager::MAX_OPERATION_VALUE_BYTES + 1, 'FooBar');
+
+		$operationMock = $this->createMock(IOperation::class);
+		$entityMock = $this->createMock(IEntity::class);
+		$eventEntityMock = $this->createMock(IEntityEvent::class);
+		$checkMock = $this->createMock(ICheck::class);
+
+		$operationMock->expects($this->never())
+			->method('validateOperation');
+
+		$entityMock->expects($this->any())
+			->method('getEvents')
+			->willReturn([$eventEntityMock]);
+
+		$eventEntityMock->expects($this->any())
+			->method('getEventName')
+			->willReturn('MyEvent');
+
+		$checkMock->expects($this->any())
+			->method('supportedEntities')
+			->willReturn([IEntity::class]);
+		$checkMock->expects($this->never())
+			->method('validateCheck');
+
+		$this->container->expects($this->any())
+			->method('query')
+			->willReturnCallback(function ($className) use ($operationMock, $entityMock, $eventEntityMock, $checkMock) {
+				switch ($className) {
+					case IOperation::class:
+						return $operationMock;
+					case IEntity::class:
+						return $entityMock;
+					case IEntityEvent::class:
+						return $eventEntityMock;
+					case ICheck::class:
+						return $checkMock;
+					default:
+						return $this->createMock($className);
+				}
+			});
+
+		try {
+			$this->manager->validateOperation(IOperation::class, 'test', [$check], $operationData, IEntity::class, ['MyEvent']);
+		} catch (\UnexpectedValueException $e) {
+			$this->assertSame('The provided operation data is too long', $e->getMessage());
+		}
 	}
 }

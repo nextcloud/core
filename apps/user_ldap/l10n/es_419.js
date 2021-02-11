@@ -181,7 +181,6 @@ OC.L10N.register(
     "UUID Attribute for Groups:" : "Atributo UUID para Grupos:",
     "Username-LDAP User Mapping" : "Mapeo del Usuario al Usuario LDAP",
     "Clear Username-LDAP User Mapping" : "Borrar el mapeo de los Usuarios a los Usuarios-LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Borrar el mapeo de los Nombres de grupo a los grupos-LDAP",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Dejar vacío para el usuario (predeterminado). En caso contrario, especifica un atributo LDAP/AD."
+    "Clear Groupname-LDAP Group Mapping" : "Borrar el mapeo de los Nombres de grupo a los grupos-LDAP"
 },
 "nplurals=2; plural=(n != 1);");

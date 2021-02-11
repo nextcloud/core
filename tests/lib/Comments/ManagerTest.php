@@ -3,13 +3,17 @@
 namespace Test\Comments;
 
 use OC\Comments\Comment;
-use OC\Comments\ManagerFactory;
+use OC\Comments\Manager;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Comments\IComment;
 use OCP\Comments\ICommentsEventHandler;
 use OCP\Comments\ICommentsManager;
 use OCP\Comments\NotFoundException;
+use OCP\IConfig;
 use OCP\IDBConnection;
+use OCP\IInitialStateService;
 use OCP\IUser;
+use Psr\Log\LoggerInterface;
 use Test\TestCase;
 
 /**
@@ -63,8 +67,13 @@ class ManagerTest extends TestCase {
 	}
 
 	protected function getManager() {
-		$factory = new ManagerFactory(\OC::$server);
-		return $factory->getManager();
+		return new Manager(
+			$this->connection,
+			$this->createMock(LoggerInterface::class),
+			$this->createMock(IConfig::class),
+			$this->createMock(ITimeFactory::class),
+			$this->createMock(IInitialStateService::class)
+		);
 	}
 
 

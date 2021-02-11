@@ -1,1 +1,5 @@
-[]
+{
+    "packages": [],
+    "dev": false,
+    "dev-package-names": []
+}

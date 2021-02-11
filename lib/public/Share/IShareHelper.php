@@ -29,7 +29,6 @@ use OCP\Files\Node;
 /**
  * Interface IShareHelper
  *
- * @package OCP\Share
  * @since 12
  */
 interface IShareHelper {

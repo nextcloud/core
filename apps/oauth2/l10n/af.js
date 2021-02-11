@@ -3,12 +3,12 @@ OC.L10N.register(
     {
     "OAuth 2.0" : "OAuth 2.0",
     "OAuth 2.0 clients" : "OAuth 2.0-kliënte",
+    "Add client" : "Voeg kliënt toe",
     "Name" : "Naam",
     "Redirection URI" : "Herverwysings-URI",
+    "Add" : "Voeg toe",
     "Client Identifier" : "Kliëntidentifiseerder",
     "Secret" : "Geheim",
-    "Add client" : "Voeg kliënt toe",
-    "Add" : "Voeg toe",
     "Delete" : "Skrap"
 },
 "nplurals=2; plural=(n != 1);");

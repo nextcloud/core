@@ -4,7 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Joas Schilling <coding@schilljs.com>
- * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -30,6 +30,8 @@ namespace OC\Comments;
 
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\InvalidFieldNameException;
+use OCA\Comments\AppInfo\Application;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Comments\CommentsEvent;
 use OCP\Comments\IComment;
 use OCP\Comments\ICommentsEventHandler;
@@ -38,19 +40,27 @@ use OCP\Comments\NotFoundException;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IConfig;
 use OCP\IDBConnection;
-use OCP\ILogger;
 use OCP\IUser;
+use OCP\IInitialStateService;
+use OCP\Util;
+use Psr\Log\LoggerInterface;
 
 class Manager implements ICommentsManager {
 
 	/** @var  IDBConnection */
 	protected $dbConn;
 
-	/** @var  ILogger */
+	/** @var  LoggerInterface */
 	protected $logger;
 
 	/** @var IConfig */
 	protected $config;
+
+	/** @var ITimeFactory */
+	protected $timeFactory;
+
+	/** @var IInitialStateService */
+	protected $initialStateService;
 
 	/** @var IComment[] */
 	protected $commentsCache = [];
@@ -64,21 +74,16 @@ class Manager implements ICommentsManager {
 	/** @var \Closure[] */
 	protected $displayNameResolvers = [];
 
-	/**
-	 * Manager constructor.
-	 *
-	 * @param IDBConnection $dbConn
-	 * @param ILogger $logger
-	 * @param IConfig $config
-	 */
-	public function __construct(
-		IDBConnection $dbConn,
-		ILogger $logger,
-		IConfig $config
-	) {
+	public function __construct(IDBConnection $dbConn,
+								LoggerInterface $logger,
+								IConfig $config,
+								ITimeFactory $timeFactory,
+								IInitialStateService $initialStateService) {
 		$this->dbConn = $dbConn;
 		$this->logger = $logger;
 		$this->config = $config;
+		$this->timeFactory = $timeFactory;
+		$this->initialStateService = $initialStateService;
 	}
 
 	/**
@@ -396,6 +401,7 @@ class Manager implements ICommentsManager {
 	 * @param string $sortDirection direction of the comments (`asc` or `desc`)
 	 * @param int $limit optional, number of maximum comments to be returned. if
 	 * set to 0, all comments are returned.
+	 * @param bool $includeLastKnown
 	 * @return IComment[]
 	 * @return array
 	 */
@@ -404,7 +410,8 @@ class Manager implements ICommentsManager {
 		string $objectId,
 		int $lastKnownCommentId,
 		string $sortDirection = 'asc',
-		int $limit = 30
+		int $limit = 30,
+		bool $includeLastKnown = false
 	): array {
 		$comments = [];
 
@@ -428,6 +435,11 @@ class Manager implements ICommentsManager {
 		if ($lastKnownComment instanceof IComment) {
 			$lastKnownCommentDateTime = $lastKnownComment->getCreationDateTime();
 			if ($sortDirection === 'desc') {
+				if ($includeLastKnown) {
+					$idComparison = $query->expr()->lte('id', $query->createNamedParameter($lastKnownCommentId));
+				} else {
+					$idComparison = $query->expr()->lt('id', $query->createNamedParameter($lastKnownCommentId));
+				}
 				$query->andWhere(
 					$query->expr()->orX(
 						$query->expr()->lt(
@@ -441,11 +453,16 @@ class Manager implements ICommentsManager {
 								$query->createNamedParameter($lastKnownCommentDateTime, IQueryBuilder::PARAM_DATE),
 								IQueryBuilder::PARAM_DATE
 							),
-							$query->expr()->lt('id', $query->createNamedParameter($lastKnownCommentId))
+							$idComparison
 						)
 					)
 				);
 			} else {
+				if ($includeLastKnown) {
+					$idComparison = $query->expr()->gte('id', $query->createNamedParameter($lastKnownCommentId));
+				} else {
+					$idComparison = $query->expr()->gt('id', $query->createNamedParameter($lastKnownCommentId));
+				}
 				$query->andWhere(
 					$query->expr()->orX(
 						$query->expr()->gt(
@@ -459,7 +476,7 @@ class Manager implements ICommentsManager {
 								$query->createNamedParameter($lastKnownCommentDateTime, IQueryBuilder::PARAM_DATE),
 								IQueryBuilder::PARAM_DATE
 							),
-							$query->expr()->gt('id', $query->createNamedParameter($lastKnownCommentId))
+							$idComparison
 						)
 					)
 				);
@@ -518,6 +535,25 @@ class Manager implements ICommentsManager {
 	 * @return IComment[]
 	 */
 	public function search(string $search, string $objectType, string $objectId, string $verb, int $offset, int $limit = 50): array {
+		$objectIds = [];
+		if ($objectId) {
+			$objectIds[] = $objectIds;
+		}
+		return $this->searchForObjects($search, $objectType, $objectIds, $verb, $offset, $limit);
+	}
+
+	/**
+	 * Search for comments on one or more objects with a given content
+	 *
+	 * @param string $search content to search for
+	 * @param string $objectType Limit the search by object type
+	 * @param array $objectIds Limit the search by object ids
+	 * @param string $verb Limit the verb of the comment
+	 * @param int $offset
+	 * @param int $limit
+	 * @return IComment[]
+	 */
+	public function searchForObjects(string $search, string $objectType, array $objectIds, string $verb, int $offset, int $limit = 50): array {
 		$query = $this->dbConn->getQueryBuilder();
 
 		$query->select('*')
@@ -532,8 +568,8 @@ class Manager implements ICommentsManager {
 		if ($objectType !== '') {
 			$query->andWhere($query->expr()->eq('object_type', $query->createNamedParameter($objectType)));
 		}
-		if ($objectId !== '') {
-			$query->andWhere($query->expr()->eq('object_id', $query->createNamedParameter($objectId)));
+		if (!empty($objectIds)) {
+			$query->andWhere($query->expr()->in('object_id', $query->createNamedParameter($objectIds, IQueryBuilder::PARAM_STR_ARRAY)));
 		}
 		if ($verb !== '') {
 			$query->andWhere($query->expr()->eq('verb', $query->createNamedParameter($verb)));
@@ -589,13 +625,145 @@ class Manager implements ICommentsManager {
 	}
 
 	/**
+	 * @param string $objectType the object type, e.g. 'files'
+	 * @param string[] $objectIds the id of the object
+	 * @param IUser $user
+	 * @param string $verb Limit the verb of the comment - Added in 14.0.0
+	 * @return array Map with object id => # of unread comments
+	 * @psalm-return array<string, int>
+	 * @since 21.0.0
+	 */
+	public function getNumberOfUnreadCommentsForObjects(string $objectType, array $objectIds, IUser $user, $verb = ''): array {
+		$query = $this->dbConn->getQueryBuilder();
+		$query->select('c.object_id', $query->func()->count('c.id', 'num_comments'))
+			->from('comments', 'c')
+			->leftJoin('c', 'comments_read_markers', 'm', $query->expr()->andX(
+				$query->expr()->eq('m.user_id', $query->createNamedParameter($user->getUID())),
+				$query->expr()->eq('c.object_type', 'm.object_type'),
+				$query->expr()->eq('c.object_id', 'm.object_id')
+			))
+			->where($query->expr()->eq('c.object_type', $query->createNamedParameter($objectType)))
+			->andWhere($query->expr()->in('c.object_id', $query->createNamedParameter($objectIds, IQueryBuilder::PARAM_STR_ARRAY)))
+			->andWhere($query->expr()->orX(
+				$query->expr()->gt('c.creation_timestamp', 'm.marker_datetime'),
+				$query->expr()->isNull('m.marker_datetime')
+			))
+			->groupBy('c.object_id');
+
+		if ($verb !== '') {
+			$query->andWhere($query->expr()->eq('c.verb', $query->createNamedParameter($verb)));
+		}
+
+		$result = $query->execute();
+		$unreadComments = array_fill_keys($objectIds, 0);
+		while ($row = $result->fetch()) {
+			$unreadComments[$row['object_id']] = (int) $row['num_comments'];
+		}
+		$result->closeCursor();
+
+		return $unreadComments;
+	}
+
+	/**
+	 * @param string $objectType
+	 * @param string $objectId
+	 * @param int $lastRead
+	 * @param string $verb
+	 * @return int
+	 * @since 21.0.0
+	 */
+	public function getNumberOfCommentsForObjectSinceComment(string $objectType, string $objectId, int $lastRead, string $verb = ''): int {
+		$query = $this->dbConn->getQueryBuilder();
+		$query->select($query->func()->count('id', 'num_messages'))
+			->from('comments')
+			->where($query->expr()->eq('object_type', $query->createNamedParameter($objectType)))
+			->andWhere($query->expr()->eq('object_id', $query->createNamedParameter($objectId)))
+			->andWhere($query->expr()->gt('id', $query->createNamedParameter($lastRead)));
+
+		if ($verb !== '') {
+			$query->andWhere($query->expr()->eq('verb', $query->createNamedParameter($verb)));
+		}
+
+		$result = $query->execute();
+		$data = $result->fetch();
+		$result->closeCursor();
+
+		return (int) ($data['num_messages'] ?? 0);
+	}
+
+	/**
+	 * @param string $objectType
+	 * @param string $objectId
+	 * @param \DateTime $beforeDate
+	 * @param string $verb
+	 * @return int
+	 * @since 21.0.0
+	 */
+	public function getLastCommentBeforeDate(string $objectType, string $objectId, \DateTime $beforeDate, string $verb = ''): int {
+		$query = $this->dbConn->getQueryBuilder();
+		$query->select('id')
+			->from('comments')
+			->where($query->expr()->eq('object_type', $query->createNamedParameter($objectType)))
+			->andWhere($query->expr()->eq('object_id', $query->createNamedParameter($objectId)))
+			->andWhere($query->expr()->lt('creation_timestamp', $query->createNamedParameter($beforeDate, IQueryBuilder::PARAM_DATE)))
+			->orderBy('creation_timestamp', 'desc');
+
+		if ($verb !== '') {
+			$query->andWhere($query->expr()->eq('verb', $query->createNamedParameter($verb)));
+		}
+
+		$result = $query->execute();
+		$data = $result->fetch();
+		$result->closeCursor();
+
+		return (int) ($data['id'] ?? 0);
+	}
+
+	/**
+	 * @param string $objectType
+	 * @param string $objectId
+	 * @param string $verb
+	 * @param string $actorType
+	 * @param string[] $actors
+	 * @return \DateTime[] Map of "string actor" => "\DateTime most recent comment date"
+	 * @psalm-return array<string, \DateTime>
+	 * @since 21.0.0
+	 */
+	public function getLastCommentDateByActor(
+		string $objectType,
+		string $objectId,
+		string $verb,
+		string $actorType,
+		array $actors
+	): array {
+		$lastComments = [];
+
+		$query = $this->dbConn->getQueryBuilder();
+		$query->select('actor_id')
+			->selectAlias($query->createFunction('MAX(' . $query->getColumnName('creation_timestamp') . ')'), 'last_comment')
+			->from('comments')
+			->where($query->expr()->eq('object_type', $query->createNamedParameter($objectType)))
+			->andWhere($query->expr()->eq('object_id', $query->createNamedParameter($objectId)))
+			->andWhere($query->expr()->eq('verb', $query->createNamedParameter($verb)))
+			->andWhere($query->expr()->eq('actor_type', $query->createNamedParameter($actorType)))
+			->andWhere($query->expr()->in('actor_id', $query->createNamedParameter($actors, IQueryBuilder::PARAM_STR_ARRAY)))
+			->groupBy('actor_id');
+
+		$result = $query->execute();
+		while ($row = $result->fetch()) {
+			$lastComments[$row['actor_id']] = $this->timeFactory->getDateTime($row['last_comment']);
+		}
+		$result->closeCursor();
+
+		return $lastComments;
+	}
+
+	/**
 	 * Get the number of unread comments for all files in a folder
 	 *
 	 * @param int $folderId
 	 * @param IUser $user
 	 * @return array [$fileId => $unreadCount]
-	 *
-	 * @suppress SqlInjectionChecker
 	 */
 	public function getNumberOfUnreadCommentsForFolder($folderId, IUser $user) {
 		$qb = $this->dbConn->getQueryBuilder();
@@ -695,7 +863,10 @@ class Manager implements ICommentsManager {
 			$affectedRows = $query->execute();
 			$this->uncache($id);
 		} catch (DriverException $e) {
-			$this->logger->logException($e, ['app' => 'core_comments']);
+			$this->logger->error($e->getMessage(), [
+				'exception' => $e,
+				'app' => 'core_comments',
+			]);
 			return false;
 		}
 
@@ -920,7 +1091,10 @@ class Manager implements ICommentsManager {
 		try {
 			$affectedRows = $query->execute();
 		} catch (DriverException $e) {
-			$this->logger->logException($e, ['app' => 'core_comments']);
+			$this->logger->error($e->getMessage(), [
+				'exception' => $e,
+				'app' => 'core_comments',
+			]);
 			return false;
 		}
 		return ($affectedRows > 0);
@@ -935,7 +1109,6 @@ class Manager implements ICommentsManager {
 	 * @param \DateTime $dateTime
 	 * @param IUser $user
 	 * @since 9.0.0
-	 * @suppress SqlInjectionChecker
 	 */
 	public function setReadMark($objectType, $objectId, \DateTime $dateTime, IUser $user) {
 		$this->checkRoleParameters('Object', $objectType, $objectId);
@@ -1025,7 +1198,10 @@ class Manager implements ICommentsManager {
 		try {
 			$affectedRows = $query->execute();
 		} catch (DriverException $e) {
-			$this->logger->logException($e, ['app' => 'core_comments']);
+			$this->logger->error($e->getMessage(), [
+				'exception' => $e,
+				'app' => 'core_comments',
+			]);
 			return false;
 		}
 		return ($affectedRows > 0);
@@ -1120,5 +1296,15 @@ class Manager implements ICommentsManager {
 		foreach ($entities as $entity) {
 			$entity->handle($event);
 		}
+	}
+
+	/**
+	 * Load the Comments app into the page
+	 *
+	 * @since 21.0.0
+	 */
+	public function load(): void {
+		$this->initialStateService->provideInitialState(Application::APP_ID, 'max-message-length', IComment::MAX_MESSAGE_LENGTH);
+		Util::addScript(Application::APP_ID, 'comments-app');
 	}
 }

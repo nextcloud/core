@@ -4,6 +4,7 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Jacob Neplokh <me@jacobneplokh.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
@@ -103,7 +104,8 @@ class ImageExportPlugin extends ServerPlugin {
 		try {
 			$file = $this->cache->get($addressbook->getResourceId(), $node->getName(), $size, $node);
 			$response->setHeader('Content-Type', $file->getMimeType());
-			$response->setHeader('Content-Disposition', 'attachment');
+			$fileName = $node->getName() . '.' . PhotoCache::ALLOWED_CONTENT_TYPES[$file->getMimeType()];
+			$response->setHeader('Content-Disposition', "attachment; filename=$fileName");
 			$response->setStatus(200);
 
 			$response->setBody($file->getContent());

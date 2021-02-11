@@ -13,7 +13,7 @@
 	<p></p>
 </div>
 
-<table id="filestable" data-preview-x="250" data-preview-y="250">
+<table id="filestable" data-preview-x="250" data-preview-y="250" class="list-container">
 	<thead>
 		<tr>
 			<th id='headerName' class="hidden column-name">

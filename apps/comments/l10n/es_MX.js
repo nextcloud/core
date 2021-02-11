@@ -15,18 +15,19 @@ OC.L10N.register(
     "Files app plugin to add comments to files" : "Un complemento a la aplicación de Archivos para agregar comentarios a los archivos",
     "Edit comment" : "Editar comentario",
     "Delete comment" : "Borrar comentario",
+    "No comments yet, start the conversation!" : "¡Aún no hay comentarios, inicia la conversación!",
+    "Retry" : "Reintentar",
+    "_%n unread comment_::_%n unread comments_" : ["%n comentarios sin leer","%n comentarios sin leer"],
+    "Comment" : "Comentario",
     "New comment …" : "Comentario nuevo ...",
     "Post" : "Publicar",
     "Cancel" : "Cancelar",
     "[Deleted user]" : "[Usuario borrado]",
-    "No comments yet, start the conversation!" : "¡Aún no hay comentarios, inicia la conversación!",
     "More comments …" : "Más comentarios ...",
     "Save" : "Guardar",
     "Allowed characters {count} of {max}" : "Caracteres permitidos {count} de {max}",
     "Error occurred while retrieving comment with ID {id}" : "Se presentó un error al recuperar el comentario con ID {id}",
     "Error occurred while updating comment with id {id}" : "Se presentó un error al actualizar el comentario con Id {id}",
-    "Error occurred while posting comment" : "Se presentó un error al publicar el comentario",
-    "_%n unread comment_::_%n unread comments_" : ["%n comentarios sin leer","%n comentarios sin leer"],
-    "Comment" : "Comentario"
+    "Error occurred while posting comment" : "Se presentó un error al publicar el comentario"
 },
 "nplurals=2; plural=(n != 1);");

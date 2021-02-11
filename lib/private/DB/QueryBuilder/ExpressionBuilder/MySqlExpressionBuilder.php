@@ -24,9 +24,8 @@
 
 namespace OC\DB\QueryBuilder\ExpressionBuilder;
 
-use OC\DB\Connection;
+use OC\DB\ConnectionAdapter;
 use OCP\DB\QueryBuilder\IQueryBuilder;
-use OCP\IDBConnection;
 
 class MySqlExpressionBuilder extends ExpressionBuilder {
 
@@ -34,13 +33,13 @@ class MySqlExpressionBuilder extends ExpressionBuilder {
 	protected $charset;
 
 	/**
-	 * @param \OCP\IDBConnection|Connection $connection
+	 * @param ConnectionAdapter $connection
 	 * @param IQueryBuilder $queryBuilder
 	 */
-	public function __construct(IDBConnection $connection, IQueryBuilder $queryBuilder) {
+	public function __construct(ConnectionAdapter $connection, IQueryBuilder $queryBuilder) {
 		parent::__construct($connection, $queryBuilder);
 
-		$params = $connection->getParams();
+		$params = $connection->getInner()->getParams();
 		$this->charset = isset($params['charset']) ? $params['charset'] : 'utf8';
 	}
 

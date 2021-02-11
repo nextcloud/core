@@ -49,7 +49,7 @@ class ContactsManagerTest extends \Test\TestCase {
 			],
 		];
 
-		$expectedResult =  array_merge($search1, $search2);
+		$expectedResult = array_merge($search1, $search2);
 		return [
 			[
 				$search1,
@@ -91,7 +91,7 @@ class ContactsManagerTest extends \Test\TestCase {
 
 		$this->cm->registerAddressBook($addressbook1);
 		$this->cm->registerAddressBook($addressbook2);
-		$result =  $this->cm->search('');
+		$result = $this->cm->search('');
 		$this->assertEquals($expectedResult, $result);
 	}
 

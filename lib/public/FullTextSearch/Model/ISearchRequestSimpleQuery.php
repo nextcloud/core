@@ -37,7 +37,6 @@ namespace OCP\FullTextSearch\Model;
  *
  * @since 17.0.0
  *
- * @package OCP\FullTextSearch\Model
  */
 interface ISearchRequestSimpleQuery {
 	public const COMPARE_TYPE_TEXT = 1;

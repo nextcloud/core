@@ -5,7 +5,7 @@
 	<name>WebDAV</name>
 	<summary>WebDAV endpoint</summary>
 	<description>WebDAV endpoint</description>
-	<version>1.16.0</version>
+	<version>1.17.1</version>
 	<licence>agpl</licence>
 	<author>owncloud.org</author>
 	<namespace>DAV</namespace>
@@ -16,7 +16,7 @@
 	<category>integration</category>
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 	<dependencies>
-		<nextcloud min-version="20" max-version="20"/>
+		<nextcloud min-version="22" max-version="22"/>
 	</dependencies>
 
 	<background-jobs>
@@ -32,6 +32,7 @@
 			<step>OCA\DAV\Migration\RegenerateBirthdayCalendars</step>
 			<step>OCA\DAV\Migration\CalDAVRemoveEmptyValue</step>
 			<step>OCA\DAV\Migration\BuildCalendarSearchIndex</step>
+			<step>OCA\DAV\Migration\BuildSocialSearchIndex</step>
 			<step>OCA\DAV\Migration\RefreshWebcalJobRegistrar</step>
 			<step>OCA\DAV\Migration\RegisterBuildReminderIndexBackgroundJob</step>
 			<step>OCA\DAV\Migration\RemoveOrphanEventsAndContacts</step>

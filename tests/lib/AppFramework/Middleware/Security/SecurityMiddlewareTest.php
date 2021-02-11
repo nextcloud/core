@@ -223,7 +223,7 @@ class SecurityMiddlewareTest extends \Test\TestCase {
 	 * @param string $method
 	 * @param string $expects
 	 */
-	private function securityCheck($method, $expects, $shouldFail=false) {
+	private function securityCheck($method, $expects, $shouldFail = false) {
 		// admin check requires login
 		if ($expects === 'isAdminUser') {
 			$isLoggedIn = true;

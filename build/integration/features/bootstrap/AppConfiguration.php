@@ -4,6 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Sergio Bertolin <sbertolin@solidgear.es>
@@ -66,6 +67,19 @@ trait AppConfiguration {
 	protected function modifyServerConfig($app, $parameter, $value) {
 		$body = new \Behat\Gherkin\Node\TableNode([['value', $value]]);
 		$this->sendingToWith('post', "/apps/testing/api/v1/app/{$app}/{$parameter}", $body);
+		$this->theHTTPStatusCodeShouldBe('200');
+		if ($this->apiVersion === 1) {
+			$this->theOCSStatusCodeShouldBe('100');
+		}
+	}
+
+	/**
+	 * @param string $app
+	 * @param string $parameter
+	 * @param string $value
+	 */
+	protected function deleteServerConfig($app, $parameter) {
+		$this->sendingTo('DELETE', "/apps/testing/api/v1/app/{$app}/{$parameter}");
 		$this->theHTTPStatusCodeShouldBe('200');
 		if ($this->apiVersion === 1) {
 			$this->theOCSStatusCodeShouldBe('100');

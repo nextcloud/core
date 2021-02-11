@@ -790,9 +790,9 @@ const Dialogs = {
 			$originalDiv.find('.size').text(OC.Util.humanFileSize(original.size))
 			$originalDiv.find('.mtime').text(OC.Util.formatDate(original.mtime))
 			// ie sucks
-			if (replacement.size && replacement.lastModifiedDate) {
+			if (replacement.size && replacement.lastModified) {
 				$replacementDiv.find('.size').text(OC.Util.humanFileSize(replacement.size))
-				$replacementDiv.find('.mtime').text(OC.Util.formatDate(replacement.lastModifiedDate))
+				$replacementDiv.find('.mtime').text(OC.Util.formatDate(replacement.lastModified))
 			}
 			var path = original.directory + '/' + original.name
 			var urlSpec = {
@@ -823,9 +823,9 @@ const Dialogs = {
 
 			// set more recent mtime bold
 			// ie sucks
-			if (replacement.lastModifiedDate && replacement.lastModifiedDate.getTime() > original.mtime) {
+			if (replacement.lastModified > original.mtime) {
 				$replacementDiv.find('.mtime').css('font-weight', 'bold')
-			} else if (replacement.lastModifiedDate && replacement.lastModifiedDate.getTime() < original.mtime) {
+			} else if (replacement.lastModified < original.mtime) {
 				$originalDiv.find('.mtime').css('font-weight', 'bold')
 			} else {
 				// TODO add to same mtime collection?
@@ -930,7 +930,11 @@ const Dialogs = {
 					closeButton: null,
 					close: function() {
 						self._fileexistsshown = false
-						$(this).ocdialog('destroy').remove()
+						try {
+							$(this).ocdialog('destroy').remove()
+						} catch (e) {
+							// ignore
+						}
 					}
 				})
 
@@ -1159,6 +1163,8 @@ const Dialogs = {
 				self.$filePicker.find('.emptycontent').hide()
 				self.$fileListHeader.show()
 			}
+
+			self.$filelist.empty();
 
 			$.each(files, function(idx, entry) {
 				entry.icon = OC.MimeType.getIconUrl(entry.mimetype)

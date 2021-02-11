@@ -22,6 +22,10 @@ class DeprecationCheckTest extends TestCase {
 	 * @param string $fileToVerify
 	 */
 	public function testFindInvalidUsage($expectedErrorToken, $expectedErrorCode, $fileToVerify) {
+		if (PHP_MAJOR_VERSION > 7) {
+			$this->markTestSkipped('Only run on php7');
+		}
+
 		$checker = new CodeChecker(
 			new DeprecationCheck(new EmptyCheck()),
 			false

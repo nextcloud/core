@@ -26,7 +26,6 @@ namespace OCP\DB;
 /**
  * Interface ISchemaWrapper
  *
- * @package OCP\DB
  * @since 13.0.0
  */
 interface ISchemaWrapper {

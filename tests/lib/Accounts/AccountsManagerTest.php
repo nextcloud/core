@@ -25,9 +25,10 @@ use OC\Accounts\Account;
 use OC\Accounts\AccountManager;
 use OCP\Accounts\IAccountManager;
 use OCP\BackgroundJob\IJobList;
-use OCP\ILogger;
+use OCP\IConfig;
 use OCP\IUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Test\TestCase;
@@ -43,6 +44,9 @@ class AccountsManagerTest extends TestCase {
 	/** @var  \OCP\IDBConnection */
 	private $connection;
 
+	/** @var  IConfig|MockObject */
+	private $config;
+
 	/** @var  EventDispatcherInterface|MockObject */
 	private $eventDispatcher;
 
@@ -52,15 +56,16 @@ class AccountsManagerTest extends TestCase {
 	/** @var string accounts table name */
 	private $table = 'accounts';
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	protected function setUp(): void {
 		parent::setUp();
 		$this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
 		$this->connection = \OC::$server->getDatabaseConnection();
+		$this->config = $this->createMock(IConfig::class);
 		$this->jobList = $this->createMock(IJobList::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 	}
 
 	protected function tearDown(): void {
@@ -77,7 +82,13 @@ class AccountsManagerTest extends TestCase {
 	 */
 	public function getInstance($mockedMethods = null) {
 		return $this->getMockBuilder(AccountManager::class)
-			->setConstructorArgs([$this->connection, $this->eventDispatcher, $this->jobList, $this->logger])
+			->setConstructorArgs([
+				$this->connection,
+				$this->config,
+				$this->eventDispatcher,
+				$this->jobList,
+				$this->logger,
+			])
 			->setMethods($mockedMethods)
 			->getMock();
 	}
@@ -187,9 +198,9 @@ class AccountsManagerTest extends TestCase {
 
 	public function testUpdateExistingUser() {
 		$user = $this->getMockBuilder(IUser::class)->getMock();
-		$user->expects($this->once())->method('getUID')->willReturn('uid');
-		$oldData = ['key' => 'value'];
-		$newData = ['newKey' => 'newValue'];
+		$user->expects($this->atLeastOnce())->method('getUID')->willReturn('uid');
+		$oldData = ['key' => ['value' => 'value']];
+		$newData = ['newKey' => ['value' => 'newValue']];
 
 		$accountManager = $this->getInstance();
 		$this->addDummyValuesToTable('uid', $oldData);
@@ -201,10 +212,10 @@ class AccountsManagerTest extends TestCase {
 	public function testInsertNewUser() {
 		$user = $this->getMockBuilder(IUser::class)->getMock();
 		$uid = 'uid';
-		$data = ['key' => 'value'];
+		$data = ['key' => ['value' => 'value']];
 
 		$accountManager = $this->getInstance();
-		$user->expects($this->once())->method('getUID')->willReturn($uid);
+		$user->expects($this->atLeastOnce())->method('getUID')->willReturn($uid);
 		$this->assertNull($this->getDataFromTable($uid));
 		$this->invokePrivate($accountManager, 'insertNewUser', [$user, $data]);
 
@@ -248,7 +259,10 @@ class AccountsManagerTest extends TestCase {
 			->where($query->expr()->eq('uid', $query->createParameter('uid')))
 			->setParameter('uid', $uid);
 		$query->execute();
-		$result = $query->execute()->fetchAll();
+
+		$qResult = $query->execute();
+		$result = $qResult->fetchAll();
+		$qResult->closeCursor();
 
 		if (!empty($result)) {
 			return json_decode($result[0]['data'], true);
@@ -289,5 +303,33 @@ class AccountsManagerTest extends TestCase {
 			->method('getUser')
 			->willReturn($data);
 		$this->assertEquals($expected, $accountManager->getAccount($user));
+	}
+
+	public function dataParsePhoneNumber(): array {
+		return [
+			['0711 / 25 24 28-90', 'DE', '+4971125242890'],
+			['0711 / 25 24 28-90', '', null],
+			['+49 711 / 25 24 28-90', '', '+4971125242890'],
+		];
+	}
+
+	/**
+	 * @dataProvider dataParsePhoneNumber
+	 * @param string $phoneInput
+	 * @param string $defaultRegion
+	 * @param string|null $phoneNumber
+	 */
+	public function testParsePhoneNumber(string $phoneInput, string $defaultRegion, ?string $phoneNumber): void {
+		$this->config->method('getSystemValueString')
+			->willReturn($defaultRegion);
+
+		$instance = $this->getInstance();
+
+		if ($phoneNumber === null) {
+			$this->expectException(\InvalidArgumentException::class);
+			self::invokePrivate($instance, 'parsePhoneNumber', [$phoneInput]);
+		} else {
+			self::assertEquals($phoneNumber, self::invokePrivate($instance, 'parsePhoneNumber', [$phoneInput]));
+		}
 	}
 }

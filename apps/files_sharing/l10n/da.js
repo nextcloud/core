@@ -93,6 +93,7 @@ OC.L10N.register(
     "Share for file {file} expired" : "Deling af {file} udløbet",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "En fil eller mapper delt vie mail eller offentligt link blev <strong>downloaded</strong>",
     "A file or folder was shared from <strong>another server</strong>" : "En fil eller mappe blev delt fra <strong>en anden server</strong>",
+    "Files" : "Filer",
     "A file or folder has been <strong>shared</strong>" : "En fil eller mappe er blevet <strong>delt</strong>",
     "Shared link" : "Delt link",
     "Wrong share ID, share doesn't exist" : "Forkert DelingsID, deling findes ikke",
@@ -176,7 +177,6 @@ OC.L10N.register(
     "Upload files to %s" : "Upload filer til %s",
     "Note" : "Note",
     "Select or drop files" : "Vælg eller slip filer",
-    "Uploaded files:" : "Uploadede filer:",
-    "Uploading files…" : "Uploader filer ..."
+    "Uploaded files:" : "Uploadede filer:"
 },
 "nplurals=2; plural=(n != 1);");

@@ -24,7 +24,6 @@ OC.L10N.register(
     "Could not write file to disk" : "Неможливо записати файл на диск",
     "A PHP extension stopped the file upload" : "Розширення PHP призупинило завантаження файлу",
     "No file uploaded" : "Файл не завантажено",
-    "Unsupported image type" : "Цей тип зображення не підтримується",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "Ви уже використовуєте власну тему. Таким чином налаштування застосунку Оформлення може бути перезаписано.",
     "Theming" : "Оформлення",
     "Legal notice" : "Правові застереження",

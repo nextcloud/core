@@ -1,4 +1,4 @@
-<?php /** @var $l \OCP\IL10N */ ?>
+<?php /** @var \OCP\IL10N $l */ ?>
 <?php
 script('core', 'dist/login');
 ?>

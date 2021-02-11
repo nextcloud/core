@@ -116,7 +116,7 @@ class CacheTest extends \Test\TestCase {
 	public function testFolder($folder) {
 		if (strpos($folder, 'F09F9890')) {
 			// 4 byte UTF doesn't work on mysql
-			$params = \OC::$server->getDatabaseConnection()->getParams();
+			$params = \OC::$server->get(\OC\DB\Connection::class)->getParams();
 			if (\OC::$server->getDatabaseConnection()->getDatabasePlatform() instanceof MySqlPlatform && $params['charset'] !== 'utf8mb4') {
 				$this->markTestSkipped('MySQL doesn\'t support 4 byte UTF-8');
 			}

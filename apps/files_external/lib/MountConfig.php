@@ -20,7 +20,7 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -43,10 +43,7 @@ namespace OCA\Files_External;
 use OCA\Files_External\AppInfo\Application;
 use OCA\Files_External\Config\IConfigHandler;
 use OCA\Files_External\Config\UserContext;
-use OCA\Files_External\Config\UserPlaceholderHandler;
-use OCA\Files_External\Lib\Auth\Builtin;
 use OCA\Files_External\Lib\Backend\Backend;
-use OCA\Files_External\Lib\Backend\LegacyBackend;
 use OCA\Files_External\Lib\StorageConfig;
 use OCA\Files_External\Service\BackendService;
 use OCA\Files_External\Service\GlobalStoragesService;
@@ -72,21 +69,6 @@ class MountConfig {
 
 	/** @var Application */
 	public static $app;
-
-	/**
-	 * @param string $class
-	 * @param array $definition
-	 * @return bool
-	 * @deprecated 8.2.0 use \OCA\Files_External\Service\BackendService::registerBackend()
-	 */
-	public static function registerBackend($class, $definition) {
-		$backendService = self::$app->getContainer()->query(BackendService::class);
-		$auth = self::$app->getContainer()->query(Builtin::class);
-
-		$backendService->registerBackend(new LegacyBackend($class, $definition, $auth));
-
-		return true;
-	}
 
 	/**
 	 * Returns the mount points for the given user.
@@ -151,24 +133,6 @@ class MountConfig {
 	}
 
 	/**
-	 * Get the personal mount points of the current user
-	 *
-	 * @return array
-	 *
-	 * @deprecated 8.2.0 use UserStoragesService::getStorages()
-	 */
-	public static function getPersonalMountPoints() {
-		$mountPoints = [];
-		$service = self::$app->getContainer()->query(UserStoragesService::class);
-
-		foreach ($service->getStorages() as $storage) {
-			$mountPoints[] = self::prepareMountPointEntry($storage, true);
-		}
-
-		return $mountPoints;
-	}
-
-	/**
 	 * Convert a StorageConfig to the legacy mountPoints array format
 	 * There's a lot of extra information in here, to satisfy all of the legacy functions
 	 *
@@ -199,19 +163,6 @@ class MountConfig {
 		$mountEntry['id'] = $storage->getId();
 
 		return $mountEntry;
-	}
-
-	/**
-	 * fill in the correct values for $user
-	 *
-	 * @param string $user user value
-	 * @param string|array $input
-	 * @return string
-	 * @deprecated use self::substitutePlaceholdersInConfig($input)
-	 */
-	public static function setUserVars($user, $input) {
-		$handler = self::$app->getContainer()->query(UserPlaceholderHandler::class);
-		return $handler->handle($input);
 	}
 
 	/**
@@ -344,11 +295,11 @@ class MountConfig {
 	private static function getSingleDependencyMessage(\OCP\IL10N $l, $module, $backend) {
 		switch (strtolower($module)) {
 			case 'curl':
-				return (string)$l->t('The cURL support in PHP is not enabled or installed. Mounting of %s is not possible. Please ask your system administrator to install it.', [$backend]);
+				return $l->t('The cURL support in PHP is not enabled or installed. Mounting of %s is not possible. Please ask your system administrator to install it.', [$backend]);
 			case 'ftp':
-				return (string)$l->t('The FTP support in PHP is not enabled or installed. Mounting of %s is not possible. Please ask your system administrator to install it.', [$backend]);
+				return $l->t('The FTP support in PHP is not enabled or installed. Mounting of %s is not possible. Please ask your system administrator to install it.', [$backend]);
 			default:
-				return (string)$l->t('"%1$s" is not installed. Mounting of %2$s is not possible. Please ask your system administrator to install it.', [$module, $backend]);
+				return $l->t('"%1$s" is not installed. Mounting of %2$s is not possible. Please ask your system administrator to install it.', [$module, $backend]);
 		}
 	}
 

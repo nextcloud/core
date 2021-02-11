@@ -103,7 +103,8 @@ class RemotePlugin implements ISearchPlugin {
 							'value' => [
 								'shareType' => IShare::TYPE_USER,
 								'shareWith' => $remoteUser
-							]
+							],
+							'shareWithDisplayNameUnique' => $contact['EMAIL'] !== null && $contact['EMAIL'] !== '' ? $contact['EMAIL'] : $contact['UID'],
 						];
 					}
 

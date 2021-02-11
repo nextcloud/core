@@ -45,9 +45,8 @@ OC.L10N.register(
     "Invalid backend or authentication mechanism class" : "Netinkama programinio kodo klasė realizuoja prisijungimo mechanizmą",
     "Invalid mount point" : "Neteisingas prijungimo taškas",
     "Objectstore forbidden" : "Objektų saugykla yra neprieinama",
-    "Invalid storage backend \"%s\"" : "Netinkama saugyklos posistemė \"%s\"",
-    "Not permitted to use backend \"%s\"" : "Neleidžiama naudoti posistemės \"%s\"",
-    "Not permitted to use authentication mechanism \"%s\"" : "Neleidžiama naudoti prisijungimo mechanizmo \"%s\"",
+    "Not permitted to use backend \"%s\"" : "Neleidžiama naudoti vidinės pusės „%s“",
+    "Not permitted to use authentication mechanism \"%s\"" : "Neleidžiama naudoti tapatybės nustatymo mechanizmo „%s“",
     "Unsatisfied backend parameters" : " Netinkami posistemės parametrai",
     "Unsatisfied authentication mechanism parameters" : "Netinkami parametrai perduoti į prisijungimo mechanizmą",
     "Insufficient data: %s" : "Trūksta duomenų: %s",
@@ -105,7 +104,6 @@ OC.L10N.register(
     "Timeout" : "Pasibaigė laikas",
     "SMB / CIFS using OC login" : "SMB / CIFS, naudojant OC prisijungimą",
     "Username as share" : "Dalinimosi vardas kaip ir vartotojo vardas",
-    "OpenStack Object Storage" : "Objektų saugykla \"OpenStack\"",
     "Service name" : "Paslaugos vardas",
     "Request timeout (seconds)" : "Prisijungimo laikas (sekundėmis)",
     "The cURL support in PHP is not enabled or installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "cURL palaikymas yra neįjungtas arba neįdiegtas į PHP. %s prijungimas neįmanomas. Paprašykite sistemos administratoriaus pagalbos.",
@@ -125,7 +123,6 @@ OC.L10N.register(
     "Click to recheck the configuration" : "Spustelėkite norėdami iš naujo patikrinti konfigūraciją",
     "Add storage" : "Pridėti saugyklą",
     "Advanced settings" : "Išplėstiniai nustatymai",
-    "Allow users to mount external storage" : "Leisti naudotojams prijungti išorines saugyklas",
-    "Saving..." : "Įrašoma..."
+    "Allow users to mount external storage" : "Leisti naudotojams prijungti išorines saugyklas"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

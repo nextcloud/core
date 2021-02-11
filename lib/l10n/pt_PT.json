@@ -74,7 +74,6 @@
     "Set an admin username." : "Definir um nome de utilizador de administrador",
     "Set an admin password." : "Definia uma palavra-passe de administrador.",
     "Can't create or write into the data directory %s" : "Não é possível criar ou escrever a directoria data %s",
-    "Invalid Federated Cloud ID" : "Id. de Nuvem Federada Inválida",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "Ao partilhar a interface %s deve implementar a interface OCP\\Share_Backend",
     "Sharing backend %s not found" : "Não foi encontrada a partilha da interface %s",
     "Sharing backend for %s not found" : "Não foi encontrada a partilha da interface para %s",
@@ -191,11 +190,6 @@
     "Storage connection timeout. %s" : "Tempo de ligação ao armazenamento expirou. %s",
     "Following databases are supported: %s" : "São suportadas as seguintes bases de dados: %s",
     "Following platforms are supported: %s" : "São suportadas as seguintes plataformas: %s",
-    "Overview" : "Visão Geral",
-    "Basic settings" : "Definições básicas",
-    "Sharing" : "Partilhar",
-    "Security" : "Segurança",
-    "Personal info" : "Informação pessoal",
-    "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s" : "Isto pode ser normalmente resolvido dando ao servidor web direito de escrita para o directório de aplicação ou desactivando a loja de aplicações no ficheiro de configuração. Ver %s"
+    "Invalid Federated Cloud ID" : "Id. de Nuvem Federada Inválida"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

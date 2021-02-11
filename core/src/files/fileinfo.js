@@ -139,6 +139,8 @@
 		 * @type int
 		 */
 		sharePermissions: null,
+
+		quotaAvailableBytes: -1,
 	}
 
 	if (!OC.Files) {

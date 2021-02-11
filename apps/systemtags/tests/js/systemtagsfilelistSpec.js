@@ -149,10 +149,10 @@ describe('OCA.SystemTags.FileList tests', function() {
 			getFilteredFilesSpec = sinon.stub(OC.Files.Client.prototype, 'getFilteredFiles')
 				.returns(requestDeferred.promise());
 		});
-		afterEach(function() { 
+		afterEach(function() {
 			getFilteredFilesSpec.restore();
 		});
-		
+
 		it('renders empty message when no tags were set', function() {
 			fileList = new OCA.SystemTags.FileList(
 				$('#app-content-container'), {
@@ -167,14 +167,14 @@ describe('OCA.SystemTags.FileList tests', function() {
 			expect(getFilteredFilesSpec.notCalled).toEqual(true);
 		});
 
-		it('render files', function() {
+		it('render files', function(done) {
 			fileList = new OCA.SystemTags.FileList(
 				$('#app-content-container'), {
 					systemTagIds: ['123', '456']
 				}
 			);
 
-			fileList.reload();
+			var reloading = fileList.reload();
 
 			expect(getFilteredFilesSpec.calledOnce).toEqual(true);
 			expect(getFilteredFilesSpec.lastCall.args[0].systemTagIds).toEqual(['123', '456']);
@@ -219,8 +219,10 @@ describe('OCA.SystemTags.FileList tests', function() {
 
 			requestDeferred.resolve(207, testFiles);
 
-			expect(fileList.$el.find('#emptycontent').hasClass('hidden')).toEqual(true);
-			expect(fileList.$el.find('tbody>tr').length).toEqual(4);
+			return reloading.then(function() {
+				expect(fileList.$el.find('#emptycontent').hasClass('hidden')).toEqual(true);
+				expect(fileList.$el.find('tbody>tr').length).toEqual(4);
+			}).then(done, done);
 		});
 	});
 });

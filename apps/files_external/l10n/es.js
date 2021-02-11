@@ -134,7 +134,6 @@ OC.L10N.register(
     "Add storage" : "Añadir almacenamiento",
     "Advanced settings" : "Configuración avanzada",
     "Allow users to mount external storage" : "Permitir a los usuarios montar un almacenamiento externo",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Se pueden usar credenciales globales para autenticar con múltiples almacenamientos externos que tengan las mismas credenciales.",
-    "Saving..." : "Guardando..."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Se pueden usar credenciales globales para autenticar con múltiples almacenamientos externos que tengan las mismas credenciales."
 },
 "nplurals=2; plural=(n != 1);");

@@ -94,7 +94,7 @@
 			</p>
 			<p v-else-if="userDisabled"
 				class="warning userDisabledMsg">
-				{{ t('lib', 'User disabled') }}
+				{{ t('core', 'User disabled') }}
 			</p>
 
 			<p v-if="throttleDelay && throttleDelay > 5000"

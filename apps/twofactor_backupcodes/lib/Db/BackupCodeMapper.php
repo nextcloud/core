@@ -30,6 +30,9 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IUser;
 
+/**
+ * @template-extends QBMapper<BackupCode>
+ */
 class BackupCodeMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'twofactor_backupcodes');

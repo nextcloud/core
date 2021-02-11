@@ -33,6 +33,7 @@ class PublicEmitter extends BasicEmitter {
 	 * @param string $scope
 	 * @param string $method
 	 * @param array $arguments optional
+	 * @deprecated 18.0.0 use \OCP\EventDispatcher\IEventDispatcher::dispatchTyped
 	 *
 	 * @suppress PhanAccessMethodProtected
 	 */

@@ -28,7 +28,6 @@
     "Delete file" : "Xóa tệp",
     "Delete folder" : "Xóa thư mục",
     "Disconnect storage" : "Bộ lưu trữ đã ngắt kết nối",
-    "Unshare" : "Bỏ chia sẻ",
     "Could not load info for file \"{file}\"" : "Không thể tải thông tin cho tệp \"{file}\"",
     "Files" : "Tập tin",
     "Details" : "Chi tiết",
@@ -67,8 +66,6 @@
     "\"{name}\" is not an allowed filetype" : "\"{name}\" không phải là loại tập tin được cho phép",
     "Storage of {owner} is full, files can not be updated or synced anymore!" : "Dung lượng của {owner} đã hết, không thể tải hay đồng bộ dữ liệu mới!",
     "Your storage is full, files can not be updated or synced anymore!" : "Your storage is full, files can not be updated or synced anymore!",
-    "Storage of {owner} is almost full ({usedSpacePercent}%)" : "Dung lượng của {owner} gần hết ({usedSpacePercent}%)",
-    "Your storage is almost full ({usedSpacePercent}%)" : "Your storage is almost full ({usedSpacePercent}%)",
     "_matches '{filter}'_::_match '{filter}'_" : ["khớp '{filter}'"],
     "View in folder" : "Xem trong thư mục",
     "Copied!" : "Đã sao chép!",
@@ -109,8 +106,7 @@
     "You moved {oldfile} to {newfile}" : "Bạn đã chuyển {oldfile} tới {newfile}",
     "{user} moved {oldfile} to {newfile}" : "{user} đã chuyển {oldfile} tới {newfile}",
     "A file has been added to or removed from your <strong>favorites</strong>" : "Một tệp đã được thêm hoặc bị xóa khỏi <strong>mục yêu thích của bạn</strong>",
-    "A file or folder has been <strong>deleted</strong>" : "Tệp hoặc thư mục đã bị <strong>xóa</strong>",
-    "A file or folder has been <strong>restored</strong>" : "Tệp hoặc thư mục đã được <strong>khôi phục</strong>",
+    "A file or folder has been <strong>changed</strong>" : "Tệp hoặc thư mục đã được <strong>thay đổi</strong>",
     "All files" : "Tất cả tệp tin",
     "Unlimited" : "Không giới hạn",
     "Upload (max. %s)" : "Tải lên (tối đa. %s)",
@@ -134,6 +130,11 @@
     "Shared with others" : "Chia sẻ với người khác",
     "Shared with you" : "Đã chia sẻ với bạn",
     "Shared by link" : "Được chia sẻ bởi liên kết",
-    "Text file" : "Tập tin văn bản"
+    "Text file" : "Tập tin văn bản",
+    "Unshare" : "Bỏ chia sẻ",
+    "Storage of {owner} is almost full ({usedSpacePercent}%)" : "Dung lượng của {owner} gần hết ({usedSpacePercent}%)",
+    "Your storage is almost full ({usedSpacePercent}%)" : "Your storage is almost full ({usedSpacePercent}%)",
+    "A file or folder has been <strong>deleted</strong>" : "Tệp hoặc thư mục đã bị <strong>xóa</strong>",
+    "A file or folder has been <strong>restored</strong>" : "Tệp hoặc thư mục đã được <strong>khôi phục</strong>"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

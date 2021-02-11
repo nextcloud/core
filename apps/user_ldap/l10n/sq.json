@@ -175,7 +175,6 @@
     "UUID Attribute for Groups:" : "Atribut UUID për Grupe:",
     "Username-LDAP User Mapping" : "Përshoqërim Emër përdoruesi-Përdorues LDAP",
     "Clear Username-LDAP User Mapping" : "Pastro Përshoqërimin Emër përdoruesi-Përdorues LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Pastro Përshoqërimin Emër grupi-Grup LDAP",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Lëreni bosh për emrin e përdoruesit (I Paracaktuar). Ose, përcaktoni një atribut LDAP/AD."
+    "Clear Groupname-LDAP Group Mapping" : "Pastro Përshoqërimin Emër grupi-Grup LDAP"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

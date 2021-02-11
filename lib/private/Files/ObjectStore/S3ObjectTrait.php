@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2017 Robin Appelman <robin@icewind.nl>
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Florent <florent@coppint.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -122,5 +123,9 @@ trait S3ObjectTrait {
 
 	public function objectExists($urn) {
 		return $this->getConnection()->doesObjectExist($this->bucket, $urn);
+	}
+
+	public function copyObject($from, $to) {
+		$this->getConnection()->copy($this->getBucket(), $from, $this->getBucket(), $to);
 	}
 }

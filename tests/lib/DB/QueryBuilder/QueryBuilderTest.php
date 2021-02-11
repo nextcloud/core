@@ -22,6 +22,8 @@
 namespace Test\DB\QueryBuilder;
 
 use Doctrine\DBAL\Query\Expression\CompositeExpression;
+use Doctrine\DBAL\Query\QueryException;
+use Doctrine\DBAL\Result;
 use OC\DB\QueryBuilder\Literal;
 use OC\DB\QueryBuilder\Parameter;
 use OC\DB\QueryBuilder\QueryBuilder;
@@ -307,6 +309,44 @@ class QueryBuilderTest extends \Test\TestCase {
 
 		$this->assertEquals(
 			[['appid' => 'testFirstResult2'], ['appid' => 'testFirstResult1']],
+			$rows
+		);
+
+		$this->deleteTestingRows('testFirstResult1');
+		$this->deleteTestingRows('testFirstResult2');
+	}
+
+	public function testSelectDistinctMultiple() {
+		$this->deleteTestingRows('testFirstResult1');
+		$this->deleteTestingRows('testFirstResult2');
+		$this->createTestingRows('testFirstResult1');
+		$this->createTestingRows('testFirstResult2');
+
+		$this->queryBuilder->selectDistinct(['appid', 'configkey']);
+
+		$this->queryBuilder->from('*PREFIX*appconfig')
+			->where($this->queryBuilder->expr()->eq(
+				'appid',
+				$this->queryBuilder->expr()->literal('testFirstResult1')
+			))
+			->orderBy('appid', 'DESC');
+
+		$query = $this->queryBuilder->execute();
+		$rows = $query->fetchAll();
+		$query->closeCursor();
+
+		$this->assertEquals(
+			[
+				['appid' => 'testFirstResult1', 'configkey' => 'testing1'],
+				['appid' => 'testFirstResult1', 'configkey' => 'testing2'],
+				['appid' => 'testFirstResult1', 'configkey' => 'testing3'],
+				['appid' => 'testFirstResult1', 'configkey' => 'testing4'],
+				['appid' => 'testFirstResult1', 'configkey' => 'testing5'],
+				['appid' => 'testFirstResult1', 'configkey' => 'testing6'],
+				['appid' => 'testFirstResult1', 'configkey' => 'testing7'],
+				['appid' => 'testFirstResult1', 'configkey' => 'testing8'],
+				['appid' => 'testFirstResult1', 'configkey' => 'testing9'],
+			],
 			$rows
 		);
 
@@ -1223,6 +1263,10 @@ class QueryBuilderTest extends \Test\TestCase {
 			->expects($this->once())
 			->method('execute')
 			->willReturn(3);
+		$queryBuilder
+			->expects($this->any())
+			->method('getParameters')
+			->willReturn([]);
 		$this->logger
 			->expects($this->never())
 			->method('debug');
@@ -1239,14 +1283,14 @@ class QueryBuilderTest extends \Test\TestCase {
 	public function testExecuteWithLoggerAndNamedArray() {
 		$queryBuilder = $this->createMock(\Doctrine\DBAL\Query\QueryBuilder::class);
 		$queryBuilder
-			->expects($this->at(0))
+			->expects($this->any())
 			->method('getParameters')
 			->willReturn([
 				'foo' => 'bar',
 				'key' => 'value',
 			]);
 		$queryBuilder
-			->expects($this->at(1))
+			->expects($this->any())
 			->method('getSQL')
 			->willReturn('SELECT * FROM FOO WHERE BAR = ?');
 		$queryBuilder
@@ -1277,11 +1321,11 @@ class QueryBuilderTest extends \Test\TestCase {
 	public function testExecuteWithLoggerAndUnnamedArray() {
 		$queryBuilder = $this->createMock(\Doctrine\DBAL\Query\QueryBuilder::class);
 		$queryBuilder
-			->expects($this->at(0))
+			->expects($this->any())
 			->method('getParameters')
 			->willReturn(['Bar']);
 		$queryBuilder
-			->expects($this->at(1))
+			->expects($this->any())
 			->method('getSQL')
 			->willReturn('SELECT * FROM FOO WHERE BAR = ?');
 		$queryBuilder
@@ -1312,11 +1356,11 @@ class QueryBuilderTest extends \Test\TestCase {
 	public function testExecuteWithLoggerAndNoParams() {
 		$queryBuilder = $this->createMock(\Doctrine\DBAL\Query\QueryBuilder::class);
 		$queryBuilder
-			->expects($this->at(0))
+			->expects($this->any())
 			->method('getParameters')
 			->willReturn([]);
 		$queryBuilder
-			->expects($this->at(1))
+			->expects($this->any())
 			->method('getSQL')
 			->willReturn('SELECT * FROM FOO WHERE BAR = ?');
 		$queryBuilder
@@ -1341,5 +1385,75 @@ class QueryBuilderTest extends \Test\TestCase {
 
 		$this->invokePrivate($this->queryBuilder, 'queryBuilder', [$queryBuilder]);
 		$this->assertEquals(3, $this->queryBuilder->execute());
+	}
+
+	public function testExecuteWithParameterTooLarge() {
+		$queryBuilder = $this->createMock(\Doctrine\DBAL\Query\QueryBuilder::class);
+		$p = array_fill(0, 1001, 'foo');
+		$queryBuilder
+			->expects($this->any())
+			->method('getParameters')
+			->willReturn([$p]);
+		$queryBuilder
+			->expects($this->any())
+			->method('getSQL')
+			->willReturn('SELECT * FROM FOO WHERE BAR IN (?)');
+		$queryBuilder
+			->expects($this->once())
+			->method('execute')
+			->willReturn($this->createMock(Result::class));
+		$this->logger
+			->expects($this->once())
+			->method('logException')
+			->willReturnCallback(function ($e, $parameters) {
+				$this->assertInstanceOf(QueryException::class, $e);
+				$this->assertSame(
+					'More than 1000 expressions in a list are not allowed on Oracle.',
+					$parameters['message']
+				);
+			});
+		$this->config
+			->expects($this->once())
+			->method('getValue')
+			->with('log_query', false)
+			->willReturn(false);
+
+		$this->invokePrivate($this->queryBuilder, 'queryBuilder', [$queryBuilder]);
+		$this->queryBuilder->execute();
+	}
+
+	public function testExecuteWithParametersTooMany() {
+		$queryBuilder = $this->createMock(\Doctrine\DBAL\Query\QueryBuilder::class);
+		$p = array_fill(0, 999, 'foo');
+		$queryBuilder
+			->expects($this->any())
+			->method('getParameters')
+			->willReturn(array_fill(0, 66, $p));
+		$queryBuilder
+			->expects($this->any())
+			->method('getSQL')
+			->willReturn('SELECT * FROM FOO WHERE BAR IN (?) OR BAR IN (?)');
+		$queryBuilder
+			->expects($this->once())
+			->method('execute')
+			->willReturn($this->createMock(Result::class));
+		$this->logger
+			->expects($this->once())
+			->method('logException')
+			->willReturnCallback(function ($e, $parameters) {
+				$this->assertInstanceOf(QueryException::class, $e);
+				$this->assertSame(
+					'The number of parameters must not exceed 65535. Restriction by PostgreSQL.',
+					$parameters['message']
+				);
+			});
+		$this->config
+			->expects($this->once())
+			->method('getValue')
+			->with('log_query', false)
+			->willReturn(false);
+
+		$this->invokePrivate($this->queryBuilder, 'queryBuilder', [$queryBuilder]);
+		$this->queryBuilder->execute();
 	}
 }

@@ -23,7 +23,7 @@
 <template>
 	<li :class="{'sharing-entry--share': share}" class="sharing-entry sharing-entry__link">
 		<Avatar :is-no-user="true"
-			:class="isEmailShareType ? 'icon-mail-white' : 'icon-public-white'"
+			:icon-class="isEmailShareType ? 'avatar-link-share icon-mail-white' : 'avatar-link-share icon-public-white'"
 			class="sharing-entry__avatar" />
 		<div class="sharing-entry__desc">
 			<h5 :title="title">
@@ -113,6 +113,9 @@
 				{{ t('files_sharing', 'Enter a date') }}
 			</ActionInput>
 
+			<ActionButton icon="icon-checkmark" @click.prevent.stop="onNewLinkShare">
+				{{ t('files_sharing', 'Create share') }}
+			</ActionButton>
 			<ActionButton icon="icon-close" @click.prevent.stop="onCancel">
 				{{ t('files_sharing', 'Cancel') }}
 			</ActionButton>
@@ -137,13 +140,14 @@
 						}"
 						:class="{ error: errors.label }"
 						:disabled="saving"
-						:placeholder="t('files_sharing', 'Share label')"
 						:aria-label="t('files_sharing', 'Share label')"
-						:value="share.newLabel || share.label"
+						:value="share.newLabel !== undefined ? share.newLabel : share.label"
 						icon="icon-edit"
 						maxlength="255"
 						@update:value="onLabelChange"
-						@submit="onLabelSubmit" />
+						@submit="onLabelSubmit">
+						{{ t('files_sharing', 'Share label') }}
+					</ActionInput>
 					<!-- folder -->
 					<template v-if="isFolder && fileHasCreatePermission && config.isPublicUploadEnabled">
 						<ActionRadio :checked="sharePermissions === publicUploadRValue"
@@ -406,6 +410,12 @@ export default {
 			// if we have a valid existing share (not pending)
 			if (this.share && this.share.id) {
 				if (!this.isShareOwner && this.share.ownerDisplayName) {
+					if (this.isEmailShareType) {
+						return t('files_sharing', '{shareWith} by {initiator}', {
+							shareWith: this.share.shareWith,
+							initiator: this.share.ownerDisplayName,
+						})
+					}
 					return t('files_sharing', 'Shared via link by {initiator}', {
 						initiator: this.share.ownerDisplayName,
 					})
@@ -708,7 +718,11 @@ export default {
 				// Execute the copy link method
 				// freshly created share component
 				// ! somehow does not works on firefox !
-				component.copyLink()
+				if (!this.config.enforcePasswordForPublicLink) {
+					// Only copy the link when the password was not forced,
+					// otherwise the user needs to copy/paste the password before finishing the share.
+					component.copyLink()
+				}
 
 			} catch ({ response }) {
 				const message = response.data.ocs.meta.message
@@ -910,6 +924,10 @@ export default {
 		.new-share-link {
 			border-top: 1px solid var(--color-border);
 		}
+	}
+
+	::v-deep .avatar-link-share {
+		background-color: var(--color-primary);
 	}
 
 	.sharing-entry__action--public-upload {

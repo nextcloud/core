@@ -1,0 +1,24 @@
+{ "translations": {
+    "In a meeting" : "Bilera batean",
+    "Clear status message after" : "Garbitu egoera mezua gero",
+    "What's your status?" : "Zein da zure egoera?",
+    "Set status" : "Ezarri egoera",
+    "Online status" : "Online egoera",
+    "Status message" : "Egoera mezua",
+    "Clear status message" : "Garbitu egoera mezua",
+    "Set status message" : "Ezarri egoera mezua",
+    "Away" : "Kanpoan",
+    "Do not disturb" : "Ez molestatu",
+    "Don't clear" : "Ez garbitu",
+    "Today" : "Gaur",
+    "This week" : "Aste honetan",
+    "Online" : "Linean",
+    "Invisible" : "Ikusezina",
+    "Offline" : "Lineaz kanpo",
+    "30 minutes" : "30 minutu",
+    "1 hour" : "Ordu 1",
+    "4 hours" : "4 ordu",
+    "Mute all notifications" : "Mututu jakinarazpen guztiak",
+    "Appear offline" : "Lineaz kanpo agertu"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

@@ -17,6 +17,7 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author KB7777 <k.burkowski@gmail.com>
+ * @author Kevin Lanni <therealklanni@gmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author MichaIng <28480705+MichaIng@users.noreply.github.com>
  * @author MichaIng <micha@dietpi.com>
@@ -27,7 +28,7 @@
  * @author Serge Martin <edb@sigluy.net>
  * @author Simounet <contact@simounet.net>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -235,6 +236,7 @@ class Setup {
 			} catch (\OC\HintException $e) {
 				$errors[] = [
 					'error' => $e->getMessage(),
+					'exception' => $e,
 					'hint' => $e->getHint(),
 				];
 				$htAccessWorking = false;
@@ -359,12 +361,14 @@ class Setup {
 		} catch (\OC\DatabaseSetupException $e) {
 			$error[] = [
 				'error' => $e->getMessage(),
+				'exception' => $e,
 				'hint' => $e->getHint(),
 			];
 			return $error;
 		} catch (Exception $e) {
 			$error[] = [
 				'error' => 'Error while trying to create admin user: ' . $e->getMessage(),
+				'exception' => $e,
 				'hint' => '',
 			];
 			return $error;
@@ -375,6 +379,7 @@ class Setup {
 		} catch (Exception $e) {
 			$error[] = [
 				'error' => 'Error while trying to initialise the database: ' . $e->getMessage(),
+				'exception' => $e,
 				'hint' => '',
 			];
 			return $error;
@@ -503,7 +508,7 @@ class Setup {
 
 		$setupHelper = new \OC\Setup(
 			$config,
-			\OC::$server->getIniWrapper(),
+			\OC::$server->get(IniGetWrapper::class),
 			\OC::$server->getL10N('lib'),
 			\OC::$server->query(Defaults::class),
 			\OC::$server->getLogger(),
@@ -543,7 +548,7 @@ class Setup {
 			$content .= "\n  RewriteCond %{REQUEST_FILENAME} !/ocs-provider/";
 			$content .= "\n  RewriteCond %{REQUEST_FILENAME} !/ocm-provider/";
 			$content .= "\n  RewriteCond %{REQUEST_URI} !^/\\.well-known/(acme-challenge|pki-validation)/.*";
-			$content .= "\n  RewriteCond %{REQUEST_FILENAME} !/richdocumentscode/proxy.php$";
+			$content .= "\n  RewriteCond %{REQUEST_FILENAME} !/richdocumentscode(_arm64)?/proxy.php$";
 			$content .= "\n  RewriteRule . index.php [PT,E=PATH_INFO:$1]";
 			$content .= "\n  RewriteBase " . $rewriteBase;
 			$content .= "\n  <IfModule mod_env.c>";

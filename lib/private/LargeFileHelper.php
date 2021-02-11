@@ -5,6 +5,7 @@
  *
  * @author Andreas Fischer <bantu@owncloud.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author marco44 <cousinmarc@gmail.com>
  * @author Michael Roitzsch <reactorcontrol@icloud.com>
@@ -28,6 +29,8 @@
  */
 
 namespace OC;
+
+use bantu\IniGetWrapper\IniGetWrapper;
 
 /**
  * Helper class for large files on 32-bit platforms.
@@ -117,7 +120,7 @@ class LargeFileHelper {
 	 *                        null on failure.
 	 */
 	public function getFileSizeViaCurl($fileName) {
-		if (\OC::$server->getIniWrapper()->getString('open_basedir') === '') {
+		if (\OC::$server->get(IniGetWrapper::class)->getString('open_basedir') === '') {
 			$encodedFileName = rawurlencode($fileName);
 			$ch = curl_init("file:///$encodedFileName");
 			curl_setopt($ch, CURLOPT_NOBODY, true);
@@ -190,7 +193,7 @@ class LargeFileHelper {
 		try {
 			$result = filemtime($fullPath);
 		} catch (\Exception $e) {
-			$result =- 1;
+			$result = - 1;
 		}
 		if ($result < 0) {
 			if (\OC_Helper::is_function_enabled('exec')) {

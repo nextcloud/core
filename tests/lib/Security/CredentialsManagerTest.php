@@ -21,6 +21,7 @@
 
 namespace Test\Security;
 
+use OC\DB\ConnectionAdapter;
 use OC\Security\CredentialsManager;
 use OC\SystemConfig;
 use OCP\IDBConnection;
@@ -38,13 +39,19 @@ class CredentialsManagerTest extends \Test\TestCase {
 	/** @var IDBConnection */
 	protected $dbConnection;
 
+	/** @var ConnectionAdapter */
+	protected $dbConnectionAdapter;
+
 	/** @var CredentialsManager */
 	protected $manager;
 
 	protected function setUp(): void {
 		parent::setUp();
 		$this->crypto = $this->createMock(ICrypto::class);
-		$this->dbConnection = $this->getMockBuilder('\OC\DB\Connection')
+		$this->dbConnection = $this->getMockBuilder(IDBConnection::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$this->dbConnectionAdapter = $this->getMockBuilder(ConnectionAdapter::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$this->manager = new CredentialsManager($this->crypto, $this->dbConnection);
@@ -91,9 +98,9 @@ class CredentialsManagerTest extends \Test\TestCase {
 			->with('baz')
 			->willReturn(json_encode('bar'));
 
-		$qb = $this->getMockBuilder('\OC\DB\QueryBuilder\QueryBuilder')
+		$qb = $this->getMockBuilder(\OC\DB\QueryBuilder\QueryBuilder::class)
 			->setConstructorArgs([
-				$this->dbConnection,
+				$this->dbConnectionAdapter,
 				$this->createMock(SystemConfig::class),
 				$this->createMock(ILogger::class),
 			])
@@ -103,7 +110,7 @@ class CredentialsManagerTest extends \Test\TestCase {
 			->method('execute')
 			->willReturn($this->getQueryResult(['credentials' => 'baz']));
 
-		$this->dbConnection->expects($this->once())
+		$this->dbConnectionAdapter->expects($this->once())
 			->method('getQueryBuilder')
 			->willReturn($qb);
 

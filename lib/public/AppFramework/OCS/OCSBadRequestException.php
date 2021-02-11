@@ -29,7 +29,6 @@ use OCP\AppFramework\Http;
 /**
  * Class OCSBadRequestException
  *
- * @package OCP\AppFramework
  * @since 9.1.0
  */
 class OCSBadRequestException extends OCSException {

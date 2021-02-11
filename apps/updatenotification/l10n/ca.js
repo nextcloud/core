@@ -23,7 +23,6 @@ OC.L10N.register(
     "A non-default update server is in use to be checked for updates:" : "Es fa servir un servidor d’actualització no predeterminat per comprovar si hi ha actualitzacions:",
     "Update channel:" : "Canal d'actualitzacions:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Sempre podeu actualitzar a una versió més recent. Però mai no podeu baixar a una versió més estable.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Tingueu en compte que després d'un nou llançament, pot trigar un temps abans que aparegui aquí. Despleguem noves versions distribuïdes amb el temps als nostres usuaris i, de vegades, ometem una versió quan es detecten problemes.",
     "Notify members of the following groups about available updates:" : "Notifica als membres dels següents grups sobre les actualitzacions disponibles:",
     "Only notification for app updates are available." : "Només hi ha disponible notificacions per actualitzacions d’aplicacions.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "El canal d'actualització seleccionat deixa obsoletes les notificacions específiques del servidor.",
@@ -41,6 +40,7 @@ OC.L10N.register(
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "La versió estable més recent. És adequat per un ús normal i sempre s'actualitzarà a la versió més recent.",
     "Beta" : "Beta",
     "A pre-release version only for testing new features, not for production environments." : "Una versió prèvia a la publicació només per provar noves funcions, no per a entorns de producció.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> aplicació no té cap actualització disponible per aquesta versió.","<strong>%n</strong> aplicacions no tenen cap actualització disponible per aquesta versió."]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> aplicació no té cap actualització disponible per aquesta versió.","<strong>%n</strong> aplicacions no tenen cap actualització disponible per aquesta versió."],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Tingueu en compte que després d'un nou llançament, pot trigar un temps abans que aparegui aquí. Despleguem noves versions distribuïdes amb el temps als nostres usuaris i, de vegades, ometem una versió quan es detecten problemes."
 },
 "nplurals=2; plural=(n != 1);");

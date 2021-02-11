@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -126,7 +126,7 @@ const registerAutoLogout = () => {
 		const timeout = Date.now() - config.session_lifetime * 1000
 		if (lastActive < timeout) {
 			console.info('Inactivity timout reached, logging out')
-			const logoutUrl = generateUrl('/logout') + '?requesttoken=' + getRequestToken()
+			const logoutUrl = generateUrl('/logout') + '?requesttoken=' + encodeURIComponent(getRequestToken())
 			window.location = logoutUrl
 		}
 	}, 1000)

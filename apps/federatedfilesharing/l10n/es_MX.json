@@ -31,7 +31,6 @@
     "Federated Cloud Sharing" : "Compartiendo en la Nube Federada",
     "Open documentation" : "Abrir documentación",
     "Adjust how people can share between servers." : "Ajustar cómo las personas pueden compartir entre servidores. ",
-    "Allow users on this server to send shares to other servers" : "Permitirle a los usuarios de este servidor enviar elementos compartidos a otros servidores",
     "Allow users on this server to receive shares from other servers" : "Permitirle alos usuarios de este servidor recibir elementos compartidos de otros servidores",
     "Search global and public address book for users" : "Buscar usuarios en las libretas de contactos globales y públicas",
     "Allow users to publish their data to a global and public address book" : "Permitirle a los usuarios publicar sus datos a una libreta de direcciones global y pública",
@@ -41,7 +40,6 @@
     "Add to your website" : "Agregar a tu sitio web",
     "Share with me via Nextcloud" : "Compartir conmigo vía Nextcloud",
     "HTML Code:" : "Código HTML:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Has recibido \"%3$s\" como un elemento compartido remoto de %1$s (de parte de %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Has recibido \"%3$s\" como un elemento compartido remoto de %1$s"
+    "Allow users on this server to send shares to other servers" : "Permitirle a los usuarios de este servidor enviar elementos compartidos a otros servidores"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

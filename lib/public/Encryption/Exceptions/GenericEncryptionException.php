@@ -32,7 +32,6 @@ use OC\HintException;
 /**
  * Class GenericEncryptionException
  *
- * @package OCP\Encryption\Exceptions
  * @since 8.1.0
  */
 class GenericEncryptionException extends HintException {

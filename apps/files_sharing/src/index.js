@@ -32,5 +32,6 @@ Object.assign(OC, {
 		SHARE_TYPE_GUEST: 8,
 		SHARE_TYPE_REMOTE_GROUP: 9,
 		SHARE_TYPE_ROOM: 10,
+		SHARE_TYPE_DECK: 12,
 	},
 })

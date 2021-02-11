@@ -28,6 +28,8 @@ namespace OCA\ContactsInteraction\Db;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\IUser;
+use function is_resource;
+use function stream_get_contents;
 
 class CardSearchDao {
 
@@ -79,11 +81,14 @@ class CardSearchDao {
 			->andWhere($cardQuery->expr()->in('addressbookid', $cardQuery->createFunction($addressbooksQuery->getSQL()), IQueryBuilder::PARAM_INT_ARRAY))
 			->setMaxResults(1);
 		$result = $cardQuery->execute();
-		/** @var string|false $card */
-		$card = $result->fetchColumn(0);
+		/** @var string|resource|false $card */
+		$card = $result->fetchOne();
 
 		if ($card === false) {
 			return null;
+		}
+		if (is_resource($card)) {
+			return stream_get_contents($card);
 		}
 
 		return $card;

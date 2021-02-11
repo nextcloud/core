@@ -5,6 +5,7 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -35,7 +36,6 @@ use OCP\IUser;
  *
  * This class manages the access to comments
  *
- * @package OCP\Comments
  * @since 9.0.0
  */
 interface ICommentsManager {
@@ -129,6 +129,7 @@ interface ICommentsManager {
 	 * @param string $sortDirection direction of the comments (`asc` or `desc`)
 	 * @param int $limit optional, number of maximum comments to be returned. if
 	 * set to 0, all comments are returned.
+	 * @param bool $includeLastKnown
 	 * @return IComment[]
 	 * @since 14.0.0
 	 */
@@ -137,7 +138,8 @@ interface ICommentsManager {
 		string $objectId,
 		int $lastKnownCommentId,
 		string $sortDirection = 'asc',
-		int $limit = 30
+		int $limit = 30,
+		bool $includeLastKnown = false
 	): array;
 
 	/**
@@ -155,6 +157,20 @@ interface ICommentsManager {
 	public function search(string $search, string $objectType, string $objectId, string $verb, int $offset, int $limit = 50): array;
 
 	/**
+	 * Search for comments on one or more objects with a given content
+	 *
+	 * @param string $search content to search for
+	 * @param string $objectType Limit the search by object type
+	 * @param array $objectIds Limit the search by object ids
+	 * @param string $verb Limit the verb of the comment
+	 * @param int $offset
+	 * @param int $limit
+	 * @return IComment[]
+	 * @since 21.0.0
+	 */
+	public function searchForObjects(string $search, string $objectType, array $objectIds, string $verb, int $offset, int $limit = 50): array;
+
+	/**
 	 * @param $objectType string the object type, e.g. 'files'
 	 * @param $objectId string the id of the object
 	 * @param \DateTime|null $notOlderThan optional, timestamp of the oldest comments
@@ -164,6 +180,55 @@ interface ICommentsManager {
 	 * @since 9.0.0
 	 */
 	public function getNumberOfCommentsForObject($objectType, $objectId, \DateTime $notOlderThan = null, $verb = '');
+
+	/**
+	 * @param string $objectType the object type, e.g. 'files'
+	 * @param string[] $objectIds the id of the object
+	 * @param IUser $user
+	 * @param string $verb Limit the verb of the comment - Added in 14.0.0
+	 * @return array Map with object id => # of unread comments
+	 * @psalm-return array<string, int>
+	 * @since 21.0.0
+	 */
+	public function getNumberOfUnreadCommentsForObjects(string $objectType, array $objectIds, IUser $user, $verb = ''): array;
+
+	/**
+	 * @param string $objectType
+	 * @param string $objectId
+	 * @param int $lastRead
+	 * @param string $verb
+	 * @return int
+	 * @since 21.0.0
+	 */
+	public function getNumberOfCommentsForObjectSinceComment(string $objectType, string $objectId, int $lastRead, string $verb = ''): int;
+
+	/**
+	 * @param string $objectType
+	 * @param string $objectId
+	 * @param \DateTime $beforeDate
+	 * @param string $verb
+	 * @return int
+	 * @since 21.0.0
+	 */
+	public function getLastCommentBeforeDate(string $objectType, string $objectId, \DateTime $beforeDate, string $verb = ''): int;
+
+	/**
+	 * @param string $objectType
+	 * @param string $objectId
+	 * @param string $verb
+	 * @param string $actorType
+	 * @param string[] $actors
+	 * @return \DateTime[] Map of "string actor" => "\DateTime most recent comment date"
+	 * @psalm-return array<string, \DateTime>
+	 * @since 21.0.0
+	 */
+	public function getLastCommentDateByActor(
+		string $objectType,
+		string $objectId,
+		string $verb,
+		string $actorType,
+		array $actors
+	): array;
 
 	/**
 	 * Get the number of unread comments for all files in a folder
@@ -323,4 +388,11 @@ interface ICommentsManager {
 	 * provided ID is unknown. It must be ensured that a string is returned.
 	 */
 	public function resolveDisplayName($type, $id);
+
+	/**
+	 * Load the Comments app into the page
+	 *
+	 * @since 21.0.0
+	 */
+	public function load(): void;
 }

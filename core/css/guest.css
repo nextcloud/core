@@ -394,7 +394,6 @@ input[type='checkbox'].checkbox--white:checked + label:before {
 .strengthify-wrapper {
 	display: inline-block;
 	position: relative;
-	left: 5px;
 	top: -20px;
 	width: 269px;
 	border-radius: 0 0 3px 3px;
@@ -910,8 +909,8 @@ footer .info .entity-name {
 label.infield,
 .hidden-visually {
 	position: absolute;
-	left:-10000px;
-	top: auto;
+	left: -10000px;
+	top: -10000px;
 	width: 1px;
 	height: 1px;
 	overflow: hidden;

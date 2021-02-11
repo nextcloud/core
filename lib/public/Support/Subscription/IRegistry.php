@@ -7,6 +7,7 @@ declare(strict_types=1);
  *
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -77,4 +78,11 @@ interface IRegistry {
 	 * @since 17.0.0
 	 */
 	public function delegateHasExtendedSupport(): bool;
+
+	/**
+	 * Indicates if a hard user limit is reached and no new users should be created
+	 *
+	 * @since 21.0.0
+	 */
+	public function delegateIsHardUserLimitReached(): bool;
 }

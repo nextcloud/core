@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -31,7 +32,6 @@ namespace OCP\Activity;
 /**
  * Interface IManager
  *
- * @package OCP\Activity
  * @since 6.0.0
  */
 interface IManager {
@@ -44,6 +44,7 @@ interface IManager {
 	 *  - setType()
 	 *  - setAffectedUser()
 	 *  - setSubject()
+	 *  - setObject()
 	 *
 	 * @return IEvent
 	 * @since 8.2.0
@@ -58,6 +59,7 @@ interface IManager {
 	 *  - setType()
 	 *  - setAffectedUser()
 	 *  - setSubject()
+	 *  - setObject()
 	 *
 	 * @param IEvent $event
 	 * @throws \BadMethodCallException if required values have not been set

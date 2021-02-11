@@ -8,15 +8,17 @@ declare(strict_types=1);
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author brad2014 <brad2014@users.noreply.github.com>
+ * @author Brad Rubenstein <brad@wbr.tech>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Liam JACK <liamjack@users.noreply.github.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author medcloud <42641918+medcloud@users.noreply.github.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Tomasz Paluszkiewicz <tomasz.paluszkiewicz@gmail.com>
- * @author Simon Spannagel <simonspa@kth.se>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -118,8 +120,8 @@ EOF;
 						<table class="row collapse" style="border-collapse:collapse;border-spacing:0;display:table;padding:0;position:relative;text-align:left;vertical-align:top;width:100%%">
 							<tbody>
 							<tr style="padding:0;text-align:left;vertical-align:top">
-								<center data-parsed="" style="background-color:%s;width:150px;height:150px;padding:0px;position:relative;border-radius:200px">
-									<img class="logo float-center" src="%s" alt="%s" align="center" style="-ms-interpolation-mode:bicubic;clear:both;display:block;float:none;outline:0;text-align:center;text-decoration:none;position:absolute;max-height:100px;max-width:100px;width:auto;height:auto;position:absolute;top:0;bottom:0;left:0;right:0;margin:auto;">
+								<center data-parsed="" style="background-color:%s;min-width:175px;max-height:175px; padding:35px 0px;border-radius:200px">
+									<img class="logo float-center" src="%s" alt="%s" align="center" style="-ms-interpolation-mode:bicubic;clear:both;display:block;float:none;margin:0 auto;outline:0;text-align:center;text-decoration:none;max-height:105px;max-width:105px;width:auto;height:auto">
 								</center>
 							</tr>
 							</tbody>
@@ -291,7 +293,7 @@ EOF;
 									<td style="-moz-hyphens:auto;-webkit-hyphens:auto;Margin:0;border-collapse:collapse!important;color:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen-Sans,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:400;hyphens:auto;line-height:1.3;margin:0;padding:0;text-align:left;vertical-align:top;word-wrap:break-word">
 										<table style="border-collapse:collapse;border-spacing:0;padding:0;text-align:left;vertical-align:top;width:100%%">
 											<tr style="padding:0;text-align:left;vertical-align:top">
-												<td style="-moz-hyphens:auto;-webkit-hyphens:auto;Margin:0;border:0 solid %2\$;border-collapse:collapse!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen-Sans,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:400;hyphens:auto;line-height:1.3;margin:0;padding:0;text-align:left;vertical-align:top;word-wrap:break-word">
+												<td style="-moz-hyphens:auto;-webkit-hyphens:auto;Margin:0;border:0 solid %2\$s;border-collapse:collapse!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen-Sans,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:400;hyphens:auto;line-height:1.3;margin:0;padding:0;text-align:left;vertical-align:top;word-wrap:break-word">
 													<a href="%3\$s" style="Margin:0;border:0 solid %4\$s;border-radius:2px;color:%5\$s;display:inline-block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen-Sans,Ubuntu,Cantarell,'Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:regular;line-height:1.3;margin:0;padding:10px 25px 10px 25px;text-align:left;outline:1px solid %5\$s;text-decoration:none">%7\$s</a>
 												</td>
 											</tr>
@@ -447,19 +449,21 @@ EOF;
 	 * @param string $metaInfo Note: When $plainMetaInfo falls back to this, HTML is automatically escaped in the HTML email
 	 * @param string $icon Absolute path, must be 16*16 pixels
 	 * @param string|bool $plainText Text that is used in the plain text email
-	 *   if empty the $text is used, if false none will be used
+	 *   if empty or true the $text is used, if false none will be used
 	 * @param string|bool $plainMetaInfo Meta info that is used in the plain text email
-	 *   if empty the $metaInfo is used, if false none will be used
+	 *   if empty or true the $metaInfo is used, if false none will be used
+	 * @param integer plainIndent If > 0, Indent plainText by this amount.
 	 * @since 12.0.0
 	 */
-	public function addBodyListItem(string $text, string $metaInfo = '', string $icon = '', $plainText = '', $plainMetaInfo = '') {
+	public function addBodyListItem(string $text, string $metaInfo = '', string $icon = '', $plainText = '', $plainMetaInfo = '', $plainIndent = 0) {
 		$this->ensureBodyListOpened();
 
-		if ($plainText === '') {
+		if ($plainText === '' || $plainText === true) {
 			$plainText = $text;
 			$text = htmlspecialchars($text);
+			$text = str_replace("\n", "<br/>", $text); // convert newlines to HTML breaks
 		}
-		if ($plainMetaInfo === '') {
+		if ($plainMetaInfo === '' || $plainMetaInfo === true) {
 			$plainMetaInfo = $metaInfo;
 			$metaInfo = htmlspecialchars($metaInfo);
 		}
@@ -475,11 +479,29 @@ EOF;
 		}
 		$this->htmlBody .= vsprintf($this->listItem, [$icon, $htmlText]);
 		if ($plainText !== false) {
-			$this->plainBody .= '  * ' . $plainText;
-			if ($plainMetaInfo !== false) {
-				$this->plainBody .= ' (' . $plainMetaInfo . ')';
+			if ($plainIndent === 0) {
+				/*
+				 * If plainIndent is not set by caller, this is the old NC17 layout code.
+				 */
+				$this->plainBody .= '  * ' . $plainText;
+				if ($plainMetaInfo !== false) {
+					$this->plainBody .= ' (' . $plainMetaInfo . ')';
+				}
+				$this->plainBody .= PHP_EOL;
+			} else {
+				/*
+				 * Caller can set plainIndent > 0 to format plainText in tabular fashion.
+				 * with plainMetaInfo in column 1, and plainText in column 2.
+				 * The plainMetaInfo label is right justified in a field of width
+				 * "plainIndent". Multilines after the first are indented plainIndent+1
+				 * (to account for space after label).  Fixes: #12391
+				 */
+				/** @var string $label */
+				$label = ($plainMetaInfo !== false)? $plainMetaInfo : '';
+				$this->plainBody .= sprintf("%${plainIndent}s %s\n",
+					$label,
+					str_replace("\n", "\n" . str_repeat(' ', $plainIndent + 1), $plainText));
 			}
-			$this->plainBody .= PHP_EOL;
 		}
 	}
 
@@ -538,7 +560,7 @@ EOF;
 		$textColor = $this->themingDefaults->getTextColorPrimary();
 
 		$this->htmlBody .= vsprintf($this->buttonGroup, [$color, $color, $urlLeft, $color, $textColor, $textColor, $textLeft, $urlRight, $textRight]);
-		$this->plainBody .= $plainTextLeft . ': ' . $urlLeft . PHP_EOL;
+		$this->plainBody .= PHP_EOL . $plainTextLeft . ': ' . $urlLeft . PHP_EOL;
 		$this->plainBody .= $plainTextRight . ': ' . $urlRight . PHP_EOL . PHP_EOL;
 	}
 
@@ -573,7 +595,7 @@ EOF;
 			$this->plainBody .= $plainText . ': ';
 		}
 
-		$this->plainBody .=  $url . PHP_EOL;
+		$this->plainBody .= $url . PHP_EOL;
 	}
 
 	/**

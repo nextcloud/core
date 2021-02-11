@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author GrayFix <grayfix@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -36,7 +37,8 @@ namespace OCA\AdminAudit\AppInfo;
 use Closure;
 use OC\Files\Filesystem;
 use OC\Files\Node\File;
-use OC\Group\Manager;
+use OC\Group\Manager as GroupManager;
+use OC\User\Session as UserSession;
 use OCA\AdminAudit\Actions\AppManagement;
 use OCA\AdminAudit\Actions\Auth;
 use OCA\AdminAudit\Actions\Console;
@@ -134,6 +136,7 @@ class Application extends App implements IBootstrap {
 		Util::connectHook('OC_User', 'post_deleteUser', $userActions, 'delete');
 		Util::connectHook('OC_User', 'changeUser', $userActions, 'change');
 
+		assert($userSession instanceof UserSession);
 		$userSession->listen('\OC\User', 'postSetPassword', [$userActions, 'setPassword']);
 		$userSession->listen('\OC\User', 'assignedUserId', [$userActions, 'assign']);
 		$userSession->listen('\OC\User', 'postUnassignedUserId', [$userActions, 'unassign']);
@@ -143,7 +146,7 @@ class Application extends App implements IBootstrap {
 								IGroupManager $groupManager) {
 		$groupActions = new GroupManagement($logger);
 
-		/** @var IGroupManager|Manager $groupManager */
+		assert($groupManager instanceof GroupManager);
 		$groupManager->listen('\OC\Group', 'postRemoveUser', [$groupActions, 'removeUser']);
 		$groupManager->listen('\OC\Group', 'postAddUser', [$groupActions, 'addUser']);
 		$groupManager->listen('\OC\Group', 'postDelete', [$groupActions, 'deleteGroup']);

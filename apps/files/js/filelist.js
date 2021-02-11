@@ -252,7 +252,8 @@
 				this._filesConfig = OCA.Files.App.getFilesConfig();
 			} else {
 				this._filesConfig = new OC.Backbone.Model({
-					'showhidden': false
+					'showhidden': false,
+					'cropimagepreviews': true
 				});
 			}
 
@@ -289,6 +290,10 @@
 						// hiding files could make the page too small, need to try rendering next page
 						self._onScroll();
 					}
+				});
+
+				this._filesConfig.on('change:cropimagepreviews', function() {
+					self.reload();
 				});
 
 				this.$el.toggleClass('hide-hidden-files', !this._filesConfig.get('showhidden'));
@@ -433,6 +438,8 @@
 			this.triedActionOnce = false;
 
 			OC.Plugins.attach('OCA.Files.FileList', this);
+
+			OCA.Files.App && OCA.Files.App.updateCurrentFileList(this);
 
 			this.initHeadersAndFooters()
 		},
@@ -738,6 +745,7 @@
 		 * Event handler when leaving previously hidden state
 		 */
 		_onShow: function(e) {
+			OCA.Files.App && OCA.Files.App.updateCurrentFileList(this);
 			if (this.shown) {
 				if (e.itemId === this.id) {
 					this._setCurrentDir('/', false);
@@ -1233,6 +1241,7 @@
 				mtime: parseInt($el.attr('data-mtime'), 10),
 				type: $el.attr('data-type'),
 				etag: $el.attr('data-etag'),
+				quotaAvailableBytes: $el.attr('data-quota'),
 				permissions: parseInt($el.attr('data-permissions'), 10),
 				hasPreview: $el.attr('data-has-preview') === 'true',
 				isEncrypted: $el.attr('data-e2eencrypted') === 'true'
@@ -1492,6 +1501,7 @@
 				"data-mime": mime,
 				"data-mtime": mtime,
 				"data-etag": fileData.etag,
+				"data-quota": fileData.quotaAvailableBytes,
 				"data-permissions": permissions,
 				"data-has-preview": fileData.hasPreview !== false,
 				"data-e2eencrypted": fileData.isEncrypted === true
@@ -1558,9 +1568,7 @@
 				"href": linkUrl
 			});
 			if (this._defaultFileActionsDisabled) {
-				linkElem = $('<p></p>').attr({
-					"class": "name"
-				})
+				linkElem.addClass('disabled');
 			}
 
 			linkElem.append('<div class="thumbnail-wrapper"><div class="thumbnail" style="background-image:url(' + icon + ');"></div></div>');
@@ -2211,6 +2219,12 @@
 			urlSpec.x = Math.ceil(urlSpec.x);
 			urlSpec.y = Math.ceil(urlSpec.y);
 			urlSpec.forceIcon = 0;
+
+			/**
+			 * Images are cropped to a square by default. Append a=1 to the URL
+			 *  if the user wants to see images with original aspect ratio.
+			 */
+			urlSpec.a = this._filesConfig.get('cropimagepreviews') ? 0 : 1;
 
 			if (typeof urlSpec.fileId !== 'undefined') {
 				delete urlSpec.file;
@@ -3697,7 +3711,22 @@
 			console.warn('registerTabView is deprecated! It will be removed in nextcloud 20.');
 			const enabled = tabView.canDisplay || undefined
 			if (tabView.id) {
-				OCA.Files.Sidebar.registerTab(new OCA.Files.Sidebar.Tab(tabView.id, tabView, enabled, true))
+				OCA.Files.Sidebar.registerTab(new OCA.Files.Sidebar.Tab({
+					id: tabView.id,
+					name: tabView.getLabel(),
+					icon: tabView.getIcon(),
+					mount: function(el, fileInfo) {
+						tabView.setFileInfo(new OCA.Files.FileInfoModel(fileInfo))
+						el.appendChild(tabView.el)
+					},
+					update: function(fileInfo) {
+						tabView.setFileInfo(new OCA.Files.FileInfoModel(fileInfo))
+					},
+					destroy: function() {
+						tabView.el.remove()
+					},
+					enabled: enabled
+				}))
 			}
 		},
 

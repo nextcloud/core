@@ -136,7 +136,12 @@ class QuerySearchHelperTest extends TestCase {
 	private function search(ISearchOperator $operator) {
 		$dbOperator = $this->querySearchHelper->searchOperatorToDBExpr($this->builder, $operator);
 		$this->builder->andWhere($dbOperator);
-		return $this->builder->execute()->fetchAll(\PDO::FETCH_COLUMN);
+
+		$result = $this->builder->execute();
+		$rows = $result->fetchAll(\PDO::FETCH_COLUMN);
+		$result->closeCursor();
+
+		return $rows;
 	}
 
 	public function comparisonProvider() {

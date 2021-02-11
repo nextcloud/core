@@ -34,6 +34,7 @@ use OCA\UserStatus\Exception\InvalidStatusTypeException;
 use OCA\UserStatus\Exception\StatusMessageTooLongException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\UserStatus\IUserStatus;
 
 /**
  * Class StatusService
@@ -54,17 +55,32 @@ class StatusService {
 	/** @var EmojiService */
 	private $emojiService;
 
-	/** @var string[] */
-	private $allowedStatusTypes = [
-		'online',
-		'away',
-		'dnd',
-		'invisible',
-		'offline'
+	/**
+	 * List of priorities ordered by their priority
+	 */
+	public const PRIORITY_ORDERED_STATUSES = [
+		IUserStatus::ONLINE,
+		IUserStatus::AWAY,
+		IUserStatus::DND,
+		IUserStatus::INVISIBLE,
+		IUserStatus::OFFLINE
+	];
+
+	/**
+	 * List of statuses that persist the clear-up
+	 * or UserLiveStatusEvents
+	 */
+	public const PERSISTENT_STATUSES = [
+		IUserStatus::AWAY,
+		IUserStatus::DND,
+		IUserStatus::INVISIBLE,
 	];
 
 	/** @var int */
-	private $maximumMessageLength = 80;
+	public const INVALIDATE_STATUS_THRESHOLD = 15 /* minutes */ * 60 /* seconds */;
+
+	/** @var int */
+	public const MAXIMUM_MESSAGE_LENGTH = 80;
 
 	/**
 	 * StatusService constructor.
@@ -93,6 +109,17 @@ class StatusService {
 		return array_map(function ($status) {
 			return $this->processStatus($status);
 		}, $this->mapper->findAll($limit, $offset));
+	}
+
+	/**
+	 * @param int|null $limit
+	 * @param int|null $offset
+	 * @return array
+	 */
+	public function findAllRecentStatusChanges(?int $limit = null, ?int $offset = null): array {
+		return array_map(function ($status) {
+			return $this->processStatus($status);
+		}, $this->mapper->findAllRecent($limit, $offset));
 	}
 
 	/**
@@ -134,7 +161,7 @@ class StatusService {
 		}
 
 		// Check if status-type is valid
-		if (!\in_array($status, $this->allowedStatusTypes, true)) {
+		if (!\in_array($status, self::PRIORITY_ORDERED_STATUSES, true)) {
 			throw new InvalidStatusTypeException('Status-type "' . $status . '" is not supported');
 		}
 		if ($statusTimestamp === null) {
@@ -168,7 +195,7 @@ class StatusService {
 		} catch (DoesNotExistException $ex) {
 			$userStatus = new UserStatus();
 			$userStatus->setUserId($userId);
-			$userStatus->setStatus('offline');
+			$userStatus->setStatus(IUserStatus::OFFLINE);
 			$userStatus->setStatusTimestamp(0);
 			$userStatus->setIsUserDefined(false);
 		}
@@ -213,7 +240,7 @@ class StatusService {
 		} catch (DoesNotExistException $ex) {
 			$userStatus = new UserStatus();
 			$userStatus->setUserId($userId);
-			$userStatus->setStatus('offline');
+			$userStatus->setStatus(IUserStatus::OFFLINE);
 			$userStatus->setStatusTimestamp(0);
 			$userStatus->setIsUserDefined(false);
 		}
@@ -223,8 +250,8 @@ class StatusService {
 			throw new InvalidStatusIconException('Status-Icon is longer than one character');
 		}
 		// Check for maximum length of custom message
-		if (\mb_strlen($message) > $this->maximumMessageLength) {
-			throw new StatusMessageTooLongException('Message is longer than supported length of ' . $this->maximumMessageLength . ' characters');
+		if (\mb_strlen($message) > self::MAXIMUM_MESSAGE_LENGTH) {
+			throw new StatusMessageTooLongException('Message is longer than supported length of ' . self::MAXIMUM_MESSAGE_LENGTH . ' characters');
 		}
 		// Check that clearAt is in the future
 		if ($clearAt !== null && $clearAt < $this->timeFactory->getTime()) {
@@ -255,7 +282,7 @@ class StatusService {
 			return false;
 		}
 
-		$userStatus->setStatus('offline');
+		$userStatus->setStatus(IUserStatus::OFFLINE);
 		$userStatus->setStatusTimestamp(0);
 		$userStatus->setIsUserDefined(false);
 
@@ -309,8 +336,13 @@ class StatusService {
 	 */
 	private function processStatus(UserStatus $status): UserStatus {
 		$clearAt = $status->getClearAt();
-		if ($clearAt !== null && $clearAt < $this->timeFactory->getTime()) {
+
+		if ($status->getStatusTimestamp() < $this->timeFactory->getTime() - self::INVALIDATE_STATUS_THRESHOLD
+			&& (!$status->getIsUserDefined() || $status->getStatus() === IUserStatus::ONLINE)) {
 			$this->cleanStatus($status);
+		}
+		if ($clearAt !== null && $clearAt < $this->timeFactory->getTime()) {
+			$this->cleanStatusMessage($status);
 		}
 		if ($status->getMessageId() !== null) {
 			$this->addDefaultMessage($status);
@@ -323,6 +355,17 @@ class StatusService {
 	 * @param UserStatus $status
 	 */
 	private function cleanStatus(UserStatus $status): void {
+		$status->setStatus(IUserStatus::OFFLINE);
+		$status->setStatusTimestamp($this->timeFactory->getTime());
+		$status->setIsUserDefined(false);
+
+		$this->mapper->update($status);
+	}
+
+	/**
+	 * @param UserStatus $status
+	 */
+	private function cleanStatusMessage(UserStatus $status): void {
 		$status->setMessageId(null);
 		$status->setCustomIcon(null);
 		$status->setCustomMessage(null);

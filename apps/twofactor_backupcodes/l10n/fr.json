@@ -16,9 +16,6 @@
     "An error occurred while generating your backup codes" : "Une erreur est survenue lors de la génération de vos codes de récupération",
     "{name} backup codes" : "{name} codes de récupération",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Utilisez l'un des codes de secours que vous avez crée lors du paramétrage de l'authentification à deux facteurs.",
-    "Submit" : "Envoyer",
-    "function" : "fonction",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["petie-icone-de-chargement","generer-code-de-secours"]
+    "Submit" : "Envoyer"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

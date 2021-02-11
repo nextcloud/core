@@ -58,7 +58,7 @@ OC.L10N.register(
     "Public" : "Offentlig",
     "Restricted" : "Begränsad",
     "Invisible" : "Osynlig",
-    "Delete" : "Radera",
+    "Delete" : "Ta bort",
     "Reset" : "Återställ",
     "No files in here" : "Inga filer här inne",
     "No entries found in this folder" : "Ingenting hittades i denna mapp",

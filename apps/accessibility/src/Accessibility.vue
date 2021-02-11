@@ -90,14 +90,18 @@ export default {
 		// SELECT handlers
 		selectHighContrast(id) {
 			this.selectItem('highcontrast', id)
+			document.body.classList.toggle('theme--highcontrast')
 		},
 		selectTheme(id) {
 			const previous = this.selected.theme
 			if (previous) {
-				document.body.classList.remove(previous)
+				document.body.classList.remove(`theme--${previous}`)
 			}
 			if (id) {
-				document.body.classList.add(id)
+				document.body.classList.remove('theme--light')
+				document.body.classList.add(`theme--${id}`)
+			} else {
+				document.body.classList.add('theme--light')
 			}
 
 			this.selectItem('theme', id)

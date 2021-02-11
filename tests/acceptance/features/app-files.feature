@@ -105,12 +105,13 @@ Feature: app-files
 #    Then I see that the current section is "Favorites"
 #    Then I see that the file list contains a file named "welcome.txt"
 
-  Scenario: show shares
-    Given I am logged in
-    And I share the link for "welcome.txt"
-    When I open the "Shares" section
-    Then I see that the current section is "Shares"
-    Then I see that the file list contains a file named "welcome.txt"
+# TODO: disabled unreliable test
+#  Scenario: show shares
+#    Given I am logged in
+#    And I share the link for "welcome.txt"
+#    When I open the "Shares" section
+#    Then I see that the current section is "Shares"
+#    Then I see that the file list contains a file named "welcome.txt"
 
 #  Scenario: show shares for a second time
 #    Given I am logged in

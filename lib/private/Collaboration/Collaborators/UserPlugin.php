@@ -4,10 +4,13 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license GNU AGPL version 3 or any later version
@@ -38,6 +41,7 @@ use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
 use OCP\Share\IShare;
+use OCP\UserStatus\IManager as IUserStatusManager;
 
 class UserPlugin implements ISearchPlugin {
 	/* @var bool */
@@ -53,13 +57,29 @@ class UserPlugin implements ISearchPlugin {
 	private $userSession;
 	/** @var IUserManager */
 	private $userManager;
+	/** @var IUserStatusManager */
+	private $userStatusManager;
 
-	public function __construct(IConfig $config, IUserManager $userManager, IGroupManager $groupManager, IUserSession $userSession) {
+	/**
+	 * UserPlugin constructor.
+	 *
+	 * @param IConfig $config
+	 * @param IUserManager $userManager
+	 * @param IGroupManager $groupManager
+	 * @param IUserSession $userSession
+	 * @param IUserStatusManager $userStatusManager
+	 */
+	public function __construct(IConfig $config,
+								IUserManager $userManager,
+								IGroupManager $groupManager,
+								IUserSession $userSession,
+								IUserStatusManager $userStatusManager) {
 		$this->config = $config;
 
 		$this->groupManager = $groupManager;
 		$this->userSession = $userSession;
 		$this->userManager = $userManager;
+		$this->userStatusManager = $userStatusManager;
 
 		$this->shareWithGroupOnly = $this->config->getAppValue('core', 'shareapi_only_share_with_group_members', 'no') === 'yes';
 		$this->shareeEnumeration = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes') === 'yes';
@@ -78,7 +98,15 @@ class UserPlugin implements ISearchPlugin {
 				$usersInGroup = $this->groupManager->displayNamesInGroup($userGroupId, $search, $limit, $offset);
 				foreach ($usersInGroup as $userId => $displayName) {
 					$userId = (string) $userId;
-					$users[$userId] = $this->userManager->get($userId);
+					$user = $this->userManager->get($userId);
+					if (!$user->isEnabled()) {
+						// Ignore disabled users
+						continue;
+					}
+					$users[$userId] = $user;
+				}
+				if (count($usersInGroup) >= $limit) {
+					$hasMoreResults = true;
 				}
 			}
 		} else {
@@ -99,24 +127,44 @@ class UserPlugin implements ISearchPlugin {
 
 		$foundUserById = false;
 		$lowerSearch = strtolower($search);
+		$userStatuses = $this->userStatusManager->getUserStatuses(array_keys($users));
 		foreach ($users as $uid => $user) {
 			$userDisplayName = $user->getDisplayName();
 			$userEmail = $user->getEMailAddress();
 			$uid = (string) $uid;
+
+			$status = [];
+			if (array_key_exists($uid, $userStatuses)) {
+				$userStatus = $userStatuses[$uid];
+				$status = [
+					'status' => $userStatus->getStatus(),
+					'message' => $userStatus->getMessage(),
+					'icon' => $userStatus->getIcon(),
+					'clearAt' => $userStatus->getClearAt()
+						? (int)$userStatus->getClearAt()->format('U')
+						: null,
+				];
+			}
+
+
 			if (
-				strtolower($uid) === $lowerSearch ||
+				$lowerSearch !== '' && (strtolower($uid) === $lowerSearch ||
 				strtolower($userDisplayName) === $lowerSearch ||
-				strtolower($userEmail) === $lowerSearch
+				strtolower($userEmail) === $lowerSearch)
 			) {
 				if (strtolower($uid) === $lowerSearch) {
 					$foundUserById = true;
 				}
 				$result['exact'][] = [
 					'label' => $userDisplayName,
+					'subline' => $status['message'] ?? '',
+					'icon' => 'icon-user',
 					'value' => [
 						'shareType' => IShare::TYPE_USER,
 						'shareWith' => $uid,
 					],
+					'shareWithDisplayNameUnique' => !empty($userEmail) ? $userEmail : $uid,
+					'status' => $status,
 				];
 			} else {
 				$addToWideResults = false;
@@ -134,10 +182,14 @@ class UserPlugin implements ISearchPlugin {
 				if ($addToWideResults) {
 					$result['wide'][] = [
 						'label' => $userDisplayName,
+						'subline' => $status['message'] ?? '',
+						'icon' => 'icon-user',
 						'value' => [
 							'shareType' => IShare::TYPE_USER,
 							'shareWith' => $uid,
 						],
+						'shareWithDisplayNameUnique' => !empty($userEmail) ? $userEmail : $uid,
+						'status' => $status,
 					];
 				}
 			}
@@ -157,12 +209,31 @@ class UserPlugin implements ISearchPlugin {
 				}
 
 				if ($addUser) {
+					$status = [];
+					$uid = $user->getUID();
+					$userEmail = $user->getEMailAddress();
+					if (array_key_exists($user->getUID(), $userStatuses)) {
+						$userStatus = $userStatuses[$user->getUID()];
+						$status = [
+							'status' => $userStatus->getStatus(),
+							'message' => $userStatus->getMessage(),
+							'icon' => $userStatus->getIcon(),
+							'clearAt' => $userStatus->getClearAt()
+								? (int)$userStatus->getClearAt()->format('U')
+								: null,
+						];
+					}
+
 					$result['exact'][] = [
 						'label' => $user->getDisplayName(),
+						'icon' => 'icon-user',
+						'subline' => $status['message'] ?? '',
 						'value' => [
 							'shareType' => IShare::TYPE_USER,
 							'shareWith' => $user->getUID(),
 						],
+						'shareWithDisplayNameUnique' => $userEmail !== null && $userEmail !== '' ? $userEmail : $uid,
+						'status' => $status,
 					];
 				}
 			}

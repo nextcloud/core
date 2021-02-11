@@ -81,7 +81,7 @@ class BackupCodeStorage {
 			$result[] = $code;
 		}
 
-		$this->eventDispatcher->dispatch(CodesGenerated::class, new CodesGenerated($user));
+		$this->eventDispatcher->dispatchTyped(new CodesGenerated($user));
 
 		return $result;
 	}

@@ -3,6 +3,7 @@
  *
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Rinat Gumirov <rinat.gumirov@mail.ru>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *

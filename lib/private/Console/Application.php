@@ -221,7 +221,11 @@ class Application {
 				$c = \OC::$server->query($command);
 			} catch (QueryException $e) {
 				if (class_exists($command)) {
-					$c = new $command();
+					try {
+						$c = new $command();
+					} catch (\ArgumentCountError $e2) {
+						throw new \Exception("Failed to construct console command '$command': " . $e->getMessage(), 0, $e);
+					}
 				} else {
 					throw new \Exception("Console command '$command' is unknown and could not be loaded");
 				}

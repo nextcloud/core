@@ -43,7 +43,6 @@ namespace OCP;
 /**
  * Interface IL10N
  *
- * @package OCP
  * @since 6.0.0
  */
 interface IL10N {

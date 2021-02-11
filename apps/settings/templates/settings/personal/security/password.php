@@ -37,7 +37,7 @@ if ($_['passwordChangeSupported']) {
 	<h2 class="inlineblock"><?php p($l->t('Password'));?></h2>
 	<span id="password-error-msg" class="msg success hidden">Saved</span>
 	<div class="personal-settings-setting-box personal-settings-password-box">
-			<form id="passwordform">
+			<form id="passwordform" method="POST">
 				<label for="pass1" class="hidden-visually"><?php p($l->t('Current password')); ?>: </label>
 				<input type="password" id="pass1" name="oldpassword"
 					   placeholder="<?php p($l->t('Current password'));?>"

@@ -39,7 +39,6 @@ namespace OCP\AppFramework\Http;
  * This is a temp helper class from the default ContentSecurityPolicy to allow slow
  * migration to a stricter CSP. This does not allow unsafe eval.
  *
- * @package OCP\AppFramework\Http
  * @since 14.0.0
  * @deprecated 17.0.0
  */

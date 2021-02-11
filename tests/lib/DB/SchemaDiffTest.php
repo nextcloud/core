@@ -26,6 +26,7 @@ use Doctrine\DBAL\Schema\SchemaDiff;
 use OC\DB\MDB2SchemaManager;
 use OC\DB\MDB2SchemaReader;
 use OCP\IConfig;
+use OCP\IDBConnection;
 use Test\TestCase;
 
 /**
@@ -36,8 +37,10 @@ use Test\TestCase;
  * @package Test\DB
  */
 class SchemaDiffTest extends TestCase {
-	/** @var \Doctrine\DBAL\Connection $connection */
+	/** @var IDBConnection $connection */
 	private $connection;
+	/** @var \Doctrine\DBAL\Connection $connection */
+	private $internalConnection;
 
 	/** @var MDB2SchemaManager */
 	private $manager;
@@ -57,8 +60,9 @@ class SchemaDiffTest extends TestCase {
 
 		$this->config = \OC::$server->getConfig();
 		$this->connection = \OC::$server->getDatabaseConnection();
-		$this->manager = new MDB2SchemaManager($this->connection);
-		$this->testPrefix= strtolower($this->getUniqueID($this->config->getSystemValue('dbtableprefix', 'oc_'), 3));
+		$this->internalConnection = \OC::$server->get(\OC\DB\Connection::class);
+		$this->manager = new MDB2SchemaManager($this->internalConnection);
+		$this->testPrefix = strtolower($this->getUniqueID($this->config->getSystemValue('dbtableprefix', 'oc_'), 3));
 	}
 
 	protected function tearDown(): void {
@@ -79,17 +83,17 @@ class SchemaDiffTest extends TestCase {
 		$this->manager->createDbFromStructure($schemaFile);
 
 		$schemaReader = new MDB2SchemaReader($this->config, $this->connection->getDatabasePlatform());
-		$toSchema = new Schema([], [], $this->connection->getSchemaManager()->createSchemaConfig());
+		$toSchema = new Schema([], [], $this->internalConnection->getSchemaManager()->createSchemaConfig());
 		$endSchema = $schemaReader->loadSchemaFromFile($schemaFile, $toSchema);
 
 		// get the diff
 		/** @var SchemaDiff $diff */
 		$migrator = $this->manager->getMigrator();
-		$diff = $this->invokePrivate($migrator, 'getDiff', [$endSchema, $this->connection]);
+		$diff = $this->invokePrivate($migrator, 'getDiff', [$endSchema, $this->internalConnection]);
 
 		// no sql statement is expected
 		$sqls = $diff->toSql($this->connection->getDatabasePlatform());
-		$this->assertEquals([], $sqls);
+		$this->assertEmpty($sqls);
 	}
 
 	public function providesSchemaFiles() {

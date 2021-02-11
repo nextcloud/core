@@ -51,7 +51,7 @@ class CommentTest extends TestCase {
 		$this->assertSame($object['id'], $comment->getObjectId());
 	}
 
-	
+
 	public function testSetIdIllegalInput() {
 		$this->expectException(\OCP\Comments\IllegalIDChangeException::class);
 
@@ -120,7 +120,7 @@ class CommentTest extends TestCase {
 		$comment->$setter($type, $id);
 	}
 
-	
+
 	public function testSetUberlongMessage() {
 		$this->expectException(\OCP\Comments\MessageTooLongException::class);
 
@@ -149,7 +149,7 @@ class CommentTest extends TestCase {
 					' cc @23452-4333-54353-2342 @yolo!' .
 					' however the most important thing to know is that www.croissant.com/@oil is not valid' .
 					' and won\'t match anything at all',
-				['foobar', 'barfoo', 'foo@bar.com', 'bar@foo.org@foobar.io', '23452-4333-54353-2342', 'yolo']
+				['bar@foo.org@foobar.io', '23452-4333-54353-2342', 'foo@bar.com', 'foobar', 'barfoo', 'yolo']
 			],
 			[
 				'@@chef is also a valid mention, no matter how strange it looks', ['@chef']

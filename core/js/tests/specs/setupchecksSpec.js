@@ -62,7 +62,7 @@ describe('OC.SetupChecks tests', function() {
 
 	describe('checkWellKnownUrl', function() {
 		it('should fail with another response status code than the expected one', function(done) {
-			var async = OC.SetupChecks.checkWellKnownUrl('/.well-known/caldav', 'http://example.org/PLACEHOLDER', true, 207);
+			var async = OC.SetupChecks.checkWellKnownUrl('PROPFIND', '/.well-known/caldav', 'http://example.org/PLACEHOLDER', true, 207);
 
 			suite.server.requests[0].respond(200);
 
@@ -76,7 +76,7 @@ describe('OC.SetupChecks tests', function() {
 		});
 
 		it('should return no error with the expected response status code', function(done) {
-			var async = OC.SetupChecks.checkWellKnownUrl('/.well-known/caldav', 'http://example.org/PLACEHOLDER', true, 207);
+			var async = OC.SetupChecks.checkWellKnownUrl('PROPFIND', '/.well-known/caldav', 'http://example.org/PLACEHOLDER', true, 207);
 
 			suite.server.requests[0].respond(207);
 
@@ -87,7 +87,7 @@ describe('OC.SetupChecks tests', function() {
 		});
 
 		it('should return no error with the default expected response status code', function(done) {
-			var async = OC.SetupChecks.checkWellKnownUrl('/.well-known/caldav', 'http://example.org/PLACEHOLDER', true);
+			var async = OC.SetupChecks.checkWellKnownUrl('PROPFIND', '/.well-known/caldav', 'http://example.org/PLACEHOLDER', true);
 
 			suite.server.requests[0].respond(207);
 
@@ -98,7 +98,7 @@ describe('OC.SetupChecks tests', function() {
 		});
 
 		it('should return no error when no check should be run', function(done) {
-			var async = OC.SetupChecks.checkWellKnownUrl('/.well-known/caldav', 'http://example.org/PLACEHOLDER', false);
+			var async = OC.SetupChecks.checkWellKnownUrl('PROPFIND', '/.well-known/caldav', 'http://example.org/PLACEHOLDER', false);
 
 			async.done(function( data, s, x ){
 				expect(data).toEqual([]);
@@ -240,6 +240,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -250,6 +251,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -294,6 +296,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -304,6 +307,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -349,6 +353,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -359,6 +364,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -402,6 +408,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -412,6 +419,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -453,6 +461,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -463,6 +472,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -504,6 +514,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -516,6 +527,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -557,6 +569,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -567,6 +580,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -608,6 +622,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: false,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -618,6 +633,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -659,6 +675,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -669,6 +686,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -677,7 +695,7 @@ describe('OC.SetupChecks tests', function() {
 			async.done(function( data, s, x ){
 				expect(data).toEqual([{
 					msg: 'The PHP memory limit is below the recommended value of 512MB.',
-					type: OC.SetupChecks.MESSAGE_TYPE_WARNING
+					type: OC.SetupChecks.MESSAGE_TYPE_ERROR
 				}]);
 				done();
 			});
@@ -731,6 +749,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -741,6 +760,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -783,6 +803,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -793,6 +814,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -835,6 +857,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -845,6 +868,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -887,6 +911,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: false,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -897,6 +922,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -938,6 +964,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -948,6 +975,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: true,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -989,6 +1017,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -999,6 +1028,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
 					reverseProxyDocs: 'https://docs.nextcloud.com/foo/bar.html',
 					reverseProxyGeneratedURL: 'http://server',
@@ -1041,6 +1071,7 @@ describe('OC.SetupChecks tests', function() {
 					isSettimelimitAvailable: true,
 					hasFreeTypeSupport: true,
 					missingIndexes: [],
+					missingPrimaryKeys: [],
 					missingColumns: [],
 					cronErrors: [],
 					cronInfo: {
@@ -1051,6 +1082,7 @@ describe('OC.SetupChecks tests', function() {
 					recommendedPHPModules: [],
 					pendingBigIntConversionColumns: [],
 					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: true,
 					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: false,
 					reverseProxyGeneratedURL: 'https://server',
 				})
@@ -1060,6 +1092,59 @@ describe('OC.SetupChecks tests', function() {
 				expect(data).toEqual([{
 					msg: 'This instance uses an S3 based object store as primary storage. The uploaded files are stored temporarily on the server and thus it is recommended to have 50 GB of free space available in the temp directory of PHP. Check the logs for full details about the path and the available space. To improve this please change the temporary directory in the php.ini or make more space available in that path.',
 					type: OC.SetupChecks.MESSAGE_TYPE_WARNING
+				}]);
+				done();
+			});
+		});
+
+		it('should return an info if there is no default phone region', function(done) {
+			var async = OC.SetupChecks.checkSetup();
+
+			suite.server.requests[0].respond(
+				200,
+				{
+					'Content-Type': 'application/json',
+				},
+				JSON.stringify({
+					hasFileinfoInstalled: true,
+					isGetenvServerWorking: true,
+					isReadOnlyConfig: false,
+					hasWorkingFileLocking: true,
+					hasValidTransactionIsolationLevel: true,
+					suggestedOverwriteCliURL: '',
+					isRandomnessSecure: true,
+					securityDocs: 'https://docs.owncloud.org/myDocs.html',
+					serverHasInternetConnectionProblems: false,
+					isMemcacheConfigured: true,
+					forwardedForHeadersWorking: true,
+					isCorrectMemcachedPHPModuleInstalled: true,
+					hasPassedCodeIntegrityCheck: true,
+					isOpcacheProperlySetup: true,
+					hasOpcacheLoaded: true,
+					isSettimelimitAvailable: true,
+					hasFreeTypeSupport: true,
+					missingIndexes: [],
+					missingPrimaryKeys: [],
+					missingColumns: [],
+					cronErrors: [],
+					cronInfo: {
+						diffInSeconds: 0
+					},
+					isMemoryLimitSufficient: true,
+					appDirsWithDifferentOwner: [],
+					recommendedPHPModules: [],
+					pendingBigIntConversionColumns: [],
+					isMysqlUsedWithoutUTF8MB4: false,
+					isDefaultPhoneRegionSet: false,
+					isEnoughTempSpaceAvailableIfS3PrimaryStorageIsUsed: true,
+					reverseProxyGeneratedURL: 'https://server',
+				})
+			);
+
+			async.done(function( data, s, x ){
+				expect(data).toEqual([{
+					msg: 'Your installation has no default phone region set. This is required to validate phone numbers in the profile settings without a country code. To allow numbers without a country code, please add "default_phone_region" with the respective <a target="_blank" rel="noreferrer noopener" class="external" href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements">ISO 3166-1 code ↗</a> of the region to your config file.',
+					type: OC.SetupChecks.MESSAGE_TYPE_INFO
 				}]);
 				done();
 			});
@@ -1098,7 +1183,8 @@ describe('OC.SetupChecks tests', function() {
 				{
 					'Content-Type': 'application/json',
 					'Strict-Transport-Security': 'max-age=15768000'
-				}
+				},
+				'{}'
 			);
 
 			async.done(function( data, s, x ){

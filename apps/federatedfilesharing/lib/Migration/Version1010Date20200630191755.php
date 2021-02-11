@@ -1,10 +1,12 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2020 Joas Schilling <coding@schilljs.com>
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,13 +21,13 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 namespace OCA\FederatedFileSharing\Migration;
 
 use Closure;
-use Doctrine\DBAL\Types\Types;
+use OCP\DB\Types;
 use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
@@ -43,15 +45,16 @@ class Version1010Date20200630191755 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('federated_reshares')) {
 			$table = $schema->createTable('federated_reshares');
-			$table->addColumn('share_id', Types::INTEGER, [
+			$table->addColumn('share_id', Types::BIGINT, [
 				'notnull' => true,
-				'length' => 4,
 			]);
-			$table->addColumn('remote_id', Types::INTEGER, [
-				'notnull' => true,
-				'length' => 4,
+			$table->addColumn('remote_id', Types::STRING, [
+				'notnull' => false,
+				'length' => 255,
+				'default' => '',
 			]);
-			$table->addUniqueIndex(['share_id'], 'share_id_index');
+			$table->setPrimaryKey(['share_id'], 'federated_res_pk');
+//			$table->addUniqueIndex(['share_id'], 'share_id_index');
 		}
 		return $schema;
 	}

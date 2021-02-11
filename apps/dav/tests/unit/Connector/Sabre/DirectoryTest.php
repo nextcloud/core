@@ -4,11 +4,12 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -32,6 +33,7 @@ use OC\Files\FileInfo;
 use OC\Files\Storage\Wrapper\Quota;
 use OCA\DAV\Connector\Sabre\Directory;
 use OCP\Files\ForbiddenException;
+use OCP\Files\Mount\IMountPoint;
 
 class TestViewDirectory extends \OC\Files\View {
 	private $updatables;
@@ -269,9 +271,12 @@ class DirectoryTest extends \Test\TestCase {
 	}
 
 	public function testGetQuotaInfoUnlimited() {
+		$mountPoint = $this->createMock(IMountPoint::class);
 		$storage = $this->getMockBuilder(Quota::class)
 			->disableOriginalConstructor()
 			->getMock();
+		$mountPoint->method('getStorage')
+			->willReturn($storage);
 
 		$storage->expects($this->any())
 			->method('instanceOfStorage')
@@ -292,21 +297,27 @@ class DirectoryTest extends \Test\TestCase {
 			->willReturn(200);
 
 		$this->info->expects($this->once())
-			->method('getStorage')
-			->willReturn($storage);
+			->method('getMountPoint')
+			->willReturn($mountPoint);
 
 		$this->view->expects($this->once())
 			->method('getFileInfo')
 			->willReturn($this->info);
+
+		$mountPoint->method('getMountPoint')
+			->willReturn('/user/files/mymountpoint');
 
 		$dir = new Directory($this->view, $this->info);
 		$this->assertEquals([200, -3], $dir->getQuotaInfo()); //200 used, unlimited
 	}
 
 	public function testGetQuotaInfoSpecific() {
+		$mountPoint = $this->createMock(IMountPoint::class);
 		$storage = $this->getMockBuilder(Quota::class)
 			->disableOriginalConstructor()
 			->getMock();
+		$mountPoint->method('getStorage')
+			->willReturn($storage);
 
 		$storage->expects($this->any())
 			->method('instanceOfStorage')
@@ -328,8 +339,11 @@ class DirectoryTest extends \Test\TestCase {
 			->willReturn(200);
 
 		$this->info->expects($this->once())
-			->method('getStorage')
-			->willReturn($storage);
+			->method('getMountPoint')
+			->willReturn($mountPoint);
+
+		$mountPoint->method('getMountPoint')
+			->willReturn('/user/files/mymountpoint');
 
 		$this->view->expects($this->once())
 			->method('getFileInfo')

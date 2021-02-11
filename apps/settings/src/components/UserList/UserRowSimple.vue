@@ -84,7 +84,9 @@
 </template>
 
 <script>
-import { PopoverMenu, Actions, ActionButton } from '@nextcloud/vue'
+import PopoverMenu from '@nextcloud/vue/dist/Components/PopoverMenu'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ClickOutside from 'vue-click-outside'
 import { getCurrentUser } from '@nextcloud/auth'
 import UserRowMixin from '../../mixins/UserRowMixin'
@@ -154,11 +156,21 @@ export default {
 			return getCurrentUser().uid !== this.user.id || this.settings.isAdmin
 		},
 		userQuota() {
-			if (this.user.quota.quota === 'none') {
-				return t('settings', 'Unlimited')
+			let quota = this.user.quota.quota
+
+			if (quota === 'default') {
+				quota = this.settings.defaultQuota
+				if (quota !== 'none') {
+					// convert to numeric value to match what the server would usually return
+					quota = OC.Util.computerFileSize(quota)
+				}
 			}
-			if (this.user.quota.quota >= 0) {
-				return OC.Util.humanFileSize(this.user.quota.quota)
+
+			// when the default quota is unlimited, the server returns -3 here, map it to "none"
+			if (quota === 'none' || quota === -3) {
+				return t('settings', 'Unlimited')
+			} else if (quota >= 0) {
+				return OC.Util.humanFileSize(quota)
 			}
 			return OC.Util.humanFileSize(0)
 		},

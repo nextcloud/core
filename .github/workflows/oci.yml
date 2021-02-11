@@ -1,0 +1,56 @@
+name: PHPUnit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - stable*
+
+jobs:
+  phpunit-oci8:
+    runs-on: ubuntu-latest
+
+    strategy:
+      # do not stop on another job's failure
+      fail-fast: false
+      matrix:
+        php-versions: [ '7.4' ]
+        databases: [ 'oci' ]
+
+    name: php${{ matrix.php-versions }}-${{ matrix.databases }}
+
+    services:
+      oracle:
+        image: deepdiver/docker-oracle-xe-11g # "wnameless/oracle-xe-11g-r2"
+        ports:
+          - "1521:1521"
+
+    steps:
+      - name: Checkout server
+        uses: actions/checkout@v2
+
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+
+      - name: Set up php ${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, iconv, fileinfo, intl, sqlite, pdo_sqlite, oci8
+          tools: phpunit:8.5.2
+          coverage: none
+
+      - name: Set up Nextcloud
+        run: |
+          mkdir data
+          ./occ maintenance:install --verbose --database=oci --database-name=XE --database-host=127.0.0.1 --database-port=1521 --database-user=autotest --database-pass=owncloud --admin-user admin --admin-pass admin
+          php -f index.php
+
+      - name: PHPUnit
+        working-directory: tests
+        run: phpunit --configuration phpunit-autotest.xml --group DB,SLOWDB

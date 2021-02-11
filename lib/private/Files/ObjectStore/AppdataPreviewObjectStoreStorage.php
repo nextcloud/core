@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2020, Morris Jobke <hey@morrisjobke.de>
  *

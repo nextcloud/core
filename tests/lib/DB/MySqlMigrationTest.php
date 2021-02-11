@@ -24,7 +24,7 @@ class MySqlMigrationTest extends \Test\TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->connection = \OC::$server->getDatabaseConnection();
+		$this->connection = \OC::$server->get(\OC\DB\Connection::class);
 		if (!$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\MySqlPlatform) {
 			$this->markTestSkipped("Test only relevant on MySql");
 		}

@@ -2,6 +2,7 @@
 /**
  * @copyright Robin Appelman <robin@icewind.nl>
  *
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -61,6 +62,7 @@ class StorageGlobal {
 		while ($row = $result->fetch()) {
 			$this->cache[$row['id']] = $row;
 		}
+		$result->closeCursor();
 	}
 
 	/**
@@ -74,7 +76,10 @@ class StorageGlobal {
 				->from('storages')
 				->where($builder->expr()->eq('id', $builder->createNamedParameter($storageId)));
 
-			$row = $query->execute()->fetch();
+			$result = $query->execute();
+			$row = $result->fetch();
+			$result->closeCursor();
+
 			if ($row) {
 				$this->cache[$storageId] = $row;
 			}

@@ -62,7 +62,7 @@ class RemotePluginTest extends TestCase {
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->contactsManager = $this->createMock(IManager::class);
-		$this->cloudIdManager = new CloudIdManager();
+		$this->cloudIdManager = new CloudIdManager($this->contactsManager);
 		$this->searchResult = new SearchResult();
 	}
 
@@ -104,8 +104,12 @@ class RemotePluginTest extends TestCase {
 
 		$this->contactsManager->expects($this->any())
 			->method('search')
-			->with($searchTerm, ['CLOUD', 'FN'])
-			->willReturn($contacts);
+			->willReturnCallback(function ($search, $searchAttributes) use ($searchTerm, $contacts) {
+				if ($search === $searchTerm) {
+					return $contacts;
+				}
+				return [];
+			});
 
 		$moreResults = $this->plugin->search($searchTerm, 2, 0, $this->searchResult);
 		$result = $this->searchResult->asArray();
@@ -124,6 +128,10 @@ class RemotePluginTest extends TestCase {
 	 */
 	public function testSplitUserRemote($remote, $expectedUser, $expectedUrl) {
 		$this->instantiatePlugin();
+
+		$this->contactsManager->expects($this->any())
+			->method('search')
+			->willReturn([]);
 
 		list($remoteUser, $remoteUrl) = $this->plugin->splitUserRemote($remote);
 		$this->assertSame($expectedUser, $remoteUser);

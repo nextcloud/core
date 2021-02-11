@@ -93,7 +93,7 @@ class Expiration {
 		$time = $this->timeFactory->getTime();
 		// Never expire dates in future e.g. misconfiguration or negative time
 		// adjustment
-		if ($time<$timestamp) {
+		if ($time < $timestamp) {
 			return false;
 		}
 
@@ -153,7 +153,7 @@ class Expiration {
 			$isValid = false;
 			\OC::$server->getLogger()->warning(
 					$minValue . ' is not a valid value for minimal versions retention obligation. Check versions_retention_obligation in your config.php. Falling back to auto.',
-					['app'=>'files_versions']
+					['app' => 'files_versions']
 			);
 		}
 
@@ -161,7 +161,7 @@ class Expiration {
 			$isValid = false;
 			\OC::$server->getLogger()->warning(
 					$maxValue . ' is not a valid value for maximal versions retention obligation. Check versions_retention_obligation in your config.php. Falling back to auto.',
-					['app'=>'files_versions']
+					['app' => 'files_versions']
 			);
 		}
 

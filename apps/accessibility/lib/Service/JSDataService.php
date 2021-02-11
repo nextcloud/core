@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2020, Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -19,17 +20,18 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\Accessibility\Service;
 
 use OCA\Accessibility\AppInfo\Application;
+use OCP\AppFramework\Services\InitialStateProvider;
 use OCP\IConfig;
 use OCP\IUserSession;
 
-class JSDataService implements \JsonSerializable {
+class JSDataService extends InitialStateProvider {
 	/** @var IUserSession */
 	private $userSession;
 	/** @var IConfig */
@@ -43,7 +45,11 @@ class JSDataService implements \JsonSerializable {
 		$this->config = $config;
 	}
 
-	public function jsonSerialize() {
+	public function getKey(): string {
+		return 'data';
+	}
+
+	public function getData() {
 		$user = $this->userSession->getUser();
 
 		if ($user === null) {

@@ -3,9 +3,11 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Stefan Weil <sw@weilnetz.de>
  * @author Sujith H <sharidasan@owncloud.com>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -26,6 +28,7 @@
 require __DIR__ . '/../../vendor/autoload.php';
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use PHPUnit\Framework\Assert;
 
 class CommandLineContext implements \Behat\Behat\Context\Context {
 	use CommandLine;
@@ -127,5 +130,12 @@ class CommandLineContext implements \Behat\Behat\Context\Context {
 		$davPath = $this->featureContext->getDavFilesPath($user);
 		$davPath = rtrim($davPath, '/') . $this->lastTransferPath;
 		$this->featureContext->usingDavPath($davPath);
+	}
+
+	/**
+	 * @Then /^transfer folder name contains "([^"]+)"$/
+	 */
+	public function transferFolderNameContains($text) {
+		Assert::assertContains($text, $this->lastTransferPath);
 	}
 }

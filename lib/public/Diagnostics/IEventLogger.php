@@ -27,7 +27,6 @@ namespace OCP\Diagnostics;
 /**
  * Interface IEventLogger
  *
- * @package OCP\Diagnostics
  * @since 8.0.0
  */
 interface IEventLogger {

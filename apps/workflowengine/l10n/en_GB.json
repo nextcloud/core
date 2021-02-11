@@ -59,25 +59,6 @@
     "Request user agent" : "Request user agent",
     "User group membership" : "User group membership",
     "is member of" : "is member of",
-    "is not member of" : "is not member of",
-    "Example: {placeholder}" : "Example: {placeholder}",
-    "Select tag…" : "Select tag…",
-    "Start" : "Start",
-    "End" : "End",
-    "Select timezone…" : "Select timezone…",
-    "Sync clients" : "Sync clients",
-    "Short rule description" : "Short rule description",
-    "Add rule" : "Add rule",
-    "Reset" : "Reset",
-    "Saving…" : "Saving…",
-    "Group list is empty" : "Group list is empty",
-    "Unable to retrieve the group list" : "Unable to retrieve the group list",
-    "Saved" : "Saved",
-    "Saving failed:" : "Saving failed:",
-    "Add rule group" : "Add rule group",
-    "Tag management" : "Tag management",
-    "Files workflow engine" : "Files workflow engine",
-    "Open documentation" : "Open documentation",
-    "Loading…" : "Loading…"
+    "is not member of" : "is not member of"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

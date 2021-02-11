@@ -22,7 +22,6 @@ OC.L10N.register(
     "A non-default update server is in use to be checked for updates:" : "Atnaujinimų tikrinimui yra naudojamas ne numatytasis atnaujinimų serveris: ",
     "Update channel:" : "Atnaujinimo kanalas:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Visada galite atnaujinti į naujesnę versiją. Tačiau niekada negalite sendinti į stabilesnę versiją.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Turėkite omenyje, kad po naujos versijos išleidimo, gali praeiti šiek tiek laiko, kol ji čia taps matoma. Mes išleidžiame naujas versijas paskirstytas pagal laiką savo naudotojams ir, kartais, pastebėjus klaidas, praleidžiame versiją.",
     "Notify members of the following groups about available updates:" : "Apie galimus atnaujinimus informuoti narius iš grupių:",
     "Only notification for app updates are available." : "Yra prieinami tik pranešimai apie programėlių atnaujinimus.",
     "The selected update channel does not support updates of the server." : "Pasirinktas kanalas nepalaiko serverio atnaujinimų.",
@@ -37,6 +36,7 @@ OC.L10N.register(
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "Paskiausia stabili versija. Tinka įprastam naudojimui ir visada bus atnaujinama į naujausią pagrindinę versiją.",
     "Beta" : "Beta",
     "A pre-release version only for testing new features, not for production environments." : "Išankstinės laidos versija, skirta tik naujų ypatybių išbandymui, o ne darbinėms aplinkoms.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> programėlė neturi šiai versijai prieinamo atnaujinimo","<strong>%n</strong> programėlės neturi šiai versijai prieinamo atnaujinimo","<strong>%n</strong> programėlių neturi šiai versijai prieinamo atnaujinimo","<strong>%n</strong> programėlė neturi šiai versijai prieinamo atnaujinimo"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> programėlė neturi šiai versijai prieinamo atnaujinimo","<strong>%n</strong> programėlės neturi šiai versijai prieinamo atnaujinimo","<strong>%n</strong> programėlių neturi šiai versijai prieinamo atnaujinimo","<strong>%n</strong> programėlė neturi šiai versijai prieinamo atnaujinimo"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Turėkite omenyje, kad po naujos versijos išleidimo, gali praeiti šiek tiek laiko, kol ji čia taps matoma. Mes išleidžiame naujas versijas paskirstytas pagal laiką savo naudotojams ir, kartais, pastebėjus klaidas, praleidžiame versiją."
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

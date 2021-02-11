@@ -435,7 +435,7 @@ abstract class AbstractPrincipalBackend implements BackendInterface {
 	 * @param String[] $metadata
 	 * @return Array
 	 */
-	private function rowToPrincipal(array $row, array $metadata=[]):array {
+	private function rowToPrincipal(array $row, array $metadata = []):array {
 		return array_merge([
 			'uri' => $this->principalPrefix . '/' . $row['backend_id'] . '-' . $row['resource_id'],
 			'{DAV:}displayname' => $row['displayname'],

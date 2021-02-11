@@ -32,7 +32,6 @@ use OCP\Files\Storage\IStorage;
 /**
  * Interface IFileCheck
  *
- * @package OCP\WorkflowEngine
  * @since 18.0.0
  */
 interface IFileCheck extends IEntityCheck {

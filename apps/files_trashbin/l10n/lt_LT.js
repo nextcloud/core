@@ -13,7 +13,7 @@ OC.L10N.register(
     "Error while emptying trashbin" : "Klaida išvalant šiukšlinę",
     "Error while removing files from trashbin" : "Klaida šalinant failus iš šiukšlinės",
     "This operation is forbidden" : "Ši operacija yra uždrausta",
-    "This directory is unavailable, please check the logs or contact the administrator" : "Katalogas neprieinamas, prašome peržiūrėti žurnalo įrašus arba susisiekti su administratoriumi",
+    "This directory is unavailable, please check the logs or contact the administrator" : "Šis katalogas neprieinamas, peržiūrėkite žurnalo įrašus arba susisiekite su administratoriumi",
     "No deleted files" : "Jokių ištrintų failų",
     "You will be able to recover deleted files from here" : "Čia galėsite atkurti ištrintus failus ",
     "No entries found in this folder" : "Šiame aplanke įrašų nerasta",

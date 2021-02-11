@@ -21,6 +21,7 @@ class ComposerStaticInitAdminAudit
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\AdminAudit\\Actions\\Action' => __DIR__ . '/..' . '/../lib/Actions/Action.php',
         'OCA\\AdminAudit\\Actions\\AppManagement' => __DIR__ . '/..' . '/../lib/Actions/AppManagement.php',
         'OCA\\AdminAudit\\Actions\\Auth' => __DIR__ . '/..' . '/../lib/Actions/Auth.php',

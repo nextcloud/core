@@ -206,19 +206,19 @@ class ScannerTest extends \Test\TestCase {
 	public function testBackgroundScanNestedIncompleteFolders() {
 		$this->storage->mkdir('folder');
 		$this->scanner->backgroundScan();
-		
+
 		$this->storage->mkdir('folder/subfolder1');
 		$this->storage->mkdir('folder/subfolder2');
-		
+
 		$this->storage->mkdir('folder/subfolder1/subfolder3');
 		$this->cache->put('folder', ['size' => -1]);
 		$this->cache->put('folder/subfolder1', ['size' => -1]);
-		
+
 		// do a scan to get the folders into the cache.
 		$this->scanner->backgroundScan();
 
 		$this->assertTrue($this->cache->inCache('folder/subfolder1/subfolder3'));
-		
+
 		$this->storage->file_put_contents('folder/subfolder1/bar1.txt', 'foobar');
 		$this->storage->file_put_contents('folder/subfolder1/subfolder3/bar3.txt', 'foobar');
 		$this->storage->file_put_contents('folder/subfolder2/bar2.txt', 'foobar');
@@ -227,7 +227,7 @@ class ScannerTest extends \Test\TestCase {
 		$this->cache->put('folder/subfolder1', ['size' => -1]);
 		$this->cache->put('folder/subfolder2', ['size' => -1]);
 		$this->cache->put('folder/subfolder1/subfolder3', ['size' => -1]);
-		
+
 		$this->scanner->backgroundScan();
 
 		$this->assertTrue($this->cache->inCache('folder/subfolder1/bar1.txt'));
@@ -343,9 +343,11 @@ class ScannerTest extends \Test\TestCase {
 		$this->assertTrue($this->cache->inCache('folder/bar.txt'));
 		$oldFolderId = $this->cache->getId('folder');
 
-		// delete the folder without removing the childs
-		$sql = 'DELETE FROM `*PREFIX*filecache` WHERE `fileid` = ?';
-		\OC_DB::executeAudited($sql, [$oldFolderId]);
+		// delete the folder without removing the children
+		$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+		$query->delete('filecache')
+			->where($query->expr()->eq('fileid', $query->createNamedParameter($oldFolderId)));
+		$query->execute();
 
 		$cachedData = $this->cache->get('folder/bar.txt');
 		$this->assertEquals($oldFolderId, $cachedData['parent']);
@@ -367,9 +369,11 @@ class ScannerTest extends \Test\TestCase {
 		$this->assertTrue($this->cache->inCache('folder/bar.txt'));
 		$oldFolderId = $this->cache->getId('folder');
 
-		// delete the folder without removing the childs
-		$sql = 'DELETE FROM `*PREFIX*filecache` WHERE `fileid` = ?';
-		\OC_DB::executeAudited($sql, [$oldFolderId]);
+		// delete the folder without removing the children
+		$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+		$query->delete('filecache')
+			->where($query->expr()->eq('fileid', $query->createNamedParameter($oldFolderId)));
+		$query->execute();
 
 		$cachedData = $this->cache->get('folder/bar.txt');
 		$this->assertEquals($oldFolderId, $cachedData['parent']);

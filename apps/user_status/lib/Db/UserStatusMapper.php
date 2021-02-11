@@ -28,6 +28,7 @@ namespace OCA\UserStatus\Db;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
+use OCP\UserStatus\IUserStatus;
 
 /**
  * Class UserStatusMapper
@@ -70,6 +71,33 @@ class UserStatusMapper extends QBMapper {
 	}
 
 	/**
+	 * @param int|null $limit
+	 * @param int|null $offset
+	 * @return array
+	 */
+	public function findAllRecent(?int $limit = null, ?int $offset = null): array {
+		$qb = $this->db->getQueryBuilder();
+
+		$qb
+			->select('*')
+			->from($this->tableName)
+			->orderBy('status_timestamp', 'DESC')
+			->where($qb->expr()->notIn('status', $qb->createNamedParameter([IUserStatus::ONLINE, IUserStatus::AWAY, IUserStatus::OFFLINE], IQueryBuilder::PARAM_STR_ARRAY)))
+			->orWhere($qb->expr()->isNotNull('message_id'))
+			->orWhere($qb->expr()->isNotNull('custom_icon'))
+			->orWhere($qb->expr()->isNotNull('custom_message'));
+
+		if ($limit !== null) {
+			$qb->setMaxResults($limit);
+		}
+		if ($offset !== null) {
+			$qb->setFirstResult($offset);
+		}
+
+		return $this->findEntities($qb);
+	}
+
+	/**
 	 * @param string $userId
 	 * @return UserStatus
 	 * @throws \OCP\AppFramework\Db\DoesNotExistException
@@ -99,11 +127,30 @@ class UserStatusMapper extends QBMapper {
 	}
 
 	/**
+	 * @param int $olderThan
+	 * @param int $now
+	 */
+	public function clearStatusesOlderThan(int $olderThan, int $now): void {
+		$qb = $this->db->getQueryBuilder();
+		$qb->update($this->tableName)
+			->set('status', $qb->createNamedParameter(IUserStatus::OFFLINE))
+			->set('is_user_defined', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL))
+			->set('status_timestamp', $qb->createNamedParameter($now, IQueryBuilder::PARAM_INT))
+			->where($qb->expr()->lte('status_timestamp', $qb->createNamedParameter($olderThan, IQueryBuilder::PARAM_INT)))
+			->andWhere($qb->expr()->orX(
+				$qb->expr()->eq('is_user_defined', $qb->createNamedParameter(false, IQueryBuilder::PARAM_BOOL), IQueryBuilder::PARAM_BOOL),
+				$qb->expr()->eq('status', $qb->createNamedParameter(IUserStatus::ONLINE))
+			));
+
+		$qb->execute();
+	}
+
+	/**
 	 * Clear all statuses older than a given timestamp
 	 *
 	 * @param int $timestamp
 	 */
-	public function clearOlderThan(int $timestamp): void {
+	public function clearMessagesOlderThan(int $timestamp): void {
 		$qb = $this->db->getQueryBuilder();
 		$qb->update($this->tableName)
 			->set('message_id', $qb->createNamedParameter(null))

@@ -176,7 +176,7 @@
 					var isFavorite = $file.data('favorite') === true;
 
 					if (isFavorite) {
-						return 'icon-star-dark';
+						return 'icon-favorite';
 					}
 
 					return 'icon-starred';

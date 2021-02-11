@@ -112,7 +112,7 @@ class CheckCode extends Command implements CompletionAwareInterface {
 				$output->writeln(" {$count} errors");
 			}
 			usort($errors, function ($a, $b) {
-				return $a['line'] >$b['line'];
+				return $a['line'] > $b['line'];
 			});
 
 			foreach ($errors as $p) {
@@ -157,30 +157,12 @@ class CheckCode extends Command implements CompletionAwareInterface {
 			$errors = array_merge($errors, $schemaErrors['errors']);
 		}
 
-		$this->analyseUpdateFile($appId, $output);
-
 		if (empty($errors)) {
 			$output->writeln('<info>App is compliant - awesome job!</info>');
 			return 0;
 		} else {
 			$output->writeln('<error>App is not compliant</error>');
 			return 101;
-		}
-	}
-
-	/**
-	 * @param string $appId
-	 * @param $output
-	 */
-	private function analyseUpdateFile($appId, OutputInterface $output) {
-		$appPath = \OC_App::getAppPath($appId);
-		if ($appPath === false) {
-			throw new \RuntimeException("No app with given id <$appId> known.");
-		}
-
-		$updatePhp = $appPath . '/appinfo/update.php';
-		if (file_exists($updatePhp)) {
-			$output->writeln("<info>Deprecated file found: $updatePhp - please use repair steps</info>");
 		}
 	}
 

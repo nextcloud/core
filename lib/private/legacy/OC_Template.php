@@ -20,7 +20,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -114,7 +114,7 @@ class OC_Template extends \OC\Template\Base {
 			OC_Util::addStyle('server', null, true);
 			OC_Util::addTranslations('core', null, true);
 
-			if (\OC::$server->getSystemConfig()->getValue('installed', false)) {
+			if (\OC::$server->getSystemConfig()->getValue('installed', false) && !\OCP\Util::needUpgrade()) {
 				OC_Util::addScript('merged-template-prepend', null, true);
 				OC_Util::addScript('dist/files_client', null, true);
 				OC_Util::addScript('dist/files_fileinfo', null, true);
@@ -161,8 +161,8 @@ class OC_Template extends \OC\Template\Base {
 	 * @param string $text the text content for the element. If $text is null then the
 	 * element will be written as empty element. So use "" to get a closing tag.
 	 */
-	public function addHeader($tag, $attributes, $text=null) {
-		$this->headers[]= [
+	public function addHeader($tag, $attributes, $text = null) {
+		$this->headers[] = [
 			'tag' => $tag,
 			'attributes' => $attributes,
 			'text' => $text
@@ -171,7 +171,7 @@ class OC_Template extends \OC\Template\Base {
 
 	/**
 	 * Process the template
-	 * @return boolean|string
+	 * @return string
 	 *
 	 * This function process the template. If $this->renderAs is set, it
 	 * will produce a full page.
@@ -195,7 +195,7 @@ class OC_Template extends \OC\Template\Base {
 				if (strcasecmp($header['tag'], 'script') === 0 && in_array('src', array_map('strtolower', array_keys($header['attributes'])))) {
 					$headers .= ' defer';
 				}
-				foreach ($header['attributes'] as $name=>$value) {
+				foreach ($header['attributes'] as $name => $value) {
 					$headers .= ' '.\OCP\Util::sanitizeHTML($name).'="'.\OCP\Util::sanitizeHTML($value).'"';
 				}
 				if ($header['text'] !== null) {
@@ -325,7 +325,7 @@ class OC_Template extends \OC\Template\Base {
 			$content->assign('errorCode', $exception->getCode());
 			$content->assign('file', $exception->getFile());
 			$content->assign('line', $exception->getLine());
-			$content->assign('trace', $exception->getTraceAsString());
+			$content->assign('exception', $exception);
 			$content->assign('debugMode', \OC::$server->getSystemConfig()->getValue('debug', false));
 			$content->assign('remoteAddr', $request->getRemoteAddress());
 			$content->assign('requestID', $request->getId());

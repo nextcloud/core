@@ -65,10 +65,10 @@ class WizardTest extends TestCase {
 		if (is_null($confMethods)) {
 			$confMethods = get_class_methods('\OCA\User_LDAP\Configuration');
 			$connMethods = get_class_methods('\OCA\User_LDAP\Connection');
-			$accMethods  = get_class_methods('\OCA\User_LDAP\Access');
+			$accMethods = get_class_methods('\OCA\User_LDAP\Access');
 		}
 		/** @var ILDAPWrapper|\PHPUnit\Framework\MockObject\MockObject $lw */
-		$lw   = $this->createMock(ILDAPWrapper::class);
+		$lw = $this->createMock(ILDAPWrapper::class);
 
 		/** @var Configuration|\PHPUnit\Framework\MockObject\MockObject $conf */
 		$conf = $this->getMockBuilder(Configuration::class)

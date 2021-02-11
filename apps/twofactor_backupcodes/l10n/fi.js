@@ -14,8 +14,6 @@ OC.L10N.register(
     "Regenerate backup codes" : "Luo varakoodit uudelleen",
     "If you regenerate backup codes, you automatically invalidate old codes." : "Jos luot varakoodit uudelleen, vanhat koodit poistetaan automaattisesti käytöstä.",
     "An error occurred while generating your backup codes" : "Tapahtui virhe varakoodeja luotaessa",
-    "Submit" : "Lähetä",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["icon-loading-small","generate-backup-codes"]
+    "Submit" : "Lähetä"
 },
 "nplurals=2; plural=(n != 1);");

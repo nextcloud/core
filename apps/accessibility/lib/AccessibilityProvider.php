@@ -53,41 +53,41 @@ class AccessibilityProvider {
 	public function __construct(string $appName,
 								IURLGenerator $urlGenerator,
 								IL10N $l) {
-		$this->appName      = $appName;
+		$this->appName = $appName;
 		$this->urlGenerator = $urlGenerator;
-		$this->l            = $l;
+		$this->l = $l;
 	}
 
 	public function getThemes() {
 		return [
 			[
-				'id'    => 'dark',
-				'img'   => $this->urlGenerator->imagePath($this->appName, 'theme-dark.jpg'),
+				'id' => 'dark',
+				'img' => $this->urlGenerator->imagePath($this->appName, 'theme-dark.jpg'),
 				'title' => $this->l->t('Dark theme'),
 				'enableLabel' => $this->l->t('Enable dark theme'),
-				'text'  => $this->l->t('A dark theme to ease your eyes by reducing the overall luminosity and brightness. It is still under development, so please report any issues you may find.')
+				'text' => $this->l->t('A dark theme to ease your eyes by reducing the overall luminosity and brightness. It is still under development, so please report any issues you may find.')
 			]
 		];
 	}
 
 	public function getHighContrast() {
 		return [
-			'id'    => 'highcontrast',
-			'img'   => $this->urlGenerator->imagePath($this->appName, 'mode-highcontrast.jpg'),
+			'id' => 'highcontrast',
+			'img' => $this->urlGenerator->imagePath($this->appName, 'mode-highcontrast.jpg'),
 			'title' => $this->l->t('High contrast mode'),
 			'enableLabel' => $this->l->t('Enable high contrast mode'),
-			'text'  => $this->l->t('A high contrast mode to ease your navigation. Visual quality will be reduced but clarity will be increased.')
+			'text' => $this->l->t('A high contrast mode to ease your navigation. Visual quality will be reduced but clarity will be increased.')
 		];
 	}
 
 	public function getFonts() {
 		return [
 			[
-				'id'    => 'fontdyslexic',
-				'img'   => $this->urlGenerator->imagePath($this->appName, 'font-opendyslexic.jpg'),
+				'id' => 'fontdyslexic',
+				'img' => $this->urlGenerator->imagePath($this->appName, 'font-opendyslexic.jpg'),
 				'title' => $this->l->t('Dyslexia font'),
 				'enableLabel' => $this->l->t('Enable dyslexia font'),
-				'text'  => $this->l->t('OpenDyslexic is a free typeface/font designed to mitigate some of the common reading errors caused by dyslexia.')
+				'text' => $this->l->t('OpenDyslexic is a free typeface/font designed to mitigate some of the common reading errors caused by dyslexia.')
 			]
 		];
 	}

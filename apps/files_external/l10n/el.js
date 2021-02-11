@@ -134,7 +134,6 @@ OC.L10N.register(
     "Add storage" : "Προσθηκη αποθηκευσης",
     "Advanced settings" : "Ρυθμίσεις για προχωρημένους",
     "Allow users to mount external storage" : "Να επιτρέπεται στους χρήστες η σύνδεση εξωτερικού χώρου",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Τα δημόσια διαπιστευτήρια μπορούν να χρησιμοποιηθούν για τον έλεγχο ταυτότητας με διάφορους εξωτερικούς χώρους αποθήκευσης με ίδια διαπιστευτήρια.",
-    "Saving..." : "Γίνεται αποθήκευση..."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Τα δημόσια διαπιστευτήρια μπορούν να χρησιμοποιηθούν για τον έλεγχο ταυτότητας με διάφορους εξωτερικούς χώρους αποθήκευσης με ίδια διαπιστευτήρια."
 },
 "nplurals=2; plural=(n != 1);");

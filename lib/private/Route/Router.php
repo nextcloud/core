@@ -13,7 +13,7 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -33,6 +33,7 @@
 
 namespace OC\Route;
 
+use OC\AppFramework\Routing\RouteParser;
 use OCP\AppFramework\App;
 use OCP\ILogger;
 use OCP\Route\IRouter;
@@ -73,7 +74,7 @@ class Router implements IRouter {
 		$this->logger = $logger;
 		$baseUrl = \OC::$WEBROOT;
 		if (!(\OC::$server->getConfig()->getSystemValue('htaccess.IgnoreFrontController', false) === true || getenv('front_controller_active') === 'true')) {
-			$baseUrl = \OC::$server->getURLGenerator()->linkTo('', 'index.php');
+			$baseUrl .= '/index.php';
 		}
 		if (!\OC::$CLI && isset($_SERVER['REQUEST_METHOD'])) {
 			$method = $_SERVER['REQUEST_METHOD'];
@@ -174,14 +175,6 @@ class Router implements IRouter {
 			$this->root->addCollection($collection);
 		}
 		\OC::$server->getEventLogger()->end('loadroutes' . $requestedApp);
-	}
-
-	/**
-	 * @return string
-	 * @deprecated
-	 */
-	public function getCacheKey() {
-		return '';
 	}
 
 	/**
@@ -304,6 +297,7 @@ class Router implements IRouter {
 		if (isset($parameters['caller'])) {
 			$caller = $parameters['caller'];
 			unset($parameters['caller']);
+			unset($parameters['action']);
 			$application = $this->getApplicationClass($caller[0]);
 			\OC\AppFramework\App::main($caller[1], $caller[2], $application->getContainer(), $parameters);
 		} elseif (isset($parameters['action'])) {
@@ -312,6 +306,7 @@ class Router implements IRouter {
 				throw new \Exception('not a callable action');
 			}
 			unset($parameters['action']);
+			unset($parameters['caller']);
 			call_user_func($action, $parameters);
 		} elseif (isset($parameters['file'])) {
 			include $parameters['file'];
@@ -346,13 +341,27 @@ class Router implements IRouter {
 	public function generate($name,
 							 $parameters = [],
 							 $absolute = false) {
+		$referenceType = UrlGenerator::ABSOLUTE_URL;
+		if ($absolute === false) {
+			$referenceType = UrlGenerator::ABSOLUTE_PATH;
+		}
+		$name = $this->fixLegacyRootName($name);
+		if (strpos($name, '.') !== false) {
+			list($appName, $other) = explode('.', $name, 3);
+			// OCS routes are prefixed with "ocs."
+			if ($appName === 'ocs') {
+				$appName = $other;
+			}
+			$this->loadRoutes($appName);
+			try {
+				return $this->getGenerator()->generate($name, $parameters, $referenceType);
+			} catch (RouteNotFoundException $e) {
+			}
+		}
+
+		// Fallback load all routes
 		$this->loadRoutes();
 		try {
-			$referenceType = UrlGenerator::ABSOLUTE_URL;
-			if ($absolute === false) {
-				$referenceType = UrlGenerator::ABSOLUTE_PATH;
-			}
-			$name = $this->fixLegacyRootName($name);
 			return $this->getGenerator()->generate($name, $parameters, $referenceType);
 		} catch (RouteNotFoundException $e) {
 			$this->logger->logException($e, ['level' => ILogger::INFO]);
@@ -412,8 +421,14 @@ class Router implements IRouter {
 	 */
 	private function setupRoutes($routes, $appName) {
 		if (is_array($routes)) {
-			$application = $this->getApplicationClass($appName);
-			$application->registerRoutes($this, $routes);
+			$routeParser = new RouteParser();
+
+			$defaultRoutes = $routeParser->parseDefaultRoutes($routes, $appName);
+			$ocsRoutes = $routeParser->parseOCSRoutes($routes, $appName);
+
+			$this->root->addCollection($defaultRoutes);
+			$ocsRoutes->addPrefix('/ocsapp');
+			$this->root->addCollection($ocsRoutes);
 		}
 	}
 

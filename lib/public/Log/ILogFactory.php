@@ -29,7 +29,6 @@ use OCP\ILogger;
 /**
  * Interface ILogFactory
  *
- * @package OCP\Log
  * @since 14.0.0
  */
 interface ILogFactory {

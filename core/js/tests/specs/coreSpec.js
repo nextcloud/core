@@ -640,7 +640,7 @@ describe('Core base tests', function() {
 				expect($row.length).toEqual(0);
 			});
 			it('hides itself after a given time', function() {
-				OC.Notification.showTemporary('', {timeout: 10});
+				OC.Notification.showTemporary('', {timeout: 10000});
 
 				var $row = $('body .toastify');
 				expect($row.length).toEqual(1);
@@ -660,7 +660,7 @@ describe('Core base tests', function() {
 		});
 		describe('show', function() {
 			it('hides itself after a given time', function() {
-				OC.Notification.show('', {timeout: 10});
+				OC.Notification.show('', {timeout: 10000});
 
 				var $row = $('body .toastify');
 				expect($row.length).toEqual(1);
@@ -685,7 +685,7 @@ describe('Core base tests', function() {
 		});
 		describe('showHtml', function() {
 			it('hides itself after a given time', function() {
-				OC.Notification.showHtml('<p></p>', {timeout: 10});
+				OC.Notification.showHtml('<p></p>', {timeout: 10000});
 
 				var $row = $('body .toastify');
 				expect($row.length).toEqual(1);
@@ -730,7 +730,7 @@ describe('Core base tests', function() {
 			it('hides a notification before its timeout expires', function() {
 				var hideCallback = sinon.spy();
 
-				var notification = OC.Notification.show('', {timeout: 10});
+				var notification = OC.Notification.show('', {timeout: 10000});
 
 				var $row = $('body .toastify');
 				expect($row.length).toEqual(1);
@@ -766,7 +766,7 @@ describe('Core base tests', function() {
 		});
 		it('cumulates several notifications', function() {
 			var $row1 = OC.Notification.showTemporary('One');
-			var $row2 = OC.Notification.showTemporary('Two', {timeout: 2});
+			var $row2 = OC.Notification.showTemporary('Two', {timeout: 2000});
 			var $row3 = OC.Notification.showTemporary('Three');
 
 			var $el = $('body');
@@ -903,11 +903,15 @@ describe('Core base tests', function() {
 
 		beforeEach(function() {
 			snapConstructorStub = sinon.stub(window, 'Snap');
-
 			snapperStub = {};
+
 			snapperStub.enable = sinon.stub();
 			snapperStub.disable = sinon.stub();
 			snapperStub.close = sinon.stub();
+			snapperStub.on = sinon.stub();
+			snapperStub.state = sinon.stub().returns({
+				state: sinon.stub()
+			});
 
 			snapConstructorStub.returns(snapperStub);
 

@@ -22,15 +22,21 @@
 namespace Test\Federation;
 
 use OC\Federation\CloudIdManager;
+use OCP\Contacts\IManager;
 use Test\TestCase;
 
 class CloudIdManagerTest extends TestCase {
+	/** @var IManager|\PHPUnit\Framework\MockObject\MockObject */
+	protected $contactsManager;
 	/** @var CloudIdManager */
 	private $cloudIdManager;
 
 	protected function setUp(): void {
 		parent::setUp();
-		$this->cloudIdManager = new CloudIdManager();
+
+		$this->contactsManager = $this->createMock(IManager::class);
+
+		$this->cloudIdManager = new CloudIdManager($this->contactsManager);
 	}
 
 	public function cloudIdProvider() {
@@ -51,11 +57,24 @@ class CloudIdManagerTest extends TestCase {
 	 * @param string $remote
 	 */
 	public function testResolveCloudId($cloudId, $user, $remote, $cleanId) {
+		$displayName = 'Ample Ex';
+
+		$this->contactsManager->expects($this->any())
+			->method('search')
+			->with($cleanId, ['CLOUD'])
+			->willReturn([
+				[
+					'CLOUD' => [$cleanId],
+					'FN' => 'Ample Ex',
+				]
+			]);
+
 		$cloudId = $this->cloudIdManager->resolveCloudId($cloudId);
 
 		$this->assertEquals($user, $cloudId->getUser());
 		$this->assertEquals($remote, $cloudId->getRemote());
 		$this->assertEquals($cleanId, $cloudId->getId());
+		$this->assertEquals($displayName . '@' . $remote, $cloudId->getDisplayId());
 	}
 
 	public function invalidCloudIdProvider() {
@@ -75,6 +94,9 @@ class CloudIdManagerTest extends TestCase {
 	public function testInvalidCloudId($cloudId) {
 		$this->expectException(\InvalidArgumentException::class);
 
+		$this->contactsManager->expects($this->never())
+			->method('search');
+
 		$this->cloudIdManager->resolveCloudId($cloudId);
 	}
 
@@ -93,6 +115,16 @@ class CloudIdManagerTest extends TestCase {
 	 * @param string $id
 	 */
 	public function testGetCloudId($user, $remote, $id) {
+		$this->contactsManager->expects($this->any())
+			->method('search')
+			->with($id, ['CLOUD'])
+			->willReturn([
+				[
+					'CLOUD' => [$id],
+					'FN' => 'Ample Ex',
+				]
+			]);
+
 		$cloudId = $this->cloudIdManager->getCloudId($user, $remote);
 
 		$this->assertEquals($id, $cloudId->getId());

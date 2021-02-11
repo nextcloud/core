@@ -56,7 +56,7 @@
 		<input type="text" name='shareapi_internal_expire_after_n_days' id="shareapiInternalExpireAfterNDays" placeholder="<?php p('7')?>"
 			   value='<?php p($_['shareInternalExpireAfterNDays']) ?>' />
 		<?php p($l->t('days')); ?>
-		<input type="checkbox" name="shareapi_internal_enforce_expire_date" id="shareapiInternalEnforceExpireDate" class="checkbox"
+		<input type="checkbox" name="shareapi_enforce_internal_expire_date" id="shareapiInternalEnforceExpireDate" class="checkbox"
 			   value="1" <?php if ($_['shareInternalEnforceExpireDate'] === 'yes') {
 	print_unescaped('checked="checked"');
 } ?> />
@@ -163,7 +163,7 @@
 			<?php if ($_['allowShareDialogUserEnumeration'] === 'yes') {
 	print_unescaped('checked="checked"');
 } ?> />
-		<label for="shareapi_allow_share_dialog_user_enumeration"><?php p($l->t('Allow username autocompletion in share dialog. If this is disabled the full username or email address needs to be entered.'));?></label><br />
+		<label for="shareapi_allow_share_dialog_user_enumeration"><?php p($l->t('Allow username autocompletion in share dialog (if this is disabled the full username or email address needs to be entered)'));?></label><br />
 	</p>
 
 	<p id="shareapi_restrict_user_enumeration_to_group_setting" class="indent <?php if ($_['shareAPIEnabled'] === 'no' || $_['allowShareDialogUserEnumeration'] === 'no') {
@@ -181,7 +181,7 @@
 			<?php if ($_['publicShareDisclaimerText'] !== null) {
 	print_unescaped('checked="checked"');
 } ?> />
-		<label for="publicShareDisclaimer"><?php p($l->t('Show disclaimer text on the public link upload page. (Only shown when the file list is hidden.)'));?></label>
+		<label for="publicShareDisclaimer"><?php p($l->t('Show disclaimer text on the public link upload page (only shown when the file list is hidden)'));?></label>
 		<span id="publicShareDisclaimerStatus" class="msg" style="display:none"></span>
 		<br/>
 		<textarea placeholder="<?php p($l->t('This text will be shown on the public link upload page when the file list is hidden.')) ?>" id="publicShareDisclaimerText" <?php if ($_['publicShareDisclaimerText'] === null) {

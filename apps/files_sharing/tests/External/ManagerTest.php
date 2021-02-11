@@ -2,9 +2,12 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -33,6 +36,7 @@ use OC\Files\Storage\StorageFactory;
 use OCA\Files_Sharing\External\Manager;
 use OCA\Files_Sharing\External\MountProvider;
 use OCA\Files_Sharing\Tests\TestCase;
+use OCP\Contacts\IManager;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Federation\ICloudFederationFactory;
 use OCP\Federation\ICloudFederationProviderManager;
@@ -52,6 +56,9 @@ use Test\Traits\UserTrait;
  */
 class ManagerTest extends TestCase {
 	use UserTrait;
+
+	/** @var IManager|\PHPUnit\Framework\MockObject\MockObject */
+	protected $contactsManager;
 
 	/** @var Manager|\PHPUnit\Framework\MockObject\MockObject **/
 	private $manager;
@@ -99,6 +106,12 @@ class ManagerTest extends TestCase {
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
 
+		$this->contactsManager = $this->createMock(IManager::class);
+		// needed for MountProvider() initialization
+		$this->contactsManager->expects($this->any())
+			->method('search')
+			->willReturn([]);
+
 		$this->manager = $this->getMockBuilder(Manager::class)
 			->setConstructorArgs(
 				[
@@ -119,7 +132,7 @@ class ManagerTest extends TestCase {
 
 		$this->testMountProvider = new MountProvider(\OC::$server->getDatabaseConnection(), function () {
 			return $this->manager;
-		}, new CloudIdManager());
+		}, new CloudIdManager($this->contactsManager));
 	}
 
 	private function setupMounts() {
@@ -139,6 +152,7 @@ class ManagerTest extends TestCase {
 			'shareType' => IShare::TYPE_USER,
 			'accepted' => false,
 			'user' => $this->uid,
+			'remoteId' => '2342'
 		];
 		$shareData2 = $shareData1;
 		$shareData2['token'] = 'token2';
@@ -148,8 +162,8 @@ class ManagerTest extends TestCase {
 		$this->userManager->expects($this->any())->method('get')->willReturn($this->user);
 		$this->groupManager->expects($this->any())->method(('getUserGroups'))->willReturn([]);
 
-		$this->manager->expects($this->at(0))->method('tryOCMEndPoint')->with('http://localhost', 'token1', -1, 'accept')->willReturn(false);
-		$this->manager->expects($this->at(1))->method('tryOCMEndPoint')->with('http://localhost', 'token3', -1, 'decline')->willReturn(false);
+		$this->manager->expects($this->at(0))->method('tryOCMEndPoint')->with('http://localhost', 'token1', '2342', 'accept')->willReturn(false);
+		$this->manager->expects($this->at(1))->method('tryOCMEndPoint')->with('http://localhost', 'token3', '2342', 'decline')->willReturn(false);
 
 		// Add a share for "user"
 		$this->assertSame(null, call_user_func_array([$this->manager, 'addShare'], $shareData1));

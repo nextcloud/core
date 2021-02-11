@@ -13,19 +13,20 @@
     "Files app plugin to add comments to files" : "Plugin pentru aplicația de fișiere pentru adăugarea de comentarii",
     "Edit comment" : "Editează comentariul",
     "Delete comment" : "Șterge comentariul",
+    "No comments yet, start the conversation!" : "Nici un comentariu încă, începe conversația!",
+    "Retry" : "Reîncearcă",
+    "_%n unread comment_::_%n unread comments_" : ["%n comentariu necitit","%n comentarii necitite","%n comentarii necitite"],
+    "_1 new comment_::_{unread} new comments_" : ["1 nou comentariu","{unread} noi comentarii","{unread} comentarii noi"],
+    "Comment" : "Comentariu",
     "New comment …" : "Comentariu nou...",
     "Post" : "Postează",
     "Cancel" : "Anulează",
     "[Deleted user]" : "[Utilizator șters]",
-    "No comments yet, start the conversation!" : "Nici un comentariu încă, începe conversația!",
     "More comments …" : "Mai multe comentarii...",
     "Save" : "Salvează",
     "Allowed characters {count} of {max}" : "Caractere admise {count} din {max}",
     "Error occurred while retrieving comment with ID {id}" : "Eroare la încărcarea comentariului cu ID-ul {id}",
     "Error occurred while updating comment with id {id}" : "Eroare la actualizarea comentariului cu id-ul {id}",
-    "Error occurred while posting comment" : "Eroare la postarea comentariului",
-    "_%n unread comment_::_%n unread comments_" : ["%n comentariu necitit","%n comentarii necitite","%n comentarii necitite"],
-    "_1 new comment_::_{unread} new comments_" : ["1 nou comentariu","{unread} noi comentarii","{unread} comentarii noi"],
-    "Comment" : "Comentariu"
+    "Error occurred while posting comment" : "Eroare la postarea comentariului"
 },"pluralForm" :"nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));"
 }

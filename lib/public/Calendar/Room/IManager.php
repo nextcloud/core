@@ -26,7 +26,6 @@ namespace OCP\Calendar\Room;
 /**
  * Interface IManager
  *
- * @package OCP\Calendar\Room
  * @since 14.0.0
  */
 interface IManager {

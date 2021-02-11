@@ -22,7 +22,6 @@
     "Could not write file to disk" : "无法写入文件到磁盘",
     "A PHP extension stopped the file upload" : "PHP 扩展停止了文件上传。",
     "No file uploaded" : "文件没有上传",
-    "Unsupported image type" : "不支持图片格式",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "你已经在使用一个自定义的主题。主题应用的设置可能会被其覆盖。",
     "Theming" : "主题",
     "Legal notice" : "法律声明",

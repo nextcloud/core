@@ -21,6 +21,7 @@
  */
 
 import api from './api'
+import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
 
 const orderGroups = function(groups, orderBy) {
@@ -189,6 +190,9 @@ const getters = {
 	},
 }
 
+const CancelToken = axios.CancelToken
+let searchRequestCancelSource = null
+
 const actions = {
 
 	/**
@@ -203,29 +207,45 @@ const actions = {
 	 * @returns {Promise}
 	 */
 	getUsers(context, { offset, limit, search, group }) {
+		if (searchRequestCancelSource) {
+			searchRequestCancelSource.cancel('Operation canceled by another search request.')
+		}
+		searchRequestCancelSource = CancelToken.source()
 		search = typeof search === 'string' ? search : ''
 		group = typeof group === 'string' ? group : ''
 		if (group !== '') {
-			return api.get(generateOcsUrl(`cloud/groups/${encodeURIComponent(encodeURIComponent(group))}/users/details?offset=${offset}&limit=${limit}&search=${search}`, 2))
+			return api.get(generateOcsUrl(`cloud/groups/${encodeURIComponent(encodeURIComponent(group))}/users/details?offset=${offset}&limit=${limit}&search=${search}`, 2), {
+				cancelToken: searchRequestCancelSource.token,
+			})
 				.then((response) => {
 					if (Object.keys(response.data.ocs.data.users).length > 0) {
 						context.commit('appendUsers', response.data.ocs.data.users)
-						return true
+						return Object.keys(response.data.ocs.data.users).length >= limit
 					}
 					return false
 				})
-				.catch((error) => context.commit('API_FAILURE', error))
+				.catch((error) => {
+					if (!axios.isCancel(error)) {
+						context.commit('API_FAILURE', error)
+					}
+				})
 		}
 
-		return api.get(generateOcsUrl(`cloud/users/details?offset=${offset}&limit=${limit}&search=${search}`, 2))
+		return api.get(generateOcsUrl(`cloud/users/details?offset=${offset}&limit=${limit}&search=${search}`, 2), {
+			cancelToken: searchRequestCancelSource.token,
+		})
 			.then((response) => {
 				if (Object.keys(response.data.ocs.data.users).length > 0) {
 					context.commit('appendUsers', response.data.ocs.data.users)
-					return true
+					return Object.keys(response.data.ocs.data.users).length >= limit
 				}
 				return false
 			})
-			.catch((error) => context.commit('API_FAILURE', error))
+			.catch((error) => {
+				if (!axios.isCancel(error)) {
+					context.commit('API_FAILURE', error)
+				}
+			})
 	},
 
 	getGroups(context, { offset, limit, search }) {

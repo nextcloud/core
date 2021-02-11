@@ -45,7 +45,6 @@ namespace OCP\Mail;
  *
  * This message can then be passed to send() of \OC\Mail\Mailer
  *
- * @package OCP\Mail
  * @since 8.1.0
  */
 interface IMailer {

@@ -128,7 +128,6 @@ OC.L10N.register(
     "Click to recheck the configuration" : "Smelltu til að yfirfara aftur uppsetninguna",
     "Add storage" : "Bæta við gagnahirslu",
     "Advanced settings" : "Ítarlegri valkostir",
-    "Allow users to mount external storage" : "Leyfa notendum að tengja ytri gagnageymslur í skráakerfi",
-    "Saving..." : "Er að vista ..."
+    "Allow users to mount external storage" : "Leyfa notendum að tengja ytri gagnageymslur í skráakerfi"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

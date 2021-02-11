@@ -8,6 +8,7 @@
     "The files of the app %1$s were not replaced correctly. Make sure it is a version compatible with the server." : "Filerna i appen %1$s ersattes inte korrekt. Kontrollera att det är en version som är kompatibel med servern.",
     "Sample configuration detected" : "Exempel-konfiguration detekterad",
     "It has been detected that the sample configuration has been copied. This can break your installation and is unsupported. Please read the documentation before performing changes on config.php" : "Det har upptäckts att provkonfigurationen har kopierats. Detta kan bryta din installation och stöds inte. Vänligen läs dokumentationen innan du utför ändringar på config.php",
+    "Other activities" : "Andra aktiviteter",
     "%1$s and %2$s" : "%1$s och %2$s",
     "%1$s, %2$s and %3$s" : "%1$s, %2$s och %3$s",
     "%1$s, %2$s, %3$s and %4$s" : "%1$s, %2$s, %3$s och %4$s",
@@ -98,7 +99,6 @@
     "Set an admin username." : "Ange ett användarnamn för administratören.",
     "Set an admin password." : "Ange ett administratörslösenord.",
     "Can't create or write into the data directory %s" : "Kan inte skapa eller skriva till data-katalogen %s",
-    "Invalid Federated Cloud ID" : "Ogiltigt federerat moln-ID",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "Delningsgränssnittet %s måste implementera gränssnittet OCP\\Share_Backend",
     "Sharing backend %s not found" : "Delningsgränssnittet %s hittades inte",
     "Sharing backend for %s not found" : "Delningsgränssnittet för %s hittades inte",
@@ -223,13 +223,6 @@
     "Storage connection timeout. %s" : "Lagringsutrymme lyckas inte ansluta \"timeout\". %s",
     "Following databases are supported: %s" : "Följande databastyper stöds: %s",
     "Following platforms are supported: %s" : "Följande plattformar stöds: %s",
-    "Overview" : "Översikt",
-    "Basic settings" : "Generella inställningar",
-    "Sharing" : "Delning",
-    "Security" : "Säkerhet",
-    "Groupware" : "Grupprogram",
-    "Personal info" : "Personlig information",
-    "Mobile & desktop" : "Mobil & skrivbord",
-    "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s" : "Detta kan vanligtvis lösas genom att ge webbservern skrivåtkomst till mappen för appar eller genom att inaktivera appbutiken i konfigurationsfilen. Se %s"
+    "Invalid Federated Cloud ID" : "Ogiltigt federerat moln-ID"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

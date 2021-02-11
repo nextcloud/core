@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -55,7 +56,7 @@ trait UserTrait {
 	 * Override the user from the session
 	 * Unset with ->resetUser() when finished!
 	 *
-	 * @param IUser
+	 * @param IUser $user
 	 * @return self
 	 */
 	public function setUser(IUser $user) {

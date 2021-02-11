@@ -9,7 +9,7 @@
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Tanghus <thomas@tanghus.net>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -115,7 +115,7 @@ abstract class Controller {
 	 * @since 7.0.0
 	 * @since 9.1.0 Added default parameter
 	 */
-	public function getResponderByHTTPHeader($acceptHeader, $default='json') {
+	public function getResponderByHTTPHeader($acceptHeader, $default = 'json') {
 		$headers = explode(',', $acceptHeader);
 
 		// return the first matching responder
@@ -154,7 +154,7 @@ abstract class Controller {
 	 * @return Response
 	 * @since 7.0.0
 	 */
-	public function buildResponse($response, $format='json') {
+	public function buildResponse($response, $format = 'json') {
 		if (array_key_exists($format, $this->responders)) {
 			$responder = $this->responders[$format];
 

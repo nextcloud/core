@@ -189,11 +189,11 @@ class DefaultShareProviderTest extends \Test\TestCase {
 
 		$qb->insert('share')
 			->values([
-				'share_type'  => $qb->expr()->literal(IShare::TYPE_USER),
-				'share_with'  => $qb->expr()->literal('sharedWith'),
-				'uid_owner'   => $qb->expr()->literal('shareOwner'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_USER),
+				'share_with' => $qb->expr()->literal('sharedWith'),
+				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -236,11 +236,11 @@ class DefaultShareProviderTest extends \Test\TestCase {
 
 		$qb->insert('share')
 			->values([
-				'share_type'  => $qb->expr()->literal(IShare::TYPE_USER),
-				'share_with'  => $qb->expr()->literal('sharedWith'),
-				'uid_owner'   => $qb->expr()->literal('shareOwner'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_USER),
+				'share_with' => $qb->expr()->literal('sharedWith'),
+				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -271,11 +271,11 @@ class DefaultShareProviderTest extends \Test\TestCase {
 
 		$qb->insert('share')
 			->values([
-				'share_type'  => $qb->expr()->literal(IShare::TYPE_USER),
-				'share_with'  => $qb->expr()->literal('sharedWith'),
-				'uid_owner'   => $qb->expr()->literal('shareOwner'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_USER),
+				'share_with' => $qb->expr()->literal('sharedWith'),
+				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -319,7 +319,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -401,7 +401,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'password_by_talk' => $qb->expr()->literal(true),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -445,7 +445,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_type' => $qb->expr()->literal(IShare::TYPE_USER),
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -494,7 +494,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -526,7 +526,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_type' => $qb->expr()->literal(IShare::TYPE_GROUP),
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -540,11 +540,11 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_type' => $qb->expr()->literal(2),
 				'share_with' => $qb->expr()->literal('sharedWithUser'),
 				'uid_owner' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
-				'parent'      => $qb->expr()->literal($id),
+				'parent' => $qb->expr()->literal($id),
 			]);
 		$this->assertEquals(1, $qb->execute());
 
@@ -585,11 +585,11 @@ class DefaultShareProviderTest extends \Test\TestCase {
 		$qb = $this->dbConn->getQueryBuilder();
 		$qb->insert('share')
 			->values([
-				'share_type'  => $qb->expr()->literal(IShare::TYPE_USER),
-				'share_with'  => $qb->expr()->literal('sharedWith'),
-				'uid_owner'   => $qb->expr()->literal('shareOwner'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_USER),
+				'share_with' => $qb->expr()->literal('sharedWith'),
+				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -602,30 +602,30 @@ class DefaultShareProviderTest extends \Test\TestCase {
 		$qb = $this->dbConn->getQueryBuilder();
 		$qb->insert('share')
 			->values([
-				'share_type'  => $qb->expr()->literal(IShare::TYPE_USER),
-				'share_with'  => $qb->expr()->literal('user1'),
-				'uid_owner'   => $qb->expr()->literal('shareOwner'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_USER),
+				'share_with' => $qb->expr()->literal('user1'),
+				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('user2'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(1),
 				'file_target' => $qb->expr()->literal('myTarget1'),
 				'permissions' => $qb->expr()->literal(2),
-				'parent'      => $qb->expr()->literal($id),
+				'parent' => $qb->expr()->literal($id),
 			]);
 		$qb->execute();
 
 		$qb = $this->dbConn->getQueryBuilder();
 		$qb->insert('share')
 			->values([
-				'share_type'  => $qb->expr()->literal(IShare::TYPE_GROUP),
-				'share_with'  => $qb->expr()->literal('group1'),
-				'uid_owner'   => $qb->expr()->literal('shareOwner'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_GROUP),
+				'share_with' => $qb->expr()->literal('group1'),
+				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('user3'),
-				'item_type'   => $qb->expr()->literal('folder'),
+				'item_type' => $qb->expr()->literal('folder'),
 				'file_source' => $qb->expr()->literal(3),
 				'file_target' => $qb->expr()->literal('myTarget2'),
 				'permissions' => $qb->expr()->literal(4),
-				'parent'      => $qb->expr()->literal($id),
+				'parent' => $qb->expr()->literal($id),
 			]);
 		$qb->execute();
 
@@ -841,16 +841,16 @@ class DefaultShareProviderTest extends \Test\TestCase {
 
 		$qb->insert('share')
 			->values([
-				'share_type'    => $qb->expr()->literal(IShare::TYPE_LINK),
-				'password'    => $qb->expr()->literal('password'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_LINK),
+				'password' => $qb->expr()->literal('password'),
 				'password_by_talk' => $qb->expr()->literal(true),
-				'uid_owner'     => $qb->expr()->literal('shareOwner'),
+				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'     => $qb->expr()->literal('file'),
-				'file_source'   => $qb->expr()->literal(42),
-				'file_target'   => $qb->expr()->literal('myTarget'),
-				'permissions'   => $qb->expr()->literal(13),
-				'token'         => $qb->expr()->literal('secrettoken'),
+				'item_type' => $qb->expr()->literal('file'),
+				'file_source' => $qb->expr()->literal(42),
+				'file_target' => $qb->expr()->literal('myTarget'),
+				'permissions' => $qb->expr()->literal(13),
+				'token' => $qb->expr()->literal('secrettoken'),
 			]);
 		$qb->execute();
 		$id = $qb->getLastInsertId();
@@ -925,7 +925,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal($fileId),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -940,7 +940,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('sharedWith2'),
 				'uid_owner' => $qb->expr()->literal('shareOwner2'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy2'),
-				'item_type'   => $qb->expr()->literal('file2'),
+				'item_type' => $qb->expr()->literal('file2'),
 				'file_source' => $qb->expr()->literal($fileId2),
 				'file_target' => $qb->expr()->literal('myTarget2'),
 				'permissions' => $qb->expr()->literal(14),
@@ -976,7 +976,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('shareOwner2'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy2'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal($fileId2),
 				'file_target' => $qb->expr()->literal('myTarget2'),
 				'permissions' => $qb->expr()->literal(14),
@@ -990,7 +990,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal($fileId),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -1047,7 +1047,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal($fileId),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -1065,7 +1065,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('user2'),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal($fileId),
 				'file_target' => $qb->expr()->literal('wrongTarget'),
 				'permissions' => $qb->expr()->literal(31),
@@ -1083,7 +1083,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('user'),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal($fileId),
 				'file_target' => $qb->expr()->literal('userTarget'),
 				'permissions' => $qb->expr()->literal(0),
@@ -1235,7 +1235,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal($deletedFileId),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -1279,7 +1279,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -1294,7 +1294,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy2'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('userTarget'),
 				'permissions' => $qb->expr()->literal(0),
@@ -1328,7 +1328,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget'),
 				'permissions' => $qb->expr()->literal(13),
@@ -1343,7 +1343,7 @@ class DefaultShareProviderTest extends \Test\TestCase {
 				'share_with' => $qb->expr()->literal('sharedWith'),
 				'uid_owner' => $qb->expr()->literal('shareOwner'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(43),
 				'file_target' => $qb->expr()->literal('userTarget'),
 				'permissions' => $qb->expr()->literal(0),
@@ -1433,14 +1433,14 @@ class DefaultShareProviderTest extends \Test\TestCase {
 		$qb = $this->dbConn->getQueryBuilder();
 		$stmt = $qb->insert('share')
 			->values([
-				'share_type'    => $qb->expr()->literal(IShare::TYPE_GROUP),
-				'share_with'    => $qb->expr()->literal('group'),
-				'uid_owner'     => $qb->expr()->literal('user1'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_GROUP),
+				'share_with' => $qb->expr()->literal('group'),
+				'uid_owner' => $qb->expr()->literal('user1'),
 				'uid_initiator' => $qb->expr()->literal('user1'),
-				'item_type'     => $qb->expr()->literal('file'),
-				'file_source'   => $qb->expr()->literal(1),
-				'file_target'   => $qb->expr()->literal('myTarget1'),
-				'permissions'   => $qb->expr()->literal(2)
+				'item_type' => $qb->expr()->literal('file'),
+				'file_source' => $qb->expr()->literal(1),
+				'file_target' => $qb->expr()->literal('myTarget1'),
+				'permissions' => $qb->expr()->literal(2)
 			])->execute();
 		$this->assertEquals(1, $stmt);
 		$id = $qb->getLastInsertId();
@@ -1489,14 +1489,14 @@ class DefaultShareProviderTest extends \Test\TestCase {
 		$qb = $this->dbConn->getQueryBuilder();
 		$stmt = $qb->insert('share')
 			->values([
-				'share_type'    => $qb->expr()->literal(IShare::TYPE_GROUP),
-				'share_with'    => $qb->expr()->literal('group'),
-				'uid_owner'     => $qb->expr()->literal('user1'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_GROUP),
+				'share_with' => $qb->expr()->literal('group'),
+				'uid_owner' => $qb->expr()->literal('user1'),
 				'uid_initiator' => $qb->expr()->literal('user1'),
-				'item_type'     => $qb->expr()->literal('file'),
-				'file_source'   => $qb->expr()->literal(1),
-				'file_target'   => $qb->expr()->literal('myTarget1'),
-				'permissions'   => $qb->expr()->literal(2)
+				'item_type' => $qb->expr()->literal('file'),
+				'file_source' => $qb->expr()->literal(1),
+				'file_target' => $qb->expr()->literal('myTarget1'),
+				'permissions' => $qb->expr()->literal(2)
 			])->execute();
 		$this->assertEquals(1, $stmt);
 		$id = $qb->getLastInsertId();
@@ -1504,15 +1504,15 @@ class DefaultShareProviderTest extends \Test\TestCase {
 		$qb = $this->dbConn->getQueryBuilder();
 		$stmt = $qb->insert('share')
 			->values([
-				'share_type'    => $qb->expr()->literal(2),
-				'share_with'    => $qb->expr()->literal('user2'),
-				'uid_owner'     => $qb->expr()->literal('user1'),
+				'share_type' => $qb->expr()->literal(2),
+				'share_with' => $qb->expr()->literal('user2'),
+				'uid_owner' => $qb->expr()->literal('user1'),
 				'uid_initiator' => $qb->expr()->literal('user1'),
-				'item_type'     => $qb->expr()->literal('file'),
-				'file_source'   => $qb->expr()->literal(1),
-				'file_target'   => $qb->expr()->literal('myTarget1'),
-				'permissions'   => $qb->expr()->literal(2),
-				'parent'        => $qb->expr()->literal($id),
+				'item_type' => $qb->expr()->literal('file'),
+				'file_source' => $qb->expr()->literal(1),
+				'file_target' => $qb->expr()->literal('myTarget1'),
+				'permissions' => $qb->expr()->literal(2),
+				'parent' => $qb->expr()->literal($id),
 			])->execute();
 		$this->assertEquals(1, $stmt);
 
@@ -1564,14 +1564,14 @@ class DefaultShareProviderTest extends \Test\TestCase {
 		$qb = $this->dbConn->getQueryBuilder();
 		$stmt = $qb->insert('share')
 			->values([
-				'share_type'    => $qb->expr()->literal(IShare::TYPE_GROUP),
-				'share_with'    => $qb->expr()->literal('group'),
-				'uid_owner'     => $qb->expr()->literal('user1'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_GROUP),
+				'share_with' => $qb->expr()->literal('group'),
+				'uid_owner' => $qb->expr()->literal('user1'),
 				'uid_initiator' => $qb->expr()->literal('user1'),
-				'item_type'     => $qb->expr()->literal('file'),
-				'file_source'   => $qb->expr()->literal(1),
-				'file_target'   => $qb->expr()->literal('myTarget1'),
-				'permissions'   => $qb->expr()->literal(2)
+				'item_type' => $qb->expr()->literal('file'),
+				'file_source' => $qb->expr()->literal(1),
+				'file_target' => $qb->expr()->literal('myTarget1'),
+				'permissions' => $qb->expr()->literal(2)
 			])->execute();
 		$this->assertEquals(1, $stmt);
 		$id = $qb->getLastInsertId();
@@ -1609,14 +1609,14 @@ class DefaultShareProviderTest extends \Test\TestCase {
 		$qb = $this->dbConn->getQueryBuilder();
 		$stmt = $qb->insert('share')
 			->values([
-				'share_type'    => $qb->expr()->literal(IShare::TYPE_GROUP),
-				'share_with'    => $qb->expr()->literal('group'),
-				'uid_owner'     => $qb->expr()->literal('user1'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_GROUP),
+				'share_with' => $qb->expr()->literal('group'),
+				'uid_owner' => $qb->expr()->literal('user1'),
 				'uid_initiator' => $qb->expr()->literal('user1'),
-				'item_type'     => $qb->expr()->literal('file'),
-				'file_source'   => $qb->expr()->literal(1),
-				'file_target'   => $qb->expr()->literal('myTarget1'),
-				'permissions'   => $qb->expr()->literal(2)
+				'item_type' => $qb->expr()->literal('file'),
+				'file_source' => $qb->expr()->literal(1),
+				'file_target' => $qb->expr()->literal('myTarget1'),
+				'permissions' => $qb->expr()->literal(2)
 			])->execute();
 		$this->assertEquals(1, $stmt);
 		$id = $qb->getLastInsertId();
@@ -1647,14 +1647,14 @@ class DefaultShareProviderTest extends \Test\TestCase {
 		$qb = $this->dbConn->getQueryBuilder();
 		$stmt = $qb->insert('share')
 			->values([
-				'share_type'    => $qb->expr()->literal(IShare::TYPE_USER),
-				'share_with'    => $qb->expr()->literal('user2'),
-				'uid_owner'     => $qb->expr()->literal('user1'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_USER),
+				'share_with' => $qb->expr()->literal('user2'),
+				'uid_owner' => $qb->expr()->literal('user1'),
 				'uid_initiator' => $qb->expr()->literal('user1'),
-				'item_type'     => $qb->expr()->literal('file'),
-				'file_source'   => $qb->expr()->literal(1),
-				'file_target'   => $qb->expr()->literal('myTarget1'),
-				'permissions'   => $qb->expr()->literal(2)
+				'item_type' => $qb->expr()->literal('file'),
+				'file_source' => $qb->expr()->literal(1),
+				'file_target' => $qb->expr()->literal('myTarget1'),
+				'permissions' => $qb->expr()->literal(2)
 			])->execute();
 		$this->assertEquals(1, $stmt);
 		$id = $qb->getLastInsertId();
@@ -1700,14 +1700,14 @@ class DefaultShareProviderTest extends \Test\TestCase {
 		$qb = $this->dbConn->getQueryBuilder();
 		$stmt = $qb->insert('share')
 			->values([
-				'share_type'    => $qb->expr()->literal(IShare::TYPE_USER),
-				'share_with'    => $qb->expr()->literal('user2'),
-				'uid_owner'     => $qb->expr()->literal('user1'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_USER),
+				'share_with' => $qb->expr()->literal('user2'),
+				'uid_owner' => $qb->expr()->literal('user1'),
 				'uid_initiator' => $qb->expr()->literal('user1'),
-				'item_type'     => $qb->expr()->literal('file'),
-				'file_source'   => $qb->expr()->literal(1),
-				'file_target'   => $qb->expr()->literal('myTarget1'),
-				'permissions'   => $qb->expr()->literal(2)
+				'item_type' => $qb->expr()->literal('file'),
+				'file_source' => $qb->expr()->literal(1),
+				'file_target' => $qb->expr()->literal('myTarget1'),
+				'permissions' => $qb->expr()->literal(2)
 			])->execute();
 		$this->assertEquals(1, $stmt);
 		$id = $qb->getLastInsertId();
@@ -2770,11 +2770,11 @@ class DefaultShareProviderTest extends \Test\TestCase {
 
 		$qb->insert('share')
 			->values([
-				'share_type'  => $qb->expr()->literal(IShare::TYPE_USER),
-				'share_with'  => $qb->expr()->literal('sharedWith1'),
-				'uid_owner'   => $qb->expr()->literal('shareOwner1'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_USER),
+				'share_with' => $qb->expr()->literal('sharedWith1'),
+				'uid_owner' => $qb->expr()->literal('shareOwner1'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy1'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(42),
 				'file_target' => $qb->expr()->literal('myTarget1'),
 				'permissions' => $qb->expr()->literal(13),
@@ -2785,11 +2785,11 @@ class DefaultShareProviderTest extends \Test\TestCase {
 
 		$qb->insert('share')
 			->values([
-				'share_type'  => $qb->expr()->literal(IShare::TYPE_GROUP),
-				'share_with'  => $qb->expr()->literal('sharedWith2'),
-				'uid_owner'   => $qb->expr()->literal('shareOwner2'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_GROUP),
+				'share_with' => $qb->expr()->literal('sharedWith2'),
+				'uid_owner' => $qb->expr()->literal('shareOwner2'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy2'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(43),
 				'file_target' => $qb->expr()->literal('myTarget2'),
 				'permissions' => $qb->expr()->literal(14),
@@ -2800,11 +2800,11 @@ class DefaultShareProviderTest extends \Test\TestCase {
 
 		$qb->insert('share')
 			->values([
-				'share_type'  => $qb->expr()->literal(IShare::TYPE_LINK),
-				'token'  => $qb->expr()->literal('token3'),
-				'uid_owner'   => $qb->expr()->literal('shareOwner3'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_LINK),
+				'token' => $qb->expr()->literal('token3'),
+				'uid_owner' => $qb->expr()->literal('shareOwner3'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy3'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(44),
 				'file_target' => $qb->expr()->literal('myTarget3'),
 				'permissions' => $qb->expr()->literal(15),
@@ -2815,12 +2815,12 @@ class DefaultShareProviderTest extends \Test\TestCase {
 
 		$qb->insert('share')
 			->values([
-				'share_type'  => $qb->expr()->literal(IShare::TYPE_EMAIL),
-				'share_with'  => $qb->expr()->literal('shareOwner4'),
-				'token'  => $qb->expr()->literal('token4'),
-				'uid_owner'   => $qb->expr()->literal('shareOwner4'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_EMAIL),
+				'share_with' => $qb->expr()->literal('shareOwner4'),
+				'token' => $qb->expr()->literal('token4'),
+				'uid_owner' => $qb->expr()->literal('shareOwner4'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy4'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(45),
 				'file_target' => $qb->expr()->literal('myTarget4'),
 				'permissions' => $qb->expr()->literal(16),
@@ -2831,11 +2831,11 @@ class DefaultShareProviderTest extends \Test\TestCase {
 
 		$qb->insert('share')
 			->values([
-				'share_type'  => $qb->expr()->literal(IShare::TYPE_LINK),
-				'token'  => $qb->expr()->literal('token5'),
-				'uid_owner'   => $qb->expr()->literal('shareOwner5'),
+				'share_type' => $qb->expr()->literal(IShare::TYPE_LINK),
+				'token' => $qb->expr()->literal('token5'),
+				'uid_owner' => $qb->expr()->literal('shareOwner5'),
 				'uid_initiator' => $qb->expr()->literal('sharedBy5'),
-				'item_type'   => $qb->expr()->literal('file'),
+				'item_type' => $qb->expr()->literal('file'),
 				'file_source' => $qb->expr()->literal(46),
 				'file_target' => $qb->expr()->literal('myTarget5'),
 				'permissions' => $qb->expr()->literal(17),

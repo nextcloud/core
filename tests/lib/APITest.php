@@ -17,7 +17,7 @@ class APITest extends \Test\TestCase {
 	/**
 	 * @param string $message
 	 */
-	public function buildResponse($shipped, $data, $code, $message=null) {
+	public function buildResponse($shipped, $data, $code, $message = null) {
 		$resp = new \OC\OCS\Result($data, $code, $message);
 		$resp->addHeader('KEY', 'VALUE');
 		return [

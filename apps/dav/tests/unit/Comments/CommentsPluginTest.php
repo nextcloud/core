@@ -7,7 +7,7 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -668,11 +668,11 @@ class CommentsPluginTest extends \Test\TestCase {
 
 		$parameters = [
 			[
-				'name'  => '{http://owncloud.org/ns}limit',
+				'name' => '{http://owncloud.org/ns}limit',
 				'value' => 5,
 			],
 			[
-				'name'  => '{http://owncloud.org/ns}offset',
+				'name' => '{http://owncloud.org/ns}offset',
 				'value' => 10,
 			],
 			[
@@ -723,11 +723,11 @@ class CommentsPluginTest extends \Test\TestCase {
 
 		$parameters = [
 			[
-				'name'  => '{http://owncloud.org/ns}limit',
+				'name' => '{http://owncloud.org/ns}limit',
 				'value' => 5,
 			],
 			[
-				'name'  => '{http://owncloud.org/ns}offset',
+				'name' => '{http://owncloud.org/ns}offset',
 				'value' => 10,
 			],
 			[

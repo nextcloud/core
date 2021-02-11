@@ -328,7 +328,7 @@ export default L10n
  *
  * @returns {String} locale string
  */
-export const getLocale = () => $('html').data('locale')
+export const getLocale = () => $('html').data('locale') ?? 'en'
 
 /**
  * Returns the user's language

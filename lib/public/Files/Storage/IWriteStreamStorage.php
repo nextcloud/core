@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2018 Robin Appelman <robin@icewind.nl>
  *
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Robin Appelman <robin@icewind.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -26,6 +27,8 @@ declare(strict_types=1);
 
 namespace OCP\Files\Storage;
 
+use OCP\Files\GenericFileException;
+
 /**
  * Interface that adds the ability to write a stream directly to file
  *
@@ -39,6 +42,7 @@ interface IWriteStreamStorage extends IStorage {
 	 * @param resource $stream
 	 * @param int|null $size the size of the stream if known in advance
 	 * @return int the number of bytes written
+	 * @throws GenericFileException
 	 * @since 15.0.0
 	 */
 	public function writeStream(string $path, $stream, int $size = null): int;

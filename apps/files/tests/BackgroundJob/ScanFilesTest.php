@@ -2,7 +2,6 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -25,129 +24,94 @@
 
 namespace OCA\Files\Tests\BackgroundJob;
 
+use OC\Files\Mount\MountPoint;
+use OC\Files\Storage\Temporary;
 use OCA\Files\BackgroundJob\ScanFiles;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
+use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserManager;
 use Test\TestCase;
+use Test\Traits\MountProviderTrait;
+use Test\Traits\UserTrait;
 
 /**
  * Class ScanFilesTest
  *
  * @package OCA\Files\Tests\BackgroundJob
+ * @group DB
  */
 class ScanFilesTest extends TestCase {
-	/** @var IConfig */
-	private $config;
-	/** @var IUserManager */
-	private $userManager;
+	use UserTrait;
+	use MountProviderTrait;
+
 	/** @var ScanFiles */
 	private $scanFiles;
+	/** @var \OCP\Files\Config\IUserMountCache */
+	private $mountCache;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->config = $this->createMock(IConfig::class);
-		$this->userManager = $this->createMock(IUserManager::class);
+		$config = $this->createMock(IConfig::class);
+		$userManager = $this->createMock(IUserManager::class);
+		$dispatcher = $this->createMock(IEventDispatcher::class);
+		$logger = $this->createMock(ILogger::class);
+		$connection = \OC::$server->getDatabaseConnection();
+		$this->mountCache = \OC::$server->getUserMountCache();
 
 		$this->scanFiles = $this->getMockBuilder('\OCA\Files\BackgroundJob\ScanFiles')
-				->setConstructorArgs([
-					$this->config,
-					$this->userManager,
-				])
-				->setMethods(['runScanner'])
-				->getMock();
+			->setConstructorArgs([
+				$config,
+				$userManager,
+				$dispatcher,
+				$logger,
+				$connection,
+			])
+			->setMethods(['runScanner'])
+			->getMock();
 	}
 
-	public function testRunWithoutUsers() {
-		$this->config
-				->expects($this->at(0))
-				->method('getSystemValueBool')
-				->with('files_no_background_scan', false)
-				->willReturn(false);
-		$this->config
-				->expects($this->at(1))
-				->method('getAppValue')
-				->with('files', 'cronjob_scan_files', 0)
-				->willReturn(50);
-		$this->userManager
-				->expects($this->at(0))
-				->method('search')
-				->with('', 500, 50)
-				->willReturn([]);
-		$this->userManager
-				->expects($this->at(1))
-				->method('search')
-				->with('', 500)
-				->willReturn([]);
-		$this->config
-				->expects($this->at(2))
-				->method('setAppValue')
-				->with('files', 'cronjob_scan_files', 500);
-
+	private function runJob() {
 		$this->invokePrivate($this->scanFiles, 'run', [[]]);
 	}
 
-	public function testRunWithUsers() {
-		$fakeUser = $this->createMock(IUser::class);
-		$this->config
-				->expects($this->at(0))
-				->method('getSystemValueBool')
-				->with('files_no_background_scan', false)
-				->willReturn(false);
-		$this->config
-				->expects($this->at(1))
-				->method('getAppValue')
-				->with('files', 'cronjob_scan_files', 0)
-				->willReturn(50);
-		$this->userManager
-				->expects($this->at(0))
-				->method('search')
-				->with('', 500, 50)
-				->willReturn([
-					$fakeUser
-				]);
-		$this->config
-				->expects($this->at(2))
-				->method('setAppValue')
-				->with('files', 'cronjob_scan_files', 550);
-		$this->scanFiles
-				->expects($this->once())
-				->method('runScanner')
-				->with($fakeUser);
-
-		$this->invokePrivate($this->scanFiles, 'run', [[]]);
+	private function getUser(string $userId): IUser {
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')
+			->willReturn($userId);
+		return $user;
 	}
 
-	public function testRunWithUsersAndOffsetAtEndOfUserList() {
-		$this->config
-				->expects($this->at(0))
-				->method('getSystemValueBool')
-				->with('files_no_background_scan', false)
-				->willReturn(false);
-		$this->config
-				->expects($this->at(1))
-				->method('getAppValue')
-				->with('files', 'cronjob_scan_files', 0)
-				->willReturn(50);
-		$this->userManager
-				->expects($this->at(0))
-				->method('search')
-				->with('', 500, 50)
-				->willReturn([]);
-		$this->userManager
-				->expects($this->at(1))
-				->method('search')
-				->with('', 500)
-				->willReturn([]);
-		$this->config
-				->expects($this->at(2))
-				->method('setAppValue')
-				->with('files', 'cronjob_scan_files', 500);
-		$this->scanFiles
-				->expects($this->never())
-				->method('runScanner');
+	private function setupStorage(string $user, string $mountPoint) {
+		$storage = new Temporary([]);
+		$storage->mkdir('foo');
+		$storage->getScanner()->scan('');
 
-		$this->invokePrivate($this->scanFiles, 'run', [[]]);
+		$this->createUser($user, '');
+		$this->mountCache->registerMounts($this->getUser($user), [
+			new MountPoint($storage, $mountPoint)
+		]);
+
+		return $storage;
+	}
+
+	public function testAllScanned() {
+		$this->setupStorage('foouser', '/foousers/files/foo');
+
+		$this->scanFiles->expects($this->never())
+			->method('runScanner');
+		$this->runJob();
+	}
+
+	public function testUnscanned() {
+		$storage = $this->setupStorage('foouser', '/foousers/files/foo');
+		$storage->getCache()->put('foo', ['size' => -1]);
+
+		$this->scanFiles->expects($this->once())
+			->method('runScanner')
+			->with('foouser');
+		$this->runJob();
 	}
 }

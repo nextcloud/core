@@ -14,7 +14,6 @@ OC.L10N.register(
     "No file was uploaded" : "Ühtegi faili ei latud üles",
     "Missing a temporary folder" : "Ajutine kausta on puudu",
     "No file uploaded" : "Faili ei laetud üles",
-    "Unsupported image type" : "Pildi tüüp pole toetatud",
     "Theming" : "Teemad",
     "Open documentation" : "Ava dokumentatsioon",
     "Theming makes it possible to easily customize the look and feel of your instance and supported clients. This will be visible for all users." : "Teemad võimaldavad lihtsalt serveriinstantsi ja toetatud klientide välimus muuta. See on näha kõigile kasutajatele.",

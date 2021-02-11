@@ -12,14 +12,6 @@
     "Accessibility options for nextcloud" : "Tilgjengelighetsvalg for nextcloud",
     "Provides multiple accessibilities options to ease your use of Nextcloud" : "Gir muligheten for flere tilgjengelighetsvalg for å gjøre det lettere å bruke Nextcloud",
     "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines}Web Content Accessibility Guidelines{linkend} 2.1 on AA level, with the high contrast theme even on AAA level." : "Universell utforming er viktig for oss. Vi følger web-standarder og tester for full funksjonalitet, både uten mus og med hjelpeprogrammer, slik som skjermlesere. Vi etterstreber å følge {guidelines}Retningslinjer for tilgjengelighet på nettsider{linkend} 2.1 på nivå AA, og med temaet for høy kontrast også nivå AAA.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Ikke nøl med å rapportere problemer på {issuetracker}vår problemdatabase{linkend}. Og bli gjerne med i {designteam}vårt designteam{linkend} hvis du vil bidra.",
-    "High contrast theme" : "Høykontrast-tema",
-    "A high contrast theme to ease your navigation. Visual quality will be reduced but clarity will be increased." : "En høykontrast tema for å få en lettere navigasjon. Den visuelle kvaliteten vil bli reusert men klarheten vil bli økt.",
-    "Web Content Accessibility Guidelines" : "Retningslinjer for tilgjengelighet på nettsider",
-    "our issue tracker" : "vår problemsporer",
-    "our design team" : "vårt designteam",
-    "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines} 2.1 on AA level, with the high contrast theme even on AAA level." : "Universell utforming er viktig for oss. Vi følger web-standarder og tester for full funksjonalitet, både uten mus og med hjelpeprogrammer, slik som skjermlesere. Vi etterstreber å følge {guidelines} 2.1 på nivå AA, og med temaet for høy kontrast også nivå AAA.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}. And if you want to get involved, come join {designteam}!" : "Ikke nøl med å rapportere problemer du måtte finne på {issuetracker}. Og bli med i {designteam} hvis du vil bidra.",
-    "Enable" : "Aktiver"
+    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Ikke nøl med å rapportere problemer på {issuetracker}vår problemdatabase{linkend}. Og bli gjerne med i {designteam}vårt designteam{linkend} hvis du vil bidra."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<psalm
+	errorLevel="4"
+	resolveFromConfigFile="true"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://getpsalm.org/schema/config"
+	xsi:schemaLocation="https://getpsalm.org/schema/config"
+    errorBaseline="build/psalm-baseline-ocp.xml"
+>
+	<plugins>
+		<plugin filename="build/psalm/AppFrameworkTainter.php" />
+	</plugins>
+	<projectFiles>
+		<directory name="lib/public"/>
+	</projectFiles>
+	<extraFiles>
+		<directory name="3rdparty"/>
+	</extraFiles>
+</psalm>

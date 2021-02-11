@@ -106,6 +106,7 @@ OC.L10N.register(
     "Share" : "שיתוף",
     "Show hidden files" : "הצגת קבצים נסתרים",
     "Verify ACL access when listing files" : "אימות גישה דרש רשימת בקרת גישה (ACL) בעת הצגת קבצים",
+    "Check the ACL's of each file or folder inside a directory to filter out items where the user has no read permissions, comes with a performance penalty" : "בדוק את ה- ACL של כל קובץ או תיקיה בספרייה כדי לסנן פריטים שבהם אין למשתמש הרשאות קריאה, כולל פגיעה בביצועים",
     "Timeout" : "פג הזמן הקצוב",
     "SMB / CIFS using OC login" : "SMB / CIFS בשימוש עם כניסת OC",
     "Username as share" : "שם משתמש כשיתוף",
@@ -117,6 +118,7 @@ OC.L10N.register(
     "\"%1$s\" is not installed. Mounting of %2$s is not possible. Please ask your system administrator to install it." : "„%1$s” אינו מותקן. העיגון של %2$s אינו אפשרי. נא לבקש ממנהל המערכת להתקין אותו.",
     "External storage support" : "תמיכה באחסון חיצוני",
     "Adds basic external storage support" : "מוסיף תמיכה באחסון חיצוני בסיסי",
+    "This application enables administrators to configure connections to external storage providers, such as FTP servers, S3 or SWIFT object stores, other Nextcloud servers, WebDAV servers, and more. Administrators can choose which types of storage to enable and can mount these storage locations for a user, a group, or the entire system. Users will see a new folder appear in their root Nextcloud directory, which they can access and use like any other Nextcloud folder. External storage also allows users to share files stored in these external locations. In these cases, the credentials for the owner of the file are used when the recipient requests the file from external storage, thereby ensuring that the recipient can access the shared file.\n\nExternal storage can be configured using the GUI or at the command line. This second option provides the advanced user with more flexibility for configuring bulk external storage mounts and setting mount priorities. More information is available in the external storage GUI documentation and the external storage Configuration File documentation." : "יישום זה מאפשר למנהלים להגדיר חיבורים לספקי אחסון חיצוניים, כמו שרתי FTP, חנויות אובייקטים S3 או SWIFT, שרתי Nextcloud אחרים, שרתי WebDAV ועוד. מנהלי מערכת יכולים לבחור אילו סוגי אחסון להפעיל, ויכולים להרכיב את מיקומי האחסון הללו עבור משתמש, קבוצה, או לכל המערכת. משתמשים יראו תיקיה חדשה המופיעה בספריית Nextcloud הבסיסית שלהם, אליה הם יכולים לגשת ולהשתמש כמו כל תיקיית Nextcloud אחרת. אחסון חיצוני מאפשר למשתמשים גם לשתף קבצים המאוחסנים במיקומים חיצוניים אלה. במקרים אלה, נעשה שימוש בתעודות בעל הקובץ כאשר הנמען מבקש את הקובץ מאחסון חיצוני, ובכך מבטיח כי הנמען יכול לגשת לקובץ המשותף.\n\nניתן להגדיר אחסון חיצוני באמצעות ה- GUI או בשורת הפקודה. אפשרות השנייה זו מספקת למשתמש המתקדם גמישות רבה יותר לקביעת תצורה של רכיבי אחסון חיצוניים בכמות גדולה וקביעת סדרי עדיפויות ברכיבי אחסון. מידע נוסף זמין בתיעוד GUI לאחסון חיצוני, ובתיעוד קובץ תצורה של אחסון חיצוני.",
     "No external storage configured or you don't have the permission to configure them" : "לא הוגדר התקן חיצוני או שאין לך הרשאות להגדיר כאלה",
     "Name" : "שם",
     "Storage type" : "סוג אחסון",
@@ -132,7 +134,6 @@ OC.L10N.register(
     "Add storage" : "הוספת אחסון",
     "Advanced settings" : "הגדרות מתקדמות",
     "Allow users to mount external storage" : "מאפשר למשתמשים לחבר אחסון חיצוני",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "ניתן להשתמש בפרטי גישה גלובליים עם מגוון אמצעי אחסון חיצוניים שיש להם את אותם פרטי הגישה.",
-    "Saving..." : "מתבצעת שמירה…"
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "ניתן להשתמש בפרטי גישה גלובליים עם מגוון אמצעי אחסון חיצוניים שיש להם את אותם פרטי הגישה."
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;");

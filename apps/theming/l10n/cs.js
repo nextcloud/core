@@ -24,7 +24,6 @@ OC.L10N.register(
     "Could not write file to disk" : "Soubor se nedaří zapsat na datové úložiště",
     "A PHP extension stopped the file upload" : "PHP rozšíření zastavilo nahrávání souboru",
     "No file uploaded" : "Nenahrán žádný soubor",
-    "Unsupported image type" : "Nepodporovaný typ obrázku",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "Už používáte svůj vlastní motiv vzhledu. Nastavení aplikace pro změnu motivu vzhledu tím mohou být přepsána.",
     "Theming" : "Motiv vzhledu",
     "Legal notice" : "Právní upozornění",

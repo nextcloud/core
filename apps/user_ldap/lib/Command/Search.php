@@ -8,7 +8,6 @@
  * @author Juan Pablo Villafáñez <jvillafanez@solidgear.es>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vinicius Cubas Brand <vinicius@eita.org.br>
  *
  * @license AGPL-3.0
  *
@@ -29,11 +28,9 @@
 namespace OCA\User_LDAP\Command;
 
 use OCA\User_LDAP\Group_Proxy;
-use OCA\User_LDAP\GroupPluginManager;
 use OCA\User_LDAP\Helper;
 use OCA\User_LDAP\LDAP;
 use OCA\User_LDAP\User_Proxy;
-use OCA\User_LDAP\UserPluginManager;
 use OCP\IConfig;
 
 use Symfony\Component\Console\Command\Command;
@@ -45,13 +42,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Search extends Command {
 	/** @var \OCP\IConfig */
 	protected $ocConfig;
+	/** @var User_Proxy */
+	private $userProxy;
+	/** @var Group_Proxy */
+	private $groupProxy;
 
-	/**
-	 * @param \OCP\IConfig $ocConfig
-	 */
-	public function __construct(IConfig $ocConfig) {
-		$this->ocConfig = $ocConfig;
+	public function __construct(IConfig $ocConfig, User_Proxy $userProxy, Group_Proxy $groupProxy) {
 		parent::__construct();
+		$this->ocConfig = $ocConfig;
+		$this->userProxy = $userProxy;
+		$this->groupProxy = $groupProxy;
 	}
 
 	protected function configure() {
@@ -96,7 +96,7 @@ class Search extends Command {
 		if ($limit < 0) {
 			throw new \InvalidArgumentException('limit must be  0 or greater');
 		}
-		if ($offset  < 0) {
+		if ($offset < 0) {
 			throw new \InvalidArgumentException('offset must be 0 or greater');
 		}
 		if ($limit === 0 && $offset !== 0) {
@@ -108,7 +108,7 @@ class Search extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
-		$helper = new Helper($this->ocConfig);
+		$helper = new Helper($this->ocConfig, \OC::$server->getDatabaseConnection());
 		$configPrefixes = $helper->getServerConfigurationPrefixes(true);
 		$ldapWrapper = new LDAP();
 
@@ -117,7 +117,7 @@ class Search extends Command {
 		$this->validateOffsetAndLimit($offset, $limit);
 
 		if ($input->getOption('group')) {
-			$proxy = new Group_Proxy($configPrefixes, $ldapWrapper, \OC::$server->query(GroupPluginManager::class));
+			$proxy = $this->groupProxy;
 			$getMethod = 'getGroups';
 			$printID = false;
 			// convert the limit of groups to null. This will show all the groups available instead of
@@ -126,14 +126,7 @@ class Search extends Command {
 				$limit = null;
 			}
 		} else {
-			$proxy = new User_Proxy(
-				$configPrefixes,
-				$ldapWrapper,
-				$this->ocConfig,
-				\OC::$server->getNotificationManager(),
-				\OC::$server->getUserSession(),
-				\OC::$server->query(UserPluginManager::class)
-			);
+			$proxy = $this->userProxy;
 			$getMethod = 'getDisplayNames';
 			$printID = true;
 		}

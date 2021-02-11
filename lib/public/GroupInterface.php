@@ -8,7 +8,7 @@
  * @author Knut Ahlers <knut@ahlers.me>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -40,7 +40,6 @@ namespace OCP;
 /**
  * TODO actually this is a IGroupBackend
  *
- * @package OCP
  * @since 4.5.0
  */
 interface GroupInterface {
@@ -48,18 +47,18 @@ interface GroupInterface {
 	/**
 	 * actions that user backends can define
 	 */
-	public const CREATE_GROUP		= 0x00000001;
-	public const DELETE_GROUP		= 0x00000010;
-	public const ADD_TO_GROUP		= 0x00000100;
-	public const REMOVE_FROM_GOUP	= 0x00001000; // oops
-	public const REMOVE_FROM_GROUP	= 0x00001000;
+	public const CREATE_GROUP = 0x00000001;
+	public const DELETE_GROUP = 0x00000010;
+	public const ADD_TO_GROUP = 0x00000100;
+	public const REMOVE_FROM_GOUP = 0x00001000; // oops
+	public const REMOVE_FROM_GROUP = 0x00001000;
 	//OBSOLETE const GET_DISPLAYNAME	= 0x00010000;
-	public const COUNT_USERS		= 0x00100000;
-	public const GROUP_DETAILS		= 0x01000000;
+	public const COUNT_USERS = 0x00100000;
+	public const GROUP_DETAILS = 0x01000000;
 	/**
 	 * @since 13.0.0
 	 */
-	public const IS_ADMIN  = 0x10000000;
+	public const IS_ADMIN = 0x10000000;
 
 	/**
 	 * Check if backend implements actions

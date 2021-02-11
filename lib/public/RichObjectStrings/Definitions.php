@@ -6,6 +6,8 @@
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Maxence Lange <maxence@nextcloud.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -29,7 +31,6 @@ namespace OCP\RichObjectStrings;
 /**
  * Class Definitions
  *
- * @package OCP\RichObjectStrings
  * @since 11.0.0
  */
 class Definitions {
@@ -218,6 +219,68 @@ class Definitions {
 				],
 			],
 		],
+		'deck-board' => [
+			'author' => 'Nextcloud',
+			'app' => 'deck',
+			'since' => '21.0.0',
+			'parameters' => [
+				'id' => [
+					'since' => '21.0.0',
+					'required' => true,
+					'description' => 'The id used to identify the board on the instance',
+					'example' => '1',
+				],
+				'name' => [
+					'since' => '21.0.0',
+					'required' => true,
+					'description' => 'The display name of the deck board',
+					'example' => 'Personal',
+				],
+				'link' => [
+					'since' => '21.0.0',
+					'required' => true,
+					'description' => 'The full URL to the board',
+					'example' => 'http://localhost/index.php/apps/deck/#/board/1',
+				],
+			],
+		],
+		'deck-card' => [
+			'author' => 'Nextcloud',
+			'app' => 'deck',
+			'since' => '21.0.0',
+			'parameters' => [
+				'id' => [
+					'since' => '21.0.0',
+					'required' => true,
+					'description' => 'The id used to identify the card on the instance',
+					'example' => '1',
+				],
+				'name' => [
+					'since' => '21.0.0',
+					'required' => true,
+					'description' => 'The title of the deck card',
+					'example' => 'Foo Bar',
+				],
+				'boardname' => [
+					'since' => '21.0.0',
+					'required' => true,
+					'description' => 'The display name of board which contains the card',
+					'example' => 'Personal',
+				],
+				'stackname' => [
+					'since' => '21.0.0',
+					'required' => true,
+					'description' => 'The display name of the stack which contains the card in the board',
+					'example' => 'To do',
+				],
+				'link' => [
+					'since' => '21.0.0',
+					'required' => true,
+					'description' => 'The full URL to the card directly',
+					'example' => 'https://nextcloud21.local/index.php/apps/deck/#/board/1/card/1',
+				],
+			],
+		],
 		'email' => [
 			'author' => 'Nextcloud',
 			'app' => 'sharebymail',
@@ -253,6 +316,12 @@ class Definitions {
 					'required' => true,
 					'description' => 'The file name which should be used in the visual representation',
 					'example' => 'file.txt',
+				],
+				'size' => [
+					'since' => '21.0.0',
+					'required' => false,
+					'description' => 'The file size in bytes',
+					'example' => '3145728',
 				],
 				'path' => [
 					'since' => '11.0.0',

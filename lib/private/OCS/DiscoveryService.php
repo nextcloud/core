@@ -97,7 +97,7 @@ class DiscoveryService implements IDiscoveryService {
 		}
 
 		// Write into cache
-		$this->cache->set($remote . '#' . $service, json_encode($discoveredServices), 60*60*24);
+		$this->cache->set($remote . '#' . $service, json_encode($discoveredServices), 60 * 60 * 24);
 		return $discoveredServices;
 	}
 

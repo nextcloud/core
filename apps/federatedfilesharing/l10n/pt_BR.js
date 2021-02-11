@@ -18,7 +18,7 @@ OC.L10N.register(
     "Federated Share request sent, you will receive an invitation. Check your notifications." : "Solicitação de Compartilhamento Federado enviada, você receberá um convite. Verifique suas notificações.",
     "Couldn't establish a federated share, it looks like the server to federate with is too old (Nextcloud <= 9)." : "Não foi possível estabelecer um compartilhamento federado, parece que o servidor a se federar é muito antigo (Nextcloud <= 9).",
     "It is not allowed to send federated group shares from this server." : "Não é permitido enviar compartilhamentos de grupos federados deste servidor.",
-    "Sharing %1$s failed, because this item is already shared with %2$s" : "O compartilhamento%1$s falhou, porque este item já está compartilhado com %2$s",
+    "Sharing %1$s failed, because this item is already shared with %2$s" : "O compartilhamento %1$s falhou, porque este item já está compartilhado com %2$s",
     "Not allowed to create a federated share with the same user" : "Não é permitido criar um compartilhamento federado com o mesmo usuário",
     "File is already shared with %s" : "O arquivo já é compartilhado com %s",
     "Sharing %1$s failed, could not find %2$s, maybe the server is currently unreachable or uses a self-signed certificate." : "O compartilhamento%1$s falhou, não pude encontrar %2$s, talvez o servidor esteja inacessível ou usa um certificado auto-assinado.",
@@ -38,7 +38,7 @@ OC.L10N.register(
     "Federated Cloud Sharing" : "Compartilhamento de Nuvem Federada",
     "Open documentation" : "Abrir documentação",
     "Adjust how people can share between servers." : "Ajustar como as pessoas podem compartilhar entre servidores.",
-    "Allow users on this server to send shares to other servers" : "Permitir que os usuários deste servidor enviem compartilhamentos para outros servidores",
+    "Allow users on this server to send shares to other servers (this option also allows WebDAV access to public shares)" : "Permitir que os usuários neste servidor enviem compartilhamentos para outros servidores (esta opção também permite acesso WebDAV a compartilhamentos públicos)",
     "Allow users on this server to receive shares from other servers" : "Permitir que os usuários deste servidor recebam compartilhamentos de outros servidores",
     "Allow users on this server to send shares to groups on other servers" : "Permitir que usuários deste servidor enviem compartilhamentos para grupos de outros servidores",
     "Allow users on this server to receive group shares from other servers" : "Permitir que usuários deste servidor recebam compartilhamentos de grupos de outros servidores",
@@ -51,7 +51,6 @@ OC.L10N.register(
     "Add to your website" : "Adicione ao seu website",
     "Share with me via Nextcloud" : "Compartilhe comigo via Nextcloud",
     "HTML Code:" : "Código HTML:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Você recebeu \"%3$s\" como um compartilhamento remoto de %1$s ( em nome de %2$s )",
-    "You received \"%3$s\" as a remote share from %1$s" : "Você recebeu \"%3$s\" como um compartilhamento remoto de %1$s"
+    "Allow users on this server to send shares to other servers" : "Permitir que os usuários deste servidor enviem compartilhamentos para outros servidores"
 },
 "nplurals=2; plural=(n > 1);");

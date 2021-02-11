@@ -3,12 +3,13 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author J0WI <J0WI@users.noreply.github.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Markus Goetz <markus@woboq.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -73,7 +74,7 @@ class AssemblyStream implements \Icewind\Streams\File {
 		$this->loadContext('assembly');
 
 		$nodes = $this->nodes;
-		// http://stackoverflow.com/a/10985500
+		// https://stackoverflow.com/a/10985500
 		@usort($nodes, function (IFile $a, IFile $b) {
 			return strnatcmp($a->getName(), $b->getName());
 		});

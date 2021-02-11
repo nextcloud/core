@@ -3,17 +3,17 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Andreas Fischer <bantu@owncloud.com>
- * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Nils Wittenbrink <nilswittenbrink@web.de>
  * @author Owen Winkler <a_github@midnightcircus.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Sander Ruitenbeek <sander@grids.be>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Pulzer <t.pulzer@kniel.de>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -240,10 +240,10 @@ class Upgrade extends Command {
 				$output->writeln("<error>$message</error>");
 			});
 			$updater->listen('\OC\Updater', 'setDebugLogLevel', function ($logLevel, $logLevelName) use ($output) {
-				$output->writeln("<info>Set log level to debug</info>");
+				$output->writeln("<info>Setting log level to debug</info>");
 			});
 			$updater->listen('\OC\Updater', 'resetLogLevel', function ($logLevel, $logLevelName) use ($output) {
-				$output->writeln("<info>Reset log level</info>");
+				$output->writeln("<info>Resetting log level</info>");
 			});
 			$updater->listen('\OC\Updater', 'startCheckCodeIntegrity', function () use ($output) {
 				$output->writeln("<info>Starting code integrity check...</info>");
@@ -263,7 +263,7 @@ class Upgrade extends Command {
 			return self::ERROR_SUCCESS;
 		} elseif ($this->config->getSystemValueBool('maintenance')) {
 			//Possible scenario: Nextcloud core is updated but an app failed
-			$output->writeln('<warning>Nextcloud is in maintenance mode</warning>');
+			$output->writeln('<comment>Nextcloud is in maintenance mode</comment>');
 			$output->write('<comment>Maybe an upgrade is already in process. Please check the '
 				. 'logfile (data/nextcloud.log). If you want to re-run the '
 				. 'upgrade procedure, remove the "maintenance mode" from '

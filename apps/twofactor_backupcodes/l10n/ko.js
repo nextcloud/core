@@ -17,8 +17,6 @@ OC.L10N.register(
     "An error occurred while generating your backup codes" : "백업 코드를 생성하는 중 오류가 발생했습니다.",
     "{name} backup codes" : "{name} 백업 코드",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "2단계 인증을 설정할 때 저장한 백업 코드를 사용하십시오.",
-    "Submit" : "제출",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["백업 코드 생성"]
+    "Submit" : "제출"
 },
 "nplurals=1; plural=0;");

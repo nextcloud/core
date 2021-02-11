@@ -13,19 +13,21 @@
     "Files app plugin to add comments to files" : "Connexió de l’aplicació de fitxers per afegir comentaris als fitxers",
     "Edit comment" : "Edita comentari",
     "Delete comment" : "Suprimeix comentari",
+    "No comments yet, start the conversation!" : "Encara no hi ha comentaris. Enceteu la conversa!",
+    "Retry" : "Torna a intentar",
+    "_%n unread comment_::_%n unread comments_" : ["%n comentari no llegit","%n comentaris no llegits"],
+    "_1 new comment_::_{unread} new comments_" : ["1 comentari nou","{unread} comentaris nous"],
+    "Comment" : "Comentari",
+    "Comment deleted" : "Comentari suprimit",
     "New comment …" : "Nou comentari...",
     "Post" : "Publica",
     "Cancel" : "Cancel·la",
     "[Deleted user]" : "[Usuari suprimit]",
-    "No comments yet, start the conversation!" : "Encara no hi ha comentaris. Enceteu la conversa!",
     "More comments …" : "Més comentaris...",
     "Save" : "Desa",
     "Allowed characters {count} of {max}" : "{count} caràcters permesos de {max}",
     "Error occurred while retrieving comment with ID {id}" : "S'ha produït un error en recuperar el comentari amb l'ID {id}",
     "Error occurred while updating comment with id {id}" : "Hi ha hagut un error en actualitzar el comentari amb id {id}",
-    "Error occurred while posting comment" : "Hi ha hagut un error en publicar el comentari",
-    "_%n unread comment_::_%n unread comments_" : ["%n comentari no llegit","%n comentaris no llegits"],
-    "_1 new comment_::_{unread} new comments_" : ["1 comentari nou","{unread} comentaris nous"],
-    "Comment" : "Comentari"
+    "Error occurred while posting comment" : "Hi ha hagut un error en publicar el comentari"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

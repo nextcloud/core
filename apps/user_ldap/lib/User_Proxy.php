@@ -42,17 +42,8 @@ class User_Proxy extends Proxy implements \OCP\IUserBackend, \OCP\UserInterface,
 	/** @var User_LDAP */
 	private $refBackend = null;
 
-	/**
-	 * Constructor
-	 *
-	 * @param array $serverConfigPrefixes array containing the config Prefixes
-	 * @param ILDAPWrapper $ldap
-	 * @param IConfig $ocConfig
-	 * @param INotificationManager $notificationManager
-	 * @param IUserSession $userSession
-	 */
 	public function __construct(
-		array $serverConfigPrefixes,
+		Helper $helper,
 		ILDAPWrapper $ldap,
 		IConfig $ocConfig,
 		INotificationManager $notificationManager,
@@ -60,6 +51,7 @@ class User_Proxy extends Proxy implements \OCP\IUserBackend, \OCP\UserInterface,
 		UserPluginManager $userPluginManager
 	) {
 		parent::__construct($ldap);
+		$serverConfigPrefixes = $helper->getServerConfigurationPrefixes(true);
 		foreach ($serverConfigPrefixes as $configPrefix) {
 			$this->backends[$configPrefix] =
 				new User_LDAP($this->getAccess($configPrefix), $ocConfig, $notificationManager, $userSession, $userPluginManager);
@@ -73,12 +65,13 @@ class User_Proxy extends Proxy implements \OCP\IUserBackend, \OCP\UserInterface,
 	/**
 	 * Tries the backends one after the other until a positive result is returned from the specified method
 	 *
-	 * @param string $uid the uid connected to the request
+	 * @param string $id the uid connected to the request
 	 * @param string $method the method of the user backend that shall be called
 	 * @param array $parameters an array of parameters to be passed
 	 * @return mixed the result of the method or false
 	 */
-	protected function walkBackends($uid, $method, $parameters) {
+	protected function walkBackends($id, $method, $parameters) {
+		$uid = $id;
 		$cacheKey = $this->getUserCacheKey($uid);
 		foreach ($this->backends as $configPrefix => $backend) {
 			$instance = $backend;
@@ -99,13 +92,14 @@ class User_Proxy extends Proxy implements \OCP\IUserBackend, \OCP\UserInterface,
 	/**
 	 * Asks the backend connected to the server that supposely takes care of the uid from the request.
 	 *
-	 * @param string $uid the uid connected to the request
+	 * @param string $id the uid connected to the request
 	 * @param string $method the method of the user backend that shall be called
 	 * @param array $parameters an array of parameters to be passed
 	 * @param mixed $passOnWhen the result matches this variable
 	 * @return mixed the result of the method or false
 	 */
-	protected function callOnLastSeenOn($uid, $method, $parameters, $passOnWhen) {
+	protected function callOnLastSeenOn($id, $method, $parameters, $passOnWhen) {
+		$uid = $id;
 		$cacheKey = $this->getUserCacheKey($uid);
 		$prefix = $this->getFromCache($cacheKey);
 		//in case the uid has been found in the past, try this stored connection first

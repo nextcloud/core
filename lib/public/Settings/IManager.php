@@ -38,7 +38,7 @@ interface IManager {
 	/**
 	 * @since 9.1.0
 	 */
-	public const KEY_ADMIN_SECTION  = 'admin-section';
+	public const KEY_ADMIN_SECTION = 'admin-section';
 
 	/**
 	 * @since 13.0.0
@@ -48,7 +48,7 @@ interface IManager {
 	/**
 	 * @since 13.0.0
 	 */
-	public const KEY_PERSONAL_SECTION  = 'personal-section';
+	public const KEY_PERSONAL_SECTION = 'personal-section';
 
 	/**
 	 * @param string $type 'admin' or 'personal'

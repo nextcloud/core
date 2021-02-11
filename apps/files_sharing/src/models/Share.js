@@ -150,6 +150,21 @@ export default class Share {
 			|| this.#share.share_with
 	}
 
+	get shareWithDisplayNameUnique() {
+		return this.#share.share_with_displayname_unique || this.#share.share_with
+	}
+
+	/**
+	 * Get the share with entity link
+	 *
+	 * @returns {string}
+	 * @readonly
+	 * @memberof Share
+	 */
+	get shareWithLink() {
+		return this.#share.share_with_link
+	}
+
 	/**
 	 * Get the share with avatar if any
 	 *
@@ -526,6 +541,10 @@ export default class Share {
 
 	get itemSource() {
 		return this.#share.item_source
+	}
+
+	get status() {
+		return this.#share.status
 	}
 
 }

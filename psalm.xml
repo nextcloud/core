@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<psalm
+	errorLevel="4"
+	resolveFromConfigFile="true"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://getpsalm.org/schema/config"
+	xsi:schemaLocation="https://getpsalm.org/schema/config"
+    errorBaseline="build/psalm-baseline.xml"
+>
+	<plugins>
+		<plugin filename="build/psalm/AppFrameworkTainter.php" />
+	</plugins>
+	<projectFiles>
+		<directory name="apps/accessibility"/>
+		<directory name="apps/admin_audit"/>
+		<directory name="apps/cloud_federation_api"/>
+		<directory name="apps/comments"/>
+		<directory name="apps/contactsinteraction"/>
+		<directory name="apps/dashboard"/>
+		<directory name="apps/dav"/>
+		<directory name="apps/encryption"/>
+		<directory name="apps/federatedfilesharing"/>
+		<directory name="apps/federation"/>
+		<directory name="apps/files"/>
+		<directory name="apps/files_external"/>
+		<directory name="apps/files_sharing"/>
+		<directory name="apps/files_trashbin"/>
+		<directory name="apps/files_versions"/>
+		<directory name="apps/lookup_server_connector"/>
+		<directory name="apps/oauth2"/>
+		<directory name="apps/provisioning_api"/>
+		<directory name="apps/settings"/>
+		<directory name="apps/sharebymail"/>
+		<directory name="apps/systemtags"/>
+		<directory name="apps/testing"/>
+		<directory name="apps/theming"/>
+		<directory name="apps/twofactor_backupcodes"/>
+		<directory name="apps/updatenotification"/>
+		<directory name="apps/user_ldap"/>
+		<directory name="apps/user_status"/>
+		<directory name="apps/weather_status"/>
+		<directory name="apps/workflowengine"/>
+		<directory name="core"/>
+		<directory name="lib"/>
+		<directory name="ocm-provider"/>
+		<directory name="ocs"/>
+		<directory name="ocs-provider"/>
+		<file name="index.php"/>
+		<file name="public.php"/>
+		<file name="remote.php"/>
+		<file name="status.php"/>
+		<file name="version.php"/>
+		<ignoreFiles>
+			<directory name="apps/**/composer"/>
+			<directory name="apps/**/tests"/>
+			<directory name="apps/files_external/3rdparty"/>
+			<directory name="lib/composer"/>
+			<directory name="lib/l10n"/>
+		</ignoreFiles>
+	</projectFiles>
+	<extraFiles>
+		<directory name="3rdparty"/>
+		<directory name="apps/files_external/3rdparty"/>
+	</extraFiles>
+	<stubs>
+		<file name="build/stubs/apcu.php"/>
+		<file name="build/stubs/gd.php"/>
+		<file name="build/stubs/imagick.php"/>
+		<file name="build/stubs/intl.php"/>
+		<file name="build/stubs/IntlChar.php"/>
+		<file name="build/stubs/ldap.php"/>
+		<file name="build/stubs/memcached.php"/>
+		<file name="build/stubs/redis.php"/>
+		<file name="build/stubs/redis_cluster.php"/>
+		<file name="build/stubs/sftp.php"/>
+		<file name="build/stubs/ssh2.php"/>
+		<file name="build/stubs/xsl.php"/>
+	</stubs>
+	<issueHandlers>
+		<UndefinedFunction>
+			<errorLevel type="suppress">
+				<!-- template functions: https://github.com/nextcloud/server/blob/6e8e34fef920a073118c22111f0f31eb3b3a91dc/lib/private/legacy/template/functions.php -->
+				<referencedFunction name="p"/>
+				<referencedFunction name="emit_css_tag"/>
+				<referencedFunction name="emit_css_loading_tags"/>
+				<referencedFunction name="emit_script_tag"/>
+				<referencedFunction name="emit_script_loading_tags"/>
+				<referencedFunction name="print_unescaped"/>
+				<referencedFunction name="script"/>
+				<referencedFunction name="vendor_script"/>
+				<referencedFunction name="style"/>
+				<referencedFunction name="vendor_style"/>
+				<referencedFunction name="translation"/>
+				<referencedFunction name="component"/>
+				<referencedFunction name="link_to"/>
+				<referencedFunction name="link_to_docs"/>
+				<referencedFunction name="image_path"/>
+				<referencedFunction name="mimetype_icon"/>
+				<referencedFunction name="preview_icon"/>
+				<referencedFunction name="publicPreview_icon"/>
+				<referencedFunction name="human_file_size"/>
+				<referencedFunction name="strip_time"/>
+				<referencedFunction name="relative_modified_date"/>
+				<referencedFunction name="html_select_options"/>
+			</errorLevel>
+		</UndefinedFunction>
+		<UndefinedGlobalVariable>
+			<errorLevel type="suppress">
+				<referencedVariable name="$_"/>
+				<referencedVariable name="$l"/>
+				<referencedVariable name="$theme"/>
+				<!-- false positive: https://github.com/nextcloud/server/blob/cb057829f72c70e819f456edfadbb29d72dba832/lib/private/Console/Application.php#L92 -->
+				<file name="core/register_command.php" />
+			</errorLevel>
+		</UndefinedGlobalVariable>
+		<UndefinedDocblockClass>
+			<errorLevel type="suppress">
+				<!-- Helper classes for sharing API integration from other apps -->
+				<referencedClass name="OCA\Deck\Sharing\ShareAPIHelper" />
+				<referencedClass name="OCA\Talk\Share\Helper\DeletedShareAPIController" />
+			</errorLevel>
+		</UndefinedDocblockClass>
+	</issueHandlers>
+</psalm>

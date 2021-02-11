@@ -28,12 +28,12 @@ namespace lib\Authentication\Login;
 use OC\Authentication\Login\LoggedInCheckCommand;
 use OC\Core\Controller\LoginController;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\ILogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class LoggedInCheckCommandTest extends ALoginCommandTest {
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var IEventDispatcher|MockObject */
@@ -42,7 +42,7 @@ class LoggedInCheckCommandTest extends ALoginCommandTest {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->dispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->cmd = new LoggedInCheckCommand(

@@ -108,6 +108,7 @@ class IMipPlugin extends SabreIMipPlugin {
 	public const METHOD_REQUEST = 'request';
 	public const METHOD_REPLY = 'reply';
 	public const METHOD_CANCEL = 'cancel';
+	public const IMIP_INDENT = 15; // Enough for the length of all body bullet items, in all languages
 
 	/**
 	 * @param IConfig $config
@@ -204,26 +205,6 @@ class IMipPlugin extends SabreIMipPlugin {
 		$meetingTitle = $vevent->SUMMARY;
 		$meetingDescription = $vevent->DESCRIPTION;
 
-		$start = $vevent->DTSTART;
-		if (isset($vevent->DTEND)) {
-			$end = $vevent->DTEND;
-		} elseif (isset($vevent->DURATION)) {
-			$isFloating = $vevent->DTSTART->isFloating();
-			$end = clone $vevent->DTSTART;
-			$endDateTime = $end->getDateTime();
-			$endDateTime = $endDateTime->add(DateTimeParser::parse($vevent->DURATION->getValue()));
-			$end->setDateTime($endDateTime, $isFloating);
-		} elseif (!$vevent->DTSTART->hasTime()) {
-			$isFloating = $vevent->DTSTART->isFloating();
-			$end = clone $vevent->DTSTART;
-			$endDateTime = $end->getDateTime();
-			$endDateTime = $endDateTime->modify('+1 day');
-			$end->setDateTime($endDateTime, $isFloating);
-		} else {
-			$end = clone $vevent->DTSTART;
-		}
-
-		$meetingWhen = $this->generateWhenString($l10n, $start, $end);
 
 		$meetingUrl = $vevent->URL;
 		$meetingLocation = $vevent->LOCATION;
@@ -261,10 +242,8 @@ class IMipPlugin extends SabreIMipPlugin {
 
 		$summary = ((string) $summary !== '') ? (string) $summary : $l10n->t('Untitled event');
 
-		$this->addSubjectAndHeading($template, $l10n, $method, $summary,
-			$meetingAttendeeName, $meetingInviteeName);
-		$this->addBulletList($template, $l10n, $meetingWhen, $meetingLocation,
-			$meetingDescription, $meetingUrl);
+		$this->addSubjectAndHeading($template, $l10n, $method, $summary);
+		$this->addBulletList($template, $l10n, $vevent);
 
 
 		// Only add response buttons to invitation requests: Fix Issue #11230
@@ -314,7 +293,7 @@ class IMipPlugin extends SabreIMipPlugin {
 			$failed = $this->mailer->send($message);
 			$iTipMessage->scheduleStatus = '1.1; Scheduling message is sent via iMip';
 			if ($failed) {
-				$this->logger->error('Unable to deliver message to {failed}', ['app' => 'dav', 'failed' =>  implode(', ', $failed)]);
+				$this->logger->error('Unable to deliver message to {failed}', ['app' => 'dav', 'failed' => implode(', ', $failed)]);
 				$iTipMessage->scheduleStatus = '5.0; EMail delivery failed';
 			}
 		} catch (\Exception $ex) {
@@ -370,7 +349,6 @@ class IMipPlugin extends SabreIMipPlugin {
 		return $lastOccurrence;
 	}
 
-
 	/**
 	 * @param Message $iTipMessage
 	 * @return null|Property
@@ -420,10 +398,28 @@ class IMipPlugin extends SabreIMipPlugin {
 
 	/**
 	 * @param IL10N $l10n
-	 * @param Property $dtstart
-	 * @param Property $dtend
+	 * @param VEvent $vevent
 	 */
-	private function generateWhenString(IL10N $l10n, Property $dtstart, Property $dtend) {
+	private function generateWhenString(IL10N $l10n, VEvent $vevent) {
+		$dtstart = $vevent->DTSTART;
+		if (isset($vevent->DTEND)) {
+			$dtend = $vevent->DTEND;
+		} elseif (isset($vevent->DURATION)) {
+			$isFloating = $vevent->DTSTART->isFloating();
+			$dtend = clone $vevent->DTSTART;
+			$endDateTime = $dtend->getDateTime();
+			$endDateTime = $endDateTime->add(DateTimeParser::parse($vevent->DURATION->getValue()));
+			$dtend->setDateTime($endDateTime, $isFloating);
+		} elseif (!$vevent->DTSTART->hasTime()) {
+			$isFloating = $vevent->DTSTART->isFloating();
+			$dtend = clone $vevent->DTSTART;
+			$endDateTime = $dtend->getDateTime();
+			$endDateTime = $endDateTime->modify('+1 day');
+			$dtend->setDateTime($endDateTime, $isFloating);
+		} else {
+			$dtend = clone $vevent->DTSTART;
+		}
+
 		$isAllDay = $dtstart instanceof Property\ICalendar\Date;
 
 		/** @var Property\ICalendar\Date | Property\ICalendar\DateTime $dtstart */
@@ -507,49 +503,132 @@ class IMipPlugin extends SabreIMipPlugin {
 	 * @param IL10N $l10n
 	 * @param string $method
 	 * @param string $summary
-	 * @param string $attendeeName
-	 * @param string $inviteeName
 	 */
 	private function addSubjectAndHeading(IEMailTemplate $template, IL10N $l10n,
-										  $method, $summary, $attendeeName, $inviteeName) {
+										  $method, $summary) {
 		if ($method === self::METHOD_CANCEL) {
-			$template->setSubject('Cancelled: ' . $summary);
-			$template->addHeading($l10n->t('Invitation canceled'), $l10n->t('Hello %s,', [$attendeeName]));
-			$template->addBodyText($l10n->t('The meeting »%1$s« with %2$s was canceled.', [$summary, $inviteeName]));
+			$template->setSubject('Canceled: ' . $summary);
+			$template->addHeading($l10n->t('Invitation canceled'));
 		} elseif ($method === self::METHOD_REPLY) {
 			$template->setSubject('Re: ' . $summary);
-			$template->addHeading($l10n->t('Invitation updated'), $l10n->t('Hello %s,', [$attendeeName]));
-			$template->addBodyText($l10n->t('The meeting »%1$s« with %2$s was updated.', [$summary, $inviteeName]));
+			$template->addHeading($l10n->t('Invitation updated'));
 		} else {
 			$template->setSubject('Invitation: ' . $summary);
-			$template->addHeading($l10n->t('%1$s invited you to »%2$s«', [$inviteeName, $summary]), $l10n->t('Hello %s,', [$attendeeName]));
+			$template->addHeading($l10n->t('Invitation'));
 		}
 	}
 
 	/**
 	 * @param IEMailTemplate $template
 	 * @param IL10N $l10n
-	 * @param string $time
-	 * @param string $location
-	 * @param string $description
-	 * @param string $url
+	 * @param VEVENT $vevent
 	 */
-	private function addBulletList(IEMailTemplate $template, IL10N $l10n, $time, $location, $description, $url) {
-		$template->addBodyListItem($time, $l10n->t('When:'),
-			$this->getAbsoluteImagePath('filetypes/text-calendar.svg'));
+	private function addBulletList(IEMailTemplate $template, IL10N $l10n, $vevent) {
+		if ($vevent->SUMMARY) {
+			$template->addBodyListItem($vevent->SUMMARY, $l10n->t('Title:'),
+				$this->getAbsoluteImagePath('caldav/title.svg'),'','',self::IMIP_INDENT);
+		}
+		$meetingWhen = $this->generateWhenString($l10n, $vevent);
+		if ($meetingWhen) {
+			$template->addBodyListItem($meetingWhen, $l10n->t('Time:'),
+				$this->getAbsoluteImagePath('caldav/time.svg'),'','',self::IMIP_INDENT);
+		}
+		if ($vevent->LOCATION) {
+			$template->addBodyListItem($vevent->LOCATION, $l10n->t('Location:'),
+				$this->getAbsoluteImagePath('caldav/location.svg'),'','',self::IMIP_INDENT);
+		}
+		if ($vevent->URL) {
+			$url = $vevent->URL->getValue();
+			$template->addBodyListItem(sprintf('<a href="%s">%s</a>',
+					htmlspecialchars($url),
+					htmlspecialchars($url)),
+				$l10n->t('Link:'),
+				$this->getAbsoluteImagePath('caldav/link.svg'),
+				$url,'',self::IMIP_INDENT);
+		}
 
-		if ($location) {
-			$template->addBodyListItem($location, $l10n->t('Where:'),
-				$this->getAbsoluteImagePath('filetypes/location.svg'));
+		$this->addAttendees($template, $l10n, $vevent);
+
+		/* Put description last, like an email body, since it can be arbitrarily long */
+		if ($vevent->DESCRIPTION) {
+			$template->addBodyListItem($vevent->DESCRIPTION->getValue(), $l10n->t('Description:'),
+				$this->getAbsoluteImagePath('caldav/description.svg'),'','',self::IMIP_INDENT);
 		}
-		if ($description) {
-			$template->addBodyListItem((string)$description, $l10n->t('Description:'),
-				$this->getAbsoluteImagePath('filetypes/text.svg'));
+	}
+
+	/**
+	 * addAttendees: add organizer and attendee names/emails to iMip mail.
+	 *
+	 * Enable with DAV setting: invitation_list_attendees (default: no)
+	 *
+	 * The default is 'no', which matches old behavior, and is privacy preserving.
+	 *
+	 * To enable including attendees in invitation emails:
+	 *   % php occ config:app:set dav invitation_list_attendees --value yes
+	 *
+	 * @param IEMailTemplate $template
+	 * @param IL10N $l10n
+	 * @param Message $iTipMessage
+	 * @param int $lastOccurrence
+	 * @author brad2014 on github.com
+	 */
+
+	private function addAttendees(IEMailTemplate $template, IL10N $l10n, VEvent $vevent) {
+		if ($this->config->getAppValue('dav', 'invitation_list_attendees', 'no') === 'no') {
+			return;
 		}
-		if ($url) {
-			$template->addBodyListItem((string)$url, $l10n->t('Link:'),
-				$this->getAbsoluteImagePath('filetypes/link.svg'));
+
+		if (isset($vevent->ORGANIZER)) {
+			/** @var Property\ICalendar\CalAddress $organizer */
+			$organizer = $vevent->ORGANIZER;
+			$organizerURI = $organizer->getNormalizedValue();
+			list($scheme,$organizerEmail) = explode(':',$organizerURI,2); # strip off scheme mailto:
+			/** @var string|null $organizerName */
+			$organizerName = isset($organizer['CN']) ? $organizer['CN'] : null;
+			$organizerHTML = sprintf('<a href="%s">%s</a>',
+				htmlspecialchars($organizerURI),
+				htmlspecialchars($organizerName ?: $organizerEmail));
+			$organizerText = sprintf('%s <%s>', $organizerName, $organizerEmail);
+			if (isset($organizer['PARTSTAT'])) {
+				/** @var Parameter $partstat */
+				$partstat = $organizer['PARTSTAT'];
+				if (strcasecmp($partstat->getValue(), 'ACCEPTED') === 0) {
+					$organizerHTML .= ' ✔︎';
+					$organizerText .= ' ✔︎';
+				}
+			}
+			$template->addBodyListItem($organizerHTML, $l10n->t('Organizer:'),
+				$this->getAbsoluteImagePath('caldav/organizer.svg'),
+				$organizerText,'',self::IMIP_INDENT);
 		}
+
+		$attendees = $vevent->select('ATTENDEE');
+		if (count($attendees) === 0) {
+			return;
+		}
+
+		$attendeesHTML = [];
+		$attendeesText = [];
+		foreach ($attendees as $attendee) {
+			$attendeeURI = $attendee->getNormalizedValue();
+			list($scheme,$attendeeEmail) = explode(':',$attendeeURI,2); # strip off scheme mailto:
+			$attendeeName = isset($attendee['CN']) ? $attendee['CN'] : null;
+			$attendeeHTML = sprintf('<a href="%s">%s</a>',
+				htmlspecialchars($attendeeURI),
+				htmlspecialchars($attendeeName ?: $attendeeEmail));
+			$attendeeText = sprintf('%s <%s>', $attendeeName, $attendeeEmail);
+			if (isset($attendee['PARTSTAT'])
+				&& strcasecmp($attendee['PARTSTAT'], 'ACCEPTED') === 0) {
+				$attendeeHTML .= ' ✔︎';
+				$attendeeText .= ' ✔︎';
+			}
+			array_push($attendeesHTML, $attendeeHTML);
+			array_push($attendeesText, $attendeeText);
+		}
+
+		$template->addBodyListItem(implode('<br/>',$attendeesHTML), $l10n->t('Attendees:'),
+			$this->getAbsoluteImagePath('caldav/attendees.svg'),
+			implode("\n",$attendeesText),'',self::IMIP_INDENT);
 	}
 
 	/**

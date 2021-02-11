@@ -60,7 +60,7 @@ class RememberBackupCodesJob extends TimedJob {
 		$this->notificationManager = $notificationManager;
 		$this->jobList = $jobList;
 
-		$this->setInterval(60*60*24*14);
+		$this->setInterval(60 * 60 * 24 * 14);
 	}
 
 	protected function run($argument) {

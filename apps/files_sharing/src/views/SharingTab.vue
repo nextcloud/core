@@ -21,10 +21,7 @@
   -->
 
 <template>
-	<Tab :id="id"
-		:icon="icon"
-		:name="name"
-		:class="{ 'icon-loading': loading }">
+	<div :class="{ 'icon-loading': loading }">
 		<!-- error message -->
 		<div v-if="error" class="emptycontent">
 			<div class="icon icon-error" />
@@ -84,7 +81,7 @@
 				<component :is="section($refs['section-'+index], fileInfo)" :file-info="fileInfo" />
 			</div>
 		</template>
-	</Tab>
+	</div>
 </template>
 
 <script>
@@ -92,8 +89,8 @@ import { CollectionList } from 'nextcloud-vue-collections'
 import { generateOcsUrl } from '@nextcloud/router'
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import axios from '@nextcloud/axios'
-import Tab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 
+import Config from '../services/ConfigService'
 import { shareWithTitle } from '../utils/SharedWithMe'
 import Share from '../models/Share'
 import ShareTypes from '../mixins/ShareTypes'
@@ -117,56 +114,31 @@ export default {
 		SharingInput,
 		SharingLinkList,
 		SharingList,
-		Tab,
 	},
 
 	mixins: [ShareTypes],
 
-	props: {
-		fileInfo: {
-			type: Object,
-			default: () => {},
-			required: true,
-		},
-	},
-
 	data() {
 		return {
+			config: new Config(),
+
 			error: '',
 			expirationInterval: null,
-			icon: 'icon-share',
 			loading: true,
-			name: t('files_sharing', 'Sharing'),
+
+			fileInfo: null,
+
 			// reshare Share object
 			reshare: null,
 			sharedWithMe: {},
 			shares: [],
 			linkShares: [],
+
 			sections: OCA.Sharing.ShareTabSections.getSections(),
 		}
 	},
 
 	computed: {
-		/**
-		 * Needed to differenciate the tabs
-		 * pulled from the AppSidebarTab component
-		 *
-		 * @returns {string}
-		 */
-		id() {
-			return 'sharing'
-		},
-
-		/**
-		 * Returns the current active tab
-		 * needed because AppSidebarTab also uses $parent.activeTab
-		 *
-		 * @returns {string}
-		 */
-		activeTab() {
-			return this.$parent.activeTab
-		},
-
 		/**
 		 * Is this share shared with me?
 		 *
@@ -178,24 +150,21 @@ export default {
 
 		canReshare() {
 			return !!(this.fileInfo.permissions & OC.PERMISSION_SHARE)
-				|| !!(this.reshare && this.reshare.hasSharePermission)
+				|| !!(this.reshare && this.reshare.hasSharePermission && this.config.isResharingAllowed)
 		},
-	},
-
-	watch: {
-		fileInfo(newFile, oldFile) {
-			if (newFile.id !== oldFile.id) {
-				this.resetState()
-				this.getShares()
-			}
-		},
-	},
-
-	beforeMount() {
-		this.getShares()
 	},
 
 	methods: {
+		/**
+		 * Update current fileInfo and fetch new data
+		 * @param {Object} fileInfo the current file FileInfo
+		 */
+		async update(fileInfo) {
+			this.fileInfo = fileInfo
+			this.resetState()
+			this.getShares()
+		},
+
 		/**
 		 * Get the existing shares infos
 		 */
@@ -248,6 +217,7 @@ export default {
 			this.error = ''
 			this.sharedWithMe = {}
 			this.shares = []
+			this.linkShares = []
 		},
 
 		/**
@@ -286,6 +256,7 @@ export default {
 
 				this.linkShares = shares.filter(share => share.type === this.SHARE_TYPES.SHARE_TYPE_LINK || share.type === this.SHARE_TYPES.SHARE_TYPE_EMAIL)
 				this.shares = shares.filter(share => share.type !== this.SHARE_TYPES.SHARE_TYPE_LINK && share.type !== this.SHARE_TYPES.SHARE_TYPE_EMAIL)
+
 				console.debug('Processed', this.linkShares.length, 'link share(s)')
 				console.debug('Processed', this.shares.length, 'share(s)')
 			}
@@ -340,7 +311,3 @@ export default {
 	},
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

@@ -4,6 +4,8 @@
  *
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Clement Wong <git@clement.hk>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -36,6 +38,8 @@ namespace OCP\AppFramework\Http;
 
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IConfig;
+use Psr\Log\LoggerInterface;
 
 /**
  * Base class for responses. Also used to just send headers.
@@ -200,6 +204,18 @@ class Response {
 		$name = trim($name);  // always remove leading and trailing whitespace
 		// to be able to reliably check for security
 		// headers
+
+		if ($this->status === Http::STATUS_NOT_MODIFIED
+			&& stripos($name, 'x-') === 0) {
+			/** @var IConfig $config */
+			$config = \OC::$server->get(IConfig::class);
+
+			if ($config->getSystemValueBool('debug', false)) {
+				\OC::$server->get(LoggerInterface::class)->error(
+					'Setting a custom header on a 204 or 304 is not supported'
+				);
+			}
+		}
 
 		if (is_null($value)) {
 			unset($this->headers[$name]);

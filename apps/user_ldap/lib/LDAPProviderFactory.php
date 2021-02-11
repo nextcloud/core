@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, Roger Szabo (roger.szabo@web.de)
  *
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roger Szabo <roger.szabo@web.de>
  * @author root <root@localhost.localdomain>
@@ -26,38 +26,19 @@
 
 namespace OCA\User_LDAP;
 
-use OCA\User_LDAP\Mapping\UserMapping;
-use OCA\User_LDAP\User\DeletedUsersIndex;
 use OCP\IServerContainer;
+use OCP\LDAP\ILDAPProvider;
 use OCP\LDAP\ILDAPProviderFactory;
 
 class LDAPProviderFactory implements ILDAPProviderFactory {
-	/**
-	 * Server container
-	 *
-	 * @var IServerContainer
-	 */
+	/** * @var IServerContainer */
 	private $serverContainer;
-	
-	/**
-	 * Constructor for the LDAP provider factory
-	 *
-	 * @param IServerContainer $serverContainer server container
-	 */
+
 	public function __construct(IServerContainer $serverContainer) {
 		$this->serverContainer = $serverContainer;
 	}
-	
-	/**
-	 * creates and returns an instance of the ILDAPProvider
-	 *
-	 * @return OCP\LDAP\ILDAPProvider
-	 */
-	public function getLDAPProvider() {
-		$dbConnection = $this->serverContainer->getDatabaseConnection();
-		$userMapping = new UserMapping($dbConnection);
-		return new LDAPProvider($this->serverContainer, new Helper($this->serverContainer->getConfig()),
-					new DeletedUsersIndex($this->serverContainer->getConfig(),
-					$dbConnection, $userMapping));
+
+	public function getLDAPProvider(): ILDAPProvider {
+		return $this->serverContainer->get(LDAPProvider::class);
 	}
 }

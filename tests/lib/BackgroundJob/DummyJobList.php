@@ -118,15 +118,6 @@ class DummyJobList extends \OC\BackgroundJob\JobList {
 	}
 
 	/**
-	 * get the id of the last ran job
-	 *
-	 * @return int
-	 */
-	public function getLastJob() {
-		return $this->last;
-	}
-
-	/**
 	 * set the lastRun of $job to now
 	 *
 	 * @param IJob $job

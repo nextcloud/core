@@ -77,7 +77,7 @@ class DbHandler {
 		$query->insert($this->dbTable)
 			->values(
 				[
-					'url' =>  $query->createParameter('url'),
+					'url' => $query->createParameter('url'),
 					'url_hash' => $query->createParameter('url_hash'),
 				]
 			)
@@ -120,8 +120,10 @@ class DbHandler {
 		$query->select('*')->from($this->dbTable)
 			->where($query->expr()->eq('id', $query->createParameter('id')))
 			->setParameter('id', $id);
-		$query->execute();
-		$result = $query->execute()->fetchAll();
+
+		$qResult = $query->execute();
+		$result = $qResult->fetchAll();
+		$qResult->closeCursor();
 
 		if (empty($result)) {
 			throw new \Exception('No Server found with ID: ' . $id);

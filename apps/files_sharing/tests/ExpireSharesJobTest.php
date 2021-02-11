@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -25,6 +26,8 @@
 namespace OCA\Files_Sharing\Tests;
 
 use OCA\Files_Sharing\ExpireSharesJob;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\Share\IManager;
 use OCP\Share\IShare;
 
 /**
@@ -36,24 +39,16 @@ use OCP\Share\IShare;
  */
 class ExpireSharesJobTest extends \Test\TestCase {
 
-	/**
-	 * @var ExpireSharesJob
-	 */
+	/** @var ExpireSharesJob */
 	private $job;
 
-	/**
-	 * @var \OCP\IDBConnection
-	 */
+	/** @var \OCP\IDBConnection */
 	private $connection;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $user1;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	private $user2;
 
 	protected function setUp(): void {
@@ -67,12 +62,12 @@ class ExpireSharesJobTest extends \Test\TestCase {
 		$this->user2 = $this->getUniqueID('user2_');
 
 		$userManager = \OC::$server->getUserManager();
-		$userManager->createUser($this->user1, 'pass');
-		$userManager->createUser($this->user2, 'pass');
+		$userManager->createUser($this->user1, 'longrandompassword');
+		$userManager->createUser($this->user2, 'longrandompassword');
 
-		\OC::registerShareHooks();
+		\OC::registerShareHooks(\OC::$server->getSystemConfig());
 
-		$this->job = new ExpireSharesJob();
+		$this->job = new ExpireSharesJob(\OC::$server->get(ITimeFactory::class), \OC::$server->get(IManager::class), $this->connection);
 	}
 
 	protected function tearDown(): void {

@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2018, Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -140,7 +141,7 @@ class DirectControllerTest extends TestCase {
 				$this->assertSame('awesomeUser', $direct->getUserId());
 				$this->assertSame(101, $direct->getFileId());
 				$this->assertSame('superduperlongtoken', $direct->getToken());
-				$this->assertSame(42 + 60*60*8, $direct->getExpiration());
+				$this->assertSame(42 + 60 * 60 * 8, $direct->getExpiration());
 			});
 
 		$this->urlGenerator->method('getAbsoluteURL')

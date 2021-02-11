@@ -112,7 +112,6 @@ OC.L10N.register(
     "Available for" : "可用的",
     "Add storage" : "增加儲存區",
     "Advanced settings" : "進階設定",
-    "Allow users to mount external storage" : "允許使用者能自行掛載外部儲存",
-    "Saving..." : "儲存中..."
+    "Allow users to mount external storage" : "允許使用者能自行掛載外部儲存"
 },
 "nplurals=1; plural=0;");

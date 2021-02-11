@@ -30,6 +30,8 @@ class DummySubscription implements \OCP\Support\Subscription\ISubscription {
 	private $hasValidSubscription;
 	/** @var bool */
 	private $hasExtendedSupport;
+	/** @var bool */
+	private $isHardUserLimitReached;
 
 	/**
 	 * DummySubscription constructor.
@@ -37,9 +39,10 @@ class DummySubscription implements \OCP\Support\Subscription\ISubscription {
 	 * @param bool $hasValidSubscription
 	 * @param bool $hasExtendedSupport
 	 */
-	public function __construct(bool $hasValidSubscription, bool $hasExtendedSupport) {
+	public function __construct(bool $hasValidSubscription, bool $hasExtendedSupport, bool $isHardUserLimitReached) {
 		$this->hasValidSubscription = $hasValidSubscription;
 		$this->hasExtendedSupport = $hasExtendedSupport;
+		$this->isHardUserLimitReached = $isHardUserLimitReached;
 	}
 
 	/**
@@ -54,5 +57,9 @@ class DummySubscription implements \OCP\Support\Subscription\ISubscription {
 	 */
 	public function hasExtendedSupport(): bool {
 		return $this->hasExtendedSupport;
+	}
+
+	public function isHardUserLimitReached(): bool {
+		return $this->isHardUserLimitReached;
 	}
 }

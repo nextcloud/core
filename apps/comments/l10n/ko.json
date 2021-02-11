@@ -13,19 +13,20 @@
     "Files app plugin to add comments to files" : "파일에 댓글을 남기는 파일 앱 플러그인",
     "Edit comment" : "댓글 편집",
     "Delete comment" : "댓글 삭제",
+    "No comments yet, start the conversation!" : "아직 댓글이 없습니다. 대화를 시작하십시오!",
+    "Retry" : "다시 시도",
+    "_%n unread comment_::_%n unread comments_" : ["읽지 않은 댓글 %n개"],
+    "_1 new comment_::_{unread} new comments_" : ["새 댓글 {unread}개"],
+    "Comment" : "설명",
     "New comment …" : "새로운 댓글 …",
     "Post" : "게시",
     "Cancel" : "취소",
     "[Deleted user]" : "[삭제된 사용자]",
-    "No comments yet, start the conversation!" : "아직 댓글이 없습니다. 대화를 시작하십시오!",
     "More comments …" : "더 많은 댓글 …",
     "Save" : "저장",
     "Allowed characters {count} of {max}" : "{count}/{max}글자 사용 가능",
     "Error occurred while retrieving comment with ID {id}" : "댓글 ID {id} 가져오기 오류",
     "Error occurred while updating comment with id {id}" : "댓글 ID {id}을(를) 업데이트하는 동안 오류가 발생했습니다 ",
-    "Error occurred while posting comment" : "댓글을 게시하는 중 오류가 발생했습니다",
-    "_%n unread comment_::_%n unread comments_" : ["읽지 않은 댓글 %n개"],
-    "_1 new comment_::_{unread} new comments_" : ["새 댓글 {unread}개"],
-    "Comment" : "설명"
+    "Error occurred while posting comment" : "댓글을 게시하는 중 오류가 발생했습니다"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

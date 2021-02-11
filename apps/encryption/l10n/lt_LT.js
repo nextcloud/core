@@ -27,7 +27,7 @@ OC.L10N.register(
     "Encryption app is enabled and ready" : "Šifravimo įskiepis yra paruoštas ir veikia",
     "Bad Signature" : "Blogas parašas",
     "Missing Signature" : "Trūksta parašo",
-    "one-time password for server-side-encryption" : "vienkartinis slaptažodis skirtas šifravimui",
+    "one-time password for server-side-encryption" : "vienkartinis slaptažodis skirtas šifravimui serverio pusėje",
     "Can not decrypt this file, probably this is a shared file. Please ask the file owner to reshare the file with you." : "Nepavyksta iššifruoti šio failo, tikriausiai, tai yra bendrinamas failas. Paprašykite failo savininko iš naujo pradėti bendrinti su jumis šį failą.",
     "Can not read this file, probably this is a shared file. Please ask the file owner to reshare the file with you." : "Nepavyksta perskaityti šio failo, tikriausiai, tai yra bendrinamas failas. Paprašykite failo savininko iš naujo pradėti bendrinti su jumis šį failą.",
     "Default encryption module" : "Numatytasis šifravimo modulis",

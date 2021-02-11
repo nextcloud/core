@@ -21,6 +21,7 @@ class ComposerStaticInitSystemTags
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\SystemTags\\Activity\\Listener' => __DIR__ . '/..' . '/../lib/Activity/Listener.php',
         'OCA\\SystemTags\\Activity\\Provider' => __DIR__ . '/..' . '/../lib/Activity/Provider.php',
         'OCA\\SystemTags\\Activity\\Setting' => __DIR__ . '/..' . '/../lib/Activity/Setting.php',

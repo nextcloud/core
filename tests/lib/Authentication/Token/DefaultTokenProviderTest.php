@@ -32,8 +32,8 @@ use OC\Authentication\Token\PublicKeyToken;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
-use OCP\ILogger;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
 use Test\TestCase;
 
 class DefaultTokenProviderTest extends TestCase {
@@ -46,7 +46,7 @@ class DefaultTokenProviderTest extends TestCase {
 	private $crypto;
 	/** @var IConfig|\PHPUnit\Framework\MockObject\MockObject */
 	private $config;
-	/** @var ILogger|\PHPUnit\Framework\MockObject\MockObject */
+	/** @var LoggerInterface|\PHPUnit\Framework\MockObject\MockObject */
 	private $logger;
 	/** @var ITimeFactory|\PHPUnit\Framework\MockObject\MockObject */
 	private $timeFactory;
@@ -59,7 +59,7 @@ class DefaultTokenProviderTest extends TestCase {
 		$this->mapper = $this->createMock(DefaultTokenMapper::class);
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->config = $this->createMock(IConfig::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->time = 1313131;
 		$this->timeFactory->expects($this->any())

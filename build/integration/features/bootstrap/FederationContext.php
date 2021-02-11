@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Sergio Bertolin <sbertolin@solidgear.es>
@@ -97,7 +98,7 @@ class FederationContext implements Context, SnippetAcceptingContext {
 	}
 
 	protected function resetAppConfigs() {
-		$this->modifyServerConfig('files_sharing', 'incoming_server2server_group_share_enabled', 'no');
-		$this->modifyServerConfig('files_sharing', 'outgoing_server2server_group_share_enabled', 'no');
+		$this->deleteServerConfig('files_sharing', 'incoming_server2server_group_share_enabled');
+		$this->deleteServerConfig('files_sharing', 'outgoing_server2server_group_share_enabled');
 	}
 }

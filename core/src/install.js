@@ -3,6 +3,8 @@ import { translate as t } from '@nextcloud/l10n'
 import { getToken } from './OC/requesttoken'
 import getURLParameter from './Util/get-url-parameter'
 
+import './jquery/showpassword'
+
 import 'jquery-ui/ui/widgets/button'
 import 'jquery-ui/themes/base/theme.css'
 import 'jquery-ui/themes/base/button.css'
@@ -134,4 +136,7 @@ window.addEventListener('DOMContentLoaded', function() {
 		drawTitles: true,
 		nonce: btoa(getToken()),
 	})
+
+	$('#dbpass').showPassword().keyup()
+	$('#adminpass').showPassword().keyup()
 })

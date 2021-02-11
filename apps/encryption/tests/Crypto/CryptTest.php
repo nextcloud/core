@@ -209,6 +209,9 @@ class CryptTest extends TestCase {
 	 * @dataProvider dataTestSplitMetaData
 	 */
 	public function testSplitMetaData($data, $expected) {
+		$this->config->method('getSystemValue')
+			->with('encryption_skip_signature_check', false)
+			->willReturn(true);
 		$result = self::invokePrivate($this->crypt, 'splitMetaData', [$data, 'AES-256-CFB']);
 		$this->assertTrue(is_array($result));
 		$this->assertSame(3, count($result));
@@ -233,6 +236,9 @@ class CryptTest extends TestCase {
 	 * @dataProvider dataTestHasSignature
 	 */
 	public function testHasSignature($data, $expected) {
+		$this->config->method('getSystemValue')
+			->with('encryption_skip_signature_check', false)
+			->willReturn(true);
 		$this->assertSame($expected,
 			$this->invokePrivate($this->crypt, 'hasSignature', [$data, 'AES-256-CFB'])
 		);
@@ -300,7 +306,7 @@ class CryptTest extends TestCase {
 	 * test parseHeader()
 	 */
 	public function testParseHeader() {
-		$header= 'HBEGIN:foo:bar:cipher:AES-256-CFB:HEND';
+		$header = 'HBEGIN:foo:bar:cipher:AES-256-CFB:HEND';
 		$result = self::invokePrivate($this->crypt, 'parseHeader', [$header]);
 
 		$this->assertTrue(is_array($result));
@@ -385,6 +391,10 @@ class CryptTest extends TestCase {
 	 * @dataProvider dataTestDecryptPrivateKey
 	 */
 	public function testDecryptPrivateKey($header, $privateKey, $expectedCipher, $isValidKey, $expected) {
+		$this->config->method('getSystemValueBool')
+			->with('encryption.legacy_format_support', false)
+			->willReturn(true);
+
 		/** @var \OCA\Encryption\Crypto\Crypt | \PHPUnit\Framework\MockObject\MockObject $crypt */
 		$crypt = $this->getMockBuilder(Crypt::class)
 			->setConstructorArgs(

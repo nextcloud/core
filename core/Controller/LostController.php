@@ -216,7 +216,7 @@ class LostController extends Controller {
 			throw new \Exception($this->l10n->t('Couldn\'t reset password because the token is invalid'));
 		}
 
-		if ($splittedToken[0] < ($this->timeFactory->getTime() - 60*60*24*7) ||
+		if ($splittedToken[0] < ($this->timeFactory->getTime() - 60 * 60 * 24 * 7) ||
 			$user->getLastLogin() > $splittedToken[0]) {
 			throw new \Exception($this->l10n->t('Couldn\'t reset password because the token is expired'));
 		}
@@ -231,7 +231,7 @@ class LostController extends Controller {
 	 * @param array $additional
 	 * @return array
 	 */
-	private function error($message, array $additional=[]) {
+	private function error($message, array $additional = []) {
 		return array_merge(['status' => 'error', 'msg' => $message], $additional);
 	}
 
@@ -240,7 +240,7 @@ class LostController extends Controller {
 	 * @return array
 	 */
 	private function success($data = []) {
-		return array_merge($data, ['status'=>'success']);
+		return array_merge($data, ['status' => 'success']);
 	}
 
 	/**

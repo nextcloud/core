@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -27,6 +28,7 @@ namespace OCA\DAV\DAV\Sharing;
 use OCA\DAV\Connector\Sabre\Auth;
 use OCA\DAV\DAV\Sharing\Xml\Invite;
 use OCA\DAV\DAV\Sharing\Xml\ShareRequest;
+use OCP\IConfig;
 use OCP\IRequest;
 use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\INode;
@@ -46,15 +48,20 @@ class Plugin extends ServerPlugin {
 	/** @var IRequest */
 	private $request;
 
+	/** @var IConfig */
+	private $config;
+
 	/**
 	 * Plugin constructor.
 	 *
 	 * @param Auth $authBackEnd
 	 * @param IRequest $request
+	 * @param IConfig $config
 	 */
-	public function __construct(Auth $authBackEnd, IRequest $request) {
+	public function __construct(Auth $authBackEnd, IRequest $request, IConfig $config) {
 		$this->auth = $authBackEnd;
 		$this->request = $request;
+		$this->config = $config;
 	}
 
 	/**
@@ -164,6 +171,12 @@ class Plugin extends ServerPlugin {
 				if ($acl) {
 					/** @var \Sabre\DAVACL\Plugin $acl */
 					$acl->checkPrivileges($path, '{DAV:}write');
+
+					$limitSharingToOwner = $this->config->getAppValue('dav', 'limitAddressBookAndCalendarSharingToOwner', 'no') === 'yes';
+					$isOwner = $acl->getCurrentUserPrincipal() === $node->getOwner();
+					if ($limitSharingToOwner && !$isOwner) {
+						return;
+					}
 				}
 
 				$node->updateShares($message->set, $message->remove);

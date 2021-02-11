@@ -5,6 +5,7 @@
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -544,10 +545,13 @@ class ShareByMailProviderTest extends TestCase {
 		);
 
 		$qb = $this->connection->getQueryBuilder();
-		$result = $qb->select('*')
+		$qb->select('*')
 			->from('share')
-			->where($qb->expr()->eq('id', $qb->createNamedParameter($id)))
-			->execute()->fetchAll();
+			->where($qb->expr()->eq('id', $qb->createNamedParameter($id)));
+
+		$qResult = $qb->execute();
+		$result = $qResult->fetchAll();
+		$qResult->closeCursor();
 
 		$this->assertSame(1, count($result));
 
@@ -589,10 +593,13 @@ class ShareByMailProviderTest extends TestCase {
 		);
 
 		$qb = $this->connection->getQueryBuilder();
-		$result = $qb->select('*')
+		$qb->select('*')
 			->from('share')
-			->where($qb->expr()->eq('id', $qb->createNamedParameter($id)))
-			->execute()->fetchAll();
+			->where($qb->expr()->eq('id', $qb->createNamedParameter($id)));
+
+		$qResult = $qb->execute();
+		$result = $qResult->fetchAll();
+		$qResult->closeCursor();
 
 		$this->assertSame(1, count($result));
 
@@ -722,7 +729,7 @@ class ShareByMailProviderTest extends TestCase {
 
 		$id = $this->createDummyShare($itemType, $itemSource, $shareWith, $sharedBy, $uidOwner, $permissions, $token);
 
-		$instance->getShareById($id+1);
+		$instance->getShareById($id + 1);
 	}
 
 	public function testGetShareByPath() {
@@ -830,7 +837,10 @@ class ShareByMailProviderTest extends TestCase {
 		$query = $this->connection->getQueryBuilder();
 		$query->select('*')->from('share')
 			->where($query->expr()->eq('id', $query->createNamedParameter($id)));
-		$before = $query->execute()->fetchAll();
+
+		$result = $query->execute();
+		$before = $result->fetchAll();
+		$result->closeCursor();
 
 		$this->assertTrue(is_array($before));
 		$this->assertSame(1, count($before));
@@ -840,7 +850,10 @@ class ShareByMailProviderTest extends TestCase {
 		$query = $this->connection->getQueryBuilder();
 		$query->select('*')->from('share')
 			->where($query->expr()->eq('id', $query->createNamedParameter($id)));
-		$after = $query->execute()->fetchAll();
+
+		$result = $query->execute();
+		$after = $result->fetchAll();
+		$result->closeCursor();
 
 		$this->assertTrue(is_array($after));
 		$this->assertEmpty($after);
@@ -860,7 +873,10 @@ class ShareByMailProviderTest extends TestCase {
 
 		$query = $this->connection->getQueryBuilder();
 		$query->select('*')->from('share');
-		$before = $query->execute()->fetchAll();
+
+		$result = $query->execute();
+		$before = $result->fetchAll();
+		$result->closeCursor();
 
 		$this->assertTrue(is_array($before));
 		$this->assertSame(2, count($before));
@@ -872,7 +888,10 @@ class ShareByMailProviderTest extends TestCase {
 
 		$query = $this->connection->getQueryBuilder();
 		$query->select('*')->from('share');
-		$after = $query->execute()->fetchAll();
+
+		$result = $query->execute();
+		$after = $result->fetchAll();
+		$result->closeCursor();
 
 		$this->assertTrue(is_array($after));
 		$this->assertSame(1, count($after));
@@ -920,10 +939,10 @@ class ShareByMailProviderTest extends TestCase {
 
 		$id = $this->createDummyShare($itemType, $itemSource, $shareWith, $sharedBy, $uidOwner, $permissions, $token);
 
-		$this->invokePrivate($instance, 'getRawShare', [$id+1]);
+		$this->invokePrivate($instance, 'getRawShare', [$id + 1]);
 	}
 
-	private function createDummyShare($itemType, $itemSource, $shareWith, $sharedBy, $uidOwner, $permissions, $token, $note='', $shareType = IShare::TYPE_EMAIL) {
+	private function createDummyShare($itemType, $itemSource, $shareWith, $sharedBy, $uidOwner, $permissions, $token, $note = '', $shareType = IShare::TYPE_EMAIL) {
 		$qb = $this->connection->getQueryBuilder();
 		$qb->insert('share')
 			->setValue('share_type', $qb->createNamedParameter($shareType))

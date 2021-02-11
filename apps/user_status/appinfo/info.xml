@@ -1,31 +1,30 @@
 <?xml version="1.0"?>
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
-    <id>user_status</id>
-    <name>User status</name>
-    <summary>User status</summary>
-    <description><![CDATA[User status]]></description>
-    <version>0.0.2</version>
-    <licence>agpl</licence>
-    <author mail="oc.list@georgehrke.com" >Georg Ehrke</author>
-    <namespace>UserStatus</namespace>
-    <default_enable/>
-    <category>social</category>
-    <bugs>https://github.com/nextcloud/server</bugs>
-    <navigations>
-        <navigation>
-            <id>user_status-menuitem</id>
-            <name>User status</name>
-            <route />
-            <order>1</order>
-            <icon>info.svg</icon>
-            <type>settings</type>
-        </navigation>
-    </navigations>
-    <dependencies>
-        <nextcloud min-version="20" max-version="20"/>
-    </dependencies>
-    <background-jobs>
-        <job>OCA\UserStatus\BackgroundJob\ClearOldStatusesBackgroundJob</job>
-    </background-jobs>
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>user_status</id>
+	<name>User status</name>
+	<summary>User status</summary>
+	<description><![CDATA[User status]]></description>
+	<version>1.1.1</version>
+	<licence>agpl</licence>
+	<author mail="oc.list@georgehrke.com" >Georg Ehrke</author>
+	<namespace>UserStatus</namespace>
+	<default_enable/>
+	<category>social</category>
+	<bugs>https://github.com/nextcloud/server</bugs>
+	<navigations>
+		<navigation>
+			<id>user_status-menuitem</id>
+			<name>User status</name>
+			<route />
+			<order>1</order>
+			<type>settings</type>
+		</navigation>
+	</navigations>
+	<dependencies>
+		<nextcloud min-version="22" max-version="22"/>
+	</dependencies>
+	<background-jobs>
+		<job>OCA\UserStatus\BackgroundJob\ClearOldStatusesBackgroundJob</job>
+	</background-jobs>
 </info>

@@ -146,15 +146,6 @@ class JobListTest extends TestCase {
 		$this->assertFalse($this->instance->has($job, 10));
 	}
 
-	public function testGetLastJob() {
-		$this->config->expects($this->once())
-			->method('getAppValue')
-			->with('backgroundjob', 'lastjob', 0)
-			->willReturn(15);
-
-		$this->assertEquals(15, $this->instance->getLastJob());
-	}
-
 	protected function createTempJob($class, $argument, $reservedTime = 0, $lastChecked = 0) {
 		if ($lastChecked === 0) {
 			$lastChecked = time();

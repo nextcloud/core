@@ -42,6 +42,7 @@ use OCP\IDBConnection;
 use OCP\Image;
 use OCP\IUserManager;
 use OCP\Notification\IManager as INotificationManager;
+use OCP\Share\IManager;
 
 /**
  * Class Test_User_Manager
@@ -86,6 +87,8 @@ class ManagerTest extends \Test\TestCase {
 
 	/** @var Manager */
 	protected $manager;
+	/** @var IManager|\PHPUnit\Framework\MockObject\MockObject */
+	protected $shareManager;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -96,11 +99,11 @@ class ManagerTest extends \Test\TestCase {
 		$this->log = $this->createMock(LogWrapper::class);
 		$this->avatarManager = $this->createMock(IAvatarManager::class);
 		$this->image = $this->createMock(Image::class);
-		$this->dbc = $this->createMock(IDBConnection::class);
 		$this->ncUserManager = $this->createMock(IUserManager::class);
 		$this->notificationManager = $this->createMock(INotificationManager::class);
-
 		$this->ldapWrapper = $this->createMock(ILDAPWrapper::class);
+		$this->shareManager = $this->createMock(IManager::class);
+
 		$this->connection = new Connection($this->ldapWrapper, '', null);
 
 		$this->access->expects($this->any())
@@ -114,9 +117,9 @@ class ManagerTest extends \Test\TestCase {
 			$this->log,
 			$this->avatarManager,
 			$this->image,
-			$this->dbc,
 			$this->ncUserManager,
-			$this->notificationManager
+			$this->notificationManager,
+			$this->shareManager
 		);
 
 		$this->manager->setLdapAccess($this->access);

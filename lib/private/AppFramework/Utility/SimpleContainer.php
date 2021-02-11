@@ -7,7 +7,6 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
- * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -74,13 +73,13 @@ class SimpleContainer implements ArrayAccess, ContainerInterface, IContainer {
 		}
 
 		return $class->newInstanceArgs(array_map(function (ReflectionParameter $parameter) {
-			$parameterClass = $parameter->getClass();
+			$parameterType = $parameter->getType();
+
+			$resolveName = $parameter->getName();
 
 			// try to find out if it is a class or a simple parameter
-			if ($parameterClass === null) {
-				$resolveName = $parameter->getName();
-			} else {
-				$resolveName = $parameterClass->name;
+			if ($parameterType !== null && !$parameterType->isBuiltin()) {
+				$resolveName = $parameterType->getName();
 			}
 
 			try {
@@ -92,9 +91,14 @@ class SimpleContainer implements ArrayAccess, ContainerInterface, IContainer {
 					return $parameter->getDefaultValue();
 				}
 
-				if ($parameterClass !== null) {
+				if ($parameterType !== null && !$parameterType->isBuiltin()) {
 					$resolveName = $parameter->getName();
-					return $this->query($resolveName);
+					try {
+						return $this->query($resolveName);
+					} catch (QueryException $e2) {
+						// don't lose the error we got while trying to query by type
+						throw new QueryException($e2->getMessage(), (int) $e2->getCode(), $e);
+					}
 				}
 
 				throw $e;

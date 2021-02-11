@@ -243,6 +243,7 @@ class UserStatusControllerTest extends TestCase {
 	 * @param Throwable|null $exception
 	 * @param bool $expectLogger
 	 * @param string|null $expectedLogMessage
+	 * @param bool $expectSuccessAsReset
 	 *
 	 * @dataProvider setCustomMessageDataProvider
 	 */
@@ -253,7 +254,8 @@ class UserStatusControllerTest extends TestCase {
 										 bool $expectException,
 										 ?Throwable $exception,
 										 bool $expectLogger,
-										 ?string $expectedLogMessage): void {
+										 ?string $expectedLogMessage,
+										 bool $expectSuccessAsReset = false): void {
 		$userStatus = $this->getUserStatus();
 
 		if ($expectException) {
@@ -262,10 +264,25 @@ class UserStatusControllerTest extends TestCase {
 				->with('john.doe', $statusIcon, $message, $clearAt)
 				->willThrowException($exception);
 		} else {
-			$this->service->expects($this->once())
-				->method('setCustomMessage')
-				->with('john.doe', $statusIcon, $message, $clearAt)
-				->willReturn($userStatus);
+			if ($expectSuccessAsReset) {
+				$this->service->expects($this->never())
+					->method('setCustomMessage');
+				$this->service->expects($this->once())
+					->method('clearMessage')
+					->with('john.doe');
+				$this->service->expects($this->once())
+					->method('findByUserId')
+					->with('john.doe')
+					->willReturn($userStatus);
+			} else {
+				$this->service->expects($this->once())
+					->method('setCustomMessage')
+					->with('john.doe', $statusIcon, $message, $clearAt)
+					->willReturn($userStatus);
+
+				$this->service->expects($this->never())
+					->method('clearMessage');
+			}
 		}
 
 		if ($expectLogger) {
@@ -297,6 +314,7 @@ class UserStatusControllerTest extends TestCase {
 	public function setCustomMessageDataProvider(): array {
 		return [
 			['👨🏽‍💻', 'Busy developing the status feature', 500, true, false, null, false, null],
+			['👨🏽‍💻', '', 500, true, false, null, false, null, true],
 			['👨🏽‍💻', 'Busy developing the status feature', 500, false, true, new InvalidClearAtException('Original exception message'), true,
 				'New user-status for "john.doe" was rejected due to an invalid clearAt value "500"'],
 			['👨🏽‍💻', 'Busy developing the status feature', 500, false, true, new InvalidStatusIconException('Original exception message'), true,

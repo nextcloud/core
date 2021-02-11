@@ -9,7 +9,8 @@ OC.L10N.register(
     "Federation allows you to connect with other trusted servers to exchange the user directory." : "Zvezni oblak omogoča povezovanje zunanjih strežnikov v skupen oblak in izmenjavo datotek in map uporabnikov različnih sistemov.",
     "Federation allows you to connect with other trusted servers to exchange the user directory. For example this will be used to auto-complete external users for federated sharing." : "Zvezni oblak omogoča povezovanje z drugimi varnimi strežniki in izmenjavo datotek in map uporabnikov v enotnem oblaku. Možnost omogoča na primer samodejno dopolnjevanje tudi imen uporabnikov na drugih, zunanjih strežnikih.",
     "Trusted servers" : "Varni strežniki",
-    "Add server automatically once a federated share was created successfully" : "Strežnik dodaj samodejno, ko je povezava zveznega oblaka uspešno ustvarjena.",
+    "Federation allows you to connect with other trusted servers to exchange the user directory. For example this will be used to auto-complete external users for federated sharing. It is not necessary to add a server as trusted server in order to create a federated share." : "Zvezni oblak omogoča povezovanje z drugimi varnimi strežniki in izmenjavo datotek in map uporabnikov v enotnem oblaku. Možnost omogoča na primer samodejno dopolnjevanje tudi imen uporabnikov na drugih, zunanjih strežnikih. Zunanjih strežnikov ni nujno dodati kot zaupanja vredne, da lahko ustvarite povezave.",
+    "Add server automatically once a federated share was created successfully" : "Strežnik dodaj samodejno, če je potrjena kakršnakoli povezava zveznega oblaka.",
     "+ Add trusted server" : "+ Dodaj varen strežnik",
     "Trusted server" : "Varen strežnik",
     "Add" : "Dodaj"

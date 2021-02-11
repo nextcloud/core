@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -61,14 +62,14 @@ class Admin implements ISettings {
 	 */
 	public function getForm() {
 		$parameters = [
-			'encryptionEnabled'    => $this->encryptionManager->isEnabled(),
-			'visibilityType'       => BackendService::VISIBILITY_ADMIN,
-			'storages'             => $this->globalStoragesService->getStorages(),
-			'backends'             => $this->backendService->getAvailableBackends(),
-			'authMechanisms'       => $this->backendService->getAuthMechanisms(),
-			'dependencies'         => \OCA\Files_External\MountConfig::dependencyMessage($this->backendService->getBackends()),
-			'allowUserMounting'    => $this->backendService->isUserMountingAllowed(),
-			'globalCredentials'    => $this->globalAuth->getAuth(''),
+			'encryptionEnabled' => $this->encryptionManager->isEnabled(),
+			'visibilityType' => BackendService::VISIBILITY_ADMIN,
+			'storages' => $this->globalStoragesService->getStorages(),
+			'backends' => $this->backendService->getAvailableBackends(),
+			'authMechanisms' => $this->backendService->getAuthMechanisms(),
+			'dependencies' => \OCA\Files_External\MountConfig::dependencyMessage($this->backendService->getBackends()),
+			'allowUserMounting' => $this->backendService->isUserMountingAllowed(),
+			'globalCredentials' => $this->globalAuth->getAuth(''),
 			'globalCredentialsUid' => '',
 		];
 

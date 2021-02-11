@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2017 Lukas Reschke <lukas@statuscode.ch>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Konrad Bucheli <kb@open.ch>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -57,7 +58,7 @@ class IpAddress {
 		$binary = \inet_pton($ip);
 		for ($i = 32; $i > $maskBits; $i -= 8) {
 			$j = \intdiv($i, 8) - 1;
-			$k = (int) \min(8, $i - $maskBits);
+			$k = \min(8, $i - $maskBits);
 			$mask = (0xff - ((2 ** $k) - 1));
 			$int = \unpack('C', $binary[$j]);
 			$binary[$j] = \pack('C', $int[1] & $mask);
@@ -78,12 +79,12 @@ class IpAddress {
 		}
 		$pos = strpos($ip, '%'); // if there is an explicit interface added to the IP, e.g. fe80::ae2d:d1e7:fe1e:9a8d%enp2s0
 		if ($pos !== false) {
-			$ip = substr($ip, 0, $pos-1);
+			$ip = substr($ip, 0, $pos - 1);
 		}
 		$binary = \inet_pton($ip);
 		for ($i = 128; $i > $maskBits; $i -= 8) {
 			$j = \intdiv($i, 8) - 1;
-			$k = (int) \min(8, $i - $maskBits);
+			$k = \min(8, $i - $maskBits);
 			$mask = (0xff - ((2 ** $k) - 1));
 			$int = \unpack('C', $binary[$j]);
 			$binary[$j] = \pack('C', $int[1] & $mask);

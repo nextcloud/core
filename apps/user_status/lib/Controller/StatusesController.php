@@ -32,6 +32,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use OCP\UserStatus\IUserStatus;
 
 class StatusesController extends OCSController {
 
@@ -59,7 +60,7 @@ class StatusesController extends OCSController {
 	 * @param int|null $offset
 	 * @return DataResponse
 	 */
-	public function findAll(?int $limit=null, ?int $offset=null): DataResponse {
+	public function findAll(?int $limit = null, ?int $offset = null): DataResponse {
 		$allStatuses = $this->service->findAll($limit, $offset);
 
 		return new DataResponse(array_map(function ($userStatus) {
@@ -92,8 +93,8 @@ class StatusesController extends OCSController {
 	 */
 	private function formatStatus(UserStatus $status): array {
 		$visibleStatus = $status->getStatus();
-		if ($visibleStatus === 'invisible') {
-			$visibleStatus = 'offline';
+		if ($visibleStatus === IUserStatus::INVISIBLE) {
+			$visibleStatus = IUserStatus::OFFLINE;
 		}
 
 		return [

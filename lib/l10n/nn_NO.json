@@ -60,7 +60,6 @@
     "Dec." : "Des.",
     "A valid username must be provided" : "Du må oppgje eit gyldig brukarnamn",
     "A valid password must be provided" : "Du må oppgje eit gyldig passord",
-    "Authentication error" : "Feil i autentisering",
-    "Sharing" : "Deling"
+    "Authentication error" : "Feil i autentisering"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

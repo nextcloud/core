@@ -75,7 +75,6 @@
     "Set an admin username." : "Set an admin username.",
     "Set an admin password." : "Set an admin password.",
     "Can't create or write into the data directory %s" : "Can't create or write into the data directory %s",
-    "Invalid Federated Cloud ID" : "Invalid Federated Cloud ID",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "Sharing backend %s must implement the interface OCP\\Share_Backend",
     "Sharing backend %s not found" : "Sharing backend %s not found",
     "Sharing backend for %s not found" : "Sharing backend for %s not found",
@@ -187,12 +186,6 @@
     "Storage connection timeout. %s" : "Storage connection timeout. %s",
     "Following databases are supported: %s" : "Following databases are supported: %s",
     "Following platforms are supported: %s" : "Following platforms are supported: %s",
-    "Overview" : "Overview",
-    "Basic settings" : "Basic settings",
-    "Sharing" : "Sharing",
-    "Security" : "Security",
-    "Personal info" : "Personal info",
-    "Mobile & desktop" : "Mobile & desktop",
-    "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s" : "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s"
+    "Invalid Federated Cloud ID" : "Invalid Federated Cloud ID"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

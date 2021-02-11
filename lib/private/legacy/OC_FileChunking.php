@@ -11,7 +11,7 @@
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Tanghus <thomas@tanghus.net>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -88,7 +88,7 @@ class OC_FileChunking {
 		$cache = $this->getCache();
 		$chunkcount = (int)$this->info['chunkcount'];
 
-		for ($i=($chunkcount-1); $i >= 0; $i--) {
+		for ($i = ($chunkcount - 1); $i >= 0; $i--) {
 			if (!$cache->hasKey($prefix.$i)) {
 				return false;
 			}
@@ -144,7 +144,7 @@ class OC_FileChunking {
 	public function cleanup() {
 		$cache = $this->getCache();
 		$prefix = $this->getPrefix();
-		for ($i=0; $i < $this->info['chunkcount']; $i++) {
+		for ($i = 0; $i < $this->info['chunkcount']; $i++) {
 			$cache->remove($prefix.$i);
 		}
 	}

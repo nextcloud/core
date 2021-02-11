@@ -57,21 +57,6 @@
     "Request user agent" : "Потребителски агент на заявка",
     "User group membership" : "Членство към потребителска група",
     "is member of" : "е член на",
-    "is not member of" : "не е член на",
-    "Example: {placeholder}" : "Пример: {placeholder}",
-    "Select tag…" : "Изберете етикет...",
-    "Start" : "Начало",
-    "End" : "Край",
-    "Select timezone…" : "Изберете часови пояс...",
-    "Sync clients" : "Синхронизиране на клиенти",
-    "Short rule description" : "Кратко описание на правило",
-    "Add rule" : "Добави правило",
-    "Reset" : "Възстанови",
-    "Saving…" : "Запазване...",
-    "Saved" : "Запазено",
-    "Saving failed:" : "Запазването се провали:",
-    "Add rule group" : "Добави група правила",
-    "Open documentation" : "Отвори документация",
-    "Loading…" : "Зареждане..."
+    "is not member of" : "не е член на"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -95,7 +95,7 @@ class RetryJob extends Job {
 	 * @param IJobList $jobList
 	 * @param ILogger|null $logger
 	 */
-	public function execute($jobList, ILogger $logger = null): void {
+	public function execute(IJobList $jobList, ILogger $logger = null): void {
 		if (!isset($this->argument['userId'])) {
 			// Old background job without user id, just drop it.
 			$jobList->remove($this, $this->argument);

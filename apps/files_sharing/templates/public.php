@@ -1,6 +1,6 @@
 <?php
-/** @var $l \OCP\IL10N */
-/** @var $_ array */
+/** @var \OCP\IL10N $l */
+/** @var array $_ */
 ?>
 <div id="app-content">
 <?php if ($_['previewSupported']): /* This enables preview images for links (e.g. on Facebook, Google+, ...)*/?>
@@ -23,8 +23,8 @@
 <input type="hidden" name="hideDownload" value="<?php p($_['hideDownload'] ? 'true' : 'false'); ?>" id="hideDownload">
 <input type="hidden" id="disclaimerText" value="<?php p($_['disclaimer']) ?>">
 <?php
-$upload_max_filesize = OC::$server->getIniWrapper()->getBytes('upload_max_filesize');
-$post_max_size = OC::$server->getIniWrapper()->getBytes('post_max_size');
+$upload_max_filesize = OC::$server->get(\bantu\IniGetWrapper\IniGetWrapper::class)->getBytes('upload_max_filesize');
+$post_max_size = OC::$server->get(\bantu\IniGetWrapper\IniGetWrapper::class)->getBytes('post_max_size');
 $maxUploadFilesize = min($upload_max_filesize, $post_max_size);
 ?>
 <input type="hidden" name="maxFilesizeUpload" value="<?php p($maxUploadFilesize); ?>" id="maxFilesizeUpload">

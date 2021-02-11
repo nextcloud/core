@@ -4,7 +4,6 @@
  *
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Björn Schießle <bjoern@schiessle.org>
- * @author Christopher Schäpers <kondou@ts.unde.re>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Julius Härtl <jus@bitgrid.net>
@@ -31,6 +30,7 @@
 namespace OC\Template;
 
 use OCP\Defaults;
+use Throwable;
 
 class Base {
 	private $template; // The template
@@ -92,7 +92,7 @@ class Base {
 	/**
 	 * Assign variables
 	 * @param string $key key
-	 * @param array|bool|integer|string $value value
+	 * @param array|bool|integer|string|Throwable $value value
 	 * @return bool
 	 *
 	 * This function assigns a variable. It can be accessed via $_[$key] in

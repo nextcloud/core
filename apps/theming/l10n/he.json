@@ -22,7 +22,6 @@
     "Could not write file to disk" : "לא ניתן לכתוב לכונן",
     "A PHP extension stopped the file upload" : "הרחבת PHP עצרה את העלאת הקובץ",
     "No file uploaded" : "לא הועלה קובץ",
-    "Unsupported image type" : "סוג התמונה לא נתמך",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "כבר נעשה שימוש בערכת עיצוב מותאמת אישית. יכול להיות שהגדרות יישומון ערכות העיצוב יידרסו.",
     "Theming" : "ערכות נושא",
     "Legal notice" : "הצהרה משפטית",

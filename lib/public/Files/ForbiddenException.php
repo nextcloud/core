@@ -30,7 +30,6 @@ namespace OCP\Files;
 /**
  * Class ForbiddenException
  *
- * @package OCP\Files
  * @since 9.0.0
  */
 class ForbiddenException extends \Exception {

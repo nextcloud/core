@@ -3,8 +3,9 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -30,7 +31,9 @@ use OCP\EventDispatcher\GenericEvent;
 OCP\User::checkLoggedIn();
 $config = \OC::$server->getConfig();
 $userSession = \OC::$server->getUserSession();
-$eventDispatcher = \OC::$server->getEventDispatcher();
+$legacyEventDispatcher = \OC::$server->getEventDispatcher();
+/** @var \OCP\EventDispatcher\IEventDispatcher $eventDispatcher */
+$eventDispatcher = \OC::$server->get(OCP\EventDispatcher\IEventDispatcher::class);
 
 $showgridview = $config->getUserValue($userSession->getUser()->getUID(), 'files', 'show_grid', false);
 $isIE = \OCP\Util::isIE();
@@ -41,13 +44,13 @@ $tmpl = new OCP\Template('files_sharing', 'list', '');
 $tmpl->assign('showgridview', $showgridview && !$isIE);
 
 // fire script events
-$eventDispatcher->dispatch('\OCP\Collaboration\Resources::loadAdditionalScripts', new GenericEvent());
-$eventDispatcher->dispatch(LoadAdditionalScriptsEvent::class, new LoadAdditionalScriptsEvent());
-$eventDispatcher->dispatch(LoadSidebar::class, new LoadSidebar());
+$legacyEventDispatcher->dispatch('\OCP\Collaboration\Resources::loadAdditionalScripts', new GenericEvent());
+$eventDispatcher->dispatchTyped(new LoadAdditionalScriptsEvent());
+$eventDispatcher->dispatchTyped(new LoadSidebar());
 
 // Load Viewer scripts
 if (class_exists(LoadViewer::class)) {
-	$eventDispatcher->dispatch(LoadViewer::class, new LoadViewer());
+	$eventDispatcher->dispatchTyped(new LoadViewer());
 }
 
 $tmpl->printPage();

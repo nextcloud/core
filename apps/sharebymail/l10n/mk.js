@@ -16,8 +16,8 @@ OC.L10N.register(
     "You shared {file} with {email} by mail" : "Споделивте {file} со {email} преку е-пошта",
     "%3$s shared %1$s with %2$s by mail" : "%3$s сподели %1$s со %2$s преку е-пошта",
     "{actor} shared {file} with {email} by mail" : "{actor} сподели {file} со {email} преку е-пошта",
-    "You unshared %1$s from %2$s by mail" : "Го одстранивте споделувањето преку емаил на %1$s со %2$s",
-    "You unshared {file} from {email} by mail" : "Го одстранивте споделувањето преку емаил на {file} со {email}",
+    "You unshared %1$s from %2$s by mail" : "Отстранивте споделување преку емаил на %1$s со %2$s",
+    "You unshared {file} from {email} by mail" : "Отстранивте споделување преку емаил на {file} со {email}",
     "%3$s unshared %1$s from %2$s by mail" : "%3$s не го споделува повеќе преку емаил %1$s со %2$s",
     "{actor} unshared {file} from {email} by mail" : "{actor} не го споделува повеќе преку емаил {file} со {email}",
     "Password to access %1$s was sent to %2s" : "Лозинката за пристап до %1$s е испратена на %2s",
@@ -46,6 +46,7 @@ OC.L10N.register(
     "You can choose a different password at any time in the share dialog." : "Можете да изберете било каква лозинка во било кое време.",
     "Could not find share" : "Неможе да се пронајде споделувањето",
     "Share by mail" : "Сподели преку е-пошта",
+    "Share provider which allows you to share files by mail" : "Провајдер за споделување кој дозволува споделување преки е-пошта",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Дозволете им на корисниците да споделуваат персонални линкови до датотеки и папки со внесување на адреса на е-пошта.",
     "Send password by mail" : "Испрати лозинка преку е-пошта",
     "Enforce password protection" : "Задолжителна заштита со лозинка"

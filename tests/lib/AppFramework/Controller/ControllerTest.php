@@ -112,7 +112,7 @@ class ControllerTest extends \Test\TestCase {
 			'test' => 'something',
 			'Cache-Control' => 'no-cache, no-store, must-revalidate',
 			'Content-Type' => 'application/json; charset=utf-8',
-			'Content-Security-Policy' => "default-src 'none';base-uri 'none';manifest-src 'self'",
+			'Content-Security-Policy' => "default-src 'none';base-uri 'none';manifest-src 'self';frame-ancestors 'none'",
 			'Feature-Policy' => "autoplay 'none';camera 'none';fullscreen 'none';geolocation 'none';microphone 'none';payment 'none'",
 			'X-Robots-Tag' => 'none',
 		];

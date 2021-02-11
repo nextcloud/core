@@ -42,7 +42,7 @@ class EventHandler implements ICommentsEventHandler {
 	private $notificationListener;
 
 	public function __construct(ActivityListener $activityListener, NotificationListener $notificationListener) {
-		$this->activityListener     = $activityListener;
+		$this->activityListener = $activityListener;
 		$this->notificationListener = $notificationListener;
 	}
 

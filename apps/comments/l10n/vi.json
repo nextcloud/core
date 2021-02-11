@@ -11,18 +11,18 @@
     "{user} mentioned you in a comment on “{file}”" : "{user} đề cập tới bạn trong một bình luận về “{file}”",
     "Edit comment" : "Sửa bình luận",
     "Delete comment" : "Xóa bình luận",
+    "No comments yet, start the conversation!" : "Không có bình luận nào, bắt đầu cuộc hội thoại!",
+    "_%n unread comment_::_%n unread comments_" : ["%n bình luận chưa đọc"],
+    "Comment" : "Bình luận",
     "New comment …" : "Tạo bình luận mới",
     "Post" : "Đăng",
     "Cancel" : "Hủy",
     "[Deleted user]" : "[Người dùng bị xoá]",
-    "No comments yet, start the conversation!" : "Không có bình luận nào, bắt đầu cuộc hội thoại!",
     "More comments …" : "Xem thêm các bình luận...",
     "Save" : "Lưu",
     "Allowed characters {count} of {max}" : "Số  ký tự được còn lại là {count} trong tổng số {max}",
     "Error occurred while retrieving comment with ID {id}" : "Xảy ra lỗi khi trích xuất bình của ID{id}",
     "Error occurred while updating comment with id {id}" : "Có lỗi xảy ra khi cập nhật bình luận có id {id}",
-    "Error occurred while posting comment" : "Có lỗi xảy ra khi đăng bình luận",
-    "_%n unread comment_::_%n unread comments_" : ["%n bình luận chưa đọc"],
-    "Comment" : "Bình luận"
+    "Error occurred while posting comment" : "Có lỗi xảy ra khi đăng bình luận"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

@@ -41,19 +41,19 @@ class DataResponse extends Response {
 
 	/**
 	 * response data
-	 * @var array|object
+	 * @var array|int|float|string|bool|object
 	 */
 	protected $data;
 
 
 	/**
-	 * @param array|object $data the object or array that should be transformed
+	 * @param array|int|float|string|bool|object $data the object or array that should be transformed
 	 * @param int $statusCode the Http status code, defaults to 200
 	 * @param array $headers additional key value based headers
 	 * @since 8.0.0
 	 */
-	public function __construct($data=[], $statusCode=Http::STATUS_OK,
-								array $headers=[]) {
+	public function __construct($data = [], $statusCode = Http::STATUS_OK,
+								array $headers = []) {
 		parent::__construct();
 
 		$this->data = $data;
@@ -64,7 +64,7 @@ class DataResponse extends Response {
 
 	/**
 	 * Sets values in the data json array
-	 * @param array|object $data an array or object which will be transformed
+	 * @param array|int|float|string|object $data an array or object which will be transformed
 	 * @return DataResponse Reference to this object
 	 * @since 8.0.0
 	 */
@@ -77,7 +77,7 @@ class DataResponse extends Response {
 
 	/**
 	 * Used to get the set parameters
-	 * @return array the data
+	 * @return array|int|float|string|bool|object the data
 	 * @since 8.0.0
 	 */
 	public function getData() {

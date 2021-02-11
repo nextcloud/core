@@ -4,9 +4,10 @@
  *
  * @author Bernhard Reiter <ockham@raz.or.at>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Thomas Tanghus <thomas@tanghus.net>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -38,32 +39,27 @@
 namespace OC;
 
 use OC\Tagging\TagMapper;
+use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\IDBConnection;
+use OCP\ITagManager;
+use OCP\ITags;
+use OCP\IUserSession;
 
-class TagManager implements \OCP\ITagManager {
+class TagManager implements ITagManager {
 
-	/**
-	 * User session
-	 *
-	 * @var \OCP\IUserSession
-	 */
-	private $userSession;
-
-	/**
-	 * TagMapper
-	 *
-	 * @var TagMapper
-	 */
+	/** @var TagMapper */
 	private $mapper;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param TagMapper $mapper Instance of the TagMapper abstraction layer.
-	 * @param \OCP\IUserSession $userSession the user session
-	 */
-	public function __construct(TagMapper $mapper, \OCP\IUserSession $userSession) {
+	/** @var IUserSession */
+	private $userSession;
+
+	/** @var IDBConnection */
+	private $connection;
+
+	public function __construct(TagMapper $mapper, IUserSession $userSession, IDBConnection $connection) {
 		$this->mapper = $mapper;
 		$this->userSession = $userSession;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -89,5 +85,28 @@ class TagManager implements \OCP\ITagManager {
 			$userId = $this->userSession->getUser()->getUId();
 		}
 		return new Tags($this->mapper, $userId, $type, $defaultTags);
+	}
+
+	/**
+	 * Get all users who favorited an object
+	 *
+	 * @param string $objectType
+	 * @param int $objectId
+	 * @return array
+	 */
+	public function getUsersFavoritingObject(string $objectType, int $objectId): array {
+		$query = $this->connection->getQueryBuilder();
+		$query->select('uid')
+			->from('vcategory_to_object', 'o')
+			->innerJoin('o', 'vcategory', 'c', $query->expr()->eq('o.categoryid', 'c.id'))
+			->where($query->expr()->eq('objid', $query->createNamedParameter($objectId, IQueryBuilder::PARAM_INT)))
+			->andWhere($query->expr()->eq('c.type', $query->createNamedParameter($objectType)))
+			->andWhere($query->expr()->eq('c.category', $query->createNamedParameter(ITags::TAG_FAVORITE)));
+
+		$result = $query->execute();
+		$users = $result->fetchAll(\PDO::FETCH_COLUMN);
+		$result->closeCursor();
+
+		return $users;
 	}
 }

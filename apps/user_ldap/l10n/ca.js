@@ -113,7 +113,7 @@ OC.L10N.register(
     "The filter specifies which LDAP users shall have access to the %s instance." : "El filtre especifica quins usuaris LDAP haurien de tenir accés a la instància %s",
     "Verify settings and count users" : "Verifica configuracions i compta usuaris",
     "Saving" : "Desant...",
-    "Back" : "Enrera",
+    "Back" : "Enrere",
     "Continue" : "Continua",
     "Please renew your password." : "Heu de renovar la vostra contrasenya.",
     "An internal error occurred." : "Hi ha hagut un error intern inesperat.",
@@ -189,7 +189,6 @@ OC.L10N.register(
     "Username-LDAP User Mapping" : "Mapatge d'usuari Nom d'usuari-LDAP",
     "Usernames are used to store and assign metadata. In order to precisely identify and recognize users, each LDAP user will have an internal username. This requires a mapping from username to LDAP user. The created username is mapped to the UUID of the LDAP user. Additionally the DN is cached as well to reduce LDAP interaction, but it is not used for identification. If the DN changes, the changes will be found. The internal username is used all over. Clearing the mappings will have leftovers everywhere. Clearing the mappings is not configuration sensitive, it affects all LDAP configurations! Never clear the mappings in a production environment, only in a testing or experimental stage." : "Els noms d'usuari son emprats per emmagatzemar i assignar metadades. Per tal d'identificar i reconèixer amb precisió als usuaris, cada usuari LDAP té un nom d'usuari intern. Això requereix una assignació de noms d'usuari interns per a cada un dels usuaris LDAP. Al nom d'usuari creat s'assigna el UUID de l'usuari LDAP. A més el DN es guarda en memòria cau per a reduir la interacció amb LDAP, però no s'utilitza per a identificació. Si el DN canvia, es trobaran els canvis. El nom d'usuari intern s'utilitza arreu. Netejar el mapa d'assignacions deixaria restes per totes bandes. Netejar el mapa d'assignacions no és que sigui sensible a la configuració, sinó que afecta a totes les configuracions LDAP! Mai netegeu el mapa d'assignacions en un entorn de producció, només en escenaris de proves o experimentals.",
     "Clear Username-LDAP User Mapping" : "Elimina el mapatge d'usuari Nom d'usuari-LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Suprimeix el mapatge de grup Nom de grup-LDAP",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Deixeu-ho buit pel nom d'usuari (per defecte). Altrament, especifiqueu un atribut LDAP/AD."
+    "Clear Groupname-LDAP Group Mapping" : "Suprimeix el mapatge de grup Nom de grup-LDAP"
 },
 "nplurals=2; plural=(n != 1);");

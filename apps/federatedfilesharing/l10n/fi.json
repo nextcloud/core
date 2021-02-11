@@ -32,7 +32,6 @@
     "Federated Cloud Sharing" : "Federoitu pilvijakaminen",
     "Open documentation" : "Avaa ohje",
     "Adjust how people can share between servers." : "Mukauta kuinka ihmiset voivat jakaa palvelinten välillä.",
-    "Allow users on this server to send shares to other servers" : "Salli tämän palvelimen käyttäjien lähettää jakoja muille palvelimille",
     "Allow users on this server to receive shares from other servers" : "Salli tämän palvelimen käyttäjien vastaanottaa jakoja muilta palvelimilta",
     "Allow users on this server to send shares to groups on other servers" : "Salli käyttäjien tällä palvelimella lähettää jakoja toisten palvelimien ryhmille",
     "Allow users on this server to receive group shares from other servers" : "Salli käyttäjien tällä palvelimella vastaanottaa ryhmäjakoja toisilta palvelimilta",
@@ -44,7 +43,6 @@
     "Add to your website" : "Lisää verkkosivuillesi",
     "Share with me via Nextcloud" : "Jaa kanssani Nextcloudin kautta",
     "HTML Code:" : "HTML-koodi:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Vastaanotit \"%3$s\":n etäjakona käyttäjältä %1$s (%2$s:n puolesta)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Vastaanotit \"%3$s\":n etäjakona käyttäjältä %1$s"
+    "Allow users on this server to send shares to other servers" : "Salli tämän palvelimen käyttäjien lähettää jakoja muille palvelimille"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

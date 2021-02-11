@@ -29,7 +29,6 @@ use OCP\AppFramework\Http;
 /**
  * Class OCSForbiddenException
  *
- * @package OCP\AppFramework
  * @since 9.1.0
  */
 class OCSForbiddenException extends OCSException {

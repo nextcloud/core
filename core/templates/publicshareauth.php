@@ -1,6 +1,6 @@
 <?php
-	/** @var $_ array */
-	/** @var $l \OCP\IL10N */
+	/** @var array $_ */
+	/** @var \OCP\IL10N $l */
 	style('core', 'guest');
 	style('core', 'publicshareauth');
 	script('core', 'publicshareauth');

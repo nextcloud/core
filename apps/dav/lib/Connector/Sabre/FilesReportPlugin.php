@@ -7,7 +7,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  * @author Vinicius Cubas Brand <vinicius@eita.org.br>
  *
  * @license AGPL-3.0
@@ -49,7 +49,7 @@ class FilesReportPlugin extends ServerPlugin {
 
 	// namespace
 	public const NS_OWNCLOUD = 'http://owncloud.org/ns';
-	public const REPORT_NAME            = '{http://owncloud.org/ns}filter-files';
+	public const REPORT_NAME = '{http://owncloud.org/ns}filter-files';
 	public const SYSTEMTAG_PROPERTYNAME = '{http://owncloud.org/ns}systemtag';
 	public const CIRCLE_PROPERTYNAME = '{http://owncloud.org/ns}circle';
 

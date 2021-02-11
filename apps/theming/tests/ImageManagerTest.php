@@ -6,6 +6,7 @@
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Michael Weimann <mail@michael-weimann.eu>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -35,23 +36,27 @@ use OCP\Files\SimpleFS\ISimpleFolder;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\ILogger;
+use OCP\ITempManager;
 use OCP\IURLGenerator;
+use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
 
 class ImageManagerTest extends TestCase {
 
-	/** @var IConfig|\PHPUnit\Framework\MockObject\MockObject */
+	/** @var IConfig|MockObject */
 	protected $config;
-	/** @var IAppData|\PHPUnit\Framework\MockObject\MockObject */
+	/** @var IAppData|MockObject */
 	protected $appData;
 	/** @var ImageManager */
 	protected $imageManager;
-	/** @var IURLGenerator|\PHPUnit\Framework\MockObject\MockObject */
+	/** @var IURLGenerator|MockObject */
 	private $urlGenerator;
-	/** @var ICacheFactory|\PHPUnit\Framework\MockObject\MockObject */
+	/** @var ICacheFactory|MockObject */
 	private $cacheFactory;
-	/** @var ILogger|\PHPUnit\Framework\MockObject\MockObject */
+	/** @var ILogger|MockObject */
 	private $logger;
+	/** @var ITempManager|MockObject */
+	private $tempManager;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -60,12 +65,14 @@ class ImageManagerTest extends TestCase {
 		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->cacheFactory = $this->createMock(ICacheFactory::class);
 		$this->logger = $this->createMock(ILogger::class);
+		$this->tempManager = $this->createMock(ITempManager::class);
 		$this->imageManager = new ImageManager(
 			$this->config,
 			$this->appData,
 			$this->urlGenerator,
 			$this->cacheFactory,
-			$this->logger
+			$this->logger,
+			$this->tempManager
 		);
 	}
 
@@ -83,7 +90,7 @@ class ImageManagerTest extends TestCase {
 	}
 
 	public function mockGetImage($key, $file) {
-		/** @var \PHPUnit\Framework\MockObject\MockObject $folder */
+		/** @var MockObject $folder */
 		$folder = $this->createMock(ISimpleFolder::class);
 		if ($file === null) {
 			$folder->expects($this->once())
@@ -305,7 +312,7 @@ class ImageManagerTest extends TestCase {
 			$this->createMock(ISimpleFolder::class),
 			$this->createMock(ISimpleFolder::class)
 		];
-		foreach ($folders as $index=>$folder) {
+		foreach ($folders as $index => $folder) {
 			$folder->expects($this->any())
 				->method('getName')
 				->willReturn($index);
@@ -325,5 +332,57 @@ class ImageManagerTest extends TestCase {
 			->with('2')
 			->willReturn($folders[2]);
 		$this->imageManager->cleanup();
+	}
+
+
+	public function dataUpdateImage() {
+		return [
+			['background', __DIR__ . '/../../../tests/data/testimage.png', true, true],
+			['background', __DIR__ . '/../../../tests/data/testimage.png', false, true],
+			['background', __DIR__ . '/../../../tests/data/testimage.jpg', true, true],
+			['logo', __DIR__ . '/../../../tests/data/testimagelarge.svg', true, false],
+		];
+	}
+
+	/**
+	 * @dataProvider dataUpdateImage
+	 */
+	public function testUpdateImage($key, $tmpFile, $folderExists, $shouldConvert) {
+		$file = $this->createMock(ISimpleFile::class);
+		$folder = $this->createMock(ISimpleFolder::class);
+		$oldFile = $this->createMock(ISimpleFile::class);
+		$folder->expects($this->any())
+			->method('getFile')
+			->willReturn($oldFile);
+		if ($folderExists) {
+			$this->appData
+				->expects($this->any())
+				->method('getFolder')
+				->with('images')
+				->willReturn($folder);
+		} else {
+			$this->appData
+				->expects($this->any())
+				->method('getFolder')
+				->with('images')
+				->willThrowException(new NotFoundException());
+			$this->appData
+				->expects($this->any())
+				->method('newFolder')
+				->with('images')
+				->willReturn($folder);
+		}
+		$folder->expects($this->once())
+			->method('newFile')
+			->with($key)
+			->willReturn($file);
+
+		if ($shouldConvert) {
+			$this->tempManager->expects($this->once())
+				->method('getTemporaryFile')
+				->willReturn('/tmp/randomtempfile-theming');
+		}
+
+		$this->imageManager->updateImage($key, $tmpFile);
 	}
 }

@@ -43,6 +43,7 @@
     "user_ldap",
     "user_status",
     "viewer",
+    "weather_status",
     "workflowengine"
   ],
   "alwaysEnabled": [

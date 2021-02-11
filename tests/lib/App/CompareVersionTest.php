@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
@@ -49,11 +51,18 @@ class CompareVersionTest extends TestCase {
 			['13.0.0', '13', '>=', true],
 			['13.0.1', '13', '>=', true],
 			['13.0.1', '13', '<=', true],
+			['13.0.1.9', '13', '<=', true],
+			['13.0.1-beta.1', '13', '<=', true],
+			['7.4.14', '7.4', '<=', true],
+			['7.4.14-ubuntu', '7.4', '<=', true],
+			['7.4.14-ubuntu', '7.4.15', '<=', true],
+			['7.4.16-ubuntu', '7.4.15', '<=', false],
 			// Incompatible major versions
 			['13.0.0.3', '13.0.0', '<', false],
 			['12.0.0', '13.0.0', '>=', false],
 			['12.0.0', '13.0', '>=', false],
 			['12.0.0', '13', '>=', false],
+			['7.4.15-ubuntu', '7.4.15', '>=', true],
 			// Incompatible minor and patch versions
 			['13.0.0', '13.0.1', '>=', false],
 			['13.0.0', '13.1', '>=', false],

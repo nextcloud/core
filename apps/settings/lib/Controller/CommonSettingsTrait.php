@@ -6,6 +6,7 @@
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -34,7 +35,6 @@ use OCP\IGroupManager;
 use OCP\INavigationManager;
 use OCP\IUser;
 use OCP\IUserSession;
-use OCP\Settings\IIconSection;
 use OCP\Settings\IManager as ISettingsManager;
 use OCP\Settings\ISettings;
 
@@ -84,7 +84,7 @@ trait CommonSettingsTrait {
 
 	protected function formatSections($sections, $currentSection, $type, $currentType, bool $subAdminOnly = false) {
 		$templateParameters = [];
-		/** @var \OCP\Settings\ISection[] $prioritizedSections */
+		/** @var \OCP\Settings\IIconSection[] $prioritizedSections */
 		foreach ($sections as $prioritizedSections) {
 			foreach ($prioritizedSections as $section) {
 				if ($type === 'admin') {
@@ -96,19 +96,16 @@ trait CommonSettingsTrait {
 					continue;
 				}
 
-				$icon = '';
-				if ($section instanceof IIconSection) {
-					$icon = $section->getIcon();
-				}
+				$icon = $section->getIcon();
 
 				$active = $section->getID() === $currentSection
 					&& $type === $currentType;
 
 				$templateParameters[] = [
-					'anchor'       => $section->getID(),
+					'anchor' => $section->getID(),
 					'section-name' => $section->getName(),
-					'active'       => $active,
-					'icon'         => $icon,
+					'active' => $active,
+					'icon' => $icon,
 				];
 			}
 		}

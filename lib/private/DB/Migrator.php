@@ -11,7 +11,7 @@
  * @author tbelau666 <thomas.belau@gmx.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -31,7 +31,9 @@
 
 namespace OC\DB;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Schema\AbstractAsset;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Schema;
@@ -43,6 +45,7 @@ use OCP\IConfig;
 use OCP\Security\ISecureRandom;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use function preg_match;
 
 class Migrator {
 
@@ -79,6 +82,8 @@ class Migrator {
 
 	/**
 	 * @param \Doctrine\DBAL\Schema\Schema $targetSchema
+	 *
+	 * @throws Exception
 	 */
 	public function migrate(Schema $targetSchema) {
 		$this->noEmit = true;
@@ -99,34 +104,6 @@ class Migrator {
 		}
 
 		return $script;
-	}
-
-	/**
-	 * @param Schema $targetSchema
-	 * @throws \OC\DB\MigrationException
-	 */
-	public function checkMigrate(Schema $targetSchema) {
-		$this->noEmit = true;
-		/**@var \Doctrine\DBAL\Schema\Table[] $tables */
-		$tables = $targetSchema->getTables();
-		$filterExpression = $this->getFilterExpression();
-		$this->connection->getConfiguration()->
-			setFilterSchemaAssetsExpression($filterExpression);
-		$existingTables = $this->connection->getSchemaManager()->listTableNames();
-
-		$step = 0;
-		foreach ($tables as $table) {
-			if (strpos($table->getName(), '.')) {
-				list(, $tableName) = explode('.', $table->getName());
-			} else {
-				$tableName = $table->getName();
-			}
-			$this->emitCheckStep($tableName, $step++, count($tables));
-			// don't need to check for new tables
-			if (array_search($tableName, $existingTables) !== false) {
-				$this->checkTableMigrate($table);
-			}
-		}
 	}
 
 	/**
@@ -160,7 +137,7 @@ class Migrator {
 		try {
 			$this->applySchema($schema);
 			$this->dropTable($tmpName);
-		} catch (DBALException $e) {
+		} catch (Exception $e) {
 			// pgsql needs to commit it's failed transaction before doing anything else
 			if ($this->connection->isTransactionActive()) {
 				$this->connection->commit();
@@ -193,12 +170,21 @@ class Migrator {
 		}
 
 		// foreign keys are not supported so we just set it to an empty array
-		return new Table($newName, $table->getColumns(), $newIndexes, [], 0, $table->getOptions());
+		return new Table($newName, $table->getColumns(), $newIndexes, [], [], $table->getOptions());
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function createSchema() {
-		$filterExpression = $this->getFilterExpression();
-		$this->connection->getConfiguration()->setFilterSchemaAssetsExpression($filterExpression);
+		$this->connection->getConfiguration()->setSchemaAssetsFilter(function ($asset) {
+			/** @var string|AbstractAsset $asset */
+			$filterExpression = $this->getFilterExpression();
+			if ($asset instanceof AbstractAsset) {
+				return preg_match($filterExpression, $asset->getName()) !== false;
+			}
+			return preg_match($filterExpression, $asset) !== false;
+		});
 		return $this->connection->getSchemaManager()->createSchema();
 	}
 
@@ -206,7 +192,6 @@ class Migrator {
 	 * @param Schema $targetSchema
 	 * @param \Doctrine\DBAL\Connection $connection
 	 * @return \Doctrine\DBAL\Schema\SchemaDiff
-	 * @throws DBALException
 	 */
 	protected function getDiff(Schema $targetSchema, \Doctrine\DBAL\Connection $connection) {
 		// adjust varchar columns with a length higher then getVarcharMaxLength to clob
@@ -221,12 +206,17 @@ class Migrator {
 			}
 		}
 
-		$filterExpression = $this->getFilterExpression();
-		$this->connection->getConfiguration()->setFilterSchemaAssetsExpression($filterExpression);
+		$this->connection->getConfiguration()->setSchemaAssetsFilter(function ($asset) {
+			/** @var string|AbstractAsset $asset */
+			$filterExpression = $this->getFilterExpression();
+			if ($asset instanceof AbstractAsset) {
+				return preg_match($filterExpression, $asset->getName()) !== false;
+			}
+			return preg_match($filterExpression, $asset) !== false;
+		});
 		$sourceSchema = $connection->getSchemaManager()->createSchema();
 
 		// remove tables we don't know about
-		/** @var $table \Doctrine\DBAL\Schema\Table */
 		foreach ($sourceSchema->getTables() as $table) {
 			if (!$targetSchema->hasTable($table->getName())) {
 				$sourceSchema->dropTable($table->getName());
@@ -246,6 +236,8 @@ class Migrator {
 	/**
 	 * @param \Doctrine\DBAL\Schema\Schema $targetSchema
 	 * @param \Doctrine\DBAL\Connection $connection
+	 *
+	 * @throws Exception
 	 */
 	protected function applySchema(Schema $targetSchema, \Doctrine\DBAL\Connection $connection = null) {
 		if (is_null($connection)) {
@@ -254,14 +246,18 @@ class Migrator {
 
 		$schemaDiff = $this->getDiff($targetSchema, $connection);
 
-		$connection->beginTransaction();
+		if (!$connection->getDatabasePlatform() instanceof MySQLPlatform) {
+			$connection->beginTransaction();
+		}
 		$sqls = $schemaDiff->toSql($connection->getDatabasePlatform());
 		$step = 0;
 		foreach ($sqls as $sql) {
 			$this->emit($sql, $step++, count($sqls));
 			$connection->query($sql);
 		}
-		$connection->commit();
+		if (!$connection->getDatabasePlatform() instanceof MySQLPlatform) {
+			$connection->commit();
+		}
 	}
 
 	/**
@@ -305,13 +301,13 @@ class Migrator {
 		if (is_null($this->dispatcher)) {
 			return;
 		}
-		$this->dispatcher->dispatch('\OC\DB\Migrator::executeSql', new GenericEvent($sql, [$step+1, $max]));
+		$this->dispatcher->dispatch('\OC\DB\Migrator::executeSql', new GenericEvent($sql, [$step + 1, $max]));
 	}
 
 	private function emitCheckStep($tableName, $step, $max) {
 		if (is_null($this->dispatcher)) {
 			return;
 		}
-		$this->dispatcher->dispatch('\OC\DB\Migrator::checkTable', new GenericEvent($tableName, [$step+1, $max]));
+		$this->dispatcher->dispatch('\OC\DB\Migrator::checkTable', new GenericEvent($tableName, [$step + 1, $max]));
 	}
 }

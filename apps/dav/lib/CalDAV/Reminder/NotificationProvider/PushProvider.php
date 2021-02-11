@@ -86,8 +86,8 @@ class PushProvider extends AbstractProvider {
 	 * @throws \Exception
 	 */
 	public function send(VEvent $vevent,
-						 string $calendarDisplayName=null,
-						 array $users=[]):void {
+						 string $calendarDisplayName = null,
+						 array $users = []):void {
 		if ($this->config->getAppValue('dav', 'sendEventRemindersPush', 'no') !== 'yes') {
 			return;
 		}
@@ -138,15 +138,11 @@ class PushProvider extends AbstractProvider {
 				? ((string) $vevent->LOCATION)
 				: null,
 			'all_day' => $start instanceof Property\ICalendar\Date,
-			/** @phan-suppress-next-line PhanUndeclaredClassMethod */
 			'start_atom' => $start->getDateTime()->format(\DateTime::ATOM),
 			'start_is_floating' => $start->isFloating(),
-			/** @phan-suppress-next-line PhanUndeclaredClassMethod */
 			'start_timezone' => $start->getDateTime()->getTimezone()->getName(),
-			/** @phan-suppress-next-line PhanUndeclaredClassMethod */
 			'end_atom' => $end->getDateTime()->format(\DateTime::ATOM),
 			'end_is_floating' => $end->isFloating(),
-			/** @phan-suppress-next-line PhanUndeclaredClassMethod */
 			'end_timezone' => $end->getDateTime()->getTimezone()->getName(),
 		];
 	}

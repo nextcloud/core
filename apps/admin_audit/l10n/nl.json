@@ -1,0 +1,5 @@
+{ "translations": {
+    "Auditing / Logging" : "Audit / Logging",
+    "Provides logging abilities for Nextcloud such as logging file accesses or otherwise sensitive actions." : "Biedt loggingfuncties voor Nextcloud, zoals het loggen van bestandstoegang of anderszins gevoelige acties."
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

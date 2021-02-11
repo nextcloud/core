@@ -161,6 +161,37 @@ select {
 }
 
 
+// Button for 'Reasons to use Nextcloud in your organization'
+.development-notice {
+	text-align: center;
+}
+
+.link-button {
+	display: inline-block;
+	margin: 16px;
+	padding: 14px 20px;
+	background-color: var(--color-primary);
+	color: #fff;
+	border-radius: var(--border-radius-pill);
+	border: 1px solid var(--color-primary);
+	box-shadow: 0 2px 9px var(--color-box-shadow);
+
+	&:active,
+	&:hover,
+	&:focus {
+		color: var(--color-primary);
+		background-color: var(--color-primary-text);
+		border-color: var(--color-primary) !important;
+	}
+
+	&.icon-file {
+		padding-left: 48px;
+		background-position: 24px;
+	}
+}
+
+
+
 @media (min-width: 1200px) and (max-width: 1400px) {
 	#personal-settings {
 		display: grid;
@@ -663,8 +694,6 @@ span.version {
 }
 
 .app-level {
-	margin-top: 8px;
-
 	span {
 		color: var(--color-text-maxcontrast);
 		background-color: transparent;
@@ -1324,20 +1353,6 @@ doesnotexist:-o-prefocus, .strengthify-wrapper {
 	font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
 }
 
-/* HELP */
-.help-includes {
-	overflow: hidden !important;
-}
-
-.help-iframe {
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	border: 0;
-	overflow: auto;
-}
-
 #postsetupchecks {
 	ul {
 		margin-left: 44px;
@@ -1414,6 +1429,8 @@ doesnotexist:-o-prefocus, .strengthify-wrapper {
 	$grid-row-height: 60px;
 	$grid-col-min-width: 160px;
 	overflow-x: scroll;
+	min-height: 100%;
+	height: auto;
 
 	#app-content.user-list-grid {
 		display: grid;

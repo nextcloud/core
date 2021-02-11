@@ -3,6 +3,7 @@
  *
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -29,11 +30,14 @@ namespace OCA\Provisioning_API\AppInfo;
 
 use OC\AppFramework\Utility\SimpleContainer;
 use OC\AppFramework\Utility\TimeFactory;
+use OC\Group\Manager as GroupManager;
 use OCA\Provisioning_API\Middleware\ProvisioningApiMiddleware;
 use OCA\Settings\Mailer\NewUserMailHelper;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\Defaults;
+use OCP\IGroupManager;
+use OCP\IUser;
 use OCP\Util;
 
 class Application extends App {
@@ -58,8 +62,16 @@ class Application extends App {
 		});
 		$container->registerService('ProvisioningApiMiddleware', function (SimpleContainer $c) use ($server) {
 			$user = $server->getUserManager()->get($c['UserId']);
-			$isAdmin = $user !== null ? $server->getGroupManager()->isAdmin($user->getUID()) : false;
-			$isSubAdmin = $user !== null ? $server->getGroupManager()->getSubAdmin()->isSubAdmin($user) : false;
+			$isAdmin = false;
+			$isSubAdmin = false;
+
+			if ($user instanceof IUser) {
+				$groupManager = $server->get(IGroupManager::class);
+				assert($groupManager instanceof GroupManager);
+				$isAdmin = $groupManager->isAdmin($user->getUID());
+				$isSubAdmin = $groupManager->getSubAdmin()->isSubAdmin($user);
+			}
+
 			return new ProvisioningApiMiddleware(
 				$c->query(IControllerMethodReflector::class),
 				$isAdmin,

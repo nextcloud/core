@@ -29,6 +29,8 @@ namespace OCA\User_LDAP\AppInfo;
 use Closure;
 use OCA\Files_External\Service\BackendService;
 use OCA\User_LDAP\Controller\RenewPasswordController;
+use OCA\User_LDAP\Events\GroupBackendRegistered;
+use OCA\User_LDAP\Events\UserBackendRegistered;
 use OCA\User_LDAP\Group_Proxy;
 use OCA\User_LDAP\GroupPluginManager;
 use OCA\User_LDAP\Handler\ExtStorageConfigHandler;
@@ -43,11 +45,10 @@ use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\IAppContainer;
-use OCP\IConfig;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IGroupManager;
 use OCP\IL10N;
 use OCP\IServerContainer;
-use OCP\IUserSession;
 use OCP\Notification\IManager as INotificationManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -83,33 +84,31 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function boot(IBootContext $context): void {
-		$context->injectFn(function (IConfig $config,
-									 INotificationManager $notificationManager,
-									 IUserSession $userSession,
-									 IAppContainer $appContainer,
-									 EventDispatcherInterface $dispatcher,
-									 IGroupManager $groupManager) {
-			$helper = new Helper($config);
+		$context->injectFn(function (
+			INotificationManager $notificationManager,
+			IAppContainer $appContainer,
+			EventDispatcherInterface $legacyDispatcher,
+			IEventDispatcher $dispatcher,
+			IGroupManager $groupManager,
+			User_Proxy $userBackend,
+			Group_Proxy $groupBackend,
+			Helper $helper
+		) {
 			$configPrefixes = $helper->getServerConfigurationPrefixes(true);
 			if (count($configPrefixes) > 0) {
-				$ldapWrapper = new LDAP();
-
 				$notificationManager->registerNotifierService(Notifier::class);
 
 				$userPluginManager = $appContainer->get(UserPluginManager::class);
 				$groupPluginManager = $appContainer->get(GroupPluginManager::class);
 
-				$userBackend = new User_Proxy(
-					$configPrefixes, $ldapWrapper, $config, $notificationManager, $userSession, $userPluginManager
-				);
-				$groupBackend = new Group_Proxy($configPrefixes, $ldapWrapper, $groupPluginManager);
-				// register user backend
 				\OC_User::useBackend($userBackend);
-
-				// Hook to allow plugins to work on registered backends
-				$dispatcher->dispatch('OCA\\User_LDAP\\User\\User::postLDAPBackendAdded');
-
 				$groupManager->addBackend($groupBackend);
+
+				$userBackendRegisteredEvent = new UserBackendRegistered($userBackend, $userPluginManager);
+				$legacyDispatcher->dispatch('OCA\\User_LDAP\\User\\User::postLDAPBackendAdded', $userBackendRegisteredEvent);
+				$dispatcher->dispatchTyped($userBackendRegisteredEvent);
+				$groupBackendRegisteredEvent = new GroupBackendRegistered($groupBackend, $groupPluginManager);
+				$dispatcher->dispatchTyped($groupBackendRegisteredEvent);
 			}
 		});
 

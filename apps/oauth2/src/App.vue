@@ -28,17 +28,8 @@
 		<table v-if="clients.length > 0" class="grid">
 			<thead>
 				<tr>
-					<th id="headerName" scope="col">
-						{{ t('oauth2', 'Name') }}
-					</th>
-					<th id="headerRedirectUri" scope="col">
-						{{ t('oauth2', 'Redirection URI') }}
-					</th>
-					<th id="headerClientIdentifier" scope="col">
-						{{ t('oauth2', 'Client Identifier') }}
-					</th>
-					<th id="headerSecret" scope="col">
-						{{ t('oauth2', 'Secret') }}
+					<th id="headerContent">
+
 					</th>
 					<th id="headerRemove">
 &nbsp;
@@ -127,3 +118,8 @@ export default {
 	},
 }
 </script>
+<style scoped>
+	table {
+		max-width: 800px;
+	}
+</style>

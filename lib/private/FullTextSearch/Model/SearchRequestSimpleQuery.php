@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright 2018
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Maxence Lange <maxence@artificial-owl.com>
  *
  * @license GNU AGPL version 3 or any later version
@@ -173,8 +174,8 @@ final class SearchRequestSimpleQuery implements ISearchRequestSimpleQuery, JsonS
 	 */
 	public function jsonSerialize() {
 		return [
-			'type'   => $this->getType(),
-			'field'  => $this->getField(),
+			'type' => $this->getType(),
+			'field' => $this->getField(),
 			'values' => $this->getValues()
 		];
 	}

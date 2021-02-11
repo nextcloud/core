@@ -33,13 +33,13 @@ use OC\Authentication\Token\IToken;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\L10N\IFactory;
 use OCP\Mail\IMailer;
 use OCP\Mail\IMessage;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Test\TestCase;
 
 class RemoteWipeEmailListenerTest extends TestCase {
@@ -56,7 +56,7 @@ class RemoteWipeEmailListenerTest extends TestCase {
 	/** @var IL10N|MockObject */
 	private $l10n;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var IEventListener */
@@ -69,7 +69,7 @@ class RemoteWipeEmailListenerTest extends TestCase {
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->l10nFactory = $this->createMock(IFactory::class);
 		$this->l10n = $this->createMock(IL10N::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->l10nFactory->method('get')->with('core')->willReturn($this->l10n);
 		$this->l10n->method('t')->willReturnArgument(0);
@@ -135,7 +135,7 @@ class RemoteWipeEmailListenerTest extends TestCase {
 			->method('send')
 			->willThrowException(new Exception());
 		$this->logger->expects($this->once())
-			->method('logException');
+			->method('error');
 
 		$this->listener->handle($event);
 	}
@@ -210,7 +210,7 @@ class RemoteWipeEmailListenerTest extends TestCase {
 			->method('send')
 			->willThrowException(new Exception());
 		$this->logger->expects($this->once())
-			->method('logException');
+			->method('error');
 
 		$this->listener->handle($event);
 	}

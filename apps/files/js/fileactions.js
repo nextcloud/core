@@ -701,7 +701,7 @@
 					if (mountType === 'external-root') {
 						deleteTitle = t('files', 'Disconnect storage');
 					} else if (mountType === 'shared-root') {
-						deleteTitle = t('files', 'Unshare');
+						deleteTitle = t('files', 'Leave this share');
 					}
 					return deleteTitle;
 				},

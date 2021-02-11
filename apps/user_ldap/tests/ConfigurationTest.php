@@ -74,23 +74,23 @@ class ConfigurationTest extends \Test\TestCase {
 
 		return [
 			'set general base' => ['ldapBase', $inputWithDN, $expectWithDN],
-			'set user base'    => ['ldapBaseUsers', $inputWithDN, $expectWithDN],
-			'set group base'   => ['ldapBaseGroups', $inputWithDN, $expectWithDN],
+			'set user base' => ['ldapBaseUsers', $inputWithDN, $expectWithDN],
+			'set group base' => ['ldapBaseGroups', $inputWithDN, $expectWithDN],
 
-			'set search attributes users'  => ['ldapAttributesForUserSearch', $inputNames, $expectedNames],
+			'set search attributes users' => ['ldapAttributesForUserSearch', $inputNames, $expectedNames],
 			'set search attributes groups' => ['ldapAttributesForGroupSearch', $inputNames, $expectedNames],
 
-			'set user filter objectclasses'  => ['ldapUserFilterObjectclass', $inputNames, $expectedNames],
-			'set user filter groups'         => ['ldapUserFilterGroups', $inputNames, $expectedNames],
+			'set user filter objectclasses' => ['ldapUserFilterObjectclass', $inputNames, $expectedNames],
+			'set user filter groups' => ['ldapUserFilterGroups', $inputNames, $expectedNames],
 			'set group filter objectclasses' => ['ldapGroupFilterObjectclass', $inputNames, $expectedNames],
-			'set group filter groups'        => ['ldapGroupFilterGroups', $inputNames, $expectedNames],
-			'set login filter attributes'    => ['ldapLoginFilterAttributes', $inputNames, $expectedNames],
+			'set group filter groups' => ['ldapGroupFilterGroups', $inputNames, $expectedNames],
+			'set login filter attributes' => ['ldapLoginFilterAttributes', $inputNames, $expectedNames],
 
 			'set agent password' => ['ldapAgentPassword', $password, $password],
 
 			'set home folder, variant 1' => ['homeFolderNamingRule', $inputHomeFolder[0], $expectedHomeFolder[0]],
 			'set home folder, variant 2' => ['homeFolderNamingRule', $inputHomeFolder[1], $expectedHomeFolder[1]],
-			'set home folder, empty'     => ['homeFolderNamingRule', $inputHomeFolder[2], $expectedHomeFolder[2]],
+			'set home folder, empty' => ['homeFolderNamingRule', $inputHomeFolder[2], $expectedHomeFolder[2]],
 
 			// default behaviour, one case is enough, special needs must be tested
 			// individually

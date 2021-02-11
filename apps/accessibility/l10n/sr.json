@@ -12,14 +12,6 @@
     "Accessibility options for nextcloud" : "Опције приступачности за Некстлауд",
     "Provides multiple accessibilities options to ease your use of Nextcloud" : "Нуди више опција за приступачност да олакша употребу Некстклауда",
     "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines}Web Content Accessibility Guidelines{linkend} 2.1 on AA level, with the high contrast theme even on AAA level." : "Универзални приступ нам је веома важан. Пратимо веб стандарде и проверавамо да све буде употребљиво и без миша а и са помоћним софтвером попут читача екрана. Циљ нам је да будемо усклађени са документом {guidelines}Смернице приступачности веб садржаја{linkend}  2.1 на АА нивоу а са темом високог контраста и на ААА нивоу.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Наиђете ли на било какве проблеме, не оклевајте да их пријавите на {issuetracker}нашем пратиоцу проблема{linkend}. А ако пожелите да се укључите, придружите се {designteam}нашем тиму{linkend}!",
-    "High contrast theme" : "Тема високог контраста",
-    "A high contrast theme to ease your navigation. Visual quality will be reduced but clarity will be increased." : "Тема високог контраста олакшава навигацију. Биће мање лепа али јаснија и читљивија.",
-    "Web Content Accessibility Guidelines" : "Смернице приступачности веб садржаја",
-    "our issue tracker" : "нашем пратиоцу проблема",
-    "our design team" : "нашем тиму",
-    "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines} 2.1 on AA level, with the high contrast theme even on AAA level." : "Универзални приступ нам је веома важан. Пратимо веб стандарде и проверавамо да све буде употребљиво и без миша а и са помоћним софтвером попут читача екрана. Циљ нам је да будемо усклађени са документом {guidelines} 2.1 на АА нивоу а са темом високог контраста и на ААА нивоу.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}. And if you want to get involved, come join {designteam}!" : "Наиђете ли на било какве проблеме, не оклевајте да их пријавите на {issuetracker}. А ако пожелите да се укључите, придружите се {designteam}!",
-    "Enable" : "Укључи"
+    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Наиђете ли на било какве проблеме, не оклевајте да их пријавите на {issuetracker}нашем пратиоцу проблема{linkend}. А ако пожелите да се укључите, придружите се {designteam}нашем тиму{linkend}!"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 }

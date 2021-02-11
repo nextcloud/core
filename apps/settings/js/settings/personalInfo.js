@@ -134,6 +134,7 @@ function avatarResponseHandler (data) {
 		oc_userconfig.avatar.generated = false;
 		updateAvatar();
 	} else if (data.data === "notsquare") {
+		cleanCropper();
 		showAvatarCropper();
 	} else {
 		$warning.show();

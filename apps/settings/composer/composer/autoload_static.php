@@ -21,6 +21,7 @@ class ComposerStaticInitSettings
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\Settings\\Activity\\GroupProvider' => __DIR__ . '/..' . '/../lib/Activity/GroupProvider.php',
         'OCA\\Settings\\Activity\\GroupSetting' => __DIR__ . '/..' . '/../lib/Activity/GroupSetting.php',
         'OCA\\Settings\\Activity\\Provider' => __DIR__ . '/..' . '/../lib/Activity/Provider.php',
@@ -40,9 +41,11 @@ class ComposerStaticInitSettings
         'OCA\\Settings\\Controller\\LogSettingsController' => __DIR__ . '/..' . '/../lib/Controller/LogSettingsController.php',
         'OCA\\Settings\\Controller\\MailSettingsController' => __DIR__ . '/..' . '/../lib/Controller/MailSettingsController.php',
         'OCA\\Settings\\Controller\\PersonalSettingsController' => __DIR__ . '/..' . '/../lib/Controller/PersonalSettingsController.php',
+        'OCA\\Settings\\Controller\\ReasonsController' => __DIR__ . '/..' . '/../lib/Controller/ReasonsController.php',
         'OCA\\Settings\\Controller\\TwoFactorSettingsController' => __DIR__ . '/..' . '/../lib/Controller/TwoFactorSettingsController.php',
         'OCA\\Settings\\Controller\\UsersController' => __DIR__ . '/..' . '/../lib/Controller/UsersController.php',
         'OCA\\Settings\\Controller\\WebAuthnController' => __DIR__ . '/..' . '/../lib/Controller/WebAuthnController.php',
+        'OCA\\Settings\\Events\\BeforeTemplateRenderedEvent' => __DIR__ . '/..' . '/../lib/Events/BeforeTemplateRenderedEvent.php',
         'OCA\\Settings\\Hooks' => __DIR__ . '/..' . '/../lib/Hooks.php',
         'OCA\\Settings\\Mailer\\NewUserMailHelper' => __DIR__ . '/..' . '/../lib/Mailer/NewUserMailHelper.php',
         'OCA\\Settings\\Middleware\\SubadminMiddleware' => __DIR__ . '/..' . '/../lib/Middleware/SubadminMiddleware.php',
@@ -69,8 +72,11 @@ class ComposerStaticInitSettings
         'OCA\\Settings\\Settings\\Personal\\Security\\TwoFactor' => __DIR__ . '/..' . '/../lib/Settings/Personal/Security/TwoFactor.php',
         'OCA\\Settings\\Settings\\Personal\\Security\\WebAuthn' => __DIR__ . '/..' . '/../lib/Settings/Personal/Security/WebAuthn.php',
         'OCA\\Settings\\Settings\\Personal\\ServerDevNotice' => __DIR__ . '/..' . '/../lib/Settings/Personal/ServerDevNotice.php',
+        'OCA\\Settings\\SetupChecks\\CheckUserCertificates' => __DIR__ . '/..' . '/../lib/SetupChecks/CheckUserCertificates.php',
+        'OCA\\Settings\\SetupChecks\\LegacySSEKeyFormat' => __DIR__ . '/..' . '/../lib/SetupChecks/LegacySSEKeyFormat.php',
         'OCA\\Settings\\SetupChecks\\PhpDefaultCharset' => __DIR__ . '/..' . '/../lib/SetupChecks/PhpDefaultCharset.php',
         'OCA\\Settings\\SetupChecks\\PhpOutputBuffering' => __DIR__ . '/..' . '/../lib/SetupChecks/PhpOutputBuffering.php',
+        'OCA\\Settings\\SetupChecks\\SupportedDatabase' => __DIR__ . '/..' . '/../lib/SetupChecks/SupportedDatabase.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

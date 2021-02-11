@@ -40,11 +40,9 @@ class UUIDFixGroupTest extends AbstractUUIDFixTest {
 		$this->isUser = false;
 		parent::setUp();
 
-		$this->isUser = false;
-
 		$this->mapper = $this->createMock(GroupMapping::class);
+		$this->proxy = $this->createMock(Group_Proxy::class);
 
-		$this->mockProxy(Group_Proxy::class);
 		$this->instantiateJob(UUIDFixGroup::class);
 	}
 }

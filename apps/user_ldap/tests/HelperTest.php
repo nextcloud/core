@@ -3,6 +3,7 @@
  *
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -28,6 +29,9 @@ namespace OCA\User_LDAP\Tests;
 use OCA\User_LDAP\Helper;
 use OCP\IConfig;
 
+/**
+ * @group DB
+ */
 class HelperTest extends \Test\TestCase {
 
 	/** @var IConfig|\PHPUnit\Framework\MockObject\MockObject */
@@ -40,7 +44,7 @@ class HelperTest extends \Test\TestCase {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);
-		$this->helper = new Helper($this->config);
+		$this->helper = new Helper($this->config, \OC::$server->getDatabaseConnection());
 	}
 
 	public function testGetServerConfigurationPrefixes() {

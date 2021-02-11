@@ -84,14 +84,13 @@ export default {
 			}
 
 			this.status.isLoading = true
-			return axios.get(generateOcsUrl('cloud', 2) + 'groups?limit=20&search=' + encodeURI(searchQuery)).then((response) => {
-				response.data.ocs.data.groups.reduce((obj, item) => {
-					obj.push({
-						id: item,
-						displayname: item,
+			return axios.get(generateOcsUrl('cloud', 2) + 'groups/details?limit=20&search=' + encodeURI(searchQuery)).then((response) => {
+				response.data.ocs.data.groups.forEach((group) => {
+					this.addGroup({
+						id: group.id,
+						displayname: group.displayname,
 					})
-					return obj
-				}, []).forEach((group) => this.addGroup(group))
+				})
 				this.status.isLoading = false
 			}, (error) => {
 				console.error('Error while loading group list', error.response)

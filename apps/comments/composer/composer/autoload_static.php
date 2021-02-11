@@ -21,6 +21,7 @@ class ComposerStaticInitComments
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\Comments\\Activity\\Filter' => __DIR__ . '/..' . '/../lib/Activity/Filter.php',
         'OCA\\Comments\\Activity\\Listener' => __DIR__ . '/..' . '/../lib/Activity/Listener.php',
         'OCA\\Comments\\Activity\\Provider' => __DIR__ . '/..' . '/../lib/Activity/Provider.php',

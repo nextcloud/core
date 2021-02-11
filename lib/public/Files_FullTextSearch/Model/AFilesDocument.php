@@ -48,7 +48,6 @@ use OCP\FullTextSearch\Model\IIndexDocument;
  *
  * @since 15.0.0
  *
- * @package OCP\Files_FullTextSearch\Model
  */
 abstract class AFilesDocument extends IndexDocument {
 

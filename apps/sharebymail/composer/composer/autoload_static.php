@@ -21,6 +21,7 @@ class ComposerStaticInitShareByMail
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\ShareByMail\\Activity' => __DIR__ . '/..' . '/../lib/Activity.php',
         'OCA\\ShareByMail\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
         'OCA\\ShareByMail\\Capabilities' => __DIR__ . '/..' . '/../lib/Capabilities.php',

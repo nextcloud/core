@@ -17,7 +17,6 @@ OC.L10N.register(
     "Could not write file to disk" : "Tidak dapat menulis berkas ke disk",
     "A PHP extension stopped the file upload" : "Ekstensi PHP menghentikan proses unggah berkas",
     "No file uploaded" : "Tidak ada file diunggah",
-    "Unsupported image type" : "Tipe gambar tidak bisa diterima",
     "Theming" : "Tema",
     "Open documentation" : "Buka dokumentasi",
     "Name" : "Nama",

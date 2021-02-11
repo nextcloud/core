@@ -16,8 +16,6 @@
     "An error occurred while generating your backup codes" : "Prišlo je do namako med ustvarjanjem varnostnih kok",
     "{name} backup codes" : "Varnostne kode {name}",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Uporabite eno izmed varnostnih kod, ki ste jo shranili pri nastavljanju dvostopenjske overitve",
-    "Submit" : "Pošlji",
-    "function" : "funkcija",
-    "_" : "_"
+    "Submit" : "Pošlji"
 },"pluralForm" :"nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);"
 }

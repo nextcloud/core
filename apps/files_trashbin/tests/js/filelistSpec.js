@@ -129,7 +129,7 @@ describe('OCA.Trashbin.FileList tests', function () {
 	describe('Initialization', function () {
 		it('Sorts by mtime by default', function () {
 			expect(fileList._sort).toEqual('mtime');
-			expect(fileList._sortDirection).toEqual('desc');
+			expect(fileList._sortDirection).toEqual('asc');
 		});
 		it('Always returns read and delete permission', function () {
 			expect(fileList.getDirectoryPermissions()).toEqual(OC.PERMISSION_READ | OC.PERMISSION_DELETE);
@@ -316,7 +316,7 @@ describe('OCA.Trashbin.FileList tests', function () {
 				expect($('.selectedActions .item-delete').is(':visible')).toEqual(false);
 				expect($('.selectedActions .item-restore').is(':visible')).toEqual(false);
 			});
-			it('Deletes selected files when "Delete" clicked', function () {
+			it('Deletes selected files when "Delete" clicked', function (done) {
 				var request;
 				var promise = fileList._onClickDeleteSelected({
 					preventDefault: function () {
@@ -334,9 +334,9 @@ describe('OCA.Trashbin.FileList tests', function () {
 					expect(fileList.findFileEl('Three.pdf.d33333').length).toEqual(0);
 					expect(fileList.findFileEl('somedir.d99999').length).toEqual(0);
 					expect(fileList.findFileEl('Two.jpg.d22222').length).toEqual(1);
-				});
+				}).then(done, done);
 			});
-			it('Deletes all files when all selected when "Delete" clicked', function () {
+			it('Deletes all files when all selected when "Delete" clicked', function (done) {
 				var request;
 				$('.select-all').click();
 				var promise = fileList._onClickDeleteSelected({
@@ -349,11 +349,11 @@ describe('OCA.Trashbin.FileList tests', function () {
 				request.respond(200);
 				return promise.then(function () {
 					expect(fileList.isEmpty).toEqual(true);
-				});
+				}).then(done, done);
 			});
 		});
 		describe('Restore', function () {
-			it('Restores selected files when "Restore" clicked', function () {
+			it('Restores selected files when "Restore" clicked', function (done) {
 				var request;
 				var promise = fileList._onClickRestoreSelected({
 					preventDefault: function () {
@@ -372,9 +372,9 @@ describe('OCA.Trashbin.FileList tests', function () {
 					expect(fileList.findFileEl('Three.pdf.d33333').length).toEqual(0);
 					expect(fileList.findFileEl('somedir.d99999').length).toEqual(0);
 					expect(fileList.findFileEl('Two.jpg.d22222').length).toEqual(1);
-				});
+				}).then(done, done);
 			});
-			it('Restores all files when all selected when "Restore" clicked', function () {
+			it('Restores all files when all selected when "Restore" clicked', function (done) {
 				var request;
 				$('.select-all').click();
 				var promise = fileList._onClickRestoreSelected({
@@ -391,7 +391,7 @@ describe('OCA.Trashbin.FileList tests', function () {
 				}
 				return promise.then(function() {
 					expect(fileList.isEmpty).toEqual(true);
-				});
+				}).then(done, done);
 			});
 		});
 	});

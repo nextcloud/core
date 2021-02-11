@@ -136,7 +136,6 @@ OC.L10N.register(
     "UUID Attribute for Groups:" : "UUID Атрибут для груп:",
     "Username-LDAP User Mapping" : "Картографія Імен користувачів-LDAP ",
     "Clear Username-LDAP User Mapping" : "Очистити картографію Імен користувачів-LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Очистити картографію Імен груп-LDAP",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Залиште порожнім для імені користувача (за замовчанням). Інакше, вкажіть атрибут LDAP/AD."
+    "Clear Groupname-LDAP Group Mapping" : "Очистити картографію Імен груп-LDAP"
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

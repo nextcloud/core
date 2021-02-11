@@ -26,10 +26,12 @@ namespace OCA\Files_External\Tests;
 
 use OC\Files\Mount\Manager;
 use OCA\Files_External\Lib\PersonalMount;
+use OCA\Files_External\Lib\StorageConfig;
 use Test\TestCase;
 
 class PersonalMountTest extends TestCase {
 	public function testFindByStorageId() {
+		$storageConfig = $this->createMock(StorageConfig::class);
 		/** @var \OCA\Files_External\Service\UserStoragesService $storageService */
 		$storageService = $this->getMockBuilder('\OCA\Files_External\Service\UserStoragesService')
 			->disableOriginalConstructor()
@@ -43,7 +45,7 @@ class PersonalMountTest extends TestCase {
 			->method('getId')
 			->willReturn('dummy');
 
-		$mount = new PersonalMount($storageService, 10, $storage, '/foo');
+		$mount = new PersonalMount($storageService, $storageConfig, 10, $storage, '/foo');
 
 		$mountManager = new Manager();
 		$mountManager->addMount($mount);

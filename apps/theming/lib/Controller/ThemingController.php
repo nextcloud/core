@@ -7,14 +7,13 @@
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
- * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Kyle Fazzari <kyrofa@ubuntu.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
- * @author Michael Weimann <mail@michael-weimann.eu>
+ * @author nhirokinet <nhirokinet@nhiroki.net>
  * @author rakekniven <mark.ziegler@rakekniven.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -214,9 +213,6 @@ class ThemingController extends Controller {
 	 * @throws NotPermittedException
 	 */
 	public function uploadImage(): DataResponse {
-		// logo / background
-		// new: favicon logo-header
-		//
 		$key = $this->request->getParam('key');
 		$image = $this->request->getUploadedFile('image');
 		$error = null;
@@ -249,23 +245,14 @@ class ThemingController extends Controller {
 			);
 		}
 
-		$name = '';
 		try {
-			$folder = $this->appData->getFolder('images');
-		} catch (NotFoundException $e) {
-			$folder = $this->appData->newFolder('images');
-		}
-
-		$this->imageManager->delete($key);
-
-		$target = $folder->newFile($key);
-		$supportedFormats = $this->getSupportedUploadImageFormats($key);
-		$detectedMimeType = mime_content_type($image['tmp_name']);
-		if (!in_array($image['type'], $supportedFormats) || !in_array($detectedMimeType, $supportedFormats)) {
+			$mime = $this->imageManager->updateImage($key, $image['tmp_name']);
+			$this->themingDefaults->set($key . 'Mime', $mime);
+		} catch (\Exception $e) {
 			return new DataResponse(
 				[
 					'data' => [
-						'message' => $this->l10n->t('Unsupported image type'),
+						'message' => $e->getMessage()
 					],
 					'status' => 'failure',
 				],
@@ -273,28 +260,7 @@ class ThemingController extends Controller {
 			);
 		}
 
-		if ($key === 'background' && strpos($detectedMimeType, 'image/svg') === false) {
-			// Optimize the image since some people may upload images that will be
-			// either to big or are not progressive rendering.
-			$newImage = @imagecreatefromstring(file_get_contents($image['tmp_name'], 'r'));
-
-			$tmpFile = $this->tempManager->getTemporaryFile();
-			$newWidth = imagesx($newImage) < 4096 ? imagesx($newImage) : 4096;
-			$newHeight = imagesy($newImage) / (imagesx($newImage) / $newWidth);
-			$outputImage = imagescale($newImage, $newWidth, $newHeight);
-
-			imageinterlace($outputImage, 1);
-			imagejpeg($outputImage, $tmpFile, 75);
-			imagedestroy($outputImage);
-
-			$target->putContent(file_get_contents($tmpFile, 'r'));
-		} else {
-			$target->putContent(file_get_contents($image['tmp_name'], 'r'));
-		}
 		$name = $image['name'];
-
-		$this->themingDefaults->set($key.'Mime', $image['type']);
-
 		$cssCached = $this->scssCacher->process(\OC::$SERVERROOT, 'core/css/css-variables.scss', 'core');
 
 		return new DataResponse(
@@ -312,24 +278,6 @@ class ThemingController extends Controller {
 	}
 
 	/**
-	 * Returns a list of supported mime types for image uploads.
-	 * "favicon" images are only allowed to be SVG when imagemagick with SVG support is available.
-	 *
-	 * @param string $key The image key, e.g. "favicon"
-	 * @return array
-	 */
-	private function getSupportedUploadImageFormats(string $key): array {
-		$supportedFormats = ['image/jpeg', 'image/png', 'image/gif',];
-
-		if ($key !== 'favicon' || $this->imageManager->shouldReplaceIcons() === true) {
-			$supportedFormats[] = 'image/svg+xml';
-			$supportedFormats[] = 'image/svg';
-		}
-
-		return $supportedFormats;
-	}
-
-	/**
 	 * Revert setting to default value
 	 *
 	 * @param string $setting setting which should be reverted
@@ -340,11 +288,6 @@ class ThemingController extends Controller {
 		$value = $this->themingDefaults->undo($setting);
 		// reprocess server scss for preview
 		$cssCached = $this->scssCacher->process(\OC::$SERVERROOT, 'core/css/css-variables.scss', 'core');
-
-		if (strpos($setting, 'Mime') !== -1) {
-			$imageKey = str_replace('Mime', '', $setting);
-			$this->imageManager->delete($imageKey);
-		}
 
 		return new DataResponse(
 			[
@@ -438,8 +381,8 @@ class ThemingController extends Controller {
 					[
 						'src' => $this->urlGenerator->linkToRoute('theming.Icon.getTouchIcon',
 								['app' => $app]) . '?v=' . $cacheBusterValue,
-						'type'=> 'image/png',
-						'sizes'=> '128x128'
+						'type' => 'image/png',
+						'sizes' => '512x512'
 					],
 					[
 						'src' => $this->urlGenerator->linkToRoute('theming.Icon.getFavicon',

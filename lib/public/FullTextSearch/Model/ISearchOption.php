@@ -32,7 +32,6 @@ namespace OCP\FullTextSearch\Model;
  *
  * Interface ISearchOption
  *
- * @package OCP\FullTextSearch\Model
  */
 interface ISearchOption {
 

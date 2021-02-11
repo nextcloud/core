@@ -134,7 +134,6 @@ OC.L10N.register(
     "Add storage" : "Depolama ekle",
     "Advanced settings" : "Gelişmiş ayarlar",
     "Allow users to mount external storage" : "Kullanıcılar dış depolama bağlayabilsin",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Aynı kimlik doğrulama bilgilerini kullanan bir çok dış depolama aygıtına genel kimlik doğrulama bilgileri ile erişebilirsiniz.",
-    "Saving..." : "Kaydediliyor..."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Aynı kimlik doğrulama bilgilerini kullanan bir çok dış depolama aygıtına genel kimlik doğrulama bilgileri ile erişebilirsiniz."
 },
 "nplurals=2; plural=(n > 1);");

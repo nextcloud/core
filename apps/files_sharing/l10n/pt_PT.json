@@ -53,6 +53,7 @@
     "{user} unshared {file} from you" : "{user} cancelou a partilha de {file} consigo",
     "Shared with {user}" : "Partilhado com {user}",
     "Removed share for {user}" : "Partilha removida para {user}",
+    "{actor} removed themselves" : "{actor} removeu eles mesmos",
     "{actor} shared with {user}" : "{actor} partilhou com {user}",
     "{actor} removed share for {user}" : "{actor} removeu partilha com {user}",
     "Shared by {actor}" : "Partilhado por {actor}",
@@ -64,6 +65,7 @@
     "{actor} shared {file} with you" : "{actor} partilhou {file} consigo",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "Um ficheiro ou pasta partilhado por e-mail ou hiperligação publica foi <strong>transferido</strong>",
     "A file or folder was shared from <strong>another server</strong>" : "Um ficheiro ou pasta foi partilhado a partir de <strong>outro servidor</strong>",
+    "Files" : "Ficheiros",
     "A file or folder has been <strong>shared</strong>" : "Foi <strong>partilhado</strong> um ficheiro ou uma pasta",
     "Wrong share ID, share doesn't exist" : "Id. de partilha errada, a partilha não existe",
     "Could not delete share" : "Não foi possível eliminar a partilha",
@@ -141,8 +143,6 @@
     "Upload files to %s" : "Enviar ficheiros para %s",
     "Note" : "Nota",
     "Select or drop files" : "Seleccione ou solte ficheiros",
-    "Uploaded files:" : "Ficheiros enviados:",
-    "could not delete share" : "Não foi possível eliminar a partilha",
-    "Uploading files…" : "A enviar ficheiros..."
+    "Uploaded files:" : "Ficheiros enviados:"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

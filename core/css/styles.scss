@@ -88,9 +88,9 @@ ul {
 body {
 	background-color: var(--color-main-background);
 	font-weight: normal;
-	/* bring the default font size up to 14px */
-	font-size: .875em;
-	line-height: 1.6em;
+	/* bring the default font size up to 15px */
+	font-size: var(--default-font-size);
+	line-height: var(--default-line-height);
 	font-family: var(--font-face);
 	color: var(--color-main-text);
 }
@@ -151,8 +151,8 @@ body {
 /* SCROLLING */
 
 ::-webkit-scrollbar {
-	width: 6px;
-	height: 5px;
+	width: 12px;
+	height: 12px
 }
 
 ::-webkit-scrollbar-track-piece {
@@ -161,7 +161,9 @@ body {
 
 ::-webkit-scrollbar-thumb {
 	background: var(--color-border-dark);
-	border-radius: var(--border-radius);
+	border-radius: var(--border-radius-large);
+	border: 2px solid transparent;
+	background-clip: content-box;
 }
 
 
@@ -350,9 +352,9 @@ body {
 	}
 }
 
-.error {
+.error:not(.toastify) {
 	a {
-		color: var(--color-primary-text) !important;
+		color: white !important;
 		font-weight: bold !important;
 		&.button {
 			color: var(--color-text-lighter) !important;
@@ -467,7 +469,9 @@ tr .action:not(.permanent), .selectedActions a {
 }
 
 tr {
-	&:hover .action, &:focus .action, .action.permanent {
+	&:hover .action:not(.menuitem),
+	&:focus .action:not(.menuitem),
+	.action.permanent:not(.menuitem) {
 		opacity: .5;
 	}
 }

@@ -24,7 +24,6 @@ OC.L10N.register(
     "Could not write file to disk" : "ディスクにファイルを書き込めませんでした",
     "A PHP extension stopped the file upload" : "PHP拡張でファイルのアップロードが停止されています",
     "No file uploaded" : "ファイルがアップロードされていません",
-    "Unsupported image type" : "サポートされていない画像形式です",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "あなたはすでにカスタムテーマを使用しています。 テーマ設定の設定が上書きされる可能性があります。",
     "Theming" : "テーマ",
     "Legal notice" : "法的通知",

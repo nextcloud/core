@@ -29,7 +29,6 @@ use OCP\Util;
 /**
  * Class SimpleMenuAction
  *
- * @package OCP\AppFramework\Http\Template
  * @since 14.0.0
  */
 class SimpleMenuAction implements IMenuAction {

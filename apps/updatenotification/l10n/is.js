@@ -23,7 +23,6 @@ OC.L10N.register(
     "A non-default update server is in use to be checked for updates:" : "Uppfærsluþjónn sem ekki er sjálfgefinn er núna í notkun til að athuga með uppfærslur:",
     "Update channel:" : "Uppfærslurás:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Þú getur alltaf uppfært í nýrri útgáfu. En þú getur aldrei niðurfært í stöðugri útgáfu.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Athugaðu að það getur tekið nokkurn tíma áður en nýjar útgáfur birtast hér. Við dreifum útgáfum yfir tíma auk þess sem stundum er útgáfum sleppt ef í þeim finnast hnökrar.",
     "Notify members of the following groups about available updates:" : "Tilkynna meðlimum eftirfarandi hópa um tiltækar uppfærslur:",
     "Only notification for app updates are available." : "Eingöngu eru eru tiltækar tilkynningar fyrir uppfærslur forrita.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "Valda uppfærslurásin gerir úreltar sértækar tilkynningar fyrir vefþjóninn.",
@@ -40,6 +39,7 @@ OC.L10N.register(
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "Nýjasta stöðuga útgáfan. Hún hentar fyrir alla venjulega notkun og er alltaf uppfærð í nýjustu aðalútgáfu.",
     "Beta" : "BETA-prófunarútgáfa",
     "A pre-release version only for testing new features, not for production environments." : "For-útgáfa sem einungis er hugsuð til að prófa nýja eiginleika, og er alls ekki ætluð fyrir alvöru vinnslu.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> forrit eru með uppfærslu tiltæka fyrir þessa útgáfu","<strong>%n</strong> forrit eru með uppfærslu tiltæka fyrir þessa útgáfu"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> forrit eru með uppfærslu tiltæka fyrir þessa útgáfu","<strong>%n</strong> forrit eru með uppfærslu tiltæka fyrir þessa útgáfu"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Athugaðu að það getur tekið nokkurn tíma áður en nýjar útgáfur birtast hér. Við dreifum útgáfum yfir tíma auk þess sem stundum er útgáfum sleppt ef í þeim finnast hnökrar."
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

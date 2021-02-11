@@ -36,7 +36,6 @@ namespace OCP\Authentication;
 /**
  * Interface IApacheBackend
  *
- * @package OCP\Authentication
  * @since 6.0.0
  */
 interface IApacheBackend {

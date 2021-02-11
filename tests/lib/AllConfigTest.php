@@ -68,9 +68,9 @@ class AllConfigTest extends \Test\TestCase {
 
 		$this->assertEquals(1, count($result));
 		$this->assertEquals([
-			'userid'      => 'userSet',
-			'appid'       => 'appSet',
-			'configkey'   => 'keySet',
+			'userid' => 'userSet',
+			'appid' => 'appSet',
+			'configkey' => 'keySet',
 			'configvalue' => 'valueSet'
 		], $result[0]);
 
@@ -81,9 +81,9 @@ class AllConfigTest extends \Test\TestCase {
 
 		$this->assertEquals(1, count($result));
 		$this->assertEquals([
-			'userid'      => 'userSet',
-			'appid'       => 'appSet',
-			'configkey'   => 'keySet',
+			'userid' => 'userSet',
+			'appid' => 'appSet',
+			'configkey' => 'keySet',
 			'configvalue' => 'valueSet2'
 		], $result[0]);
 
@@ -102,9 +102,9 @@ class AllConfigTest extends \Test\TestCase {
 
 		$this->assertEquals(1, count($result));
 		$this->assertEquals([
-			'userid'      => 'userPreCond',
-			'appid'       => 'appPreCond',
-			'configkey'   => 'keyPreCond',
+			'userid' => 'userPreCond',
+			'appid' => 'appPreCond',
+			'configkey' => 'keyPreCond',
 			'configvalue' => 'valuePreCond'
 		], $result[0]);
 
@@ -115,9 +115,9 @@ class AllConfigTest extends \Test\TestCase {
 
 		$this->assertEquals(1, count($result));
 		$this->assertEquals([
-			'userid'      => 'userPreCond',
-			'appid'       => 'appPreCond',
-			'configkey'   => 'keyPreCond',
+			'userid' => 'userPreCond',
+			'appid' => 'appPreCond',
+			'configkey' => 'keyPreCond',
 			'configvalue' => 'valuePreCond2'
 		], $result[0]);
 
@@ -159,9 +159,9 @@ class AllConfigTest extends \Test\TestCase {
 
 		$this->assertEquals(1, count($result));
 		$this->assertEquals([
-			'userid'      => 'userPreCond1',
-			'appid'       => 'appPreCond',
-			'configkey'   => 'keyPreCond',
+			'userid' => 'userPreCond1',
+			'appid' => 'appPreCond',
+			'configkey' => 'keyPreCond',
 			'configvalue' => 'valuePreCond'
 		], $result[0]);
 
@@ -172,9 +172,9 @@ class AllConfigTest extends \Test\TestCase {
 
 		$this->assertEquals(1, count($result));
 		$this->assertEquals([
-			'userid'      => 'userPreCond1',
-			'appid'       => 'appPreCond',
-			'configkey'   => 'keyPreCond',
+			'userid' => 'userPreCond1',
+			'appid' => 'appPreCond',
+			'configkey' => 'keyPreCond',
 			'configvalue' => 'valuePreCond'
 		], $result[0]);
 
@@ -223,9 +223,9 @@ class AllConfigTest extends \Test\TestCase {
 
 		$this->assertEquals(1, count($result));
 		$this->assertEquals([
-			'userid'      => 'userGet',
-			'appid'       => 'appGet',
-			'configkey'   => 'keyGet',
+			'userid' => 'userGet',
+			'appid' => 'appGet',
+			'configkey' => 'keyGet',
 			'configvalue' => 'valueGet'
 		], $result[0]);
 

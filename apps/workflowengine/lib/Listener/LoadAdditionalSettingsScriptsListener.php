@@ -41,8 +41,6 @@ class LoadAdditionalSettingsScriptsListener implements IEventListener {
 		}
 
 		script('core', [
-			'files/fileinfo',
-			'files/client',
 			'dist/systemtags',
 		]);
 

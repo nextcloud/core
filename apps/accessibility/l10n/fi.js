@@ -1,8 +1,8 @@
 OC.L10N.register(
     "accessibility",
     {
-    "Dark theme" : "Tumma teema",
-    "Enable dark theme" : "Käytä tummaa teemaa",
+    "Dark theme" : "Tummateema",
+    "Enable dark theme" : "Käytä tummaateemaa",
     "A dark theme to ease your eyes by reducing the overall luminosity and brightness. It is still under development, so please report any issues you may find." : "Tumma teema helpottaa silmien rasitusta vähentämällä kokonaiskirkkautta. Teemaa kehitetään edelleen, joten ilmoitathan mahdollisesti kohtaamasi ongelmat.",
     "High contrast mode" : "Suuren kontrastin tila",
     "Enable high contrast mode" : "Käytä suuren kontrastin tilaa",
@@ -14,14 +14,6 @@ OC.L10N.register(
     "Accessibility options for nextcloud" : "Saavutettavuusvaihtoehdot Nextcloudille",
     "Provides multiple accessibilities options to ease your use of Nextcloud" : "Tarjoaa monia saavutettavuusvaihtoehtoja helpottamaan Nexcloudin käyttöä.",
     "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines}Web Content Accessibility Guidelines{linkend} 2.1 on AA level, with the high contrast theme even on AAA level." : "Saavutettavuus on erittäin tärkeää meille. Seuraamme verkkostandardeja ja varmistamme, että kaikki on käytettävissä ilman hiirtä sekä avustavien ohjelmistojen kuten ruudunlukijoiden avulla. Pyrimme olemaan yhteensopivia {guidelines}Web Content Accessibility Guidelines{linkend} -ohjeistuksen version 2.1 AA-tason kanssa, suuren kontrastin teemalla pyrimme jopa AAA-tasoon.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Jos löydät ongelmia, älä epäröi ilmoittaa niistä {issuetracker}virheidenseurantajärjestelmäämme{linkend}. Jos haluat osallistua, liity {designteam}suunnitteluryhmäämme{linkend}!",
-    "High contrast theme" : "Suuren kontrastin teema",
-    "A high contrast theme to ease your navigation. Visual quality will be reduced but clarity will be increased." : "Suuren kontrasin tila helpottaa liikkumista. Visuaalista näyttävyyttä karsitaan hieman, jotta käyttöliittymä olisi jopa aiempaa selkeämpi.",
-    "Web Content Accessibility Guidelines" : "Verkkosisällön saavutettavuusohjeet",
-    "our issue tracker" : "virheidenseurantajärjestelmämme",
-    "our design team" : "suunnitteluryhmämme",
-    "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines} 2.1 on AA level, with the high contrast theme even on AAA level." : "Saavutettavuus on erittäin tärkeää meille. Seuraamme verkkostandardeja ja varmistamme, että kaikki on käytettävissä ilman hiirtä sekä avustavien ohjelmistojen kuten ruudunlukijoiden avulla. Pyrimme olemaan yhteensopivia {guidelines} -ohjeistuksen version 2.1 AA-tason kanssa, suuren kontrastin teemalla pyrimme jopa AAA-tasoon.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}. And if you want to get involved, come join {designteam}!" : "Jos löydät ongelmia, älä epäröi ilmoittaa niistä {issuetracker}. Jos haluat osallistua, liity {designteam}!",
-    "Enable" : "Ota käyttöön"
+    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Jos löydät ongelmia, älä epäröi ilmoittaa niistä {issuetracker}virheidenseurantajärjestelmäämme{linkend}. Jos haluat osallistua, liity {designteam}suunnitteluryhmäämme{linkend}!"
 },
 "nplurals=2; plural=(n != 1);");

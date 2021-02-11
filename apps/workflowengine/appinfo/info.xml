@@ -5,7 +5,7 @@
 	<name>Nextcloud workflow engine</name>
 	<summary>Nextcloud workflow engine</summary>
 	<description>Nextcloud workflow engine</description>
-	<version>2.2.0</version>
+	<version>2.3.0</version>
 	<licence>agpl</licence>
 	<author>Arthur Schiwon</author>
 	<author>Julius Härtl</author>
@@ -22,7 +22,7 @@
 	<repository>https://github.com/nextcloud/server.git</repository>
 
 	<dependencies>
-		<nextcloud min-version="20" max-version="20"/>
+		<nextcloud min-version="22" max-version="22"/>
 	</dependencies>
 
 	<background-jobs>

@@ -50,7 +50,7 @@ class RepairMimeTypesTest extends \Test\TestCase {
 
 		$this->storage = new \OC\Files\Storage\Temporary([]);
 
-		$this->repair = new \OC\Repair\RepairMimeTypes($config);
+		$this->repair = new \OC\Repair\RepairMimeTypes($config, \OC::$server->getDatabaseConnection());
 	}
 
 	protected function tearDown(): void {

@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Sven Strickroth <email@cs-ware.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -166,7 +167,7 @@ class BirthdayService {
 		$this->calDavBackEnd->createCalendar($principal, self::BIRTHDAY_CALENDAR_URI, [
 			'{DAV:}displayname' => 'Contact birthdays',
 			'{http://apple.com/ns/ical/}calendar-color' => '#E9D859',
-			'components'   => 'VEVENT',
+			'components' => 'VEVENT',
 		]);
 
 		return $this->calDavBackEnd->getCalendarByUri($principal, self::BIRTHDAY_CALENDAR_URI);
@@ -235,7 +236,12 @@ class BirthdayService {
 				}
 			} else {
 				$originalYear = (int)$dateParts['year'];
-
+				// 'X-APPLE-OMIT-YEAR' is not always present, at least iOS 12.4 uses the hard coded date of 1604 (the start of the gregorian calendar) when the year is unknown
+				if ($originalYear == 1604) {
+					$originalYear = null;
+					$unknownYear = true;
+					$birthday = '1970-' . $dateParts['month'] . '-' . $dateParts['date'];
+				}
 				if ($originalYear < 1970) {
 					$birthday = '1970-' . $dateParts['month'] . '-' . $dateParts['date'];
 				}
@@ -427,8 +433,8 @@ class BirthdayService {
 	 */
 	private function formatTitle(string $field,
 								 string $name,
-								 int $year=null,
-								 bool $supports4Byte=true):string {
+								 int $year = null,
+								 bool $supports4Byte = true):string {
 		if ($supports4Byte) {
 			switch ($field) {
 				case 'BDAY':

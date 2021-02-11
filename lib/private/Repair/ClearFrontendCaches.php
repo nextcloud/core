@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright (c) 2018 Julius Härtl <jus@bitgrid.net>
  *
- * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -46,8 +46,8 @@ class ClearFrontendCaches implements IRepairStep {
 								SCSSCacher $SCSSCacher,
 								JSCombiner $JSCombiner) {
 		$this->cacheFactory = $cacheFactory;
-		$this->scssCacher   = $SCSSCacher;
-		$this->jsCombiner   = $JSCombiner;
+		$this->scssCacher = $SCSSCacher;
+		$this->jsCombiner = $JSCombiner;
 	}
 
 	public function getName() {

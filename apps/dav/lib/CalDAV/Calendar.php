@@ -138,7 +138,7 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 	 * @return array
 	 */
 	public function getACL() {
-		$acl =  [
+		$acl = [
 			[
 				'privilege' => '{DAV:}read',
 				'principal' => $this->getOwner(),
@@ -191,7 +191,7 @@ class Calendar extends \Sabre\CalDAV\Calendar implements IShareable {
 		}
 
 		if ($this->getOwner() !== parent::getOwner()) {
-			$acl[] =  [
+			$acl[] = [
 				'privilege' => '{DAV:}read',
 				'principal' => parent::getOwner(),
 				'protected' => true,

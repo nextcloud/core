@@ -136,6 +136,8 @@ class MailPlugin implements ISearchPlugin {
 										'shareType' => IShare::TYPE_USER,
 										'shareWith' => $cloud->getUser(),
 									],
+									'shareWithDisplayNameUnique' => !empty($emailAddress) ? $emailAddress : $cloud->getUser()
+
 								]];
 								$searchResult->addResultSet($userType, [], $singleResult);
 								$searchResult->markExactIdMatch($emailType);
@@ -170,6 +172,7 @@ class MailPlugin implements ISearchPlugin {
 										'shareType' => IShare::TYPE_USER,
 										'shareWith' => $cloud->getUser(),
 									],
+									'shareWithDisplayNameUnique' => !empty($emailAddress) ? $emailAddress : $cloud->getUser()
 								];
 								continue;
 							}

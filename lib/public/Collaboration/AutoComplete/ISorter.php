@@ -28,7 +28,6 @@ namespace OCP\Collaboration\AutoComplete;
  *
  * Sorts the list of .e.g users for auto completion
  *
- * @package OCP\Collaboration\AutoComplete
  * @since 13.0.0
  */
 interface ISorter {

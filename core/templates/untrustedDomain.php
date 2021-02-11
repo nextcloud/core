@@ -1,4 +1,4 @@
-<?php /** @var $_ array */ ?>
+<?php /** @var array $_ */ ?>
 
 <div class="error">
 	<h2><?php p($l->t('Access through untrusted domain')); ?></h2>

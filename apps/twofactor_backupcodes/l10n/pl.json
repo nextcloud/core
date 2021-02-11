@@ -16,9 +16,6 @@
     "An error occurred while generating your backup codes" : "Wystąpił błąd podczas generowania kodów zapasowych.",
     "{name} backup codes" : "Kody kopii zapasowej {name}",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Użyj jednego z kodów zapasowych zapisanych podczas konfigurowania uwierzytelniania dwuskładnikowego.",
-    "Submit" : "Prześlij",
-    "function" : "funkcja",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["mała ikona ładowania","małe ikony ładowania","małe ikony ładowania","generuj kody zapasowe"]
+    "Submit" : "Wyślij"
 },"pluralForm" :"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2019, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -29,7 +30,8 @@ namespace OCA\Files\Event;
 use OCP\EventDispatcher\Event;
 
 /**
- * This event is triggered when the files app is rendered. It canb e used to add additional scripts to the files app.
+ * This event is triggered when the files app is rendered.
+ * It can be used to add additional scripts to the files app.
  *
  * @since 17.0.0
  */

@@ -10,7 +10,7 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -260,8 +260,16 @@ class MDB2SchemaReader {
 				$options['primary'] = true;
 			}
 
-			$table->addColumn($name, $type, $options);
+			# not used anymore in the options argument
+			# see https://github.com/doctrine/dbal/commit/138eb85234a1faeaa2e6a32cd7bcc66bb51c64e8#diff-300f55366adb50a32a40882ebdc95c163b141f64cba5f45f20bda04a907b3eb3L82
+			# therefore it's read before and then unset right before the addColumn call
+			$setPrimaryKey = false;
 			if (!empty($options['primary']) && $options['primary']) {
+				$setPrimaryKey = true;
+			}
+			unset($options['primary']);
+			$table->addColumn($name, $type, $options);
+			if ($setPrimaryKey) {
 				$table->setPrimaryKey([$name]);
 			}
 		}

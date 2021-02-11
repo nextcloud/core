@@ -27,11 +27,13 @@ namespace OCA\UserStatus\Listener;
 
 use OCA\UserStatus\Db\UserStatus;
 use OCA\UserStatus\Db\UserStatusMapper;
+use OCA\UserStatus\Service\StatusService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\EventDispatcher\IEventListener;
 use OCP\EventDispatcher\Event;
 use OCP\User\Events\UserLiveStatusEvent;
+use OCP\UserStatus\IUserStatus;
 
 /**
  * Class UserDeletedListener
@@ -45,25 +47,6 @@ class UserLiveStatusListener implements IEventListener {
 
 	/** @var ITimeFactory */
 	private $timeFactory;
-
-	/** @var string[] */
-	private $priorityOrderedStatuses = [
-		'online',
-		'away',
-		'dnd',
-		'invisible',
-		'offline'
-	];
-
-	/** @var string[] */
-	private $persistentUserStatuses = [
-		'away',
-		'dnd',
-		'invisible',
-	];
-
-	/** @var int */
-	private $offlineThreshold = 300;
 
 	/**
 	 * UserLiveStatusListener constructor.
@@ -92,7 +75,7 @@ class UserLiveStatusListener implements IEventListener {
 		} catch (DoesNotExistException $ex) {
 			$userStatus = new UserStatus();
 			$userStatus->setUserId($user->getUID());
-			$userStatus->setStatus('offline');
+			$userStatus->setStatus(IUserStatus::OFFLINE);
 			$userStatus->setStatusTimestamp(0);
 			$userStatus->setIsUserDefined(false);
 		}
@@ -100,7 +83,7 @@ class UserLiveStatusListener implements IEventListener {
 		// If the status is user-defined and one of the persistent statuses, we
 		// will not override it.
 		if ($userStatus->getIsUserDefined() &&
-			\in_array($userStatus->getStatus(), $this->persistentUserStatuses, true)) {
+			\in_array($userStatus->getStatus(), StatusService::PERSISTENT_STATUSES, true)) {
 			return;
 		}
 
@@ -108,13 +91,13 @@ class UserLiveStatusListener implements IEventListener {
 
 		// If the current status is older than 5 minutes,
 		// treat it as outdated and update
-		if ($userStatus->getStatusTimestamp() < ($this->timeFactory->getTime() - $this->offlineThreshold)) {
+		if ($userStatus->getStatusTimestamp() < ($this->timeFactory->getTime() - StatusService::INVALIDATE_STATUS_THRESHOLD)) {
 			$needsUpdate = true;
 		}
 
 		// If the emitted status is more important than the current status
 		// treat it as outdated and update
-		if (array_search($event->getStatus(), $this->priorityOrderedStatuses) < array_search($userStatus->getStatus(), $this->priorityOrderedStatuses)) {
+		if (array_search($event->getStatus(), StatusService::PRIORITY_ORDERED_STATUSES) < array_search($userStatus->getStatus(), StatusService::PRIORITY_ORDERED_STATUSES)) {
 			$needsUpdate = true;
 		}
 

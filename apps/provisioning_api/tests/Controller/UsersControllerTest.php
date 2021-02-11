@@ -6,7 +6,9 @@
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author GretaD <gretadoci@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Julius Härtl <jus@bitgrid.net>
@@ -14,6 +16,7 @@
  * @author michag86 <micha_g@arcor.de>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Sujith Haridasan <sujith.h@gmail.com>
  * @author Thomas Citharel <nextcloud@tcit.fr>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Tom Needham <tom@owncloud.com>
@@ -46,6 +49,7 @@ use OCA\FederatedFileSharing\FederatedShareProvider;
 use OCA\Provisioning_API\Controller\UsersController;
 use OCA\Provisioning_API\FederatedShareProviderFactory;
 use OCA\Settings\Mailer\NewUserMailHelper;
+use OCP\Accounts\IAccountManager;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -54,6 +58,7 @@ use OCP\IGroup;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
+use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
@@ -83,6 +88,8 @@ class UsersControllerTest extends TestCase {
 	protected $api;
 	/** @var AccountManager|MockObject */
 	protected $accountManager;
+	/** @var IURLGenerator|MockObject */
+	protected $urlGenerator;
 	/** @var IRequest|MockObject */
 	protected $request;
 	/** @var IFactory|MockObject */
@@ -109,6 +116,7 @@ class UsersControllerTest extends TestCase {
 		$this->logger = $this->createMock(ILogger::class);
 		$this->request = $this->createMock(IRequest::class);
 		$this->accountManager = $this->createMock(AccountManager::class);
+		$this->urlGenerator = $this->createMock(IURLGenerator::class);
 		$this->l10nFactory = $this->createMock(IFactory::class);
 		$this->newUserMailHelper = $this->createMock(NewUserMailHelper::class);
 		$this->federatedShareProviderFactory = $this->createMock(FederatedShareProviderFactory::class);
@@ -126,6 +134,7 @@ class UsersControllerTest extends TestCase {
 				$this->groupManager,
 				$this->userSession,
 				$this->accountManager,
+				$this->urlGenerator,
 				$this->logger,
 				$this->l10nFactory,
 				$this->newUserMailHelper,
@@ -379,7 +388,7 @@ class UsersControllerTest extends TestCase {
 	}
 
 	public function testAddUserSuccessfulWithDisplayName() {
-		$api = $this->getMockBuilder('OCA\Provisioning_API\Controller\UsersController')
+		$api = $this->getMockBuilder(UsersController::class)
 			->setConstructorArgs([
 				'provisioning_api',
 				$this->request,
@@ -389,6 +398,7 @@ class UsersControllerTest extends TestCase {
 				$this->groupManager,
 				$this->userSession,
 				$this->accountManager,
+				$this->urlGenerator,
 				$this->logger,
 				$this->l10nFactory,
 				$this->newUserMailHelper,
@@ -498,9 +508,13 @@ class UsersControllerTest extends TestCase {
 			->method('userExists')
 			->with('NewUser')
 			->willReturn(false);
+		$newUser = $this->createMock(IUser::class);
+		$newUser->expects($this->once())
+			->method('setEMailAddress');
 		$this->userManager
 			->expects($this->once())
-			->method('createUser');
+			->method('createUser')
+			->willReturn($newUser);
 		$this->logger
 			->expects($this->once())
 			->method('info')
@@ -987,10 +1001,10 @@ class UsersControllerTest extends TestCase {
 			->with($targetUser)
 			->willReturn(
 				[
-					AccountManager::PROPERTY_ADDRESS => ['value' => 'address'],
-					AccountManager::PROPERTY_PHONE => ['value' => 'phone'],
-					AccountManager::PROPERTY_TWITTER => ['value' => 'twitter'],
-					AccountManager::PROPERTY_WEBSITE => ['value' => 'website'],
+					IAccountManager::PROPERTY_ADDRESS => ['value' => 'address'],
+					IAccountManager::PROPERTY_PHONE => ['value' => 'phone'],
+					IAccountManager::PROPERTY_TWITTER => ['value' => 'twitter'],
+					IAccountManager::PROPERTY_WEBSITE => ['value' => 'website'],
 				]
 			);
 		$this->config
@@ -1156,10 +1170,10 @@ class UsersControllerTest extends TestCase {
 			->with($targetUser)
 			->willReturn(
 				[
-					AccountManager::PROPERTY_ADDRESS => ['value' => 'address'],
-					AccountManager::PROPERTY_PHONE => ['value' => 'phone'],
-					AccountManager::PROPERTY_TWITTER => ['value' => 'twitter'],
-					AccountManager::PROPERTY_WEBSITE => ['value' => 'website'],
+					IAccountManager::PROPERTY_ADDRESS => ['value' => 'address'],
+					IAccountManager::PROPERTY_PHONE => ['value' => 'phone'],
+					IAccountManager::PROPERTY_TWITTER => ['value' => 'twitter'],
+					IAccountManager::PROPERTY_WEBSITE => ['value' => 'website'],
 				]
 			);
 
@@ -1327,10 +1341,10 @@ class UsersControllerTest extends TestCase {
 			->with($targetUser)
 			->willReturn(
 				[
-					AccountManager::PROPERTY_ADDRESS => ['value' => 'address'],
-					AccountManager::PROPERTY_PHONE => ['value' => 'phone'],
-					AccountManager::PROPERTY_TWITTER => ['value' => 'twitter'],
-					AccountManager::PROPERTY_WEBSITE => ['value' => 'website'],
+					IAccountManager::PROPERTY_ADDRESS => ['value' => 'address'],
+					IAccountManager::PROPERTY_PHONE => ['value' => 'phone'],
+					IAccountManager::PROPERTY_TWITTER => ['value' => 'twitter'],
+					IAccountManager::PROPERTY_WEBSITE => ['value' => 'website'],
 				]
 			);
 
@@ -1362,6 +1376,47 @@ class UsersControllerTest extends TestCase {
 			]
 		];
 		$this->assertEquals($expected, $this->invokePrivate($this->api, 'getUserData', ['UID']));
+	}
+
+	public function dataSearchByPhoneNumbers(): array {
+		return [
+			'Invalid country' => ['Not a country code', ['12345' => ['NaN']], 400, null, null, []],
+			'No number to search' => ['DE', ['12345' => ['NaN']], 200, null, null, []],
+			'Valid number but no match' => ['DE', ['12345' => ['0711 / 25 24 28-90']], 200, ['+4971125242890'], [], []],
+			'Invalid number' => ['FR', ['12345' => ['0711 / 25 24 28-90']], 200, null, null, []],
+			'Invalid and valid number' => ['DE', ['12345' => ['NaN', '0711 / 25 24 28-90']], 200, ['+4971125242890'], [], []],
+			'Valid and invalid number' => ['DE', ['12345' => ['0711 / 25 24 28-90', 'NaN']], 200, ['+4971125242890'], [], []],
+			'Valid number and a match' => ['DE', ['12345' => ['0711 / 25 24 28-90']], 200, ['+4971125242890'], ['+4971125242890' => 'admin'], ['12345' => 'admin@localhost']],
+			'Same number twice, later hits' => ['DE', ['12345' => ['0711 / 25 24 28-90'], '23456' => ['0711 / 25 24 28-90']], 200, ['+4971125242890'], ['+4971125242890' => 'admin'], ['23456' => 'admin@localhost']],
+		];
+	}
+
+	/**
+	 * @dataProvider dataSearchByPhoneNumbers
+	 * @param string $location
+	 * @param array $search
+	 * @param int $status
+	 * @param array $expected
+	 */
+	public function testSearchByPhoneNumbers(string $location, array $search, int $status, ?array $searchUsers, ?array $userMatches, array $expected) {
+		if ($searchUsers === null) {
+			$this->accountManager->expects($this->never())
+				->method('searchUsers');
+		} else {
+			$this->accountManager->expects($this->once())
+				->method('searchUsers')
+				->with(IAccountManager::PROPERTY_PHONE, $searchUsers)
+				->willReturn($userMatches);
+		}
+
+		$this->urlGenerator->method('getAbsoluteURL')
+			->with('/')
+			->willReturn('https://localhost/');
+
+		$response = $this->api->searchByPhoneNumbers($location, $search);
+
+		self::assertEquals($status, $response->getStatus());
+		self::assertEquals($expected, $response->getData());
 	}
 
 	public function testEditUserRegularUserSelfEditChangeDisplayName() {
@@ -3156,7 +3211,7 @@ class UsersControllerTest extends TestCase {
 			->willReturn($user);
 
 		/** @var UsersController | MockObject $api */
-		$api = $this->getMockBuilder('OCA\Provisioning_API\Controller\UsersController')
+		$api = $this->getMockBuilder(UsersController::class)
 			->setConstructorArgs([
 				'provisioning_api',
 				$this->request,
@@ -3166,6 +3221,7 @@ class UsersControllerTest extends TestCase {
 				$this->groupManager,
 				$this->userSession,
 				$this->accountManager,
+				$this->urlGenerator,
 				$this->logger,
 				$this->l10nFactory,
 				$this->newUserMailHelper,
@@ -3221,7 +3277,7 @@ class UsersControllerTest extends TestCase {
 
 	public function testGetUser() {
 		/** @var UsersController | MockObject $api */
-		$api = $this->getMockBuilder('OCA\Provisioning_API\Controller\UsersController')
+		$api = $this->getMockBuilder(UsersController::class)
 			->setConstructorArgs([
 				'provisioning_api',
 				$this->request,
@@ -3231,6 +3287,7 @@ class UsersControllerTest extends TestCase {
 				$this->groupManager,
 				$this->userSession,
 				$this->accountManager,
+				$this->urlGenerator,
 				$this->logger,
 				$this->l10nFactory,
 				$this->newUserMailHelper,
@@ -3560,22 +3617,22 @@ class UsersControllerTest extends TestCase {
 		return [
 			[false, false, []],
 			[false,  true, [
-				AccountManager::PROPERTY_PHONE,
-				AccountManager::PROPERTY_ADDRESS,
-				AccountManager::PROPERTY_WEBSITE,
-				AccountManager::PROPERTY_TWITTER,
+				IAccountManager::PROPERTY_PHONE,
+				IAccountManager::PROPERTY_ADDRESS,
+				IAccountManager::PROPERTY_WEBSITE,
+				IAccountManager::PROPERTY_TWITTER,
 			]],
 			[ true, false, [
-				AccountManager::PROPERTY_DISPLAYNAME,
-				AccountManager::PROPERTY_EMAIL,
+				IAccountManager::PROPERTY_DISPLAYNAME,
+				IAccountManager::PROPERTY_EMAIL,
 			]],
 			[ true,  true ,[
-				AccountManager::PROPERTY_DISPLAYNAME,
-				AccountManager::PROPERTY_EMAIL,
-				AccountManager::PROPERTY_PHONE,
-				AccountManager::PROPERTY_ADDRESS,
-				AccountManager::PROPERTY_WEBSITE,
-				AccountManager::PROPERTY_TWITTER,
+				IAccountManager::PROPERTY_DISPLAYNAME,
+				IAccountManager::PROPERTY_EMAIL,
+				IAccountManager::PROPERTY_PHONE,
+				IAccountManager::PROPERTY_ADDRESS,
+				IAccountManager::PROPERTY_WEBSITE,
+				IAccountManager::PROPERTY_TWITTER,
 			]]
 		];
 	}

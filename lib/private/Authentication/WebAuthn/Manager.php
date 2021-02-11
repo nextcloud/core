@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2020, Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -35,8 +36,8 @@ use OC\Authentication\WebAuthn\Db\PublicKeyCredentialEntity;
 use OC\Authentication\WebAuthn\Db\PublicKeyCredentialMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IConfig;
-use OCP\ILogger;
 use OCP\IUser;
+use Psr\Log\LoggerInterface;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
@@ -63,7 +64,7 @@ class Manager {
 	/** @var PublicKeyCredentialMapper */
 	private $credentialMapper;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var IConfig */
@@ -72,7 +73,7 @@ class Manager {
 	public function __construct(
 		CredentialRepository $repository,
 		PublicKeyCredentialMapper $credentialMapper,
-		ILogger $logger,
+		LoggerInterface $logger,
 		IConfig $config
 	) {
 		$this->repository = $repository;

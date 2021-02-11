@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @author Abijeet <abijeetpatro@gmail.com>
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
@@ -33,6 +34,7 @@ namespace OC\Template;
 use bantu\IniGetWrapper\IniGetWrapper;
 use OC\CapabilitiesManager;
 use OCP\App\IAppManager;
+use OCP\Constants;
 use OCP\Defaults;
 use OCP\IConfig;
 use OCP\IGroupManager;
@@ -160,7 +162,7 @@ class JSConfigHelper {
 		$defaultInternalExpireDate = $defaultInternalExpireDateEnforced = null;
 		if ($defaultInternalExpireDateEnabled) {
 			$defaultInternalExpireDate = (int)$this->config->getAppValue('core', 'shareapi_internal_expire_after_n_days', '7');
-			$defaultInternalExpireDateEnforced = $this->config->getAppValue('core', 'shareapi_internal_enforce_expire_date', 'no') === 'yes';
+			$defaultInternalExpireDateEnforced = $this->config->getAppValue('core', 'shareapi_enforce_internal_expire_date', 'no') === 'yes';
 		}
 
 		$countOfDataLocation = 0;
@@ -189,8 +191,8 @@ class JSConfigHelper {
 			'enable_avatars' => true, // here for legacy reasons - to not crash existing code that relies on this value
 			'lost_password_link' => $this->config->getSystemValue('lost_password_link', null),
 			'modRewriteWorking' => $this->config->getSystemValue('htaccess.IgnoreFrontController', false) === true || getenv('front_controller_active') === 'true',
-			'sharing.maxAutocompleteResults' => (int)$this->config->getSystemValue('sharing.maxAutocompleteResults', 0),
-			'sharing.minSearchStringLength' => (int)$this->config->getSystemValue('sharing.minSearchStringLength', 0),
+			'sharing.maxAutocompleteResults' => max(0, $this->config->getSystemValueInt('sharing.maxAutocompleteResults', Constants::SHARING_MAX_AUTOCOMPLETE_RESULTS_DEFAULT)),
+			'sharing.minSearchStringLength' => $this->config->getSystemValueInt('sharing.minSearchStringLength', 0),
 			'blacklist_files_regex' => \OCP\Files\FileInfo::BLACKLIST_FILES_REGEX,
 		];
 
@@ -205,59 +207,59 @@ class JSConfigHelper {
 			'nc_lastLogin' => $lastConfirmTimestamp,
 			'nc_pageLoad' => time(),
 			"dayNames" => json_encode([
-				(string)$this->l->t('Sunday'),
-				(string)$this->l->t('Monday'),
-				(string)$this->l->t('Tuesday'),
-				(string)$this->l->t('Wednesday'),
-				(string)$this->l->t('Thursday'),
-				(string)$this->l->t('Friday'),
-				(string)$this->l->t('Saturday')
+				$this->l->t('Sunday'),
+				$this->l->t('Monday'),
+				$this->l->t('Tuesday'),
+				$this->l->t('Wednesday'),
+				$this->l->t('Thursday'),
+				$this->l->t('Friday'),
+				$this->l->t('Saturday')
 			]),
 			"dayNamesShort" => json_encode([
-				(string)$this->l->t('Sun.'),
-				(string)$this->l->t('Mon.'),
-				(string)$this->l->t('Tue.'),
-				(string)$this->l->t('Wed.'),
-				(string)$this->l->t('Thu.'),
-				(string)$this->l->t('Fri.'),
-				(string)$this->l->t('Sat.')
+				$this->l->t('Sun.'),
+				$this->l->t('Mon.'),
+				$this->l->t('Tue.'),
+				$this->l->t('Wed.'),
+				$this->l->t('Thu.'),
+				$this->l->t('Fri.'),
+				$this->l->t('Sat.')
 			]),
 			"dayNamesMin" => json_encode([
-				(string)$this->l->t('Su'),
-				(string)$this->l->t('Mo'),
-				(string)$this->l->t('Tu'),
-				(string)$this->l->t('We'),
-				(string)$this->l->t('Th'),
-				(string)$this->l->t('Fr'),
-				(string)$this->l->t('Sa')
+				$this->l->t('Su'),
+				$this->l->t('Mo'),
+				$this->l->t('Tu'),
+				$this->l->t('We'),
+				$this->l->t('Th'),
+				$this->l->t('Fr'),
+				$this->l->t('Sa')
 			]),
 			"monthNames" => json_encode([
-				(string)$this->l->t('January'),
-				(string)$this->l->t('February'),
-				(string)$this->l->t('March'),
-				(string)$this->l->t('April'),
-				(string)$this->l->t('May'),
-				(string)$this->l->t('June'),
-				(string)$this->l->t('July'),
-				(string)$this->l->t('August'),
-				(string)$this->l->t('September'),
-				(string)$this->l->t('October'),
-				(string)$this->l->t('November'),
-				(string)$this->l->t('December')
+				$this->l->t('January'),
+				$this->l->t('February'),
+				$this->l->t('March'),
+				$this->l->t('April'),
+				$this->l->t('May'),
+				$this->l->t('June'),
+				$this->l->t('July'),
+				$this->l->t('August'),
+				$this->l->t('September'),
+				$this->l->t('October'),
+				$this->l->t('November'),
+				$this->l->t('December')
 			]),
 			"monthNamesShort" => json_encode([
-				(string)$this->l->t('Jan.'),
-				(string)$this->l->t('Feb.'),
-				(string)$this->l->t('Mar.'),
-				(string)$this->l->t('Apr.'),
-				(string)$this->l->t('May.'),
-				(string)$this->l->t('Jun.'),
-				(string)$this->l->t('Jul.'),
-				(string)$this->l->t('Aug.'),
-				(string)$this->l->t('Sep.'),
-				(string)$this->l->t('Oct.'),
-				(string)$this->l->t('Nov.'),
-				(string)$this->l->t('Dec.')
+				$this->l->t('Jan.'),
+				$this->l->t('Feb.'),
+				$this->l->t('Mar.'),
+				$this->l->t('Apr.'),
+				$this->l->t('May.'),
+				$this->l->t('Jun.'),
+				$this->l->t('Jul.'),
+				$this->l->t('Aug.'),
+				$this->l->t('Sep.'),
+				$this->l->t('Oct.'),
+				$this->l->t('Nov.'),
+				$this->l->t('Dec.')
 			]),
 			"firstDay" => json_encode($this->l->l('firstday', null)),
 			"_oc_config" => json_encode($config),

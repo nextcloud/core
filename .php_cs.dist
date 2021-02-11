@@ -13,6 +13,7 @@ $config
 	->exclude('config')
 	->exclude('data')
 	->notPath('3rdparty')
+	->notPath('build/stubs')
 	->notPath('composer')
 	->notPath('vendor')
 	->in(__DIR__);

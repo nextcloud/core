@@ -20,7 +20,6 @@
     "A non-default update server is in use to be checked for updates:" : "Проверката за налични актуализации се извършва чрез сървър, който е различен от стандартния:",
     "Update channel:" : "Канал за актуализиране:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Винаги може да актуализирате до по-нова версия. Но не може да се върнете до по-стабилна (по-стара) версия.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "След издаването на нова версия обикновено няма да получите веднага известие. Потребителите се известяват на интервали, което може да доведе до пропускане на версия ако се появят проблеми.",
     "Notify members of the following groups about available updates:" : "Известявай следните групи при наличие на актуализация:",
     "Only notification for app updates are available." : "Налични са само известия за актуализации на приложенията.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "Избрания канал за актуализации прави известията за този сървър остарели.",
@@ -35,6 +34,7 @@
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "Последната стабилна версия. Подходяща е за ежедневно ползване и се актуализации до последната главна версия.",
     "Beta" : "Бета",
     "A pre-release version only for testing new features, not for production environments." : "Версия само за тестване на нови функционалности, която не е подходяща за ползване в производствена среда.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> приложение няма актуализация за тази версия","<strong>%n</strong> приложения нямат актуализация за тази версия"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> приложение няма актуализация за тази версия","<strong>%n</strong> приложения нямат актуализация за тази версия"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "След издаването на нова версия обикновено няма да получите веднага известие. Потребителите се известяват на интервали, което може да доведе до пропускане на версия ако се появят проблеми."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

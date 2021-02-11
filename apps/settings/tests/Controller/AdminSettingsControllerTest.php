@@ -4,7 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Julius Härtl <jus@bitgrid.net>
+ * @author Jan C. Borchardt <hey@jancborchardt.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -37,7 +37,6 @@ use OCP\IRequest;
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\Settings\IManager;
-use OCP\Support\Subscription\IRegistry;
 use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
 
@@ -87,7 +86,7 @@ class AdminSettingsControllerTest extends TestCase {
 			$this->subAdmin
 		);
 
-		$user = \OC::$server->getUserManager()->createUser($this->adminUid, 'olo');
+		$user = \OC::$server->getUserManager()->createUser($this->adminUid, 'mylongrandompassword');
 		\OC_User::setUserId($user->getUID());
 		\OC::$server->getGroupManager()->createGroup('admin')->addUser($user);
 	}
@@ -100,7 +99,6 @@ class AdminSettingsControllerTest extends TestCase {
 
 	public function testIndex() {
 		$user = $this->createMock(IUser::class);
-		$registry = $this->createMock(IRegistry::class);
 		$this->userSession
 			->method('getUser')
 			->willReturn($user);
@@ -125,7 +123,7 @@ class AdminSettingsControllerTest extends TestCase {
 			->expects($this->once())
 			->method('getAdminSettings')
 			->with('test')
-			->willReturn([5 => new ServerDevNotice($registry)]);
+			->willReturn([5 => $this->createMock(ServerDevNotice::class)]);
 
 		$idx = $this->adminSettingsController->index('test');
 

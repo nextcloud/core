@@ -7,6 +7,7 @@
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
@@ -18,8 +19,7 @@
  * @author Pauli Järvinen <pauli.jarvinen@gmail.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Thibault Coupin <thibault.coupin@gmail.com>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -43,6 +43,7 @@ use OC\Cache\CappedMemoryCache;
 use OC\Files\Mount\MoveableMount;
 use OC\HintException;
 use OC\Share20\Exception\ProviderException;
+use OCA\Files_Sharing\ISharedStorage;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\File;
 use OCP\Files\Folder;
@@ -247,6 +248,7 @@ class Manager implements IManager {
 				throw new \InvalidArgumentException('SharedWith is not a valid circle');
 			}
 		} elseif ($share->getShareType() === IShare::TYPE_ROOM) {
+		} elseif ($share->getShareType() === IShare::TYPE_DECK) {
 		} else {
 			// We can't handle other types yet
 			throw new \InvalidArgumentException('unknown share type');
@@ -286,8 +288,7 @@ class Manager implements IManager {
 
 		// Check if we actually have share permissions
 		if (!$share->getNode()->isShareable()) {
-			$path = $userFolder->getRelativePath($share->getNode()->getPath());
-			$message_t = $this->l->t('You are not allowed to share %s', [$path]);
+			$message_t = $this->l->t('You are not allowed to share %s', [$share->getNode()->getName()]);
 			throw new GenericShareException($message_t, $message_t, 404);
 		}
 
@@ -299,10 +300,17 @@ class Manager implements IManager {
 		$isFederatedShare = $share->getNode()->getStorage()->instanceOfStorage('\OCA\Files_Sharing\External\Storage');
 		$permissions = 0;
 
-		$userMounts = $userFolder->getById($share->getNode()->getId());
-		$userMount = array_shift($userMounts);
-		$mount = $userMount->getMountPoint();
 		if (!$isFederatedShare && $share->getNode()->getOwner() && $share->getNode()->getOwner()->getUID() !== $share->getSharedBy()) {
+			$userMounts = array_filter($userFolder->getById($share->getNode()->getId()), function ($mount) {
+				// We need to filter since there might be other mountpoints that contain the file
+				// e.g. if the user has access to the same external storage that the file is originating from
+				return $mount->getStorage()->instanceOfStorage(ISharedStorage::class);
+			});
+			$userMount = array_shift($userMounts);
+			if ($userMount === null) {
+				throw new GenericShareException('Could not get proper share mount for ' . $share->getNode()->getId() . '. Failing since else the next calls are called with null');
+			}
+			$mount = $userMount->getMountPoint();
 			// When it's a reshare use the parent share permissions as maximum
 			$userMountPointId = $mount->getStorageRootId();
 			$userMountPoints = $userFolder->getById($userMountPointId);
@@ -331,7 +339,7 @@ class Manager implements IManager {
 			 * while we 'most likely' do have that on the storage.
 			 */
 			$permissions = $share->getNode()->getPermissions();
-			if (!($mount instanceof MoveableMount)) {
+			if (!($share->getNode()->getMountPoint() instanceof MoveableMount)) {
 				$permissions |= \OCP\Constants::PERMISSION_DELETE | \OCP\Constants::PERMISSION_UPDATE;
 			}
 		}
@@ -401,9 +409,9 @@ class Manager implements IManager {
 			$expirationDate = new \DateTime();
 			$expirationDate->setTime(0,0,0);
 
-			$days = (int)$this->config->getAppValue('core', 'internal_defaultExpDays', $this->shareApiLinkDefaultExpireDays());
-			if ($days > $this->shareApiLinkDefaultExpireDays()) {
-				$days = $this->shareApiLinkDefaultExpireDays();
+			$days = (int)$this->config->getAppValue('core', 'internal_defaultExpDays', (string)$this->shareApiInternalDefaultExpireDays());
+			if ($days > $this->shareApiInternalDefaultExpireDays()) {
+				$days = $this->shareApiInternalDefaultExpireDays();
 			}
 			$expirationDate->add(new \DateInterval('P'.$days.'D'));
 		}
@@ -534,7 +542,8 @@ class Manager implements IManager {
 					$this->groupManager->getUserGroupIds($sharedWith)
 			);
 			if (empty($groups)) {
-				throw new \Exception('Sharing is only allowed with group members');
+				$message_t = $this->l->t('Sharing is only allowed with group members');
+				throw new \Exception($message_t);
 			}
 		}
 
@@ -805,7 +814,8 @@ class Manager implements IManager {
 
 		$this->dispatcher->dispatchTyped(new Share\Events\ShareCreatedEvent($share));
 
-		if ($share->getShareType() === IShare::TYPE_USER) {
+		if ($this->config->getSystemValueBool('sharing.enable_share_mail', true)
+			&& $share->getShareType() === IShare::TYPE_USER) {
 			$mailSend = $share->getMailSend();
 			if ($mailSend === true) {
 				$user = $this->userManager->get($share->getSharedWith());
@@ -1129,6 +1139,7 @@ class Manager implements IManager {
 			$deletedShares = array_merge($deletedShares, $deletedChildren);
 
 			$provider->delete($child);
+			$this->dispatcher->dispatchTyped(new Share\Events\ShareDeletedEvent($child));
 			$deletedShares[] = $child;
 		}
 
@@ -1158,6 +1169,8 @@ class Manager implements IManager {
 		// Do the actual delete
 		$provider = $this->factory->getProviderForType($share->getShareType());
 		$provider->delete($share);
+
+		$this->dispatcher->dispatchTyped(new Share\Events\ShareDeletedEvent($share));
 
 		// All the deleted shares caused by this delete
 		$deletedShares[] = $share;
@@ -1386,7 +1399,7 @@ class Manager implements IManager {
 	 *
 	 * @return Share[]
 	 */
-	public function getSharesByPath(\OCP\Files\Node $path, $page=0, $perPage=50) {
+	public function getSharesByPath(\OCP\Files\Node $path, $page = 0, $perPage = 50) {
 		return [];
 	}
 
@@ -1877,6 +1890,10 @@ class Manager implements IManager {
 		}
 
 		return true;
+	}
+
+	public function registerShareProvider(string $shareProviderClass): void {
+		$this->factory->registerProvider($shareProviderClass);
 	}
 
 	public function getAllShares(): iterable {

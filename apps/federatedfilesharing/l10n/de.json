@@ -8,7 +8,7 @@
     "Copied!" : "Kopiert!",
     "Not supported!" : "Nicht unterstützt!",
     "Press ⌘-C to copy." : "⌘-C zum Kopieren drücken.",
-    "Press Ctrl-C to copy." : "Strg-C zum Kopieren drücken.",
+    "Press Ctrl-C to copy." : "Zum Kopieren Strg-C drücken.",
     "Invalid Federated Cloud ID" : "Ungültige Federated-Cloud-ID",
     "Server to server sharing is not enabled on this server" : "Das Server-zu-Server-Teilen ist auf diesem Server nicht aktiviert",
     "Couldn't establish a federated share." : "Federated-Share konnte nicht aufgebaut werden",
@@ -36,7 +36,7 @@
     "Federated Cloud Sharing" : "Federated-Cloud-Sharing",
     "Open documentation" : "Dokumentation öffnen",
     "Adjust how people can share between servers." : "Definiere wie die Benutzer Inhalte mit anderen Servern teilen können.",
-    "Allow users on this server to send shares to other servers" : "Benutzern auf diesem Server das Senden von Freigaben an andere Server erlauben",
+    "Allow users on this server to send shares to other servers (this option also allows WebDAV access to public shares)" : "Benutzern auf diesem Server das Senden von Freigaben an andere Server erlauben (Diese Option ermöglicht auch den WebDAV-Zugriff auf öffentliche Freigaben)",
     "Allow users on this server to receive shares from other servers" : "Benutzern auf diesem Server das Empfangen von Freigaben von anderen Servern erlauben",
     "Allow users on this server to send shares to groups on other servers" : "Ermögliche Benutzern dieses Servers Freigaben an Gruppen auf anderen Servern zu senden",
     "Allow users on this server to receive group shares from other servers" : "Ermögliche Benutzern dieses Servers Gruppen-Freigaben von anderen Servern zu empfangen",
@@ -49,7 +49,6 @@
     "Add to your website" : "Zu Deiner Webseite hinzufügen",
     "Share with me via Nextcloud" : "Teile mit mir über Nextcloud",
     "HTML Code:" : "HTML-Code:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Du hast \"%3$s\" als externe Freigabe von \"%1$s\" empfangen (im Auftrag von %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Du hast \"%3$s\" als externe Freigabe von \"%1$s\" empfangen"
+    "Allow users on this server to send shares to other servers" : "Benutzern auf diesem Server das Senden von Freigaben an andere Server erlauben"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

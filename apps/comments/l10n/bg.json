@@ -12,17 +12,18 @@
     "{user} mentioned you in a comment on “{file}”" : "{user} те спомена в коментар за “{file}”",
     "Edit comment" : "Редактирай коментра",
     "Delete comment" : "Изтрий коментар",
+    "No comments yet, start the conversation!" : "Все още няма коментари, започнете разговор!",
+    "Retry" : "Опитай отново",
+    "_%n unread comment_::_%n unread comments_" : ["%n непрочетен коментар","%n непрочетени коментари"],
+    "Comment" : "Коментар",
     "New comment …" : "Нов коментар...",
     "Post" : "Публикация",
     "Cancel" : "Отказ",
     "[Deleted user]" : "[Изтрит потребител]",
-    "No comments yet, start the conversation!" : "Все още няма коментари, започнете разговор!",
     "More comments …" : "Още коментари...",
     "Save" : "Запазване",
     "Allowed characters {count} of {max}" : "Позволени символи {count} от {max}",
     "Error occurred while updating comment with id {id}" : "Възникна грешка по време на обновяване на коментар с код {id}",
-    "Error occurred while posting comment" : "Възникна грешка по време на изпращане на коментар",
-    "_%n unread comment_::_%n unread comments_" : ["%n непрочетен коментар","%n непрочетени коментари"],
-    "Comment" : "Коментар"
+    "Error occurred while posting comment" : "Възникна грешка по време на изпращане на коментар"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

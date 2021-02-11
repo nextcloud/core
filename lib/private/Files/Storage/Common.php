@@ -4,7 +4,6 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
- * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Greta Doci <gretadoci@gmail.com>
  * @author hkjolhede <hkjolhede@gmail.com>
@@ -22,7 +21,7 @@
  * @author scambra <sergio@entrecables.com>
  * @author Stefan Weil <sw@weilnetz.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  * @author Vinicius Cubas Brand <vinicius@eita.org.br>
  *
  * @license AGPL-3.0
@@ -631,8 +630,9 @@ abstract class Common implements Storage, ILockingStorage, IWriteStreamStorage {
 				}
 			}
 
-			if ($result and $preserveMtime) {
-				$this->touch($targetInternalPath, $sourceStorage->filemtime($sourceInternalPath));
+			if ($result && $preserveMtime) {
+				$mtime = $sourceStorage->filemtime($sourceInternalPath);
+				$this->touch($targetInternalPath, is_int($mtime) ? $mtime : null);
 			}
 
 			if (!$result) {
@@ -689,9 +689,9 @@ abstract class Common implements Storage, ILockingStorage, IWriteStreamStorage {
 		$result = $this->copyFromStorage($sourceStorage, $sourceInternalPath, $targetInternalPath, true);
 		if ($result) {
 			if ($sourceStorage->is_dir($sourceInternalPath)) {
-				$result &= $sourceStorage->rmdir($sourceInternalPath);
+				$result = $result && $sourceStorage->rmdir($sourceInternalPath);
 			} else {
-				$result &= $sourceStorage->unlink($sourceInternalPath);
+				$result = $result && $sourceStorage->unlink($sourceInternalPath);
 			}
 		}
 		return $result;

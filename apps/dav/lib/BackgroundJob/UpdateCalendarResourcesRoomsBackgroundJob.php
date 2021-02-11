@@ -401,7 +401,7 @@ class UpdateCalendarResourcesRoomsBackgroundJob extends TimedJob {
 
 		return array_map(function ($row) {
 			return $row['resource_id'];
-		}, $stmt->fetchAll(\PDO::FETCH_NAMED));
+		}, $stmt->fetchAll());
 	}
 
 	/**
@@ -435,6 +435,6 @@ class UpdateCalendarResourcesRoomsBackgroundJob extends TimedJob {
 			->andWhere($query->expr()->eq('resource_id', $query->createNamedParameter($resourceId)));
 		$stmt = $query->execute();
 
-		return $stmt->fetch(\PDO::FETCH_NAMED)['id'];
+		return $stmt->fetch()['id'];
 	}
 }

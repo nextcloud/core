@@ -28,13 +28,13 @@ declare(strict_types=1);
 
 namespace OC\Authentication\Token;
 
+use Psr\Log\LoggerInterface;
 use function array_filter;
 use OC\Authentication\Events\RemoteWipeFinished;
 use OC\Authentication\Events\RemoteWipeStarted;
 use OC\Authentication\Exceptions\InvalidTokenException;
 use OC\Authentication\Exceptions\WipeTokenException;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\ILogger;
 use OCP\IUser;
 
 class RemoteWipe {
@@ -45,12 +45,12 @@ class RemoteWipe {
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(IProvider $tokenProvider,
 								IEventDispatcher $eventDispatcher,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->tokenProvider = $tokenProvider;
 		$this->eventDispatcher = $eventDispatcher;
 		$this->logger = $logger;

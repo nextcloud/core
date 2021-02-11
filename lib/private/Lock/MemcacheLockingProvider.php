@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Jaakko Salo <jaakkos@gmail.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -60,7 +61,7 @@ class MemcacheLockingProvider extends AbstractLockingProvider {
 	public function isLocked(string $path, int $type): bool {
 		$lockValue = $this->memcache->get($path);
 		if ($type === self::LOCK_SHARED) {
-			return $lockValue > 0;
+			return is_int($lockValue) && $lockValue > 0;
 		} elseif ($type === self::LOCK_EXCLUSIVE) {
 			return $lockValue === 'exclusive';
 		} else {

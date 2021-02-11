@@ -21,7 +21,7 @@
 
 import _ from 'underscore'
 import $ from 'jquery'
-import { showMessage } from '@nextcloud/dialogs'
+import { showMessage, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 
 /**
  * @todo Write documentation
@@ -98,7 +98,7 @@ export default {
 	showHtml(html, options) {
 		options = options || {}
 		options.isHTML = true
-		options.timeout = (!options.timeout) ? -1 : options.timeout
+		options.timeout = (!options.timeout) ? TOAST_PERMANENT_TIMEOUT : options.timeout
 		const toast = showMessage(html, options)
 		toast.toastElement.toastify = toast
 		return $(toast.toastElement)
@@ -115,9 +115,18 @@ export default {
 	 * @deprecated 17.0.0 use the `@nextcloud/dialogs` package
 	 */
 	show(text, options) {
+		const escapeHTML = function(text) {
+			return text.toString()
+				.split('&').join('&amp;')
+				.split('<').join('&lt;')
+				.split('>').join('&gt;')
+				.split('"').join('&quot;')
+				.split('\'').join('&#039;')
+		}
+
 		options = options || {}
-		options.timeout = (!options.timeout) ? -1 : options.timeout
-		const toast = showMessage(text, options)
+		options.timeout = (!options.timeout) ? TOAST_PERMANENT_TIMEOUT : options.timeout
+		const toast = showMessage(escapeHTML(text), options)
 		toast.toastElement.toastify = toast
 		return $(toast.toastElement)
 	},
@@ -133,7 +142,7 @@ export default {
 		if (this.updatableNotification) {
 			this.updatableNotification.hideToast()
 		}
-		this.updatableNotification = showMessage(text, { timeout: -1 })
+		this.updatableNotification = showMessage(text, { timeout: TOAST_PERMANENT_TIMEOUT })
 		this.updatableNotification.toastElement.toastify = this.updatableNotification
 		return $(this.updatableNotification.toastElement)
 	},
@@ -152,7 +161,7 @@ export default {
 	 */
 	showTemporary(text, options) {
 		options = options || {}
-		options.timeout = options.timeout || 7
+		options.timeout = options.timeout || TOAST_DEFAULT_TIMEOUT
 		const toast = showMessage(text, options)
 		toast.toastElement.toastify = toast
 		return $(toast.toastElement)

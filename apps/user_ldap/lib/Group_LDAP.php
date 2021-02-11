@@ -22,7 +22,6 @@
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Tobias Perschon <tobias@perschon.at>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
- * @author Vincent Petry <pvince81@owncloud.com>
  * @author Vinicius Cubas Brand <vinicius@eita.org.br>
  * @author Xuanwo <xuanwo@yunify.com>
  *
@@ -56,7 +55,7 @@ use OCP\ILogger;
 class Group_LDAP extends BackendUtility implements GroupInterface, IGroupLDAP, IGetDisplayNameBackend {
 	protected $enabled = false;
 
-	/** @var string[] $cachedGroupMembers array of users with gid as key */
+	/** @var string[][] $cachedGroupMembers array of users with gid as key */
 	protected $cachedGroupMembers;
 	/** @var string[] $cachedGroupsByMember array of groups with uid as key */
 	protected $cachedGroupsByMember;
@@ -137,17 +136,13 @@ class Group_LDAP extends BackendUtility implements GroupInterface, IGroupLDAP, I
 
 		//usually, LDAP attributes are said to be case insensitive. But there are exceptions of course.
 		$members = $this->_groupMembers($groupDN);
-		if (!is_array($members) || count($members) === 0) {
-			$this->access->connection->writeToCache($cacheKey, false);
-			return false;
-		}
 
 		//extra work if we don't get back user DNs
 		switch ($this->ldapGroupMemberAssocAttr) {
 			case 'memberuid':
 			case 'zimbramailforwardingaddress':
 				$requestAttributes = $this->access->userManager->getAttributes(true);
-				$dns = [];
+				$users = [];
 				$filterParts = [];
 				$bytes = 0;
 				foreach ($members as $mid) {
@@ -161,20 +156,35 @@ class Group_LDAP extends BackendUtility implements GroupInterface, IGroupLDAP, I
 					if ($bytes >= 9000000) {
 						// AD has a default input buffer of 10 MB, we do not want
 						// to take even the chance to exceed it
+						// so we fetch results with the filterParts we collected so far
 						$filter = $this->access->combineFilterWithOr($filterParts);
-						$users = $this->access->fetchListOfUsers($filter, $requestAttributes, count($filterParts));
+						$search = $this->access->fetchListOfUsers($filter, $requestAttributes, count($filterParts));
 						$bytes = 0;
 						$filterParts = [];
-						$dns = array_merge($dns, $users);
+						$users = array_merge($users, $search);
 					}
 				}
+
 				if (count($filterParts) > 0) {
+					// if there are filterParts left we need to add their result
 					$filter = $this->access->combineFilterWithOr($filterParts);
-					$users = $this->access->fetchListOfUsers($filter, $requestAttributes, count($filterParts));
-					$dns = array_merge($dns, $users);
+					$search = $this->access->fetchListOfUsers($filter, $requestAttributes, count($filterParts));
+					$users = array_merge($users, $search);
 				}
-				$members = $dns;
+
+				// now we cleanup the users array to get only dns
+				$dns = [];
+				foreach ($users as $record) {
+					$dns[$record['dn'][0]] = 1;
+				}
+				$members = array_keys($dns);
+
 				break;
+		}
+
+		if (count($members) === 0) {
+			$this->access->connection->writeToCache($cacheKey, false);
+			return false;
 		}
 
 		$isInGroup = in_array($userDN, $members);
@@ -212,7 +222,7 @@ class Group_LDAP extends BackendUtility implements GroupInterface, IGroupLDAP, I
 			$pos = strpos($memberURLs[0], '(');
 			if ($pos !== false) {
 				$memberUrlFilter = substr($memberURLs[0], $pos);
-				$foundMembers = $this->access->searchUsers($memberUrlFilter, 'dn');
+				$foundMembers = $this->access->searchUsers($memberUrlFilter, ['dn']);
 				$dynamicMembers = [];
 				foreach ($foundMembers as $value) {
 					$dynamicMembers[$value['dn'][0]] = 1;
@@ -345,7 +355,7 @@ class Group_LDAP extends BackendUtility implements GroupInterface, IGroupLDAP, I
 		}
 
 		$seen = [];
-		while ($record = array_pop($list)) {
+		while ($record = array_shift($list)) {
 			$recordDN = $recordMode ? $record['dn'][0] : $record;
 			if ($recordDN === $dn || array_key_exists($recordDN, $seen)) {
 				// Prevent loops
@@ -823,6 +833,11 @@ class Group_LDAP extends BackendUtility implements GroupInterface, IGroupLDAP, I
 			$filter .= '@*';
 		}
 
+		$nesting = (int)$this->access->connection->ldapNestedGroups;
+		if ($nesting === 0) {
+			$filter = $this->access->combineFilterWithAnd([$filter, $this->access->connection->ldapGroupFilter]);
+		}
+
 		$groups = $this->access->fetchListOfGroups($filter,
 			[strtolower($this->access->connection->ldapGroupMemberAssocAttr), $this->access->connection->ldapGroupDisplayName, 'dn']);
 		if (is_array($groups)) {
@@ -900,6 +915,7 @@ class Group_LDAP extends BackendUtility implements GroupInterface, IGroupLDAP, I
 		$attrs = $this->access->userManager->getAttributes(true);
 		foreach ($members as $member) {
 			switch ($this->ldapGroupMemberAssocAttr) {
+				/** @noinspection PhpMissingBreakStatementInspection */
 				case 'zimbramailforwardingaddress':
 					//we get email addresses and need to convert them to uids
 					$parts = explode('@', $member);
@@ -1073,6 +1089,7 @@ class Group_LDAP extends BackendUtility implements GroupInterface, IGroupLDAP, I
 		if (!$this->enabled) {
 			return [];
 		}
+		$search = $this->access->escapeFilterPart($search, true);
 		$cacheKey = 'getGroups-' . $search . '-' . $limit . '-' . $offset;
 
 		//Check cache before driving unnecessary searches

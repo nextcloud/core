@@ -17,6 +17,7 @@ use OC\Files\View;
 use OCP\Constants;
 use OCP\Files\Config\IMountProvider;
 use OCP\Files\FileInfo;
+use OCP\Files\GenericFileException;
 use OCP\Files\Storage\IStorage;
 use OCP\Lock\ILockingProvider;
 use OCP\Lock\LockedException;
@@ -1163,11 +1164,11 @@ class ViewTest extends \Test\TestCase {
 		/** @var \PHPUnit\Framework\MockObject\MockObject|Temporary $storage2 */
 		$storage2 = $this->getMockBuilder(TemporaryNoCross::class)
 			->setConstructorArgs([[]])
-			->setMethods(['fopen'])
+			->setMethods(['fopen', 'writeStream'])
 			->getMock();
 
 		$storage2->method('writeStream')
-			->willReturn(0);
+			->willThrowException(new GenericFileException("Failed to copy stream"));
 
 		$storage1->mkdir('sub');
 		$storage1->file_put_contents('foo.txt', '0123456789ABCDEFGH');
@@ -1674,6 +1675,8 @@ class ViewTest extends \Test\TestCase {
 			->setSharedBy($this->user)
 			->setShareType(IShare::TYPE_USER)
 			->setPermissions(\OCP\Constants::PERMISSION_READ)
+			->setId(42)
+			->setProviderId('foo')
 			->setNode($shareDir);
 		$shareManager->createShare($share);
 
@@ -1681,7 +1684,7 @@ class ViewTest extends \Test\TestCase {
 		$this->assertFalse($view->rename('mount1', 'shareddir/sub'), 'Cannot move mount point into shared folder');
 		$this->assertFalse($view->rename('mount1', 'shareddir/sub/sub2'), 'Cannot move mount point into shared subfolder');
 
-		$this->assertTrue(\OC\Share\Share::unshare('folder', $fileId, IShare::TYPE_USER, 'test2'));
+		$shareManager->deleteShare($share);
 		$userObject->delete();
 	}
 

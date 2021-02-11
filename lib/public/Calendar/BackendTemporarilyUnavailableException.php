@@ -27,7 +27,6 @@ namespace OCP\Calendar;
 /**
  * Class BackendTemporarilyUnavailableException
  *
- * @package OCP\Calendar
  * @since 14.0.0
  */
 class BackendTemporarilyUnavailableException extends \Exception {

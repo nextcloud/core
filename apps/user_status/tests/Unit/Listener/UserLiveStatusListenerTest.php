@@ -99,7 +99,7 @@ class UserLiveStatusListenerTest extends TestCase {
 		$user->method('getUID')->willReturn($userId);
 		$event = new UserLiveStatusEvent($user, $eventStatus, $eventTimestamp);
 
-		$this->timeFactory->expects($this->once())
+		$this->timeFactory->expects($this->atMost(1))
 			->method('getTime')
 			->willReturn(5000);
 
@@ -149,6 +149,8 @@ class UserLiveStatusListenerTest extends TestCase {
 			['john.doe', 'online', 5000, false, 'online', 5000, false, true],
 			['john.doe', 'away', 5000, false, 'online', 5000, true, true],
 			['john.doe', 'online', 5000, false, 'away', 5000, true, false],
+			['john.doe', 'away', 5000, true, 'online', 5000, true, false],
+			['john.doe', 'online', 5000, true, 'away', 5000, true, false],
 		];
 	}
 

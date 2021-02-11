@@ -27,7 +27,6 @@ namespace OCP\AppFramework\Http;
 /**
  * Class DataDownloadResponse
  *
- * @package OCP\AppFramework\Http
  * @since 8.0.0
  */
 class DataDownloadResponse extends DownloadResponse {

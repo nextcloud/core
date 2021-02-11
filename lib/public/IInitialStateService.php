@@ -31,6 +31,8 @@ use Closure;
 
 /**
  * @since 16.0.0
+ * @deprecated 21 Use OCP\AppFramework\Services\IInitialState or OCP\AppFramework\Services\InitialStateProvider
+ * @see \OCP\AppFramework\Services\IInitialState
  */
 interface IInitialStateService {
 	/**
@@ -43,6 +45,9 @@ interface IInitialStateService {
 	 * @param string $appName
 	 * @param string $key
 	 * @param bool|int|float|string|array|\JsonSerializable $data
+	 *
+	 * @deprecated 21 Use OCP\AppFramework\Services\IInitialState or OCP\AppFramework\Services\InitialStateProvider
+	 * @see \OCP\AppFramework\Services\IInitialState::provideInitialState()
 	 */
 	public function provideInitialState(string $appName, string $key, $data): void;
 
@@ -58,6 +63,9 @@ interface IInitialStateService {
 	 * @param string $appName
 	 * @param string $key
 	 * @param Closure $closure returns a primitive or an object that implements JsonSerializable
+	 *
+	 * @deprecated 21 Use OCP\AppFramework\Services\IInitialState or OCP\AppFramework\Services\InitialStateProvider
+	 * @see \OCP\AppFramework\Services\IInitialState::provideLazyInitialState()
 	 */
 	public function provideLazyInitialState(string $appName, string $key, Closure $closure): void;
 }

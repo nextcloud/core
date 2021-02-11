@@ -3,10 +3,12 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author call-me-matt <nextcloud@matthiasheinisch.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -34,6 +36,7 @@ use OCA\DAV\CardDAV\CardDavBackend;
 use OCP\IURLGenerator;
 use Sabre\VObject\Component\VCard;
 use Sabre\VObject\Property\Text;
+//use Sabre\VObject\Property\;
 use Test\TestCase;
 
 class AddressBookImplTest extends TestCase {
@@ -198,7 +201,7 @@ class AddressBookImplTest extends TestCase {
 			->willReturn(['carddata' => 'data']);
 		$addressBookImpl->expects($this->once())->method('readCard')
 			->with('data')->willReturn($this->vCard);
-		$this->vCard->expects($this->exactly(count($properties)))
+		$this->vCard->expects($this->exactly(count($properties)-1))
 			->method('createProperty');
 		$this->backend->expects($this->never())->method('createCard');
 		$this->backend->expects($this->once())->method('updateCard');
@@ -206,6 +209,41 @@ class AddressBookImplTest extends TestCase {
 			->with($uri, $this->vCard)->willReturn(true);
 
 		$this->assertTrue($addressBookImpl->createOrUpdate($properties));
+	}
+
+	public function testUpdateWithTypes() {
+		$uid = 'uid';
+		$uri = 'bla.vcf';
+		$properties = ['URI' => $uri, 'UID' => $uid, 'FN' => 'John Doe', 'ADR' => [['type' => 'HOME', 'value' => ';;street;city;;;country']]];
+		$vCard = new vCard;
+		$textProperty = $vCard->createProperty('KEY','value');
+
+		/** @var \PHPUnit\Framework\MockObject\MockObject | AddressBookImpl $addressBookImpl */
+		$addressBookImpl = $this->getMockBuilder(AddressBookImpl::class)
+			->setConstructorArgs(
+				[
+					$this->addressBook,
+					$this->addressBookInfo,
+					$this->backend,
+					$this->urlGenerator,
+				]
+			)
+			->setMethods(['vCard2Array', 'createUid', 'createEmptyVCard', 'readCard'])
+			->getMock();
+
+		$this->backend->expects($this->once())->method('getCard')
+			->with($this->addressBookInfo['id'], $uri)
+			->willReturn(['carddata' => 'data']);
+		$addressBookImpl->expects($this->once())->method('readCard')
+			->with('data')->willReturn($this->vCard);
+		$this->vCard->method('createProperty')->willReturn($textProperty);
+		$this->vCard->expects($this->exactly(count($properties)-1))
+			->method('createProperty');
+		$this->vCard->expects($this->once())->method('remove')
+			->with('ADR');
+		$this->vCard->expects($this->once())->method('add');
+
+		$addressBookImpl->createOrUpdate($properties);
 	}
 
 	/**

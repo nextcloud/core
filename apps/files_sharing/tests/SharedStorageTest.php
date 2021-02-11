@@ -9,7 +9,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -107,7 +107,7 @@ class SharedStorageTest extends TestCase {
 
 		// delete the local folder
 		/** @var \OC\Files\Storage\Storage $storage */
-		list($storage, $internalPath)  = \OC\Files\Filesystem::resolvePath('/' . self::TEST_FILES_SHARING_API_USER2 . '/files/localfolder');
+		list($storage, $internalPath) = \OC\Files\Filesystem::resolvePath('/' . self::TEST_FILES_SHARING_API_USER2 . '/files/localfolder');
 		$storage->rmdir($internalPath);
 
 		//enforce reload of the mount points
@@ -302,9 +302,7 @@ class SharedStorageTest extends TestCase {
 
 		//cleanup
 		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
-		$result = \OC\Share\Share::unshare('folder', $fileinfoFolder['fileid'], IShare::TYPE_USER,
-			self::TEST_FILES_SHARING_API_USER2);
-		$this->assertTrue($result);
+		$this->shareManager->deleteShare($share);
 	}
 
 	public function testFopenWithUpdateOnlyPermission() {

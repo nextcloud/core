@@ -79,7 +79,6 @@
     "Set an admin username." : "Állítson be egy rendszergazdai felhasználónevet!",
     "Set an admin password." : "Állítson be egy rendszergazdai jelszót!",
     "Can't create or write into the data directory %s" : "Nem sikerült  létrehozni vagy irni  a \"data\" könyvtárba %s",
-    "Invalid Federated Cloud ID" : "Érvénytelen Egyesített Felhő Azonosító",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "Az %s megosztási alrendszernek támogatnia kell az OCP\\Share_Backend interface-t",
     "Sharing backend %s not found" : "A %s megosztási alrendszer nem található",
     "Sharing backend for %s not found" : "%s megosztási alrendszere nem található",
@@ -202,13 +201,6 @@
     "Storage connection timeout. %s" : "Tároló kapcsolat időtúllépés. %s",
     "Following databases are supported: %s" : "A következő adatbázisok támogatottak: %s",
     "Following platforms are supported: %s" : "Ezek a platformok támogatottak: %s",
-    "Overview" : "Áttekintés",
-    "Basic settings" : "Alapvető beállítások",
-    "Sharing" : "Megosztás",
-    "Security" : "Biztonság",
-    "Groupware" : "Csoportmunka",
-    "Personal info" : "Személyes információk",
-    "Mobile & desktop" : "Mobil és deszktop",
-    "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s" : "Ez legtöbbször megoldható az app mappára a webszervernek adott írási joggal, vagy a config fájlban az alkalmazástár letiltásával. Lásd: %s"
+    "Invalid Federated Cloud ID" : "Érvénytelen Egyesített Felhő Azonosító"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

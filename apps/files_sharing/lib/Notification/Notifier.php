@@ -178,7 +178,7 @@ class Notifier implements INotifier {
 						'id' => $notification->getObjectId(),
 						'name' => $share->getTarget(),
 					],
-					'user' =>  [
+					'user' => [
 						'type' => 'user',
 						'id' => $sharer->getUID(),
 						'name' => $sharer->getDisplayName(),
@@ -219,7 +219,7 @@ class Notifier implements INotifier {
 						'id' => $group->getGID(),
 						'name' => $group->getDisplayName(),
 					],
-					'user' =>  [
+					'user' => [
 						'type' => 'user',
 						'id' => $sharer->getUID(),
 						'name' => $sharer->getDisplayName(),

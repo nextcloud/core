@@ -29,7 +29,6 @@ namespace OCP\Notification;
 /**
  * Interface IManager
  *
- * @package OCP\Notification
  * @since 9.0.0
  */
 interface IManager extends IApp, INotifier {

@@ -61,19 +61,19 @@ return ['routes' => [
 		'defaults' => ['app' => 'core']
 	],
 	[
-		'name'	=> 'Icon#getFavicon',
+		'name' => 'Icon#getFavicon',
 		'url' => '/favicon/{app}',
 		'verb' => 'GET',
 		'defaults' => ['app' => 'core'],
 	],
 	[
-		'name'	=> 'Icon#getTouchIcon',
+		'name' => 'Icon#getTouchIcon',
 		'url' => '/icon/{app}',
 		'verb' => 'GET',
 		'defaults' => ['app' => 'core'],
 	],
 	[
-		'name'	=> 'Icon#getThemedIcon',
+		'name' => 'Icon#getThemedIcon',
 		'url' => '/img/{app}/{image}',
 		'verb' => 'GET',
 		'requirements' => ['image' => '.+']

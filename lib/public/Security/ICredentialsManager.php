@@ -26,7 +26,6 @@ namespace OCP\Security;
 /**
  * Store and retrieve credentials for external services
  *
- * @package OCP\Security
  * @since 8.2.0
  */
 interface ICredentialsManager {

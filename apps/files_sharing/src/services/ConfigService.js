@@ -248,7 +248,7 @@ export default class Config {
 	 * @memberof Config
 	 */
 	get maxAutocompleteResults() {
-		return parseInt(OC.config['sharing.maxAutocompleteResults'], 10) || 200
+		return parseInt(OC.config['sharing.maxAutocompleteResults'], 10) || 25
 	}
 
 	/**

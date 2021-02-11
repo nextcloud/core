@@ -30,6 +30,9 @@ use OCP\AppFramework\Db\QBMapper;
 use OCP\IDBConnection;
 use OCP\IUser;
 
+/**
+ * @template-extends QBMapper<RecentContact>
+ */
 class RecentContactMapper extends QBMapper {
 	public const TABLE_NAME = 'recent_contact';
 

@@ -48,7 +48,6 @@ class Version14000Date20180518120534 extends SimpleMigrationStep {
 			'unsigned' => true,
 		]);
 		$table->addIndex(['uid'], 'authtoken_uid_index');
-		$table->addIndex(['version'], 'authtoken_version_index');
 
 		return $schema;
 	}

@@ -40,8 +40,8 @@ class UUIDFixUserTest extends AbstractUUIDFixTest {
 		parent::setUp();
 
 		$this->mapper = $this->createMock(UserMapping::class);
+		$this->proxy = $this->createMock(User_Proxy::class);
 
-		$this->mockProxy(User_Proxy::class);
 		$this->instantiateJob(UUIDFixUser::class);
 	}
 }

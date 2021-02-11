@@ -1,5 +1,4 @@
 { "translations": {
-    "Authentication error" : "Samgildis feilur",
-    "Security" : "Trygd"
+    "Authentication error" : "Samgildis feilur"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

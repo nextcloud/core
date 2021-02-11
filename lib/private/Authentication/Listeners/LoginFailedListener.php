@@ -35,6 +35,9 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\IUserManager;
 use OCP\Util;
 
+/**
+ * @template-implements IEventListener<\OC\Authentication\Events\LoginFailed>
+ */
 class LoginFailedListener implements IEventListener {
 
 	/** @var IEventDispatcher */

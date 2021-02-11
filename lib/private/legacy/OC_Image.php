@@ -9,6 +9,7 @@
  * @author Christopher Schäpers <kondou@ts.unde.re>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author J0WI <J0WI@users.noreply.github.com>
  * @author j-ed <juergen@eisfair.org>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Johannes Willnecker <johannes@willnecker.com>
@@ -98,7 +99,14 @@ class OC_Image implements \OCP\IImage {
 	 * @return bool
 	 */
 	public function valid() { // apparently you can't name a method 'empty'...
-		return is_resource($this->resource);
+		if (is_resource($this->resource)) {
+			return true;
+		}
+		if (is_object($this->resource) && get_class($this->resource) === 'GdImage') {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -305,7 +313,13 @@ class OC_Image implements \OCP\IImage {
 	 * @throws \InvalidArgumentException in case the supplied resource does not have the type "gd"
 	 */
 	public function setResource($resource) {
-		if (get_resource_type($resource) === 'gd') {
+		// For PHP<8
+		if (is_resource($resource) && get_resource_type($resource) === 'gd') {
+			$this->resource = $resource;
+			return;
+		}
+		// PHP 8 has real objects for GD stuff
+		if (is_object($resource) && get_class($resource) === 'GdImage') {
 			$this->resource = $resource;
 			return;
 		}
@@ -541,7 +555,7 @@ class OC_Image implements \OCP\IImage {
 	 */
 	public function loadFromFile($imagePath = false) {
 		// exif_imagetype throws "read error!" if file is less than 12 byte
-		if (!@is_file($imagePath) || !file_exists($imagePath) || filesize($imagePath) < 12 || !is_readable($imagePath)) {
+		if (is_bool($imagePath) || !@is_file($imagePath) || !file_exists($imagePath) || filesize($imagePath) < 12 || !is_readable($imagePath)) {
 			return false;
 		}
 		$iType = exif_imagetype($imagePath);
@@ -593,6 +607,13 @@ class OC_Image implements \OCP\IImage {
 				break;
 			case IMAGETYPE_BMP:
 				$this->resource = $this->imagecreatefrombmp($imagePath);
+				break;
+			case IMAGETYPE_WEBP:
+				if (imagetypes() & IMG_WEBP) {
+					$this->resource = @imagecreatefromwebp($imagePath);
+				} else {
+					$this->logger->debug('OC_Image->loadFromFile, webp images not supported: ' . $imagePath, ['app' => 'core']);
+				}
 				break;
 			/*
 			case IMAGETYPE_TIFF_II: // (intel byte order)
@@ -1175,7 +1196,7 @@ if (!function_exists('imagebmp')) {
 		} elseif ($bit == 32) {
 			$bit = 24;
 		}
-		$bits = pow(2, $bit);
+		$bits = (int)pow(2, $bit);
 		imagetruecolortopalette($im, true, $bits);
 		$width = imagesx($im);
 		$height = imagesy($im);
@@ -1211,7 +1232,7 @@ if (!function_exists('imagebmp')) {
 			} // RLE8
 			elseif ($compression == 1 && $bit == 8) {
 				for ($j = $height - 1; $j >= 0; $j--) {
-					$lastIndex = "\0";
+					$lastIndex = null;
 					$sameNum = 0;
 					for ($i = 0; $i <= $width; $i++) {
 						$index = imagecolorat($im, $i, $j);
@@ -1275,7 +1296,7 @@ if (!function_exists('exif_imagetype')) {
 	/**
 	 * Workaround if exif_imagetype does not exist
 	 *
-	 * @link http://www.php.net/manual/en/function.exif-imagetype.php#80383
+	 * @link https://www.php.net/manual/en/function.exif-imagetype.php#80383
 	 * @param string $fileName
 	 * @return string|boolean
 	 */

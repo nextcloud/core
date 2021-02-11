@@ -5,7 +5,7 @@
 	<name>Update notification</name>
 	<summary>Displays update notifications for Nextcloud and provides the SSO for the updater.</summary>
 	<description>Displays update notifications for Nextcloud and provides the SSO for the updater.</description>
-	<version>1.10.0</version>
+	<version>1.11.0</version>
 	<licence>agpl</licence>
 	<author>Lukas Reschke</author>
 	<namespace>UpdateNotification</namespace>
@@ -13,7 +13,7 @@
 	<category>monitoring</category>
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 	<dependencies>
-		<nextcloud min-version="20" max-version="20"/>
+		<nextcloud min-version="22" max-version="22"/>
 	</dependencies>
 
 	<background-jobs>

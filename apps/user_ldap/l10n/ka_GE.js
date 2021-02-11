@@ -181,7 +181,6 @@ OC.L10N.register(
     "UUID Attribute for Groups:" : "UUID ატრიბუტი ჯგუფებისთვის:",
     "Username-LDAP User Mapping" : "Username-LDAP მომხმარებლის ბმები",
     "Clear Username-LDAP User Mapping" : "Username-LDAP მომხმარებლის ბმების გასუფთავება",
-    "Clear Groupname-LDAP Group Mapping" : "Groupname-LDAP ჯგუფის ბმების გასუფთავება",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "დატოვეთ ცარიელი მომხმარებლის სახელი (საწყისი). სხვა შემთხვევაში, მიუთითეთ LDAP/AD ატრიბუტი."
+    "Clear Groupname-LDAP Group Mapping" : "Groupname-LDAP ჯგუფის ბმების გასუფთავება"
 },
 "nplurals=2; plural=(n!=1);");

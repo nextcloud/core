@@ -55,7 +55,7 @@ Feature: carddav
     Given "admin" uploads the contact "bjoern.vcf" to the addressbook "MyAddressbook"
     When Exporting the picture of contact "bjoern.vcf" from addressbook "MyAddressbook" as user "admin"
     Then The following HTTP headers should be set
-      |Content-Disposition|attachment|
+      |Content-Disposition|attachment; filename=bjoern.vcf.jpg|
       |Content-Type|image/jpeg|
       |Content-Security-Policy|default-src 'none';|
       |X-Content-Type-Options |nosniff|

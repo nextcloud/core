@@ -44,9 +44,8 @@ OC.L10N.register(
     "Where:" : "Ku:",
     "Description:" : "Përshkrimi:",
     "Invitation canceled" : "Ftesa u anullua",
-    "Hello %s," : "Përshëndetje %s,",
     "Invitation updated" : "Ftesa u përditësua",
-    "When:" : "Kur:",
+    "Location:" : "Vendndodhje:",
     "Link:" : "Link:",
     "Accept" : "Prano",
     "Decline" : "Refuzo",
@@ -58,8 +57,7 @@ OC.L10N.register(
     "Save" : "Ruaj",
     "Your attendance was updated successfully." : "Pjesëmarrja juaj u përditësua me sukses.",
     "Send invitations to attendees" : "Dërgo ftesa tek pjesëmarrësit",
-    "Technical details" : "Detaje teknike",
-    "Remote Address: %s" : "Adresa remote: %s",
-    "Request ID: %s" : "ID e kërkesës: %s"
+    "Hello %s," : "Përshëndetje %s,",
+    "When:" : "Kur:"
 },
 "nplurals=2; plural=(n != 1);");

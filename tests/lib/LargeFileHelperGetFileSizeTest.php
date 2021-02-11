@@ -8,6 +8,8 @@
 
 namespace Test;
 
+use bantu\IniGetWrapper\IniGetWrapper;
+
 /**
  * Tests whether LargeFileHelper is able to determine file size at all.
  * Large files are not considered yet.
@@ -43,7 +45,7 @@ class LargeFileHelperGetFileSizeTest extends TestCase {
 				'The PHP curl extension is required for this test.'
 			);
 		}
-		if (\OC::$server->getIniWrapper()->getString('open_basedir') !== '') {
+		if (\OC::$server->get(IniGetWrapper::class)->getString('open_basedir') !== '') {
 			$this->markTestSkipped(
 				'The PHP curl extension does not work with the file:// protocol when open_basedir is enabled.'
 			);
@@ -58,6 +60,9 @@ class LargeFileHelperGetFileSizeTest extends TestCase {
 	 * @dataProvider dataFileNameProvider
 	 */
 	public function testGetFileSizeViaExec($filename, $fileSize) {
+		if (escapeshellarg('strängé') !== '\'strängé\'') {
+			$this->markTestSkipped('Your escapeshell args removes accents');
+		}
 		if (!\OC_Helper::is_function_enabled('exec')) {
 			$this->markTestSkipped(
 				'The exec() function needs to be enabled for this test.'

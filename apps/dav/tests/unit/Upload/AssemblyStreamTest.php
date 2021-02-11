@@ -10,7 +10,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -80,7 +80,7 @@ class AssemblyStreamTest extends \Test\TestCase {
 		$tonofnodes = [];
 		$tonofdata = "";
 		for ($i = 0; $i < 101; $i++) {
-			$thisdata =  rand(0,100); // variable length and content
+			$thisdata = rand(0,100); // variable length and content
 			$tonofdata .= $thisdata;
 			array_push($tonofnodes, $this->buildNode($i,$thisdata));
 		}

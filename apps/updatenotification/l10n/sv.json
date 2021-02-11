@@ -21,7 +21,6 @@
     "A non-default update server is in use to be checked for updates:" : "En icke-standard uppdateringsserver används för att kontrolleras efter uppdateringar:",
     "Update channel:" : "Uppdateringskanal:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Du kan alltid uppdatera till en nyare version, men du kan aldrig nedgradera till en mer stabil version.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Notera att när en ny version släppts kan det ta lite tid innan den dyker upp här. Vi rullar ut nya versioner till våra användare vid utspridda tillfällen och hoppar ibland över versioner när problem hittas.",
     "Notify members of the following groups about available updates:" : "Notifiera medlemmar i följande grupper om tillgängliga uppdateraingar:",
     "Only notification for app updates are available." : "Endast notifikation för appuppdateringar är tillgängliga.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "Den valda uppdateringskanalen gör dedikerade aviseringar för servern förlegade.",
@@ -39,6 +38,7 @@
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "Den senaste stabila versionen. Den är lämplig för regelbunden användning och kommer alltid att uppdatera till den senaste större mer omfattande versionen.",
     "Beta" : "Beta",
     "A pre-release version only for testing new features, not for production environments." : "En förhandsversion endast för att testa nya funktioner, inte för produktionsmiljöer.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> appen har ingen uppdatering för den här versionen tillgänglig","<strong>%n</strong> appar har inga uppdateringar för den här versionen tillgänglig"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> appen har ingen uppdatering för den här versionen tillgänglig","<strong>%n</strong> appar har inga uppdateringar för den här versionen tillgänglig"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Notera att när en ny version släppts kan det ta lite tid innan den dyker upp här. Vi rullar ut nya versioner till våra användare vid utspridda tillfällen och hoppar ibland över versioner när problem hittas."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

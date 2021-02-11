@@ -9,11 +9,15 @@
 
 namespace Test\DB;
 
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use OC\DB\MDB2SchemaReader;
 use OCP\IConfig;
 use Test\TestCase;
+use Doctrine\DBAL\Types\IntegerType;
+use Doctrine\DBAL\Types\TextType;
+use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\BooleanType;
 
 /**
  * Class MDB2SchemaReaderTest
@@ -46,18 +50,18 @@ class MDB2SchemaReaderTest extends TestCase {
 	}
 
 	public function testRead() {
-		$reader = new MDB2SchemaReader($this->getConfig(), new MySqlPlatform());
+		$reader = new MDB2SchemaReader($this->getConfig(), new MySQLPlatform());
 		$schema = $reader->loadSchemaFromFile(__DIR__ . '/testschema.xml', new Schema());
 		$this->assertCount(1, $schema->getTables());
 
 		$table = $schema->getTable('test_table');
-		$this->assertCount(8, $table->getColumns());
+		$this->assertCount(9, $table->getColumns());
 
-		$this->assertEquals(4, $table->getColumn('integerfield')->getLength());
-		$this->assertTrue($table->getColumn('integerfield')->getAutoincrement());
-		$this->assertEquals(0, $table->getColumn('integerfield')->getDefault());
-		$this->assertTrue($table->getColumn('integerfield')->getNotnull());
-		$this->assertInstanceOf('Doctrine\DBAL\Types\IntegerType', $table->getColumn('integerfield')->getType());
+		$this->assertEquals(4, $table->getColumn('id')->getLength());
+		$this->assertTrue($table->getColumn('id')->getAutoincrement());
+		$this->assertEquals(0, $table->getColumn('id')->getDefault());
+		$this->assertTrue($table->getColumn('id')->getNotnull());
+		$this->assertInstanceOf(IntegerType::class, $table->getColumn('id')->getType());
 
 		$this->assertSame(10, $table->getColumn('integerfield_default')->getDefault());
 
@@ -65,18 +69,19 @@ class MDB2SchemaReaderTest extends TestCase {
 		$this->assertFalse($table->getColumn('textfield')->getAutoincrement());
 		$this->assertSame('foo', $table->getColumn('textfield')->getDefault());
 		$this->assertTrue($table->getColumn('textfield')->getNotnull());
-		$this->assertInstanceOf('Doctrine\DBAL\Types\StringType', $table->getColumn('textfield')->getType());
+		$this->assertInstanceOf(StringType::class, $table->getColumn('textfield')->getType());
 
 		$this->assertNull($table->getColumn('clobfield')->getLength());
 		$this->assertFalse($table->getColumn('clobfield')->getAutoincrement());
 		$this->assertNull($table->getColumn('clobfield')->getDefault());
 		$this->assertFalse($table->getColumn('clobfield')->getNotnull());
-		$this->assertInstanceOf('Doctrine\DBAL\Types\TextType', $table->getColumn('clobfield')->getType());
+		$this->assertInstanceOf(StringType::class, $table->getColumn('clobfield')->getType());
+//		$this->assertInstanceOf(TextType::class, $table->getColumn('clobfield')->getType());
 
 		$this->assertNull($table->getColumn('booleanfield')->getLength());
 		$this->assertFalse($table->getColumn('booleanfield')->getAutoincrement());
 		$this->assertNull($table->getColumn('booleanfield')->getDefault());
-		$this->assertInstanceOf('Doctrine\DBAL\Types\BooleanType', $table->getColumn('booleanfield')->getType());
+		$this->assertInstanceOf(BooleanType::class, $table->getColumn('booleanfield')->getType());
 
 		$this->assertTrue($table->getColumn('booleanfield_true')->getDefault());
 		$this->assertFalse($table->getColumn('booleanfield_false')->getDefault());
@@ -84,10 +89,13 @@ class MDB2SchemaReaderTest extends TestCase {
 		$this->assertEquals(12, $table->getColumn('decimalfield_precision_scale')->getPrecision());
 		$this->assertEquals(2, $table->getColumn('decimalfield_precision_scale')->getScale());
 
-		$this->assertCount(2, $table->getIndexes());
-		$this->assertEquals(['integerfield'], $table->getIndex('primary')->getUnquotedColumns());
+		$this->assertCount(3, $table->getIndexes());
+		$this->assertEquals(['id'], $table->getIndex('primary')->getUnquotedColumns());
 		$this->assertTrue($table->getIndex('primary')->isPrimary());
 		$this->assertTrue($table->getIndex('primary')->isUnique());
+		$this->assertEquals(['integerfield'], $table->getIndex('index_integerfield')->getUnquotedColumns());
+		$this->assertFalse($table->getIndex('index_integerfield')->isPrimary());
+		$this->assertTrue($table->getIndex('index_integerfield')->isUnique());
 		$this->assertEquals(['booleanfield'], $table->getIndex('index_boolean')->getUnquotedColumns());
 		$this->assertFalse($table->getIndex('index_boolean')->isPrimary());
 		$this->assertFalse($table->getIndex('index_boolean')->isUnique());

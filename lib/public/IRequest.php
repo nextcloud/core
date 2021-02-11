@@ -107,6 +107,8 @@ interface IRequest {
 	/**
 	 * @param string $name
 	 *
+	 * @psalm-taint-source input
+	 *
 	 * @return string
 	 * @since 6.0.0
 	 */
@@ -115,6 +117,8 @@ interface IRequest {
 	/**
 	 * Lets you access post and get parameters by the index
 	 * In case of json requests the encoded json body is accessed
+	 *
+	 * @psalm-taint-source input
 	 *
 	 * @param string $key the key which you want to access in the URL Parameter
 	 *                     placeholder, $_POST or $_GET array.
@@ -133,6 +137,8 @@ interface IRequest {
 	 * Returns all params that were received, be it from the request
 	 *
 	 * (as GET or POST) or through the URL by the route
+	 *
+	 * @psalm-taint-source input
 	 *
 	 * @return array the array with all parameters
 	 * @since 6.0.0
@@ -169,6 +175,8 @@ interface IRequest {
 
 	/**
 	 * Shortcut for getting cookie variables
+	 *
+	 * @psalm-taint-source input
 	 *
 	 * @param string $key the key that will be taken from the $_COOKIE array
 	 * @return string|null the value in the $_COOKIE element
@@ -244,6 +252,8 @@ interface IRequest {
 	 * Returns the request uri, even if the website uses one or more
 	 * reverse proxies
 	 *
+	 * @psalm-taint-source input
+	 *
 	 * @return string
 	 * @since 8.1.0
 	 */
@@ -251,6 +261,8 @@ interface IRequest {
 
 	/**
 	 * Get raw PathInfo from request (not urldecoded)
+	 *
+	 * @psalm-taint-source input
 	 *
 	 * @throws \Exception
 	 * @return string Path info
@@ -260,6 +272,8 @@ interface IRequest {
 
 	/**
 	 * Get PathInfo from request
+	 *
+	 * @psalm-taint-source input
 	 *
 	 * @throws \Exception
 	 * @return string|false Path info or false when not found
@@ -288,6 +302,8 @@ interface IRequest {
 	/**
 	 * Returns the unverified server host from the headers without checking
 	 * whether it is a trusted domain
+	 *
+	 * @psalm-taint-source input
 	 *
 	 * @return string Server host
 	 * @since 8.1.0

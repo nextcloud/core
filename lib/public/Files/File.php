@@ -38,7 +38,6 @@ use OCP\Lock\LockedException;
 /**
  * Interface File
  *
- * @package OCP\Files
  * @since 6.0.0
  */
 interface File extends Node {

@@ -31,7 +31,6 @@ use OCP\Util;
 /**
  * Class LinkMenuAction
  *
- * @package OCP\AppFramework\Http\Template
  * @since 14.0.0
  */
 class ExternalShareMenuAction extends SimpleMenuAction {

@@ -29,7 +29,6 @@ namespace OCP\WorkflowEngine\EntityContext;
 /**
  * Interface IUrl
  *
- * @package OCP\WorkflowEngine\EntityContext
  *
  * @since 18.0.0
  */

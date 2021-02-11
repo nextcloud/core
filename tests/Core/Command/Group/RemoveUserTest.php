@@ -53,7 +53,7 @@ class RemoveUserTest extends TestCase {
 		parent::setUp();
 
 		$this->groupManager = $this->createMock(IGroupManager::class);
-		$this->userManager =  $this->createMock(IUserManager::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 		$this->command = new RemoveUser($this->userManager, $this->groupManager);
 
 		$this->input = $this->createMock(InputInterface::class);

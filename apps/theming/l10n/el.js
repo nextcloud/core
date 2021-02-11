@@ -24,7 +24,6 @@ OC.L10N.register(
     "Could not write file to disk" : "Αδυναμία εγγραφής αρχείου στον δίσκο",
     "A PHP extension stopped the file upload" : "Ένα πρόσθετο PHP διέκοψε την μεταφόρτωση του αρχείου",
     "No file uploaded" : "Δεν έχει μεταφορτωθεί αρχείο",
-    "Unsupported image type" : "Μη υποστηριζόμενος τύπος εικόνας",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "Χρησιμοποιείτε ήδη προσαρμοσμένο θέμα. Οι ρυθμίσεις της εφαρμογής Θέματα μπορεί να αντικατασταθούν από αυτό.",
     "Theming" : "Προσαρμογή θέματος",
     "Legal notice" : "Νομική ειδοποίηση",

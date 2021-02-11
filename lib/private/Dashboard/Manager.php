@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2020 Julius Härtl <jus@bitgrid.net>
  *
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  *
  * @license GNU AGPL version 3 or any later version
@@ -16,7 +17,7 @@ declare(strict_types=1);
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
@@ -95,7 +96,16 @@ class Manager implements IManager {
 			}
 
 			try {
+				$startTime = microtime(true);
 				$widget->load();
+				$endTime = microtime(true);
+				$duration = $endTime - $startTime;
+				if ($duration > 1) {
+					\OC::$server->getLogger()->error('Dashboard widget {widget} took {duration} seconds to load.', [
+						'widget' => $widget->getId(),
+						'duration' => round($duration, 2),
+					]);
+				}
 			} catch (Throwable $e) {
 				\OC::$server->getLogger()->logException($e, [
 					'message' => 'Error during dashboard widget loading: ' . $e->getMessage(),

@@ -3,11 +3,14 @@
  * @copyright Copyright (c) 2017 Lukas Reschke <lukas@statuscode.ch>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Brad Rubenstein <brad@wbr.tech>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Liam JACK <liamjack@users.noreply.github.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author medcloud <42641918+medcloud@users.noreply.github.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author zulan <git@zulan.net>
@@ -136,7 +139,7 @@ class NewUserMailHelperTest extends TestCase {
 		$this->timeFactory
 			->expects($this->once())
 			->method('getTime')
-			->willReturn('12345');
+			->willReturn(12345);
 		/** @var IUser|\PHPUnit\Framework\MockObject\MockObject $user */
 		$user = $this->createMock(IUser::class);
 		$user
@@ -203,8 +206,8 @@ class NewUserMailHelperTest extends TestCase {
 						<table class="row collapse" style="border-collapse:collapse;border-spacing:0;display:table;padding:0;position:relative;text-align:left;vertical-align:top;width:100%">
 							<tbody>
 							<tr style="padding:0;text-align:left;vertical-align:top">
-								<center data-parsed="" style="background-color:;width:150px;height:150px;padding:0px;position:relative;border-radius:200px">
-									<img class="logo float-center" src="" alt="TestCloud" align="center" style="-ms-interpolation-mode:bicubic;clear:both;display:block;float:none;outline:0;text-align:center;text-decoration:none;position:absolute;max-height:100px;max-width:100px;width:auto;height:auto;position:absolute;top:0;bottom:0;left:0;right:0;margin:auto;">
+								<center data-parsed="" style="background-color:;min-width:175px;max-height:175px; padding:35px 0px;border-radius:200px">
+									<img class="logo float-center" src="" alt="TestCloud" align="center" style="-ms-interpolation-mode:bicubic;clear:both;display:block;float:none;margin:0 auto;outline:0;text-align:center;text-decoration:none;max-height:105px;max-width:105px;width:auto;height:auto">
 								</center>
 							</tr>
 							</tbody>
@@ -368,6 +371,7 @@ Welcome to your TestCloud account, you can add, protect, and share your data.
 
 Your username is: john
 
+
 Set your password: https://example.com/resetPassword/MySuperLongSecureRandomToken
 Install Client: https://nextcloud.com/install/#install-clients
 
@@ -434,8 +438,8 @@ EOF;
 						<table class="row collapse" style="border-collapse:collapse;border-spacing:0;display:table;padding:0;position:relative;text-align:left;vertical-align:top;width:100%">
 							<tbody>
 							<tr style="padding:0;text-align:left;vertical-align:top">
-								<center data-parsed="" style="background-color:;width:150px;height:150px;padding:0px;position:relative;border-radius:200px">
-									<img class="logo float-center" src="" alt="TestCloud" align="center" style="-ms-interpolation-mode:bicubic;clear:both;display:block;float:none;outline:0;text-align:center;text-decoration:none;position:absolute;max-height:100px;max-width:100px;width:auto;height:auto;position:absolute;top:0;bottom:0;left:0;right:0;margin:auto;">
+								<center data-parsed="" style="background-color:;min-width:175px;max-height:175px; padding:35px 0px;border-radius:200px">
+									<img class="logo float-center" src="" alt="TestCloud" align="center" style="-ms-interpolation-mode:bicubic;clear:both;display:block;float:none;margin:0 auto;outline:0;text-align:center;text-decoration:none;max-height:105px;max-width:105px;width:auto;height:auto">
 								</center>
 							</tr>
 							</tbody>
@@ -599,6 +603,7 @@ Welcome to your TestCloud account, you can add, protect, and share your data.
 
 Your username is: john
 
+
 Go to TestCloud: https://example.com/
 Install Client: https://nextcloud.com/install/#install-clients
 
@@ -669,8 +674,8 @@ EOF;
 						<table class="row collapse" style="border-collapse:collapse;border-spacing:0;display:table;padding:0;position:relative;text-align:left;vertical-align:top;width:100%">
 							<tbody>
 							<tr style="padding:0;text-align:left;vertical-align:top">
-								<center data-parsed="" style="background-color:;width:150px;height:150px;padding:0px;position:relative;border-radius:200px">
-									<img class="logo float-center" src="" alt="TestCloud" align="center" style="-ms-interpolation-mode:bicubic;clear:both;display:block;float:none;outline:0;text-align:center;text-decoration:none;position:absolute;max-height:100px;max-width:100px;width:auto;height:auto;position:absolute;top:0;bottom:0;left:0;right:0;margin:auto;">
+								<center data-parsed="" style="background-color:;min-width:175px;max-height:175px; padding:35px 0px;border-radius:200px">
+									<img class="logo float-center" src="" alt="TestCloud" align="center" style="-ms-interpolation-mode:bicubic;clear:both;display:block;float:none;margin:0 auto;outline:0;text-align:center;text-decoration:none;max-height:105px;max-width:105px;width:auto;height:auto">
 								</center>
 							</tr>
 							</tbody>
@@ -816,6 +821,7 @@ EOF;
 Welcome aboard John Doe
 
 Welcome to your TestCloud account, you can add, protect, and share your data.
+
 
 Go to TestCloud: https://example.com/
 Install Client: https://nextcloud.com/install/#install-clients

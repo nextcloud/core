@@ -27,7 +27,6 @@ namespace OCP\App;
 /**
  * Class AppPathNotFoundException
  *
- * @package OCP\App
  * @since 11.0.0
  */
 class AppPathNotFoundException extends \Exception {

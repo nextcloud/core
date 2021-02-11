@@ -7,10 +7,6 @@ OC.L10N.register(
     "Enable high contrast mode" : "Lubage kõrge kontrastsusega režiim.",
     "Dyslexia font" : "Düsleksia font",
     "Enable dyslexia font" : "Luba düsleksia font",
-    "Accessibility" : "Ligipääsetavus",
-    "High contrast theme" : "Kõrge kontrastsusega teema",
-    "our issue tracker" : "meie vigade jälitaja",
-    "our design team" : "meie disaini meeskond",
-    "Enable" : "Lülita sisse"
+    "Accessibility" : "Ligipääsetavus"
 },
 "nplurals=2; plural=(n != 1);");

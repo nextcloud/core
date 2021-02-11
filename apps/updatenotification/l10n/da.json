@@ -15,12 +15,12 @@
     "Your version is up to date." : "Du har seneste version.",
     "A non-default update server is in use to be checked for updates:" : "En ikke standard opdateringsserver bliver brugt for at tjekke efter opdateringer:",
     "Update channel:" : "Opdatér kanal:",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Bemærk at efter en ny udgivelse kan det tage noget tid før den bliver vist her. Vi udruller nye opdateringer spredt ud og nogle gange springer man versioner over hvis der bliver fundet fejl i dem.",
     "Notify members of the following groups about available updates:" : "Meddel brugere fra følgende gruppe om tilgængelige opdateringer: ",
     "Only notification for app updates are available." : "Kun notifikation for app opdateringer tilgængelige.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "Den valgte kanal lave dedikerede notifikationer for serveren ligegyldige.",
     "The selected update channel does not support updates of the server." : "Den valgte opdateringskanal understøtter ikke opdatering af serveren.",
     "View changelog" : "Se ændringslog",
-    "Beta" : "Beta"
+    "Beta" : "Beta",
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Bemærk at efter en ny udgivelse kan det tage noget tid før den bliver vist her. Vi udruller nye opdateringer spredt ud og nogle gange springer man versioner over hvis der bliver fundet fejl i dem."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -43,7 +43,6 @@ namespace OCP;
  * - preCreate(string $groupId)
  * - postCreate(\OC\Group\Group $group)
  *
- * @package OC\Group
  * @since 8.0.0
  */
 interface IGroupManager {

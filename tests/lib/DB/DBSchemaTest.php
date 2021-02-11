@@ -64,7 +64,6 @@ class DBSchemaTest extends TestCase {
 	public function testSchema() {
 		$this->doTestSchemaCreating();
 		$this->doTestSchemaChanging();
-		$this->doTestSchemaDumping();
 		$this->doTestSchemaRemoving();
 	}
 
@@ -77,14 +76,6 @@ class DBSchemaTest extends TestCase {
 	public function doTestSchemaChanging() {
 		OC_DB::updateDbFromStructure($this->schema_file2);
 		$this->assertTableExist($this->table2);
-	}
-
-	public function doTestSchemaDumping() {
-		$outfile = $this->tempManager->getTemporaryFile();
-		OC_DB::getDbStructure($outfile);
-		$content = file_get_contents($outfile);
-		$this->assertStringContainsString($this->table1, $content);
-		$this->assertStringContainsString($this->table2, $content);
 	}
 
 	public function doTestSchemaRemoving() {

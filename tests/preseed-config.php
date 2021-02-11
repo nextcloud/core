@@ -4,9 +4,9 @@ $CONFIG = [
 	'appstoreenabled' => false,
 	'apps_paths' => [
 		[
-			'path'		=> OC::$SERVERROOT . '/apps',
-			'url'		=> '/apps',
-			'writable'	=> true,
+			'path' => OC::$SERVERROOT . '/apps',
+			'url' => '/apps',
+			'writable' => true,
 		],
 	],
 ];

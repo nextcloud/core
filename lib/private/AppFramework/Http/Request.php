@@ -10,6 +10,8 @@ declare(strict_types=1);
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author J0WI <J0WI@users.noreply.github.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Juan Pablo Villafáñez <jvillafanez@solidgear.es>
  * @author Julius Härtl <jus@bitgrid.net>
@@ -22,7 +24,7 @@ declare(strict_types=1);
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Tanghus <thomas@tanghus.net>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -74,7 +76,7 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 	// Android Chrome user agent: https://developers.google.com/chrome/mobile/docs/user-agent
 	public const USER_AGENT_ANDROID_MOBILE_CHROME = '#Android.*Chrome/[.0-9]*#';
 	public const USER_AGENT_FREEBOX = '#^Mozilla/5\.0$#';
-	public const REGEX_LOCALHOST = '/^(127\.0\.0\.1|localhost|::1)$/';
+	public const REGEX_LOCALHOST = '/^(127\.0\.0\.1|localhost|\[::1\])$/';
 
 	/**
 	 * @deprecated use \OCP\IRequest::USER_AGENT_CLIENT_IOS instead
@@ -133,10 +135,10 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 	 * @param IConfig $config
 	 * @param CsrfTokenManager|null $csrfTokenManager
 	 * @param string $stream
-	 * @see http://www.php.net/manual/en/reserved.variables.php
+	 * @see https://www.php.net/manual/en/reserved.variables.php
 	 */
-	public function __construct(array $vars= [],
-								ISecureRandom $secureRandom = null,
+	public function __construct(array $vars,
+								ISecureRandom $secureRandom,
 								IConfig $config,
 								CsrfTokenManager $csrfTokenManager = null,
 								string $stream = 'php://input') {
@@ -826,7 +828,7 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 	 */
 	public function getScriptName(): string {
 		$name = $this->server['SCRIPT_NAME'];
-		$overwriteWebRoot =  $this->config->getSystemValue('overwritewebroot');
+		$overwriteWebRoot = $this->config->getSystemValue('overwritewebroot');
 		if ($overwriteWebRoot !== '' && $this->isOverwriteCondition()) {
 			// FIXME: This code is untestable due to __DIR__, also that hardcoded path is really dangerous
 			$serverRoot = str_replace('\\', '/', substr(__DIR__, 0, -\strlen('lib/private/appframework/http/')));

@@ -14,7 +14,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -34,24 +34,38 @@
 
 namespace OC;
 
+use OC\App\AppStore\Bundles\BundleFetcher;
 use OC\Avatar\AvatarManager;
+use OC\DB\Connection;
+use OC\DB\ConnectionAdapter;
+use OC\Repair\AddBruteForceCleanupJob;
 use OC\Repair\AddCleanupUpdaterBackupsJob;
 use OC\Repair\CleanTags;
 use OC\Repair\ClearFrontendCaches;
 use OC\Repair\ClearGeneratedAvatarCache;
 use OC\Repair\Collation;
 use OC\Repair\MoveUpdaterStepFile;
+use OC\Repair\Owncloud\CleanPreviews;
 use OC\Repair\NC11\FixMountStorages;
+use OC\Repair\Owncloud\MoveAvatars;
+use OC\Repair\Owncloud\InstallCoreBundle;
+use OC\Repair\Owncloud\UpdateLanguageCodes;
 use OC\Repair\NC13\AddLogRotateJob;
 use OC\Repair\NC14\AddPreviewBackgroundCleanupJob;
 use OC\Repair\NC16\AddClenupLoginFlowV2BackgroundJob;
 use OC\Repair\NC16\CleanupCardDAVPhotoCache;
 use OC\Repair\NC16\ClearCollectionsAccessCache;
 use OC\Repair\NC18\ResetGeneratedAvatarFlag;
+use OC\Repair\NC20\EncryptionLegacyCipher;
+use OC\Repair\NC20\EncryptionMigration;
+use OC\Repair\NC20\ShippedDashboardEnable;
+use OC\Repair\NC21\AddCheckForUserCertificatesJob;
+use OC\Repair\NC21\ValidatePhoneNumber;
 use OC\Repair\OldGroupMembershipShares;
 use OC\Repair\Owncloud\DropAccountTermsTable;
 use OC\Repair\Owncloud\SaveAccountsTableData;
 use OC\Repair\RemoveLinkShares;
+use OC\Repair\RepairDavShares;
 use OC\Repair\RepairInvalidShares;
 use OC\Repair\RepairMimeTypes;
 use OC\Repair\SqliteAutoincrement;
@@ -84,7 +98,7 @@ class Repair implements IOutput {
 	 */
 	public function __construct(array $repairSteps, EventDispatcherInterface $dispatcher) {
 		$this->repairSteps = $repairSteps;
-		$this->dispatcher  = $dispatcher;
+		$this->dispatcher = $dispatcher;
 	}
 
 	/**
@@ -141,11 +155,26 @@ class Repair implements IOutput {
 	public static function getRepairSteps() {
 		return [
 			new Collation(\OC::$server->getConfig(), \OC::$server->getLogger(), \OC::$server->getDatabaseConnection(), false),
-			new RepairMimeTypes(\OC::$server->getConfig()),
+			new RepairMimeTypes(\OC::$server->getConfig(), \OC::$server->getDatabaseConnection()),
 			new CleanTags(\OC::$server->getDatabaseConnection(), \OC::$server->getUserManager()),
 			new RepairInvalidShares(\OC::$server->getConfig(), \OC::$server->getDatabaseConnection()),
 			new MoveUpdaterStepFile(\OC::$server->getConfig()),
+			new MoveAvatars(
+				\OC::$server->getJobList(),
+				\OC::$server->getConfig()
+			),
+			new CleanPreviews(
+				\OC::$server->getJobList(),
+				\OC::$server->getUserManager(),
+				\OC::$server->getConfig()
+			),
 			new FixMountStorages(\OC::$server->getDatabaseConnection()),
+			new UpdateLanguageCodes(\OC::$server->getDatabaseConnection(), \OC::$server->getConfig()),
+			new InstallCoreBundle(
+				\OC::$server->query(BundleFetcher::class),
+				\OC::$server->getConfig(),
+				\OC::$server->query(Installer::class)
+			),
 			new AddLogRotateJob(\OC::$server->getJobList()),
 			new ClearFrontendCaches(\OC::$server->getMemCacheFactory(), \OC::$server->query(SCSSCacher::class), \OC::$server->query(JSCombiner::class)),
 			new ClearGeneratedAvatarCache(\OC::$server->getConfig(), \OC::$server->query(AvatarManager::class)),
@@ -156,6 +185,12 @@ class Repair implements IOutput {
 			new RemoveLinkShares(\OC::$server->getDatabaseConnection(), \OC::$server->getConfig(), \OC::$server->getGroupManager(), \OC::$server->getNotificationManager(), \OC::$server->query(ITimeFactory::class)),
 			new ClearCollectionsAccessCache(\OC::$server->getConfig(), \OC::$server->query(IManager::class)),
 			\OC::$server->query(ResetGeneratedAvatarFlag::class),
+			\OC::$server->query(EncryptionLegacyCipher::class),
+			\OC::$server->query(EncryptionMigration::class),
+			\OC::$server->get(ShippedDashboardEnable::class),
+			\OC::$server->get(AddBruteForceCleanupJob::class),
+			\OC::$server->get(AddCheckForUserCertificatesJob::class),
+			\OC::$server->get(RepairDavShares::class)
 		];
 	}
 
@@ -167,7 +202,8 @@ class Repair implements IOutput {
 	 */
 	public static function getExpensiveRepairSteps() {
 		return [
-			new OldGroupMembershipShares(\OC::$server->getDatabaseConnection(), \OC::$server->getGroupManager())
+			new OldGroupMembershipShares(\OC::$server->getDatabaseConnection(), \OC::$server->getGroupManager()),
+			\OC::$server->get(ValidatePhoneNumber::class),
 		];
 	}
 
@@ -178,13 +214,16 @@ class Repair implements IOutput {
 	 * @return IRepairStep[]
 	 */
 	public static function getBeforeUpgradeRepairSteps() {
-		$connection = \OC::$server->getDatabaseConnection();
-		$config     = \OC::$server->getConfig();
-		$steps      = [
-			new Collation(\OC::$server->getConfig(), \OC::$server->getLogger(), $connection, true),
+		/** @var Connection $connection */
+		$connection = \OC::$server->get(Connection::class);
+		/** @var ConnectionAdapter $connectionAdapter */
+		$connectionAdapter = \OC::$server->get(ConnectionAdapter::class);
+		$config = \OC::$server->getConfig();
+		$steps = [
+			new Collation(\OC::$server->getConfig(), \OC::$server->getLogger(), $connectionAdapter, true),
 			new SqliteAutoincrement($connection),
-			new SaveAccountsTableData($connection, $config),
-			new DropAccountTermsTable($connection)
+			new SaveAccountsTableData($connectionAdapter, $config),
+			new DropAccountTermsTable($connectionAdapter),
 		];
 
 		return $steps;

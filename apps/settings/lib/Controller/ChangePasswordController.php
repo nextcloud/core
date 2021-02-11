@@ -2,9 +2,12 @@
 /**
  *
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Matthew Setter <matthew@matthewsetter.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -33,6 +36,7 @@
 
 namespace OCA\Settings\Controller;
 
+use OC\Group\Manager as GroupManager;
 use OC\HintException;
 use OC\User\Session;
 use OCP\App\IAppManager;
@@ -56,7 +60,7 @@ class ChangePasswordController extends Controller {
 	/** @var IL10N */
 	private $l;
 
-	/** @var IGroupManager */
+	/** @var GroupManager */
 	private $groupManager;
 
 	/** @var Session */
@@ -188,7 +192,9 @@ class ChangePasswordController extends Controller {
 				\OC::$server->getUserSession(),
 				new \OCA\Encryption\Session(\OC::$server->getSession()),
 				\OC::$server->getLogger(),
-				$util);
+				$util,
+				\OC::$server->getLockingProvider()
+			);
 			$recovery = new \OCA\Encryption\Recovery(
 				\OC::$server->getUserSession(),
 				$crypt,

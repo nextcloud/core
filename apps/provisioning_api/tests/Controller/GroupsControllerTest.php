@@ -35,6 +35,7 @@ use OC\Group\Manager;
 use OC\SubAdmin;
 use OC\User\NoUserException;
 use OCA\Provisioning_API\Controller\GroupsController;
+use OCP\Accounts\IAccountManager;
 use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IRequest;
@@ -185,10 +186,10 @@ class GroupsControllerTest extends \Test\TestCase {
 			->method('getUser')
 			->willReturnCallback(function (IUser $user) {
 				return [
-					AccountManager::PROPERTY_PHONE => ['value' => '0800-call-' . $user->getUID()],
-					AccountManager::PROPERTY_ADDRESS => ['value' => 'Holzweg 99, 0601 Herrera, Panama'],
-					AccountManager::PROPERTY_WEBSITE => ['value' => 'https://' . $user->getUid() . '.pa'],
-					AccountManager::PROPERTY_TWITTER => ['value' => '@' . $user->getUID()],
+					IAccountManager::PROPERTY_PHONE => ['value' => '0800-call-' . $user->getUID()],
+					IAccountManager::PROPERTY_ADDRESS => ['value' => 'Holzweg 99, 0601 Herrera, Panama'],
+					IAccountManager::PROPERTY_WEBSITE => ['value' => 'https://' . $user->getUid() . '.pa'],
+					IAccountManager::PROPERTY_TWITTER => ['value' => '@' . $user->getUID()],
 				];
 			});
 	}

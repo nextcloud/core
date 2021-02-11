@@ -4,9 +4,14 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Gary Kim <gary@garykim.dev>
+ * @author Jacob Neplokh <me@jacobneplokh.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Julien Veyssier <eneiluj@posteo.net>
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Michael Weimann <mail@michael-weimann.eu>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -36,6 +41,7 @@ use OCP\Files\SimpleFS\ISimpleFolder;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\ILogger;
+use OCP\ITempManager;
 use OCP\IURLGenerator;
 
 class ImageManager {
@@ -52,27 +58,22 @@ class ImageManager {
 	private $cacheFactory;
 	/** @var ILogger */
 	private $logger;
+	/** @var ITempManager */
+	private $tempManager;
 
-	/**
-	 * ImageManager constructor.
-	 *
-	 * @param IConfig $config
-	 * @param IAppData $appData
-	 * @param IURLGenerator $urlGenerator
-	 * @param ICacheFactory $cacheFactory
-	 * @param ILogger $logger
-	 */
 	public function __construct(IConfig $config,
 								IAppData $appData,
 								IURLGenerator $urlGenerator,
 								ICacheFactory $cacheFactory,
-								ILogger $logger
+								ILogger $logger,
+								ITempManager $tempManager
 	) {
 		$this->config = $config;
 		$this->appData = $appData;
 		$this->urlGenerator = $urlGenerator;
 		$this->cacheFactory = $cacheFactory;
 		$this->logger = $logger;
+		$this->tempManager = $tempManager;
 	}
 
 	public function getImageUrl(string $key, bool $useSvg = true): string {
@@ -105,10 +106,9 @@ class ImageManager {
 	 * @throws NotPermittedException
 	 */
 	public function getImage(string $key, bool $useSvg = true): ISimpleFile {
-		$pngFile = null;
-		$logo = $this->config->getAppValue('theming', $key . 'Mime', false);
+		$logo = $this->config->getAppValue('theming', $key . 'Mime', '');
 		$folder = $this->appData->getFolder('images');
-		if ($logo === false || !$folder->fileExists($key)) {
+		if ($logo === '' || !$folder->fileExists($key)) {
 			throw new NotFoundException();
 		}
 		if (!$useSvg && $this->shouldReplaceIcons()) {
@@ -120,16 +120,13 @@ class ImageManager {
 					$finalIconFile->setImageFormat('png32');
 					$pngFile = $folder->newFile($key . '.png');
 					$pngFile->putContent($finalIconFile->getImageBlob());
+					return $pngFile;
 				} catch (\ImagickException $e) {
 					$this->logger->info('The image was requested to be no SVG file, but converting it to PNG failed: ' . $e->getMessage());
-					$pngFile = null;
 				}
 			} else {
-				$pngFile = $folder->getFile($key . '.png');
+				return $folder->getFile($key . '.png');
 			}
-		}
-		if ($pngFile !== null) {
-			return $pngFile;
 		}
 		return $folder->getFile($key);
 	}
@@ -209,6 +206,71 @@ class ImageManager {
 		} catch (NotFoundException $e) {
 		} catch (NotPermittedException $e) {
 		}
+	}
+
+	public function updateImage(string $key, string $tmpFile) {
+		$this->delete($key);
+
+		try {
+			$folder = $this->appData->getFolder('images');
+		} catch (NotFoundException $e) {
+			$folder = $this->appData->newFolder('images');
+		}
+
+		$target = $folder->newFile($key);
+		$supportedFormats = $this->getSupportedUploadImageFormats($key);
+		$detectedMimeType = mime_content_type($tmpFile);
+		if (!in_array($detectedMimeType, $supportedFormats, true)) {
+			throw new \Exception('Unsupported image type');
+		}
+
+		if ($key === 'background' && strpos($detectedMimeType, 'image/svg') === false && strpos($detectedMimeType, 'image/gif') === false) {
+			// Optimize the image since some people may upload images that will be
+			// either to big or are not progressive rendering.
+			$newImage = @imagecreatefromstring(file_get_contents($tmpFile));
+
+			// Preserve transparency
+			imagesavealpha($newImage, true);
+			imagealphablending($newImage, true);
+
+			$tmpFile = $this->tempManager->getTemporaryFile();
+			$newWidth = (int)(imagesx($newImage) < 4096 ? imagesx($newImage) : 4096);
+			$newHeight = (int)(imagesy($newImage) / (imagesx($newImage) / $newWidth));
+			$outputImage = imagescale($newImage, $newWidth, $newHeight);
+
+			imageinterlace($outputImage, 1);
+			imagepng($outputImage, $tmpFile, 8);
+			imagedestroy($outputImage);
+
+			$target->putContent(file_get_contents($tmpFile));
+		} else {
+			$target->putContent(file_get_contents($tmpFile));
+		}
+
+		return $detectedMimeType;
+	}
+
+	/**
+	 * Returns a list of supported mime types for image uploads.
+	 * "favicon" images are only allowed to be SVG when imagemagick with SVG support is available.
+	 *
+	 * @param string $key The image key, e.g. "favicon"
+	 * @return array
+	 */
+	private function getSupportedUploadImageFormats(string $key): array {
+		$supportedFormats = ['image/jpeg', 'image/png', 'image/gif'];
+
+		if ($key !== 'favicon' || $this->shouldReplaceIcons() === true) {
+			$supportedFormats[] = 'image/svg+xml';
+			$supportedFormats[] = 'image/svg';
+		}
+
+		if ($key === 'favicon') {
+			$supportedFormats[] = 'image/x-icon';
+			$supportedFormats[] = 'image/vnd.microsoft.icon';
+		}
+
+		return $supportedFormats;
 	}
 
 	/**

@@ -192,8 +192,8 @@ class InvitationResponseController extends Controller {
 	 * @param string|null $comment
 	 * @return Message
 	 */
-	private function buildITipResponse(array $row, string $partStat, int $guests=null,
-									   string $comment=null):Message {
+	private function buildITipResponse(array $row, string $partStat, int $guests = null,
+									   string $comment = null):Message {
 		$iTipMessage = new Message();
 		$iTipMessage->uid = $row['uid'];
 		$iTipMessage->component = 'VEVENT';

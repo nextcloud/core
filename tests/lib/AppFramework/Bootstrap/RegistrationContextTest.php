@@ -83,7 +83,10 @@ class RegistrationContextTest extends TestCase {
 		$this->context->delegateEventListenerRegistrations($dispatcher);
 	}
 
-	public function testRegisterService(): void {
+	/**
+	 * @dataProvider dataProvider_TrueFalse
+	 */
+	public function testRegisterService(bool $shared): void {
 		$app = $this->createMock(App::class);
 		$service = 'abc';
 		$factory = function () {
@@ -94,11 +97,11 @@ class RegistrationContextTest extends TestCase {
 			->willReturn($container);
 		$container->expects($this->once())
 			->method('registerService')
-			->with($service, $factory, true);
+			->with($service, $factory, $shared);
 		$this->logger->expects($this->never())
 			->method('logException');
 
-		$this->context->for('myapp')->registerService($service, $factory);
+		$this->context->for('myapp')->registerService($service, $factory, $shared);
 		$this->context->delegateContainerRegistrations([
 			'myapp' => $app,
 		]);
@@ -158,5 +161,12 @@ class RegistrationContextTest extends TestCase {
 		$this->context->delegateMiddlewareRegistrations([
 			'myapp' => $app,
 		]);
+	}
+
+	public function dataProvider_TrueFalse() {
+		return[
+			[true],
+			[false]
+		];
 	}
 }

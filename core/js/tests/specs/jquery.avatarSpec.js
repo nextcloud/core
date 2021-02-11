@@ -38,8 +38,8 @@ describe('jquery.avatar tests', function() {
 		it('undefined', function() {
 			$div.avatar('foo');
 
-			expect($div.height()).toEqual(64);
-			expect($div.width()).toEqual(64);
+			expect(Math.round($div.height())).toEqual(64);
+			expect(Math.round($div.width())).toEqual(64);
 		});
 
 		it('undefined but div has height', function() {
@@ -49,8 +49,8 @@ describe('jquery.avatar tests', function() {
 			expect(window.Image).toHaveBeenCalled();
 			window.Image().onerror();
 
-			expect($div.height()).toEqual(9);
-			expect($div.width()).toEqual(9);
+			expect(Math.round($div.height())).toEqual(9);
+			expect(Math.round($div.width())).toEqual(9);
 		});
 
 		it('undefined but data size is set', function() {
@@ -60,8 +60,8 @@ describe('jquery.avatar tests', function() {
 			expect(window.Image).toHaveBeenCalled();
 			window.Image().onerror();
 
-			expect($div.height()).toEqual(10);
-			expect($div.width()).toEqual(10);
+			expect(Math.round($div.height())).toEqual(10);
+			expect(Math.round($div.width())).toEqual(10);
 		});
 
 
@@ -71,8 +71,8 @@ describe('jquery.avatar tests', function() {
 			expect(window.Image).toHaveBeenCalled();
 			window.Image().onerror();
 
-			expect($div.height()).toEqual(8);
-			expect($div.width()).toEqual(8);
+			expect(Math.round($div.height())).toEqual(8);
+			expect(Math.round($div.width())).toEqual(8);
 		});
 	});
 

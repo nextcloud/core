@@ -135,10 +135,15 @@ class UserStatusController extends OCSController {
 	 * @throws OCSBadRequestException
 	 */
 	public function setCustomMessage(?string $statusIcon,
-									 string $message,
+									 ?string $message,
 									 ?int $clearAt): DataResponse {
 		try {
-			$status = $this->service->setCustomMessage($this->userId, $statusIcon, $message, $clearAt);
+			if ($message !== null && $message !== '') {
+				$status = $this->service->setCustomMessage($this->userId, $statusIcon, $message, $clearAt);
+			} else {
+				$this->service->clearMessage($this->userId);
+				$status = $this->service->findByUserId($this->userId);
+			}
 			return new DataResponse($this->formatStatus($status));
 		} catch (InvalidClearAtException $ex) {
 			$this->logger->debug('New user-status for "' . $this->userId . '" was rejected due to an invalid clearAt value "' . $clearAt . '"');

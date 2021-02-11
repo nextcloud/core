@@ -49,8 +49,8 @@ script('core', [
 				value="<?php p($_['adminpass']); ?>"
 				autocomplete="off" autocapitalize="none" autocorrect="off" required>
 			<label for="adminpass" class="infield"><?php p($l->t('Password')); ?></label>
-			<input type="checkbox" id="show" class="hidden-visually" name="show">
-			<label for="show" class="hidden-visually"><?php p($l->t('Show password')); ?></label>
+			<input type="checkbox" id="show" class="hidden-visually" name="show" aria-label="<?php p($l->t('Show password')); ?>">
+			<label for="show"></label>
 		</p>
 	</fieldset>
 
@@ -77,7 +77,7 @@ script('core', [
 		<?php if ($_['hasMySQL'] or $_['hasPostgreSQL'] or $_['hasOracle']) {
 			$hasOtherDB = true;
 		} else {
-			$hasOtherDB =false;
+			$hasOtherDB = false;
 		} //other than SQLite?>
 		<legend><?php p($l->t('Configure the database')); ?></legend>
 		<div id="selectDbType">
@@ -115,7 +115,7 @@ script('core', [
 					value="<?php p($_['dbpass']); ?>"
 					autocomplete="off" autocapitalize="none" autocorrect="off">
 				<label for="dbpass" class="infield"><?php p($l->t('Database password')); ?></label>
-				<input type="checkbox" id="dbpassword-toggle" class="hidden-visually" name="dbpassword-toggle">
+				<input type="checkbox" id="dbpassword-toggle" class="hidden-visually" name="dbpassword-toggle" aria-label="<?php p($l->t('Show password')); ?>">
 				<label for="dbpassword-toggle"></label>
 			</p>
 			<p class="groupmiddle">

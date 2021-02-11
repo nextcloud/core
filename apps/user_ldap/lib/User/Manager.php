@@ -39,6 +39,7 @@ use OCP\IDBConnection;
 use OCP\Image;
 use OCP\IUserManager;
 use OCP\Notification\IManager as INotificationManager;
+use OCP\Share\IManager;
 
 /**
  * Manager
@@ -82,32 +83,29 @@ class Manager {
 	 * @var CappedMemoryCache $usersByUid
 	 */
 	protected $usersByUid;
+	/** @var IManager */
+	private $shareManager;
 
-	/**
-	 * @param IConfig $ocConfig
-	 * @param \OCA\User_LDAP\FilesystemHelper $ocFilesystem object that
-	 * gives access to necessary functions from the OC filesystem
-	 * @param  \OCA\User_LDAP\LogWrapper $ocLog
-	 * @param IAvatarManager $avatarManager
-	 * @param Image $image an empty image instance
-	 * @param IDBConnection $db
-	 * @throws \Exception when the methods mentioned above do not exist
-	 */
-	public function __construct(IConfig $ocConfig,
-								FilesystemHelper $ocFilesystem, LogWrapper $ocLog,
-								IAvatarManager $avatarManager, Image $image,
-								IDBConnection $db, IUserManager $userManager,
-								INotificationManager $notificationManager) {
-		$this->ocConfig            = $ocConfig;
-		$this->ocFilesystem        = $ocFilesystem;
-		$this->ocLog               = $ocLog;
-		$this->avatarManager       = $avatarManager;
-		$this->image               = $image;
-		$this->db                  = $db;
-		$this->userManager         = $userManager;
+	public function __construct(
+		IConfig $ocConfig,
+		FilesystemHelper $ocFilesystem,
+		LogWrapper $ocLog,
+		IAvatarManager $avatarManager,
+		Image $image,
+		IUserManager $userManager,
+		INotificationManager $notificationManager,
+		IManager $shareManager
+	) {
+		$this->ocConfig = $ocConfig;
+		$this->ocFilesystem = $ocFilesystem;
+		$this->ocLog = $ocLog;
+		$this->avatarManager = $avatarManager;
+		$this->image = $image;
+		$this->userManager = $userManager;
 		$this->notificationManager = $notificationManager;
-		$this->usersByDN           = new CappedMemoryCache();
-		$this->usersByUid          = new CappedMemoryCache();
+		$this->usersByDN = new CappedMemoryCache();
+		$this->usersByUid = new CappedMemoryCache();
+		$this->shareManager = $shareManager;
 	}
 
 	/**
@@ -132,7 +130,7 @@ class Manager {
 			$this->ocFilesystem, clone $this->image, $this->ocLog,
 			$this->avatarManager, $this->userManager,
 			$this->notificationManager);
-		$this->usersByDN[$dn]   = $user;
+		$this->usersByDN[$dn] = $user;
 		$this->usersByUid[$uid] = $user;
 		return $user;
 	}
@@ -229,8 +227,9 @@ class Manager {
 		return new OfflineUser(
 			$id,
 			$this->ocConfig,
-			$this->db,
-			$this->access->getUserMapper());
+			$this->access->getUserMapper(),
+			$this->shareManager
+		);
 	}
 
 	/**

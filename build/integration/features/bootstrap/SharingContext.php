@@ -3,6 +3,7 @@
  *
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  *
  * @license GNU AGPL version 3 or any later version
@@ -31,11 +32,19 @@ require __DIR__ . '/../../vendor/autoload.php';
  * Features context.
  */
 class SharingContext implements Context, SnippetAcceptingContext {
-	use Sharing;
+	use WebDav;
+	use Trashbin;
 	use AppConfiguration;
 	use CommandLine;
 
 	protected function resetAppConfigs() {
-		$this->modifyServerConfig('sharebymail', 'enforcePasswordProtection', 'no');
+		$this->deleteServerConfig('core', 'shareapi_default_permissions');
+		$this->deleteServerConfig('core', 'shareapi_default_internal_expire_date');
+		$this->deleteServerConfig('core', 'shareapi_internal_expire_after_n_days');
+		$this->deleteServerConfig('core', 'internal_defaultExpDays');
+		$this->deleteServerConfig('core', 'shareapi_default_expire_date');
+		$this->deleteServerConfig('core', 'shareapi_expire_after_n_days');
+		$this->deleteServerConfig('core', 'link_defaultExpDays');
+		$this->deleteServerConfig('sharebymail', 'enforcePasswordProtection');
 	}
 }

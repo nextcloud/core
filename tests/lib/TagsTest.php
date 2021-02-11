@@ -61,7 +61,7 @@ class TagsTest extends \Test\TestCase {
 
 		$this->objectType = $this->getUniqueID('type_');
 		$this->tagMapper = new \OC\Tagging\TagMapper(\OC::$server->getDatabaseConnection());
-		$this->tagMgr = new \OC\TagManager($this->tagMapper, $this->userSession);
+		$this->tagMgr = new \OC\TagManager($this->tagMapper, $this->userSession, \OC::$server->getDatabaseConnection());
 	}
 
 	protected function tearDown(): void {
@@ -78,7 +78,7 @@ class TagsTest extends \Test\TestCase {
 			->expects($this->any())
 			->method('getUser')
 			->willReturn(null);
-		$this->tagMgr = new \OC\TagManager($this->tagMapper, $this->userSession);
+		$this->tagMgr = new \OC\TagManager($this->tagMapper, $this->userSession, \OC::$server->getDatabaseConnection());
 		$this->assertNull($this->tagMgr->load($this->objectType));
 	}
 

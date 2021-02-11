@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
@@ -6,7 +9,11 @@
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author GretaD <gretadoci@gmail.com>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
@@ -27,7 +34,6 @@
 
 // FIXME: disabled for now to be able to inject IGroupManager and also use
 // getSubAdmin()
-//declare(strict_types=1);
 
 namespace OCA\Settings\Controller;
 
@@ -35,10 +41,15 @@ use OC\Accounts\AccountManager;
 use OC\AppFramework\Http;
 use OC\Encryption\Exceptions\ModuleDoesNotExistsException;
 use OC\ForbiddenException;
+use OC\Group\Manager as GroupManager;
+use OC\L10N\Factory;
 use OC\Security\IdentityProof\Manager;
+use OC\User\Manager as UserManager;
 use OCA\FederatedFileSharing\FederatedShareProvider;
 use OCA\Settings\BackgroundJobs\VerifyUserData;
+use OCA\Settings\Events\BeforeTemplateRenderedEvent;
 use OCA\User_LDAP\User_Proxy;
+use OCP\Accounts\IAccountManager;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
@@ -46,6 +57,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\BackgroundJob\IJobList;
 use OCP\Encryption\IManager;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IL10N;
@@ -58,9 +70,9 @@ use OCP\Mail\IMailer;
 use function in_array;
 
 class UsersController extends Controller {
-	/** @var IUserManager */
+	/** @var UserManager */
 	private $userManager;
-	/** @var IGroupManager */
+	/** @var GroupManager */
 	private $groupManager;
 	/** @var IUserSession */
 	private $userSession;
@@ -72,7 +84,7 @@ class UsersController extends Controller {
 	private $l10n;
 	/** @var IMailer */
 	private $mailer;
-	/** @var IFactory */
+	/** @var Factory */
 	private $l10nFactory;
 	/** @var IAppManager */
 	private $appManager;
@@ -84,23 +96,28 @@ class UsersController extends Controller {
 	private $jobList;
 	/** @var IManager */
 	private $encryptionManager;
+	/** @var IEventDispatcher */
+	private $dispatcher;
 
 
-	public function __construct(string $appName,
-								IRequest $request,
-								IUserManager $userManager,
-								IGroupManager $groupManager,
-								IUserSession $userSession,
-								IConfig $config,
-								bool $isAdmin,
-								IL10N $l10n,
-								IMailer $mailer,
-								IFactory $l10nFactory,
-								IAppManager $appManager,
-								AccountManager $accountManager,
-								Manager $keyManager,
-								IJobList $jobList,
-								IManager $encryptionManager) {
+	public function __construct(
+		string $appName,
+		IRequest $request,
+		IUserManager $userManager,
+		IGroupManager $groupManager,
+		IUserSession $userSession,
+		IConfig $config,
+		bool $isAdmin,
+		IL10N $l10n,
+		IMailer $mailer,
+		IFactory $l10nFactory,
+		IAppManager $appManager,
+		AccountManager $accountManager,
+		Manager $keyManager,
+		IJobList $jobList,
+		IManager $encryptionManager,
+		IEventDispatcher $dispatcher
+	) {
 		parent::__construct($appName, $request);
 		$this->userManager = $userManager;
 		$this->groupManager = $groupManager;
@@ -115,6 +132,7 @@ class UsersController extends Controller {
 		$this->keyManager = $keyManager;
 		$this->jobList = $jobList;
 		$this->encryptionManager = $encryptionManager;
+		$this->dispatcher = $dispatcher;
 	}
 
 
@@ -126,7 +144,7 @@ class UsersController extends Controller {
 	 *
 	 * @return TemplateResponse
 	 */
-	public function usersListByGroup() {
+	public function usersListByGroup(): TemplateResponse {
 		return $this->usersList();
 	}
 
@@ -138,7 +156,7 @@ class UsersController extends Controller {
 	 *
 	 * @return TemplateResponse
 	 */
-	public function usersList() {
+	public function usersList(): TemplateResponse {
 		$user = $this->userSession->getUser();
 		$uid = $user->getUID();
 
@@ -203,7 +221,7 @@ class UsersController extends Controller {
 						$groups[$key]['usercount']--;
 						$userCount -= 1; // we also lower from one the total count
 					}
-				};
+				}
 				$userCount += $this->userManager->countUsersOfGroups($groupsInfo->getGroups());
 				$disabledUsers = $this->userManager->countDisabledUsersOfGroups($groupsNames);
 			}
@@ -221,7 +239,9 @@ class UsersController extends Controller {
 		$quotaPreset = $this->parseQuotaPreset($this->config->getAppValue('files', 'quota_preset', '1 GB, 5 GB, 10 GB'));
 		$defaultQuota = $this->config->getAppValue('files', 'default_quota', 'none');
 
-		\OC::$server->getEventDispatcher()->dispatch('OC\Settings\Users::loadAdditionalScripts');
+		$event = new BeforeTemplateRenderedEvent();
+		$this->dispatcher->dispatch('OC\Settings\Users::loadAdditionalScripts', $event);
+		$this->dispatcher->dispatchTyped($event);
 
 		/* LANGUAGES */
 		$languages = $this->l10nFactory->getLanguages();
@@ -293,19 +313,17 @@ class UsersController extends Controller {
 	 *
 	 * @return bool
 	 */
-	protected function canAdminChangeUserPasswords() {
+	protected function canAdminChangeUserPasswords(): bool {
 		$isEncryptionEnabled = $this->encryptionManager->isEnabled();
 		try {
-			$noUserSpecificEncryptionKeys =!$this->encryptionManager->getEncryptionModule()->needDetailedAccessList();
+			$noUserSpecificEncryptionKeys = !$this->encryptionManager->getEncryptionModule()->needDetailedAccessList();
 			$isEncryptionModuleLoaded = true;
 		} catch (ModuleDoesNotExistsException $e) {
 			$noUserSpecificEncryptionKeys = true;
 			$isEncryptionModuleLoaded = false;
 		}
-
-		$canChangePassword = ($isEncryptionEnabled && $isEncryptionModuleLoaded  && $noUserSpecificEncryptionKeys)
-			|| (!$isEncryptionEnabled && !$isEncryptionModuleLoaded)
-			|| (!$isEncryptionEnabled && $isEncryptionModuleLoaded && $noUserSpecificEncryptionKeys);
+		$canChangePassword = ($isEncryptionModuleLoaded && $noUserSpecificEncryptionKeys)
+			|| (!$isEncryptionModuleLoaded && !$isEncryptionEnabled);
 
 		return $canChangePassword;
 	}
@@ -315,35 +333,37 @@ class UsersController extends Controller {
 	 * @NoSubAdminRequired
 	 * @PasswordConfirmationRequired
 	 *
-	 * @param string $avatarScope
-	 * @param string $displayname
-	 * @param string $displaynameScope
-	 * @param string $phone
-	 * @param string $phoneScope
-	 * @param string $email
-	 * @param string $emailScope
-	 * @param string $website
-	 * @param string $websiteScope
-	 * @param string $address
-	 * @param string $addressScope
-	 * @param string $twitter
-	 * @param string $twitterScope
+	 * @param string|null $avatarScope
+	 * @param string|null $displayname
+	 * @param string|null $displaynameScope
+	 * @param string|null $phone
+	 * @param string|null $phoneScope
+	 * @param string|null $email
+	 * @param string|null $emailScope
+	 * @param string|null $website
+	 * @param string|null $websiteScope
+	 * @param string|null $address
+	 * @param string|null $addressScope
+	 * @param string|null $twitter
+	 * @param string|null $twitterScope
+	 *
 	 * @return DataResponse
 	 */
-	public function setUserSettings($avatarScope,
-									$displayname,
-									$displaynameScope,
-									$phone,
-									$phoneScope,
-									$email,
-									$emailScope,
-									$website,
-									$websiteScope,
-									$address,
-									$addressScope,
-									$twitter,
-									$twitterScope
+	public function setUserSettings(?string $avatarScope = null,
+									?string $displayname = null,
+									?string $displaynameScope = null,
+									?string $phone = null,
+									?string $phoneScope = null,
+									?string $email = null,
+									?string $emailScope = null,
+									?string $website = null,
+									?string $websiteScope = null,
+									?string $address = null,
+									?string $addressScope = null,
+									?string $twitter = null,
+									?string $twitterScope = null
 	) {
+		$email = strtolower($email);
 		if (!empty($email) && !$this->mailer->validateMailAddress($email)) {
 			return new DataResponse(
 				[
@@ -357,42 +377,53 @@ class UsersController extends Controller {
 		}
 		$user = $this->userSession->getUser();
 		$data = $this->accountManager->getUser($user);
-		$data[AccountManager::PROPERTY_AVATAR] = ['scope' => $avatarScope];
+		$data[IAccountManager::PROPERTY_AVATAR] = ['scope' => $avatarScope];
 		if ($this->config->getSystemValue('allow_user_to_change_display_name', true) !== false) {
-			$data[AccountManager::PROPERTY_DISPLAYNAME] = ['value' => $displayname, 'scope' => $displaynameScope];
-			$data[AccountManager::PROPERTY_EMAIL] = ['value' => $email, 'scope' => $emailScope];
+			$data[IAccountManager::PROPERTY_DISPLAYNAME] = ['value' => $displayname, 'scope' => $displaynameScope];
+			$data[IAccountManager::PROPERTY_EMAIL] = ['value' => $email, 'scope' => $emailScope];
 		}
 		if ($this->appManager->isEnabledForUser('federatedfilesharing')) {
 			$shareProvider = \OC::$server->query(FederatedShareProvider::class);
 			if ($shareProvider->isLookupServerUploadEnabled()) {
-				$data[AccountManager::PROPERTY_WEBSITE] = ['value' => $website, 'scope' => $websiteScope];
-				$data[AccountManager::PROPERTY_ADDRESS] = ['value' => $address, 'scope' => $addressScope];
-				$data[AccountManager::PROPERTY_PHONE] = ['value' => $phone, 'scope' => $phoneScope];
-				$data[AccountManager::PROPERTY_TWITTER] = ['value' => $twitter, 'scope' => $twitterScope];
+				$data[IAccountManager::PROPERTY_WEBSITE] = ['value' => $website, 'scope' => $websiteScope];
+				$data[IAccountManager::PROPERTY_ADDRESS] = ['value' => $address, 'scope' => $addressScope];
+				$data[IAccountManager::PROPERTY_PHONE] = ['value' => $phone, 'scope' => $phoneScope];
+				$data[IAccountManager::PROPERTY_TWITTER] = ['value' => $twitter, 'scope' => $twitterScope];
 			}
 		}
 		try {
-			$this->saveUserSettings($user, $data);
+			$data = $this->saveUserSettings($user, $data);
 			return new DataResponse(
 				[
 					'status' => 'success',
 					'data' => [
 						'userId' => $user->getUID(),
-						'avatarScope' => $data[AccountManager::PROPERTY_AVATAR]['scope'],
-						'displayname' => $data[AccountManager::PROPERTY_DISPLAYNAME]['value'],
-						'displaynameScope' => $data[AccountManager::PROPERTY_DISPLAYNAME]['scope'],
-						'email' => $data[AccountManager::PROPERTY_EMAIL]['value'],
-						'emailScope' => $data[AccountManager::PROPERTY_EMAIL]['scope'],
-						'website' => $data[AccountManager::PROPERTY_WEBSITE]['value'],
-						'websiteScope' => $data[AccountManager::PROPERTY_WEBSITE]['scope'],
-						'address' => $data[AccountManager::PROPERTY_ADDRESS]['value'],
-						'addressScope' => $data[AccountManager::PROPERTY_ADDRESS]['scope'],
+						'avatarScope' => $data[IAccountManager::PROPERTY_AVATAR]['scope'],
+						'displayname' => $data[IAccountManager::PROPERTY_DISPLAYNAME]['value'],
+						'displaynameScope' => $data[IAccountManager::PROPERTY_DISPLAYNAME]['scope'],
+						'phone' => $data[IAccountManager::PROPERTY_PHONE]['value'],
+						'phoneScope' => $data[IAccountManager::PROPERTY_PHONE]['scope'],
+						'email' => $data[IAccountManager::PROPERTY_EMAIL]['value'],
+						'emailScope' => $data[IAccountManager::PROPERTY_EMAIL]['scope'],
+						'website' => $data[IAccountManager::PROPERTY_WEBSITE]['value'],
+						'websiteScope' => $data[IAccountManager::PROPERTY_WEBSITE]['scope'],
+						'address' => $data[IAccountManager::PROPERTY_ADDRESS]['value'],
+						'addressScope' => $data[IAccountManager::PROPERTY_ADDRESS]['scope'],
+						'twitter' => $data[IAccountManager::PROPERTY_TWITTER]['value'],
+						'twitterScope' => $data[IAccountManager::PROPERTY_TWITTER]['scope'],
 						'message' => $this->l10n->t('Settings saved')
 					]
 				],
 				Http::STATUS_OK
 			);
 		} catch (ForbiddenException $e) {
+			return new DataResponse([
+				'status' => 'error',
+				'data' => [
+					'message' => $e->getMessage()
+				],
+			]);
+		} catch (\InvalidArgumentException $e) {
 			return new DataResponse([
 				'status' => 'error',
 				'data' => [
@@ -406,34 +437,45 @@ class UsersController extends Controller {
 	 *
 	 * @param IUser $user
 	 * @param array $data
+	 * @return array
 	 * @throws ForbiddenException
+	 * @throws \InvalidArgumentException
 	 */
-	protected function saveUserSettings(IUser $user, array $data) {
+	protected function saveUserSettings(IUser $user, array $data): array {
 		// keep the user back-end up-to-date with the latest display name and email
 		// address
 		$oldDisplayName = $user->getDisplayName();
 		$oldDisplayName = is_null($oldDisplayName) ? '' : $oldDisplayName;
-		if (isset($data[AccountManager::PROPERTY_DISPLAYNAME]['value'])
-			&& $oldDisplayName !== $data[AccountManager::PROPERTY_DISPLAYNAME]['value']
+		if (isset($data[IAccountManager::PROPERTY_DISPLAYNAME]['value'])
+			&& $oldDisplayName !== $data[IAccountManager::PROPERTY_DISPLAYNAME]['value']
 		) {
-			$result = $user->setDisplayName($data[AccountManager::PROPERTY_DISPLAYNAME]['value']);
+			$result = $user->setDisplayName($data[IAccountManager::PROPERTY_DISPLAYNAME]['value']);
 			if ($result === false) {
 				throw new ForbiddenException($this->l10n->t('Unable to change full name'));
 			}
 		}
+
 		$oldEmailAddress = $user->getEMailAddress();
-		$oldEmailAddress = is_null($oldEmailAddress) ? '' : $oldEmailAddress;
-		if (isset($data[AccountManager::PROPERTY_EMAIL]['value'])
-			&& $oldEmailAddress !== $data[AccountManager::PROPERTY_EMAIL]['value']
+		$oldEmailAddress = is_null($oldEmailAddress) ? '' : strtolower($oldEmailAddress);
+		if (isset($data[IAccountManager::PROPERTY_EMAIL]['value'])
+			&& $oldEmailAddress !== $data[IAccountManager::PROPERTY_EMAIL]['value']
 		) {
 			// this is the only permission a backend provides and is also used
 			// for the permission of setting a email address
 			if (!$user->canChangeDisplayName()) {
 				throw new ForbiddenException($this->l10n->t('Unable to change email address'));
 			}
-			$user->setEMailAddress($data[AccountManager::PROPERTY_EMAIL]['value']);
+			$user->setEMailAddress($data[IAccountManager::PROPERTY_EMAIL]['value']);
 		}
-		$this->accountManager->updateUser($user, $data);
+
+		try {
+			return $this->accountManager->updateUser($user, $data, true);
+		} catch (\InvalidArgumentException $e) {
+			if ($e->getMessage() === IAccountManager::PROPERTY_PHONE) {
+				throw new \InvalidArgumentException($this->l10n->t('Unable to set invalid phone number'));
+			}
+			throw new \InvalidArgumentException($this->l10n->t('Some account data was invalid'));
+		}
 	}
 
 	/**
@@ -464,26 +506,25 @@ class UsersController extends Controller {
 
 		switch ($account) {
 			case 'verify-twitter':
-				$accountData[AccountManager::PROPERTY_TWITTER]['verified'] = AccountManager::VERIFICATION_IN_PROGRESS;
+				$accountData[IAccountManager::PROPERTY_TWITTER]['verified'] = AccountManager::VERIFICATION_IN_PROGRESS;
 				$msg = $this->l10n->t('In order to verify your Twitter account, post the following tweet on Twitter (please make sure to post it without any line breaks):');
 				$code = $codeMd5;
-				$type = AccountManager::PROPERTY_TWITTER;
-				$data = $accountData[AccountManager::PROPERTY_TWITTER]['value'];
-				$accountData[AccountManager::PROPERTY_TWITTER]['signature'] = $signature;
+				$type = IAccountManager::PROPERTY_TWITTER;
+				$accountData[IAccountManager::PROPERTY_TWITTER]['signature'] = $signature;
 				break;
 			case 'verify-website':
-				$accountData[AccountManager::PROPERTY_WEBSITE]['verified'] = AccountManager::VERIFICATION_IN_PROGRESS;
+				$accountData[IAccountManager::PROPERTY_WEBSITE]['verified'] = AccountManager::VERIFICATION_IN_PROGRESS;
 				$msg = $this->l10n->t('In order to verify your Website, store the following content in your web-root at \'.well-known/CloudIdVerificationCode.txt\' (please make sure that the complete text is in one line):');
-				$type = AccountManager::PROPERTY_WEBSITE;
-				$data = $accountData[AccountManager::PROPERTY_WEBSITE]['value'];
-				$accountData[AccountManager::PROPERTY_WEBSITE]['signature'] = $signature;
+				$type = IAccountManager::PROPERTY_WEBSITE;
+				$accountData[IAccountManager::PROPERTY_WEBSITE]['signature'] = $signature;
 				break;
 			default:
 				return new DataResponse([], Http::STATUS_BAD_REQUEST);
 		}
 
 		if ($onlyVerificationCode === false) {
-			$this->accountManager->updateUser($user, $accountData);
+			$accountData = $this->accountManager->updateUser($user, $accountData);
+			$data = $accountData[$type]['value'];
 
 			$this->jobList->add(VerifyUserData::class,
 				[

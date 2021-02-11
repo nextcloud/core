@@ -77,8 +77,6 @@ $application->registerRoutes($this, [
 		['name' => 'RecommendedApps#index', 'url' => '/core/apps/recommended', 'verb' => 'GET'],
 		['name' => 'Svg#getSvgFromCore', 'url' => '/svg/core/{folder}/{fileName}', 'verb' => 'GET'],
 		['name' => 'Svg#getSvgFromApp', 'url' => '/svg/{app}/{fileName}', 'verb' => 'GET'],
-		['name' => 'UnifiedSearch#getProviders', 'url' => '/search/providers', 'verb' => 'GET'],
-		['name' => 'UnifiedSearch#search', 'url' => '/search/providers/{providerId}/search', 'verb' => 'GET'],
 		['name' => 'Css#getCss', 'url' => '/css/{appName}/{fileName}', 'verb' => 'GET'],
 		['name' => 'Js#getJs', 'url' => '/js/{appName}/{fileName}', 'verb' => 'GET'],
 		['name' => 'contactsMenu#index', 'url' => '/contactsmenu/contacts', 'verb' => 'POST'],
@@ -91,6 +89,9 @@ $application->registerRoutes($this, [
 		// Logins for passwordless auth
 		['name' => 'WebAuthn#startAuthentication', 'url' => 'login/webauthn/start', 'verb' => 'POST'],
 		['name' => 'WebAuthn#finishAuthentication', 'url' => 'login/webauthn/finish', 'verb' => 'POST'],
+
+		// Well known requests https://tools.ietf.org/html/rfc5785
+		['name' => 'WellKnown#handle', 'url' => '.well-known/{service}'],
 	],
 	'ocs' => [
 		['root' => '/cloud', 'name' => 'OCS#getCapabilities', 'url' => '/capabilities', 'verb' => 'GET'],
@@ -113,7 +114,11 @@ $application->registerRoutes($this, [
 
 		['root' => '/collaboration', 'name' => 'CollaborationResources#removeResource', 'url' => '/resources/collections/{collectionId}', 'verb' => 'DELETE'],
 		['root' => '/collaboration', 'name' => 'CollaborationResources#getCollectionsByResource', 'url' => '/resources/{resourceType}/{resourceId}', 'verb' => 'GET'],
-		['root' => '/collaboration', 'name' => 'CollaborationResources#createCollectionOnResource', 'url' => '/resources/{baseResourceType}/{baseResourceId}', 'verb' => 'POST']
+		['root' => '/collaboration', 'name' => 'CollaborationResources#createCollectionOnResource', 'url' => '/resources/{baseResourceType}/{baseResourceId}', 'verb' => 'POST'],
+
+		// Unified search
+		['root' => '/search', 'name' => 'UnifiedSearch#getProviders', 'url' => '/providers', 'verb' => 'GET'],
+		['root' => '/search', 'name' => 'UnifiedSearch#search', 'url' => '/providers/{providerId}/search', 'verb' => 'GET'],
 
 	],
 ]);

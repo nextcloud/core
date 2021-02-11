@@ -4,6 +4,7 @@
  *
  * @author Carla Schroder <carla@owncloud.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
  *
@@ -60,9 +61,14 @@ class CheckCore extends Base {
 	 * {@inheritdoc }
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int {
+		if (!$this->checker->isCodeCheckEnforced()) {
+			$output->writeln('<comment>integrity:check-core can not be used on git checkouts</comment>');
+			return 2;
+		}
+
 		$result = $this->checker->verifyCoreSignature();
 		$this->writeArrayInOutputFormat($input, $output, $result);
-		if (count($result)>0) {
+		if (count($result) > 0) {
 			return 1;
 		}
 		return 0;

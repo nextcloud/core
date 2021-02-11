@@ -71,7 +71,7 @@ describe('Backbone Webdav extension', function() {
 			});
 		});
 
-		it('makes a POST request to create model into collection', function() {
+		it('makes a POST request to create model into collection', function(done) {
 			var collection = new TestCollection();
 			var model = collection.create({
 				firstName: 'Hello',
@@ -104,10 +104,14 @@ describe('Backbone Webdav extension', function() {
 				}
 			});
 
-			expect(model.id).toEqual('123');
+			setTimeout(function() {
+				expect(model.id).toEqual('123');
+
+				done();
+			}, 0)
 		});
 
-		it('uses PROPFIND to retrieve collection', function() {
+		it('uses PROPFIND to retrieve collection', function(done) {
 			var successStub = sinon.stub();
 			var errorStub = sinon.stub();
 			var collection = new TestCollection();
@@ -164,23 +168,27 @@ describe('Backbone Webdav extension', function() {
 				]
 			});
 
-			expect(collection.length).toEqual(2);
+			setTimeout(function() {
+				expect(collection.length).toEqual(2);
 
-			var model = collection.get('123');
-			expect(model.id).toEqual('123');
-			expect(model.get('firstName')).toEqual('Hello');
-			expect(model.get('lastName')).toEqual('World');
+				var model = collection.get('123');
+				expect(model.id).toEqual('123');
+				expect(model.get('firstName')).toEqual('Hello');
+				expect(model.get('lastName')).toEqual('World');
 
-			model = collection.get('456');
-			expect(model.id).toEqual('456');
-			expect(model.get('firstName')).toEqual('Test');
-			expect(model.get('lastName')).toEqual('Person');
+				model = collection.get('456');
+				expect(model.id).toEqual('456');
+				expect(model.get('firstName')).toEqual('Test');
+				expect(model.get('lastName')).toEqual('Person');
 
-			expect(successStub.calledOnce).toEqual(true);
-			expect(errorStub.notCalled).toEqual(true);
+				expect(successStub.calledOnce).toEqual(true);
+				expect(errorStub.notCalled).toEqual(true);
+
+				done();
+			}, 0)
 		});
 
-		function testMethodError(doCall) {
+		function testMethodError(doCall, done) {
 			var successStub = sinon.stub();
 			var errorStub = sinon.stub();
 
@@ -191,20 +199,24 @@ describe('Backbone Webdav extension', function() {
 				body: ''
 			});
 
-			expect(successStub.notCalled).toEqual(true);
-			expect(errorStub.calledOnce).toEqual(true);
+			setTimeout(function() {
+				expect(successStub.notCalled).toEqual(true);
+				expect(errorStub.calledOnce).toEqual(true);
+
+				done();
+			}, 0)
 		}
 
-		it('calls error handler if error status in PROPFIND response', function() {
+		it('calls error handler if error status in PROPFIND response', function(done) {
 			testMethodError(function(success, error) {
 				var collection = new TestCollection();
 				collection.fetch({
 					success: success,
 					error: error
 				});
-			});
+			}, done);
 		});
-		it('calls error handler if error status in POST response', function() {
+		it('calls error handler if error status in POST response', function(done) {
 			testMethodError(function(success, error) {
 				var collection = new TestCollection();
 				collection.create({
@@ -214,7 +226,7 @@ describe('Backbone Webdav extension', function() {
 					success: success,
 					error: error
 				});
-			});
+			}, done);
 		});
 	});
 	describe('models', function() {
@@ -281,7 +293,7 @@ describe('Backbone Webdav extension', function() {
 			expect(model.get('married')).toEqual(true);
 		});
 
-		it('uses PROPFIND to fetch single model', function() {
+		it('uses PROPFIND to fetch single model', function(done) {
 			var model = new TestModel({
 				id: '123'
 			});
@@ -319,11 +331,15 @@ describe('Backbone Webdav extension', function() {
 				}
 			});
 
-			expect(model.id).toEqual('123');
-			expect(model.get('firstName')).toEqual('Hello');
-			expect(model.get('lastName')).toEqual('World');
-			expect(model.get('age')).toEqual(35);
-			expect(model.get('married')).toEqual(true);
+			setTimeout(function() {
+				expect(model.id).toEqual('123');
+				expect(model.get('firstName')).toEqual('Hello');
+				expect(model.get('lastName')).toEqual('World');
+				expect(model.get('age')).toEqual(35);
+				expect(model.get('married')).toEqual(true);
+
+				done();
+			});
 		});
 		it('makes a DELETE request to destroy model', function() {
 			var model = new TestModel({
@@ -350,7 +366,7 @@ describe('Backbone Webdav extension', function() {
 			});
 		});
 
-		function testMethodError(doCall) {
+		function testMethodError(doCall, done) {
 			var successStub = sinon.stub();
 			var errorStub = sinon.stub();
 
@@ -361,20 +377,24 @@ describe('Backbone Webdav extension', function() {
 				body: ''
 			});
 
-			expect(successStub.notCalled).toEqual(true);
-			expect(errorStub.calledOnce).toEqual(true);
+			setTimeout(function() {
+				expect(successStub.notCalled).toEqual(true);
+				expect(errorStub.calledOnce).toEqual(true);
+
+				done();
+			});
 		}
 
-		it('calls error handler if error status in PROPFIND response', function() {
+		it('calls error handler if error status in PROPFIND response', function(done) {
 			testMethodError(function(success, error) {
 				var model = new TestModel();
 				model.fetch({
 					success: success,
 					error: error
 				});
-			});
+			}, done);
 		});
-		it('calls error handler if error status in PROPPATCH response', function() {
+		it('calls error handler if error status in PROPPATCH response', function(done) {
 			testMethodError(function(success, error) {
 				var model = new TestModel();
 				model.save({
@@ -383,7 +403,7 @@ describe('Backbone Webdav extension', function() {
 					success: success,
 					error: error
 				});
-			});
+			}, done);
 		});
 	});
 });

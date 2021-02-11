@@ -41,6 +41,7 @@ class AjaxController extends Controller {
 	 * @NoAdminRequired
 	 */
 	public function getStorageStats(string $dir = '/'): JSONResponse {
+		\OC_Util::setupFS();
 		try {
 			return new JSONResponse([
 				'status' => 'success',

@@ -38,7 +38,6 @@ namespace OCP\L10N;
  * if settings are not present or truncating is not applicable, the iterator
  * skips to the next valid item itself
  *
- * @package OCP\L10N
  *
  * @since 14.0.0
  */

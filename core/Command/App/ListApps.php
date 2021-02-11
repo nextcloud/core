@@ -123,10 +123,10 @@ class ListApps extends Base {
 
 	/**
 	 * @param string $optionName
-	 * @param CompletionContext $completionContext
+	 * @param CompletionContext $context
 	 * @return array
 	 */
-	public function completeOptionValues($optionName, CompletionContext $completionContext) {
+	public function completeOptionValues($optionName, CompletionContext $context) {
 		if ($optionName === 'shipped') {
 			return ['true', 'false'];
 		}

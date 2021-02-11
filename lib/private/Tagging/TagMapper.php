@@ -57,7 +57,7 @@ class TagMapper extends Mapper {
 		}
 
 		$sql = 'SELECT `id`, `uid`, `type`, `category` FROM `' . $this->getTableName() . '` '
-			. 'WHERE `uid` IN (' . str_repeat('?,', count($owners)-1) . '?) AND `type` = ? ORDER BY `category`';
+			. 'WHERE `uid` IN (' . str_repeat('?,', count($owners) - 1) . '?) AND `type` = ? ORDER BY `category`';
 		return $this->findEntities($sql, array_merge($owners, [$type]));
 	}
 

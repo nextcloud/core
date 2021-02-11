@@ -73,25 +73,6 @@
     "Request user agent" : "요청 사용자 에이전트",
     "User group membership" : "사용자 그룹 구성원",
     "is member of" : "구성원임",
-    "is not member of" : "구성원이 아님",
-    "Example: {placeholder}" : "예: {placeholder}",
-    "Select tag…" : "태그 선택…",
-    "Start" : "시작",
-    "End" : "끝",
-    "Select timezone…" : "시간대 선택…",
-    "Sync clients" : "동기화 클라이언트",
-    "Short rule description" : "짧은 규칙 설명",
-    "Add rule" : "규칙 추가",
-    "Reset" : "초기화",
-    "Saving…" : "저장 중…",
-    "Group list is empty" : "그룹 목록이 비었음",
-    "Unable to retrieve the group list" : "그룹 목록을 받아올 수 없음",
-    "Saved" : "저장됨",
-    "Saving failed:" : "저장 실패:",
-    "Add rule group" : "규칙 그룹 추가",
-    "Tag management" : "태그 관리",
-    "Files workflow engine" : "파일 작업 흐름 엔진",
-    "Open documentation" : "문서 열기",
-    "Loading…" : "불러오는 중…"
+    "is not member of" : "구성원이 아님"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

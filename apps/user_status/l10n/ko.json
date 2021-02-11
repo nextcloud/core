@@ -1,0 +1,27 @@
+{ "translations": {
+    "In a meeting" : "회의 중",
+    "Commuting" : "이동 중",
+    "Out sick" : "병가",
+    "Vacationing" : "휴가 중",
+    "Working remotely" : "원격 근무 중",
+    "What's your status?" : "지금 무엇을 하나요?",
+    "Online status" : "접속 상태",
+    "Status message" : "상태 메시지",
+    "Clear status message" : "상태 메시지 지움",
+    "Set status message" : "상태 메시지 설정",
+    "Away" : "자리 비움",
+    "Do not disturb" : "방해 금지",
+    "Don't clear" : "지우지 않음",
+    "Today" : "오늘",
+    "This week" : "이번 주",
+    "Online" : "접속 중",
+    "Invisible" : "숨어있기",
+    "Offline" : "오프라인",
+    "30 minutes" : "30 분",
+    "1 hour" : "한 시간",
+    "4 hours" : "4 시간",
+    "Mute all notifications" : "모든 알림을 무시합니다",
+    "Appear offline" : "접속 안함으로 표시",
+    "Clear status after" : "상태 메시지 지우기 예약"
+},"pluralForm" :"nplurals=1; plural=0;"
+}

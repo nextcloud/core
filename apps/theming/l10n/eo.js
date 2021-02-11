@@ -24,7 +24,6 @@ OC.L10N.register(
     "Could not write file to disk" : "Ne eblis skribi dosieron sur diskon",
     "A PHP extension stopped the file upload" : "PHP-modulo haltigis la dosieralŝuton",
     "No file uploaded" : "Neniu dosiero alŝutiĝis",
-    "Unsupported image type" : "Nesubtenata bildotipo",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "Vi jam uzas propran etoson. Agordoj de la aplikaĵo „Etosoj“ povus esti anstataŭigitaj de ĝi.",
     "Theming" : "Etosoj",
     "Legal notice" : "Leĝa regularo",

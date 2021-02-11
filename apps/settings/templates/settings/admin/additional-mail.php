@@ -25,16 +25,16 @@
 /** @var array $_ */
 
 $mail_smtpauthtype = [
-	''	=> $l->t('None'),
-	'LOGIN'	=> $l->t('Login'),
-	'PLAIN'	=> $l->t('Plain'),
-	'NTLM'	=> $l->t('NT LAN Manager'),
+	'' => $l->t('None'),
+	'LOGIN' => $l->t('Login'),
+	'PLAIN' => $l->t('Plain'),
+	'NTLM' => $l->t('NT LAN Manager'),
 ];
 
 $mail_smtpsecure = [
-	''		=> $l->t('None'),
-	'ssl'	=> $l->t('SSL/TLS'),
-	'tls'	=> $l->t('STARTTLS'),
+	'' => $l->t('None'),
+	'ssl' => $l->t('SSL/TLS'),
+	'tls' => $l->t('STARTTLS'),
 ];
 
 $mail_smtpmode = [

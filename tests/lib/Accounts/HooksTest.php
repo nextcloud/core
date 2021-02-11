@@ -23,8 +23,10 @@ namespace Test\Accounts;
 
 use OC\Accounts\AccountManager;
 use OC\Accounts\Hooks;
-use OCP\ILogger;
+use OCP\Accounts\IAccountManager;
 use OCP\IUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Test\TestCase;
 
 /**
@@ -35,19 +37,19 @@ use Test\TestCase;
  */
 class HooksTest extends TestCase {
 
-	/** @var  ILogger | \PHPUnit\Framework\MockObject\MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
-	/** @var  AccountManager | \PHPUnit\Framework\MockObject\MockObject */
+	/** @var AccountManager|MockObject */
 	private $accountManager;
 
-	/** @var  Hooks | \PHPUnit\Framework\MockObject\MockObject */
+	/** @var Hooks|MockObject */
 	private $hooks;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->accountManager = $this->getMockBuilder(AccountManager::class)
 			->disableOriginalConstructor()->getMock();
 
@@ -76,11 +78,11 @@ class HooksTest extends TestCase {
 			$this->accountManager->expects($this->once())->method('getUser')->willReturn($data);
 			$newData = $data;
 			if ($setEmail) {
-				$newData[AccountManager::PROPERTY_EMAIL]['value'] = $params['value'];
+				$newData[IAccountManager::PROPERTY_EMAIL]['value'] = $params['value'];
 				$this->accountManager->expects($this->once())->method('updateUser')
 					->with($params['user'], $newData);
 			} elseif ($setDisplayName) {
-				$newData[AccountManager::PROPERTY_DISPLAYNAME]['value'] = $params['value'];
+				$newData[IAccountManager::PROPERTY_DISPLAYNAME]['value'] = $params['value'];
 				$this->accountManager->expects($this->once())->method('updateUser')
 					->with($params['user'], $newData);
 			} else {
@@ -97,48 +99,48 @@ class HooksTest extends TestCase {
 			[
 				['feature' => '', 'value' => ''],
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => ''],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => '']
+					IAccountManager::PROPERTY_EMAIL => ['value' => ''],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => '']
 				],
 				false, false, true
 			],
 			[
 				['user' => $user, 'value' => ''],
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => ''],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => '']
+					IAccountManager::PROPERTY_EMAIL => ['value' => ''],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => '']
 				],
 				false, false, true
 			],
 			[
 				['user' => $user, 'feature' => ''],
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => ''],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => '']
+					IAccountManager::PROPERTY_EMAIL => ['value' => ''],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => '']
 				],
 				false, false, true
 			],
 			[
 				['user' => $user, 'feature' => 'foo', 'value' => 'bar'],
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => 'oldMail@example.com'],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => 'oldDisplayName']
+					IAccountManager::PROPERTY_EMAIL => ['value' => 'oldMail@example.com'],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => 'oldDisplayName']
 				],
 				false, false, false
 			],
 			[
 				['user' => $user, 'feature' => 'eMailAddress', 'value' => 'newMail@example.com'],
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => 'oldMail@example.com'],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => 'oldDisplayName']
+					IAccountManager::PROPERTY_EMAIL => ['value' => 'oldMail@example.com'],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => 'oldDisplayName']
 				],
 				true, false, false
 			],
 			[
 				['user' => $user, 'feature' => 'displayName', 'value' => 'newDisplayName'],
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => 'oldMail@example.com'],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => 'oldDisplayName']
+					IAccountManager::PROPERTY_EMAIL => ['value' => 'oldMail@example.com'],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => 'oldDisplayName']
 				],
 				false, true, false
 			],

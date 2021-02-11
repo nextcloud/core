@@ -5,6 +5,7 @@
  * @author Alexander Bergolth <leo@strike.wu.ac.at>
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author J0WI <J0WI@users.noreply.github.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -148,7 +149,7 @@ class LDAP implements ILDAPWrapper {
 	 * @param string $dn
 	 * @param int @withAttrib
 	 * @return array|false
-	 * @link http://www.php.net/manual/en/function.ldap-explode-dn.php
+	 * @link https://www.php.net/manual/en/function.ldap-explode-dn.php
 	 */
 	public function explodeDN($dn, $withAttrib) {
 		return $this->invokeLDAPMethod('explode_dn', $dn, $withAttrib);
@@ -369,7 +370,7 @@ class LDAP implements ILDAPWrapper {
 		if ($errorCode === 0) {
 			return;
 		}
-		$errorMsg  = ldap_error($resource);
+		$errorMsg = ldap_error($resource);
 
 		if ($this->curFunc === 'ldap_get_entries'
 			&& $errorCode === -4) {

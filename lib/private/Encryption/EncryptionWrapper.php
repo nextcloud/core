@@ -81,7 +81,7 @@ class EncryptionWrapper {
 			'mount' => $mount
 		];
 
-		if (!$storage->instanceOfStorage(Storage\IDisableEncryptionStorage::class)) {
+		if (!$storage->instanceOfStorage(Storage\IDisableEncryptionStorage::class) && $mountPoint !== '/') {
 			$user = \OC::$server->getUserSession()->getUser();
 			$mountManager = Filesystem::getMountManager();
 			$uid = $user ? $user->getUID() : null;

@@ -7,7 +7,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -27,14 +27,17 @@
 
 namespace OCA\Files_External\Tests\Controller;
 
+use OC\User\User;
 use OCA\Files_External\Controller\UserStoragesController;
 use OCA\Files_External\Lib\StorageConfig;
 use OCA\Files_External\Service\BackendService;
 use OCP\AppFramework\Http;
+use OCP\IGroupManager;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IUserSession;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class UserStoragesControllerTest extends StoragesControllerTest {
 
@@ -52,13 +55,18 @@ class UserStoragesControllerTest extends StoragesControllerTest {
 		$this->service->method('getVisibilityType')
 			->willReturn(BackendService::VISIBILITY_PERSONAL);
 
+		$session = $this->createMock(IUserSession::class);
+		$session->method('getUser')
+			->willReturn(new User('test', null, $this->createMock(EventDispatcherInterface::class)));
+
 		$this->controller = new UserStoragesController(
 			'files_external',
 			$this->createMock(IRequest::class),
 			$this->createMock(IL10N::class),
 			$this->service,
-			$this->createMock(IUserSession::class),
-			$this->createMock(ILogger::class)
+			$this->createMock(ILogger::class),
+			$session,
+			$this->createMock(IGroupManager::class)
 		);
 	}
 

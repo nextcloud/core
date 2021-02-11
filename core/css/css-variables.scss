@@ -3,49 +3,58 @@
 // All css4 variables must be fixed! Scss is a PRE processor
 // css4 variables are processed after scss!
 :root {
-	--color-main-text: $color-main-text;
-	--color-main-background: $color-main-background;
-	--color-main-background-translucent: $color-main-background-translucent;
+	--color-main-text: #{$color-main-text};
+	--color-main-background: #{$color-main-background};
+	--color-main-background-translucent: #{$color-main-background-translucent};
 
-	--color-background-hover: $color-background-hover;
-	--color-background-dark: $color-background-dark;
-	--color-background-darker: $color-background-darker;
+	// To use like this: background-image: linear-gradient(0, var(--gradient-main-background));
+	--gradient-main-background: var(--color-main-background) 0%, var(--color-main-background-translucent) 85%, transparent 100%;
 
-	--color-primary: $color-primary;
-	--color-primary-light: $color-primary-light;
-	--color-primary-text: $color-primary-text;
-	--color-primary-text-dark: $color-primary-text-dark;
-	--color-primary-element: $color-primary-element;
-	--color-primary-element-light: $color-primary-element-light;
+	--color-background-hover: #{$color-background-hover};
+	--color-background-dark: #{$color-background-dark};
+	--color-background-darker: #{$color-background-darker};
 
-	--color-error: $color-error;
-	--color-warning: $color-warning;
-	--color-success: $color-success;
+	--color-placeholder-light: #{$color-placeholder-light};
+	--color-placeholder-dark: #{$color-placeholder-dark};
 
-	--color-text-maxcontrast: $color-text-maxcontrast;
-	--color-text-light: $color-main-text;
-	--color-text-lighter: $color-text-maxcontrast;
+	--color-primary: #{$color-primary};
+	--color-primary-light: #{$color-primary-light};
+	--color-primary-text: #{$color-primary-text};
+	--color-primary-text-dark: #{$color-primary-text-dark};
+	--color-primary-element: #{$color-primary-element};
+	--color-primary-element-light: #{$color-primary-element-light};
 
-	--image-logo: $image-logo;
-	--image-login-background: $image-login-background;
-	--image-logoheader: $image-logoheader;
-	--image-favicon: $image-favicon;
+	--color-error: #{$color-error};
+	--color-warning: #{$color-warning};
+	--color-success: #{$color-success};
 
-	--color-loading-light: $color-loading-light;
-	--color-loading-dark: $color-loading-dark;
+	--color-text-maxcontrast: #{$color-text-maxcontrast};
+	--color-text-light: #{$color-main-text};
+	--color-text-lighter: #{$color-text-maxcontrast};
 
-	--color-box-shadow: $color-box-shadow;
+	--image-logo: #{$image-logo};
+	--image-login-background: #{$image-login-background};
+	--image-logoheader: #{$image-logoheader};
+	--image-favicon: #{$image-favicon};
 
-	--color-border: $color-border;
-	--color-border-dark: $color-border-dark;
-	--border-radius: $border-radius;
-	--border-radius-large: $border-radius-large;
-	--border-radius-pill: $border-radius-pill;
+	--color-loading-light: #{$color-loading-light};
+	--color-loading-dark: #{$color-loading-dark};
 
-	--font-face: $font-face;
+	--color-box-shadow: #{$color-box-shadow};
 
-	--animation-quick: $animation-quick;
-	--animation-slow: $animation-slow;
+	--color-border: #{$color-border};
+	--color-border-dark: #{$color-border-dark};
+	--border-radius: #{$border-radius};
+	--border-radius-large: #{$border-radius-large};
+	--border-radius-pill: #{$border-radius-pill};
 
-	--header-height: $header-height;
+	--font-face: #{$font-face};
+	--default-font-size: #{$default-font-size};
+
+	--default-line-height: #{$default-line-height};
+
+	--animation-quick: #{$animation-quick};
+	--animation-slow: #{$animation-slow};
+
+	--header-height: #{$header-height};
 }

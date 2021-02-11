@@ -14,7 +14,7 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -133,7 +133,7 @@ try {
 	if (!$pos = strpos($pathInfo, '/', 1)) {
 		$pos = strlen($pathInfo);
 	}
-	$service=substr($pathInfo, 1, $pos-1);
+	$service = substr($pathInfo, 1, $pos - 1);
 
 	$file = resolveService($service);
 
@@ -141,10 +141,10 @@ try {
 		throw new RemoteException('Path not found', 404);
 	}
 
-	$file=ltrim($file, '/');
+	$file = ltrim($file, '/');
 
-	$parts=explode('/', $file, 2);
-	$app=$parts[0];
+	$parts = explode('/', $file, 2);
+	$app = $parts[0];
 
 	// Load all required applications
 	\OC::$REQUESTEDAPP = $app;
@@ -153,7 +153,7 @@ try {
 
 	switch ($app) {
 		case 'core':
-			$file =  OC::$SERVERROOT .'/'. $file;
+			$file = OC::$SERVERROOT .'/'. $file;
 			break;
 		default:
 			if (!\OC::$server->getAppManager()->isInstalled($app)) {

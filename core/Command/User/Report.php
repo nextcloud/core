@@ -27,6 +27,7 @@
 
 namespace OC\Core\Command\User;
 
+use OCP\IConfig;
 use OCP\IUserManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -36,12 +37,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Report extends Command {
 	/** @var IUserManager */
 	protected $userManager;
+	/** @var IConfig */
+	private $config;
 
 	/**
 	 * @param IUserManager $userManager
 	 */
-	public function __construct(IUserManager $userManager) {
+	public function __construct(IUserManager $userManager, IConfig $config) {
 		$this->userManager = $userManager;
+		$this->config = $config;
 		parent::__construct();
 	}
 
@@ -72,6 +76,10 @@ class Report extends Command {
 		$userDirectoryCount = $this->countUserDirectories();
 		$rows[] = [' '];
 		$rows[] = ['user directories', $userDirectoryCount];
+
+		$disabledUsers = $this->config->getUsersForUserValue('core', 'enabled', 'false');
+		$disabledUsersCount = count($disabledUsers);
+		$rows[] = ['disabled users', $disabledUsersCount];
 
 		$table->setRows($rows);
 		$table->render();

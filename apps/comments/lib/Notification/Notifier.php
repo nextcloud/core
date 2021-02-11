@@ -195,7 +195,11 @@ class Notifier implements INotifier {
 			// could contain characters like '@' for user IDs) but a one-based
 			// index of the mentions of that type.
 			$mentionParameterId = 'mention-' . $mention['type'] . $mentionTypeCount[$mention['type']];
-			$message = str_replace('@' . $mention['id'], '{' . $mentionParameterId . '}', $message);
+			$message = str_replace('@"' . $mention['id'] . '"', '{' . $mentionParameterId . '}', $message);
+			if (strpos($mention['id'], ' ') === false && strpos($mention['id'], 'guest/') !== 0) {
+				$message = str_replace('@' . $mention['id'], '{' . $mentionParameterId . '}', $message);
+			}
+
 			try {
 				$displayName = $this->commentsManager->resolveDisplayName($mention['type'], $mention['id']);
 			} catch (\OutOfBoundsException $e) {

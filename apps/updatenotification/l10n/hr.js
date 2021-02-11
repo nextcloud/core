@@ -23,7 +23,6 @@ OC.L10N.register(
     "A non-default update server is in use to be checked for updates:" : "Koristi se poslužitelj za ažuriranje koji nije zadan:",
     "Update channel:" : "Ažuriraj kanal:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Uvijek možete ažurirati na noviju inačicu. Ali nikad se ne možete vratiti na stabilniju inačicu.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Imajte na umu da se nova izdanja mogu pojaviti ovdje tek nakon nekog dužeg vremena. Nove inačice uvodimo u pravilnim vremenskim razmacima i ponekad preskočimo inačicu ako je problematična.",
     "Notify members of the following groups about available updates:" : "Obavijestite članove sljedećih grupa o dostupnim ažuriranjima:",
     "Only notification for app updates are available." : "Dostupne su samo obavijesti o ažuriranjima aplikacija.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "Odabrani kanal za ažuriranje čini namjenske obavijesti za pojedini poslužitelj zastarjelim.",
@@ -41,6 +40,7 @@ OC.L10N.register(
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "Najnovija stabilna inačica. Primjerena je za redovitu uporabu i uvijek će se ažurirati na najnoviju glavnu inačicu.",
     "Beta" : "Beta",
     "A pre-release version only for testing new features, not for production environments." : "Razvojna inačica koja služi samo za ispitivanje novih značajki, a nikako za produkcijska okruženja.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> aplikacija nema dostupno ažuriranje za trenutnu inačicu","<strong>%n</strong> aplikacije nemaju dostupno ažuriranje za trenutnu inačicu","<strong>%n</strong> aplikacije nemaju dostupno ažuriranje za trenutnu inačicu"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> aplikacija nema dostupno ažuriranje za trenutnu inačicu","<strong>%n</strong> aplikacije nemaju dostupno ažuriranje za trenutnu inačicu","<strong>%n</strong> aplikacije nemaju dostupno ažuriranje za trenutnu inačicu"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Imajte na umu da se nova izdanja mogu pojaviti ovdje tek nakon nekog dužeg vremena. Nove inačice uvodimo u pravilnim vremenskim razmacima i ponekad preskočimo inačicu ako je problematična."
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

@@ -1,0 +1,5 @@
+{ "translations": {
+    "Auditing / Logging" : "監査／ログ",
+    "Provides logging abilities for Nextcloud such as logging file accesses or otherwise sensitive actions." : "アクセスやその他の不安定な動作のログファイルとして、Nextcloudに記録機能を提供します"
+},"pluralForm" :"nplurals=1; plural=0;"
+}

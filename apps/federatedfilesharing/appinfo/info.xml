@@ -5,7 +5,7 @@
 	<name>Federated file sharing</name>
 	<summary>Provide federated file sharing across servers</summary>
 	<description>Provide federated file sharing across servers</description>
-	<version>1.10.1</version>
+	<version>1.11.0</version>
 	<licence>agpl</licence>
 	<author>Bjoern Schiessle</author>
 	<author>Roeland Jago Douma</author>
@@ -15,7 +15,7 @@
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 
 	<dependencies>
-		<nextcloud min-version="20" max-version="20"/>
+		<nextcloud min-version="22" max-version="22"/>
 	</dependencies>
 
 	<settings>

@@ -1,11 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
- * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Ole Ostergaard <ole.c.ostergaard@gmail.com>
  * @author Ole Ostergaard <ole.ostergaard@knime.com>
@@ -36,48 +39,69 @@ namespace OC\DB;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use Doctrine\DBAL\Configuration;
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Exception\ConstraintViolationException;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Exception\NotNullConstraintViolationException;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Statement;
 use OC\DB\QueryBuilder\QueryBuilder;
+use OC\SystemConfig;
 use OCP\DB\QueryBuilder\IQueryBuilder;
-use OCP\IDBConnection;
+use OCP\ILogger;
 use OCP\PreConditionNotMetException;
 
-class Connection extends ReconnectWrapper implements IDBConnection {
-	/**
-	 * @var string $tablePrefix
-	 */
+class Connection extends \Doctrine\DBAL\Connection {
+	/** @var string */
 	protected $tablePrefix;
 
-	/**
-	 * @var \OC\DB\Adapter $adapter
-	 */
+	/** @var \OC\DB\Adapter $adapter */
 	protected $adapter;
+
+	/** @var SystemConfig */
+	private $systemConfig;
+
+	/** @var ILogger */
+	private $logger;
 
 	protected $lockedTable = null;
 
+	/** @var int */
+	protected $queriesBuilt = 0;
+
+	/** @var int */
+	protected $queriesExecuted = 0;
+
+	/**
+	 * @throws Exception
+	 */
 	public function connect() {
 		try {
 			return parent::connect();
-		} catch (DBALException $e) {
+		} catch (Exception $e) {
 			// throw a new exception to prevent leaking info from the stacktrace
-			throw new DBALException('Failed to connect to the database: ' . $e->getMessage(), $e->getCode());
+			throw new Exception('Failed to connect to the database: ' . $e->getMessage(), $e->getCode());
 		}
+	}
+
+	public function getStats(): array {
+		return [
+			'built' => $this->queriesBuilt,
+			'executed' => $this->queriesExecuted,
+		];
 	}
 
 	/**
 	 * Returns a QueryBuilder for the connection.
-	 *
-	 * @return \OCP\DB\QueryBuilder\IQueryBuilder
 	 */
-	public function getQueryBuilder() {
+	public function getQueryBuilder(): IQueryBuilder {
+		$this->queriesBuilt++;
 		return new QueryBuilder(
-			$this,
-			\OC::$server->getSystemConfig(),
-			\OC::$server->getLogger()
+			new ConnectionAdapter($this),
+			$this->systemConfig,
+			$this->logger
 		);
 	}
 
@@ -90,6 +114,7 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	public function createQueryBuilder() {
 		$backtrace = $this->getCallerBacktrace();
 		\OC::$server->getLogger()->debug('Doctrine QueryBuilder retrieved in {backtrace}', ['app' => 'core', 'backtrace' => $backtrace]);
+		$this->queriesBuilt++;
 		return parent::createQueryBuilder();
 	}
 
@@ -102,6 +127,7 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	public function getExpressionBuilder() {
 		$backtrace = $this->getCallerBacktrace();
 		\OC::$server->getLogger()->debug('Doctrine ExpressionBuilder retrieved in {backtrace}', ['app' => 'core', 'backtrace' => $backtrace]);
+		$this->queriesBuilt++;
 		return parent::getExpressionBuilder();
 	}
 
@@ -146,9 +172,15 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 		if (!isset($params['tablePrefix'])) {
 			throw new \Exception('tablePrefix not set');
 		}
+		/**
+		 * @psalm-suppress InternalMethod
+		 */
 		parent::__construct($params, $driver, $config, $eventManager);
 		$this->adapter = new $params['adapter']($this);
 		$this->tablePrefix = $params['tablePrefix'];
+
+		$this->systemConfig = \OC::$server->getSystemConfig();
+		$this->logger = \OC::$server->getLogger();
 	}
 
 	/**
@@ -157,9 +189,11 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	 * @param string $statement The SQL statement to prepare.
 	 * @param int $limit
 	 * @param int $offset
-	 * @return \Doctrine\DBAL\Driver\Statement The prepared statement.
+	 *
+	 * @return Statement The prepared statement.
+	 * @throws Exception
 	 */
-	public function prepare($statement, $limit=null, $offset=null) {
+	public function prepare($statement, $limit = null, $offset = null): Statement {
 		if ($limit === -1) {
 			$limit = null;
 		}
@@ -179,19 +213,30 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	 * If the query is parametrized, a prepared statement is used.
 	 * If an SQLLogger is configured, the execution is logged.
 	 *
-	 * @param string                                      $query  The SQL query to execute.
+	 * @param string                                      $sql  The SQL query to execute.
 	 * @param array                                       $params The parameters to bind to the query, if any.
 	 * @param array                                       $types  The types the previous parameters are in.
 	 * @param \Doctrine\DBAL\Cache\QueryCacheProfile|null $qcp    The query cache profile, optional.
 	 *
-	 * @return \Doctrine\DBAL\Driver\Statement The executed statement.
+	 * @return Result The executed statement.
 	 *
-	 * @throws \Doctrine\DBAL\DBALException
+	 * @throws \Doctrine\DBAL\Exception
 	 */
-	public function executeQuery($query, array $params = [], $types = [], QueryCacheProfile $qcp = null) {
-		$query = $this->replaceTablePrefix($query);
-		$query = $this->adapter->fixupStatement($query);
-		return parent::executeQuery($query, $params, $types, $qcp);
+	public function executeQuery(string $sql, array $params = [], $types = [], QueryCacheProfile $qcp = null): Result {
+		$sql = $this->replaceTablePrefix($sql);
+		$sql = $this->adapter->fixupStatement($sql);
+		$this->queriesExecuted++;
+		return parent::executeQuery($sql, $params, $types, $qcp);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function executeUpdate(string $sql, array $params = [], array $types = []): int {
+		$sql = $this->replaceTablePrefix($sql);
+		$sql = $this->adapter->fixupStatement($sql);
+		$this->queriesExecuted++;
+		return parent::executeUpdate($sql, $params, $types);
 	}
 
 	/**
@@ -200,18 +245,19 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	 *
 	 * This method supports PDO binding types as well as DBAL mapping types.
 	 *
-	 * @param string $query  The SQL query.
+	 * @param string $sql  The SQL query.
 	 * @param array  $params The query parameters.
 	 * @param array  $types  The parameter types.
 	 *
-	 * @return integer The number of affected rows.
+	 * @return int The number of affected rows.
 	 *
-	 * @throws \Doctrine\DBAL\DBALException
+	 * @throws \Doctrine\DBAL\Exception
 	 */
-	public function executeUpdate($query, array $params = [], array $types = []) {
-		$query = $this->replaceTablePrefix($query);
-		$query = $this->adapter->fixupStatement($query);
-		return parent::executeUpdate($query, $params, $types);
+	public function executeStatement($sql, array $params = [], array $types = []): int {
+		$sql = $this->replaceTablePrefix($sql);
+		$sql = $this->adapter->fixupStatement($sql);
+		$this->queriesExecuted++;
+		return parent::executeStatement($sql, $params, $types);
 	}
 
 	/**
@@ -223,7 +269,9 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	 * columns or sequences.
 	 *
 	 * @param string $seqName Name of the sequence object from which the ID should be returned.
-	 * @return string A string representation of the last inserted ID.
+	 *
+	 * @return string the last inserted ID.
+	 * @throws Exception
 	 */
 	public function lastInsertId($seqName = null) {
 		if ($seqName) {
@@ -232,7 +280,10 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 		return $this->adapter->lastInsertId($seqName);
 	}
 
-	// internal use
+	/**
+	 * @internal
+	 * @throws Exception
+	 */
 	public function realLastInsertId($seqName = null) {
 		return parent::lastInsertId($seqName);
 	}
@@ -248,7 +299,7 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	 *				If this is null or an empty array, all keys of $input will be compared
 	 *				Please note: text fields (clob) must not be used in the compare array
 	 * @return int number of inserted rows
-	 * @throws \Doctrine\DBAL\DBALException
+	 * @throws \Doctrine\DBAL\Exception
 	 * @deprecated 15.0.0 - use unique index and "try { $db->insert() } catch (UniqueConstraintViolationException $e) {}" instead, because it is more reliable and does not have the risk for deadlocks - see https://github.com/nextcloud/server/pull/12371
 	 */
 	public function insertIfNotExist($table, $input, array $compare = null) {
@@ -277,9 +328,8 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	 * @param array $values (column name => value)
 	 * @param array $updatePreconditionValues ensure values match preconditions (column name => value)
 	 * @return int number of new rows
-	 * @throws \Doctrine\DBAL\DBALException
+	 * @throws \Doctrine\DBAL\Exception
 	 * @throws PreConditionNotMetException
-	 * @suppress SqlInjectionChecker
 	 */
 	public function setValues($table, array $keys, array $values, array $updatePreconditionValues = []) {
 		try {
@@ -291,6 +341,8 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 					}, array_merge($keys, $values))
 				);
 			return $insertQb->execute();
+		} catch (NotNullConstraintViolationException $e) {
+			throw $e;
 		} catch (ConstraintViolationException $e) {
 			// value already exists, try update
 			$updateQb = $this->getQueryBuilder();
@@ -301,11 +353,17 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 			$where = $updateQb->expr()->andX();
 			$whereValues = array_merge($keys, $updatePreconditionValues);
 			foreach ($whereValues as $name => $value) {
-				$where->add($updateQb->expr()->eq(
-					$name,
-					$updateQb->createNamedParameter($value, $this->getType($value)),
-					$this->getType($value)
-				));
+				if ($value === '') {
+					$where->add($updateQb->expr()->emptyString(
+						$name
+					));
+				} else {
+					$where->add($updateQb->expr()->eq(
+						$name,
+						$updateQb->createNamedParameter($value, $this->getType($value)),
+						$this->getType($value)
+					));
+				}
 			}
 			$updateQb->where($where);
 			$affected = $updateQb->execute();
@@ -322,7 +380,9 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	 * Create an exclusive read+write lock on a table
 	 *
 	 * @param string $tableName
+	 *
 	 * @throws \BadMethodCallException When trying to acquire a second lock
+	 * @throws Exception
 	 * @since 9.1.0
 	 */
 	public function lockTable($tableName) {
@@ -338,6 +398,7 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	/**
 	 * Release a previous acquired lock again
 	 *
+	 * @throws Exception
 	 * @since 9.1.0
 	 */
 	public function unlockTable() {
@@ -353,7 +414,7 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	public function getError() {
 		$msg = $this->errorCode() . ': ';
 		$errorInfo = $this->errorInfo();
-		if (is_array($errorInfo)) {
+		if (!empty($errorInfo)) {
 			$msg .= 'SQLSTATE = '.$errorInfo[0] . ', ';
 			$msg .= 'Driver Code = '.$errorInfo[1] . ', ';
 			$msg .= 'Driver Message = '.$errorInfo[2];
@@ -361,10 +422,20 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 		return $msg;
 	}
 
+	public function errorCode() {
+		return -1;
+	}
+
+	public function errorInfo() {
+		return [];
+	}
+
 	/**
 	 * Drop a table from the database if it exists
 	 *
 	 * @param string $table table name without the prefix
+	 *
+	 * @throws Exception
 	 */
 	public function dropTable($table) {
 		$table = $this->tablePrefix . trim($table);
@@ -378,7 +449,9 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	 * Check if a table exists
 	 *
 	 * @param string $table table name without the prefix
+	 *
 	 * @return bool
+	 * @throws Exception
 	 */
 	public function tableExists($table) {
 		$table = $this->tablePrefix . trim($table);
@@ -422,7 +495,7 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	 * @since 11.0.0
 	 */
 	public function supports4ByteText() {
-		if (!$this->getDatabasePlatform() instanceof MySqlPlatform) {
+		if (!$this->getDatabasePlatform() instanceof MySQLPlatform) {
 			return true;
 		}
 		return $this->getParams()['charset'] === 'utf8mb4';
@@ -433,6 +506,7 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	 * Create the schema of the connected database
 	 *
 	 * @return Schema
+	 * @throws Exception
 	 */
 	public function createSchema() {
 		$schemaManager = new MDB2SchemaManager($this);
@@ -444,6 +518,8 @@ class Connection extends ReconnectWrapper implements IDBConnection {
 	 * Migrate the database to the given schema
 	 *
 	 * @param Schema $toSchema
+	 *
+	 * @throws Exception
 	 */
 	public function migrateToSchema(Schema $toSchema) {
 		$schemaManager = new MDB2SchemaManager($this);

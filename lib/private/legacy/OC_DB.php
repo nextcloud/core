@@ -12,7 +12,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -44,7 +44,7 @@ class OC_DB {
 	 * @return \OC\DB\MDB2SchemaManager
 	 */
 	private static function getMDB2SchemaManager() {
-		return new \OC\DB\MDB2SchemaManager(\OC::$server->getDatabaseConnection());
+		return new \OC\DB\MDB2SchemaManager(\OC::$server->get(\OC\DB\Connection::class));
 	}
 
 	/**
@@ -55,6 +55,7 @@ class OC_DB {
 	 * @param bool|null $isManipulation
 	 * @throws \OC\DatabaseException
 	 * @return OC_DB_StatementWrapper prepared SQL query
+	 * @deprecated 21.0.0 Please use \OCP\IDBConnection::getQueryBuilder() instead
 	 *
 	 * SQL query via Doctrine prepare(), needs to be execute()'d!
 	 */
@@ -68,13 +69,12 @@ class OC_DB {
 
 		// return the result
 		try {
-			$result =$connection->prepare($query, $limit, $offset);
-		} catch (\Doctrine\DBAL\DBALException $e) {
+			$result = $connection->prepare($query, $limit, $offset);
+		} catch (\Doctrine\DBAL\Exception $e) {
 			throw new \OC\DatabaseException($e->getMessage());
 		}
 		// differentiate between query and manipulation
-		$result = new OC_DB_StatementWrapper($result, $isManipulation);
-		return $result;
+		return new OC_DB_StatementWrapper($result, $isManipulation);
 	}
 
 	/**
@@ -85,22 +85,27 @@ class OC_DB {
 	 * @return bool
 	 */
 	public static function isManipulation($sql) {
+		$sql = trim($sql);
 		$selectOccurrence = stripos($sql, 'SELECT');
-		if ($selectOccurrence !== false && $selectOccurrence < 10) {
+		if ($selectOccurrence === 0) {
 			return false;
 		}
 		$insertOccurrence = stripos($sql, 'INSERT');
-		if ($insertOccurrence !== false && $insertOccurrence < 10) {
+		if ($insertOccurrence === 0) {
 			return true;
 		}
 		$updateOccurrence = stripos($sql, 'UPDATE');
-		if ($updateOccurrence !== false && $updateOccurrence < 10) {
+		if ($updateOccurrence === 0) {
 			return true;
 		}
 		$deleteOccurrence = stripos($sql, 'DELETE');
-		if ($deleteOccurrence !== false && $deleteOccurrence < 10) {
+		if ($deleteOccurrence === 0) {
 			return true;
 		}
+
+		// This is triggered with "SHOW VERSION" and some more, so until we made a list, we keep this out.
+		// \OC::$server->getLogger()->logException(new \Exception('Can not detect if query is manipulating: ' . $sql));
+
 		return false;
 	}
 
@@ -112,6 +117,7 @@ class OC_DB {
 	 * @param array $parameters
 	 * @return OC_DB_StatementWrapper
 	 * @throws \OC\DatabaseException
+	 * @deprecated 21.0.0 Please use \OCP\IDBConnection::getQueryBuilder() instead
 	 */
 	public static function executeAudited($stmt, array $parameters = []) {
 		if (is_string($stmt)) {
@@ -154,18 +160,6 @@ class OC_DB {
 	}
 
 	/**
-	 * saves database schema to xml file
-	 * @param string $file name of file
-	 * @return bool
-	 *
-	 * TODO: write more documentation
-	 */
-	public static function getDbStructure($file) {
-		$schemaManager = self::getMDB2SchemaManager();
-		return $schemaManager->getDbStructure($file);
-	}
-
-	/**
 	 * Creates tables from XML file
 	 * @param string $file file to read structure from
 	 * @return bool
@@ -205,7 +199,7 @@ class OC_DB {
 	}
 
 	/**
-	 * check if a result is an error and throws an exception, works with \Doctrine\DBAL\DBALException
+	 * check if a result is an error and throws an exception, works with \Doctrine\DBAL\Exception
 	 * @param mixed $result
 	 * @param string $message
 	 * @return void

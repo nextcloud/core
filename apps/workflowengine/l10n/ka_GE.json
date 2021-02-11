@@ -56,22 +56,6 @@
     "Request user agent" : "მოთხოვნის მომხმარებლის აგენტი",
     "User group membership" : "მომხმარებლის ჯგუფის წევრიანობა",
     "is member of" : "არის წევრი ჯგუფისა",
-    "is not member of" : "არ არის წევრი ჯგუფისა",
-    "Example: {placeholder}" : "მაგალითი: {placeholder}",
-    "Select tag…" : "აირჩიეთ ტეგი...",
-    "Start" : "დაწყება",
-    "End" : "დამთავრება",
-    "Select timezone…" : "აირჩიეთ დროის სარტყელი...",
-    "Sync clients" : "სინქ. კლიენტები",
-    "Short rule description" : "წესის მოკლე აღწერა",
-    "Add rule" : "წესის დამატება",
-    "Reset" : "საწყის მდოგმარეობაში დაბრუნება",
-    "Saving…" : "მიმდინარეობს დამახსოვრება...",
-    "Saved" : "შენახულია",
-    "Saving failed:" : "შენახვა ვერ მოხერხდა:",
-    "Add rule group" : "ჯგუფის წესის დამატება",
-    "Files workflow engine" : "ფაილების სამუშაოს შესრულების ძრავა",
-    "Open documentation" : "ღია დოკუმენტაცია",
-    "Loading…" : "იტვირთება..."
+    "is not member of" : "არ არის წევრი ჯგუფისა"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

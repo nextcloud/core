@@ -14,7 +14,7 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -47,12 +47,12 @@ function p($string) {
  * @param string $opts, additional optional options
  */
 function emit_css_tag($href, $opts = '') {
-	$s='<link rel="stylesheet"';
+	$s = '<link rel="stylesheet"';
 	if (!empty($href)) {
-		$s.=' href="' . $href .'"';
+		$s .= ' href="' . $href .'"';
 	}
 	if (!empty($opts)) {
-		$s.=' '.$opts;
+		$s .= ' '.$opts;
 	}
 	print_unescaped($s.">\n");
 }
@@ -75,20 +75,20 @@ function emit_css_loading_tags($obj) {
  * @param string $src the source URL, ignored when empty
  * @param string $script_content the inline script content, ignored when empty
  */
-function emit_script_tag($src, $script_content='') {
-	$defer_str=' defer';
-	$s='<script nonce="' . \OC::$server->getContentSecurityPolicyNonceManager()->getNonce() . '"';
+function emit_script_tag($src, $script_content = '') {
+	$defer_str = ' defer';
+	$s = '<script nonce="' . \OC::$server->getContentSecurityPolicyNonceManager()->getNonce() . '"';
 	if (!empty($src)) {
 		// emit script tag for deferred loading from $src
-		$s.=$defer_str.' src="' . $src .'">';
+		$s .= $defer_str.' src="' . $src .'">';
 	} elseif (!empty($script_content)) {
 		// emit script tag for inline script from $script_content without defer (see MDN)
-		$s.=">\n".$script_content."\n";
+		$s .= ">\n".$script_content."\n";
 	} else {
 		// no $src nor $src_content, really useless empty tag
-		$s.='>';
+		$s .= '>';
 	}
-	$s.='</script>';
+	$s .= '</script>';
 	print_unescaped($s."\n");
 }
 
@@ -306,9 +306,9 @@ function relative_modified_date($timestamp, $fromTime = null, $dateOnly = false)
 	return $formatter->formatTimeSpan($timestamp, $fromTime);
 }
 
-function html_select_options($options, $selected, $params=[]) {
+function html_select_options($options, $selected, $params = []) {
 	if (!is_array($selected)) {
-		$selected=[$selected];
+		$selected = [$selected];
 	}
 	if (isset($params['combine']) && $params['combine']) {
 		$options = array_combine($options, $options);

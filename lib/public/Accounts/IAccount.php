@@ -32,7 +32,6 @@ use OCP\IUser;
  * Interface IAccount
  *
  * @since 15.0.0
- * @package OCP\Accounts
  */
 interface IAccount extends \JsonSerializable {
 

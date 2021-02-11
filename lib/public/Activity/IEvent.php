@@ -7,6 +7,7 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2016 Joas Schilling <coding@schilljs.com>
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
@@ -38,7 +39,6 @@ namespace OCP\Activity;
 /**
  * Interface IEvent
  *
- * @package OCP\Activity
  * @since 8.2.0
  */
 interface IEvent {

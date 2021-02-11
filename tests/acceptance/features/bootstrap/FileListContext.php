@@ -387,7 +387,7 @@ class FileListContext implements Context, ActorAwareInterface {
 	 * @Given I open the details view for :fileName
 	 */
 	public function iOpenTheDetailsViewFor($fileName) {
-		$this->actor->find(self::fileActionsMenuButtonForFile($this->fileListAncestor, $fileName), 10)->click();
+		$this->openFileActionsMenuForFile($fileName);
 
 		$this->actor->find(self::detailsMenuItem(), 2)->click();
 	}
@@ -396,7 +396,7 @@ class FileListContext implements Context, ActorAwareInterface {
 	 * @Given I rename :fileName1 to :fileName2
 	 */
 	public function iRenameTo($fileName1, $fileName2) {
-		$this->actor->find(self::fileActionsMenuButtonForFile($this->fileListAncestor, $fileName1), 10)->click();
+		$this->openFileActionsMenuForFile($fileName1);
 
 		$this->actor->find(self::renameMenuItem(), 2)->click();
 
@@ -416,7 +416,7 @@ class FileListContext implements Context, ActorAwareInterface {
 	 * @Given I start the move or copy operation for :fileName
 	 */
 	public function iStartTheMoveOrCopyOperationFor($fileName) {
-		$this->actor->find(self::fileActionsMenuButtonForFile($this->fileListAncestor, $fileName), 10)->click();
+		$this->openFileActionsMenuForFile($fileName);
 
 		$this->actor->find(self::moveOrCopyMenuItem(), 2)->click();
 	}
@@ -427,7 +427,7 @@ class FileListContext implements Context, ActorAwareInterface {
 	public function iMarkAsFavorite($fileName) {
 		$this->iSeeThatIsNotMarkedAsFavorite($fileName);
 
-		$this->actor->find(self::fileActionsMenuButtonForFile($this->fileListAncestor, $fileName), 10)->click();
+		$this->openFileActionsMenuForFile($fileName);
 
 		$this->actor->find(self::addToFavoritesMenuItem(), 2)->click();
 	}
@@ -438,7 +438,7 @@ class FileListContext implements Context, ActorAwareInterface {
 	public function iUnmarkAsFavorite($fileName) {
 		$this->iSeeThatIsMarkedAsFavorite($fileName);
 
-		$this->actor->find(self::fileActionsMenuButtonForFile($this->fileListAncestor, $fileName), 10)->click();
+		$this->openFileActionsMenuForFile($fileName);
 
 		$this->actor->find(self::removeFromFavoritesMenuItem(), 2)->click();
 	}
@@ -447,7 +447,7 @@ class FileListContext implements Context, ActorAwareInterface {
 	 * @When I view :fileName in folder
 	 */
 	public function iViewInFolder($fileName) {
-		$this->actor->find(self::fileActionsMenuButtonForFile($this->fileListAncestor, $fileName), 10)->click();
+		$this->openFileActionsMenuForFile($fileName);
 
 		$this->actor->find(self::viewFileInFolderMenuItem(), 2)->click();
 	}
@@ -456,7 +456,7 @@ class FileListContext implements Context, ActorAwareInterface {
 	 * @When I delete :fileName
 	 */
 	public function iDelete($fileName) {
-		$this->actor->find(self::fileActionsMenuButtonForFile($this->fileListAncestor, $fileName), 10)->click();
+		$this->openFileActionsMenuForFile($fileName);
 
 		$this->actor->find(self::deleteMenuItem(), 2)->click();
 	}
@@ -551,5 +551,35 @@ class FileListContext implements Context, ActorAwareInterface {
 	 */
 	public function iSeeThatHasUnreadComments($fileName) {
 		PHPUnit_Framework_Assert::assertTrue($this->actor->find(self::commentActionForFile($this->fileListAncestor, $fileName), 10)->isVisible());
+	}
+
+	private function waitForRowForFileToBeFullyOpaque($fileName) {
+		$actor = $this->actor;
+		$fileRowXpathExpression = $this->actor->find(self::rowForFile($this->fileListAncestor, $fileName), 10)->getWrappedElement()->getXpath();
+
+		$fileRowIsFullyOpaqueCallback = function () use ($actor, $fileRowXpathExpression) {
+			$opacity = $actor->getSession()->evaluateScript("return window.getComputedStyle(document.evaluate(\"" . $fileRowXpathExpression . "\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue).opacity;");
+			if ($opacity === "1") {
+				return true;
+			}
+
+			return false;
+		};
+
+		if (!Utils::waitFor($fileRowIsFullyOpaqueCallback, $timeout = 2 * $this->actor->getFindTimeoutMultiplier(), $timeoutStep = 1)) {
+			PHPUnit_Framework_Assert::fail("The row for file $fileName in file list is not fully opaque after $timeout seconds");
+		}
+	}
+
+	private function openFileActionsMenuForFile($fileName) {
+		// When a row is added to the file list the opacity of the file row is
+		// animated from transparent to fully opaque. As the file actions menu
+		// is a descendant of the row but overflows it when the row is not fully
+		// opaque clicks on the menu entries "fall-through" and are received
+		// instead by the rows behind. Therefore it should be waited until the
+		// row of the file is fully opaque before using the menu.
+		$this->waitForRowForFileToBeFullyOpaque($fileName);
+
+		$this->actor->find(self::fileActionsMenuButtonForFile($this->fileListAncestor, $fileName), 10)->click();
 	}
 }

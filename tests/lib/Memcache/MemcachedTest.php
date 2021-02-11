@@ -29,7 +29,7 @@ class MemcachedTest extends Cache {
 
 	public function testClear() {
 		// Memcached is sometimes broken with clear(), so we don't test it thoroughly
-		$value='ipsum lorum';
+		$value = 'ipsum lorum';
 		$this->instance->set('1_value1', $value);
 		$this->instance->set('1_value2', $value);
 		$this->instance->set('2_value1', $value);

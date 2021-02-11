@@ -12,6 +12,7 @@ OC.L10N.register(
     "The given end time is invalid" : "Antud lõppaeg on vigane",
     "The given group does not exist" : "Antud gruppi ei leitud",
     "File" : "Fail",
+    "File deleted" : "Fail on kustutatud",
     "Operation #%s does not exist" : "Tegevus # %s ei leitud",
     "Operation %s does not exist" : "Tegevust %s ei leitud",
     "Operation %s is invalid" : "Tegevus %s on vigane",

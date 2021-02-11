@@ -38,20 +38,18 @@ OC.L10N.register(
     "Federated Cloud Sharing" : "統合されたクラウド共有",
     "Open documentation" : "ドキュメントを開く",
     "Adjust how people can share between servers." : "サーバー間でどうやって共有するかを調整します。",
-    "Allow users on this server to send shares to other servers" : "ユーザーがこのサーバーから他のサーバーに共有することを許可する",
     "Allow users on this server to receive shares from other servers" : "ユーザーが他のサーバーからこのサーバーに共有することを許可する",
     "Allow users on this server to send shares to groups on other servers" : "ユーザーがこのサーバーから他のサーバー上のグループに共有することを許可する",
     "Allow users on this server to receive group shares from other servers" : "ユーザーが他のサーバーからこのサーバーにグループ共有することを許可する",
     "Search global and public address book for users" : "グローバルまたはユーザーの公開アドレス帳を検索する",
     "Allow users to publish their data to a global and public address book" : "公開アドレス帳をグローバルに公開することをユーザーに許可する",
     "Federated Cloud" : "クラウド共有",
-    "You can share with anyone who uses a Nextcloud server or other Open Cloud Mesh (OCM) compatible servers and services! Just put their Federated Cloud ID in the share dialog. It looks like person@cloud.example.com" : "Nextcloudサーバーまたはその他のOpen Cloud Mesh(OCM)互換のサーバーとサービスを使用しているユーザーであれば、共有ダイアログにFederated Cloud IDを入力するだけで誰とでも共有できます。例:person@cloud.example.com",
+    "You can share with anyone who uses a Nextcloud server or other Open Cloud Mesh (OCM) compatible servers and services! Just put their Federated Cloud ID in the share dialog. It looks like person@cloud.example.com" : "Nextcloud サーバーまたはその他の Open Cloud Mesh (OCM) 互換のサーバーとサービスを使用しているユーザーであれば、共有ダイアログに Federated Cloud ID を入力するだけで誰とでも共有できます。例: person@cloud.example.com",
     "Your Federated Cloud ID:" : "あなたのクラウド共有ID：",
     "Share it so your friends can share files with you:" : "友達があなたとファイルを共有できるよう、シェアしましょう:",
     "Add to your website" : "ウェブサイトに追加",
     "Share with me via Nextcloud" : "Nextcloud 経由で共有",
     "HTML Code:" : "HTMLコード:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "%1$s からリモート共有として \"%3$s\" を受け取りました。(%2$s の代理として)",
-    "You received \"%3$s\" as a remote share from %1$s" : "%1$s からリモート共有として \"%3$s\" を受け取りました。"
+    "Allow users on this server to send shares to other servers" : "ユーザーがこのサーバーから他のサーバーに共有することを許可する"
 },
 "nplurals=1; plural=0;");

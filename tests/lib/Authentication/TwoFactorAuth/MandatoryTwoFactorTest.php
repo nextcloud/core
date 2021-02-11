@@ -110,7 +110,7 @@ class MandatoryTwoFactorTest extends TestCase {
 			]);
 		$this->groupManager->method('isInGroup')
 			->willReturnCallback(function ($user, $group) {
-				return $user === 'user123' && $group ==='twofactorers';
+				return $user === 'user123' && $group === 'twofactorers';
 			});
 
 		$isEnforced = $this->mandatoryTwoFactor->isEnforcedFor($user);
@@ -148,7 +148,7 @@ class MandatoryTwoFactorTest extends TestCase {
 			]);
 		$this->groupManager->method('isInGroup')
 			->willReturnCallback(function ($user, $group) {
-				return $user === 'user123' && $group ==='yoloers';
+				return $user === 'user123' && $group === 'yoloers';
 			});
 
 		$isEnforced = $this->mandatoryTwoFactor->isEnforcedFor($user);

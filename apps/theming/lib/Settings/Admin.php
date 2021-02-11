@@ -4,7 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
- * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -73,18 +73,18 @@ class Admin implements ISettings {
 		}
 
 		$parameters = [
-			'themable'        => $themable,
-			'errorMessage'    => $errorMessage,
-			'name'            => $this->themingDefaults->getEntity(),
-			'url'             => $this->themingDefaults->getBaseUrl(),
-			'slogan'          => $this->themingDefaults->getSlogan(),
-			'color'           => $this->themingDefaults->getColorPrimary(),
+			'themable' => $themable,
+			'errorMessage' => $errorMessage,
+			'name' => $this->themingDefaults->getEntity(),
+			'url' => $this->themingDefaults->getBaseUrl(),
+			'slogan' => $this->themingDefaults->getSlogan(),
+			'color' => $this->themingDefaults->getColorPrimary(),
 			'uploadLogoRoute' => $this->urlGenerator->linkToRoute('theming.Theming.uploadImage'),
-			'canThemeIcons'   => $this->imageManager->shouldReplaceIcons(),
-			'iconDocs'        => $this->urlGenerator->linkToDocs('admin-theming-icons'),
-			'images'		  => $this->imageManager->getCustomImages(),
-			'imprintUrl'      => $this->themingDefaults->getImprintUrl(),
-			'privacyUrl'      => $this->themingDefaults->getPrivacyUrl(),
+			'canThemeIcons' => $this->imageManager->shouldReplaceIcons(),
+			'iconDocs' => $this->urlGenerator->linkToDocs('admin-theming-icons'),
+			'images' => $this->imageManager->getCustomImages(),
+			'imprintUrl' => $this->themingDefaults->getImprintUrl(),
+			'privacyUrl' => $this->themingDefaults->getPrivacyUrl(),
 		];
 
 		return new TemplateResponse('theming', 'settings-admin', $parameters, '');

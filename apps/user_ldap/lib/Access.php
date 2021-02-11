@@ -10,6 +10,7 @@
  * @author bline <scottbeck@gmail.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author J0WI <J0WI@users.noreply.github.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Juan Pablo Villafáñez <jvillafanez@solidgear.es>
@@ -52,6 +53,7 @@ use OC\Hooks\PublicEmitter;
 use OC\ServerNotAvailableException;
 use OCA\User_LDAP\Exceptions\ConstraintViolationException;
 use OCA\User_LDAP\Mapping\AbstractMapping;
+use OCA\User_LDAP\Mapping\UserMapping;
 use OCA\User_LDAP\User\Manager;
 use OCA\User_LDAP\User\OfflineUser;
 use OCP\IConfig;
@@ -74,9 +76,7 @@ class Access extends LDAPUtility {
 	protected $pagedSearchedSuccessful;
 
 	/**
-	 * protected $cookies = [];
-	 *
-	 * @var AbstractMapping $userMapper
+	 * @var UserMapping $userMapper
 	 */
 	protected $userMapper;
 
@@ -123,12 +123,9 @@ class Access extends LDAPUtility {
 	}
 
 	/**
-	 * returns the User Mapper
-	 *
-	 * @return AbstractMapping
 	 * @throws \Exception
 	 */
-	public function getUserMapper() {
+	public function getUserMapper(): UserMapping {
 		if (is_null($this->userMapper)) {
 			throw new \Exception('UserMapper was not assigned to this Access instance.');
 		}
@@ -546,7 +543,7 @@ class Access extends LDAPUtility {
 		if (is_null($ldapName)) {
 			$ldapName = $this->readAttribute($fdn, $nameAttribute, $filter);
 			if (!isset($ldapName[0]) && empty($ldapName[0])) {
-				\OCP\Util::writeLog('user_ldap', 'No or empty name for ' . $fdn . ' with filter ' . $filter . '.', ILogger::INFO);
+				\OCP\Util::writeLog('user_ldap', 'No or empty name for ' . $fdn . ' with filter ' . $filter . '.', ILogger::DEBUG);
 				return false;
 			}
 			$ldapName = $ldapName[0];
@@ -948,7 +945,7 @@ class Access extends LDAPUtility {
 
 		array_walk($groupRecords, function ($record) use ($idsByDn) {
 			$newlyMapped = false;
-			$gid = $uidsByDn[$record['dn'][0]] ?? null;
+			$gid = $idsByDn[$record['dn'][0]] ?? null;
 			if ($gid === null) {
 				$gid = $this->dn2ocname($record['dn'][0], null, false, $newlyMapped, $record);
 			}
@@ -1785,7 +1782,7 @@ class Access extends LDAPUtility {
 	 *
 	 * @param string $oguid the ObjectGUID in it's binary form as retrieved from AD
 	 * @return string
-	 * @link http://www.php.net/manual/en/function.ldap-get-values-len.php#73198
+	 * @link https://www.php.net/manual/en/function.ldap-get-values-len.php#73198
 	 */
 	private function convertObjectGUID2Str($oguid) {
 		$hex_guid = bin2hex($oguid);

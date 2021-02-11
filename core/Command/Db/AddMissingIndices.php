@@ -7,11 +7,12 @@ declare(strict_types=1);
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Mario Danic <mario@lovelyhq.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Citharel <nextcloud@tcit.fr>
- * @author Mario Danic <mario@lovelyhq.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -32,6 +33,7 @@ declare(strict_types=1);
 
 namespace OC\Core\Command\Db;
 
+use OC\DB\Connection;
 use OC\DB\SchemaWrapper;
 use OCP\IDBConnection;
 use Symfony\Component\Console\Command\Command;
@@ -50,13 +52,13 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  */
 class AddMissingIndices extends Command {
 
-	/** @var IDBConnection */
+	/** @var Connection */
 	private $connection;
 
 	/** @var EventDispatcherInterface */
 	private $dispatcher;
 
-	public function __construct(IDBConnection $connection, EventDispatcherInterface $dispatcher) {
+	public function __construct(Connection $connection, EventDispatcherInterface $dispatcher) {
 		parent::__construct();
 
 		$this->connection = $connection;
@@ -135,6 +137,13 @@ class AddMissingIndices extends Command {
 				$updated = true;
 				$output->writeln('<info>Filecache table updated successfully.</info>');
 			}
+			if (!$table->hasIndex('fs_size')) {
+				$output->writeln('<info>Adding additional size index to the filecache table, this can take some time...</info>');
+				$table->addIndex(['size'], 'fs_size');
+				$this->connection->migrateToSchema($schema->getWrappedSchema());
+				$updated = true;
+				$output->writeln('<info>Filecache table updated successfully.</info>');
+			}
 		}
 
 		$output->writeln('<info>Check indices of the twofactor_providers table.</info>');
@@ -193,8 +202,23 @@ class AddMissingIndices extends Command {
 		}
 
 		$output->writeln('<info>Check indices of the cards table.</info>');
+		$cardsUpdated = false;
 		if ($schema->hasTable('cards')) {
 			$table = $schema->getTable('cards');
+
+			if ($table->hasIndex('addressbookid_uri_index')) {
+				$output->writeln('<info>Renaming addressbookid_uri_index index to  to the cards table, this can take some time...</info>');
+
+				foreach ($table->getIndexes() as $index) {
+					if ($index->getColumns() === ['addressbookid', 'uri']) {
+						$table->renameIndex('addressbookid_uri_index', 'cards_abiduri');
+					}
+				}
+
+				$this->connection->migrateToSchema($schema->getWrappedSchema());
+				$cardsUpdated = true;
+			}
+
 			if (!$table->hasIndex('cards_abid')) {
 				$output->writeln('<info>Adding cards_abid index to the cards table, this can take some time...</info>');
 
@@ -206,6 +230,24 @@ class AddMissingIndices extends Command {
 
 				$table->addIndex(['addressbookid'], 'cards_abid');
 				$this->connection->migrateToSchema($schema->getWrappedSchema());
+				$cardsUpdated = true;
+			}
+
+			if (!$table->hasIndex('cards_abiduri')) {
+				$output->writeln('<info>Adding cards_abiduri index to the cards table, this can take some time...</info>');
+
+				foreach ($table->getIndexes() as $index) {
+					if ($index->getColumns() === ['addressbookid', 'uri']) {
+						$table->dropIndex($index->getName());
+					}
+				}
+
+				$table->addIndex(['addressbookid', 'uri'], 'cards_abiduri');
+				$this->connection->migrateToSchema($schema->getWrappedSchema());
+				$cardsUpdated = true;
+			}
+
+			if ($cardsUpdated) {
 				$updated = true;
 				$output->writeln('<info>cards table updated successfully.</info>');
 			}

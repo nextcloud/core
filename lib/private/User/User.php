@@ -16,7 +16,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -50,6 +50,9 @@ use OCP\IImage;
 use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserBackend;
+use OCP\User\Events\BeforeUserDeletedEvent;
+use OCP\User\Events\UserDeletedEvent;
+use OCP\User\GetQuotaEvent;
 use OCP\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -211,10 +214,13 @@ class User implements IUser {
 	 * @return bool
 	 */
 	public function delete() {
+		/** @deprecated 21.0.0 use BeforeUserDeletedEvent event with the IEventDispatcher instead */
 		$this->legacyDispatcher->dispatch(IUser::class . '::preDelete', new GenericEvent($this));
 		if ($this->emitter) {
+			/** @deprecated 21.0.0 use BeforeUserDeletedEvent event with the IEventDispatcher instead */
 			$this->emitter->emit('\OC\User', 'preDelete', [$this]);
 		}
+		$this->dispatcher->dispatchTyped(new BeforeUserDeletedEvent($this));
 		// get the home now because it won't return it after user deletion
 		$homePath = $this->getHome();
 		$result = $this->backend->deleteUser($this->uid);
@@ -260,10 +266,13 @@ class User implements IUser {
 			$accountManager = \OC::$server->query(AccountManager::class);
 			$accountManager->deleteUser($this);
 
+			/** @deprecated 21.0.0 use UserDeletedEvent event with the IEventDispatcher instead */
 			$this->legacyDispatcher->dispatch(IUser::class . '::postDelete', new GenericEvent($this));
 			if ($this->emitter) {
+				/** @deprecated 21.0.0 use UserDeletedEvent event with the IEventDispatcher instead */
 				$this->emitter->emit('\OC\User', 'postDelete', [$this]);
 			}
+			$this->dispatcher->dispatchTyped(new UserDeletedEvent($this));
 		}
 		return !($result === false);
 	}
@@ -406,7 +415,15 @@ class User implements IUser {
 	 * @since 9.0.0
 	 */
 	public function getQuota() {
-		$quota = $this->config->getUserValue($this->uid, 'files', 'quota', 'default');
+		// allow apps to modify the user quota by hooking into the event
+		$event = new GetQuotaEvent($this);
+		$this->dispatcher->dispatchTyped($event);
+		$overwriteQuota = $event->getQuota();
+		if ($overwriteQuota) {
+			$quota = $overwriteQuota;
+		} else {
+			$quota = $this->config->getUserValue($this->uid, 'files', 'quota', 'default');
+		}
 		if ($quota === 'default') {
 			$quota = $this->config->getAppValue('files', 'default_quota', 'none');
 		}
@@ -463,7 +480,7 @@ class User implements IUser {
 	public function getCloudId() {
 		$uid = $this->getUID();
 		$server = $this->urlGenerator->getAbsoluteURL('/');
-		$server =  rtrim($this->removeProtocolFromUrl($server), '/');
+		$server = rtrim($this->removeProtocolFromUrl($server), '/');
 		return \OC::$server->getCloudIdManager()->getCloudId($uid, $server)->getId();
 	}
 

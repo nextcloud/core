@@ -101,7 +101,13 @@ class Redis extends Cache implements IMemcacheTTL {
 		if (!is_int($value)) {
 			$value = json_encode($value);
 		}
-		return self::$cache->setnx($this->getPrefix() . $key, $value);
+
+		$args = ['nx'];
+		if ($ttl !== 0 && is_int($ttl)) {
+			$args['ex'] = $ttl;
+		}
+
+		return self::$cache->set($this->getPrefix() . $key, $value, $args);
 	}
 
 	/**

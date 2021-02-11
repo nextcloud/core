@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2017 Robin Appelman <robin@icewind.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Robin Appelman <robin@icewind.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -69,14 +70,14 @@ class Personal implements ISettings {
 		$uid = $this->userSession->getUser()->getUID();
 
 		$parameters = [
-			'encryptionEnabled'    => $this->encryptionManager->isEnabled(),
-			'visibilityType'       => BackendService::VISIBILITY_PERSONAL,
-			'storages'             => $this->userGlobalStoragesService->getStorages(),
-			'backends'             => $this->backendService->getAvailableBackends(),
-			'authMechanisms'       => $this->backendService->getAuthMechanisms(),
-			'dependencies'         => \OCA\Files_External\MountConfig::dependencyMessage($this->backendService->getBackends()),
-			'allowUserMounting'    => $this->backendService->isUserMountingAllowed(),
-			'globalCredentials'    => $this->globalAuth->getAuth($uid),
+			'encryptionEnabled' => $this->encryptionManager->isEnabled(),
+			'visibilityType' => BackendService::VISIBILITY_PERSONAL,
+			'storages' => $this->userGlobalStoragesService->getStorages(),
+			'backends' => $this->backendService->getAvailableBackends(),
+			'authMechanisms' => $this->backendService->getAuthMechanisms(),
+			'dependencies' => \OCA\Files_External\MountConfig::dependencyMessage($this->backendService->getBackends()),
+			'allowUserMounting' => $this->backendService->isUserMountingAllowed(),
+			'globalCredentials' => $this->globalAuth->getAuth($uid),
 			'globalCredentialsUid' => $uid,
 		];
 

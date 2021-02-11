@@ -6,7 +6,6 @@
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -62,6 +61,7 @@ use OCP\Files\Folder;
 use OCP\Files\IAppData;
 use OCP\Group\ISubAdmin;
 use OCP\IConfig;
+use OCP\IDBConnection;
 use OCP\IInitialStateService;
 use OCP\IL10N;
 use OCP\ILogger;
@@ -181,7 +181,10 @@ class DIContainer extends SimpleContainer implements IAppContainer {
 				$c->get('Protocol'),
 				$c->get(MiddlewareDispatcher::class),
 				$c->get(IControllerMethodReflector::class),
-				$c->get(IRequest::class)
+				$c->get(IRequest::class),
+				$c->get(IConfig::class),
+				$c->get(IDBConnection::class),
+				$c->get(LoggerInterface::class)
 			);
 		});
 

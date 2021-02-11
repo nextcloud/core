@@ -22,7 +22,7 @@ OC.L10N.register(
     "Read only" : "Schreibgeschützt",
     "Delete" : "Löschen",
     "Admin defined" : "Vom Administrator festgelegt",
-    "Are you sure you want to delete this external storage?" : "Möchten Sie wirklich diesen externen Speicher löschen?",
+    "Are you sure you want to delete this external storage?" : "Soll dieser externer Speicher wirklich gelöscht werden?",
     "Delete storage?" : "Speicher löschen?",
     "Saved" : "Gespeichert",
     "Saving …" : "Speichere …",
@@ -75,10 +75,10 @@ OC.L10N.register(
     "Username and password" : "Benutzername und Passwort",
     "Log-in credentials, save in session" : "Anmeldedaten in Sitzung speichern",
     "Global credentials, user entered" : "Globale Anmeldeinformationen, vom Benutzer eingegeben",
-    "User entered, store in database" : "Benutzer eingetragen, speichere in Datenbank",
+    "User entered, store in database" : "Benutzer eingetragen, in Datenbank speichern",
     "RSA public key" : "RSA öffentlicher Schlüssel",
     "Public key" : "Öffentlicher Schlüssel",
-    "RSA private key" : "RSA privater Schlüssel",
+    "RSA private key" : "Privater RSA-Schlüssel",
     "Private key" : "Privater Schlüssel",
     "Kerberos ticket" : "Kerberos-Ticket",
     "Amazon S3" : "Amazon S3",
@@ -134,7 +134,6 @@ OC.L10N.register(
     "Add storage" : "Speicher hinzufügen",
     "Advanced settings" : "Erweiterte Einstellungen",
     "Allow users to mount external storage" : "Benutzern erlauben, externen Speicher einzubinden",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globale Zugangsdaten können für die Authentifizierung für mehrere externe Speicher verwendet werden, solange sie identische Zugangsdaten benötigen.",
-    "Saving..." : "Speichere …"
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globale Zugangsdaten können für die Authentifizierung für mehrere externe Speicher verwendet werden, solange sie identische Zugangsdaten benötigen."
 },
 "nplurals=2; plural=(n != 1);");

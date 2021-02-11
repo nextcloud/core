@@ -42,7 +42,7 @@ use Sabre\DAV\PropPatch;
  * @package OCA\DAV\Comments
  */
 class EntityCollection extends RootCollection implements IProperties {
-	public const PROPERTY_NAME_READ_MARKER  = '{http://owncloud.org/ns}readMarker';
+	public const PROPERTY_NAME_READ_MARKER = '{http://owncloud.org/ns}readMarker';
 
 	/** @var  string */
 	protected $id;

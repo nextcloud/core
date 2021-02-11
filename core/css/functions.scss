@@ -27,6 +27,7 @@
  * @return string The color without #
  */
 @function remove-hash-from-color($color) {
+	$color: unquote($color);
 	$index: str-index(inspect($color), '#');
 	@if $index {
 		$color: str-slice(inspect($color), 2);

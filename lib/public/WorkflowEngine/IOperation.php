@@ -29,7 +29,6 @@ use OCP\EventDispatcher\Event;
 /**
  * Interface IOperation
  *
- * @package OCP\WorkflowEngine
  * @since 9.1
  */
 interface IOperation {

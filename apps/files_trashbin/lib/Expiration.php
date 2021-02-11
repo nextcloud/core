@@ -92,7 +92,7 @@ class Expiration {
 		$time = $this->timeFactory->getTime();
 		// Never expire dates in future e.g. misconfiguration or negative time
 		// adjustment
-		if ($time<$timestamp) {
+		if ($time < $timestamp) {
 			return false;
 		}
 

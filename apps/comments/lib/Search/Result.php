@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2018 Joas Schilling <coding@schilljs.com>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Michał Węgrzynek <michal.wegrzynek@malloc.com.pl>
  *

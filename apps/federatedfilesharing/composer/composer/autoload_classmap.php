@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = $vendorDir;
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'OCA\\FederatedFileSharing\\AddressHandler' => $baseDir . '/../lib/AddressHandler.php',
     'OCA\\FederatedFileSharing\\AppInfo\\Application' => $baseDir . '/../lib/AppInfo/Application.php',
     'OCA\\FederatedFileSharing\\BackgroundJob\\RetryJob' => $baseDir . '/../lib/BackgroundJob/RetryJob.php',
@@ -15,6 +16,7 @@ return array(
     'OCA\\FederatedFileSharing\\FederatedShareProvider' => $baseDir . '/../lib/FederatedShareProvider.php',
     'OCA\\FederatedFileSharing\\Listeners\\LoadAdditionalScriptsListener' => $baseDir . '/../lib/Listeners/LoadAdditionalScriptsListener.php',
     'OCA\\FederatedFileSharing\\Migration\\Version1010Date20200630191755' => $baseDir . '/../lib/Migration/Version1010Date20200630191755.php',
+    'OCA\\FederatedFileSharing\\Migration\\Version1011Date20201120125158' => $baseDir . '/../lib/Migration/Version1011Date20201120125158.php',
     'OCA\\FederatedFileSharing\\Notifications' => $baseDir . '/../lib/Notifications.php',
     'OCA\\FederatedFileSharing\\Notifier' => $baseDir . '/../lib/Notifier.php',
     'OCA\\FederatedFileSharing\\OCM\\CloudFederationProviderFiles' => $baseDir . '/../lib/OCM/CloudFederationProviderFiles.php',

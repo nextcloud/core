@@ -36,7 +36,6 @@
     "Federated Cloud Sharing" : "Federerad Moln-delning",
     "Open documentation" : "Öppna dokumentationen",
     "Adjust how people can share between servers." : "Justera hur användare kan dela genom servrar.",
-    "Allow users on this server to send shares to other servers" : "Tillåt användare på denna server att skicka utdelningar till andra servrar",
     "Allow users on this server to receive shares from other servers" : "Tillåt användare på denna servern att ta emot utdelningar från andra servrar",
     "Allow users on this server to send shares to groups on other servers" : "Tillåt användare på denna server att skicka delningar till grupper på andra servrar",
     "Allow users on this server to receive group shares from other servers" : "Tillåt användare på denna servern att ta emot gruppdelningar från andra servrar",
@@ -49,7 +48,6 @@
     "Add to your website" : "Lägg till på din hemsida",
     "Share with me via Nextcloud" : "Dela med mig via Nextcloud",
     "HTML Code:" : "HTML Kod:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Du tog emot \"%3$s\" som en extern delning från %1$s (på uppdrag av %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Du tog emot \"%3$s\" som en extern delning från %1$s"
+    "Allow users on this server to send shares to other servers" : "Tillåt användare på denna server att skicka utdelningar till andra servrar"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -32,7 +32,7 @@ use OCP\IDBConnection;
 class MySqlTools {
 
 	/**
-	 * @param Connection $connection
+	 * @param IDBConnection $connection
 	 * @return bool
 	 */
 	public function supports4ByteCharset(IDBConnection $connection) {

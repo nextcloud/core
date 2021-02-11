@@ -6,12 +6,12 @@
     "The OAuth2 app allows administrators to configure the built-in authentication workflow to also allow OAuth2 compatible authentication from other web applications." : "Az OAuth2 alkalmazás megengedi az adminisztrátoroknak, hogy beállíthassák a beépített azonosítási munkafolyamat számára az OAuth2 kompatibilis azonosítás engedélyezését is más web alkalmazásokból.",
     "OAuth 2.0 clients" : "OAuth 2.0 kliensek",
     "OAuth 2.0 allows external services to request access to {instanceName}." : "OAuth 2.0 engedélyezi a külső szolgáltatások hozzáférési kérelmét a következőhöz: {instanceName}.",
+    "Add client" : "Ügyfél hozzáadás",
     "Name" : "Név",
     "Redirection URI" : "Átirányítési URI",
+    "Add" : "Hozzáadás",
     "Client Identifier" : "Ügyfél azonosító",
     "Secret" : "Titok",
-    "Add client" : "Ügyfél hozzáadás",
-    "Add" : "Hozzáadás",
     "Show client secret" : "Kliens titkosítási kulcs mutatása",
     "Delete" : "Törlés"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

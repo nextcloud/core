@@ -32,7 +32,6 @@ use OCP\AppFramework\Http;
 /**
  * Class StreamResponse
  *
- * @package OCP\AppFramework\Http
  * @since 8.1.0
  */
 class StreamResponse extends Response implements ICallbackResponse {

@@ -35,14 +35,14 @@ class ExpirationTest extends \Test\TestCase {
 	public const SECONDS_PER_DAY = 86400; //60*60*24
 
 	public function expirationData() {
-		$today = 100*self::SECONDS_PER_DAY;
-		$back10Days = (100-10)*self::SECONDS_PER_DAY;
-		$back20Days = (100-20)*self::SECONDS_PER_DAY;
-		$back30Days = (100-30)*self::SECONDS_PER_DAY;
-		$back35Days = (100-35)*self::SECONDS_PER_DAY;
+		$today = 100 * self::SECONDS_PER_DAY;
+		$back10Days = (100 - 10) * self::SECONDS_PER_DAY;
+		$back20Days = (100 - 20) * self::SECONDS_PER_DAY;
+		$back30Days = (100 - 30) * self::SECONDS_PER_DAY;
+		$back35Days = (100 - 35) * self::SECONDS_PER_DAY;
 
 		// it should never happen, but who knows :/
-		$ahead100Days = (100+100)*self::SECONDS_PER_DAY;
+		$ahead100Days = (100 + 100) * self::SECONDS_PER_DAY;
 
 		return [
 			// Expiration is disabled - always should return false
@@ -117,42 +117,6 @@ class ExpirationTest extends \Test\TestCase {
 		$this->assertEquals($expectedResult, $actualResult);
 	}
 
-
-	public function configData() {
-		return [
-			[ 'disabled', null, null, null],
-			[ 'auto', Expiration::NO_OBLIGATION, Expiration::NO_OBLIGATION, true ],
-			[ 'auto,auto', Expiration::NO_OBLIGATION, Expiration::NO_OBLIGATION, true ],
-			[ 'auto, auto', Expiration::NO_OBLIGATION, Expiration::NO_OBLIGATION, true ],
-			[ 'auto, 3', Expiration::NO_OBLIGATION, 3, true ],
-			[ '5, auto', 5, Expiration::NO_OBLIGATION, true ],
-			[ '3, 5', 3, 5, false ],
-			[ '10, 3', 10, 10, false ],
-			[ 'g,a,r,b,a,g,e',  Expiration::NO_OBLIGATION, Expiration::NO_OBLIGATION, true ],
-			[ '-3,8',  Expiration::NO_OBLIGATION, Expiration::NO_OBLIGATION, true ]
-		];
-	}
-
-
-	/**
-	 * @dataProvider configData
-	 *
-	 * @param string $configValue
-	 * @param int $expectedMinAge
-	 * @param int $expectedMaxAge
-	 * @param bool $expectedCanPurgeToSaveSpace
-	 */
-	public function testParseRetentionObligation($configValue, $expectedMinAge, $expectedMaxAge, $expectedCanPurgeToSaveSpace) {
-		$mockedConfig = $this->getMockedConfig($configValue);
-		$mockedTimeFactory = $this->getMockedTimeFactory(
-				time()
-		);
-
-		$expiration = new Expiration($mockedConfig, $mockedTimeFactory);
-		$this->assertAttributeEquals($expectedMinAge, 'minAge', $expiration);
-		$this->assertAttributeEquals($expectedMaxAge, 'maxAge', $expiration);
-		$this->assertAttributeEquals($expectedCanPurgeToSaveSpace, 'canPurgeToSaveSpace', $expiration);
-	}
 
 	/**
 	 * @param int $time

@@ -25,10 +25,10 @@
 
 namespace OC\Core\Command\Db\Migrations;
 
+use OC\DB\Connection;
 use OC\DB\MigrationService;
 use OC\Migration\ConsoleOutput;
 use OCP\App\IAppManager;
-use OCP\IDBConnection;
 use Stecman\Component\Symfony\Console\BashCompletion\Completion\CompletionAwareInterface;
 use Stecman\Component\Symfony\Console\BashCompletion\CompletionContext;
 use Symfony\Component\Console\Command\Command;
@@ -60,7 +60,7 @@ class {{classname}} extends SimpleMigrationStep {
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
 	 */
-	public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
+	public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 	}
 
 	/**
@@ -69,7 +69,7 @@ class {{classname}} extends SimpleMigrationStep {
 	 * @param array $options
 	 * @return null|ISchemaWrapper
 	 */
-	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
+	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options): ?ISchemaWrapper {
 {{schemabody}}
 	}
 
@@ -78,22 +78,22 @@ class {{classname}} extends SimpleMigrationStep {
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
 	 */
-	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options): void {
 	}
 }
 ';
 
-	/** @var IDBConnection */
+	/** @var Connection */
 	protected $connection;
 
 	/** @var IAppManager */
 	protected $appManager;
 
 	/**
-	 * @param IDBConnection $connection
+	 * @param Connection $connection
 	 * @param IAppManager $appManager
 	 */
-	public function __construct(IDBConnection $connection, IAppManager $appManager) {
+	public function __construct(Connection $connection, IAppManager $appManager) {
 		$this->connection = $connection;
 		$this->appManager = $appManager;
 

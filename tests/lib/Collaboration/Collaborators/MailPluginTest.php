@@ -65,7 +65,8 @@ class MailPluginTest extends TestCase {
 		$this->contactsManager = $this->createMock(IManager::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->userSession = $this->createMock(IUserSession::class);
-		$this->cloudIdManager = new CloudIdManager();
+		$this->cloudIdManager = new CloudIdManager($this->contactsManager);
+
 		$this->searchResult = new SearchResult();
 	}
 
@@ -104,8 +105,12 @@ class MailPluginTest extends TestCase {
 
 		$this->contactsManager->expects($this->any())
 			->method('search')
-			->with($searchTerm, ['EMAIL', 'FN'])
-			->willReturn($contacts);
+			->willReturnCallback(function ($search, $searchAttributes) use ($searchTerm, $contacts) {
+				if ($search === $searchTerm) {
+					return $contacts;
+				}
+				return [];
+			});
 
 		$moreResults = $this->plugin->search($searchTerm, 2, 0, $this->searchResult);
 		$result = $this->searchResult->asArray();
@@ -380,7 +385,7 @@ class MailPluginTest extends TestCase {
 					]
 				],
 				false,
-				['users' => [], 'exact' => ['users' => [['uuid' => 'uid1', 'name' => 'User', 'label' => 'User (test@example.com)','value' => ['shareType' => IShare::TYPE_USER, 'shareWith' => 'test'],]]]],
+				['users' => [], 'exact' => ['users' => [['uuid' => 'uid1', 'name' => 'User', 'label' => 'User (test@example.com)','value' => ['shareType' => IShare::TYPE_USER, 'shareWith' => 'test'], 'shareWithDisplayNameUnique' => 'test@example.com']]]],
 				true,
 				false,
 			],
@@ -438,8 +443,8 @@ class MailPluginTest extends TestCase {
 				],
 				true,
 				['users' => [
-					['uuid' => 'uid1', 'name' => 'User1', 'label' => 'User1 (test@example.com)', 'value' => ['shareType' => IShare::TYPE_USER, 'shareWith' => 'test1']],
-					['uuid' => 'uid2', 'name' => 'User2', 'label' => 'User2 (test@example.de)', 'value' => ['shareType' => IShare::TYPE_USER, 'shareWith' => 'test2']],
+					['uuid' => 'uid1', 'name' => 'User1', 'label' => 'User1 (test@example.com)', 'value' => ['shareType' => IShare::TYPE_USER, 'shareWith' => 'test1'], 'shareWithDisplayNameUnique' => 'test@example.com'],
+					['uuid' => 'uid2', 'name' => 'User2', 'label' => 'User2 (test@example.de)', 'value' => ['shareType' => IShare::TYPE_USER, 'shareWith' => 'test2'], 'shareWithDisplayNameUnique' => 'test@example.de'],
 				], 'emails' => [], 'exact' => ['users' => [], 'emails' => []]],
 				false,
 				true,
@@ -553,8 +558,12 @@ class MailPluginTest extends TestCase {
 
 		$this->contactsManager->expects($this->any())
 			->method('search')
-			->with($searchTerm, ['EMAIL', 'FN'])
-			->willReturn($contacts);
+			->willReturnCallback(function ($search, $searchAttributes) use ($searchTerm, $contacts) {
+				if ($search === $searchTerm) {
+					return $contacts;
+				}
+				return [];
+			});
 
 		$this->userSession->expects($this->any())
 			->method('getUser')
@@ -594,7 +603,7 @@ class MailPluginTest extends TestCase {
 						'UID' => 'User'
 					]
 				],
-				['users' => [['label' => 'User (test@example.com)', 'uuid' => 'User', 'name' => 'User', 'value' => ['shareType' => 0, 'shareWith' => 'test'],]], 'emails' => [], 'exact' => ['emails' => [], 'users' => []]],
+				['users' => [['label' => 'User (test@example.com)', 'uuid' => 'User', 'name' => 'User', 'value' => ['shareType' => 0, 'shareWith' => 'test'],'shareWithDisplayNameUnique' => 'test@example.com',]], 'emails' => [], 'exact' => ['emails' => [], 'users' => []]],
 				false,
 				false,
 				[
@@ -614,7 +623,7 @@ class MailPluginTest extends TestCase {
 						'UID' => 'User'
 					]
 				],
-				['emails'=> [], 'exact' => ['emails' => []]],
+				['emails' => [], 'exact' => ['emails' => []]],
 				false,
 				false,
 				[

@@ -95,7 +95,7 @@ class RequestRemoteAddress implements ICheck {
 	}
 
 	/**
-	 * Based on http://stackoverflow.com/a/594134
+	 * Based on https://stackoverflow.com/a/594134
 	 * @param string $ip
 	 * @param string $rangeIp
 	 * @param int $bits
@@ -109,7 +109,7 @@ class RequestRemoteAddress implements ICheck {
 	}
 
 	/**
-	 * Based on http://stackoverflow.com/a/7951507
+	 * Based on https://stackoverflow.com/a/7951507
 	 * @param string $ip
 	 * @param string $rangeIp
 	 * @param int $bits
@@ -128,7 +128,7 @@ class RequestRemoteAddress implements ICheck {
 	}
 
 	/**
-	 * Based on http://stackoverflow.com/a/7951507
+	 * Based on https://stackoverflow.com/a/7951507
 	 * @param string $packedIp
 	 * @return string
 	 */

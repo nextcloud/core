@@ -42,7 +42,7 @@ script('encryption', 'settings-personal');
 			<span class="msg"></span>
 		</p>
 
-	<?php elseif ($_["recoveryEnabled"] && $_["privateKeySet"] &&  $_["initialized"] === \OCA\Encryption\Session::INIT_SUCCESSFUL): ?>
+	<?php elseif ($_["recoveryEnabled"] && $_["privateKeySet"] && $_["initialized"] === \OCA\Encryption\Session::INIT_SUCCESSFUL): ?>
 		<br />
 		<p id="userEnableRecovery">
 			<label for="userEnableRecovery"><?php p($l->t("Enable password recovery:")); ?></label>

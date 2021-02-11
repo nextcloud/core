@@ -36,9 +36,8 @@ namespace OCP\AppFramework\Http;
  * notice that Nextcloud ships already with sensible defaults and those policies
  * should require no modification at all for most use-cases.
  *
- * This class allows unsafe-eval of javascript and unsafe-inline of CSS.
+ * This class allows unsafe-inline of CSS.
  *
- * @package OCP\AppFramework\Http
  * @since 8.1.0
  */
 class ContentSecurityPolicy extends EmptyContentSecurityPolicy {

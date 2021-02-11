@@ -6,7 +6,7 @@
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -152,7 +152,7 @@ class Listener {
 	 */
 	public function mapperEvent(MapperEvent $event) {
 		$tagIds = $event->getTags();
-		if ($event->getObjectType() !== 'files' ||empty($tagIds)
+		if ($event->getObjectType() !== 'files' || empty($tagIds)
 			|| !in_array($event->getEvent(), [MapperEvent::EVENT_ASSIGN, MapperEvent::EVENT_UNASSIGN])
 			|| !$this->appManager->isInstalled('activity')) {
 			// System tags not for files, no tags, not (un-)assigning or no activity-app enabled (save the energy)

@@ -3,7 +3,8 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
@@ -24,7 +25,11 @@
 
 namespace OCA\Files_Sharing;
 
-use OC\BackgroundJob\TimedJob;
+use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\BackgroundJob\TimedJob;
+use OCP\IDBConnection;
+use OCP\Share\Exceptions\ShareNotFound;
+use OCP\Share\IManager;
 use OCP\Share\IShare;
 
 /**
@@ -32,13 +37,22 @@ use OCP\Share\IShare;
  */
 class ExpireSharesJob extends TimedJob {
 
-	/**
-	 * sets the correct interval for this timed job
-	 */
-	public function __construct() {
+	/** @var IManager */
+	private $shareManager;
+
+	/** @var IDBConnection */
+	private $db;
+
+	public function __construct(ITimeFactory $time, IManager $shareManager, IDBConnection $db) {
+		$this->shareManager = $shareManager;
+		$this->db = $db;
+
+		parent::__construct($time);
+
 		// Run once a day
 		$this->setInterval(24 * 60 * 60);
 	}
+
 
 	/**
 	 * Makes the background job do its work
@@ -46,8 +60,6 @@ class ExpireSharesJob extends TimedJob {
 	 * @param array $argument unused argument
 	 */
 	public function run($argument) {
-		$connection = \OC::$server->getDatabaseConnection();
-
 		//Current time
 		$now = new \DateTime();
 		$now = $now->format('Y-m-d H:i:s');
@@ -55,12 +67,15 @@ class ExpireSharesJob extends TimedJob {
 		/*
 		 * Expire file link shares only (for now)
 		 */
-		$qb = $connection->getQueryBuilder();
-		$qb->select('id', 'file_source', 'uid_owner', 'item_type')
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('id', 'share_type')
 			->from('share')
 			->where(
 				$qb->expr()->andX(
-					$qb->expr()->eq('share_type', $qb->expr()->literal(IShare::TYPE_LINK)),
+					$qb->expr()->orX(
+						$qb->expr()->eq('share_type', $qb->expr()->literal(IShare::TYPE_LINK)),
+						$qb->expr()->eq('share_type', $qb->expr()->literal(IShare::TYPE_EMAIL))
+					),
 					$qb->expr()->lte('expiration', $qb->expr()->literal($now)),
 					$qb->expr()->orX(
 						$qb->expr()->eq('item_type', $qb->expr()->literal('file')),
@@ -71,7 +86,20 @@ class ExpireSharesJob extends TimedJob {
 
 		$shares = $qb->execute();
 		while ($share = $shares->fetch()) {
-			\OC\Share\Share::unshare($share['item_type'], $share['file_source'], IShare::TYPE_LINK, null, $share['uid_owner']);
+			if ((int)$share['share_type'] === IShare::TYPE_LINK) {
+				$id = 'ocinternal';
+			} elseif ((int)$share['share_type'] === IShare::TYPE_EMAIL) {
+				$id = 'ocMailShare';
+			}
+
+			$id .= ':' . $share['id'];
+
+			try {
+				$share = $this->shareManager->getShareById($id);
+				$this->shareManager->deleteShare($share);
+			} catch (ShareNotFound $e) {
+				// Normally the share gets automatically expired on fetching it
+			}
 		}
 		$shares->closeCursor();
 	}

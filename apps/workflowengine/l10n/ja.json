@@ -110,25 +110,6 @@
     "Request user agent" : "リクエスト時のユーザーエージェント",
     "User group membership" : "ユーザーがグループのメンバーかどうか",
     "is member of" : "が次のグループのメンバーである",
-    "is not member of" : "が次のグループのメンバーではない",
-    "Example: {placeholder}" : "例: {プレースホルダー}",
-    "Select tag…" : "タグを選択...",
-    "Start" : "開始",
-    "End" : "終了",
-    "Select timezone…" : "タイムゾーンを選択...",
-    "Sync clients" : "同期クライアントタイプ",
-    "Short rule description" : "ルールの簡潔な説明",
-    "Add rule" : "ルールを追加",
-    "Reset" : "リセット",
-    "Saving…" : "保存中...",
-    "Group list is empty" : "グループリストが空です",
-    "Unable to retrieve the group list" : "グループリストを取得できません",
-    "Saved" : "保存しました",
-    "Saving failed:" : "保存に失敗しました：",
-    "Add rule group" : "ルールグループを追加する",
-    "Tag management" : "タグ管理",
-    "Files workflow engine" : "ファイルワークフローエンジン",
-    "Open documentation" : "ドキュメントを開く",
-    "Loading…" : "読み込み中..."
+    "is not member of" : "が次のグループのメンバーではない"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

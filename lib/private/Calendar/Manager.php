@@ -31,12 +31,12 @@ class Manager implements \OCP\Calendar\IManager {
 	/**
 	 * @var ICalendar[] holds all registered calendars
 	 */
-	private $calendars=[];
+	private $calendars = [];
 
 	/**
 	 * @var \Closure[] to call to load/register calendar providers
 	 */
-	private $calendarLoaders=[];
+	private $calendarLoaders = [];
 
 	/**
 	 * This function is used to search and find objects within the user's calendars.
@@ -51,7 +51,7 @@ class Manager implements \OCP\Calendar\IManager {
 	 * @return array an array of events/journals/todos which are arrays of arrays of key-value-pairs
 	 * @since 13.0.0
 	 */
-	public function search($pattern, array $searchProperties=[], array $options=[], $limit=null, $offset=null) {
+	public function search($pattern, array $searchProperties = [], array $options = [], $limit = null, $offset = null) {
 		$this->loadCalendars();
 		$result = [];
 		foreach ($this->calendars as $calendar) {

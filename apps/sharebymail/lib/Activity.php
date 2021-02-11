@@ -288,24 +288,24 @@ class Activity implements IProvider {
 			case self::SUBJECT_SHARED_EMAIL_SELF:
 			case self::SUBJECT_UNSHARED_EMAIL_SELF:
 				return [
-					'file' => $this->generateFileParameter((int) $event->getObjectId(), $parameters[0]),
+					'file' => $this->generateFileParameter($event->getObjectId(), $parameters[0]),
 					'email' => $this->generateEmailParameter($parameters[1]),
 				];
 			case self::SUBJECT_SHARED_EMAIL_BY:
 			case self::SUBJECT_UNSHARED_EMAIL_BY:
 				return [
-					'file' => $this->generateFileParameter((int) $event->getObjectId(), $parameters[0]),
+					'file' => $this->generateFileParameter($event->getObjectId(), $parameters[0]),
 					'email' => $this->generateEmailParameter($parameters[1]),
 					'actor' => $this->generateUserParameter($parameters[2]),
 				];
 			case self::SUBJECT_SHARED_EMAIL_PASSWORD_SEND:
 				return [
-					'file' => $this->generateFileParameter((int) $event->getObjectId(), $parameters[0]),
+					'file' => $this->generateFileParameter($event->getObjectId(), $parameters[0]),
 					'email' => $this->generateEmailParameter($parameters[1]),
 				];
 			case self::SUBJECT_SHARED_EMAIL_PASSWORD_SEND_SELF:
 				return [
-					'file' => $this->generateFileParameter((int) $event->getObjectId(), $parameters[0]),
+					'file' => $this->generateFileParameter($event->getObjectId(), $parameters[0]),
 				];
 		}
 		throw new \InvalidArgumentException();

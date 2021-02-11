@@ -4,11 +4,12 @@
  *
  * @author Dariusz Olszewski <starypatyk@users.noreply.github.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -234,7 +235,9 @@ class UserMountCache implements IUserMountCache {
 				->innerJoin('m', 'filecache', 'f', $builder->expr()->eq('m.root_id', 'f.fileid'))
 				->where($builder->expr()->eq('user_id', $builder->createPositionalParameter($user->getUID())));
 
-			$rows = $query->execute()->fetchAll();
+			$result = $query->execute();
+			$rows = $result->fetchAll();
+			$result->closeCursor();
 
 			$this->mountsForUsers[$user->getUID()] = array_filter(array_map([$this, 'dbRowToMountInfo'], $rows));
 		}
@@ -257,7 +260,9 @@ class UserMountCache implements IUserMountCache {
 			$query->andWhere($builder->expr()->eq('user_id', $builder->createPositionalParameter($user)));
 		}
 
-		$rows = $query->execute()->fetchAll();
+		$result = $query->execute();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
 
 		return array_filter(array_map([$this, 'dbRowToMountInfo'], $rows));
 	}
@@ -273,7 +278,9 @@ class UserMountCache implements IUserMountCache {
 			->innerJoin('m', 'filecache', 'f', $builder->expr()->eq('m.root_id', 'f.fileid'))
 			->where($builder->expr()->eq('root_id', $builder->createPositionalParameter($rootFileId, IQueryBuilder::PARAM_INT)));
 
-		$rows = $query->execute()->fetchAll();
+		$result = $query->execute();
+		$rows = $result->fetchAll();
+		$result->closeCursor();
 
 		return array_filter(array_map([$this, 'dbRowToMountInfo'], $rows));
 	}
@@ -290,7 +297,10 @@ class UserMountCache implements IUserMountCache {
 				->from('filecache')
 				->where($builder->expr()->eq('fileid', $builder->createNamedParameter($fileId, IQueryBuilder::PARAM_INT)));
 
-			$row = $query->execute()->fetch();
+			$result = $query->execute();
+			$row = $result->fetch();
+			$result->closeCursor();
+
 			if (is_array($row)) {
 				$this->cacheInfoCache[$fileId] = [
 					(int)$row['storage'],
@@ -374,7 +384,6 @@ class UserMountCache implements IUserMountCache {
 	/**
 	 * @param array $users
 	 * @return array
-	 * @suppress SqlInjectionChecker
 	 */
 	public function getUsedSpaceForUsers(array $users) {
 		$builder = $this->connection->getQueryBuilder();
@@ -408,5 +417,10 @@ class UserMountCache implements IUserMountCache {
 		}
 		$result->closeCursor();
 		return $results;
+	}
+
+	public function clear(): void {
+		$this->cacheInfoCache = new CappedMemoryCache();
+		$this->mountsForUsers = new CappedMemoryCache();
 	}
 }

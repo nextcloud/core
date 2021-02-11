@@ -207,35 +207,6 @@ describe('OCA.Files.BreadCrumb tests', function() {
 			bc = null;
 		});
 
-		it('Opens and closes the menu on click', function() {
-			// Menu exists
-			expect($popovermenu.length).toEqual(1);
-
-			// Disable jQuery delay
-			jQuery.fx.off = true
-
-			// Click on menu
-			$crumbmenuLink.click();
-			expect($popovermenu.is(':visible')).toEqual(true);
-
-			// Click on home
-			$(document).mouseup();
-			expect($popovermenu.is(':visible')).toEqual(false);
-
-			// Change directory and reset elements
-			bc.setDirectory('/one/two/three/four/five/six/seven/eight/nine/ten');
-			$crumbmenuLink = bc.$el.find('.crumbmenu > a');
-			$popovermenu = $crumbmenuLink.next('.popovermenu');
-
-			// Click on menu again
-			$crumbmenuLink.click();
-			expect($popovermenu.is(':visible')).toEqual(true);
-
-			// Click on home again
-			$(document).mouseup();
-			expect($popovermenu.is(':visible')).toEqual(false);
-
-		});
 		it('Shows only items not in the breadcrumb', function() {
 			var hiddenCrumbs = bc.$el.find('.crumb:not(.crumbmenu).hidden');
 			expect($popovermenu.find('li:not(.in-breadcrumb)').length).toEqual(hiddenCrumbs.length);

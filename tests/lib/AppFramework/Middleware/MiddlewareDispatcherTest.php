@@ -136,7 +136,7 @@ class MiddlewareDispatcherTest extends \Test\TestCase {
 	}
 
 
-	private function getMiddleware($beforeControllerThrowsEx=false) {
+	private function getMiddleware($beforeControllerThrowsEx = false) {
 		$m1 = new TestMiddleware($beforeControllerThrowsEx);
 		$this->dispatcher->registerMiddleware($m1);
 		return $m1;

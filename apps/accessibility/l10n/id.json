@@ -12,14 +12,6 @@
     "Accessibility options for nextcloud" : "Opsi aksesibilitas untuk nextcloud",
     "Provides multiple accessibilities options to ease your use of Nextcloud" : "Menyediakan beberapa opsi aksesibilitas untuk memudahkan Anda menggunakan Nextcloud",
     "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines}Web Content Accessibility Guidelines{linkend} 2.1 on AA level, with the high contrast theme even on AAA level." : "Akses universal sangat penting bagi kami. Kami mengikuti standar web dan memeriksa agar semua dapat digunakan, bahkan saat tanpa menggunakan tetikus, dan lainnya seperti perangkat lunak pembantu pembaca layar. Kami bertujuan untuk mematuhi {guidelines}Web Content Accessibility Guidelines{linkend} 2.1 pada tingkat AA, dengan tema kontras tinggi bahkan pada tingkat AAA.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Jika Anda menemukan isu, jangan sungkan untuk melaporkan pada {issuetracker}pelacakan isu kami{linkend}. Silakan gabung dan berkontribusi dengan {designteam}tim desain kami{linkend} jika Anda ingin!",
-    "High contrast theme" : "Tema kontras tinggi",
-    "A high contrast theme to ease your navigation. Visual quality will be reduced but clarity will be increased." : "Tema kontras tinggi untuk memudahkan navigasi Anda. Kualitas visual akan berkurang tetapi kejelasan akan meningkat.",
-    "Web Content Accessibility Guidelines" : "Pedoman Aksesibilitas Konten Web",
-    "our issue tracker" : "pelacak masalah kami",
-    "our design team" : "Tim desain kami",
-    "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines} 2.1 on AA level, with the high contrast theme even on AAA level." : "Akses universal sangat penting bagi kami. Kami mengikuti standar web dan memeriksa agar semua dapat digunakan, bahkan saat tanpa menggunakan tetikus, dan lainnya seperti perangkat lunak pembantu pembaca layar. Kami bertujuan untuk mematuhi {guidelines} 2.1 pada tingkat AA, dengan tema kontras tinggi bahkan pada tingkat AAA.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}. And if you want to get involved, come join {designteam}!" : "Jika Anda menemukan isu, jangan sungkan untuk melaporkan pada {issuetracker}. Silakan gabung dan berkontribusi dengan {designteam} jika Anda ingin!",
-    "Enable" : "aktifkan"
+    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Jika Anda menemukan isu, jangan sungkan untuk melaporkan pada {issuetracker}pelacakan isu kami{linkend}. Silakan gabung dan berkontribusi dengan {designteam}tim desain kami{linkend} jika Anda ingin!"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

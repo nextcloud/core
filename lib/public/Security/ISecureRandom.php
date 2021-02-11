@@ -37,7 +37,6 @@ namespace OCP\Security;
  * Usage:
  * \OC::$server->getSecureRandom()->generate(10);
  *
- * @package OCP\Security
  * @since 8.0.0
  */
 interface ISecureRandom {

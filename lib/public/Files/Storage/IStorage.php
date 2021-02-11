@@ -2,9 +2,12 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author J0WI <J0WI@users.noreply.github.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
  *
  * @license AGPL-3.0
  *
@@ -66,7 +69,7 @@ interface IStorage {
 	public function getId();
 
 	/**
-	 * see http://php.net/manual/en/function.mkdir.php
+	 * see https://www.php.net/manual/en/function.mkdir.php
 	 * implementations need to implement a recursive mkdir
 	 *
 	 * @param string $path
@@ -76,7 +79,7 @@ interface IStorage {
 	public function mkdir($path);
 
 	/**
-	 * see http://php.net/manual/en/function.rmdir.php
+	 * see https://www.php.net/manual/en/function.rmdir.php
 	 *
 	 * @param string $path
 	 * @return bool
@@ -85,16 +88,16 @@ interface IStorage {
 	public function rmdir($path);
 
 	/**
-	 * see http://php.net/manual/en/function.opendir.php
+	 * see https://www.php.net/manual/en/function.opendir.php
 	 *
 	 * @param string $path
-	 * @return resource|false
+	 * @return resource|bool
 	 * @since 9.0.0
 	 */
 	public function opendir($path);
 
 	/**
-	 * see http://php.net/manual/en/function.is-dir.php
+	 * see https://www.php.net/manual/en/function.is-dir.php
 	 *
 	 * @param string $path
 	 * @return bool
@@ -103,7 +106,7 @@ interface IStorage {
 	public function is_dir($path);
 
 	/**
-	 * see http://php.net/manual/en/function.is-file.php
+	 * see https://www.php.net/manual/en/function.is-file.php
 	 *
 	 * @param string $path
 	 * @return bool
@@ -112,30 +115,30 @@ interface IStorage {
 	public function is_file($path);
 
 	/**
-	 * see http://php.net/manual/en/function.stat.php
+	 * see https://www.php.net/manual/en/function.stat.php
 	 * only the following keys are required in the result: size and mtime
 	 *
 	 * @param string $path
-	 * @return array|false
+	 * @return array|bool
 	 * @since 9.0.0
 	 */
 	public function stat($path);
 
 	/**
-	 * see http://php.net/manual/en/function.filetype.php
+	 * see https://www.php.net/manual/en/function.filetype.php
 	 *
 	 * @param string $path
-	 * @return string|false
+	 * @return string|bool
 	 * @since 9.0.0
 	 */
 	public function filetype($path);
 
 	/**
-	 * see http://php.net/manual/en/function.filesize.php
+	 * see https://www.php.net/manual/en/function.filesize.php
 	 * The result for filesize when called on a folder is required to be 0
 	 *
 	 * @param string $path
-	 * @return int|false
+	 * @return int|bool
 	 * @since 9.0.0
 	 */
 	public function filesize($path);
@@ -196,7 +199,7 @@ interface IStorage {
 	public function getPermissions($path);
 
 	/**
-	 * see http://php.net/manual/en/function.file_exists.php
+	 * see https://www.php.net/manual/en/function.file_exists.php
 	 *
 	 * @param string $path
 	 * @return bool
@@ -205,35 +208,35 @@ interface IStorage {
 	public function file_exists($path);
 
 	/**
-	 * see http://php.net/manual/en/function.filemtime.php
+	 * see https://www.php.net/manual/en/function.filemtime.php
 	 *
 	 * @param string $path
-	 * @return int|false
+	 * @return int|bool
 	 * @since 9.0.0
 	 */
 	public function filemtime($path);
 
 	/**
-	 * see http://php.net/manual/en/function.file_get_contents.php
+	 * see https://www.php.net/manual/en/function.file_get_contents.php
 	 *
 	 * @param string $path
-	 * @return string|false
+	 * @return string|bool
 	 * @since 9.0.0
 	 */
 	public function file_get_contents($path);
 
 	/**
-	 * see http://php.net/manual/en/function.file_put_contents.php
+	 * see https://www.php.net/manual/en/function.file_put_contents.php
 	 *
 	 * @param string $path
-	 * @param string $data
-	 * @return bool
+	 * @param mixed $data
+	 * @return int|false
 	 * @since 9.0.0
 	 */
 	public function file_put_contents($path, $data);
 
 	/**
-	 * see http://php.net/manual/en/function.unlink.php
+	 * see https://www.php.net/manual/en/function.unlink.php
 	 *
 	 * @param string $path
 	 * @return bool
@@ -242,7 +245,7 @@ interface IStorage {
 	public function unlink($path);
 
 	/**
-	 * see http://php.net/manual/en/function.rename.php
+	 * see https://www.php.net/manual/en/function.rename.php
 	 *
 	 * @param string $path1
 	 * @param string $path2
@@ -252,7 +255,7 @@ interface IStorage {
 	public function rename($path1, $path2);
 
 	/**
-	 * see http://php.net/manual/en/function.copy.php
+	 * see https://www.php.net/manual/en/function.copy.php
 	 *
 	 * @param string $path1
 	 * @param string $path2
@@ -262,11 +265,11 @@ interface IStorage {
 	public function copy($path1, $path2);
 
 	/**
-	 * see http://php.net/manual/en/function.fopen.php
+	 * see https://www.php.net/manual/en/function.fopen.php
 	 *
 	 * @param string $path
 	 * @param string $mode
-	 * @return resource|false
+	 * @return resource|bool
 	 * @since 9.0.0
 	 */
 	public function fopen($path, $mode);
@@ -276,33 +279,33 @@ interface IStorage {
 	 * The mimetype for a folder is required to be "httpd/unix-directory"
 	 *
 	 * @param string $path
-	 * @return string|false
+	 * @return string|bool
 	 * @since 9.0.0
 	 */
 	public function getMimeType($path);
 
 	/**
-	 * see http://php.net/manual/en/function.hash-file.php
+	 * see https://www.php.net/manual/en/function.hash-file.php
 	 *
 	 * @param string $type
 	 * @param string $path
 	 * @param bool $raw
-	 * @return string|false
+	 * @return string|bool
 	 * @since 9.0.0
 	 */
 	public function hash($type, $path, $raw = false);
 
 	/**
-	 * see http://php.net/manual/en/function.free_space.php
+	 * see https://www.php.net/manual/en/function.free_space.php
 	 *
 	 * @param string $path
-	 * @return int|false
+	 * @return int|bool
 	 * @since 9.0.0
 	 */
 	public function free_space($path);
 
 	/**
-	 * see http://php.net/manual/en/function.touch.php
+	 * see https://www.php.net/manual/en/function.touch.php
 	 * If the backend does not support the operation, false should be returned
 	 *
 	 * @param string $path
@@ -317,7 +320,7 @@ interface IStorage {
 	 * The local version of the file can be temporary and doesn't have to be persistent across requests
 	 *
 	 * @param string $path
-	 * @return string|false
+	 * @return string|bool
 	 * @since 9.0.0
 	 */
 	public function getLocalFile($path);
@@ -339,7 +342,7 @@ interface IStorage {
 	 * get the ETag for a file or folder
 	 *
 	 * @param string $path
-	 * @return string|false
+	 * @return string|bool
 	 * @since 9.0.0
 	 */
 	public function getETag($path);
@@ -371,7 +374,7 @@ interface IStorage {
 	 * For now the returned array can hold the parameter url - in future more attributes might follow.
 	 *
 	 * @param string $path
-	 * @return array|false
+	 * @return array|bool
 	 * @since 9.0.0
 	 */
 	public function getDirectDownload($path);

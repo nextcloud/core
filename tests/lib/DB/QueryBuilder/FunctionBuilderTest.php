@@ -48,7 +48,10 @@ class FunctionBuilderTest extends TestCase {
 		$query->from('appconfig')
 			->setMaxResults(1);
 
-		$this->assertEquals('foobar', $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$column = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals('foobar', $column);
 	}
 
 	public function testMd5() {
@@ -58,7 +61,10 @@ class FunctionBuilderTest extends TestCase {
 		$query->from('appconfig')
 			->setMaxResults(1);
 
-		$this->assertEquals(md5('foobar'), $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$column = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals(md5('foobar'), $column);
 	}
 
 	public function testSubstring() {
@@ -68,7 +74,10 @@ class FunctionBuilderTest extends TestCase {
 		$query->from('appconfig')
 			->setMaxResults(1);
 
-		$this->assertEquals('oo', $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$column = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals('oo', $column);
 	}
 
 	public function testSubstringNoLength() {
@@ -78,7 +87,10 @@ class FunctionBuilderTest extends TestCase {
 		$query->from('appconfig')
 			->setMaxResults(1);
 
-		$this->assertEquals('oobar', $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$column = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals('oobar', $column);
 	}
 
 	public function testLower() {
@@ -88,7 +100,10 @@ class FunctionBuilderTest extends TestCase {
 		$query->from('appconfig')
 			->setMaxResults(1);
 
-		$this->assertEquals('foobar', $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$column = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals('foobar', $column);
 	}
 
 	public function testAdd() {
@@ -98,7 +113,10 @@ class FunctionBuilderTest extends TestCase {
 		$query->from('appconfig')
 			->setMaxResults(1);
 
-		$this->assertEquals(3, $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$column = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals(3, $column);
 	}
 
 	public function testSubtract() {
@@ -108,7 +126,10 @@ class FunctionBuilderTest extends TestCase {
 		$query->from('appconfig')
 			->setMaxResults(1);
 
-		$this->assertEquals(1, $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$column = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals(1, $column);
 	}
 
 	public function testCount() {
@@ -118,7 +139,10 @@ class FunctionBuilderTest extends TestCase {
 		$query->from('appconfig')
 			->setMaxResults(1);
 
-		$this->assertGreaterThan(1, $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$column = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertGreaterThan(1, $column);
 	}
 
 	private function setUpMinMax($value) {
@@ -151,7 +175,10 @@ class FunctionBuilderTest extends TestCase {
 			->where($query->expr()->eq('appid', $query->createNamedParameter('minmax')))
 			->setMaxResults(1);
 
-		$this->assertEquals(null, $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$row = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals(null, $row);
 	}
 
 	public function testMinEmpty() {
@@ -164,7 +191,10 @@ class FunctionBuilderTest extends TestCase {
 			->where($query->expr()->eq('appid', $query->createNamedParameter('minmax')))
 			->setMaxResults(1);
 
-		$this->assertEquals(null, $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$row = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals(null, $row);
 	}
 
 	public function testMax() {
@@ -180,7 +210,10 @@ class FunctionBuilderTest extends TestCase {
 			->where($query->expr()->eq('appid', $query->createNamedParameter('minmax')))
 			->setMaxResults(1);
 
-		$this->assertEquals(20, $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$row = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals(20, $row);
 	}
 
 	public function testMin() {
@@ -196,7 +229,10 @@ class FunctionBuilderTest extends TestCase {
 			->where($query->expr()->eq('appid', $query->createNamedParameter('minmax')))
 			->setMaxResults(1);
 
-		$this->assertEquals(10, $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$row = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals(10, $row);
 	}
 
 	public function testGreatest() {
@@ -206,7 +242,10 @@ class FunctionBuilderTest extends TestCase {
 		$query->from('appconfig')
 			->setMaxResults(1);
 
-		$this->assertEquals(2, $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$row = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals(2, $row);
 	}
 
 	public function testLeast() {
@@ -216,6 +255,9 @@ class FunctionBuilderTest extends TestCase {
 		$query->from('appconfig')
 			->setMaxResults(1);
 
-		$this->assertEquals(1, $query->execute()->fetchColumn());
+		$result = $query->execute();
+		$row = $result->fetchOne();
+		$result->closeCursor();
+		$this->assertEquals(1, $row);
 	}
 }

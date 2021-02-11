@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -62,7 +63,7 @@ class BackgroundRepair extends TimedJob {
 	 */
 	public function execute($jobList, ILogger $logger = null) {
 		// add an interval of 15 mins
-		$this->setInterval(15*60);
+		$this->setInterval(15 * 60);
 
 		$this->jobList = $jobList;
 		$this->logger = $logger;

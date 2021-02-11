@@ -48,7 +48,7 @@ class ResourceLocatorTest extends \Test\TestCase {
 
 	public function testFindNotFound() {
 		$locator = $this->getResourceLocator('theme',
-			['core'=>'map'], ['3rd'=>'party'], ['foo'=>'bar']);
+			['core' => 'map'], ['3rd' => 'party'], ['foo' => 'bar']);
 		$locator->expects($this->once())
 			->method('doFind')
 			->with('foo')
@@ -66,7 +66,7 @@ class ResourceLocatorTest extends \Test\TestCase {
 
 	public function testAppendIfExist() {
 		$locator = $this->getResourceLocator('theme',
-			[__DIR__=>'map'], ['3rd'=>'party'], ['foo'=>'bar']);
+			[__DIR__ => 'map'], ['3rd' => 'party'], ['foo' => 'bar']);
 		/** @var \OC\Template\ResourceLocator $locator */
 		$method = new \ReflectionMethod($locator, 'appendIfExist');
 		$method->setAccessible(true);

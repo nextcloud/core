@@ -217,18 +217,74 @@ export const initCore = () => {
 
 		$('#app-content').prepend('<div id="app-navigation-toggle" class="icon-menu" style="display:none" tabindex="0"></div>')
 
-		const toggleSnapperOnButton = () => {
-			if (snapper.state().state === 'left') {
-				snapper.close()
-			} else {
-				snapper.open('left')
+		// keep track whether snapper is currently animating, and
+		// prevent to call open or close while that is the case
+		// to avoid duplicating events (snap.js doesn't check this)
+		let animating = false
+		snapper.on('animating', () => {
+			// we need this because the trigger button
+			// is also implicitly wired to close by snapper
+			animating = true
+		})
+		snapper.on('animated', () => {
+			animating = false
+		})
+		snapper.on('start', () => {
+			// we need this because dragging triggers that
+			animating = true
+		})
+		snapper.on('end', () => {
+			// we need this because dragging stop triggers that
+			animating = false
+		})
+
+		// These are necessary because calling open or close
+		// on snapper during an animation makes it trigger an
+		// unfinishable animation, which itself will continue
+		// triggering animating events and cause high CPU load,
+		//
+		// Ref https://github.com/jakiestfu/Snap.js/issues/216
+		const oldSnapperOpen = snapper.open
+		const oldSnapperClose = snapper.close
+		const _snapperOpen = () => {
+			if (animating || snapper.state().state !== 'closed') {
+				return
+			}
+			oldSnapperOpen('left')
+		}
+
+		const _snapperClose = () => {
+			if (animating || snapper.state().state === 'closed') {
+				return
+			}
+			oldSnapperClose()
+		}
+
+		// Needs to be deferred to properly catch in-between
+		// events that snap.js is triggering after dragging.
+		//
+		// Skipped when running unit tests as we are not testing
+		// the snap.js workarounds...
+		if (!window.TESTING) {
+			snapper.open = () => {
+				_.defer(_snapperOpen)
+			}
+			snapper.close = () => {
+				_.defer(_snapperClose)
 			}
 		}
 
-		$('#app-navigation-toggle').click(toggleSnapperOnButton)
+		$('#app-navigation-toggle').click((e) => {
+			// close is implicit in the button by snap.js
+			if (snapper.state().state !== 'left') {
+				snapper.open()
+			}
+		})
 		$('#app-navigation-toggle').keypress(e => {
-			if (e.which === 13) {
-				toggleSnapperOnButton()
+			if (snapper.state().state === 'left') {
+				snapper.close()
+			} else {
+				snapper.open()
 			}
 		})
 

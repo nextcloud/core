@@ -39,19 +39,24 @@ use function array_key_exists;
  * convenience reimplementation of \Symfony\Component\GenericEvent against
  * \OCP\EventDispatcher\Event
  *
- * @package OCP\EventDispatcher
  * @since 18.0.0
+ * @deprecated 22.0.0 use \OCP\EventDispatcher\Event
  */
 class GenericEvent extends Event implements ArrayAccess, IteratorAggregate {
+	/** @deprecated 22.0.0 */
 	protected $subject;
+
+	/** @deprecated 22.0.0 */
 	protected $arguments;
 
 	/**
 	 * Encapsulate an event with $subject and $args.
 	 *
 	 * @since 18.0.0
+	 * @deprecated 22.0.0
 	 */
 	public function __construct($subject = null, array $arguments = []) {
+		parent::__construct();
 		$this->subject = $subject;
 		$this->arguments = $arguments;
 	}
@@ -60,6 +65,7 @@ class GenericEvent extends Event implements ArrayAccess, IteratorAggregate {
 	 * Getter for subject property.
 	 *
 	 * @since 18.0.0
+	 * @deprecated 22.0.0
 	 */
 	public function getSubject() {
 		return $this->subject;
@@ -70,6 +76,7 @@ class GenericEvent extends Event implements ArrayAccess, IteratorAggregate {
 	 *
 	 * @throws InvalidArgumentException if key is not found
 	 * @since 18.0.0
+	 * @deprecated 22.0.0
 	 */
 	public function getArgument(string $key) {
 		if ($this->hasArgument($key)) {
@@ -83,6 +90,7 @@ class GenericEvent extends Event implements ArrayAccess, IteratorAggregate {
 	 * Add argument to event.
 	 *
 	 * @since 18.0.0
+	 * @deprecated 22.0.0
 	 */
 	public function setArgument($key, $value): GenericEvent {
 		$this->arguments[$key] = $value;
@@ -93,6 +101,7 @@ class GenericEvent extends Event implements ArrayAccess, IteratorAggregate {
 	 * Getter for all arguments.
 	 *
 	 * @since 18.0.0
+	 * @deprecated 22.0.0
 	 */
 	public function getArguments(): array {
 		return $this->arguments;
@@ -102,6 +111,7 @@ class GenericEvent extends Event implements ArrayAccess, IteratorAggregate {
 	 * Set args property.
 	 *
 	 * @since 18.0.0
+	 * @deprecated 22.0.0
 	 */
 	public function setArguments(array $args = []): GenericEvent {
 		$this->arguments = $args;
@@ -112,6 +122,7 @@ class GenericEvent extends Event implements ArrayAccess, IteratorAggregate {
 	 * Has argument.
 	 *
 	 * @since 18.0.0
+	 * @deprecated 22.0.0
 	 */
 	public function hasArgument($key): bool {
 		return array_key_exists($key, $this->arguments);
@@ -122,6 +133,7 @@ class GenericEvent extends Event implements ArrayAccess, IteratorAggregate {
 	 *
 	 * @link https://php.net/manual/en/iteratoraggregate.getiterator.php
 	 * @since 18.0.0
+	 * @deprecated 22.0.0
 	 */
 	public function getIterator(): Traversable {
 		return new ArrayIterator($this->arguments);
@@ -132,6 +144,7 @@ class GenericEvent extends Event implements ArrayAccess, IteratorAggregate {
 	 *
 	 * @link https://php.net/manual/en/arrayaccess.offsetexists.php
 	 * @since 18.0.0
+	 * @deprecated 22.0.0
 	 */
 	public function offsetExists($offset): bool {
 		return $this->hasArgument($offset);
@@ -142,6 +155,7 @@ class GenericEvent extends Event implements ArrayAccess, IteratorAggregate {
 	 *
 	 * @link https://php.net/manual/en/arrayaccess.offsetget.php
 	 * @since 18.0.0
+	 * @deprecated 22.0.0
 	 */
 	public function offsetGet($offset) {
 		return $this->arguments[$offset];
@@ -152,6 +166,7 @@ class GenericEvent extends Event implements ArrayAccess, IteratorAggregate {
 	 *
 	 * @link https://php.net/manual/en/arrayaccess.offsetset.php
 	 * @since 18.0.0
+	 * @deprecated 22.0.0
 	 */
 	public function offsetSet($offset, $value): void {
 		$this->setArgument($offset, $value);
@@ -162,6 +177,7 @@ class GenericEvent extends Event implements ArrayAccess, IteratorAggregate {
 	 *
 	 * @link https://php.net/manual/en/arrayaccess.offsetunset.php
 	 * @since 18.0.0
+	 * @deprecated 22.0.0
 	 */
 	public function offsetUnset($offset): void {
 		if ($this->hasArgument($offset)) {

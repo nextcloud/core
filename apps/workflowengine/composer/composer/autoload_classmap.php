@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = $vendorDir;
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'OCA\\WorkflowEngine\\AppInfo\\Application' => $baseDir . '/../lib/AppInfo/Application.php',
     'OCA\\WorkflowEngine\\BackgroundJobs\\Rotate' => $baseDir . '/../lib/BackgroundJobs/Rotate.php',
     'OCA\\WorkflowEngine\\Check\\AbstractStringCheck' => $baseDir . '/../lib/Check/AbstractStringCheck.php',

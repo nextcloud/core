@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright 2018, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -38,7 +39,7 @@ class CleanupDirectLinksJob extends TimedJob {
 	private $mapper;
 
 	public function __construct(ITimeFactory $timeFactory, DirectMapper $mapper) {
-		$this->setInterval(60*60*24);
+		$this->setInterval(60 * 60 * 24);
 
 		$this->timeFactory = $timeFactory;
 		$this->mapper = $mapper;
@@ -46,6 +47,6 @@ class CleanupDirectLinksJob extends TimedJob {
 
 	protected function run($argument) {
 		// Delete all shares expired 24 hours ago
-		$this->mapper->deleteExpired($this->timeFactory->getTime() - 60*60*24);
+		$this->mapper->deleteExpired($this->timeFactory->getTime() - 60 * 60 * 24);
 	}
 }

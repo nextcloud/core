@@ -68,7 +68,7 @@ class LoggerTest extends TestCase implements IWriter {
 	}
 
 	public function write(string $app, $message, int $level) {
-		$this->logs[]= "$level $message";
+		$this->logs[] = "$level $message";
 	}
 
 	public function userAndPasswordData(): array {

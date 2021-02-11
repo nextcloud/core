@@ -33,7 +33,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Interface IEncryptionModule
  *
- * @package OCP\Encryption
  * @since 8.1.0
  */
 interface IEncryptionModule {
@@ -103,7 +102,7 @@ interface IEncryptionModule {
 	 * decrypt data
 	 *
 	 * @param string $data you want to decrypt
-	 * @param string $position position of the block we want to decrypt
+	 * @param int|string $position position of the block we want to decrypt
 	 *
 	 * @return mixed decrypted data
 	 *

@@ -84,7 +84,6 @@
     "Set an admin username." : "관리자의 사용자 이름을 설정합니다.",
     "Set an admin password." : "관리자의 암호를 설정합니다.",
     "Can't create or write into the data directory %s" : "데이터 디렉터리 %s을(를) 만들거나 기록할 수 없음",
-    "Invalid Federated Cloud ID" : "잘못된 연합 클라우드 ID",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "공유 백엔드 %s에서 OCP\\Share_Backend 인터페이스를 구현해야 함",
     "Sharing backend %s not found" : "공유 백엔드 %s을(를) 찾을 수 없음",
     "Sharing backend for %s not found" : "%s의 공유 백엔드를 찾을 수 없음",
@@ -198,13 +197,6 @@
     "Storage connection timeout. %s" : "저장소 연결 시간이 초과되었습니다. %s",
     "Following databases are supported: %s" : "다음 데이터베이스를 지원합니다: %s",
     "Following platforms are supported: %s" : "다음 플랫폼을 지원합니다: %s",
-    "Overview" : "개요",
-    "Basic settings" : "기본 설정",
-    "Sharing" : "공유",
-    "Security" : "보안",
-    "Groupware" : "그룹웨어",
-    "Personal info" : "개인 정보",
-    "Mobile & desktop" : "모바일 & 데스크톱",
-    "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s" : "apps 디렉터리에 웹 서버의 쓰기 권한을 부여하거나 설정에서 앱 스토어를 비활성화해서 해결할 수 있습니다. %s 문서를 참조하십시오"
+    "Invalid Federated Cloud ID" : "잘못된 연합 클라우드 ID"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

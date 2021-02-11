@@ -21,7 +21,6 @@
     "A non-default update server is in use to be checked for updates:" : "A non-default update server is in use to be checked for updates:",
     "Update channel:" : "Update channel:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "You can always update to a newer version, but you can never downgrade to a more stable version.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found.",
     "Notify members of the following groups about available updates:" : "Notify members of the following groups about available updates:",
     "Only notification for app updates are available." : "Only notification for app updates are available.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "The selected update channel makes dedicated notifications for the server obsolete.",
@@ -39,6 +38,7 @@
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "The most recent stable version. It is suited for regular use and will always update to the latest major version.",
     "Beta" : "Beta",
     "A pre-release version only for testing new features, not for production environments." : "A pre-release version only for testing new features, not for production environments.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> app has no update for this version available","<strong>%n</strong> apps have no update for this version available"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> app has no update for this version available","<strong>%n</strong> apps have no update for this version available"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

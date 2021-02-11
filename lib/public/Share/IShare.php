@@ -6,6 +6,7 @@
  * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Maxence Lange <maxence@nextcloud.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -38,7 +39,6 @@ use OCP\Share\Exceptions\IllegalIDChangeException;
 /**
  * Interface IShare
  *
- * @package OCP\Share
  * @since 9.0.0
  */
 interface IShare {
@@ -105,6 +105,17 @@ interface IShare {
 	 * @since 17.0.0
 	 */
 	// const TYPE_USERROOM = 11;
+
+	/**
+	 * @since 21.0.0
+	 */
+	public const TYPE_DECK = 12;
+
+	/**
+	 * @internal
+	 * @since 21.0.0
+	 */
+	public const TYPE_DECK_USER = 13;
 
 	/**
 	 * @since 18.0.0

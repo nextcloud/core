@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace OCA\WorkflowEngine\Check;
 
+use OC\Files\Storage\Local;
 use OCA\WorkflowEngine\Entity\File;
+use OCP\Files\Mount\IMountManager;
 use OCP\IL10N;
 use OCP\IRequest;
 use OCP\WorkflowEngine\IFileCheck;
@@ -33,21 +35,38 @@ class FileName extends AbstractStringCheck implements IFileCheck {
 
 	/** @var IRequest */
 	protected $request;
+	/** @var IMountManager */
+	private $mountManager;
 
 	/**
 	 * @param IL10N $l
 	 * @param IRequest $request
 	 */
-	public function __construct(IL10N $l, IRequest $request) {
+	public function __construct(IL10N $l, IRequest $request, IMountManager $mountManager) {
 		parent::__construct($l);
 		$this->request = $request;
+		$this->mountManager = $mountManager;
 	}
 
 	/**
 	 * @return string
 	 */
 	protected function getActualValue(): string {
-		return $this->path === null ? '' : basename($this->path);
+		$fileName = $this->path === null ? '' : basename($this->path);
+		if ($fileName === '' && (!$this->storage->isLocal() || $this->storage->instanceOfStorage(Local::class))) {
+			// Return the mountpoint name of external storages that are not mounted as user home
+			$mountPoints = $this->mountManager->findByStorageId($this->storage->getId());
+			if (empty($mountPoints) || $mountPoints[0]->getMountType() !== 'external') {
+				return $fileName;
+			}
+			$mountPointPath = rtrim($mountPoints[0]->getMountPoint(), '/');
+			$mountPointPieces = explode('/', $mountPointPath);
+			$mountPointName = array_pop($mountPointPieces);
+			if (!empty($mountPointName) && $mountPointName !== 'files' && count($mountPointPieces) !== 2) {
+				return $mountPointName;
+			}
+		}
+		return $fileName;
 	}
 
 	/**

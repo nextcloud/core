@@ -9,6 +9,7 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Stefan Weiberg <sweiberg@suse.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -32,6 +33,7 @@ namespace OCA\Encryption\Crypto;
 
 use OC\Encryption\Exceptions\DecryptionFailedException;
 use OC\Encryption\Exceptions\EncryptionFailedException;
+use OC\ServerNotAvailableException;
 use OCA\Encryption\Exceptions\MultiKeyDecryptException;
 use OCA\Encryption\Exceptions\MultiKeyEncryptException;
 use OCP\Encryption\Exceptions\GenericEncryptionException;
@@ -89,6 +91,9 @@ class Crypt {
 		'AES-128-CFB' => 16,
 	];
 
+	/** @var bool */
+	private $supportLegacy;
+
 	/**
 	 * @param ILogger $logger
 	 * @param IUserSession $userSession
@@ -101,6 +106,8 @@ class Crypt {
 		$this->config = $config;
 		$this->l = $l;
 		$this->supportedKeyFormats = ['hash', 'password'];
+
+		$this->supportLegacy = $this->config->getSystemValueBool('encryption.legacy_format_support', false);
 	}
 
 	/**
@@ -299,6 +306,10 @@ class Crypt {
 	 * @return string
 	 */
 	public function getLegacyCipher() {
+		if (!$this->supportLegacy) {
+			throw new ServerNotAvailableException('Legacy cipher is no longer supported!');
+		}
+
 		return self::LEGACY_CIPHER;
 	}
 
@@ -391,7 +402,7 @@ class Crypt {
 		if (isset($header['cipher'])) {
 			$cipher = $header['cipher'];
 		} else {
-			$cipher = self::LEGACY_CIPHER;
+			$cipher = $this->getLegacyCipher();
 		}
 
 		if (isset($header['keyFormat'])) {
@@ -433,7 +444,8 @@ class Crypt {
 	 */
 	protected function isValidPrivateKey($plainKey) {
 		$res = openssl_get_privatekey($plainKey);
-		if (is_resource($res)) {
+		// TODO: remove resource check one php7.4 is not longer supported
+		if (is_resource($res) || (is_object($res) && get_class($res) === 'OpenSSLAsymmetricKey')) {
 			$sslInfo = openssl_pkey_get_details($res);
 			if (isset($sslInfo['key'])) {
 				return true;
@@ -448,7 +460,7 @@ class Crypt {
 	 * @param string $passPhrase
 	 * @param string $cipher
 	 * @param int $version
-	 * @param int $position
+	 * @param int|string $position
 	 * @return string
 	 * @throws DecryptionFailedException
 	 */
@@ -570,6 +582,11 @@ class Crypt {
 		$meta = substr($catFile, -93);
 		$signaturePosition = strpos($meta, '00sig00');
 
+		// If we no longer support the legacy format then everything needs a signature
+		if (!$skipSignatureCheck && !$this->supportLegacy && $signaturePosition === false) {
+			throw new GenericEncryptionException('Missing Signature', $this->l->t('Missing Signature'));
+		}
+
 		// enforce signature for the new 'CTR' ciphers
 		if (!$skipSignatureCheck && $signaturePosition === false && stripos($cipher, 'ctr') !== false) {
 			throw new GenericEncryptionException('Missing Signature', $this->l->t('Missing Signature'));
@@ -660,7 +677,7 @@ class Crypt {
 			throw new MultiKeyDecryptException('Cannot multikey decrypt empty plain content');
 		}
 
-		if (openssl_open($encKeyFile, $plainContent, $shareKey, $privateKey)) {
+		if (openssl_open($encKeyFile, $plainContent, $shareKey, $privateKey, 'RC4')) {
 			return $plainContent;
 		} else {
 			throw new MultiKeyDecryptException('multikeydecrypt with share key failed:' . openssl_error_string());
@@ -685,7 +702,7 @@ class Crypt {
 		$shareKeys = [];
 		$mappedShareKeys = [];
 
-		if (openssl_seal($plainContent, $sealed, $shareKeys, $keyFiles)) {
+		if (openssl_seal($plainContent, $sealed, $shareKeys, $keyFiles, 'RC4')) {
 			$i = 0;
 
 			// Ensure each shareKey is labelled with its corresponding key id

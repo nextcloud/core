@@ -27,7 +27,6 @@ namespace OCP;
 /**
  * Interface ITempManager
  *
- * @package OCP
  * @since 8.0.0
  */
 interface ITempManager {

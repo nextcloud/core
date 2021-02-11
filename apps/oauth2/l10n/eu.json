@@ -6,12 +6,12 @@
     "The OAuth2 app allows administrators to configure the built-in authentication workflow to also allow OAuth2 compatible authentication from other web applications." : "OAuth2 aplikazioak, zerbitzu hori eskaintzen duten beste web aplikazio batzuen bidez autentikazioa egiten konfiguratzeko aukera eskaintzen die sistemaren kudeatzaileei.",
     "OAuth 2.0 clients" : "OAuth 2.0-en bezeroak",
     "OAuth 2.0 allows external services to request access to {instanceName}." : "OAuth 2.0k kanpo zerbitzuei {instanceName} instantziara sartzeko baimena eskatzea baimentzen die.",
+    "Add client" : "Bezeroa gehitu",
     "Name" : "Izena",
     "Redirection URI" : "Birbideraketaren URI",
+    "Add" : "Gehitu",
     "Client Identifier" : "Bezeroaren Identifikadorea",
     "Secret" : "Sekretua",
-    "Add client" : "Bezeroa gehitu",
-    "Add" : "Gehitu",
     "Show client secret" : "Erakutsi bezeroaren sekretua",
     "Delete" : "Ezabatu"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

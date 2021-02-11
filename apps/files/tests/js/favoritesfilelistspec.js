@@ -58,7 +58,7 @@ describe('OCA.Files.FavoritesFileList tests', function() {
 			fileList.destroy();
 			fileList = undefined;
 		});
-		it('render files', function() {
+		it('render files', function(done) {
 			var deferred = $.Deferred();
 			fetchStub.returns(deferred.promise());
 
@@ -77,23 +77,27 @@ describe('OCA.Files.FavoritesFileList tests', function() {
 				mimetype: 'text/plain'
 			}]);
 
-			var $rows = fileList.$el.find('tbody tr');
-			var $tr = $rows.eq(0);
-			expect($rows.length).toEqual(1);
-			expect($tr.attr('data-id')).toEqual('7');
-			expect($tr.attr('data-type')).toEqual('file');
-			expect($tr.attr('data-file')).toEqual('test.txt');
-			expect($tr.attr('data-path')).toEqual('/somedir');
-			expect($tr.attr('data-size')).toEqual('123');
-			expect(parseInt($tr.attr('data-permissions'), 10))
-				.toEqual(OC.PERMISSION_ALL);
-			expect($tr.attr('data-mime')).toEqual('text/plain');
-			expect($tr.attr('data-mtime')).toEqual('11111000');
-			expect($tr.find('a.name').attr('href')).toEqual(
-				OC.getRootPath() +
-				'/remote.php/webdav/somedir/test.txt'
-			);
-			expect($tr.find('.nametext').text().trim()).toEqual('test.txt');
+			setTimeout(function() {
+				var $rows = fileList.$el.find('tbody tr');
+				var $tr = $rows.eq(0);
+				expect($rows.length).toEqual(1);
+				expect($tr.attr('data-id')).toEqual('7');
+				expect($tr.attr('data-type')).toEqual('file');
+				expect($tr.attr('data-file')).toEqual('test.txt');
+				expect($tr.attr('data-path')).toEqual('/somedir');
+				expect($tr.attr('data-size')).toEqual('123');
+				expect(parseInt($tr.attr('data-permissions'), 10))
+					.toEqual(OC.PERMISSION_ALL);
+				expect($tr.attr('data-mime')).toEqual('text/plain');
+				expect($tr.attr('data-mtime')).toEqual('11111000');
+				expect($tr.find('a.name').attr('href')).toEqual(
+					OC.getRootPath() +
+					'/remote.php/webdav/somedir/test.txt'
+				);
+				expect($tr.find('.nametext').text().trim()).toEqual('test.txt');
+
+				done();
+			}, 0);
 		});
 	});
 });

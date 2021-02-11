@@ -36,7 +36,6 @@ namespace OCP\FullTextSearch\Model;
  *
  * @since 15.0.0
  *
- * @package OCP\FullTextSearch\Model
  */
 interface IIndexOptions {
 

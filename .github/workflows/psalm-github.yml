@@ -1,0 +1,26 @@
+name: Psalm show github
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  psalm:
+    name: Psalm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Psalm
+        uses: docker://vimeo/psalm-github-actions
+        continue-on-error: true
+        with:
+          report_file: results.sarif
+      - name: Upload Analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: results.sarif

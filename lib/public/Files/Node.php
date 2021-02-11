@@ -41,7 +41,6 @@ use OCP\Lock\LockedException;
 /**
  * Interface Node
  *
- * @package OCP\Files
  * @since 6.0.0 - extends FileInfo was added in 8.0.0
  */
 interface Node extends FileInfo {

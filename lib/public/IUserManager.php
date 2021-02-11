@@ -44,7 +44,6 @@ namespace OCP;
  * - preUnassignedUserId(string $uid)
  * - postUnassignedUserId(string $uid)
  *
- * @package OC\User
  * @since 8.0.0
  */
 interface IUserManager {
@@ -156,6 +155,7 @@ interface IUserManager {
 
 	/**
 	 * @param \Closure $callback
+	 * @psalm-param \Closure(\OCP\IUser):void $callback
 	 * @param string $search
 	 * @since 9.0.0
 	 */
@@ -179,6 +179,7 @@ interface IUserManager {
 
 	/**
 	 * @param \Closure $callback
+	 * @psalm-param \Closure(\OCP\IUser):?bool $callback
 	 * @since 11.0.0
 	 */
 	public function callForSeenUsers(\Closure $callback);

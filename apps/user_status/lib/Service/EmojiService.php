@@ -81,7 +81,8 @@ class EmojiService {
 			// just continue and check the next character
 			if ($codePointType === \IntlChar::CHAR_CATEGORY_MODIFIER_SYMBOL ||
 				$codePointType === \IntlChar::CHAR_CATEGORY_MODIFIER_LETTER ||
-				$codePointType === \IntlChar::CHAR_CATEGORY_OTHER_SYMBOL) {
+				$codePointType === \IntlChar::CHAR_CATEGORY_OTHER_SYMBOL ||
+				$codePointType === \IntlChar::CHAR_CATEGORY_GENERAL_OTHER_TYPES) {
 				continue;
 			}
 

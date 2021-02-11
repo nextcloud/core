@@ -143,13 +143,23 @@ class NewUserMailHelper {
 		} else {
 			$leftButtonText = $l10n->t('Go to %s', [$this->themingDefaults->getName()]);
 		}
-		$emailTemplate->addBodyButtonGroup(
-			$leftButtonText,
-			$link,
-			$l10n->t('Install Client'),
-			$this->config->getSystemValue('customclient_desktop', 'https://nextcloud.com/install/#install-clients')
-		);
-		$emailTemplate->addFooter();
+
+		$clientDownload = $this->config->getSystemValue('customclient_desktop', 'https://nextcloud.com/install/#install-clients');
+		if ($clientDownload === '') {
+			$emailTemplate->addBodyButton(
+				$leftButtonText,
+				$link
+			);
+		} else {
+			$emailTemplate->addBodyButtonGroup(
+				$leftButtonText,
+				$link,
+				$l10n->t('Install Client'),
+				$clientDownload
+			);
+		}
+
+		$emailTemplate->addFooter('', $lang);
 
 		return $emailTemplate;
 	}

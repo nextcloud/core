@@ -116,7 +116,6 @@ OC.L10N.register(
     "Available for" : "Disponível para ",
     "Add storage" : "Adicionar armazenamento",
     "Advanced settings" : "Definições avançadas",
-    "Allow users to mount external storage" : "Permitir que os utilizadores montem armazenamento externo",
-    "Saving..." : "A guardar..."
+    "Allow users to mount external storage" : "Permitir que os utilizadores montem armazenamento externo"
 },
 "nplurals=2; plural=(n != 1);");

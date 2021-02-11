@@ -1,0 +1,5 @@
+{ "translations": {
+    "Auditing / Logging" : "Pemeriksaan / Pencatatan",
+    "Provides logging abilities for Nextcloud such as logging file accesses or otherwise sensitive actions." : "Menyediakan kemampuan pencatatan untuk Nextcloud seperti pencatatan akses berkas atau tindakan sensitif lainnya."
+},"pluralForm" :"nplurals=1; plural=0;"
+}

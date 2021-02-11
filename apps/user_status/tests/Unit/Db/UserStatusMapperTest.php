@@ -65,6 +65,15 @@ class UserStatusMapperTest extends TestCase {
 		$this->assertEquals('user2', $offsetResults[0]->getUserId());
 	}
 
+	public function testFindAllRecent(): void {
+		$this->insertSampleStatuses();
+
+		$allResults = $this->mapper->findAllRecent(2, 0);
+		$this->assertCount(2, $allResults);
+		$this->assertEquals('user2', $allResults[0]->getUserId());
+		$this->assertEquals('user1', $allResults[1]->getUserId());
+	}
+
 	public function testGetFind(): void {
 		$this->insertSampleStatuses();
 
@@ -89,7 +98,7 @@ class UserStatusMapperTest extends TestCase {
 		$user2Status = $this->mapper->findByUserId('user2');
 		$this->assertEquals('user2', $user2Status->getUserId());
 		$this->assertEquals('away', $user2Status->getStatus());
-		$this->assertEquals(5000, $user2Status->getStatusTimestamp());
+		$this->assertEquals(6000, $user2Status->getStatusTimestamp());
 		$this->assertEquals(false, $user2Status->getIsUserDefined());
 		$this->assertEquals('🏝', $user2Status->getCustomIcon());
 		$this->assertEquals('On vacation', $user2Status->getCustomMessage());
@@ -114,7 +123,7 @@ class UserStatusMapperTest extends TestCase {
 		$user2Status = $statuses[1];
 		$this->assertEquals('user2', $user2Status->getUserId());
 		$this->assertEquals('away', $user2Status->getStatus());
-		$this->assertEquals(5000, $user2Status->getStatusTimestamp());
+		$this->assertEquals(6000, $user2Status->getStatusTimestamp());
 		$this->assertEquals(false, $user2Status->getIsUserDefined());
 		$this->assertEquals('🏝', $user2Status->getCustomIcon());
 		$this->assertEquals('On vacation', $user2Status->getCustomMessage());
@@ -143,10 +152,60 @@ class UserStatusMapperTest extends TestCase {
 		$this->mapper->insert($userStatus2);
 	}
 
-	public function testClearOlderThan(): void {
+	/**
+	 * @param string $status
+	 * @param bool $isUserDefined
+	 * @param int $timestamp
+	 * @param bool $expectsClean
+	 *
+	 * @dataProvider clearStatusesOlderThanDataProvider
+	 */
+	public function testClearStatusesOlderThan(string $status, bool $isUserDefined, int $timestamp, bool $expectsClean): void {
+		$oldStatus = UserStatus::fromParams([
+			'userId' => 'john.doe',
+			'status' => $status,
+			'isUserDefined' => $isUserDefined,
+			'statusTimestamp' => $timestamp,
+		]);
+
+		$this->mapper->insert($oldStatus);
+
+		$this->mapper->clearStatusesOlderThan(5000, 8000);
+
+		$updatedStatus = $this->mapper->findAll()[0];
+
+		if ($expectsClean) {
+			$this->assertEquals('offline', $updatedStatus->getStatus());
+			$this->assertFalse($updatedStatus->getIsUserDefined());
+			$this->assertEquals(8000, $updatedStatus->getStatusTimestamp());
+		} else {
+			$this->assertEquals($status, $updatedStatus->getStatus());
+			$this->assertEquals($isUserDefined, $updatedStatus->getIsUserDefined());
+			$this->assertEquals($timestamp, $updatedStatus->getStatusTimestamp());
+		}
+	}
+
+	public function clearStatusesOlderThanDataProvider(): array {
+		return [
+			['online', true, 6000, false],
+			['online', true, 4000, true],
+			['online', false, 6000, false],
+			['online', false, 4000, true],
+			['away', true, 6000, false],
+			['away', true, 4000, false],
+			['away', false, 6000, false],
+			['away', false, 4000, true],
+			['dnd', true, 6000, false],
+			['dnd', true, 4000, false],
+			['invisible', true, 6000, false],
+			['invisible', true, 4000, false],
+		];
+	}
+
+	public function testClearMessagesOlderThan(): void {
 		$this->insertSampleStatuses();
 
-		$this->mapper->clearOlderThan(55000);
+		$this->mapper->clearMessagesOlderThan(55000);
 
 		$allStatuses = $this->mapper->findAll();
 		$this->assertCount(3, $allStatuses);
@@ -180,7 +239,7 @@ class UserStatusMapperTest extends TestCase {
 		$userStatus3 = new UserStatus();
 		$userStatus3->setUserId('user2');
 		$userStatus3->setStatus('away');
-		$userStatus3->setStatusTimestamp(5000);
+		$userStatus3->setStatusTimestamp(6000);
 		$userStatus3->setIsUserDefined(false);
 		$userStatus3->setCustomIcon('🏝');
 		$userStatus3->setCustomMessage('On vacation');

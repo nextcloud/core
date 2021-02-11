@@ -40,8 +40,6 @@ namespace OCP\FullTextSearch\Model;
  * generated. As an example, an original document can be a file, a mail, ...
  *
  * @since 15.0.0
- *
- * @package OC\FullTextSearch\Model
  */
 interface IIndexDocument {
 	public const NOT_ENCODED = 0;

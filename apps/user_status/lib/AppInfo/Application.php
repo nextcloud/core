@@ -30,6 +30,7 @@ use OCA\UserStatus\Connector\UserStatusProvider;
 use OCA\UserStatus\Listener\BeforeTemplateRenderedListener;
 use OCA\UserStatus\Listener\UserDeletedListener;
 use OCA\UserStatus\Listener\UserLiveStatusListener;
+use OCA\UserStatus\Dashboard\UserStatusWidget;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -69,6 +70,9 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(UserDeletedEvent::class, UserDeletedListener::class);
 		$context->registerEventListener(UserLiveStatusEvent::class, UserLiveStatusListener::class);
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, BeforeTemplateRenderedListener::class);
+
+		// Register the Dashboard panel
+		$context->registerDashboardWidget(UserStatusWidget::class);
 	}
 
 	public function boot(IBootContext $context): void {

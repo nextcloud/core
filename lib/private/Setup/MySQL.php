@@ -9,10 +9,9 @@
  * @author Joas Schilling <coding@schilljs.com>
  * @author Michael Göhler <somebody.here@gmx.de>
  * @author Morris Jobke <hey@morrisjobke.de>
- * @author Oliver Salzburg <oliver.salzburg@gmail.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -32,10 +31,12 @@
 
 namespace OC\Setup;
 
+use OC\DB\ConnectionAdapter;
 use OC\DB\MySqlTools;
 use OCP\IDBConnection;
 use OCP\ILogger;
 use Doctrine\DBAL\Platforms\MySQL80Platform;
+use OCP\Security\ISecureRandom;
 
 class MySQL extends AbstractDatabase {
 	public $dbprettyname = 'MySQL/MariaDB';
@@ -46,18 +47,18 @@ class MySQL extends AbstractDatabase {
 
 		// detect mb4
 		$tools = new MySqlTools();
-		if ($tools->supports4ByteCharset($connection)) {
+		if ($tools->supports4ByteCharset(new ConnectionAdapter($connection))) {
 			$this->config->setValue('mysql.utf8mb4', true);
 			$connection = $this->connect(['dbname' => null]);
 		}
 
-		$this->createSpecificUser($username, $connection);
+		$this->createSpecificUser($username, new ConnectionAdapter($connection));
 
 		//create the database
 		$this->createDatabase($connection);
 
 		//fill the database if needed
-		$query='select count(*) from information_schema.tables where table_schema=? AND table_name = ?';
+		$query = 'select count(*) from information_schema.tables where table_schema=? AND table_name = ?';
 		$connection->executeQuery($query, [$this->dbName, $this->tablePrefix.'users']);
 
 		$connection->close();
@@ -67,7 +68,7 @@ class MySQL extends AbstractDatabase {
 		} catch (\Exception $e) {
 			$this->logger->logException($e);
 			throw new \OC\DatabaseSetupException($this->trans->t('MySQL username and/or password not valid'),
-				$this->trans->t('You need to enter details of an existing account.'));
+				$this->trans->t('You need to enter details of an existing account.'), 0, $e);
 		}
 	}
 
@@ -93,7 +94,7 @@ class MySQL extends AbstractDatabase {
 
 		try {
 			//this query will fail if there aren't the right permissions, ignore the error
-			$query="GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, REFERENCES, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, EVENT, TRIGGER ON `$name` . * TO '$user'";
+			$query = "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, REFERENCES, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, EVENT, TRIGGER ON `$name` . * TO '$user'";
 			$connection->executeUpdate($query);
 		} catch (\Exception $ex) {
 			$this->logger->logException($ex, [
@@ -157,27 +158,24 @@ class MySQL extends AbstractDatabase {
 					$result = $connection->executeQuery($query, [$adminUser]);
 
 					//current dbuser has admin rights
-					if ($result) {
-						$data = $result->fetchAll();
-						//new dbuser does not exist
-						if (count($data) === 0) {
-							//use the admin login data for the new database user
-							$this->dbUser = $adminUser;
+					$data = $result->fetchAll();
+					$result->closeCursor();
+					//new dbuser does not exist
+					if (count($data) === 0) {
+						//use the admin login data for the new database user
+						$this->dbUser = $adminUser;
 
-							//create a random password so we don't need to store the admin password in the config file
-							$this->dbPassword =  $this->random->generate(30);
+						//create a random password so we don't need to store the admin password in the config file
+						$this->dbPassword = $this->random->generate(30, ISecureRandom::CHAR_DIGITS . ISecureRandom::CHAR_LOWER . ISecureRandom::CHAR_UPPER);
 
-							$this->createDBUser($connection);
+						$this->createDBUser($connection);
 
-							break;
-						} else {
-							//repeat with different username
-							$length = strlen((string)$i);
-							$adminUser = substr('oc_' . $username, 0, 16 - $length) . $i;
-							$i++;
-						}
-					} else {
 						break;
+					} else {
+						//repeat with different username
+						$length = strlen((string)$i);
+						$adminUser = substr('oc_' . $username, 0, 16 - $length) . $i;
+						$i++;
 					}
 				}
 			}

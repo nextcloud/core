@@ -80,6 +80,7 @@
     "{actor} removed you from the share named {file}" : "{actor} fjarlægði þig af sameign með heitinu {file}",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "Skrá eða mappa sem deilt var með tölvupósti eða almenningstengli var <strong>sótt</strong>",
     "A file or folder was shared from <strong>another server</strong>" : "Skjali eða möppu hefur verið deilt <strong>frá öðrum þjóni</strong>",
+    "Files" : "Skrár",
     "A file or folder has been <strong>shared</strong>" : "Skjali eða  möppu hefur verið <strong>deilt</strong>",
     "Wrong share ID, share doesn't exist" : "Rangt auðkenni sameignar, sameign er ekki til",
     "Could not delete share" : "Tókst ekki að eyða sameign",
@@ -116,6 +117,7 @@
     "Reject" : "Hafna",
     "This application enables users to share files within Nextcloud. If enabled, the admin can choose which groups can share files. The applicable users can then share files and folders with other users and groups within Nextcloud. In addition, if the admin enables the share link feature, an external link can be used to share files with other users outside of Nextcloud. Admins can also enforce passwords, expirations dates, and enable server to server sharing via share links, as well as sharing from mobile devices.\nTurning the feature off removes shared files and folders on the server for all share recipients, and also on the sync clients and mobile apps. More information is available in the Nextcloud Documentation." : "Þetta forrit gerir notendum kleift að deila skrám innan Nextcloud. Ef þetta er virkt getur stjórnandi valið hvaða hópar geti deilt skrám. Viðkomandi notendur geta þá deilt skrám og möppum með öðrum notendum og hópum innan Nextcloud. Að auki, ef stjórnandinn virkjar eiginleikan til að deila með tenglum, er hægt að nota ytri tengil til að deila skrám með öðrum notendum utan Nextcloud. Stjórnendur geta líka krafist notkunar lykilorða, gildistíma og virkjað þjónn-í-þjón deilingu með deilitenglum, rétt eins og deilingu með snjalltækjum.\nSé slökkt á þessum eiginleika, eru deildar skrár og möppur fjarlægðar af þjóninum fyrir alla notendur þessara sameigna, og einnig úr samstillingaforritum og snjalltækjum. Ítarlegri upplýsingar um þetta má finna í hjálparskjölum Nextcloud.",
     "Sharing" : "Deiling",
+    "Accept user and group shares by default" : "Samþykkja sjálfgefið sameignir frá notendum og hópum",
     "Allow editing" : "Leyfa breytingar",
     "Allow resharing" : "Leyfa endurdeilingu",
     "Expiration date enforced" : "Gerði gildistíma nauðsynlegan",
@@ -144,10 +146,6 @@
     "Add another link" : "Bæta við öðrum tengli",
     "Share link" : "Deila tengli",
     "Resharing is not allowed" : "Endurdeiling er ekki leyfð",
-    "Name or email address …" : "Nafn eða tölvupóstfang …",
-    "Name or federated cloud ID …" : "Nafn eða skýjasambandsauðkenni (Federated Cloud ID) …",
-    "Name, federated cloud ID or email address …" : "Nafn, skýjasambandsauðkenni eða tölvupóstfang …",
-    "Name …" : "Nafn …",
     "Searching …" : "Leita …",
     "Search globally" : "Leita allstaðar",
     "on {server}" : "á {server}",
@@ -178,8 +176,6 @@
     "Note" : "Minnispunktur",
     "Select or drop files" : "Veldu eða slepptu skrám",
     "Uploaded files:" : "Innsendar skrár:",
-    "By uploading files, you agree to the %1$sterms of service%2$s." : "Með því að senda inn skrár, samþykkir þú %1$sþjónustuskilmálana%2$s.",
-    "could not delete share" : "tókst ekki að eyða sameign",
-    "Uploading files…" : "Sendi inn skrár…"
+    "By uploading files, you agree to the %1$sterms of service%2$s." : "Með því að senda inn skrár, samþykkir þú %1$sþjónustuskilmálana%2$s."
 },"pluralForm" :"nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
 }

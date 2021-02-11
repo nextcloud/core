@@ -51,7 +51,7 @@ class UploadCleanup extends TimedJob {
 		$this->jobList = $jobList;
 
 		// Run once a day
-		$this->setInterval(60*60*24);
+		$this->setInterval(60 * 60 * 24);
 	}
 
 	protected function run($argument) {
@@ -65,7 +65,7 @@ class UploadCleanup extends TimedJob {
 			$uploads = $userRoot->get('uploads');
 			/** @var Folder $uploadFolder */
 			$uploadFolder = $uploads->get($folder);
-		} catch (NotFoundException|NoUserException $e) {
+		} catch (NotFoundException | NoUserException $e) {
 			$this->jobList->remove(self::class, $argument);
 			return;
 		}

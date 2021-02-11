@@ -59,24 +59,6 @@
     "Request user agent" : "Bruger \"user agent\"",
     "User group membership" : "Brugers gruppemedlemsskab",
     "is member of" : "er medlem af",
-    "is not member of" : "er ikke medlem af",
-    "Example: {placeholder}" : "Eksempel: {placeholder}",
-    "Select tag…" : "Vælg markering",
-    "Start" : "Start",
-    "End" : "Stop",
-    "Select timezone…" : "Vælg tidszone...",
-    "Sync clients" : "Synkronisering klienter",
-    "Short rule description" : "Kort regelbeskrivelse",
-    "Add rule" : "Tilføj regel",
-    "Reset" : "Reset",
-    "Saving…" : "Gemmer...",
-    "Group list is empty" : "Gruppelisten er tom",
-    "Unable to retrieve the group list" : "Kan ikke hente gruppelisten",
-    "Saved" : "Gemt",
-    "Saving failed:" : "Kunne ikke gemme:",
-    "Add rule group" : "Tilføj regelgruppe",
-    "Files workflow engine" : "Filer workflow motoren",
-    "Open documentation" : "Åbn dokumentationen",
-    "Loading…" : "Indlæser..."
+    "is not member of" : "er ikke medlem af"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

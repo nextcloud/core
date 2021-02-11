@@ -1,10 +1,12 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2020 Joas Schilling <coding@schilljs.com>
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,14 +21,14 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\Files_External\Migration;
 
 use Closure;
-use Doctrine\DBAL\Types\Types;
+use OCP\DB\Types;
 use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
@@ -120,6 +122,12 @@ class Version1011Date20200630192246 extends SimpleMigrationStep {
 			$table->setPrimaryKey(['config_id']);
 			$table->addIndex(['mount_id'], 'config_mount');
 			$table->addUniqueIndex(['mount_id', 'key'], 'config_mount_key');
+		} else {
+			$table = $schema->getTable('external_config');
+			$table->changeColumn('value', [
+				'notnull' => false,
+				'length' => 4096,
+			]);
 		}
 
 		if (!$schema->hasTable('external_options')) {

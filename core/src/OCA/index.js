@@ -19,8 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Search from './search'
+
 /**
  * Namespace for apps
  * @namespace OCA
  */
-export default {}
+export default {
+	/**
+	 * @deprecated 20.0.0, will be removed in Nextcloud 22
+	 */
+	Search,
+}

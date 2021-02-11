@@ -12,7 +12,6 @@ declare(strict_types=1);
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
- * @author Maxence Lange <maxence@artificial-owl.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -71,7 +70,7 @@ class Application extends App implements IBootstrap {
 	/**
 	 * @param array $urlParams
 	 */
-	public function __construct(array $urlParams=[]) {
+	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
 	}
 
@@ -98,16 +97,6 @@ class Application extends App implements IBootstrap {
 			}
 			return $isSubAdmin;
 		});
-		$context->registerService('userCertificateManager', function (IAppContainer $appContainer) {
-			/** @var IServerContainer $serverContainer */
-			$serverContainer = $appContainer->get(IServerContainer::class);
-			return $serverContainer->getCertificateManager();
-		}, false);
-		$context->registerService('systemCertificateManager', function (IAppContainer $appContainer) {
-			/** @var IServerContainer $serverContainer */
-			$serverContainer = $appContainer->query('ServerContainer');
-			return $serverContainer->getCertificateManager(null);
-		}, false);
 		$context->registerService(IProvider::class, function (IAppContainer $appContainer) {
 			/** @var IServerContainer $serverContainer */
 			$serverContainer = $appContainer->query(IServerContainer::class);
@@ -173,8 +162,6 @@ class Application extends App implements IBootstrap {
 			$groupManager->listen('\OC\Group', 'postRemoveUser',  [$this, 'removeUserFromGroup']);
 			$groupManager->listen('\OC\Group', 'postAddUser',  [$this, 'addUserToGroup']);
 		});
-
-		Util::connectHook('\OCP\Config', 'js', $this, 'extendJsConfig');
 	}
 
 	public function addUserToGroup(IGroup $group, IUser $user): void {
@@ -218,24 +205,5 @@ class Application extends App implements IBootstrap {
 		/** @var Hooks $hooks */
 		$hooks = $this->getContainer()->query(Hooks::class);
 		$hooks->onChangeEmail($parameters['user'], $parameters['old_value']);
-	}
-
-	/**
-	 * @param array $settings
-	 */
-	public function extendJsConfig(array $settings) {
-		$appConfig = json_decode($settings['array']['oc_appconfig'], true);
-
-		$publicWebFinger = \OC::$server->getConfig()->getAppValue('core', 'public_webfinger', '');
-		if (!empty($publicWebFinger)) {
-			$appConfig['core']['public_webfinger'] = $publicWebFinger;
-		}
-
-		$publicNodeInfo = \OC::$server->getConfig()->getAppValue('core', 'public_nodeinfo', '');
-		if (!empty($publicNodeInfo)) {
-			$appConfig['core']['public_nodeinfo'] = $publicNodeInfo;
-		}
-
-		$settings['array']['oc_appconfig'] = json_encode($appConfig);
 	}
 }

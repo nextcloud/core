@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -39,42 +40,42 @@ return [
 	'ocs' => [
 		[
 			'name' => 'Config#setAppValue',
-			'url'  => '/api/v1/app/{appid}/{configkey}',
+			'url' => '/api/v1/app/{appid}/{configkey}',
 			'verb' => 'POST',
 		],
 		[
 			'name' => 'Config#deleteAppValue',
-			'url'  => '/api/v1/app/{appid}/{configkey}',
+			'url' => '/api/v1/app/{appid}/{configkey}',
 			'verb' => 'DELETE',
 		],
 		[
 			'name' => 'Locking#isLockingEnabled',
-			'url'  => '/api/v1/lockprovisioning',
+			'url' => '/api/v1/lockprovisioning',
 			'verb' => 'GET',
 		],
 		[
 			'name' => 'Locking#isLocked',
-			'url'  => '/api/v1/lockprovisioning/{type}/{user}',
+			'url' => '/api/v1/lockprovisioning/{type}/{user}',
 			'verb' => 'GET',
 		],
 		[
 			'name' => 'Locking#acquireLock',
-			'url'  => '/api/v1/lockprovisioning/{type}/{user}',
+			'url' => '/api/v1/lockprovisioning/{type}/{user}',
 			'verb' => 'POST',
 		],
 		[
 			'name' => 'Locking#changeLock',
-			'url'  => '/api/v1/lockprovisioning/{type}/{user}',
+			'url' => '/api/v1/lockprovisioning/{type}/{user}',
 			'verb' => 'PUT',
 		],
 		[
 			'name' => 'Locking#releaseLock',
-			'url'  => '/api/v1/lockprovisioning/{type}/{user}',
+			'url' => '/api/v1/lockprovisioning/{type}/{user}',
 			'verb' => 'DELETE',
 		],
 		[
 			'name' => 'Locking#releaseAll',
-			'url'  => '/api/v1/lockprovisioning/{type}',
+			'url' => '/api/v1/lockprovisioning/{type}',
 			'verb' => 'DELETE',
 			'defaults' => [
 				'type' => null

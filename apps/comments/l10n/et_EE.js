@@ -14,17 +14,18 @@ OC.L10N.register(
     "{user} mentioned you in a comment on “{file}”" : "{user} mainis sind faili “{file}” kommentaaris",
     "Edit comment" : "Muuda kommentaari",
     "Delete comment" : "Kustuta kommentaar",
+    "No comments yet, start the conversation!" : "Kommentaare veel pole, alusta vestlust",
+    "Retry" : "Proovi uuesti",
+    "_%n unread comment_::_%n unread comments_" : ["%n lugemata kommentaar","%n lugemata kommentaari"],
+    "Comment" : "Kommentaar",
     "New comment …" : "Uus kommentaar",
     "Post" : "Postita",
     "Cancel" : "Loobu",
     "[Deleted user]" : "[Kustutatud kasutaja]",
-    "No comments yet, start the conversation!" : "Kommentaare veel pole, alusta vestlust",
     "More comments …" : "Veel kommentaare ...",
     "Save" : "Salvesta",
     "Allowed characters {count} of {max}" : "Lubatud märkide arv {count}/{max}",
     "Error occurred while updating comment with id {id}" : "Kommentaari {id} uuendamisel tekkis tõrge",
-    "Error occurred while posting comment" : "Viga kommentaari postitamisel",
-    "_%n unread comment_::_%n unread comments_" : ["%n lugemata kommentaar","%n lugemata kommentaari"],
-    "Comment" : "Kommentaar"
+    "Error occurred while posting comment" : "Viga kommentaari postitamisel"
 },
 "nplurals=2; plural=(n != 1);");

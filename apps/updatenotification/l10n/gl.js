@@ -23,12 +23,12 @@ OC.L10N.register(
     "A non-default update server is in use to be checked for updates:" : "Está en uso un servidor de actualizacións que non é o predeterminado para comprobar as actualizacións:",
     "Update channel:" : "Canle de actualización:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Sempre poderá actualizar á versión más recente, mais nunca poderá volver a unha canle máis estábel.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Teña en conta que após a publicación dunha nova versión pode levar algún tempo antes de que se amose aiquí. Programamos novas versións ao longo do tempo para os nosos usuarios e por veces omitimos unha versión cando se atopan incidentes.",
     "Notify members of the following groups about available updates:" : "Notificar aos membros dos seguintes grupos sobre actualizacións dispoñíbeis:",
     "Only notification for app updates are available." : "Só están dispoñíbeis as notificacións para actualizacións de aplicacións.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "A canle de actualización seleccionada fai obsoletas as notificacións dedicadas para o servidor.",
     "The selected update channel does not support updates of the server." : "A canle de actualización seleccionada non admite actualizacións do servidor.",
     "A new version is available: <strong>{newVersionString}</strong>" : "Hai dispoñíbel unha versión nova:<strong>{newVersionString}</strong>",
+    "Note that after a new release the update only shows up after the first minor release or later. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found. Learn more about updates and release channels at {link}" : "Ten en conta que após unha nova versión, a actualización só aparece após a primeira versión menor ou posterior.publicamos novas versións repartidas ao longo do tempo para os nosos usuarios e ás veces omitimos unha versión cando se atopan problemas. Máis información sobre actualizacións e canles de publicación en {link}",
     "Checked on {lastCheckedDate}" : "Comprobado o {lastCheckedDate}",
     "Checking apps for compatible updates" : "Comprobando as actualizacións compatíbeis coas aplicacións",
     "Please make sure your config.php does not set <samp>appstoreenabled</samp> to false." : "Asegúrese de que o seu config.php non ten configurado <samp>appstoreenabled</samp> como «false».",
@@ -41,6 +41,7 @@ OC.L10N.register(
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "A versión estábel máis recente. É axeitada para uso en produción e actualizarase sempre á última versión maior.",
     "Beta" : "Beta",
     "A pre-release version only for testing new features, not for production environments." : "Unha versión preliminar só para probar funcionalidades novas, non para contornos de produción",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong>  aplicación non ten unha actualización dispoñíbel para esta versión","<strong>%n</strong> aplicacións non teñen unha actualización dispoñíbel para esta versión"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong>  aplicación non ten unha actualización dispoñíbel para esta versión","<strong>%n</strong> aplicacións non teñen unha actualización dispoñíbel para esta versión"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Teña en conta que após a publicación dunha nova versión pode levar algún tempo antes de que se amose aiquí. Programamos novas versións ao longo do tempo para os nosos usuarios e por veces omitimos unha versión cando se atopan incidentes."
 },
 "nplurals=2; plural=(n != 1);");

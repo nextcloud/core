@@ -9,6 +9,8 @@
 
 namespace Test;
 
+use OC\AppConfig;
+use OC\DB\Connection;
 use OCP\IConfig;
 
 /**
@@ -22,7 +24,7 @@ class AppConfigTest extends TestCase {
 	/** @var \OCP\IAppConfig */
 	protected $appConfig;
 
-	/** @var \OCP\IDBConnection */
+	/** @var Connection */
 	protected $connection;
 
 	protected $originalConfig;
@@ -30,7 +32,7 @@ class AppConfigTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->connection = \OC::$server->getDatabaseConnection();
+		$this->connection = \OC::$server->get(Connection::class);
 		$sql = $this->connection->getQueryBuilder();
 		$sql->select('*')
 			->from('appconfig');
@@ -42,7 +44,7 @@ class AppConfigTest extends TestCase {
 		$sql->delete('appconfig');
 		$sql->execute();
 
-		$this->overwriteService('AppConfig', new \OC\AppConfig($this->connection));
+		$this->overwriteService(AppConfig::class, new \OC\AppConfig($this->connection));
 
 		$sql = $this->connection->getQueryBuilder();
 		$sql->insert('appconfig')
@@ -132,26 +134,26 @@ class AppConfigTest extends TestCase {
 			$sql->execute();
 		}
 
-		$this->restoreService('AppConfig');
+		$this->restoreService(AppConfig::class);
 		parent::tearDown();
 	}
 
 	public function testGetApps() {
-		$config = new \OC\AppConfig(\OC::$server->getDatabaseConnection());
+		$config = new \OC\AppConfig(\OC::$server->get(Connection::class));
 
-		$this->assertEquals([
+		$this->assertEqualsCanonicalizing([
 			'anotherapp',
 			'someapp',
 			'testapp',
-			'123456',
+			123456,
 		], $config->getApps());
 	}
 
 	public function testGetKeys() {
-		$config = new \OC\AppConfig(\OC::$server->getDatabaseConnection());
+		$config = new \OC\AppConfig(\OC::$server->get(Connection::class));
 
 		$keys = $config->getKeys('testapp');
-		$this->assertEquals([
+		$this->assertEqualsCanonicalizing([
 			'deletethis',
 			'depends_on',
 			'enabled',
@@ -161,7 +163,7 @@ class AppConfigTest extends TestCase {
 	}
 
 	public function testGetValue() {
-		$config = new \OC\AppConfig(\OC::$server->getDatabaseConnection());
+		$config = new \OC\AppConfig(\OC::$server->get(Connection::class));
 
 		$value = $config->getValue('testapp', 'installed_version');
 		$this->assertConfigKey('testapp', 'installed_version', $value);
@@ -174,7 +176,7 @@ class AppConfigTest extends TestCase {
 	}
 
 	public function testHasKey() {
-		$config = new \OC\AppConfig(\OC::$server->getDatabaseConnection());
+		$config = new \OC\AppConfig(\OC::$server->get(Connection::class));
 
 		$this->assertTrue($config->hasKey('testapp', 'installed_version'));
 		$this->assertFalse($config->hasKey('testapp', 'nonexistant'));
@@ -182,13 +184,13 @@ class AppConfigTest extends TestCase {
 	}
 
 	public function testSetValueUpdate() {
-		$config = new \OC\AppConfig(\OC::$server->getDatabaseConnection());
+		$config = new \OC\AppConfig(\OC::$server->get(Connection::class));
 
 		$this->assertEquals('1.2.3', $config->getValue('testapp', 'installed_version'));
 		$this->assertConfigKey('testapp', 'installed_version', '1.2.3');
 
 		$wasModified = $config->setValue('testapp', 'installed_version', '1.2.3');
-		if (!(\OC::$server->getDatabaseConnection() instanceof \OC\DB\OracleConnection)) {
+		if (!(\OC::$server->get(Connection::class) instanceof \OC\DB\OracleConnection)) {
 			$this->assertFalse($wasModified);
 		}
 
@@ -206,7 +208,7 @@ class AppConfigTest extends TestCase {
 	}
 
 	public function testSetValueInsert() {
-		$config = new \OC\AppConfig(\OC::$server->getDatabaseConnection());
+		$config = new \OC\AppConfig(\OC::$server->get(Connection::class));
 
 		$this->assertFalse($config->hasKey('someapp', 'somekey'));
 		$this->assertNull($config->getValue('someapp', 'somekey'));
@@ -218,13 +220,13 @@ class AppConfigTest extends TestCase {
 		$this->assertConfigKey('someapp', 'somekey', 'somevalue');
 
 		$wasInserted = $config->setValue('someapp', 'somekey', 'somevalue');
-		if (!(\OC::$server->getDatabaseConnection() instanceof \OC\DB\OracleConnection)) {
+		if (!(\OC::$server->get(Connection::class) instanceof \OC\DB\OracleConnection)) {
 			$this->assertFalse($wasInserted);
 		}
 	}
 
 	public function testDeleteKey() {
-		$config = new \OC\AppConfig(\OC::$server->getDatabaseConnection());
+		$config = new \OC\AppConfig(\OC::$server->get(Connection::class));
 
 		$this->assertTrue($config->hasKey('testapp', 'deletethis'));
 
@@ -246,7 +248,7 @@ class AppConfigTest extends TestCase {
 	}
 
 	public function testDeleteApp() {
-		$config = new \OC\AppConfig(\OC::$server->getDatabaseConnection());
+		$config = new \OC\AppConfig(\OC::$server->get(Connection::class));
 
 		$this->assertTrue($config->hasKey('someapp', 'otherkey'));
 
@@ -266,7 +268,7 @@ class AppConfigTest extends TestCase {
 	}
 
 	public function testGetValuesNotAllowed() {
-		$config = new \OC\AppConfig(\OC::$server->getDatabaseConnection());
+		$config = new \OC\AppConfig(\OC::$server->get(Connection::class));
 
 		$this->assertFalse($config->getValues('testapp', 'enabled'));
 
@@ -274,7 +276,7 @@ class AppConfigTest extends TestCase {
 	}
 
 	public function testGetValues() {
-		$config = new \OC\AppConfig(\OC::$server->getDatabaseConnection());
+		$config = new \OC\AppConfig(\OC::$server->get(Connection::class));
 
 		$sql = \OC::$server->getDatabaseConnection()->getQueryBuilder();
 		$sql->select(['configkey', 'configvalue'])
@@ -310,7 +312,7 @@ class AppConfigTest extends TestCase {
 	public function testGetFilteredValues() {
 		/** @var \OC\AppConfig|\PHPUnit\Framework\MockObject\MockObject $config */
 		$config = $this->getMockBuilder(\OC\AppConfig::class)
-			->setConstructorArgs([\OC::$server->getDatabaseConnection()])
+			->setConstructorArgs([\OC::$server->get(Connection::class)])
 			->setMethods(['getValues'])
 			->getMock();
 
@@ -332,8 +334,8 @@ class AppConfigTest extends TestCase {
 	}
 
 	public function testSettingConfigParallel() {
-		$appConfig1 = new \OC\AppConfig(\OC::$server->getDatabaseConnection());
-		$appConfig2 = new \OC\AppConfig(\OC::$server->getDatabaseConnection());
+		$appConfig1 = new \OC\AppConfig(\OC::$server->get(Connection::class));
+		$appConfig2 = new \OC\AppConfig(\OC::$server->get(Connection::class));
 		$appConfig1->getValue('testapp', 'foo', 'v1');
 		$appConfig2->getValue('testapp', 'foo', 'v1');
 

@@ -2,14 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Arne Hamann <kontakt+github@arne.email>
  * @author Bart Visscher <bartv@thisnet.nl>
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
- * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
- * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Tobia De Koninck <tobia@ledfan.be>
  *
@@ -69,11 +65,11 @@ class ContactsManager implements IManager {
 	 * This function can be used to delete the contact identified by the given id
 	 *
 	 * @param object $id the unique identifier to a contact
-	 * @param string $addressBookKey identifier of the address book in which the contact shall be deleted
+	 * @param string $address_book_key identifier of the address book in which the contact shall be deleted
 	 * @return bool successful or not
 	 */
-	public function delete($id, $addressBookKey) {
-		$addressBook = $this->getAddressBook($addressBookKey);
+	public function delete($id, $address_book_key) {
+		$addressBook = $this->getAddressBook($address_book_key);
 		if (!$addressBook) {
 			return null;
 		}
@@ -90,11 +86,11 @@ class ContactsManager implements IManager {
 	 * Otherwise the contact will be updated by replacing the entire data set.
 	 *
 	 * @param array $properties this array if key-value-pairs defines a contact
-	 * @param string $addressBookKey identifier of the address book in which the contact shall be created or updated
+	 * @param string $address_book_key identifier of the address book in which the contact shall be created or updated
 	 * @return array representing the contact just created or updated
 	 */
-	public function createOrUpdate($properties, $addressBookKey) {
-		$addressBook = $this->getAddressBook($addressBookKey);
+	public function createOrUpdate($properties, $address_book_key) {
+		$addressBook = $this->getAddressBook($address_book_key);
 		if (!$addressBook) {
 			return null;
 		}

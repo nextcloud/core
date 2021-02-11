@@ -23,7 +23,7 @@ style('federatedfilesharing', 'settings-admin');
 	print_unescaped('checked="checked"');
 } ?> />
 		<label for="outgoingServer2serverShareEnabled">
-			<?php p($l->t('Allow users on this server to send shares to other servers'));?>
+			<?php p($l->t('Allow users on this server to send shares to other servers (this option also allows WebDAV access to public shares)'));?>
 		</label>
 	</p>
 	<p>

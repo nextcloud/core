@@ -5,12 +5,11 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
- * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -162,15 +161,18 @@ class ConfigAdapter implements IMountProvider {
 			if ($storageConfig->getType() === StorageConfig::MOUNT_TYPE_PERSONAl) {
 				return new PersonalMount(
 					$this->userStoragesService,
+					$storageConfig,
 					$storageConfig->getId(),
 					$storage,
 					'/' . $user->getUID() . '/files' . $storageConfig->getMountPoint(),
 					null,
 					$loader,
-					$storageConfig->getMountOptions()
+					$storageConfig->getMountOptions(),
+					$storageConfig->getId()
 				);
 			} else {
 				return new ExternalMountPoint(
+					$storageConfig,
 					$storage,
 					'/' . $user->getUID() . '/files' . $storageConfig->getMountPoint(),
 					null,

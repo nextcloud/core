@@ -38,7 +38,7 @@ OC.L10N.register(
     "Federated Cloud Sharing" : "Condivisione cloud federata",
     "Open documentation" : "Apri la documentazione",
     "Adjust how people can share between servers." : "Regola come le persone possono condividere tra i server.",
-    "Allow users on this server to send shares to other servers" : "Consenti agli utenti su questo server di inviare condivisioni ad altri server",
+    "Allow users on this server to send shares to other servers (this option also allows WebDAV access to public shares)" : "Consenti agli utenti su questo server di inviare condivisioni ad altri server (questa opzione consente anche l'accesso WebDAV alle condivisioni pubbliche)",
     "Allow users on this server to receive shares from other servers" : "Consenti agli utenti su questo server di ricevere condivisioni da altri server",
     "Allow users on this server to send shares to groups on other servers" : "Consenti agli utenti su questo server di inviare condivisioni a gruppi su altri server",
     "Allow users on this server to receive group shares from other servers" : "Consenti agli utenti su questo server di ricevere condivisioni di gruppo da altri server",
@@ -51,7 +51,6 @@ OC.L10N.register(
     "Add to your website" : "Aggiungi al tuo sito web",
     "Share with me via Nextcloud" : "Condividi con me tramite Nextcloud",
     "HTML Code:" : "Codice HTML:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Hai ricevuto \"%3$s\" come condivisione remota da %1$s (per conto di %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Hai ricevuto \"%3$s\" come condivisione remota da %1$s"
+    "Allow users on this server to send shares to other servers" : "Consenti agli utenti su questo server di inviare condivisioni ad altri server"
 },
 "nplurals=2; plural=(n != 1);");

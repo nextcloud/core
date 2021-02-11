@@ -63,12 +63,8 @@ OC.L10N.register(
     "Where: %s" : "Kie: %s",
     "%1$s via %2$s" : "%1$s pere de %2$s",
     "Invitation canceled" : "Invito nuligita",
-    "Hello %s," : "Saluton %s,",
-    "The meeting »%1$s« with %2$s was canceled." : "La kunsido „%1$s“ kun %2$s estis nuligita.",
     "Invitation updated" : "Invito ĝisdatigita",
-    "The meeting »%1$s« with %2$s was updated." : "La kunsido „%1$s“ kun %2$s estis ĝisdatigita.",
-    "%1$s invited you to »%2$s«" : "%1$s invitis vin al „%2$s“",
-    "When:" : "Kiam:",
+    "Location:" : "Loko:",
     "Link:" : "Ligilo:",
     "Accept" : "Akcepti",
     "Decline" : "Malakcepti",
@@ -96,9 +92,10 @@ OC.L10N.register(
     "Hence they will not be available immediately after enabling but will show up after some time." : "Tial, ili disponeblos nur post kelke da tempo.",
     "Send notifications for events" : "Sendi sciigojn pri okazaĵoj",
     "Enable notifications for events via push" : "Ebligi sciigojn pri okazaĵoj per puŝteĥniko",
-    "Technical details" : "Teĥnikaj detaloj",
-    "Remote Address: %s" : "Fora adreso: %s",
-    "Request ID: %s" : "Pet-identigilo: %s",
-    "Notifications will be send through background jobs, so these need to happen often enough." : "Sciigoj sendiĝos pere de fonaj taskoj, tiu do bezonas okazi sufiĉe ofte."
+    "Hello %s," : "Saluton %s,",
+    "The meeting »%1$s« with %2$s was canceled." : "La kunsido „%1$s“ kun %2$s estis nuligita.",
+    "The meeting »%1$s« with %2$s was updated." : "La kunsido „%1$s“ kun %2$s estis ĝisdatigita.",
+    "%1$s invited you to »%2$s«" : "%1$s invitis vin al „%2$s“",
+    "When:" : "Kiam:"
 },
 "nplurals=2; plural=(n != 1);");

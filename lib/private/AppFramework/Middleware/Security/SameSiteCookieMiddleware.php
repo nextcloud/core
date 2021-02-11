@@ -48,7 +48,7 @@ class SameSiteCookieMiddleware extends Middleware {
 	public function beforeController($controller, $methodName) {
 		$requestUri = $this->request->getScriptName();
 		$processingScript = explode('/', $requestUri);
-		$processingScript = $processingScript[count($processingScript)-1];
+		$processingScript = $processingScript[count($processingScript) - 1];
 
 		if ($processingScript !== 'index.php') {
 			return;

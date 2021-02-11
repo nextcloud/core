@@ -28,6 +28,7 @@ namespace OCA\UserStatus\Listener;
 use OCA\UserStatus\AppInfo\Application;
 use OCA\UserStatus\Service\JSDataService;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IInitialStateService;
@@ -61,7 +62,7 @@ class BeforeTemplateRenderedListener implements IEventListener {
 			return;
 		}
 
-		if (!$event->isLoggedIn()) {
+		if (!$event->isLoggedIn() || $event->getResponse()->getRenderAs() !== TemplateResponse::RENDER_AS_USER) {
 			return;
 		}
 

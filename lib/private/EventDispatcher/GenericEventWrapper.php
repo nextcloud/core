@@ -1,9 +1,11 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2020, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -19,7 +21,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -39,6 +41,9 @@ class GenericEventWrapper extends GenericEvent {
 	/** @var string */
 	private $eventName;
 
+	/** @var bool */
+	private $deprecationNoticeLogged = false;
+
 	public function __construct(ILogger $logger, string $eventName, ?GenericEvent $event) {
 		parent::__construct($eventName);
 		$this->logger = $logger;
@@ -47,11 +52,16 @@ class GenericEventWrapper extends GenericEvent {
 	}
 
 	private function log() {
+		if ($this->deprecationNoticeLogged) {
+			return;
+		}
+
 		$class = ($this->event !== null && is_object($this->event)) ? get_class($this->event) : 'null';
 		$this->logger->info(
 			'Deprecated event type for {name}: {class} is used',
 			[ 'name' => $this->eventName, 'class' => $class]
 		);
+		$this->deprecationNoticeLogged = true;
 	}
 
 	public function isPropagationStopped(): bool {

@@ -4,6 +4,7 @@
  *
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -24,21 +25,7 @@
 
 namespace OCA\Files_Sharing\Activity\Settings;
 
-use OCP\Activity\ISetting;
-use OCP\IL10N;
-
-class RemoteShare implements ISetting {
-
-	/** @var IL10N */
-	protected $l;
-
-	/**
-	 * @param IL10N $l
-	 */
-	public function __construct(IL10N $l) {
-		$this->l = $l;
-	}
-
+class RemoteShare extends ShareActivitySettings {
 	/**
 	 * @return string Lowercase a-z and underscore only identifier
 	 * @since 11.0.0

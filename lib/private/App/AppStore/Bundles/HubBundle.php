@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2020 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Julius Härtl <jus@bitgrid.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -32,13 +33,19 @@ class HubBundle extends Bundle {
 	}
 
 	public function getAppIdentifiers() {
-		return [
+		$hubApps = [
 			'spreed',
 			'contacts',
 			'calendar',
 			'mail',
-			'richdocumentscode',
-			'richdocuments',
 		];
+
+		$architecture = php_uname('m');
+		if (PHP_OS_FAMILY === 'Linux' && in_array($architecture, ['x86_64', 'aarch64'])) {
+			$hubApps[] = 'richdocuments';
+			$hubApps[] = 'richdocumentscode' . ($architecture === 'aarch64' ? '_arm64' : '');
+		}
+
+		return $hubApps;
 	}
 }

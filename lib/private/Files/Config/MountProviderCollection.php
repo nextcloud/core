@@ -207,6 +207,12 @@ class MountProviderCollection implements IMountProviderCollection, Emitter {
 		$this->rootProviders[] = $provider;
 	}
 
+	/**
+	 * Get all root mountpoints
+	 *
+	 * @return \OCP\Files\Mount\IMountPoint[]
+	 * @since 20.0.0
+	 */
 	public function getRootMounts(): array {
 		$loader = $this->loader;
 		$mounts = array_map(function (IRootMountProvider $provider) use ($loader) {

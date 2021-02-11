@@ -20,18 +20,14 @@
  *
  */
 
-import { stringValidator, validateIPv4, validateIPv6 } from './../../helpers/validators'
+import { stringValidator, validateIPv4, validateIPv6 } from '../../helpers/validators'
 import FileMimeType from './FileMimeType'
 import FileSystemTag from './FileSystemTag'
 
-const stringOrRegexOperators = (check) => {
-	if (check.value.startsWith('/')) {
-		return [
-			{ operator: 'matches', name: t('workflowengine', 'matches') },
-			{ operator: '!matches', name: t('workflowengine', 'does not match') },
-		]
-	}
+const stringOrRegexOperators = () => {
 	return [
+		{ operator: 'matches', name: t('workflowengine', 'matches') },
+		{ operator: '!matches', name: t('workflowengine', 'does not match') },
 		{ operator: 'is', name: t('workflowengine', 'is') },
 		{ operator: '!is', name: t('workflowengine', 'is not') },
 	]

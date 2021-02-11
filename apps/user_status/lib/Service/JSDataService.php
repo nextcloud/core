@@ -27,6 +27,7 @@ namespace OCA\UserStatus\Service;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IUserSession;
+use OCP\UserStatus\IUserStatus;
 
 class JSDataService implements \JsonSerializable {
 
@@ -65,7 +66,7 @@ class JSDataService implements \JsonSerializable {
 				'messageIsPredefined' => false,
 				'icon' => null,
 				'clearAt' => null,
-				'status' => 'offline',
+				'status' => IUserStatus::OFFLINE,
 				'statusIsUserDefined' => false,
 			];
 		}

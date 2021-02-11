@@ -30,7 +30,6 @@ namespace OCP\Calendar\Resource;
  * Resource Backends are not limited to this list and can provide
  * any metadata they want.
  *
- * @package OCP\Calendar\Resource
  * @since 17.0.0
  */
 interface IResourceMetadata {

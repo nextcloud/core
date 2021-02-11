@@ -4,6 +4,7 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -34,7 +35,7 @@ use OCA\Theming\Util;
 use OCP\AppFramework\App;
 use OCP\Capabilities\ICapability;
 use OCP\IL10N;
-use OCP\Settings\ISection;
+use OCP\Settings\IIconSection;
 use OCP\Settings\ISettings;
 use Test\TestCase;
 
@@ -75,7 +76,7 @@ class ServicesTest extends TestCase {
 			[Admin::class],
 			[Admin::class, ISettings::class],
 			[Section::class],
-			[Section::class, ISection::class],
+			[Section::class, IIconSection::class],
 		];
 	}
 

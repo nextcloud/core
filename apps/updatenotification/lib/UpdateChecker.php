@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -82,7 +83,7 @@ class UpdateChecker {
 	 * @param array $data
 	 */
 	public function populateJavaScriptVariables(array $data) {
-		$data['array']['oc_updateState'] =  json_encode([
+		$data['array']['oc_updateState'] = json_encode([
 			'updateAvailable' => true,
 			'updateVersion' => $this->getUpdateState()['updateVersionString'],
 			'updateLink' => $this->getUpdateState()['updateLink'] ?? '',

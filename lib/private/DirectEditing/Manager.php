@@ -35,6 +35,7 @@ use OCP\DirectEditing\ACreateFromTemplate;
 use OCP\DirectEditing\IEditor;
 use \OCP\DirectEditing\IManager;
 use OCP\DirectEditing\IToken;
+use OCP\Encryption\IManager as EncryptionManager;
 use OCP\Files\File;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
@@ -45,6 +46,7 @@ use OCP\IUserSession;
 use OCP\L10N\IFactory;
 use OCP\Security\ISecureRandom;
 use OCP\Share\IShare;
+use Throwable;
 use function array_key_exists;
 use function in_array;
 
@@ -55,30 +57,33 @@ class Manager implements IManager {
 
 	/** @var IEditor[] */
 	private $editors = [];
-
 	/** @var IDBConnection */
 	private $connection;
-	/**
-	 * @var ISecureRandom
-	 */
+	/** @var ISecureRandom */
 	private $random;
+	/** @var string|null */
 	private $userId;
+	/** @var IRootFolder */
 	private $rootFolder;
 	/** @var IL10N */
 	private $l10n;
+	/** @var EncryptionManager */
+	private $encryptionManager;
 
 	public function __construct(
 		ISecureRandom $random,
 		IDBConnection $connection,
 		IUserSession $userSession,
 		IRootFolder $rootFolder,
-		IFactory $l10nFactory
+		IFactory $l10nFactory,
+		EncryptionManager $encryptionManager
 	) {
 		$this->random = $random;
 		$this->connection = $connection;
 		$this->userId = $userSession->getUser() ? $userSession->getUser()->getUID() : null;
 		$this->rootFolder = $rootFolder;
 		$this->l10n = $l10nFactory->get('core');
+		$this->encryptionManager = $encryptionManager;
 	}
 
 	public function registerDirectEditor(IEditor $directEditor): void {
@@ -116,7 +121,7 @@ class Manager implements IManager {
 			}
 		}
 		$return = [];
-		$return['templates'] =  $templates;
+		$return['templates'] = $templates;
 		return $return;
 	}
 
@@ -171,7 +176,7 @@ class Manager implements IManager {
 			}
 			$editor = $this->getEditor($tokenObject->getEditor());
 			$this->accessToken($token);
-		} catch (\Throwable $throwable) {
+		} catch (Throwable $throwable) {
 			$this->invalidateToken($token);
 			return new NotFoundResponse();
 		}
@@ -274,5 +279,23 @@ class Manager implements IManager {
 			throw new NotFoundException('File nound found by id ' . $fileId);
 		}
 		return $files[0];
+	}
+
+	public function isEnabled(): bool {
+		if (!$this->encryptionManager->isEnabled()) {
+			return true;
+		}
+
+		try {
+			$moduleId = $this->encryptionManager->getDefaultEncryptionModuleId();
+			$module = $this->encryptionManager->getEncryptionModule($moduleId);
+			/** @var \OCA\Encryption\Util $util */
+			$util = \OC::$server->get(\OCA\Encryption\Util::class);
+			if ($module->isReadyForUser($this->userId) && $util->isMasterKeyEnabled()) {
+				return true;
+			}
+		} catch (Throwable $e) {
+		}
+		return false;
 	}
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2019, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -70,7 +71,7 @@ class AdditionalScriptsMiddleware extends Middleware {
 				$isLoggedIn = false;
 			}
 
-			$this->dispatcher->dispatchTyped(new BeforeTemplateRenderedEvent($isLoggedIn));
+			$this->dispatcher->dispatchTyped(new BeforeTemplateRenderedEvent($isLoggedIn, $response));
 		}
 
 		return $response;

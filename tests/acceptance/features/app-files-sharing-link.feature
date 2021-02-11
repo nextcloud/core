@@ -166,3 +166,83 @@ Feature: app-files-sharing-link
     And I authenticate with password "abcdef"
     # download starts no page redirection
     And I see that the current page is the Authenticate page for the direct download shared link I wrote down
+
+  Scenario: sharee can not reshare by link if resharing is disabled in the settings after the share is created
+    Given I act as John
+    And I am logged in as the admin
+    And I act as Jane
+    And I am logged in
+    And I act as John
+    And I rename "welcome.txt" to "farewell.txt"
+    And I see that the file list contains a file named "farewell.txt"
+    And I share "farewell.txt" with "user0"
+    And I see that the file is shared with "user0"
+    And I visit the settings page
+    And I open the "Sharing" section of the "Administration" group
+    And I disable resharing
+    And I see that resharing is disabled
+    When I act as Jane
+    # The Files app is open again to reload the file list
+    And I open the Files app
+    Then I see that the file list contains a file named "farewell.txt"
+    And I open the details view for "farewell.txt"
+    And I see that the details view is open
+    And I open the "Sharing" tab in the details view
+    And I see that the "Sharing" tab in the details view is eventually loaded
+    And I see that the file is shared with me by "admin"
+    And I see that resharing the file by link is not available
+
+  Scenario: sharee can unshare a reshare by link if resharing is disabled in the settings after the reshare is created
+    Given I act as John
+    And I am logged in as the admin
+    And I act as Jane
+    And I am logged in
+    And I act as John
+    And I rename "welcome.txt" to "farewell.txt"
+    And I see that the file list contains a file named "farewell.txt"
+    And I share "farewell.txt" with "user0"
+    And I see that the file is shared with "user0"
+    And I act as Jane
+    # The Files app is open again to reload the file list
+    And I open the Files app
+    And I share the link for "farewell.txt"
+    And I write down the shared link
+    And I act as John
+    And I visit the settings page
+    And I open the "Sharing" section of the "Administration" group
+    And I disable resharing
+    And I see that resharing is disabled
+    When I act as Jane
+    # The Files app is open again to reload the file list
+    And I open the Files app
+    And I open the details view for "farewell.txt"
+    And I see that the details view is open
+    And I open the "Sharing" tab in the details view
+    And I see that the "Sharing" tab in the details view is eventually loaded
+    And I unshare the link share
+    Then I see that resharing the file by link is not available
+
+  Scenario: reshare by link can be accessed if resharing is disabled in the settings after the reshare is created
+    Given I act as John
+    And I am logged in as the admin
+    And I act as Jane
+    And I am logged in
+    And I act as John
+    And I rename "welcome.txt" to "farewell.txt"
+    And I see that the file list contains a file named "farewell.txt"
+    And I share "farewell.txt" with "user0"
+    And I see that the file is shared with "user0"
+    And I act as Jane
+    # The Files app is open again to reload the file list
+    And I open the Files app
+    And I share the link for "farewell.txt"
+    And I write down the shared link
+    And I act as John
+    And I visit the settings page
+    And I open the "Sharing" section of the "Administration" group
+    And I disable resharing
+    And I see that resharing is disabled
+    When I act as Jim
+    And I visit the shared link I wrote down
+    Then I see that the current page is the shared link I wrote down
+    And I see that the shared file preview shows the text "Welcome to your Nextcloud account!"

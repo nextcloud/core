@@ -39,7 +39,7 @@ trait ClientServiceTrait {
 	 * @param string $originalClassName
 	 * @return \PHPUnit\Framework\MockObject\MockObject
 	 */
-	abstract protected function createMock($originalClassName);
+	abstract protected function createMock(string $originalClassName);
 
 	/**
 	 * Returns a matcher that matches when the method is executed
@@ -49,7 +49,7 @@ trait ClientServiceTrait {
 	 *
 	 * @since  Method available since Release 3.0.0
 	 */
-	abstract public function any();
+	abstract public static function any();
 
 	protected function setUpClientServiceTrait() {
 		$this->clientService = $this->createMock(IClientService::class);

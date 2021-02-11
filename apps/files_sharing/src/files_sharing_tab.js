@@ -19,11 +19,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import Vue from 'vue'
+import VueClipboard from 'vue-clipboard2'
+import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 
 import SharingTab from './views/SharingTab'
 import ShareSearch from './services/ShareSearch'
 import ExternalLinkActions from './services/ExternalLinkActions'
-
 import TabSections from './services/TabSections'
 
 // Init Sharing Tab Service
@@ -34,8 +36,40 @@ Object.assign(window.OCA.Sharing, { ShareSearch: new ShareSearch() })
 Object.assign(window.OCA.Sharing, { ExternalLinkActions: new ExternalLinkActions() })
 Object.assign(window.OCA.Sharing, { ShareTabSections: new TabSections() })
 
+Vue.prototype.t = t
+Vue.prototype.n = n
+Vue.use(VueClipboard)
+
+// Init Sharing tab component
+const View = Vue.extend(SharingTab)
+let TabInstance = null
+
 window.addEventListener('DOMContentLoaded', function() {
 	if (OCA.Files && OCA.Files.Sidebar) {
-		OCA.Files.Sidebar.registerTab(new OCA.Files.Sidebar.Tab('sharing', SharingTab))
+		OCA.Files.Sidebar.registerTab(new OCA.Files.Sidebar.Tab({
+			id: 'sharing',
+			name: t('files_sharing', 'Sharing'),
+			icon: 'icon-share',
+
+			async mount(el, fileInfo, context) {
+				if (TabInstance) {
+					TabInstance.$destroy()
+				}
+				TabInstance = new View({
+					// Better integration with vue parent component
+					parent: context,
+				})
+				// Only mount after we have all the info we need
+				await TabInstance.update(fileInfo)
+				TabInstance.$mount(el)
+			},
+			update(fileInfo) {
+				TabInstance.update(fileInfo)
+			},
+			destroy() {
+				TabInstance.$destroy()
+				TabInstance = null
+			},
+		}))
 	}
 })

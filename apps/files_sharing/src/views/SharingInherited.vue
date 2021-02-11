@@ -128,7 +128,7 @@ export default {
 		async fetchInheritedShares() {
 			this.loading = true
 			try {
-				const url = generateOcsUrl(`apps/files_sharing/api/v1/shares/inherited?format=json&path=${this.fullPath}`, 2)
+				const url = generateOcsUrl(`apps/files_sharing/api/v1/shares/inherited?format=json&path=${encodeURIComponent(this.fullPath)}`, 2)
 				const shares = await axios.get(url.replace(/\/$/, ''))
 				this.shares = shares.data.ocs.data
 					.map(share => new Share(share))

@@ -13,7 +13,6 @@ OC.L10N.register(
     "No file was uploaded" : "No se subió ningún archivo ",
     "Missing a temporary folder" : "Falta un directorio temporal",
     "No file uploaded" : "No hay archivos cargados",
-    "Unsupported image type" : "Tipo de imagen no soportado",
     "Theming" : "Tematizar",
     "Privacy policy" : "Políticas de privacidad",
     "Open documentation" : "Abrir documentación",

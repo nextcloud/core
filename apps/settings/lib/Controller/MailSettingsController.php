@@ -125,8 +125,8 @@ class MailSettingsController extends Controller {
 		}
 
 		$this->config->setSystemValues([
-			'mail_smtpname'		=> $mail_smtpname,
-			'mail_smtppassword'	=> $mail_smtppassword,
+			'mail_smtpname' => $mail_smtpname,
+			'mail_smtppassword' => $mail_smtppassword,
 		]);
 
 		return new DataResponse();

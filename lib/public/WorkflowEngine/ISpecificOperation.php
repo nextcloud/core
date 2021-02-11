@@ -36,7 +36,6 @@ namespace OCP\WorkflowEngine;
  * because the action is not connected to the event. This mechanism suits
  * special cases.
  *
- * @package OCP\WorkflowEngine
  * @since 18.0.0
  */
 interface ISpecificOperation extends IOperation {

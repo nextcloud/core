@@ -76,8 +76,12 @@ class Streamer {
 		 * would still be possible to create an invalid zip32 file (for example,
 		 * a zip file from files smaller than 4GB with a central directory
 		 * larger than 4GiB), but it should not happen in the real world.
+		 *
+		 * We also have to check for a size above 0. As negative sizes could be
+		 * from not fully scanned external storages. And then things fall apart
+		 * if somebody tries to package to much.
 		 */
-		if ($size < 4 * 1000 * 1000 * 1000 && $numberOfFiles < 65536) {
+		if ($size > 0 && $size < 4 * 1000 * 1000 * 1000 && $numberOfFiles < 65536) {
 			$this->streamerInstance = new ZipStreamer(['zip64' => false]);
 		} elseif ($request->isUserAgent($this->preferTarFor)) {
 			$this->streamerInstance = new TarStreamer();

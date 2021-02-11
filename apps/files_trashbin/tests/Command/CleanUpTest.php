@@ -5,6 +5,7 @@
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -29,6 +30,7 @@ namespace OCA\Files_Trashbin\Tests\Command;
 use OC\User\Manager;
 use OCA\Files_Trashbin\Command\CleanUp;
 use OCP\Files\IRootFolder;
+use OCP\IDBConnection;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -52,7 +54,7 @@ class CleanUpTest extends TestCase {
 	/** @var \PHPUnit\Framework\MockObject\MockObject | IRootFolder */
 	protected $rootFolder;
 
-	/** @var \OC\DB\Connection */
+	/** @var IDBConnection */
 	protected $dbConnection;
 
 	/** @var  string */
@@ -85,7 +87,7 @@ class CleanUpTest extends TestCase {
 					'id' => $query->expr()->literal('file'.$i),
 					'timestamp' => $query->expr()->literal($i),
 					'location' => $query->expr()->literal('.'),
-					'user' => $query->expr()->literal('user'.$i%2)
+					'user' => $query->expr()->literal('user'.$i % 2)
 				])->execute();
 		}
 		$getAllQuery = $this->dbConnection->getQueryBuilder();
@@ -123,9 +125,13 @@ class CleanUpTest extends TestCase {
 			// if the delete operation was execute only files from user1
 			// should be left.
 			$query = $this->dbConnection->getQueryBuilder();
-			$result = $query->select('user')
-				->from($this->trashTable)
-				->execute()->fetchAll();
+			$query->select('user')
+				->from($this->trashTable);
+
+			$qResult = $query->execute();
+			$result = $qResult->fetchAll();
+			$qResult->closeCursor();
+
 			$this->assertSame(5, count($result));
 			foreach ($result as $r) {
 				$this->assertSame('user1', $r['user']);

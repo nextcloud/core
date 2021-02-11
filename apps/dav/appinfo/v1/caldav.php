@@ -57,8 +57,10 @@ $db = \OC::$server->getDatabaseConnection();
 $userManager = \OC::$server->getUserManager();
 $random = \OC::$server->getSecureRandom();
 $logger = \OC::$server->getLogger();
-$dispatcher = \OC::$server->getEventDispatcher();
-$calDavBackend = new CalDavBackend($db, $principalBackend, $userManager, \OC::$server->getGroupManager(), $random, $logger, $dispatcher, true);
+$dispatcher = \OC::$server->get(\OCP\EventDispatcher\IEventDispatcher::class);
+$legacyDispatcher = \OC::$server->getEventDispatcher();
+
+$calDavBackend = new CalDavBackend($db, $principalBackend, $userManager, \OC::$server->getGroupManager(), $random, $logger, $dispatcher, $legacyDispatcher, true);
 
 $debugging = \OC::$server->getConfig()->getSystemValue('debug', false);
 $sendInvitations = \OC::$server->getConfig()->getAppValue('dav', 'sendInvitations', 'yes') === 'yes';

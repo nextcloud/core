@@ -28,7 +28,6 @@ namespace OCP\Collaboration\Collaborators;
 /**
  * Class SearchResultType
  *
- * @package OCP\Collaboration\Collaborators
  * @since 13.0.0
  */
 class SearchResultType {

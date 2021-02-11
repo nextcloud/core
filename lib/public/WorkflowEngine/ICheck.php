@@ -27,7 +27,6 @@ namespace OCP\WorkflowEngine;
 /**
  * Interface ICheck
  *
- * @package OCP\WorkflowEngine
  * @since 9.1
  */
 interface ICheck {

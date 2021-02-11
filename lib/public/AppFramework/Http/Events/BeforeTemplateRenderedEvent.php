@@ -1,11 +1,13 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2020, Roeland Jago Douma <roeland@famdouma.nl>
  *
- * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,12 +22,13 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCP\AppFramework\Http\Events;
 
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\EventDispatcher\Event;
 
 /**
@@ -37,14 +40,17 @@ use OCP\EventDispatcher\Event;
 class BeforeTemplateRenderedEvent extends Event {
 	/** @var bool */
 	private $loggedIn;
+	/** @var TemplateResponse */
+	private $response;
 
 	/**
 	 * @since 20.0.0
 	 */
-	public function __construct(bool $loggedIn) {
+	public function __construct(bool $loggedIn, TemplateResponse $response) {
 		parent::__construct();
 
 		$this->loggedIn = $loggedIn;
+		$this->response = $response;
 	}
 
 	/**
@@ -52,5 +58,12 @@ class BeforeTemplateRenderedEvent extends Event {
 	 */
 	public function isLoggedIn(): bool {
 		return $this->loggedIn;
+	}
+
+	/**
+	 * @since 20.0.0
+	 */
+	public function getResponse(): TemplateResponse {
+		return $this->response;
 	}
 }

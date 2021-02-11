@@ -25,9 +25,10 @@
 namespace OC\DB\QueryBuilder\FunctionBuilder;
 
 use OC\DB\QueryBuilder\QueryFunction;
+use OCP\DB\QueryBuilder\IQueryFunction;
 
 class PgSqlFunctionBuilder extends FunctionBuilder {
-	public function concat($x, $y) {
+	public function concat($x, $y): IQueryFunction {
 		return new QueryFunction('(' . $this->helper->quoteColumnName($x) . ' || ' . $this->helper->quoteColumnName($y) . ')');
 	}
 }

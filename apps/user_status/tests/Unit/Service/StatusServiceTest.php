@@ -84,6 +84,21 @@ class StatusServiceTest extends TestCase {
 		], $this->service->findAll(20, 50));
 	}
 
+	public function testFindAllRecentStatusChanges(): void {
+		$status1 = $this->createMock(UserStatus::class);
+		$status2 = $this->createMock(UserStatus::class);
+
+		$this->mapper->expects($this->once())
+			->method('findAllRecent')
+			->with(20, 50)
+			->willReturn([$status1, $status2]);
+
+		$this->assertEquals([
+			$status1,
+			$status2,
+		], $this->service->findAllRecentStatusChanges(20, 50));
+	}
+
 	public function testFindByUserId(): void {
 		$status = $this->createMock(UserStatus::class);
 		$this->mapper->expects($this->once())
@@ -132,11 +147,30 @@ class StatusServiceTest extends TestCase {
 
 	public function testFindAllClearStatus(): void {
 		$status = new UserStatus();
+		$status->setStatus('online');
+		$status->setStatusTimestamp(1000);
+		$status->setIsUserDefined(true);
+
+		$this->timeFactory->method('getTime')
+			->willReturn(2600);
+		$this->mapper->expects($this->once())
+			->method('findByUserId')
+			->with('john.doe')
+			->willReturn($status);
+
+		$this->assertEquals($status, $this->service->findByUserId('john.doe'));
+		$this->assertEquals('offline', $status->getStatus());
+		$this->assertEquals(2600, $status->getStatusTimestamp());
+		$this->assertFalse($status->getIsUserDefined());
+	}
+
+	public function testFindAllClearMessage(): void {
+		$status = new UserStatus();
 		$status->setClearAt(50);
 		$status->setMessageId('commuting');
+		$status->setStatusTimestamp(60);
 
-		$this->timeFactory->expects($this->once())
-			->method('getTime')
+		$this->timeFactory->method('getTime')
 			->willReturn(60);
 		$this->predefinedStatusService->expects($this->never())
 			->method('getDefaultStatusById');

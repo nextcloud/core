@@ -29,7 +29,6 @@ namespace OCP\WorkflowEngine;
 /**
  * Interface IFileCheck
  *
- * @package OCP\WorkflowEngine
  * @since 18.0.0
  */
 interface IEntityCheck {

@@ -13,19 +13,21 @@
     "Files app plugin to add comments to files" : "A Fájlok alkalmazás bővítménye, amellyel megjegyzések adhatóak a fájlokhoz",
     "Edit comment" : "Hozzászólás szerkesztése",
     "Delete comment" : "Hozzászólás törlése",
+    "No comments yet, start the conversation!" : "Még nincsenek hozzászólások, kezdje el a beszélgetést!",
+    "Retry" : "Újra",
+    "_%n unread comment_::_%n unread comments_" : ["%n olvasatlan hozzászólás","%n olvasatlan hozzászólás"],
+    "_1 new comment_::_{unread} new comments_" : ["1 új hozzászólás","{unread} új hozzászólás"],
+    "Comment" : "Hozzászólás",
+    "Comment deleted" : "Hozzászólás törölve",
     "New comment …" : "Új hozzászólás…",
     "Post" : "Küldés",
     "Cancel" : "Mégse",
     "[Deleted user]" : "[Törölt felhasználó]",
-    "No comments yet, start the conversation!" : "Még nincsenek hozzászólások, kezdje el a beszélgetést!",
     "More comments …" : "Több hozzászólás…",
     "Save" : "Mentés",
     "Allowed characters {count} of {max}" : "Engedélyezett karakterek: {count} / {max}",
     "Error occurred while retrieving comment with ID {id}" : "Hiba a(z) {id} azonosítójú hozzászólás betöltésekor",
     "Error occurred while updating comment with id {id}" : "Hiba a(z) {id} azonosítójú hozzászólás frissítésekor",
-    "Error occurred while posting comment" : "Hiba történt a hozzászólás küldése közben",
-    "_%n unread comment_::_%n unread comments_" : ["%n olvasatlan hozzászólás","%n olvasatlan hozzászólás"],
-    "_1 new comment_::_{unread} new comments_" : ["1 új hozzászólás","{unread} új hozzászólás"],
-    "Comment" : "Hozzászólás"
+    "Error occurred while posting comment" : "Hiba történt a hozzászólás küldése közben"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

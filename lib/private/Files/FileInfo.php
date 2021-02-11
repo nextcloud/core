@@ -13,7 +13,7 @@
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author tbartenstein <tbartenstein@users.noreply.github.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -95,7 +95,7 @@ class FileInfo implements \OCP\Files\FileInfo, \ArrayAccess {
 	 * @param \OCP\Files\Mount\IMountPoint $mount
 	 * @param \OCP\IUser|null $owner
 	 */
-	public function __construct($path, $storage, $internalPath, $data, $mount, $owner= null) {
+	public function __construct($path, $storage, $internalPath, $data, $mount, $owner = null) {
 		$this->path = $path;
 		$this->storage = $storage;
 		$this->internalPath = $internalPath;
@@ -243,7 +243,7 @@ class FileInfo implements \OCP\Files\FileInfo, \ArrayAccess {
 		if (\OCP\Util::isSharingDisabledForUser() || ($this->isShared() && !\OC\Share\Share::isResharingAllowed())) {
 			$perms = $perms & ~\OCP\Constants::PERMISSION_SHARE;
 		}
-		return (int) $perms;
+		return $perms;
 	}
 
 	/**

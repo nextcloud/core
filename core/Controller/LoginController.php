@@ -175,7 +175,10 @@ class LoginController extends Controller {
 		);
 
 		if (!empty($redirect_url)) {
-			$this->initialStateService->provideInitialState('core', 'loginRedirectUrl', $redirect_url);
+			[$url, ] = explode('?', $redirect_url);
+			if ($url !== $this->urlGenerator->linkToRoute('core.login.logout')) {
+				$this->initialStateService->provideInitialState('core', 'loginRedirectUrl', $redirect_url);
+			}
 		}
 
 		$this->initialStateService->provideInitialState(
@@ -334,7 +337,7 @@ class LoginController extends Controller {
 		$user, $originalUser, $redirect_url, string $loginMessage) {
 		// Read current user and append if possible we need to
 		// return the unmodified user otherwise we will leak the login name
-		$args = $user !== null ? ['user' => $originalUser] : [];
+		$args = $user !== null ? ['user' => $originalUser, 'direct' => 1] : [];
 		if ($redirect_url !== null) {
 			$args['redirect_url'] = $redirect_url;
 		}

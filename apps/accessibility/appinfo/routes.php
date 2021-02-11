@@ -31,17 +31,17 @@ return [
 	'ocs' => [
 		[
 			'name' => 'Config#getConfig',
-			'url'  => '/api/v1/config',
+			'url' => '/api/v1/config',
 			'verb' => 'GET',
 		],
 		[
 			'name' => 'Config#setConfig',
-			'url'  => '/api/v1/config/{key}',
+			'url' => '/api/v1/config/{key}',
 			'verb' => 'PUT',
 		],
 		[
 			'name' => 'Config#deleteConfig',
-			'url'  => '/api/v1/config/{key}',
+			'url' => '/api/v1/config/{key}',
 			'verb' => 'DELETE',
 		],
 	]

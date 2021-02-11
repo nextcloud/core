@@ -49,6 +49,7 @@ OC.L10N.register(
     "{actor} shared {file} with you" : "{actor} сподели {file} с вас",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "<strong>Сваляне</strong>на файл, споделен чрез имейл или публична връзка",
     "A file or folder was shared from <strong>another server</strong>" : "Споделяне на файл / папка с <strong>друг сървър</strong>",
+    "Files" : "Файлове",
     "A file or folder has been <strong>shared</strong>" : "<strong>Споделяне</strong> на файл / папка",
     "Please specify a file or folder path" : "Моля въведете път до файл или папка",
     "Could not create share" : "Не е възможно създаването на споделянето",
@@ -95,7 +96,6 @@ OC.L10N.register(
     "Add another link" : "Добави още една връзка",
     "Share link" : "Връзка за споделяне",
     "Resharing is not allowed" : "Повторното споделяне е забранено",
-    "Name …" : "Име ...",
     "Searching …" : "Търсене ...",
     "on {server}" : "на {server}",
     "Link to a file" : "Линк към файл",
@@ -121,7 +121,6 @@ OC.L10N.register(
     "Upload files to %s" : "Качване на файлове към %s",
     "Note" : "Бележка",
     "Select or drop files" : "Изберете файл или преместете с мишката",
-    "Uploaded files:" : "Качени файлове:",
-    "Uploading files…" : "Качване на файлове…"
+    "Uploaded files:" : "Качени файлове:"
 },
 "nplurals=2; plural=(n != 1);");

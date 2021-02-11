@@ -56,8 +56,8 @@ class UserStatus implements IUserStatus {
 		$this->message = $status->getCustomMessage();
 		$this->icon = $status->getCustomIcon();
 
-		if ($status->getStatus() === 'invisible') {
-			$this->status = 'offline';
+		if ($status->getStatus() === IUserStatus::INVISIBLE) {
+			$this->status = IUserStatus::OFFLINE;
 		}
 		if ($status->getClearAt() !== null) {
 			$this->clearAt = DateTimeImmutable::createFromFormat('U', (string)$status->getClearAt());

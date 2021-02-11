@@ -139,7 +139,6 @@
     "UUID Attribute for Groups:" : "แอตทริบิวต์ UUID สำหรับกลุ่ม:",
     "Username-LDAP User Mapping" : "Username-LDAP ผู้ใช้ Mapping",
     "Clear Username-LDAP User Mapping" : "ล้าง Username-LDAP ผู้ใช้ Mapping",
-    "Clear Groupname-LDAP Group Mapping" : "ล้าง Groupname-LDAP กลุ่ม Mapping",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "เว้นว่างไว้สำหรับ ชื่อผู้ใช้ (ค่าเริ่มต้น) หรือไม่กรุณาระบุคุณลักษณะของ LDAP/AD"
+    "Clear Groupname-LDAP Group Mapping" : "ล้าง Groupname-LDAP กลุ่ม Mapping"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

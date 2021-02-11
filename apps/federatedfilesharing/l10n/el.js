@@ -38,7 +38,7 @@ OC.L10N.register(
     "Federated Cloud Sharing" : "Διαμοιρασμός Federated Cloud",
     "Open documentation" : "Άνοιγμα τεκμηρίωσης",
     "Adjust how people can share between servers." : "Προσαρμόστε το πως τα άτομα θα διαμοιράζονται μεταξύ των διακομιστών",
-    "Allow users on this server to send shares to other servers" : "Να επιτρέπεται σε χρήστες αυτού του διακομιστή να στέλνουν διαμοιρασμένους φακέλους σε άλλους διακομιστές",
+    "Allow users on this server to send shares to other servers (this option also allows WebDAV access to public shares)" : "Να επιτρέπεται στους χρήστες αυτού του διακομιστή να στέλνουν κοινόχρηστα στοιχεία σε άλλους διακομιστές (αυτή η επιλογή επιτρέπει επίσης στο WebDAV πρόσβαση σε δημόσιες κοινοποιήσεις).",
     "Allow users on this server to receive shares from other servers" : "Να επιτρέπεται στους χρίστες του διακομιστή να λαμβάνουν διαμοιρασμένα αρχεία από άλλους διακομιστές",
     "Allow users on this server to send shares to groups on other servers" : "Επιτρέπει σε χρήστες αυτού του διακομιστή να διαμοιράζεται αρχεία σε ομάδες άλλου διακομιστή",
     "Allow users on this server to receive group shares from other servers" : "Να επιτρέπεται στους χρήστες αυτού του διακομιστή να δέχονται κοινόχρηστους φακέλους ομάδας από άλλους διακομιστές",
@@ -51,7 +51,6 @@ OC.L10N.register(
     "Add to your website" : "Προσθήκη στην ιστοσελίδα σας",
     "Share with me via Nextcloud" : "Διαμοιραστείτε με εμένα μέσω του Nextcloud",
     "HTML Code:" : "Κώδικας HTML:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Λάβατε \"%3$s\" ως απομακρυσμένο κοινόχρηστο %1$s (εκ μέρους του %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Λάβατε \"%3$s\" ως απομακρυσμένο κοινόχρηστο από %1$s"
+    "Allow users on this server to send shares to other servers" : "Να επιτρέπεται σε χρήστες αυτού του διακομιστή να στέλνουν διαμοιρασμένους φακέλους σε άλλους διακομιστές"
 },
 "nplurals=2; plural=(n != 1);");

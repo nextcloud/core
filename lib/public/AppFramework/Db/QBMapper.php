@@ -39,13 +39,15 @@ use OCP\IDBConnection;
  * may be subject to change in the future
  *
  * @since 14.0.0
+ *
+ * @template T of Entity
  */
 abstract class QBMapper {
 
 	/** @var string */
 	protected $tableName;
 
-	/** @var string */
+	/** @var string|class-string<T> */
 	protected $entityClass;
 
 	/** @var IDBConnection */
@@ -54,11 +56,12 @@ abstract class QBMapper {
 	/**
 	 * @param IDBConnection $db Instance of the Db abstraction layer
 	 * @param string $tableName the name of the table. set this to allow entity
-	 * @param string $entityClass the name of the entity that the sql should be
+	 * @param string|null $entityClass the name of the entity that the sql should be
+	 * @psalm-param class-string<T>|null $entityClass the name of the entity that the sql should be
 	 * mapped to queries without using sql
 	 * @since 14.0.0
 	 */
-	public function __construct(IDBConnection $db, string $tableName, string $entityClass=null) {
+	public function __construct(IDBConnection $db, string $tableName, string $entityClass = null) {
 		$this->db = $db;
 		$this->tableName = $tableName;
 
@@ -84,7 +87,9 @@ abstract class QBMapper {
 	/**
 	 * Deletes an entity from the table
 	 * @param Entity $entity the entity that should be deleted
+	 * @psalm-param T $entity the entity that should be deleted
 	 * @return Entity the deleted entity
+	 * @psalm-return T the deleted entity
 	 * @since 14.0.0
 	 */
 	public function delete(Entity $entity): Entity {
@@ -104,9 +109,10 @@ abstract class QBMapper {
 	/**
 	 * Creates a new entry in the db from an entity
 	 * @param Entity $entity the entity that should be created
+	 * @psalm-param T $entity the entity that should be created
 	 * @return Entity the saved entity with the set id
+	 * @psalm-return T the saved entity with the set id
 	 * @since 14.0.0
-	 * @suppress SqlInjectionChecker
 	 */
 	public function insert(Entity $entity): Entity {
 		// get updated fields to save, fields have to be set using a setter to
@@ -142,10 +148,11 @@ abstract class QBMapper {
 	 * by the database
 	 *
 	 * @param Entity $entity the entity that should be created/updated
+	 * @psalm-param T $entity the entity that should be created/updated
 	 * @return Entity the saved entity with the (new) id
+	 * @psalm-return T the saved entity with the (new) id
 	 * @throws \InvalidArgumentException if entity has no id
 	 * @since 15.0.0
-	 * @suppress SqlInjectionChecker
 	 */
 	public function insertOrUpdate(Entity $entity): Entity {
 		try {
@@ -159,9 +166,10 @@ abstract class QBMapper {
 	 * Updates an entry in the db from an entity
 	 * @throws \InvalidArgumentException if entity has no id
 	 * @param Entity $entity the entity that should be created
+	 * @psalm-param T $entity the entity that should be created
 	 * @return Entity the saved entity with the set id
+	 * @psalm-return T the saved entity with the set id
 	 * @since 14.0.0
-	 * @suppress SqlInjectionChecker
 	 */
 	public function update(Entity $entity): Entity {
 		// if entity wasn't changed it makes no sense to run a db query
@@ -210,6 +218,7 @@ abstract class QBMapper {
 	 * of the $entity
 	 *
 	 * @param Entity $entity   The entity to get the types from
+	 * @psalm-param T $entity
 	 * @param string $property The property of $entity to get the type for
 	 * @return int
 	 * @since 16.0.0
@@ -230,6 +239,8 @@ abstract class QBMapper {
 			case 'bool':
 			case 'boolean':
 				return IQueryBuilder::PARAM_BOOL;
+			case 'blob':
+				return IQueryBuilder::PARAM_LOB;
 		}
 
 		return IQueryBuilder::PARAM_STR;
@@ -289,6 +300,7 @@ abstract class QBMapper {
 	 *
 	 * @param array $row the row which should be converted to an entity
 	 * @return Entity the entity
+	 * @psalm-return T the entity
 	 * @since 14.0.0
 	 */
 	protected function mapRowToEntity(array $row): Entity {
@@ -301,6 +313,7 @@ abstract class QBMapper {
 	 *
 	 * @param IQueryBuilder $query
 	 * @return Entity[] all fetched entities
+	 * @psalm-return T[] all fetched entities
 	 * @since 14.0.0
 	 */
 	protected function findEntities(IQueryBuilder $query): array {
@@ -326,6 +339,7 @@ abstract class QBMapper {
 	 * @throws DoesNotExistException if the item does not exist
 	 * @throws MultipleObjectsReturnedException if more than one item exist
 	 * @return Entity the entity
+	 * @psalm-return T the entity
 	 * @since 14.0.0
 	 */
 	protected function findEntity(IQueryBuilder $query): Entity {

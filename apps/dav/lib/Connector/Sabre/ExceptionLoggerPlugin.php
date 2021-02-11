@@ -8,7 +8,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -32,6 +32,7 @@ use OCA\DAV\Connector\Sabre\Exception\FileLocked;
 use OCA\DAV\Connector\Sabre\Exception\PasswordLoginForbidden;
 use OCP\Files\StorageNotAvailableException;
 use OCP\ILogger;
+use Sabre\DAV\Exception\BadRequest;
 use Sabre\DAV\Exception\Conflict;
 use Sabre\DAV\Exception\Forbidden;
 use Sabre\DAV\Exception\InvalidSyncToken;
@@ -54,6 +55,10 @@ class ExceptionLoggerPlugin extends \Sabre\DAV\ServerPlugin {
 		// the sync client uses this to find out whether files exist,
 		// so it is not always an error, log it as debug
 		NotFound::class => true,
+		// the sync client messed up their request
+		// (e.g. propfind for tags with string instead of int)
+		// so it is not always an error, log it as debug
+		BadRequest::class => true,
 		// this one mostly happens when the same file is uploaded at
 		// exactly the same time from two clients, only one client
 		// wins, the second one gets "Precondition failed"

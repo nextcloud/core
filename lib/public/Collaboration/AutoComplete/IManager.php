@@ -26,7 +26,6 @@ namespace OCP\Collaboration\AutoComplete;
 /**
  * Interface IManager
  *
- * @package OCP\Collaboration\AutoComplete
  * @since 13.0.0
  */
 interface IManager {

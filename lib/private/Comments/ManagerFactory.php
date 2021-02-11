@@ -3,9 +3,10 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -54,10 +55,6 @@ class ManagerFactory implements ICommentsManagerFactory {
 	 * @since 9.0.0
 	 */
 	public function getManager() {
-		return new Manager(
-			$this->serverContainer->getDatabaseConnection(),
-			$this->serverContainer->getLogger(),
-			$this->serverContainer->getConfig()
-		);
+		return $this->serverContainer->get(Manager::class);
 	}
 }

@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2018 Denis Mosolov <denismosolov@gmail.com>
  *
  * @author Denis Mosolov <denismosolov@gmail.com>
+ * @author Joas Schilling <coding@schilljs.com>
  *
  * @license GNU AGPL version 3 or any later version
  *

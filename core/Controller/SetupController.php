@@ -70,7 +70,7 @@ class SetupController {
 			return;
 		}
 
-		if (isset($post['install']) and $post['install']=='true') {
+		if (isset($post['install']) and $post['install'] == 'true') {
 			// We have to launch the installation process :
 			$e = $this->setupHelper->install($post);
 			$errors = ['errors' => $e];
@@ -104,7 +104,6 @@ class SetupController {
 		];
 		$parameters = array_merge($defaults, $post);
 
-		\OC_Util::addScript('setup');
 		\OC_Template::printGuestPage('', 'installation', $parameters);
 	}
 

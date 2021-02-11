@@ -28,6 +28,7 @@ use OC\Contacts\ContactsMenu\ActionProviderStore;
 use OC\Contacts\ContactsMenu\ContactsStore;
 use OC\Contacts\ContactsMenu\Manager;
 use OCP\App\IAppManager;
+use OCP\Constants;
 use OCP\Contacts\ContactsMenu\IEntry;
 use OCP\Contacts\ContactsMenu\IProvider;
 use OCP\IConfig;
@@ -82,7 +83,7 @@ class ManagerTest extends TestCase {
 
 		$this->config->expects($this->at(0))
 			->method('getSystemValueInt')
-			->with('sharing.maxAutocompleteResults', 25)
+			->with('sharing.maxAutocompleteResults', Constants::SHARING_MAX_AUTOCOMPLETE_RESULTS_DEFAULT)
 			->willReturn(25);
 		$this->config->expects($this->at(1))
 			->method('getSystemValueInt')
@@ -120,7 +121,7 @@ class ManagerTest extends TestCase {
 
 		$this->config->expects($this->at(0))
 			->method('getSystemValueInt')
-			->with('sharing.maxAutocompleteResults', 25)
+			->with('sharing.maxAutocompleteResults', Constants::SHARING_MAX_AUTOCOMPLETE_RESULTS_DEFAULT)
 			->willReturn(3);
 		$this->config->expects($this->at(1))
 			->method('getSystemValueInt')
@@ -157,7 +158,7 @@ class ManagerTest extends TestCase {
 
 		$this->config->expects($this->at(0))
 			->method('getSystemValueInt')
-			->with('sharing.maxAutocompleteResults', 25)
+			->with('sharing.maxAutocompleteResults', Constants::SHARING_MAX_AUTOCOMPLETE_RESULTS_DEFAULT)
 			->willReturn(3);
 		$this->config->expects($this->at(1))
 			->method('getSystemValueInt')

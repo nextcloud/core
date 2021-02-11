@@ -21,6 +21,7 @@ class ComposerStaticInitTwoFactorBackupCodes
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\TwoFactorBackupCodes\\Activity\\Provider' => __DIR__ . '/..' . '/../lib/Activity/Provider.php',
         'OCA\\TwoFactorBackupCodes\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
         'OCA\\TwoFactorBackupCodes\\BackgroundJob\\CheckBackupCodes' => __DIR__ . '/..' . '/../lib/BackgroundJob/CheckBackupCodes.php',

@@ -16,9 +16,6 @@ OC.L10N.register(
     "If you regenerate backup codes, you automatically invalidate old codes." : "Jeigu iš naujo generuosite atsarginius kodus, automatiškai paversite senuosius kodus nebegaliojančiais.",
     "An error occurred while generating your backup codes" : "Generuojant jūsų atsarginius kodus, įvyko klaida",
     "{name} backup codes" : "{name} atsarginiai kodai",
-    "Submit" : "Pateikti",
-    "function" : "funkcija",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["icon-loading-small","generate-backup-codes","generate-backup-codes","generate-backup-codes"]
+    "Submit" : "Pateikti"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

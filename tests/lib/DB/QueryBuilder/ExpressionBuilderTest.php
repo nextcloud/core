@@ -40,19 +40,23 @@ class ExpressionBuilderTest extends TestCase {
 	/** @var DoctrineExpressionBuilder */
 	protected $doctrineExpressionBuilder;
 
-	/** @var \Doctrine\DBAL\Connection|\OCP\IDBConnection */
+	/** @var \OCP\IDBConnection */
 	protected $connection;
+
+	/** @var \Doctrine\DBAL\Connection */
+	protected $internalConnection;
 
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->connection = \OC::$server->getDatabaseConnection();
+		$this->internalConnection = \OC::$server->get(\OC\DB\Connection::class);
 
 		$queryBuilder = $this->createMock(IQueryBuilder::class);
 
 		$this->expressionBuilder = new ExpressionBuilder($this->connection, $queryBuilder);
 
-		$this->doctrineExpressionBuilder = new DoctrineExpressionBuilder($this->connection);
+		$this->doctrineExpressionBuilder = new DoctrineExpressionBuilder($this->internalConnection);
 	}
 
 	public function dataComparison() {

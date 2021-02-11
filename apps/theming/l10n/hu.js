@@ -24,7 +24,6 @@ OC.L10N.register(
     "Could not write file to disk" : "A fájlt nem sikerült a lemezre írni",
     "A PHP extension stopped the file upload" : "Egy PHP kiterjesztés megállította a fájl feltöltését",
     "No file uploaded" : "Nincs fájl feltöltve",
-    "Unsupported image type" : "Nem támogatott képtípus",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "Már egyéni témát használ. Lehet, hogy a témázó alkalmazás beállításai felülírták.",
     "Theming" : "Témázás",
     "Legal notice" : "Jogi nyilatkozat",

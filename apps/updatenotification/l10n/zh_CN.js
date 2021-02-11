@@ -23,12 +23,12 @@ OC.L10N.register(
     "A non-default update server is in use to be checked for updates:" : "检查更新使用了一个非默认的服务器：",
     "Update channel:" : "更新通道：",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "您永远可以升级到更新的版本。但不能降级到更稳定的低版本。",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "请注意，在新版本发布后，它可能需要一段时间才能显示在这里。新版本发布后，随着时间的推移，当用户发现问题时我们可能会跳过一个版本。",
     "Notify members of the following groups about available updates:" : "提醒以下组群的用户关于可用的更新：",
     "Only notification for app updates are available." : "仅提醒应用更新就绪。",
     "The selected update channel makes dedicated notifications for the server obsolete." : "被选中的升级通道将会通知未更新的服务器。",
     "The selected update channel does not support updates of the server." : "选中的更新通道不支持服务器升级。",
     "A new version is available: <strong>{newVersionString}</strong>" : "有可用的新版本： <strong>{newVersionString}</strong>",
+    "Note that after a new release the update only shows up after the first minor release or later. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found. Learn more about updates and release channels at {link}" : "注意，在新版本发布之后，更新只在第一个次要版本或更高版本之后出现。随着时间的推移，我们会向用户推出新的版本，有时会在发现问题时跳过某个版本。要了解关于更新和发布通道的更多信息，点击 {link}。",
     "Checked on {lastCheckedDate}" : "检查时间 {lastCheckedDate}",
     "Checking apps for compatible updates" : "检查应用以匹配更新",
     "Please make sure your config.php does not set <samp>appstoreenabled</samp> to false." : "请确认 config.php 没有设置<samp>appstoreenabled </samp> 为 false。",
@@ -41,6 +41,7 @@ OC.L10N.register(
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "最新稳定版本。适合日常使用并总是更新至最新主版本。",
     "Beta" : "Beta测试版",
     "A pre-release version only for testing new features, not for production environments." : "预发布版本仅作测试新功能用，不可用于生产环境。",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong>应用没有适用这个版本的更新"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong>应用没有适用这个版本的更新"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "请注意，在新版本发布后，它可能需要一段时间才能显示在这里。新版本发布后，随着时间的推移，当用户发现问题时我们可能会跳过一个版本。"
 },
 "nplurals=1; plural=0;");

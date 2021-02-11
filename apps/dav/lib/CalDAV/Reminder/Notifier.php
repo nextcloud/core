@@ -36,6 +36,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
+use OCP\Notification\AlreadyProcessedException;
 use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
 
@@ -223,6 +224,12 @@ class Notifier implements INotifier {
 	private function generateDateString(array $parameters):string {
 		$startDateTime = DateTime::createFromFormat(\DateTime::ATOM, $parameters['start_atom']);
 		$endDateTime = DateTime::createFromFormat(\DateTime::ATOM, $parameters['end_atom']);
+
+		// If the event has already ended, dismiss the notification
+		if ($endDateTime < $this->timeFactory->getDateTime()) {
+			throw new AlreadyProcessedException();
+		}
+
 		$isAllDay = $parameters['all_day'];
 		$diff = $startDateTime->diff($endDateTime);
 

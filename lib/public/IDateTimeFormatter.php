@@ -27,7 +27,6 @@ namespace OCP;
 /**
  * Interface IDateTimeFormatter
  *
- * @package OCP
  * @since 8.0.0
  */
 interface IDateTimeFormatter {

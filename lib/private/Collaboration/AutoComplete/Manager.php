@@ -30,7 +30,7 @@ use OCP\IServerContainer;
 
 class Manager implements IManager {
 	/** @var string[] */
-	protected $sorters =[];
+	protected $sorters = [];
 
 	/** @var ISorter[]  */
 	protected $sorterInstances = [];

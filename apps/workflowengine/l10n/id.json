@@ -56,23 +56,6 @@
     "Request user agent" : "Minta user agent",
     "User group membership" : "Keanggotaan grup pengguna",
     "is member of" : "anggota dari",
-    "is not member of" : "bukan anggota dari",
-    "Example: {placeholder}" : "Contoh: {placeholder}",
-    "Select tag…" : "Pilih tag...",
-    "Start" : "Mulai",
-    "End" : "Selesai",
-    "Select timezone…" : "Pilih zona waktu...",
-    "Sync clients" : "Klien sync",
-    "Short rule description" : "Deskripsi aturan singkat",
-    "Add rule" : "Tambahkan aturan",
-    "Reset" : "Setel ulang",
-    "Saving…" : "Menyimpan...",
-    "Group list is empty" : "Daftar grup kosong",
-    "Unable to retrieve the group list" : "Tidak dapat mengambil daftar grup",
-    "Saved" : "Disimpan",
-    "Saving failed:" : "Penyimpanan gagal:",
-    "Add rule group" : "Tambahkan aturan grup ",
-    "Open documentation" : "Buka dokumentasi",
-    "Loading…" : "Memuat..."
+    "is not member of" : "bukan anggota dari"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

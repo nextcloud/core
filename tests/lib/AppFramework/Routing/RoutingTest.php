@@ -250,9 +250,9 @@ class RoutingTest extends \Test\TestCase {
 										  $url,
 										  $controllerName,
 										  $actionName,
-										  array $requirements=[],
-										  array $defaults=[],
-										  $postfix='') {
+										  array $requirements = [],
+										  array $defaults = [],
+										  $postfix = '') {
 		if ($postfix) {
 			$name .= $postfix;
 		}
@@ -415,8 +415,8 @@ class RoutingTest extends \Test\TestCase {
 		$verb,
 		$controllerName,
 		$actionName,
-		array $requirements=[],
-		array $defaults=[]
+		array $requirements = [],
+		array $defaults = []
 	) {
 		$route = $this->getMockBuilder(Route::class)
 			->onlyMethods(['method', 'requirements', 'defaults'])

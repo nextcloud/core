@@ -27,23 +27,23 @@ namespace lib\Authentication\Login;
 
 use OC\Authentication\Login\UserDisabledCheckCommand;
 use OC\Core\Controller\LoginController;
-use OCP\ILogger;
 use OCP\IUserManager;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class UserDisabledCheckCommandTest extends ALoginCommandTest {
 
 	/** @var IUserManager|MockObject */
 	private $userManager;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->userManager = $this->createMock(IUserManager::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->cmd = new UserDisabledCheckCommand(
 			$this->userManager,

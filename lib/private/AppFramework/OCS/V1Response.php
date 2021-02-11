@@ -2,6 +2,7 @@
 /**
  * @copyright 2016 Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -35,7 +36,7 @@ class V1Response extends BaseResponse {
 	 * @return int
 	 */
 	public function getStatus() {
-		$status  = parent::getStatus();
+		$status = parent::getStatus();
 		if ($status === Http::STATUS_FORBIDDEN || $status === API::RESPOND_UNAUTHORISED) {
 			return Http::STATUS_UNAUTHORIZED;
 		}

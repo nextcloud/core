@@ -5,6 +5,7 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Jacob Neplokh <me@jacobneplokh.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -36,13 +37,14 @@ use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
 use OCP\ILogger;
 use Sabre\CardDAV\Card;
+use Sabre\VObject\Parameter;
 use Sabre\VObject\Property\Binary;
 use Sabre\VObject\Reader;
 
 class PhotoCache {
 
 	/** @var array  */
-	protected const ALLOWED_CONTENT_TYPES = [
+	public const ALLOWED_CONTENT_TYPES = [
 		'image/png' => 'png',
 		'image/jpeg' => 'jpg',
 		'image/gif' => 'gif',
@@ -238,7 +240,7 @@ class PhotoCache {
 
 			return [
 				'Content-Type' => $type,
-				'body'         => $val
+				'body' => $val
 			];
 		} catch (\Exception $e) {
 			$this->logger->logException($e, [

@@ -10,6 +10,7 @@
  * @author Jan-Philipp Litza <jplitza@users.noreply.github.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Owen Winkler <a_github@midnightcircus.com>
@@ -18,7 +19,7 @@
  * @author Semih Serhat Karakaya <karakayasemi@itu.edu.tr>
  * @author Stefan Schneider <stefan.schneider@squareweave.com.au>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -51,6 +52,7 @@ use OCP\Encryption\Exceptions\GenericEncryptionException;
 use OCP\Files\EntityTooLargeException;
 use OCP\Files\FileInfo;
 use OCP\Files\ForbiddenException;
+use OCP\Files\GenericFileException;
 use OCP\Files\InvalidContentException;
 use OCP\Files\InvalidPathException;
 use OCP\Files\LockNotAcquiredException;
@@ -199,8 +201,14 @@ class File extends Node implements IFile {
 					$isEOF = feof($stream);
 				});
 
-				$count = $partStorage->writeStream($internalPartPath, $wrappedData);
-				$result = $count > 0;
+				$result = true;
+				$count = -1;
+				try {
+					$count = $partStorage->writeStream($internalPartPath, $wrappedData);
+				} catch (GenericFileException $e) {
+					$result = false;
+				}
+
 
 				if ($result === false) {
 					$result = $isEOF;
@@ -288,6 +296,9 @@ class File extends Node implements IFile {
 						throw new Exception('Could not rename part file to final file');
 					}
 				} catch (ForbiddenException $ex) {
+					if (!$ex->getRetry()) {
+						$partStorage->unlink($internalPartPath);
+					}
 					throw new DAVForbiddenException($ex->getMessage(), $ex->getRetry());
 				} catch (\Exception $e) {
 					$partStorage->unlink($internalPartPath);
@@ -483,7 +494,7 @@ class File extends Node implements IFile {
 	}
 
 	/**
-	 * @return array|false
+	 * @return array|bool
 	 */
 	public function getDirectDownload() {
 		if (\OCP\App::isEnabled('encryption')) {

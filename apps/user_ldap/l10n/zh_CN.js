@@ -189,7 +189,6 @@ OC.L10N.register(
     "Username-LDAP User Mapping" : "用户名-LDAP用户映射",
     "Usernames are used to store and assign metadata. In order to precisely identify and recognize users, each LDAP user will have an internal username. This requires a mapping from username to LDAP user. The created username is mapped to the UUID of the LDAP user. Additionally the DN is cached as well to reduce LDAP interaction, but it is not used for identification. If the DN changes, the changes will be found. The internal username is used all over. Clearing the mappings will have leftovers everywhere. Clearing the mappings is not configuration sensitive, it affects all LDAP configurations! Never clear the mappings in a production environment, only in a testing or experimental stage." : "用户名用于存储和分配元数据。为了精确的区分和识别用户，每个 LDAP 用户都会有一个内部的用户名。这要求建立一个用户名到 LDAP 用户的映射。创建的用户名会被映射到 LDAP 用户的 UUID。另外为了节省 LDAP 连接开销，DN 会被缓存，但不会用于识别。如果 DN 变了，这些变化会被识别到。在 Nextcloud 各个页面会使用内部用户名。清空映射会造成系统里面有大量的残留信息。清空映射会影响所有的 LDAP 配置，而不仅仅是当前配置。不要在生产环境里面应用清空映射，请仅用于测试环境或者早期验证步骤。",
     "Clear Username-LDAP User Mapping" : "清除用户-LDAP用户映射",
-    "Clear Groupname-LDAP Group Mapping" : "清除组用户-LDAP级映射",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "用户名留空（默认）。 否则请指定 LDAP / AD 属性。"
+    "Clear Groupname-LDAP Group Mapping" : "清除组用户-LDAP级映射"
 },
 "nplurals=1; plural=0;");

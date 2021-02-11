@@ -58,22 +58,6 @@
     "Request user agent" : "Kërko agjentin përdorues",
     "User group membership" : "Anëtarësia në grupet e përdoruesit",
     "is member of" : "është anëtarë i",
-    "is not member of" : "nuk është anëtarë i",
-    "Example: {placeholder}" : "Për shembull: {placeholder}",
-    "Select tag…" : "Zgjidh etiketën...",
-    "Start" : "Fillim",
-    "End" : "Mbarim",
-    "Select timezone…" : "Zgjidh brezin kohorë",
-    "Sync clients" : "Klient të sinkronizuar",
-    "Short rule description" : "Përshkrim i shkurtër i rregullit",
-    "Add rule" : "Shto rregull",
-    "Reset" : "Rivendos",
-    "Saving…" : "Duke u ruajtur...",
-    "Saved" : "E ruajtur",
-    "Saving failed:" : "Ruajtja dështoi:",
-    "Add rule group" : "Shto rregull grupi",
-    "Files workflow engine" : "Motori i rrjedhës së punës së skedarëve",
-    "Open documentation" : "Dokumentacion i hapur",
-    "Loading…" : "Po ngarkohet..."
+    "is not member of" : "nuk është anëtarë i"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

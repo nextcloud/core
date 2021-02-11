@@ -250,6 +250,7 @@ class AppSettingsController extends Controller {
 				$appstoreData = $appData['appstoreData'];
 				$appData['screenshot'] = isset($appstoreData['screenshots'][0]['url']) ? 'https://usercontent.apps.nextcloud.com/' . base64_encode($appstoreData['screenshots'][0]['url']) : '';
 				$appData['category'] = $appstoreData['categories'];
+				$appData['releases'] = $appstoreData['releases'];
 			}
 
 			$newVersion = $this->installer->isUpdateAvailable($appData['id']);

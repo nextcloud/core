@@ -13,19 +13,20 @@
     "Files app plugin to add comments to files" : "Files app plugin til at tilføje kommentarer til filer",
     "Edit comment" : "Rediger kommentar",
     "Delete comment" : "Slet kommentar",
+    "No comments yet, start the conversation!" : "Ingen kommentarer endnu, start samtalen!",
+    "Retry" : "Prøv igen",
+    "_%n unread comment_::_%n unread comments_" : ["%n ulæst kommentar","%n ulæste kommentarer"],
+    "_1 new comment_::_{unread} new comments_" : ["1 ny kommentar","{unread} nye kommentarer"],
+    "Comment" : "Kommentér",
     "New comment …" : "Ny kommentar ...",
     "Post" : "Indlæg",
     "Cancel" : "Annullér",
     "[Deleted user]" : "[Slettet user]",
-    "No comments yet, start the conversation!" : "Ingen kommentarer endnu, start samtalen!",
     "More comments …" : "Flere kommentarer...",
     "Save" : "Gem",
     "Allowed characters {count} of {max}" : "Tilladte tegn {count} af {max}",
     "Error occurred while retrieving comment with ID {id}" : "Der opstod fejl under hentning af kommentar med ID {id}",
     "Error occurred while updating comment with id {id}" : "Der opstod fejl under opdatering af kommentar med id {id}",
-    "Error occurred while posting comment" : "Der opstod fejl under indsendelse af kommentar",
-    "_%n unread comment_::_%n unread comments_" : ["%n ulæst kommentar","%n ulæste kommentarer"],
-    "_1 new comment_::_{unread} new comments_" : ["1 ny kommentar","{unread} nye kommentarer"],
-    "Comment" : "Kommentér"
+    "Error occurred while posting comment" : "Der opstod fejl under indsendelse af kommentar"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

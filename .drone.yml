@@ -1,27 +1,4 @@
 kind: pipeline
-name: jsunit
-
-steps:
-- name: jsunit
-  image: nextcloudci/jsunit:jsunit-5
-  environment:
-      CODECOV_TOKEN:
-          from_secret: CODECOV_TOKEN
-  commands:
-    - ./autotest-js.sh
-    - curl -o codecov.sh https://codecov.io/bash
-    - bash codecov.sh -C $DRONE_COMMIT
-
-trigger:
-  branch:
-    - master
-    - stable*
-  event:
-    - pull_request
-    - push
-
----
-kind: pipeline
 name: checkers
 
 steps:
@@ -30,7 +7,7 @@ steps:
   commands:
     - git submodule update --init
 - name: checkers
-  image: nextcloudci/php7.2:php7.2-13
+  image: nextcloudci/php7.3:php7.3-5
   commands:
     - ./autotest-checkers.sh
   secrets: [ github_token ]
@@ -42,31 +19,6 @@ trigger:
   event:
     - pull_request
     - push
-
-#---
-#kind: pipeline
-#name: syntax-and-phan
-#
-#steps:
-#- name: submodules
-#  image: docker:git
-#  commands:
-#    - git submodule update --init
-#- name: phan
-#  image: nextcloudci/php7.2:php7.2-13
-#  commands:
-#    - composer install
-#    - composer require --dev "phan/phan:0.11.1"
-#    - ./lib/composer/phan/phan/phan -k build/.phan/config.php
-#    - php ./build/.phan/plugin-checker.php
-#
-#trigger:
-#  branch:
-#    - master
-#    - stable*
-#  event:
-#    - pull_request
-#    - push
 
 ---
 kind: pipeline
@@ -271,17 +223,20 @@ steps:
   image: docker:git
   commands:
     - git submodule update --init
-- name: nodb-php7.2
-  image: nextcloudci/php7.2:latest
-  commands:
-    - NOCOVERAGE=true TEST_SELECTION=NODB ./autotest.sh sqlite
 - name: nodb-php7.3
-  image: nextcloudci/php7.3:latest
+  image: nextcloudci/php7.3:php7.3-5
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - NOCOVERAGE=true TEST_SELECTION=NODB ./autotest.sh sqlite
 - name: nodb-php7.4
-  image: nextcloudci/php7.4:latest
+  image: nextcloudci/php7.4:php7.4-3
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
+    - NOCOVERAGE=true TEST_SELECTION=NODB ./autotest.sh sqlite
+- name: nodb-php8.0
+  image: nextcloudci/php8.0:latest
+  commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - NOCOVERAGE=true TEST_SELECTION=NODB ./autotest.sh sqlite
 
 services:
@@ -305,17 +260,20 @@ steps:
   image: docker:git
   commands:
     - git submodule update --init
-- name: sqlite-php7.2
-  image: nextcloudci/php7.2:php7.2-13
-  commands:
-    - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh sqlite
 - name: sqlite-php7.3
-  image: nextcloudci/php7.3:php7.3-4
+  image: nextcloudci/php7.3:php7.3-5
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh sqlite
 - name: sqlite-php7.4
-  image: nextcloudci/php7.4:2
+  image: nextcloudci/php7.4:php7.4-3
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
+    - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh sqlite
+- name: sqlite-php8.0
+  image: nextcloudci/php8.0:latest
+  commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh sqlite
 
 services:
@@ -332,16 +290,17 @@ trigger:
 
 ---
 kind: pipeline
-name: mariadb10.1-php7.2
+name: mariadb10.1-php7.3
 
 steps:
 - name: submodules
   image: docker:git
   commands:
     - git submodule update --init
-- name: mariadb10.1-php7.2
-  image: nextcloudci/php7.2:php7.2-13
+- name: mariadb10.1-php7.3
+  image: nextcloudci/php7.3:php7.3-5
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mariadb
 
 services:
@@ -367,16 +326,17 @@ trigger:
 
 ---
 kind: pipeline
-name: mariadb10.2-php7.2
+name: mariadb10.2-php7.3
 
 steps:
 - name: submodules
   image: docker:git
   commands:
     - git submodule update --init
-- name: mariadb10.2-php7.2
-  image: nextcloudci/php7.2:php7.2-13
+- name: mariadb10.2-php7.3
+  image: nextcloudci/php7.3:php7.3-5
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mariadb
 
 services:
@@ -401,16 +361,17 @@ trigger:
 
 ---
 kind: pipeline
-name: mariadb10.3-php7.2
+name: mariadb10.3-php7.3
 
 steps:
 - name: submodules
   image: docker:git
   commands:
     - git submodule update --init
-- name: mariadb10.3-php7.2
-  image: nextcloudci/php7.2:php7.2-13
+- name: mariadb10.3-php7.3
+  image: nextcloudci/php7.3:php7.3-5
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mariadb
 
 services:
@@ -435,17 +396,24 @@ trigger:
 
 ---
 kind: pipeline
-name: mariadb10.4-php7.3
+name: mariadb10.4-php7.4
+#name: mariadb10.4-php8.0
 
 steps:
 - name: submodules
   image: docker:git
   commands:
     - git submodule update --init
-- name: mariadb10.4-php7.3
-  image: nextcloudci/php7.3:php7.3-4
+- name: mariadb10.4-php7.4
+  image: nextcloudci/php7.4:php7.4-3
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mariadb
+#- name: mariadb10.4-php8.0
+#  image: nextcloudci/php8.0:latest
+#  commands:
+#    - bash tests/drone-run-php-tests.sh || exit 0
+#    - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mariadb
 
 services:
 - name: cache
@@ -470,16 +438,17 @@ trigger:
 
 ---
 kind: pipeline
-name: mysql8.0-php7.2
+name: mysql8.0-php7.4
 
 steps:
 - name: submodules
   image: docker:git
   commands:
     - git submodule update --init
-- name: mysql-php7.2
-  image: nextcloudci/php7.2:php7.2-13
+- name: mysql-php7.4
+  image: nextcloudci/php7.4:php7.4-3
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mysql
 
 services:
@@ -506,105 +475,7 @@ trigger:
 
 ---
 kind: pipeline
-name: mysql5.7-php7.2
-
-steps:
-- name: submodules
-  image: docker:git
-  commands:
-    - git submodule update --init
-- name: mysql-php7.2
-  image: nextcloudci/php7.2:php7.2-13
-  commands:
-    - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mysql
-
-services:
-- name: mysql
-  image: mysql:5.7
-  environment:
-    MYSQL_ROOT_PASSWORD: owncloud
-    MYSQL_USER: oc_autotest
-    MYSQL_PASSWORD: owncloud
-    MYSQL_DATABASE: oc_autotest
-  tmpfs:
-    - /var/lib/mysql
-
-trigger:
-  branch:
-    - master
-    - stable*
-  event:
-    - push
-
----
-kind: pipeline
-name: mysql5.7-php7.3
-
-steps:
-- name: submodules
-  image: docker:git
-  commands:
-    - git submodule update --init
-- name: mysql-php7.3
-  image: nextcloudci/php7.3:php7.3-4
-  commands:
-    - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mysql
-
-services:
-- name: mysql
-  image: mysql:5.7
-  environment:
-    MYSQL_ROOT_PASSWORD: owncloud
-    MYSQL_USER: oc_autotest
-    MYSQL_PASSWORD: owncloud
-    MYSQL_DATABASE: oc_autotest
-  tmpfs:
-    - /var/lib/mysql
-
-trigger:
-  branch:
-    - master
-    - stable*
-  event:
-    - push
-
----
-kind: pipeline
-name: mysql5.6-php7.2
-
-steps:
-- name: submodules
-  image: docker:git
-  commands:
-    - git submodule update --init
-- name: mysql5.6-php7.2
-  image: nextcloudci/php7.2:php7.2-13
-  commands:
-    - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mysql
-
-services:
-- name: cache
-  image: redis
-- name: mysql
-  image: mysql:5.6
-  environment:
-    MYSQL_ROOT_PASSWORD: owncloud
-    MYSQL_USER: oc_autotest
-    MYSQL_PASSWORD: owncloud
-    MYSQL_DATABASE: oc_autotest
-  tmpfs:
-    - /var/lib/mysql
-trigger:
-  branch:
-    - master
-    - stable*
-  event:
-    - pull_request
-    - push
-
----
-kind: pipeline
-name: postgres9-php7.3
+name: postgres9.6-php7.3
 
 steps:
 - name: submodules
@@ -612,8 +483,9 @@ steps:
   commands:
     - git submodule update --init
 - name: postgres-php7.3
-  image: nextcloudci/php7.3:php7.3-4
+  image: nextcloudci/php7.3:php7.3-5
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - sleep 10 # gives the database enough time to initialize
     - POSTGRES=9 NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh pgsql
 
@@ -621,7 +493,7 @@ services:
 - name: cache
   image: redis
 - name: postgres-9
-  image: postgres:9
+  image: postgres:9.6
   environment:
     POSTGRES_USER: oc_autotest
     POSTGRES_DB: oc_autotest_dummy
@@ -639,16 +511,17 @@ trigger:
 
 ---
 kind: pipeline
-name: postgres10-php7.2
+name: postgres10-php7.3
 
 steps:
 - name: submodules
   image: docker:git
   commands:
     - git submodule update --init
-- name: postgres-php7.2
-  image: nextcloudci/php7.2:php7.2-13
+- name: postgres-php7.3
+  image: nextcloudci/php7.3:php7.3-5
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - sleep 10 # gives the database enough time to initialize
     - POSTGRES=10 NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh pgsql
 
@@ -673,16 +546,17 @@ trigger:
 
 ---
 kind: pipeline
-name: postgres11-php7.2
+name: postgres11-php7.4
 
 steps:
 - name: submodules
   image: docker:git
   commands:
     - git submodule update --init
-- name: postgres-php7.2
-  image: nextcloudci/php7.2:php7.2-13
+- name: postgres-php7.4
+  image: nextcloudci/php7.4:php7.4-3
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - sleep 10 # gives the database enough time to initialize
     - POSTGRES=11 NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh pgsql
 
@@ -708,17 +582,95 @@ trigger:
 
 ---
 kind: pipeline
-name: mysqlmb4-php7.2
+name: postgres12-php7.4
 
 steps:
 - name: submodules
   image: docker:git
   commands:
     - git submodule update --init
-- name: mysqlmb4-php7.2
-  image: nextcloudci/php7.2:php7.2-13
+- name: postgres-php7.4
+  image: nextcloudci/php7.4:php7.4-3
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
+    - sleep 10 # gives the database enough time to initialize
+    - POSTGRES=12 NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh pgsql
+
+services:
+- name: cache
+  image: redis
+- name: postgres-12
+  image: postgres:12
+  environment:
+    POSTGRES_USER: oc_autotest
+    POSTGRES_DB: oc_autotest_dummy
+    POSTGRES_PASSWORD: owncloud
+  tmpfs:
+    - /var/lib/postgresql/data
+
+trigger:
+  branch:
+    - master
+    - stable*
+  event:
+    - pull_request
+    - push
+
+---
+kind: pipeline
+name: postgres13-php7.4
+
+steps:
+- name: submodules
+  image: docker:git
+  commands:
+    - git submodule update --init
+- name: postgres-php7.4
+  image: nextcloudci/php7.4:php7.4-3
+  commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
+    - sleep 10 # gives the database enough time to initialize
+    - POSTGRES=13 NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh pgsql
+
+services:
+- name: cache
+  image: redis
+- name: postgres-13
+  image: postgres:13
+  environment:
+    POSTGRES_USER: oc_autotest
+    POSTGRES_DB: oc_autotest_dummy
+    POSTGRES_PASSWORD: owncloud
+  tmpfs:
+    - /var/lib/postgresql/data
+
+trigger:
+  branch:
+    - master
+    - stable*
+  event:
+    - pull_request
+    - push
+---
+kind: pipeline
+name: mysqlmb4-php7.4
+#name: mysqlmb4-php8.0
+
+steps:
+- name: submodules
+  image: docker:git
+  commands:
+    - git submodule update --init
+- name: mysqlmb4-php7.4
+  image: nextcloudci/php7.4:php7.4-3
+  commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mysqlmb4
+#- name: mysqlmb4-php8.0
+#  image: nextcloudci/php8.0:latest
+#  commands:
+#    - bash tests/drone-run-php-tests.sh || exit 0
+#    - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mysqlmb4
 
 services:
 - name: cache
@@ -751,8 +703,9 @@ steps:
   commands:
     - git submodule update --init
 - name: mysqlmb4-php7.3
-  image: nextcloudci/php7.3:php7.3-4
+  image: nextcloudci/php7.3:php7.3-5
   commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
     - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mysqlmb4
 
 services:
@@ -842,6 +795,31 @@ steps:
     - ./occ maintenance:install --admin-pass=admin --data-dir=/dev/shm/nc_int
     - cd build/integration
     - ./run.sh features/auth.feature
+
+trigger:
+  branch:
+    - master
+    - stable*
+  event:
+    - pull_request
+    - push
+
+---
+kind: pipeline
+name: integration-avatar
+
+steps:
+- name: submodules
+  image: docker:git
+  commands:
+    - git submodule update --init
+- name: integration-avatar
+  image: nextcloudci/integration-php7.3:integration-php7.3-2
+  commands:
+    - bash tests/drone-run-integration-tests.sh || exit 0
+    - ./occ maintenance:install --admin-pass=admin --data-dir=/dev/shm/nc_int
+    - cd build/integration
+    - ./run.sh features/avatar.feature
 
 trigger:
   branch:
@@ -1534,48 +1512,6 @@ trigger:
 
 ---
 kind: pipeline
-name: integration-ldap-openldap-uid-features-php54-api
-
-steps:
-- name: submodules
-  image: docker:git
-  commands:
-    - git submodule update --init
-- name: integration-ldap-openldap-uid-features
-  image: nextcloudci/integration-php7.2:integration-php7.2-1
-  commands:
-    - bash tests/drone-run-integration-tests.sh || exit 0
-    - ./occ maintenance:install --admin-pass=admin --data-dir=/dev/shm/nc_int
-    - ./occ config:system:set redis host --value=cache
-    - ./occ config:system:set redis port --value=6379 --type=integer
-    - ./occ config:system:set redis timeout --value=0 --type=integer
-    - ./occ config:system:set --type string --value "\\OC\\Memcache\\Redis" memcache.local
-    - ./occ config:system:set --type string --value "\\OC\\Memcache\\Redis" memcache.distributed
-    - cd build/integration
-    - ./run.sh ldap_features/openldap-uid-username.feature
-
-services:
-- name: cache
-  image: redis
-- name: openldap
-  image: nextcloudci/openldap:openldap-7
-  environment:
-    SLAPD_DOMAIN: nextcloud.ci
-    SLAPD_ORGANIZATION: Nextcloud
-    SLAPD_PASSWORD: admin
-    SLAPD_ADDITIONAL_MODULES: memberof
-
-trigger:
-  branch:
-    - master
-    - stable*
-  event:
-    - pull_request
-    - push
-type: docker
-
----
-kind: pipeline
 name: integration-ldap-openldap-uid-features
 
 steps:
@@ -2072,7 +2008,7 @@ steps:
   commands:
     - git submodule update --init
 - name: nodb-codecov
-  image: nextcloudci/php7.4:latest
+  image: nextcloudci/php7.4:php7.4-3
   environment:
       CODECOV_TOKEN:
           from_secret: CODECOV_TOKEN
@@ -2103,7 +2039,7 @@ steps:
   commands:
     - git submodule update --init
 - name: db-codecov
-  image: nextcloudci/php7.4:latest
+  image: nextcloudci/php7.4:php7.4-3
   environment:
       CODECOV_TOKEN:
           from_secret: CODECOV_TOKEN
@@ -2134,7 +2070,7 @@ steps:
   commands:
     - git submodule update --init
 - name: object-store
-  image: nextcloudci/php7.4:latest
+  image: nextcloudci/php7.4:php7.4-3
   environment:
       CODECOV_TOKEN:
           from_secret: CODECOV_TOKEN
@@ -2167,7 +2103,7 @@ steps:
   commands:
     - git submodule update --init
 - name: object-store
-  image: nextcloudci/php7.4:latest
+  image: nextcloudci/php7.4:php7.4-3
   environment:
       CODECOV_TOKEN:
           from_secret: CODECOV_TOKEN
@@ -2301,7 +2237,7 @@ trigger:
 #  commands:
 #    - git submodule update --init
 #- name: memcache-redis-cluster
-#  image: nextcloudci/php7.2:php7.2-13
+#  image: nextcloudci/php7.3:php7.3-5
 #  commands:
 #    - phpenmod xdebug
 #    - sleep 20
@@ -2321,4 +2257,3 @@ trigger:
 #  event:
 #    - pull_request
 #    - push
-

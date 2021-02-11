@@ -8,8 +8,9 @@ declare(strict_types=1);
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -230,7 +231,7 @@ class SystemTagManager implements ISystemTagManager {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function updateTag(string $tagId, string $tagName, bool $userVisible, bool $userAssignable) {
+	public function updateTag(string $tagId, string $newName, bool $userVisible, bool $userAssignable) {
 		try {
 			$tags = $this->getTagsByIds($tagId);
 		} catch (TagNotFoundException $e) {
@@ -242,7 +243,7 @@ class SystemTagManager implements ISystemTagManager {
 		$beforeUpdate = array_shift($tags);
 		$afterUpdate = new SystemTag(
 			$tagId,
-			$tagName,
+			$newName,
 			$userVisible,
 			$userAssignable
 		);
@@ -253,7 +254,7 @@ class SystemTagManager implements ISystemTagManager {
 			->set('visibility', $query->createParameter('visibility'))
 			->set('editable', $query->createParameter('editable'))
 			->where($query->expr()->eq('id', $query->createParameter('tagid')))
-			->setParameter('name', $tagName)
+			->setParameter('name', $newName)
 			->setParameter('visibility', $userVisible ? 1 : 0)
 			->setParameter('editable', $userAssignable ? 1 : 0)
 			->setParameter('tagid', $tagId);
@@ -266,7 +267,7 @@ class SystemTagManager implements ISystemTagManager {
 			}
 		} catch (UniqueConstraintViolationException $e) {
 			throw new TagAlreadyExistsException(
-				'Tag ("' . $tagName . '", '. $userVisible . ', ' . $userAssignable . ') already exists',
+				'Tag ("' . $newName . '", '. $userVisible . ', ' . $userAssignable . ') already exists',
 				0,
 				$e
 			);

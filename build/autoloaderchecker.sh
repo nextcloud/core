@@ -1,26 +1,18 @@
 #!/usr/bin/env bash
 
-COMPOSER_COMMAND=$(which "composer")
-if [ "$COMPOSER_COMMAND" = '' ]
-then
-	#No global composer found, try local or download it
-	if [ -e "composer.phar" ]
-	then
-		echo "Composer found: checking for update"
-	else
-		echo "Composer not found: fetching"
-		php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-		php composer-setup.php
-		php -r "unlink('composer-setup.php');"
-	fi
+COMPOSER_COMMAND="php composer.phar"
 
-	COMPOSER_COMMAND="php composer.phar"
+if [ -e "composer.phar" ]
+then
+  echo "Composer found: checking for update"
+  $COMPOSER_COMMAND self-update
 else
-	echo "Global composer found: checking for update"
+  echo "Composer not found: fetching"
+  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+  php composer-setup.php --2
+  php -r "unlink('composer-setup.php');"
 fi
 
-#Make sure we are on the latest composer
-$COMPOSER_COMMAND self-update
 
 REPODIR=`git rev-parse --show-toplevel`
 
@@ -49,6 +41,8 @@ do
         break
     fi
 done
+
+rm composer.phar
 
 echo
 if [ $composerfile = true ]

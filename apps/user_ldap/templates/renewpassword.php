@@ -1,4 +1,4 @@
-<?php /** @var $l OC_L10N */ ?>
+<?php /** @var \OCP\IL10N $l */ ?>
 <?php
 script('user_ldap', [
 	'renewPassword',

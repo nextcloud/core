@@ -1,6 +1,6 @@
 { "translations": {
     "Failed to clear the mappings." : "Fel vid rensning av mappningar",
-    "Failed to delete the server configuration" : "Misslyckades med att radera serverinställningen",
+    "Failed to delete the server configuration" : "Det gick inte att ta bort serverkonfigurationen",
     "Invalid configuration: Anonymous binding is not allowed." : "Ogiltig konfiguration: Anonym bindning är inte tillåten.",
     "Valid configuration, connection established!" : "Giltig konfiguration, anslutning upprättad!",
     "Valid configuration, but binding failed. Please check the server settings and credentials." : "Giltig konfiguration, men bindning misslyckades. Vänligen kontrollera uppgifter och serverinställningarna.",
@@ -32,7 +32,7 @@
     "More than 1,000 directory entries available." : "Mer än 1,000 katalogposter tillgängliga.",
     "_{objectsFound} entry available within the provided Base DN_::_{objectsFound} entries available within the provided Base DN_" : ["{objectsFound} post tillgänglig inom den medföljande Base DN","{objectsFound} poster tillgängliga inom den medföljande Base DN"],
     "An error occurred. Please check the Base DN, as well as connection settings and credentials." : "Ett fel uppstod. Vänligen kontrollera Base DN, och även anslutningsinställningar och referenser.",
-    "Do you really want to delete the current Server Configuration?" : "Vill du verkligen radera den nuvarande serverinställningen?",
+    "Do you really want to delete the current Server Configuration?" : "Vill du verkligen ta bort den nuvarande serverinställningen?",
     "Confirm Deletion" : "Bekräfta radering",
     "Mappings cleared successfully!" : "Rensning av mappningar lyckades!",
     "Error while clearing the mappings." : "Fel uppstod under rensning av mappningar",
@@ -90,7 +90,7 @@
     "%s. Server:" : "%s. Server:",
     "Add a new configuration" : "Lägg till en ny konfiguration",
     "Copy current configuration into new directory binding" : "Kopiera nuvarande konfiguration till en ny katalogsammansättning",
-    "Delete the current configuration" : "Radera nuvarande konfiguration",
+    "Delete the current configuration" : "Ta bort nuvarande konfiguration",
     "Host" : "Server",
     "You can omit the protocol, unless you require SSL. If so, start with ldaps://" : "Du kan utelämna protokollen, om du inte kräver SSl. I såna fall, starta med ldaps://",
     "Port" : "Port",
@@ -187,7 +187,6 @@
     "Username-LDAP User Mapping" : "Användarnamn-LDAP användarmappning",
     "Usernames are used to store and assign metadata. In order to precisely identify and recognize users, each LDAP user will have an internal username. This requires a mapping from username to LDAP user. The created username is mapped to the UUID of the LDAP user. Additionally the DN is cached as well to reduce LDAP interaction, but it is not used for identification. If the DN changes, the changes will be found. The internal username is used all over. Clearing the mappings will have leftovers everywhere. Clearing the mappings is not configuration sensitive, it affects all LDAP configurations! Never clear the mappings in a production environment, only in a testing or experimental stage." : "Användarnamn används för att lagra och tilldela metadata. För att exakt identifiera användare har varje LDAP-användare ett internt användarnamn. Detta kräver en mappning från användarnamn till LDAP-användare. Det skapade användarnamnet är mappat till UUID för LDAP-användaren. Dessutom cachas DN för att minska LDAP-interaktion, men den används inte för identifiering. Om DN ändras kommer ändringarna att hittas. Det interna användarnamnet används på nytt. Att rensa mappningarna kommer att ha rester överallt. Att rensa mappningarna är inte konfigurationskänsligt, det påverkar alla LDAP-konfigurationer! Rensa aldrig mappningarna i en produktionsmiljö, bara i en test- eller experimentfas.",
     "Clear Username-LDAP User Mapping" : "Rensa användarnamn-LDAP användarmappning",
-    "Clear Groupname-LDAP Group Mapping" : "Rensa gruppnamn-LDAP gruppmappning",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Lämnas tomt för användarnamn (standard). Ange annars ett LDAP-/AD-attribut."
+    "Clear Groupname-LDAP Group Mapping" : "Rensa gruppnamn-LDAP gruppmappning"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

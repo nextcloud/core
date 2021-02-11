@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2017 Lukas Reschke <lukas@statuscode.ch>
  *
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -40,6 +41,13 @@ class ClientMapperTest extends TestCase {
 		$this->clientMapper = new ClientMapper(\OC::$server->getDatabaseConnection());
 	}
 
+	protected function tearDown(): void {
+		$query = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+		$query->delete('oauth2_clients')->execute();
+
+		parent::tearDown();
+	}
+
 	public function testGetByIdentifier() {
 		$client = new Client();
 		$client->setClientIdentifier('MyAwesomeClientIdentifier');
@@ -51,7 +59,6 @@ class ClientMapperTest extends TestCase {
 		$this->assertEquals($client, $this->clientMapper->getByIdentifier('MyAwesomeClientIdentifier'));
 	}
 
-	
 	public function testGetByIdentifierNotExisting() {
 		$this->expectException(\OCA\OAuth2\Exceptions\ClientNotFoundException::class);
 
@@ -69,7 +76,6 @@ class ClientMapperTest extends TestCase {
 		$this->assertEquals($client, $this->clientMapper->getByUid($client->getId()));
 	}
 
-	
 	public function testGetByUidNotExisting() {
 		$this->expectException(\OCA\OAuth2\Exceptions\ClientNotFoundException::class);
 

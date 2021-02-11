@@ -20,7 +20,7 @@ OC.L10N.register(
     "Never" : "Aldrig",
     "Once every direct access" : "En gång vid varje direktåtkomst",
     "Read only" : "Skrivskyddad",
-    "Delete" : "Radera",
+    "Delete" : "Ta bort",
     "Admin defined" : "Admin definerad",
     "Are you sure you want to delete this external storage?" : "Är du säker på att du vill ta bort denna externa lagring?",
     "Delete storage?" : "Ta bort lagring?",
@@ -132,7 +132,6 @@ OC.L10N.register(
     "Add storage" : "Lägg till lagring",
     "Advanced settings" : "Avancerade inställningar",
     "Allow users to mount external storage" : "Tillåt användare att montera extern lagring",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globala användaruppgifter kan användas för att autentisera med flera externa lagrings-instanser som använder samma användaruppgifter.",
-    "Saving..." : "Sparar..."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globala användaruppgifter kan användas för att autentisera med flera externa lagrings-instanser som använder samma användaruppgifter."
 },
 "nplurals=2; plural=(n != 1);");

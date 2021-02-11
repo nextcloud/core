@@ -74,7 +74,6 @@
     "Set an admin username." : "Establecer un Usuario administrador",
     "Set an admin password." : "Establecer la contraseña del administrador.",
     "Can't create or write into the data directory %s" : "No es posible crear o escribir en el directorio de datos %s",
-    "Invalid Federated Cloud ID" : "ID Inválido",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "El backend %s que comparte debe implementar la interface OCP\\Share_Backend",
     "Sharing backend %s not found" : "No fue encontrado el Backend que comparte %s ",
     "Sharing backend for %s not found" : "No fue encontrado el Backend que comparte para %s",
@@ -185,10 +184,6 @@
     "Storage connection timeout. %s" : "El tiempo de la conexión del almacenamiento se agotó. %s",
     "Following databases are supported: %s" : "Las siguientes bases de datos están soportadas: %s",
     "Following platforms are supported: %s" : "Las siguientes plataformas están soportadas: %s",
-    "Basic settings" : "Configuraciones  básicas",
-    "Sharing" : "Compartiendo",
-    "Security" : "Seguridad",
-    "Personal info" : "Información personal",
-    "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s" : "Por lo general esto se puede resolver al darle al servidor web acceso de escritura al directorio de las aplicaciones o deshabilitando la appstore en el archivo config. Por favor ve %s"
+    "Invalid Federated Cloud ID" : "ID Inválido"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -16,7 +16,7 @@
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roland Tapken <roland@bitarbeiter.net>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -44,6 +44,7 @@ use Icewind\SMB\Exception\Exception;
 use Icewind\SMB\Exception\ForbiddenException;
 use Icewind\SMB\Exception\InvalidArgumentException;
 use Icewind\SMB\Exception\NotFoundException;
+use Icewind\SMB\Exception\OutOfSpaceException;
 use Icewind\SMB\Exception\TimedOutException;
 use Icewind\SMB\IFileInfo;
 use Icewind\SMB\Native\NativeServer;
@@ -57,8 +58,10 @@ use OC\Files\Filesystem;
 use OC\Files\Storage\Common;
 use OCA\Files_External\Lib\Notify\SMBNotifyHandler;
 use OCP\Constants;
+use OCP\Files\EntityTooLargeException;
 use OCP\Files\Notify\IChange;
 use OCP\Files\Notify\IRenameChange;
+use OCP\Files\NotPermittedException;
 use OCP\Files\Storage\INotifyStorage;
 use OCP\Files\StorageAuthException;
 use OCP\Files\StorageNotAvailableException;
@@ -233,7 +236,11 @@ class SMB extends Common implements INotifyStorage {
 	protected function getFolderContents($path): iterable {
 		try {
 			$path = ltrim($this->buildPath($path), '/');
-			$files = $this->share->dir($path);
+			try {
+				$files = $this->share->dir($path);
+			} catch (ForbiddenException $e) {
+				throw new NotPermittedException();
+			}
 			foreach ($files as $file) {
 				$this->statCache[$path . '/' . $file->getName()] = $file;
 			}
@@ -439,7 +446,7 @@ class SMB extends Common implements INotifyStorage {
 	/**
 	 * @param string $path
 	 * @param string $mode
-	 * @return resource|false
+	 * @return resource|bool
 	 */
 	public function fopen($path, $mode) {
 		$fullPath = $this->buildPath($path);
@@ -497,6 +504,8 @@ class SMB extends Common implements INotifyStorage {
 			return false;
 		} catch (ForbiddenException $e) {
 			return false;
+		} catch (OutOfSpaceException $e) {
+			throw new EntityTooLargeException("not enough available space to create file", 0, $e);
 		} catch (ConnectException $e) {
 			$this->logger->logException($e, ['message' => 'Error while opening file']);
 			throw new StorageNotAvailableException($e->getMessage(), $e->getCode(), $e);
@@ -530,7 +539,7 @@ class SMB extends Common implements INotifyStorage {
 		}
 	}
 
-	public function touch($path, $time = null) {
+	public function touch($path, $mtime = null) {
 		try {
 			if (!$this->file_exists($path)) {
 				$fh = $this->share->write($this->buildPath($path));
@@ -538,6 +547,8 @@ class SMB extends Common implements INotifyStorage {
 				return true;
 			}
 			return false;
+		} catch (OutOfSpaceException $e) {
+			throw new EntityTooLargeException("not enough available space to create file", 0, $e);
 		} catch (ConnectException $e) {
 			$this->logger->logException($e, ['message' => 'Error while creating file']);
 			throw new StorageNotAvailableException($e->getMessage(), $e->getCode(), $e);
@@ -589,7 +600,7 @@ class SMB extends Common implements INotifyStorage {
 			$files = $this->getFolderContents($path);
 		} catch (NotFoundException $e) {
 			return false;
-		} catch (ForbiddenException $e) {
+		} catch (NotPermittedException $e) {
 			return false;
 		}
 		$names = array_map(function ($info) {

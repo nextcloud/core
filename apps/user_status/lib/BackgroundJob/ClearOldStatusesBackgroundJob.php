@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\UserStatus\BackgroundJob;
 
 use OCA\UserStatus\Db\UserStatusMapper;
+use OCA\UserStatus\Service\StatusService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 
@@ -58,6 +59,9 @@ class ClearOldStatusesBackgroundJob extends TimedJob {
 	 * @inheritDoc
 	 */
 	protected function run($argument) {
-		$this->mapper->clearOlderThan($this->time->getTime());
+		$now = $this->time->getTime();
+
+		$this->mapper->clearMessagesOlderThan($now);
+		$this->mapper->clearStatusesOlderThan($now - StatusService::INVALIDATE_STATUS_THRESHOLD, $now);
 	}
 }

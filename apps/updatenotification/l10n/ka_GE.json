@@ -15,13 +15,13 @@
     "Your version is up to date." : "თქვენ იყენბთ ბოლო ვერსიას.",
     "A non-default update server is in use to be checked for updates:" : "განახლებების შესამოწმებლად მოქმედია არა-საწყისი სერვერი:",
     "Update channel:" : "განახლების არხი:",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "გაითვალისწინეთ, ახალი რელიზი აქ გამოჩენამდე, საჭიროებს გარკვეულ დროს. ჩვენ მომხმარებლებისთვის ვუშვებთ ახალ ვერსიებს და ხანდახან პრობლემების პოვნისას ზოგიერთ ვერსიას ვტოვებთ.",
     "Notify members of the following groups about available updates:" : "შემდეგი ჯგუფის წევრებს გაუგზავნეთ შეტყობინება ხელმისაწვდომ განახლებებზე:",
     "Only notification for app updates are available." : "შეტყობინება ხელმისაწვდომია მხოლოდ აპლიკაციების განახლებებზე.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "არჩეული განახლების არხი მოძველებული სერვერის შესახებ საჭიროებს გამოყოფილ შეტყობინებებს.",
     "The selected update channel does not support updates of the server." : "არჩეული განახლების არხი არ უჭერს მხარს სერვერის განახლებას.",
     "Checked on {lastCheckedDate}" : "შემოწმდა {lastCheckedDate}-ზე",
     "Please make sure your config.php does not set <samp>appstoreenabled</samp> to false." : "გთხოვთ დარწმუნდეთ რომ თქვენს config.php-ში <samp>appstoreenabled</samp>-ის მნიშვნელობა არაა false.",
-    "Could not connect to the appstore or the appstore returned no updates at all. Search manually for updates or make sure your server has access to the internet and can connect to the appstore." : "Appstore-ს ვერ დავუკავშირდით ან არ დაბრუნდა პასუხი განახლებების შესახებ. განახლებები მოძებნეთ მექანიკურად ან დარწმუნდით, რომ თქვენს სერვერს გააჩნია წვდომა ინტერნეტთან და უკავშირდება appstore-ს."
+    "Could not connect to the appstore or the appstore returned no updates at all. Search manually for updates or make sure your server has access to the internet and can connect to the appstore." : "Appstore-ს ვერ დავუკავშირდით ან არ დაბრუნდა პასუხი განახლებების შესახებ. განახლებები მოძებნეთ მექანიკურად ან დარწმუნდით, რომ თქვენს სერვერს გააჩნია წვდომა ინტერნეტთან და უკავშირდება appstore-ს.",
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "გაითვალისწინეთ, ახალი რელიზი აქ გამოჩენამდე, საჭიროებს გარკვეულ დროს. ჩვენ მომხმარებლებისთვის ვუშვებთ ახალ ვერსიებს და ხანდახან პრობლემების პოვნისას ზოგიერთ ვერსიას ვტოვებთ."
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

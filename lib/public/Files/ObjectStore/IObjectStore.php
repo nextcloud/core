@@ -30,7 +30,6 @@ use OCP\Files\NotFoundException;
 /**
  * Interface IObjectStore
  *
- * @package OCP\Files\ObjectStore
  * @since 7.0.0
  */
 interface IObjectStore {
@@ -74,4 +73,12 @@ interface IObjectStore {
 	 * @since 16.0.0
 	 */
 	public function objectExists($urn);
+
+	/**
+	 * @param string $from the unified resource name used to identify the source object
+	 * @param string $to the unified resource name used to identify the target object
+	 * @return void
+	 * @since 21.0.0
+	 */
+	public function copyObject($from, $to);
 }

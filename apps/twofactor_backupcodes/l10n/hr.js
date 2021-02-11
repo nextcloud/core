@@ -18,9 +18,6 @@ OC.L10N.register(
     "An error occurred while generating your backup codes" : "Došlo je do pogreške pri generiranju pričuvnih šifri",
     "{name} backup codes" : "{name} pričuvnih šifri",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Upotrijebite jednu od pričuvnih šifri koje ste spremili prilikom postavljanja dvofaktorske autentifikacije.",
-    "Submit" : "Šalji",
-    "function" : "funkcija",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["icon-loading-small","generate-backup-codes","generate-backup-codes"]
+    "Submit" : "Šalji"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

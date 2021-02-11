@@ -18,9 +18,6 @@ OC.L10N.register(
     "An error occurred while generating your backup codes" : "バックアップコードの生成中にエラーが発生しました",
     "{name} backup codes" : "{name} バックアップコード",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "二要素認証を設定するときに保存したバックアップコードのいずれかを使用します。",
-    "Submit" : "了解",
-    "function" : "機能",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["生成バックアップコード"]
+    "Submit" : "了解"
 },
 "nplurals=1; plural=0;");

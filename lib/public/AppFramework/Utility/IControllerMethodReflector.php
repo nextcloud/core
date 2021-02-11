@@ -33,7 +33,6 @@ namespace OCP\AppFramework\Utility;
  *
  * Reads and parses annotations from doc comments
  *
- * @package OCP\AppFramework\Utility
  * @since 8.0.0
  */
 interface IControllerMethodReflector {

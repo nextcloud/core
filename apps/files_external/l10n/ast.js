@@ -74,7 +74,6 @@ OC.L10N.register(
     "Configuration" : "Configuración",
     "Available for" : "Disponible pa",
     "Add storage" : "Amestar almacenamientu",
-    "Advanced settings" : "Axustes avanzaos",
-    "Saving..." : "Guardando..."
+    "Advanced settings" : "Axustes avanzaos"
 },
 "nplurals=2; plural=(n != 1);");

@@ -5,6 +5,7 @@
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
  *
  * @license AGPL-3.0
  *
@@ -73,7 +74,11 @@ abstract class Flysystem extends Common {
 	 * {@inheritdoc}
 	 */
 	public function file_put_contents($path, $data) {
-		return $this->flysystem->put($this->buildPath($path), $data);
+		$result = $this->flysystem->put($this->buildPath($path), $data);
+		if ($result === true) {
+			return strlen($data);
+		}
+		return $result;
 	}
 
 	/**

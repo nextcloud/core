@@ -33,7 +33,6 @@ namespace OCP\WorkflowEngine;
  * Event classes. It is only present for a transition period and will be
  * removed in 2023 again.
  *
- * @package OCP\WorkflowEngine
  * @since 18.0.0
  * @deprecated
  */

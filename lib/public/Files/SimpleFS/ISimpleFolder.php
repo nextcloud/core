@@ -30,7 +30,6 @@ use OCP\Files\NotPermittedException;
 /**
  * Interface ISimpleFolder
  *
- * @package OCP\Files\SimpleFS
  * @since 11.0.0
  */
 interface ISimpleFolder {

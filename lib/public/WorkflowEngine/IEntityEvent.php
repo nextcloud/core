@@ -31,7 +31,6 @@ namespace OCP\WorkflowEngine;
  *
  * represents an entitiy event that is dispatched via EventDispatcher
  *
- * @package OCP\WorkflowEngine
  *
  * @since 18.0.0
  */

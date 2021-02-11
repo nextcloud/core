@@ -73,7 +73,7 @@ describe('OCA.Files.TagsPlugin tests', function() {
 		});
 	});
 	describe('Applying tags', function() {
-		it('through FileActionsMenu sends request to server and updates icon', function() {
+		it('through FileActionsMenu sends request to server and updates icon', function(done) {
 			var request;
 			fileList.setFiles(testFiles);
 			var $tr = fileList.findFileEl('One.txt');
@@ -92,42 +92,51 @@ describe('OCA.Files.TagsPlugin tests', function() {
 				tags: ['tag1', 'tag2', 'tag3', OC.TAG_FAVORITE]
 			}));
 
-			// re-read the element as it was re-inserted
-			$tr = fileList.findFileEl('One.txt');
-			$favoriteMark = $tr.find('.favorite-mark');
-			$showMenuAction = $tr.find('.action-menu');
+			setTimeout(function () {
+				// re-read the element as it was re-inserted
+				$tr = fileList.findFileEl('One.txt');
+				$favoriteMark = $tr.find('.favorite-mark');
+				$showMenuAction = $tr.find('.action-menu');
 
-			expect($tr.attr('data-favorite')).toEqual('true');
-			expect($tr.attr('data-tags').split('|')).toEqual(['tag1', 'tag2', 'tag3', OC.TAG_FAVORITE]);
-			expect(fileList.files[0].tags).toEqual(['tag1', 'tag2', 'tag3', OC.TAG_FAVORITE]);
-			expect($favoriteMark.find('.icon').hasClass('icon-star')).toEqual(false);
-			expect($favoriteMark.find('.icon').hasClass('icon-starred')).toEqual(true);
+				expect($tr.attr('data-favorite')).toEqual('true');
+				expect($tr.attr('data-tags').split('|')).toEqual(['tag1', 'tag2', 'tag3', OC.TAG_FAVORITE]);
+				expect(fileList.files[0].tags).toEqual(['tag1', 'tag2', 'tag3', OC.TAG_FAVORITE]);
+				expect($favoriteMark.find('.icon').hasClass('icon-star')).toEqual(false);
+				expect($favoriteMark.find('.icon').hasClass('icon-starred')).toEqual(true);
 
-			// show again the menu and get the new action, as the menu was
-			// closed and removed (and with it, the previous action) when that
-			// action was clicked
-			$showMenuAction.click();
-			$favoriteActionInMenu = $tr.find('.fileActionsMenu .action-favorite');
-			$favoriteActionInMenu.click();
+				// show again the menu and get the new action, as the menu was
+				// closed and removed (and with it, the previous action) when that
+				// action was clicked
+				$showMenuAction.click();
+				$favoriteActionInMenu = $tr.find('.fileActionsMenu .action-favorite');
+				$favoriteActionInMenu.click();
 
-			expect(fakeServer.requests.length).toEqual(2);
-			request = fakeServer.requests[1];
-			expect(JSON.parse(request.requestBody)).toEqual({
-				tags: ['tag1', 'tag2', 'tag3']
-			});
-			request.respond(200, {'Content-Type': 'application/json'}, JSON.stringify({
-				tags: ['tag1', 'tag2', 'tag3']
-			}));
+				setTimeout(function() {
+					expect(fakeServer.requests.length).toEqual(2);
+					request = fakeServer.requests[1];
+					expect(JSON.parse(request.requestBody)).toEqual({
+						tags: ['tag1', 'tag2', 'tag3']
+					});
 
-			// re-read the element as it was re-inserted
-			$tr = fileList.findFileEl('One.txt');
-			$favoriteMark = $tr.find('.favorite-mark');
+					request.respond(200, {'Content-Type': 'application/json'}, JSON.stringify({
+						tags: ['tag1', 'tag2', 'tag3']
+					}));
 
-			expect($tr.attr('data-favorite')).toBeFalsy();
-			expect($tr.attr('data-tags').split('|')).toEqual(['tag1', 'tag2', 'tag3']);
-			expect(fileList.files[0].tags).toEqual(['tag1', 'tag2', 'tag3']);
-			expect($favoriteMark.find('.icon').hasClass('icon-star')).toEqual(true);
-			expect($favoriteMark.find('.icon').hasClass('icon-starred')).toEqual(false);
+					setTimeout(function() {
+						// re-read the element as it was re-inserted
+						$tr = fileList.findFileEl('One.txt');
+						$favoriteMark = $tr.find('.favorite-mark');
+
+						expect($tr.attr('data-favorite')).toBeFalsy();
+						expect($tr.attr('data-tags').split('|')).toEqual(['tag1', 'tag2', 'tag3']);
+						expect(fileList.files[0].tags).toEqual(['tag1', 'tag2', 'tag3']);
+						expect($favoriteMark.find('.icon').hasClass('icon-star')).toEqual(true);
+						expect($favoriteMark.find('.icon').hasClass('icon-starred')).toEqual(false);
+
+						done();
+					}, 1);
+				}, 1);
+			}, 1);
 		});
 	});
 	describe('elementToFile', function() {

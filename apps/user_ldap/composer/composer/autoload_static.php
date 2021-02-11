@@ -21,6 +21,7 @@ class ComposerStaticInitUser_LDAP
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\User_LDAP\\Access' => __DIR__ . '/..' . '/../lib/Access.php',
         'OCA\\User_LDAP\\AccessFactory' => __DIR__ . '/..' . '/../lib/AccessFactory.php',
         'OCA\\User_LDAP\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
@@ -38,6 +39,8 @@ class ComposerStaticInitUser_LDAP
         'OCA\\User_LDAP\\ConnectionFactory' => __DIR__ . '/..' . '/../lib/ConnectionFactory.php',
         'OCA\\User_LDAP\\Controller\\ConfigAPIController' => __DIR__ . '/..' . '/../lib/Controller/ConfigAPIController.php',
         'OCA\\User_LDAP\\Controller\\RenewPasswordController' => __DIR__ . '/..' . '/../lib/Controller/RenewPasswordController.php',
+        'OCA\\User_LDAP\\Events\\GroupBackendRegistered' => __DIR__ . '/..' . '/../lib/Events/GroupBackendRegistered.php',
+        'OCA\\User_LDAP\\Events\\UserBackendRegistered' => __DIR__ . '/..' . '/../lib/Events/UserBackendRegistered.php',
         'OCA\\User_LDAP\\Exceptions\\AttributeNotSet' => __DIR__ . '/..' . '/../lib/Exceptions/AttributeNotSet.php',
         'OCA\\User_LDAP\\Exceptions\\ConstraintViolationException' => __DIR__ . '/..' . '/../lib/Exceptions/ConstraintViolationException.php',
         'OCA\\User_LDAP\\Exceptions\\NotOnLDAP' => __DIR__ . '/..' . '/../lib/Exceptions/NotOnLDAP.php',
@@ -63,6 +66,8 @@ class ComposerStaticInitUser_LDAP
         'OCA\\User_LDAP\\Mapping\\AbstractMapping' => __DIR__ . '/..' . '/../lib/Mapping/AbstractMapping.php',
         'OCA\\User_LDAP\\Mapping\\GroupMapping' => __DIR__ . '/..' . '/../lib/Mapping/GroupMapping.php',
         'OCA\\User_LDAP\\Mapping\\UserMapping' => __DIR__ . '/..' . '/../lib/Mapping/UserMapping.php',
+        'OCA\\User_LDAP\\Migration\\RemoveRefreshTime' => __DIR__ . '/..' . '/../lib/Migration/RemoveRefreshTime.php',
+        'OCA\\User_LDAP\\Migration\\SetDefaultProvider' => __DIR__ . '/..' . '/../lib/Migration/SetDefaultProvider.php',
         'OCA\\User_LDAP\\Migration\\UUIDFix' => __DIR__ . '/..' . '/../lib/Migration/UUIDFix.php',
         'OCA\\User_LDAP\\Migration\\UUIDFixGroup' => __DIR__ . '/..' . '/../lib/Migration/UUIDFixGroup.php',
         'OCA\\User_LDAP\\Migration\\UUIDFixInsert' => __DIR__ . '/..' . '/../lib/Migration/UUIDFixInsert.php',

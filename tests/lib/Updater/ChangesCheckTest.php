@@ -311,7 +311,7 @@ class ChangesCheckTest extends TestCase {
 			->method('__call')
 			->willReturn($etag);
 
-		$expectedHeaders = $etag === '' ? [] : ['If-None-Match' =>  [$etag]];
+		$expectedHeaders = $etag === '' ? [] : ['If-None-Match' => [$etag]];
 
 		$client = $this->createMock(IClient::class);
 		$client->expects($this->once())

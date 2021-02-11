@@ -38,7 +38,6 @@ OC.L10N.register(
     "Federated Cloud Sharing" : "Federatutako Hodei Partekatzea",
     "Open documentation" : "Ireki dokumentazioa",
     "Adjust how people can share between servers." : "Pertsonen zerbitzarien arteko partekatzea konfiguratu",
-    "Allow users on this server to send shares to other servers" : "Baimendu zerbitzari honetako erabiltzaileak beste zerbitzariekin partekatzera",
     "Allow users on this server to receive shares from other servers" : "Baimendu zerbitzari honetako erabiltzaileak beste zerbitzarietatik partekatutakoak jasotzen",
     "Allow users on this server to send shares to groups on other servers" : "Baimendu zerbitzari honetako erabiltzaileei beste zerbitzari batzuetako taldeei elementuak partekatzen.",
     "Allow users on this server to receive group shares from other servers" : "Baimendu zerbitzari honetako erabiltzaileek beste zerbitzari batzuetako talde-partekatzeak jasotzen.",
@@ -51,7 +50,6 @@ OC.L10N.register(
     "Add to your website" : "Zure webgunera gehitu",
     "Share with me via Nextcloud" : "Partekatu nirekin Nextcloud-en bidez",
     "HTML Code:" : "HTML kodea:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "2%1$s-ren \"1%3$s\" urruneko partekatze bezala jaso duzu ( 3%2$s-en ordez)",
-    "You received \"%3$s\" as a remote share from %1$s" : "2%1$s-ren \"1%3$s\" urruneko partekatze bezala jaso duzu"
+    "Allow users on this server to send shares to other servers" : "Baimendu zerbitzari honetako erabiltzaileak beste zerbitzariekin partekatzera"
 },
 "nplurals=2; plural=(n != 1);");

@@ -57,24 +57,6 @@
     "Request user agent" : "Nepieciešams lietotāja aģents",
     "User group membership" : "Lietotāju grupas piederība",
     "is member of" : "ir biedrs",
-    "is not member of" : "nav biedrs",
-    "Example: {placeholder}" : "Piemērs: {placeholder}",
-    "Select tag…" : "Izvēlies birku...",
-    "Start" : "Sākums",
-    "End" : "Beigas",
-    "Select timezone…" : "Izvēlieties laika joslu...",
-    "Sync clients" : "Sync klients",
-    "Short rule description" : "Īss kārtulas apraksts",
-    "Add rule" : "Pievienot kārtulu",
-    "Reset" : "Atiestatīt",
-    "Saving…" : "Saglabā...",
-    "Group list is empty" : "Grupu saraksts ir tukšš",
-    "Unable to retrieve the group list" : "Nevarēja saņemt grupu sarakstu",
-    "Saved" : "Saglabāts",
-    "Saving failed:" : "Saglabāšana neizdevās:",
-    "Add rule group" : "Pievienot kārtulu grupas",
-    "Files workflow engine" : "Faila darblūsmas programma",
-    "Open documentation" : "Atvērt dokumentāciju",
-    "Loading…" : "Ielādē …"
+    "is not member of" : "nav biedrs"
 },"pluralForm" :"nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
 }

@@ -78,8 +78,6 @@ class Version14000Date20180404140050 extends SimpleMigrationStep {
 	 * @param IOutput $output
 	 * @param \Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
-	 *
-	 * @suppress SqlInjectionChecker
 	 */
 	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
 		$qb = $this->connection->getQueryBuilder();

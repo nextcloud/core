@@ -72,6 +72,8 @@
 				$('#free_space').val(response.data.freeSpace);
 				$('#upload.button').attr('data-original-title', response.data.maxHumanFilesize);
 				$('#usedSpacePercent').val(response.data.usedSpacePercent);
+				$('#usedSpacePercent').data('mount-type', response.data.mountType);
+				$('#usedSpacePercent').data('mount-point', response.data.mountPoint);
 				$('#owner').val(response.data.owner);
 				$('#ownerDisplayName').val(response.data.ownerDisplayName);
 				Files.displayStorageWarnings();
@@ -155,23 +157,35 @@
 
 			var usedSpacePercent = $('#usedSpacePercent').val(),
 				owner = $('#owner').val(),
-				ownerDisplayName = $('#ownerDisplayName').val();
+				ownerDisplayName = $('#ownerDisplayName').val(),
+				mountType = $('#usedSpacePercent').data('mount-type'),
+				mountPoint = $('#usedSpacePercent').data('mount-point');
 			if (usedSpacePercent > 98) {
 				if (owner !== OC.getCurrentUser().uid) {
 					OC.Notification.show(t('files', 'Storage of {owner} is full, files can not be updated or synced anymore!',
 						{owner: ownerDisplayName}), {type: 'error'}
 					);
-					return;
+				} else if (mountType === 'group') {
+					OC.Notification.show(t('files',
+						'Group folder "{mountPoint}" is full, files can not be updated or synced anymore!',
+						{mountPoint: mountPoint}),
+						{type: 'error'}
+					);
+				} else if (mountType === 'external') {
+					OC.Notification.show(t('files',
+						'External storage "{mountPoint}" is full, files can not be updated or synced anymore!',
+						{mountPoint: mountPoint}),
+						{type : 'error'}
+					);
+				} else {
+					OC.Notification.show(t('files',
+						'Your storage is full, files can not be updated or synced anymore!'),
+						{type: 'error'}
+					);
 				}
-				OC.Notification.show(t('files',
-					'Your storage is full, files can not be updated or synced anymore!'),
-					{type : 'error'}
-				);
-				return;
-			}
-			if (usedSpacePercent > 90) {
+			} else if (usedSpacePercent > 90) {
 				if (owner !== OC.getCurrentUser().uid) {
-					OC.Notification.show(t('files', 'Storage of {owner} is almost full ({usedSpacePercent}%)',
+					OC.Notification.show(t('files', 'Storage of {owner} is almost full ({usedSpacePercent}%).',
 						{
 							usedSpacePercent: usedSpacePercent,
 							owner: ownerDisplayName
@@ -180,12 +194,24 @@
 							type: 'error'
 						}
 					);
-					return;
+				} else if (mountType === 'group') {
+					OC.Notification.show(t('files',
+						'Group folder "{mountPoint}" is almost full ({usedSpacePercent}%).',
+						{mountPoint: mountPoint, usedSpacePercent: usedSpacePercent}),
+						{type : 'error'}
+					);
+				} else if (mountType === 'external') {
+					OC.Notification.show(t('files',
+						'External storage "{mountPoint}" is almost full ({usedSpacePercent}%).',
+						{mountPoint: mountPoint, usedSpacePercent: usedSpacePercent}),
+						{type : 'error'}
+					);
+				} else {
+					OC.Notification.show(t('files', 'Your storage is almost full ({usedSpacePercent}%).',
+						{usedSpacePercent: usedSpacePercent}),
+						{type : 'error'}
+					);
 				}
-				OC.Notification.show(t('files', 'Your storage is almost full ({usedSpacePercent}%)',
-					{usedSpacePercent: usedSpacePercent}),
-					{type : 'error'}
-				);
 			}
 		},
 

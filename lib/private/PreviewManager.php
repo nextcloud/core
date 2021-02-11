@@ -4,7 +4,7 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
- * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author John Molakvoæ <skjnldsv@protonmail.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Olivier Paroz <github@oparoz.com>
@@ -58,7 +58,7 @@ class PreviewManager implements IPreview {
 
 	/** @var Generator */
 	private $generator;
-	
+
 	/** @var GeneratorHelper */
 	private $helper;
 
@@ -261,7 +261,6 @@ class PreviewManager implements IPreview {
 						continue;
 					}
 
-					/** @var $provider IProvider */
 					if ($provider->isAvailable($file)) {
 						return true;
 					}
@@ -315,6 +314,7 @@ class PreviewManager implements IPreview {
 			Preview\HEIC::class,
 			Preview\XBitmap::class,
 			Preview\Krita::class,
+			Preview\WebP::class,
 		];
 
 		$this->defaultProviders = $this->config->getSystemValue('enabledPreviewProviders', array_merge([
@@ -361,6 +361,7 @@ class PreviewManager implements IPreview {
 		$this->registerCoreProvider(Preview\GIF::class, '/image\/gif/');
 		$this->registerCoreProvider(Preview\BMP::class, '/image\/bmp/');
 		$this->registerCoreProvider(Preview\XBitmap::class, '/image\/x-xbitmap/');
+		$this->registerCoreProvider(Preview\WebP::class, '/image\/webp/');
 		$this->registerCoreProvider(Preview\Krita::class, '/application\/x-krita/');
 		$this->registerCoreProvider(Preview\MP3::class, '/audio\/mpeg/');
 		$this->registerCoreProvider(Preview\OpenDocument::class, '/application\/vnd.oasis.opendocument.*/');
@@ -370,14 +371,16 @@ class PreviewManager implements IPreview {
 			$checkImagick = new \Imagick();
 
 			$imagickProviders = [
-				'SVG'	=> ['mimetype' => '/image\/svg\+xml/', 'class' => Preview\SVG::class],
-				'TIFF'	=> ['mimetype' => '/image\/tiff/', 'class' => Preview\TIFF::class],
-				'PDF'	=> ['mimetype' => '/application\/pdf/', 'class' => Preview\PDF::class],
-				'AI'	=> ['mimetype' => '/application\/illustrator/', 'class' => Preview\Illustrator::class],
-				'PSD'	=> ['mimetype' => '/application\/x-photoshop/', 'class' => Preview\Photoshop::class],
-				'EPS'	=> ['mimetype' => '/application\/postscript/', 'class' => Preview\Postscript::class],
-				'TTF'	=> ['mimetype' => '/application\/(?:font-sfnt|x-font$)/', 'class' => Preview\Font::class],
-				'HEIC'  => ['mimetype' => '/image\/hei(f|c)/', 'class' => Preview\HEIC::class],
+				'SVG' => ['mimetype' => '/image\/svg\+xml/', 'class' => Preview\SVG::class],
+				'TIFF' => ['mimetype' => '/image\/tiff/', 'class' => Preview\TIFF::class],
+				'PDF' => ['mimetype' => '/application\/pdf/', 'class' => Preview\PDF::class],
+				'AI' => ['mimetype' => '/application\/illustrator/', 'class' => Preview\Illustrator::class],
+				'PSD' => ['mimetype' => '/application\/x-photoshop/', 'class' => Preview\Photoshop::class],
+				'EPS' => ['mimetype' => '/application\/postscript/', 'class' => Preview\Postscript::class],
+				'TTF' => ['mimetype' => '/application\/(?:font-sfnt|x-font$)/', 'class' => Preview\Font::class],
+				'HEIC' => ['mimetype' => '/image\/hei(f|c)/', 'class' => Preview\HEIC::class],
+				'TGA' => ['mimetype' => '/image\/t(ar)?ga/', 'class' => Preview\TGA::class],
+				'SGI' => ['mimetype' => '/image\/sgi/', 'class' => Preview\SGI::class],
 			];
 
 			foreach ($imagickProviders as $queryFormat => $provider) {

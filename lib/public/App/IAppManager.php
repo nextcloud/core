@@ -37,7 +37,6 @@ use OCP\IUser;
 /**
  * Interface IAppManager
  *
- * @package OCP\App
  * @since 8.0.0
  */
 interface IAppManager {

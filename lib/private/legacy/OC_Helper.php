@@ -7,9 +7,9 @@
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Clark Tomlinson <fallen013@gmail.com>
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Felix Moeller <mail@felixmoeller.de>
+ * @author J0WI <J0WI@users.noreply.github.com>
  * @author Jakob Sack <mail@jakobsack.de>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joas Schilling <coding@schilljs.com>
@@ -26,7 +26,7 @@
  * @author Simon Könnecke <simonkoennecke@gmail.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Tanghus <thomas@tanghus.net>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -44,6 +44,7 @@
  *
  */
 
+use bantu\IniGetWrapper\IniGetWrapper;
 use Symfony\Component\Process\ExecutableFinder;
 
 /**
@@ -94,7 +95,7 @@ class OC_Helper {
 	 *
 	 * Makes 2kB to 2048.
 	 *
-	 * Inspired by: http://www.php.net/manual/en/function.filesize.php#92418
+	 * Inspired by: https://www.php.net/manual/en/function.filesize.php#92418
 	 */
 	public static function computerFileSize($str) {
 		$str = strtolower($str);
@@ -220,7 +221,7 @@ class OC_Helper {
 		// Default check will be done with $path directories :
 		$dirs = explode(PATH_SEPARATOR, $path);
 		// WARNING : We have to check if open_basedir is enabled :
-		$obd = OC::$server->getIniWrapper()->getString('open_basedir');
+		$obd = OC::$server->get(IniGetWrapper::class)->getString('open_basedir');
 		if ($obd != "none") {
 			$obd_values = explode(PATH_SEPARATOR, $obd);
 			if (count($obd_values) > 0 and $obd_values[0]) {
@@ -340,7 +341,7 @@ class OC_Helper {
 	 * @return array
 	 *
 	 * Returns an array with all keys from input lowercased or uppercased. Numbered indices are left as is.
-	 * based on http://www.php.net/manual/en/function.array-change-key-case.php#107715
+	 * based on https://www.php.net/manual/en/function.array-change-key-case.php#107715
 	 *
 	 */
 	public static function mb_array_change_key_case($input, $case = MB_CASE_LOWER, $encoding = 'UTF-8') {
@@ -361,7 +362,7 @@ class OC_Helper {
 	 *
 	 * performs a search in a nested array
 	 *
-	 * taken from http://www.php.net/manual/en/function.array-search.php#97645
+	 * taken from https://www.php.net/manual/en/function.array-search.php#97645
 	 */
 	public static function recursiveArraySearch($haystack, $needle, $index = null) {
 		$aIt = new RecursiveArrayIterator($haystack);
@@ -414,7 +415,7 @@ class OC_Helper {
 	 * @return int PHP upload file size limit
 	 */
 	public static function uploadLimit() {
-		$ini = \OC::$server->getIniWrapper();
+		$ini = \OC::$server->get(IniGetWrapper::class);
 		$upload_max_filesize = OCP\Util::computerFileSize($ini->get('upload_max_filesize'));
 		$post_max_size = OCP\Util::computerFileSize($ini->get('post_max_size'));
 		if ((int)$upload_max_filesize === 0 and (int)$post_max_size === 0) {
@@ -436,7 +437,7 @@ class OC_Helper {
 		if (!function_exists($function_name)) {
 			return false;
 		}
-		$ini = \OC::$server->getIniWrapper();
+		$ini = \OC::$server->get(IniGetWrapper::class);
 		$disabled = explode(',', $ini->get('disable_functions') ?: '');
 		$disabled = array_map('trim', $disabled);
 		if (in_array($function_name, $disabled)) {
@@ -475,6 +476,9 @@ class OC_Helper {
 	/**
 	 * Calculate the disc space for the given path
 	 *
+	 * BEWARE: this requires that Util::setupFS() was called
+	 * already !
+	 *
 	 * @param string $path
 	 * @param \OCP\Files\FileInfo $rootInfo (optional)
 	 * @return array
@@ -495,7 +499,8 @@ class OC_Helper {
 			$used = 0;
 		}
 		$quota = \OCP\Files\FileInfo::SPACE_UNLIMITED;
-		$storage = $rootInfo->getStorage();
+		$mount = $rootInfo->getMountPoint();
+		$storage = $mount->getStorage();
 		$sourceStorage = $storage;
 		if ($storage->instanceOfStorage('\OCA\Files_Sharing\SharedStorage')) {
 			$includeExtStorage = false;
@@ -544,6 +549,11 @@ class OC_Helper {
 		if ($owner) {
 			$ownerDisplayName = $owner->getDisplayName();
 		}
+		if (substr_count($mount->getMountPoint(), '/') < 3) {
+			$mountPoint = '';
+		} else {
+			[,,,$mountPoint] = explode('/', $mount->getMountPoint(), 4);
+		}
 
 		return [
 			'free' => $free,
@@ -553,6 +563,8 @@ class OC_Helper {
 			'relative' => $relative,
 			'owner' => $ownerId,
 			'ownerDisplayName' => $ownerDisplayName,
+			'mountType' => $mount->getMountType(),
+			'mountPoint' => trim($mountPoint, '/'),
 		];
 	}
 

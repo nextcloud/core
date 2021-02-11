@@ -29,7 +29,6 @@
     "Federated Cloud Sharing" : "Sammenknyttet skydeling",
     "Open documentation" : "Åpne dokumentasjonen",
     "Adjust how people can share between servers." : "Juster hvordan folk kan dele mellom servere.",
-    "Allow users on this server to send shares to other servers" : "Tillat at brukere på denne serveren sender delinger til andre servere",
     "Allow users on this server to receive shares from other servers" : "Tillat at brukere på denne serveren mottar delinger fra andre servere",
     "Search global and public address book for users" : "Søk global og offentlige adressebøker etter brukere",
     "Allow users to publish their data to a global and public address book" : "Tillat brukere å offentliggjøre deres data til en verdensomspennende og offentlig adressebok",
@@ -39,7 +38,6 @@
     "Add to your website" : "Legg på nettsiden din",
     "Share with me via Nextcloud" : "Del med meg via Nextcloud",
     "HTML Code:" : "HTML-kode:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Du har mottatt \"%3$s\" som en ekstern deling fra %1$s (på vegne av %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Du har mottatt \"%3$s\" som en ekstern deling fra %1$s"
+    "Allow users on this server to send shares to other servers" : "Tillat at brukere på denne serveren sender delinger til andre servere"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -129,7 +129,7 @@ OC.L10N.register(
     "Groups" : "Grupy",
     "Expert" : "Eksperckie",
     "Advanced" : "Zaawansowane",
-    "<b>Warning:</b> The PHP LDAP module is not installed, the backend will not work. Please ask your system administrator to install it." : "<b>Ostrzeżenie:</b>  Moduł PHP LDAP nie jest zainstalowany i nie będzie działał. Poproś administratora o włączenie go.",
+    "<b>Warning:</b> The PHP LDAP module is not installed, the backend will not work. Please ask your system administrator to install it." : "<b>Ostrzeżenie:</b> Moduł PHP LDAP jest niezainstalowany i nie będzie działał. Poproś administratora systemu o zainstalowanie go.",
     "Connection Settings" : "Konfiguracja połączeń",
     "Configuration Active" : "Konfiguracja archiwum",
     "When unchecked, this configuration will be skipped." : "Gdy niezaznaczone, ta konfiguracja zostanie pominięta.",
@@ -189,7 +189,6 @@ OC.L10N.register(
     "Username-LDAP User Mapping" : "Mapowanie użytkownika LDAP",
     "Usernames are used to store and assign metadata. In order to precisely identify and recognize users, each LDAP user will have an internal username. This requires a mapping from username to LDAP user. The created username is mapped to the UUID of the LDAP user. Additionally the DN is cached as well to reduce LDAP interaction, but it is not used for identification. If the DN changes, the changes will be found. The internal username is used all over. Clearing the mappings will have leftovers everywhere. Clearing the mappings is not configuration sensitive, it affects all LDAP configurations! Never clear the mappings in a production environment, only in a testing or experimental stage." : "Nazwy użytkowników służą do przechowywania i przypisywania metadanych. Aby precyzyjnie zidentyfikować i rozpoznać użytkowników, każdy użytkownik LDAP będzie miał wewnętrzną nazwę użytkownika. Wymaga to mapowania z nazwy użytkownika na użytkownika LDAP. Utworzona nazwa użytkownika jest mapowana na UUID użytkownika LDAP. Dodatkowo DN jest buforowany w celu zmniejszenia interakcji LDAP, ale nie jest używany do identyfikacji. Zmiany zostaną wykryte jeśli DN zmieni się. Wewnętrzna nazwa użytkownika jest używana wszędzie. Wyczyszczenie mapowań pozostawi pozostałości po nim. Wyczyszczenie mapowań nie ma wpływu na konfigurację, ale ma wpływ na wszystkie konfiguracje LDAP! Nigdy nie usuwaj mapowań w środowisku produkcyjnym, tylko na etapie testowym lub eksperymentalnym.",
     "Clear Username-LDAP User Mapping" : "Czyść Mapowanie użytkownika LDAP",
-    "Clear Groupname-LDAP Group Mapping" : "Czyść Mapowanie nazwy grupy LDAP",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Pozostaw puste dla user name (domyślnie). W przeciwnym razie podaj atrybut LDAP/AD."
+    "Clear Groupname-LDAP Group Mapping" : "Czyść Mapowanie nazwy grupy LDAP"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

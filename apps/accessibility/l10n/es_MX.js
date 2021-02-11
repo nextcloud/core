@@ -10,10 +10,6 @@ OC.L10N.register(
     "Enable dyslexia font" : "Habilitar fuente para dislexia",
     "Accessibility" : "Accesibilidad",
     "Accessibility options for nextcloud" : "Opciones de accesibilidad para nextcloud",
-    "Provides multiple accessibilities options to ease your use of Nextcloud" : "Provee múltiples opciones de accesibilidad para facilitar su uso de Nextcloud",
-    "High contrast theme" : "Tema de alto contraste",
-    "A high contrast theme to ease your navigation. Visual quality will be reduced but clarity will be increased." : "Un tema de alto contraste para facilitar tu navegación. La calidad visual será reducida pero la claridad se verá incrementada.",
-    "our design team" : "nuestro equipo de diseño",
-    "Enable" : "Habilitar"
+    "Provides multiple accessibilities options to ease your use of Nextcloud" : "Provee múltiples opciones de accesibilidad para facilitar su uso de Nextcloud"
 },
 "nplurals=2; plural=(n != 1);");

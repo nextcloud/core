@@ -243,7 +243,6 @@ describe('OCA.SystemTags.SystemTagsInfoView tests', function() {
 			view.openDropdown();
 
 			expect(select2Stub.calledOnce).toBeTruthy();
-			expect(select2Stub.thisValues[0].selector).toEqual('.systemTagsInputField');
 			expect(select2Stub.withArgs('open')).toBeTruthy();
 		});
 	});

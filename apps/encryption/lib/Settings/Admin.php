@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -99,10 +100,10 @@ class Admin implements ISettings {
 		$encryptHomeStorage = $util->shouldEncryptHomeStorage();
 
 		$parameters = [
-			'recoveryEnabled'    => $recoveryAdminEnabled,
-			'initStatus'         => $session->getStatus(),
+			'recoveryEnabled' => $recoveryAdminEnabled,
+			'initStatus' => $session->getStatus(),
 			'encryptHomeStorage' => $encryptHomeStorage,
-			'masterKeyEnabled'   => $util->isMasterKeyEnabled(),
+			'masterKeyEnabled' => $util->isMasterKeyEnabled(),
 		];
 
 		return new TemplateResponse('encryption', 'settings-admin', $parameters, '');

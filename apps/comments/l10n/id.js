@@ -8,17 +8,18 @@ OC.L10N.register(
     "%1$s commented on %2$s" : "%1$s dikomentari pada %2$s",
     "Edit comment" : "Sunting komentar",
     "Delete comment" : "Hapus komentar",
+    "No comments yet, start the conversation!" : "Belum ada yang berkomentar, mulailah perbincangan!",
+    "Retry" : "Ulangi",
+    "Comment" : "Komentar",
     "New comment …" : "Komentar baru ...",
     "Post" : "Posting",
     "Cancel" : "Batal",
     "[Deleted user]" : "[Hapus pengguna]",
-    "No comments yet, start the conversation!" : "Belum ada yang berkomentar, mulailah perbincangan!",
     "More comments …" : "Komentar lainnya ...",
     "Save" : "Simpan",
     "Allowed characters {count} of {max}" : "Karakter yang diizinkan {count} dari {max}",
     "Error occurred while retrieving comment with ID {id}" : "Terjadi galat saat mendapatkan komentar dengan ID {id}",
     "Error occurred while updating comment with id {id}" : "Terjadi kesalahan saat memperbarui komentar dengan id {id}",
-    "Error occurred while posting comment" : "Terjadi kesalahan saat memosting komentar",
-    "Comment" : "Komentar"
+    "Error occurred while posting comment" : "Terjadi kesalahan saat memosting komentar"
 },
 "nplurals=1; plural=0;");

@@ -185,12 +185,12 @@ class HasherTest extends \Test\TestCase {
 		$message = 'mysecret';
 
 		$blowfish = 1 . '|' . password_hash($message, PASSWORD_BCRYPT, []);
-		$argon2  = 2 . '|' . password_hash($message, PASSWORD_ARGON2I, []);
+		$argon2 = 2 . '|' . password_hash($message, PASSWORD_ARGON2I, []);
 
 		$newAlg = PASSWORD_ARGON2I;
 		if (\defined('PASSWORD_ARGON2ID')) {
 			$newAlg = PASSWORD_ARGON2ID;
-			$argon2  = 2 . '|' . password_hash($message, PASSWORD_ARGON2ID, []);
+			$argon2 = 2 . '|' . password_hash($message, PASSWORD_ARGON2ID, []);
 		}
 
 
@@ -213,7 +213,7 @@ class HasherTest extends \Test\TestCase {
 
 		$message = 'mysecret';
 
-		$argon2i  = 2 . '|' . password_hash($message, PASSWORD_ARGON2I, []);
+		$argon2i = 2 . '|' . password_hash($message, PASSWORD_ARGON2I, []);
 
 		$newHash = null;
 		$this->assertTrue($this->hasher->verify($message, $argon2i, $newHash));
@@ -237,7 +237,7 @@ class HasherTest extends \Test\TestCase {
 
 		$message = 'mysecret';
 
-		$argon2id  = 3 . '|' . password_hash($message, PASSWORD_ARGON2ID, []);
+		$argon2id = 3 . '|' . password_hash($message, PASSWORD_ARGON2ID, []);
 
 		$newHash = null;
 		$this->assertTrue($this->hasher->verify($message, $argon2id, $newHash));

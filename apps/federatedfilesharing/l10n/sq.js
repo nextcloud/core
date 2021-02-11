@@ -31,7 +31,6 @@ OC.L10N.register(
     "Federated Cloud Sharing" : "Ndarje Në Re të Federuar ",
     "Open documentation" : "Hap dokumentimin",
     "Adjust how people can share between servers." : "Përshtatni mënyrën se si njerëzit mund të ndajnë midis serverëve.",
-    "Allow users on this server to send shares to other servers" : "Lejoju përdoruesve në këtë shërbyes të dërgojnë ndarje në shërbyes të tjerë",
     "Allow users on this server to receive shares from other servers" : "Lejoju përdoruesve në këtë shërbyes të marrin ndarje nga shërbyes të tjerë",
     "Search global and public address book for users" : "Kërko librin e adresave globale dhe publike për përdoruesit",
     "Allow users to publish their data to a global and public address book" : "Lejo përdoruesit të publikojnë të dhënat e tyre në një libër adresash botërore dhe globale",
@@ -41,7 +40,6 @@ OC.L10N.register(
     "Add to your website" : "Shtojeni te sajti juaj",
     "Share with me via Nextcloud" : "Ndani me mua përmes Nextcloud-it",
     "HTML Code:" : "Kod HTML:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Ju pranuat \"%3$s\" si një shpërndarje në distancë nga %1$s (në emër të %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Ju pranuat \"%3$s\" si një shpërndarje në distancë nga %1$s"
+    "Allow users on this server to send shares to other servers" : "Lejoju përdoruesve në këtë shërbyes të dërgojnë ndarje në shërbyes të tjerë"
 },
 "nplurals=2; plural=(n != 1);");

@@ -123,6 +123,7 @@ describe('OC.Upload tests', function() {
 	});
 	describe('Upload conflicts', function() {
 		var conflictDialogStub;
+		var clock;
 		var fileList;
 
 		beforeEach(function() {
@@ -162,6 +163,11 @@ describe('OC.Upload tests', function() {
 			deferred.resolve();
 		});
 		afterEach(function() {
+			if (clock) {
+				clock.restore();
+				clock = undefined
+			}
+
 			conflictDialogStub.restore();
 
 			fileList.destroy();
@@ -210,7 +216,7 @@ describe('OC.Upload tests', function() {
 					expect(result[1].submit.calledOnce).toEqual(false);
 					expect(result[2].submit.calledOnce).toEqual(true);
 					done();
-				}, 0);
+				}, 10);
 			});
 			var result = addFiles(uploader, [
 				{name: 'conflict.txt'},
@@ -251,8 +257,6 @@ describe('OC.Upload tests', function() {
 			uploader.onReplace(upload);
 		});
 		it('autorenames file when choosing replace in conflict mode', function(done) {
-			// needed for _.defer call
-			var clock = sinon.useFakeTimers();
 			var fileData = {name: 'conflict.txt'};
 			var uploadData = addFiles(uploader, [
 				fileData
@@ -272,15 +276,15 @@ describe('OC.Upload tests', function() {
 					expect(uploadData[0].submit.calledOnce).toEqual(true);
 					getResponseStatusStub.returns(412);
 					uploader.fileUploadParam.fail.call($dummyUploader[0], {}, uploadData[0]);
-					clock.tick(500);
 				}
 				if(counter===2)
 				{
-					expect(upload.getFileName()).toEqual('conflict (3).txt');
-					expect(uploadData[0].submit.calledTwice).toEqual(true);
+					_.defer(function() {
+						expect(upload.getFileName()).toEqual('conflict (3).txt');
+						expect(uploadData[0].submit.calledTwice).toEqual(true);
 
-					clock.restore();
-					done();
+						done();
+					})
 				}
 			});
 

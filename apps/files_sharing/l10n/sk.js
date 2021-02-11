@@ -95,6 +95,7 @@ OC.L10N.register(
     "Share for file {file} expired" : "Zdieľanie súboru {file} vypršalo",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "Súbor alebo adresár zdieľaný cez email alebo verejný odkaz bol <strong>stiahnutý</strong>",
     "A file or folder was shared from <strong>another server</strong>" : "Súbor alebo priečinok bol sprístupnený z <strong>iného servera</strong>",
+    "Files" : "Súbory",
     "A file or folder has been <strong>shared</strong>" : "Súbor alebo priečinok bol <strong>sprístupnený</strong>",
     "Shared link" : "Zdieľaný odkaz",
     "Wrong share ID, share doesn't exist" : "Neplatné ID sprístupnenia, sprístupnenie neexistuje",
@@ -168,6 +169,7 @@ OC.L10N.register(
     "Password protection" : "Ochrana heslom",
     "Enter a password" : "Zadajte heslo",
     "Expiration date (enforced)" : "Dátum ukončenia platnosti (vynútené)",
+    "Create share" : "Vytvoriť sprístupnenie",
     "Cancel" : "Zrušiť",
     "Share label" : "Štitok zdieľania",
     "Read only" : "Iba na čítanie",
@@ -185,10 +187,8 @@ OC.L10N.register(
     "Error, please enter proper password and/or expiration date" : "Chyba, zadajte správne heslo a/alebo dátum ukončenia platnosti",
     "No recommendations. Start typing." : "Žiadne odporúčania. Píšte.",
     "Resharing is not allowed" : "Opätovné sprístupňovanie nie je povolené",
-    "Name or email address …" : "Meno alebo e-mailová adresa…",
-    "Name or federated cloud ID …" : "Meno alebo ID v rámci združeného cloudu…",
-    "Name, federated cloud ID or email address …" : "Meno, ID v rámci združeného cloudu, alebo e-mailová adresa…",
-    "Name …" : "Meno …",
+    "Name or email …" : "Meno alebo e-mail …",
+    "Name, email, or Federated Cloud ID …" : "Meno, e-mail alebo ID združeného cloudu …",
     "Searching …" : "Hľadá sa …",
     "No elements found." : "Nenájdené žiadne prvky.",
     "Search globally" : "Hľadať globálne",
@@ -231,7 +231,6 @@ OC.L10N.register(
     "Uploading files" : "Nahrávanie súborov",
     "Uploaded files:" : "Nahrané súbory...",
     "By uploading files, you agree to the %1$sterms of service%2$s." : "Nahraním súborov vyjadrujete súhlas so všeobecnými podmienkami %1$s %2$s.",
-    "could not delete share" : "nie je možné zmazať sprístupnenie",
-    "Uploading files…" : "Nahrávanie súborov..."
+    "Name, email, or federated cloud ID …" : "Meno, e-mail alebo ID združeného cloudu …"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

@@ -26,7 +26,6 @@ namespace OCP\Command;
 /**
  * Interface IBus
  *
- * @package OCP\Command
  * @since 8.1.0
  */
 interface IBus {

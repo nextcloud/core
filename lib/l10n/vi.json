@@ -65,8 +65,6 @@
     "Application is not enabled" : "Ứng dụng không được BẬT",
     "Authentication error" : "Lỗi xác thực",
     "Token expired. Please reload page." : "Mã Token đã hết hạn. Hãy tải lại trang.",
-    "Storage is temporarily not available" : "Kho lưu trữ tạm thời không khả dụng",
-    "Sharing" : "Đang chia sẽ",
-    "Security" : "Bảo mật"
+    "Storage is temporarily not available" : "Kho lưu trữ tạm thời không khả dụng"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

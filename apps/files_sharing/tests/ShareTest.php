@@ -44,7 +44,7 @@ class ShareTest extends TestCase {
 		parent::setUp();
 
 		$this->folder = self::TEST_FOLDER_NAME;
-		$this->subfolder  = '/subfolder_share_api_test';
+		$this->subfolder = '/subfolder_share_api_test';
 		$this->subsubfolder = '/subsubfolder_share_api_test';
 
 		$this->filename = '/share-api-test.txt';

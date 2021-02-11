@@ -18,9 +18,6 @@ OC.L10N.register(
     "An error occurred while generating your backup codes" : "Při pokusu o vytvoření záložních kódů nastala chyba.",
     "{name} backup codes" : "{name} záložní kódy",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Použijte jeden ze svých záložních kódů které jste si uložili při nastavování dvoufázového ověřování.",
-    "Submit" : "Odeslat",
-    "function" : "funkce",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["ikona-nacitani-mala","ikony-nacitani-male","ikon-nacitani-malych","vytvorit-zalozni-kody"]
+    "Submit" : "Odeslat"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

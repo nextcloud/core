@@ -27,7 +27,9 @@ import {
 	clearMessage,
 } from '../services/statusService'
 import { loadState } from '@nextcloud/initial-state'
+import { getCurrentUser } from '@nextcloud/auth'
 import { getTimestampForClearAt } from '../services/clearAtService'
+import { emit } from '@nextcloud/event-bus'
 
 const state = {
 	// Status (online / away / dnd / invisible / offline)
@@ -145,13 +147,21 @@ const actions = {
 	 *
 	 * @param {Object} vuex The Vuex destructuring object
 	 * @param {Function} vuex.commit The Vuex commit function
+	 * @param {Object} vuex.state The Vuex state object
 	 * @param {Object} data The data destructuring object
 	 * @param {String} data.statusType The new status type
 	 * @returns {Promise<void>}
 	 */
-	async setStatus({ commit }, { statusType }) {
+	async setStatus({ commit, state }, { statusType }) {
 		await setStatus(statusType)
 		commit('setStatus', { statusType })
+		emit('user_status:status.updated', {
+			status: state.status,
+			message: state.message,
+			icon: state.icon,
+			clearAt: state.clearAt,
+			userId: getCurrentUser()?.uid,
+		})
 	},
 
 	/**
@@ -159,13 +169,14 @@ const actions = {
 	 *
 	 * @param {Object} vuex The Vuex destructuring object
 	 * @param {Function} vuex.commit The Vuex commit function
+	 * @param {Object} vuex.state The Vuex state object
 	 * @param {Object} vuex.rootState The Vuex root state
 	 * @param {Object} data The data destructuring object
 	 * @param {String} data.messageId The messageId
 	 * @param {Object|null} data.clearAt When to automatically clear the status
 	 * @returns {Promise<void>}
 	 */
-	async setPredefinedMessage({ commit, rootState }, { messageId, clearAt }) {
+	async setPredefinedMessage({ commit, rootState, state }, { messageId, clearAt }) {
 		const resolvedClearAt = getTimestampForClearAt(clearAt)
 
 		await setPredefinedMessage(messageId, resolvedClearAt)
@@ -173,6 +184,13 @@ const actions = {
 		const { message, icon } = status
 
 		commit('setPredefinedMessage', { messageId, clearAt: resolvedClearAt, message, icon })
+		emit('user_status:status.updated', {
+			status: state.status,
+			message: state.message,
+			icon: state.icon,
+			clearAt: state.clearAt,
+			userId: getCurrentUser()?.uid,
+		})
 	},
 
 	/**
@@ -180,17 +198,25 @@ const actions = {
 	 *
 	 * @param {Object} vuex The Vuex destructuring object
 	 * @param {Function} vuex.commit The Vuex commit function
+	 * @param {Object} vuex.state The Vuex state object
 	 * @param {Object} data The data destructuring object
 	 * @param {String} data.message The message
 	 * @param {String} data.icon The icon
 	 * @param {Object|null} data.clearAt When to automatically clear the status
 	 * @returns {Promise<void>}
 	 */
-	async setCustomMessage({ commit }, { message, icon, clearAt }) {
+	async setCustomMessage({ commit, state }, { message, icon, clearAt }) {
 		const resolvedClearAt = getTimestampForClearAt(clearAt)
 
 		await setCustomMessage(message, icon, resolvedClearAt)
 		commit('setCustomMessage', { message, icon, clearAt: resolvedClearAt })
+		emit('user_status:status.updated', {
+			status: state.status,
+			message: state.message,
+			icon: state.icon,
+			clearAt: state.clearAt,
+			userId: getCurrentUser()?.uid,
+		})
 	},
 
 	/**
@@ -198,11 +224,19 @@ const actions = {
 	 *
 	 * @param {Object} vuex The Vuex destructuring object
 	 * @param {Function} vuex.commit The Vuex commit function
+	 * @param {Object} vuex.state The Vuex state object
 	 * @returns {Promise<void>}
 	 */
-	async clearMessage({ commit }) {
+	async clearMessage({ commit, state }) {
 		await clearMessage()
 		commit('clearMessage')
+		emit('user_status:status.updated', {
+			status: state.status,
+			message: state.message,
+			icon: state.icon,
+			clearAt: state.clearAt,
+			userId: getCurrentUser()?.uid,
+		})
 	},
 
 	/**

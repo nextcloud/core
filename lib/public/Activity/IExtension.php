@@ -5,6 +5,7 @@
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -28,7 +29,6 @@ namespace OCP\Activity;
 /**
  * Interface IExtension
  *
- * @package OCP\Activity
  * @since 8.0.0
  */
 interface IExtension {
@@ -36,9 +36,9 @@ interface IExtension {
 	public const METHOD_MAIL = 'email';
 	public const METHOD_NOTIFICATION = 'notification';
 
-	public const PRIORITY_VERYLOW 	= 10;
-	public const PRIORITY_LOW	= 20;
-	public const PRIORITY_MEDIUM	= 30;
-	public const PRIORITY_HIGH	= 40;
-	public const PRIORITY_VERYHIGH	= 50;
+	public const PRIORITY_VERYLOW = 10;
+	public const PRIORITY_LOW = 20;
+	public const PRIORITY_MEDIUM = 30;
+	public const PRIORITY_HIGH = 40;
+	public const PRIORITY_VERYHIGH = 50;
 }

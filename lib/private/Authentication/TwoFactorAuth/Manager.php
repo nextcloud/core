@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -27,8 +28,6 @@ declare(strict_types=1);
 
 namespace OC\Authentication\TwoFactorAuth;
 
-use function array_diff;
-use function array_filter;
 use BadMethodCallException;
 use Exception;
 use OC\Authentication\Exceptions\InvalidTokenException;
@@ -39,11 +38,13 @@ use OCP\Authentication\TwoFactorAuth\IActivatableAtLogin;
 use OCP\Authentication\TwoFactorAuth\IProvider;
 use OCP\Authentication\TwoFactorAuth\IRegistry;
 use OCP\IConfig;
-use OCP\ILogger;
 use OCP\ISession;
 use OCP\IUser;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
+use function array_diff;
+use function array_filter;
 
 class Manager {
 	public const SESSION_UID_KEY = 'two_factor_auth_uid';
@@ -69,7 +70,7 @@ class Manager {
 	/** @var IManager */
 	private $activityManager;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var TokenProvider */
@@ -84,9 +85,13 @@ class Manager {
 	public function __construct(ProviderLoader $providerLoader,
 								IRegistry $providerRegistry,
 								MandatoryTwoFactor $mandatoryTwoFactor,
-								ISession $session, IConfig $config,
-								IManager $activityManager, ILogger $logger, TokenProvider $tokenProvider,
-								ITimeFactory $timeFactory, EventDispatcherInterface $eventDispatcher) {
+								ISession $session,
+								IConfig $config,
+								IManager $activityManager,
+								LoggerInterface $logger,
+								TokenProvider $tokenProvider,
+								ITimeFactory $timeFactory,
+								EventDispatcherInterface $eventDispatcher) {
 		$this->providerLoader = $providerLoader;
 		$this->providerRegistry = $providerRegistry;
 		$this->mandatoryTwoFactor = $mandatoryTwoFactor;
@@ -295,8 +300,7 @@ class Manager {
 		try {
 			$this->activityManager->publish($activity);
 		} catch (BadMethodCallException $e) {
-			$this->logger->warning('could not publish activity', ['app' => 'core']);
-			$this->logger->logException($e, ['app' => 'core']);
+			$this->logger->warning('could not publish activity', ['app' => 'core', 'exception' => $e]);
 		}
 	}
 
@@ -335,7 +339,7 @@ class Manager {
 				$tokenId = $token->getId();
 				$tokensNeeding2FA = $this->config->getUserKeys($user->getUID(), 'login_token_2fa');
 
-				if (!\in_array($tokenId, $tokensNeeding2FA, true)) {
+				if (!\in_array((string) $tokenId, $tokensNeeding2FA, true)) {
 					$this->session->set(self::SESSION_UID_DONE, $user->getUID());
 					return false;
 				}
@@ -372,14 +376,14 @@ class Manager {
 
 		$id = $this->session->getId();
 		$token = $this->tokenProvider->getToken($id);
-		$this->config->setUserValue($user->getUID(), 'login_token_2fa', $token->getId(), $this->timeFactory->getTime());
+		$this->config->setUserValue($user->getUID(), 'login_token_2fa', (string) $token->getId(), $this->timeFactory->getTime());
 	}
 
 	public function clearTwoFactorPending(string $userId) {
 		$tokensNeeding2FA = $this->config->getUserKeys($userId, 'login_token_2fa');
 
 		foreach ($tokensNeeding2FA as $tokenId) {
-			$this->tokenProvider->invalidateTokenById($userId, $tokenId);
+			$this->tokenProvider->invalidateTokenById($userId, (int)$tokenId);
 		}
 	}
 }

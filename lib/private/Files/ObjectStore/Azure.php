@@ -130,4 +130,8 @@ class Azure implements IObjectStore {
 			}
 		}
 	}
+
+	public function copyObject($from, $to) {
+		$this->getBlobClient()->copyBlob($this->containerName, $to, $this->containerName, $from);
+	}
 }

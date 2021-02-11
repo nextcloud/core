@@ -31,7 +31,7 @@ class Rotate extends TimedJob {
 	use RotationTrait;
 
 	public function __construct() {
-		$this->setInterval(60*60*3);
+		$this->setInterval(60 * 60 * 3);
 	}
 
 	protected function run($argument) {

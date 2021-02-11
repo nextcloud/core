@@ -9,11 +9,11 @@
 		attributes, query, set and remove groups, set quota and query total storage used in Nextcloud. Group admin users
 		can also query Nextcloud and perform the same functions as an admin for groups they manage. The API also enables
 		an admin to query for active Nextcloud applications, application info, and to enable or disable an app remotely.
-		Once the app is enabled, http requests can be used via a Basic Auth header to perform any of the functions
+		Once the app is enabled, HTTP requests can be used via a Basic Auth header to perform any of the functions
 		listed above. More information is available in the Provisioning API documentation, including example calls
 		and server responses.
 	</description>
-	<version>1.10.0</version>
+	<version>1.11.0</version>
 	<licence>agpl</licence>
 	<author>Tom Needham</author>
 	<namespace>Provisioning_API</namespace>
@@ -27,6 +27,6 @@
 	<category>integration</category>
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 	<dependencies>
-		<nextcloud min-version="20" max-version="20"/>
+		<nextcloud min-version="22" max-version="22"/>
 	</dependencies>
 </info>

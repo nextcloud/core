@@ -81,7 +81,7 @@ class App {
 	 * @deprecated 14.0.0 ise \OC::$server->getAppManager()->getAppInfo($appId)
 	 * @since 4.0.0
 	 */
-	public static function getAppInfo($app, $path=false) {
+	public static function getAppInfo($app, $path = false) {
 		return \OC_App::getAppInfo($app, $path);
 	}
 

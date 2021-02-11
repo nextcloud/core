@@ -7,6 +7,8 @@
  * @author dartcafe <github@dartcafe.de>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author leith abdulla <online-nextcloud@eleith.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Citharel <nextcloud@tcit.fr>
@@ -57,7 +59,7 @@ class CalDavBackendTest extends AbstractCalDavBackend {
 			'{DAV:}displayname' => 'Unit test',
 			'{urn:ietf:params:xml:ns:caldav}calendar-description' => 'Calendar used for unit testing'
 		]);
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::updateCalendar');
 		$this->backend->updateCalendar($calendarId, $patch);
@@ -70,7 +72,7 @@ class CalDavBackendTest extends AbstractCalDavBackend {
 		$this->assertEquals('User\'s displayname', $calendars[0]['{http://nextcloud.com/ns}owner-displayname']);
 
 		// delete the address book
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::deleteCalendar');
 		$this->backend->deleteCalendar($calendars[0]['id']);
@@ -148,7 +150,7 @@ class CalDavBackendTest extends AbstractCalDavBackend {
 		$calendars = $this->backend->getCalendarsForUser(self::UNIT_TEST_USER);
 		$this->assertCount(1, $calendars);
 		$calendar = new Calendar($this->backend, $calendars[0], $l10n, $config);
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::updateShares');
 		$this->backend->updateShares($calendar, $add, []);
@@ -181,7 +183,7 @@ END:VEVENT
 END:VCALENDAR
 EOD;
 
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::createCalendarObject');
 		$this->backend->createCalendarObject($calendarId, $uri, $calData);
@@ -195,7 +197,7 @@ EOD;
 		$this->assertAccess($userCanWrite, self::UNIT_TEST_USER1, '{DAV:}write', $acl);
 
 		// delete the address book
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::deleteCalendar');
 		$this->backend->deleteCalendar($calendars[0]['id']);
@@ -225,7 +227,7 @@ END:VEVENT
 END:VCALENDAR
 EOD;
 
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::createCalendarObject');
 		$this->backend->createCalendarObject($calendarId, $uri, $calData);
@@ -263,7 +265,7 @@ DTEND;VALUE=DATE-TIME:20130912T140000Z
 END:VEVENT
 END:VCALENDAR
 EOD;
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::updateCalendarObject');
 		$this->backend->updateCalendarObject($calendarId, $uri, $calData);
@@ -271,7 +273,7 @@ EOD;
 		$this->assertEquals($calData, $calendarObject['calendardata']);
 
 		// delete the card
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::deleteCalendarObject');
 		$this->backend->deleteCalendarObject($calendarId, $uri);
@@ -366,17 +368,17 @@ END:VCALENDAR
 EOD;
 
 		$uri0 = static::getUniqueID('card');
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::createCalendarObject');
 		$this->backend->createCalendarObject($calendarId, $uri0, $calData[0]);
 		$uri1 = static::getUniqueID('card');
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::createCalendarObject');
 		$this->backend->createCalendarObject($calendarId, $uri1, $calData[1]);
 		$uri2 = static::getUniqueID('card');
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::createCalendarObject');
 		$this->backend->createCalendarObject($calendarId, $uri2, $calData[2]);
@@ -405,15 +407,15 @@ EOD;
 		$this->assertEquals($calData[2], $calendarObjects[1]['calendardata']);
 
 		// delete the card
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::deleteCalendarObject');
 		$this->backend->deleteCalendarObject($calendarId, $uri0);
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::deleteCalendarObject');
 		$this->backend->deleteCalendarObject($calendarId, $uri1);
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::deleteCalendarObject');
 		$this->backend->deleteCalendarObject($calendarId, $uri2);
@@ -498,7 +500,7 @@ EOD;
 	}
 
 	public function testPublications() {
-		$this->dispatcher->expects($this->at(0))
+		$this->legacyDispatcher->expects($this->at(0))
 			->method('dispatch')
 			->with('\OCA\DAV\CalDAV\CalDavBackend::createCalendar');
 
@@ -562,7 +564,7 @@ EOD;
 	}
 
 	public function providesSchedulingData() {
-		$data =<<<EOS
+		$data = <<<EOS
 BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Sabre//Sabre VObject 3.5.0//EN
@@ -664,6 +666,8 @@ EOS;
 		return [
 			'first occurrence before unix epoch starts' => [0, 'firstOccurence', "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Sabre//Sabre VObject 4.1.1//EN\r\nCALSCALE:GREGORIAN\r\nBEGIN:VEVENT\r\nUID:413F269B-B51B-46B1-AFB6-40055C53A4DC\r\nDTSTAMP:20160309T095056Z\r\nDTSTART;VALUE=DATE:16040222\r\nDTEND;VALUE=DATE:16040223\r\nRRULE:FREQ=YEARLY\r\nSUMMARY:SUMMARY\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"],
 			'no first occurrence because yearly' => [null, 'firstOccurence', "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Sabre//Sabre VObject 4.1.1//EN\r\nCALSCALE:GREGORIAN\r\nBEGIN:VEVENT\r\nUID:413F269B-B51B-46B1-AFB6-40055C53A4DC\r\nDTSTAMP:20160309T095056Z\r\nRRULE:FREQ=YEARLY\r\nSUMMARY:SUMMARY\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"],
+			'last occurrence is max when only last VEVENT in group is weekly' => [(new DateTime(CalDavBackend::MAX_DATE))->getTimestamp(), 'lastOccurence', "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Sabre//Sabre VObject 4.3.0//EN\r\nCALSCALE:GREGORIAN\r\nBEGIN:VEVENT\r\nDTSTART;TZID=America/Los_Angeles:20200812T103000\r\nDTEND;TZID=America/Los_Angeles:20200812T110000\r\nDTSTAMP:20200927T180638Z\r\nUID:asdfasdfasdf@google.com\r\nRECURRENCE-ID;TZID=America/Los_Angeles:20200811T123000\r\nCREATED:20200626T181848Z\r\nLAST-MODIFIED:20200922T192707Z\r\nSUMMARY:Weekly 1:1\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;TZID=America/Los_Angeles:20200728T123000\r\nDTEND;TZID=America/Los_Angeles:20200728T130000\r\nEXDATE;TZID=America/Los_Angeles:20200818T123000\r\nRRULE:FREQ=WEEKLY;BYDAY=TU\r\nDTSTAMP:20200927T180638Z\r\nUID:asdfasdfasdf@google.com\r\nCREATED:20200626T181848Z\r\nDESCRIPTION:Setting up recurring time on our calendars\r\nLAST-MODIFIED:20200922T192707Z\r\nSUMMARY:Weekly 1:1\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"],
+			'first occurrence is found when not first VEVENT in group' => [(new DateTime('2020-09-01T110000', new DateTimeZone("America/Los_Angeles")))->getTimestamp(), 'firstOccurence', "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Sabre//Sabre VObject 4.3.0//EN\r\nCALSCALE:GREGORIAN\r\nBEGIN:VEVENT\r\nDTSTART;TZID=America/Los_Angeles:20201013T110000\r\nDTEND;TZID=America/Los_Angeles:20201013T120000\r\nDTSTAMP:20200927T180638Z\r\nUID:asdf0000@google.com\r\nRECURRENCE-ID;TZID=America/Los_Angeles:20201013T110000\r\nCREATED:20160330T034726Z\r\nLAST-MODIFIED:20200925T042014Z\r\nSTATUS:CONFIRMED\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;TZID=America/Los_Angeles:20200901T110000\r\nDTEND;TZID=America/Los_Angeles:20200901T120000\r\nRRULE:FREQ=WEEKLY;BYDAY=TU\r\nEXDATE;TZID=America/Los_Angeles:20200922T110000\r\nEXDATE;TZID=America/Los_Angeles:20200915T110000\r\nEXDATE;TZID=America/Los_Angeles:20200908T110000\r\nDTSTAMP:20200927T180638Z\r\nUID:asdf0000@google.com\r\nCREATED:20160330T034726Z\r\nLAST-MODIFIED:20200915T162810Z\r\nSTATUS:CONFIRMED\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"],
 			'CLASS:PRIVATE' => [CalDavBackend::CLASSIFICATION_PRIVATE, 'classification', "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//dmfs.org//mimedir.icalendar//EN\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Berlin\r\nX-LIC-LOCATION:Europe/Berlin\r\nBEGIN:DAYLIGHT\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nTZNAME:CEST\r\nDTSTART:19700329T020000\r\nRRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nTZNAME:CET\r\nDTSTART:19701025T030000\r\nRRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTART;TZID=Europe/Berlin:20160419T130000\r\nSUMMARY:Test\r\nCLASS:PRIVATE\r\nTRANSP:OPAQUE\r\nSTATUS:CONFIRMED\r\nDTEND;TZID=Europe/Berlin:20160419T140000\r\nLAST-MODIFIED:20160419T074202Z\r\nDTSTAMP:20160419T074202Z\r\nCREATED:20160419T074202Z\r\nUID:2e468c48-7860-492e-bc52-92fa0daeeccf.1461051722310\r\nEND:VEVENT\r\nEND:VCALENDAR"],
 			'CLASS:PUBLIC' => [CalDavBackend::CLASSIFICATION_PUBLIC, 'classification', "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//dmfs.org//mimedir.icalendar//EN\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Berlin\r\nX-LIC-LOCATION:Europe/Berlin\r\nBEGIN:DAYLIGHT\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nTZNAME:CEST\r\nDTSTART:19700329T020000\r\nRRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nTZNAME:CET\r\nDTSTART:19701025T030000\r\nRRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTART;TZID=Europe/Berlin:20160419T130000\r\nSUMMARY:Test\r\nCLASS:PUBLIC\r\nTRANSP:OPAQUE\r\nSTATUS:CONFIRMED\r\nDTEND;TZID=Europe/Berlin:20160419T140000\r\nLAST-MODIFIED:20160419T074202Z\r\nDTSTAMP:20160419T074202Z\r\nCREATED:20160419T074202Z\r\nUID:2e468c48-7860-492e-bc52-92fa0daeeccf.1461051722310\r\nEND:VEVENT\r\nEND:VCALENDAR"],
 			'CLASS:CONFIDENTIAL' => [CalDavBackend::CLASSIFICATION_CONFIDENTIAL, 'classification', "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//dmfs.org//mimedir.icalendar//EN\r\nBEGIN:VTIMEZONE\r\nTZID:Europe/Berlin\r\nX-LIC-LOCATION:Europe/Berlin\r\nBEGIN:DAYLIGHT\r\nTZOFFSETFROM:+0100\r\nTZOFFSETTO:+0200\r\nTZNAME:CEST\r\nDTSTART:19700329T020000\r\nRRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU\r\nEND:DAYLIGHT\r\nBEGIN:STANDARD\r\nTZOFFSETFROM:+0200\r\nTZOFFSETTO:+0100\r\nTZNAME:CET\r\nDTSTART:19701025T030000\r\nRRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU\r\nEND:STANDARD\r\nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTART;TZID=Europe/Berlin:20160419T130000\r\nSUMMARY:Test\r\nCLASS:CONFIDENTIAL\r\nTRANSP:OPAQUE\r\nSTATUS:CONFIRMED\r\nDTEND;TZID=Europe/Berlin:20160419T140000\r\nLAST-MODIFIED:20160419T074202Z\r\nDTSTAMP:20160419T074202Z\r\nCREATED:20160419T074202Z\r\nUID:2e468c48-7860-492e-bc52-92fa0daeeccf.1461051722310\r\nEND:VEVENT\r\nEND:VCALENDAR"],
@@ -887,7 +891,7 @@ END:VCALENDAR
 EOD;
 
 		$uriCount = count($uris);
-		for ($i=0; $i < $uriCount; $i++) {
+		for ($i = 0; $i < $uriCount; $i++) {
 			$this->backend->createCalendarObject($calendarId,
 				$uris[$i], $calData[$i]);
 		}

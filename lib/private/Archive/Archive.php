@@ -47,7 +47,7 @@ abstract class Archive {
 	 * @param string $source either a local file or string data
 	 * @return bool
 	 */
-	abstract public function addFile($path, $source='');
+	abstract public function addFile($path, $source = '');
 	/**
 	 * rename a file or folder in the archive
 	 * @param string $source
@@ -113,7 +113,7 @@ abstract class Archive {
 	 * get a file handler
 	 * @param string $path
 	 * @param string $mode
-	 * @return resource
+	 * @return bool|resource
 	 */
 	abstract public function getStream($path, $mode);
 	/**

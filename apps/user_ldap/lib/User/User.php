@@ -12,7 +12,7 @@
  * @author Roger Szabo <roger.szabo@web.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -107,8 +107,7 @@ class User {
 	/**
 	 * DB config keys for user preferences
 	 */
-	public const USER_PREFKEY_FIRSTLOGIN  = 'firstLoginAccomplished';
-	public const USER_PREFKEY_LASTREFRESH = 'lastFeatureRefresh';
+	public const USER_PREFKEY_FIRSTLOGIN = 'firstLoginAccomplished';
 
 	/**
 	 * @brief constructor, make sure the subclasses call this one!
@@ -135,45 +134,19 @@ class User {
 			throw new \InvalidArgumentException('uid must not be an empty string!');
 		}
 
-		$this->access              = $access;
-		$this->connection          = $access->getConnection();
-		$this->config              = $config;
-		$this->fs                  = $fs;
-		$this->dn                  = $dn;
-		$this->uid                 = $username;
-		$this->image               = $image;
-		$this->log                 = $log;
-		$this->avatarManager       = $avatarManager;
-		$this->userManager         = $userManager;
+		$this->access = $access;
+		$this->connection = $access->getConnection();
+		$this->config = $config;
+		$this->fs = $fs;
+		$this->dn = $dn;
+		$this->uid = $username;
+		$this->image = $image;
+		$this->log = $log;
+		$this->avatarManager = $avatarManager;
+		$this->userManager = $userManager;
 		$this->notificationManager = $notificationManager;
 
 		\OCP\Util::connectHook('OC_User', 'post_login', $this, 'handlePasswordExpiry');
-	}
-
-	/**
-	 * @brief updates properties like email, quota or avatar provided by LDAP
-	 * @return null
-	 */
-	public function update() {
-		if (is_null($this->dn)) {
-			return null;
-		}
-
-		$hasLoggedIn = $this->config->getUserValue($this->uid, 'user_ldap',
-				self::USER_PREFKEY_FIRSTLOGIN, 0);
-
-		if ($this->needsRefresh()) {
-			$this->updateEmail();
-			$this->updateQuota();
-			if ($hasLoggedIn !== 0) {
-				//we do not need to try it, when the user has not been logged in
-				//before, because the file system will not be ready.
-				$this->updateAvatar();
-				//in order to get an avatar as soon as possible, mark the user
-				//as refreshed only when updating the avatar did happen
-				$this->markRefreshTime();
-			}
-		}
 	}
 
 	/**
@@ -196,7 +169,6 @@ class User {
 	 * @param array $ldapEntry the user entry as retrieved from LDAP
 	 */
 	public function processAttributes($ldapEntry) {
-		$this->markRefreshTime();
 		//Quota
 		$attr = strtolower($this->connection->ldapQuotaAttribute);
 		if (isset($ldapEntry[$attr])) {
@@ -394,31 +366,6 @@ class User {
 	public function markLogin() {
 		$this->config->setUserValue(
 			$this->uid, 'user_ldap', self::USER_PREFKEY_FIRSTLOGIN, 1);
-	}
-
-	/**
-	 * @brief marks the time when user features like email have been updated
-	 * @return null
-	 */
-	public function markRefreshTime() {
-		$this->config->setUserValue(
-			$this->uid, 'user_ldap', self::USER_PREFKEY_LASTREFRESH, time());
-	}
-
-	/**
-	 * @brief checks whether user features needs to be updated again by
-	 * comparing the difference of time of the last refresh to now with the
-	 * desired interval
-	 * @return bool
-	 */
-	private function needsRefresh() {
-		$lastChecked = $this->config->getUserValue($this->uid, 'user_ldap',
-			self::USER_PREFKEY_LASTREFRESH, 0);
-
-		if ((time() - (int)$lastChecked) < (int)$this->config->getAppValue('user_ldap', 'updateAttributesInterval', 86400)) {
-			return false;
-		}
-		return  true;
 	}
 
 	/**

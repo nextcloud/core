@@ -120,32 +120,19 @@ abstract class FetcherBase extends TestCase {
 
 	public function testGetWithNotExistingFileAndUpToDateTimestampAndVersion() {
 		$this->config
-			->expects($this->at(0))
 			->method('getSystemValue')
-			->with('appstoreenabled', true)
-			->willReturn(true);
-		$this->config
-			->expects($this->at(1))
-			->method('getSystemValue')
-			->with('has_internet_connection', true)
-			->willReturn(true);
-		$this->config
-			->expects($this->at(2))
-			->method('getSystemValue')
-			->with('appstoreenabled', true)
-			->willReturn(true);
-		$this->config
-			->expects($this->at(3))
-			->method('getSystemValue')
-			->with('appstoreurl', 'https://apps.nextcloud.com/api/v1')
-			->willReturn('https://apps.nextcloud.com/api/v1');
-		$this->config
-			->expects($this->at(4))
-			->method('getSystemValue')
-			->with(
-				$this->equalTo('version'),
-				$this->anything()
-			)->willReturn('11.0.0.2');
+			->willReturnCallback(function ($var, $default) {
+				if ($var === 'appstoreenabled') {
+					return true;
+				} elseif ($var === 'has_internet_connection') {
+					return true;
+				} elseif ($var === 'appstoreurl') {
+					return 'https://apps.nextcloud.com/api/v1';
+				} elseif ($var === 'version') {
+					return '11.0.0.2';
+				}
+				return $default;
+			});
 
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createMock(ISimpleFile::class);
@@ -286,32 +273,19 @@ abstract class FetcherBase extends TestCase {
 
 	public function testGetWithAlreadyExistingFileAndNoVersion() {
 		$this->config
-			->expects($this->at(0))
 			->method('getSystemValue')
-			->with('appstoreenabled', true)
-			->willReturn(true);
-		$this->config
-			->expects($this->at(1))
-			->method('getSystemValue')
-			->with('has_internet_connection', true)
-			->willReturn(true);
-		$this->config
-			->expects($this->at(2))
-			->method('getSystemValue')
-			->with('appstoreenabled', true)
-			->willReturn(true);
-		$this->config
-			->expects($this->at(3))
-			->method('getSystemValue')
-			->with('appstoreurl', 'https://apps.nextcloud.com/api/v1')
-			->willReturn('https://apps.nextcloud.com/api/v1');
-		$this->config
-			->expects($this->at(4))
-			->method('getSystemValue')
-			->with(
-				$this->equalTo('version'),
-				$this->anything()
-			)->willReturn('11.0.0.2');
+			->willReturnCallback(function ($var, $default) {
+				if ($var === 'appstoreenabled') {
+					return true;
+				} elseif ($var === 'has_internet_connection') {
+					return true;
+				} elseif ($var === 'appstoreurl') {
+					return 'https://apps.nextcloud.com/api/v1';
+				} elseif ($var === 'version') {
+					return '11.0.0.2';
+				}
+				return $default;
+			});
 
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createMock(ISimpleFile::class);
@@ -375,32 +349,19 @@ abstract class FetcherBase extends TestCase {
 
 	public function testGetWithAlreadyExistingFileAndOutdatedVersion() {
 		$this->config
-			->expects($this->at(0))
 			->method('getSystemValue')
-			->with('appstoreenabled', true)
-			->willReturn(true);
-		$this->config
-			->expects($this->at(1))
-			->method('getSystemValue')
-			->with('has_internet_connection', true)
-			->willReturn(true);
-		$this->config
-			->expects($this->at(2))
-			->method('getSystemValue')
-			->with('appstoreenabled', true)
-			->willReturn(true);
-		$this->config
-			->expects($this->at(3))
-			->method('getSystemValue')
-			->with('appstoreurl', 'https://apps.nextcloud.com/api/v1')
-			->willReturn('https://apps.nextcloud.com/api/v1');
-		$this->config
-			->expects($this->at(4))
-			->method('getSystemValue')
-			->with(
-				$this->equalTo('version'),
-				$this->anything()
-			)->willReturn('11.0.0.2');
+			->willReturnCallback(function ($var, $default) {
+				if ($var === 'appstoreenabled') {
+					return true;
+				} elseif ($var === 'has_internet_connection') {
+					return true;
+				} elseif ($var === 'appstoreurl') {
+					return 'https://apps.nextcloud.com/api/v1';
+				} elseif ($var === 'version') {
+					return '11.0.0.2';
+				}
+				return $default;
+			});
 
 		$folder = $this->createMock(ISimpleFolder::class);
 		$file = $this->createMock(ISimpleFile::class);

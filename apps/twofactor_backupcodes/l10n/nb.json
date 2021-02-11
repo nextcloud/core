@@ -2,6 +2,7 @@
     "You created two-factor backup codes for your account" : "Du opprettet to-trinns bekreftelse sikkerhetskopi-koder",
     "Second-factor backup codes" : "To-trinns bekreftelse sikkerhetskopi-koder",
     "Generate backup codes" : "Generer sikkerhetskopi-koder",
+    "You enabled two-factor authentication but did not generate backup codes yet. They are needed to restore access to your account in case you lose your second factor." : "Du aktiverte tofaktorautentisering, men har ikke generert sikkerhetskopikoder ennå. De er nødvendige for å gjenopprette tilgangen til kontoen din i tilfelle du mister din to faktor autentisering.",
     "Backup code" : "Sikkerhetskopi-kode",
     "Use backup code" : "Bruker sikkerhetskopi-kode",
     "Two factor backup codes" : "Sikkerhetskopikoder for tofaktor",
@@ -13,9 +14,8 @@
     "Regenerate backup codes" : "Lag sikkerhetskopi-koder på nytt",
     "If you regenerate backup codes, you automatically invalidate old codes." : "Hvis du regenererer nye sikkerhetskopi-koder, vil du automatisk gjøre de gamle kodene ugyldige.",
     "An error occurred while generating your backup codes" : "En feil oppstod under generering av sikkerhetskopi-kodene",
+    "{name} backup codes" : "{name} sikkerhetskopi-koder",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Bruk en av backup kodene du lagret når du opprettet to-faktor autentisering.",
-    "Submit" : "Send",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["icon-loading-small","generate-backup-codes"]
+    "Submit" : "Send"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

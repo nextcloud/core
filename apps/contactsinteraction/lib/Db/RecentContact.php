@@ -66,7 +66,7 @@ class RecentContact extends Entity {
 		$this->addType('uid', 'string');
 		$this->addType('email', 'string');
 		$this->addType('federatedCloudId', 'string');
-		$this->addType('card', 'string');
+		$this->addType('card', 'blob');
 		$this->addType('lastContact', 'int');
 	}
 }

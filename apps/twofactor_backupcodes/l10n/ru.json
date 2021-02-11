@@ -16,9 +16,6 @@
     "An error occurred while generating your backup codes" : "Произошла ошибка при создании резервных кодов",
     "{name} backup codes" : "Резервные коды {name}",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Использовать для двухфакторной аутентификации один из ранее выпущенных резервных кодов.",
-    "Submit" : "Отправить",
-    "function" : "функция",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["icon-loading-small","icon-loading-small","icon-loading-small","generate-backup-codes"]
+    "Submit" : "Отправить"
 },"pluralForm" :"nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);"
 }

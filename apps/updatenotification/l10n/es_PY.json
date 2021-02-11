@@ -14,12 +14,12 @@
     "Your version is up to date." : "Tu verisón está actualizada.",
     "A non-default update server is in use to be checked for updates:" : "Un servidor de actualizaciones no-predeterminado está en uso para ser verficiado por actualizaciones:",
     "Update channel:" : "Actualizar el canal:",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Nota que después una nueva publicación puede tomar algo de tiempo antes de que se muestre aquí. Distribuimos nuevas versiones para que sean distribuidas a través del tiempo para nuestros usuarios y algunas veces nos saltamos una versión cuando encontramos detalles.",
     "Notify members of the following groups about available updates:" : "Notificar a los miembros de los siguientes grupos de las actualizaciones disponibles:",
     "Only notification for app updates are available." : "Sólo se tienen disponibles notificaciones de actualizaciones de la aplicación.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "El canal de actualización seleccionado hace que las notificaciones dedicadas al servidor sean obsoletas. ",
     "The selected update channel does not support updates of the server." : "El canal de actualización seleccionado no soporta actualizaciones del servidor. ",
     "Please make sure your config.php does not set <samp>appstoreenabled</samp> to false." : "Por favor, asegurate de que tu archivo config.php no establezca <samp>appstoreenabled</samp> a falso.",
-    "Could not connect to the appstore or the appstore returned no updates at all. Search manually for updates or make sure your server has access to the internet and can connect to the appstore." : "No fue posible conectarse a la appstore o bien la appstore no regresó actualizaciones. Busca manualmente actualizaciones o asegurate de que el servidor tenga acceso a Internet y que pueda conectarse a la appstore. "
+    "Could not connect to the appstore or the appstore returned no updates at all. Search manually for updates or make sure your server has access to the internet and can connect to the appstore." : "No fue posible conectarse a la appstore o bien la appstore no regresó actualizaciones. Busca manualmente actualizaciones o asegurate de que el servidor tenga acceso a Internet y que pueda conectarse a la appstore. ",
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Nota que después una nueva publicación puede tomar algo de tiempo antes de que se muestre aquí. Distribuimos nuevas versiones para que sean distribuidas a través del tiempo para nuestros usuarios y algunas veces nos saltamos una versión cuando encontramos detalles."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

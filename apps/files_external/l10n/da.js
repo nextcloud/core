@@ -123,7 +123,6 @@ OC.L10N.register(
     "Available for" : "Tilgængelig for",
     "Add storage" : "Tilføj lager",
     "Advanced settings" : "Avancerede indstillinger",
-    "Allow users to mount external storage" : "Tillad brugere at montere eksternt lager",
-    "Saving..." : "Gemmer..."
+    "Allow users to mount external storage" : "Tillad brugere at montere eksternt lager"
 },
 "nplurals=2; plural=(n != 1);");

@@ -31,6 +31,7 @@ use OC\Authentication\TwoFactorAuth\Db\ProviderUserAssignmentDao;
 use OCP\Authentication\TwoFactorAuth\IProvider;
 use OCP\Authentication\TwoFactorAuth\IRegistry;
 use OCP\Authentication\TwoFactorAuth\RegistryEvent;
+use OCP\Authentication\TwoFactorAuth\TwoFactorProviderDisabled;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IUser;
 
@@ -66,11 +67,11 @@ class Registry implements IRegistry {
 		$this->dispatcher->dispatch(self::EVENT_PROVIDER_DISABLED, $event);
 	}
 
-	/**
-	 * @todo evaluate if we should emit RegistryEvents for each of the deleted rows -> needs documentation
-	 */
 	public function deleteUserData(IUser $user): void {
-		$this->assignmentDao->deleteByUser($user->getUID());
+		foreach ($this->assignmentDao->deleteByUser($user->getUID()) as $provider) {
+			$event = new TwoFactorProviderDisabled($provider['provider_id']);
+			$this->dispatcher->dispatchTyped($event);
+		}
 	}
 
 	public function cleanUp(string $providerId) {

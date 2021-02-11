@@ -306,15 +306,15 @@ class EncryptAllTest extends TestCase {
 		$this->view->expects($this->at(0))->method('getDirectoryContent')
 			->with('/user1/files')->willReturn(
 				[
-					['name' => 'foo', 'type'=>'dir'],
-					['name' => 'bar', 'type'=>'file'],
+					['name' => 'foo', 'type' => 'dir'],
+					['name' => 'bar', 'type' => 'file'],
 				]
 			);
 
 		$this->view->expects($this->at(3))->method('getDirectoryContent')
 			->with('/user1/files/foo')->willReturn(
 				[
-					['name' => 'subfile', 'type'=>'file']
+					['name' => 'subfile', 'type' => 'file']
 				]
 			);
 

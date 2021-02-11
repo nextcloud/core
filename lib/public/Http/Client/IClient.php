@@ -30,7 +30,6 @@ namespace OCP\Http\Client;
 /**
  * Interface IClient
  *
- * @package OCP\Http
  * @since 8.1.0
  */
 interface IClient {
@@ -56,7 +55,7 @@ interface IClient {
 	 *                   'referer'   => true,     // add a Referer header
 	 *                   'protocols' => ['https'] // only allow https URLs
 	 *              ],
-	 *              'save_to' => '/path/to/file', // save to a file or a stream
+	 *              'sink' => '/path/to/file', // save to a file or a stream
 	 *              'verify' => true, // bool or string to CA file
 	 *              'debug' => true,
 	 * @return IResponse
@@ -81,7 +80,7 @@ interface IClient {
 	 *                   'referer'   => true,     // add a Referer header
 	 *                   'protocols' => ['https'] // only allow https URLs
 	 *              ],
-	 *              'save_to' => '/path/to/file', // save to a file or a stream
+	 *              'sink' => '/path/to/file', // save to a file or a stream
 	 *              'verify' => true, // bool or string to CA file
 	 *              'debug' => true,
 	 * @return IResponse
@@ -111,7 +110,7 @@ interface IClient {
 	 *                   'referer'   => true,     // add a Referer header
 	 *                   'protocols' => ['https'] // only allow https URLs
 	 *              ],
-	 *              'save_to' => '/path/to/file', // save to a file or a stream
+	 *              'sink' => '/path/to/file', // save to a file or a stream
 	 *              'verify' => true, // bool or string to CA file
 	 *              'debug' => true,
 	 * @return IResponse
@@ -141,7 +140,7 @@ interface IClient {
 	 *                   'referer'   => true,     // add a Referer header
 	 *                   'protocols' => ['https'] // only allow https URLs
 	 *              ],
-	 *              'save_to' => '/path/to/file', // save to a file or a stream
+	 *              'sink' => '/path/to/file', // save to a file or a stream
 	 *              'verify' => true, // bool or string to CA file
 	 *              'debug' => true,
 	 * @return IResponse
@@ -171,7 +170,7 @@ interface IClient {
 	 *                   'referer'   => true,     // add a Referer header
 	 *                   'protocols' => ['https'] // only allow https URLs
 	 *              ],
-	 *              'save_to' => '/path/to/file', // save to a file or a stream
+	 *              'sink' => '/path/to/file', // save to a file or a stream
 	 *              'verify' => true, // bool or string to CA file
 	 *              'debug' => true,
 	 * @return IResponse
@@ -201,7 +200,7 @@ interface IClient {
 	 *                   'referer'   => true,     // add a Referer header
 	 *                   'protocols' => ['https'] // only allow https URLs
 	 *              ],
-	 *              'save_to' => '/path/to/file', // save to a file or a stream
+	 *              'sink' => '/path/to/file', // save to a file or a stream
 	 *              'verify' => true, // bool or string to CA file
 	 *              'debug' => true,
 	 * @return IResponse

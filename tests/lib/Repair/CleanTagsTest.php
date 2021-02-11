@@ -122,7 +122,7 @@ class CleanTagsTest extends \Test\TestCase {
 			->from($tableName)
 			->execute();
 
-		$this->assertEquals($expected, $result->fetchColumn(), $message);
+		$this->assertEquals($expected, $result->fetchOne(), $message);
 	}
 
 	/**
@@ -137,9 +137,9 @@ class CleanTagsTest extends \Test\TestCase {
 		$qb = $this->connection->getQueryBuilder();
 		$qb->insert('vcategory')
 			->values([
-				'uid'		=> $qb->createNamedParameter($user),
-				'category'	=> $qb->createNamedParameter($category),
-				'type'		=> $qb->createNamedParameter($type),
+				'uid' => $qb->createNamedParameter($user),
+				'category' => $qb->createNamedParameter($category),
+				'type' => $qb->createNamedParameter($type),
 			])
 			->execute();
 
@@ -156,9 +156,9 @@ class CleanTagsTest extends \Test\TestCase {
 		$qb = $this->connection->getQueryBuilder();
 		$qb->insert('vcategory_to_object')
 			->values([
-				'objid'			=> $qb->createNamedParameter($objectId, IQueryBuilder::PARAM_INT),
-				'categoryid'	=> $qb->createNamedParameter($category, IQueryBuilder::PARAM_INT),
-				'type'			=> $qb->createNamedParameter($type),
+				'objid' => $qb->createNamedParameter($objectId, IQueryBuilder::PARAM_INT),
+				'categoryid' => $qb->createNamedParameter($category, IQueryBuilder::PARAM_INT),
+				'type' => $qb->createNamedParameter($type),
 			])
 			->execute();
 	}
@@ -178,15 +178,15 @@ class CleanTagsTest extends \Test\TestCase {
 		$fileName = $this->getUniqueID('TestRepairCleanTags', 12);
 		$qb->insert('filecache')
 			->values([
-				'path'			=> $qb->createNamedParameter($fileName),
-				'path_hash'		=> $qb->createNamedParameter(md5($fileName)),
+				'path' => $qb->createNamedParameter($fileName),
+				'path_hash' => $qb->createNamedParameter(md5($fileName)),
 			])
 			->execute();
 		$fileName = $this->getUniqueID('TestRepairCleanTags', 12);
 		$qb->insert('filecache')
 			->values([
-				'path'			=> $qb->createNamedParameter($fileName),
-				'path_hash'		=> $qb->createNamedParameter(md5($fileName)),
+				'path' => $qb->createNamedParameter($fileName),
+				'path_hash' => $qb->createNamedParameter(md5($fileName)),
 			])
 			->execute();
 

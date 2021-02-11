@@ -76,7 +76,7 @@ class RequestUserAgent extends AbstractStringCheck {
 	 * @return string
 	 */
 	protected function getActualValue() {
-		return (string) $this->request->getHeader('User-Agent');
+		return $this->request->getHeader('User-Agent');
 	}
 
 	public function isAvailableForScope(int $scope): bool {

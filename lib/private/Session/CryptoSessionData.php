@@ -87,6 +87,7 @@ class CryptoSessionData implements \ArrayAccess, ISession {
 			);
 		} catch (\Exception $e) {
 			$this->sessionValues = [];
+			$this->regenerateId(true, false);
 		}
 	}
 

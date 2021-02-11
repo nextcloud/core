@@ -24,14 +24,14 @@ class SqliteMigrationTest extends \Test\TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->connection = \OC::$server->getDatabaseConnection();
+		$this->connection = \OC::$server->get(\OC\DB\Connection::class);
 		if (!$this->connection->getDatabasePlatform() instanceof \Doctrine\DBAL\Platforms\SqlitePlatform) {
 			$this->markTestSkipped("Test only relevant on Sqlite");
 		}
 
 		$dbPrefix = \OC::$server->getConfig()->getSystemValue("dbtableprefix");
 		$this->tableName = $this->getUniqueID($dbPrefix . '_enum_bit_test');
-		$this->connection->exec("CREATE TABLE $this->tableName(t0 tinyint unsigned, t1 tinyint)");
+		$this->connection->prepare("CREATE TABLE $this->tableName(t0 tinyint unsigned, t1 tinyint)")->execute();
 	}
 
 	protected function tearDown(): void {

@@ -10,10 +10,11 @@ declare(strict_types=1);
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Sujith Haridasan <sujith.h@gmail.com>
  * @author Sujith H <sharidasan@owncloud.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Tobia De Koninck <LEDfan@users.noreply.github.com>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -87,6 +88,16 @@ class TransferOwnership extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
+
+		/**
+		 * Check if source and destination users are same. If they are same then just ignore the transfer.
+		 */
+
+		if ($input->getArgument(('source-user')) === $input->getArgument('destination-user')) {
+			$output->writeln("<error>Ownership can't be transferred when Source and Destination users are the same user. Please check your input.</error>");
+			return 1;
+		}
+
 		$sourceUserObject = $this->userManager->get($input->getArgument('source-user'));
 		$destinationUserObject = $this->userManager->get($input->getArgument('destination-user'));
 

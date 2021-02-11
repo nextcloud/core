@@ -63,12 +63,8 @@ OC.L10N.register(
     "Where: %s" : "Місце: %s",
     "%1$s via %2$s" : "%1$s через %2$s",
     "Invitation canceled" : "Запрошення скасоване",
-    "Hello %s," : "Вітаємо %s,",
-    "The meeting »%1$s« with %2$s was canceled." : "Зустріч »%1$s« з %2$s була скасована.",
     "Invitation updated" : "Запрошення оновлене",
-    "The meeting »%1$s« with %2$s was updated." : "Зустріч »%1$s« з %2$s була оновлена.",
-    "%1$s invited you to »%2$s«" : "%1$s запрошує вас на »%2$s«",
-    "When:" : "Коли:",
+    "Location:" : "Місцевість:",
     "Link:" : "Посилання:",
     "Accept" : "Прийняти",
     "Decline" : "Відхилити",
@@ -100,9 +96,10 @@ OC.L10N.register(
     "Send notifications for events" : "Відправити сповіщення для подій",
     "Notifications are sent via background jobs, so these must occur often enough." : "Сповіщення надсилаються у фонових завданнях, тож вони мають запускатися достатньо часто.",
     "Enable notifications for events via push" : "Увімкнути push-сповіщення для подій",
-    "Technical details" : "Технічні подробиці",
-    "Remote Address: %s" : "Віддалена Адреса: %s",
-    "Request ID: %s" : "ID запиту: %s",
-    "Notifications will be send through background jobs, so these need to happen often enough." : "Сповіщення будуть надсилатися у фонових завданнях, тож вони мають запускатися достатньо часто."
+    "Hello %s," : "Вітаємо %s,",
+    "The meeting »%1$s« with %2$s was canceled." : "Зустріч »%1$s« з %2$s була скасована.",
+    "The meeting »%1$s« with %2$s was updated." : "Зустріч »%1$s« з %2$s була оновлена.",
+    "%1$s invited you to »%2$s«" : "%1$s запрошує вас на »%2$s«",
+    "When:" : "Коли:"
 },
 "nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);");

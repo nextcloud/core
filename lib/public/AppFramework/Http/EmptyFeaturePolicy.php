@@ -34,7 +34,6 @@ namespace OCP\AppFramework\Http;
  * As alternative with sane exemptions look at FeaturePolicy
  *
  * @see \OCP\AppFramework\Http\FeaturePolicy
- * @package OCP\AppFramework\Http
  * @since 17.0.0
  */
 class EmptyFeaturePolicy {

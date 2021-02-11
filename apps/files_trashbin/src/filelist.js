@@ -71,7 +71,9 @@
 			var result = OCA.Files.FileList.prototype.initialize.apply(this, arguments)
 			this.$el.find('.undelete').click('click', _.bind(this._onClickRestoreSelected, this))
 
-			this.setSort('mtime', 'desc')
+			// Sort by most recently deleted first
+			this.setSort('mtime', 'asc')
+
 			/**
 			 * Override crumb making to add "Deleted Files" entry
 			 * and convert files with ".d" extensions to a more

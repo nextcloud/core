@@ -67,7 +67,7 @@
 
 <script>
 import axios from '@nextcloud/axios'
-import { Multiselect } from '@nextcloud/vue'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import _ from 'lodash'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 

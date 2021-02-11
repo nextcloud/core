@@ -26,7 +26,6 @@ namespace OCP\Calendar\Room;
 /**
  * Interface IRoom
  *
- * @package OCP\Calendar\Room
  * @since 14.0.0
  */
 interface IRoom {

@@ -14,7 +14,7 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -56,13 +56,15 @@ class Helper {
 
 		return [
 			'uploadMaxFilesize' => $maxUploadFileSize,
-			'maxHumanFilesize'  => $maxHumanFileSize,
+			'maxHumanFilesize' => $maxHumanFileSize,
 			'freeSpace' => $storageInfo['free'],
 			'quota' => $storageInfo['quota'],
 			'used' => $storageInfo['used'],
-			'usedSpacePercent'  => (int)$storageInfo['relative'],
+			'usedSpacePercent' => (int)$storageInfo['relative'],
 			'owner' => $storageInfo['owner'],
 			'ownerDisplayName' => $storageInfo['ownerDisplayName'],
+			'mountType' => $storageInfo['mountType'],
+			'mountPoint' => $storageInfo['mountPoint'],
 		];
 	}
 

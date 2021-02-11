@@ -36,6 +36,7 @@ use OCP\Search\Provider;
  * Provide an interface to all search providers
  */
 class Search implements ISearch {
+	/** @var Provider[] */
 	private $providers = [];
 	private $registeredProviders = [];
 
@@ -51,7 +52,6 @@ class Search implements ISearch {
 		$this->initProviders();
 		$results = [];
 		foreach ($this->providers as $provider) {
-			/** @var $provider Provider */
 			if (! $provider->providesResultsFor($inApps)) {
 				continue;
 			}

@@ -30,7 +30,6 @@ use OC\HintException;
 /**
  * Class GenericEncryptionException
  *
- * @package OCP\Share\Exceptions
  * @since 9.0.0
  */
 class GenericShareException extends HintException {

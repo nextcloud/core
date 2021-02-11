@@ -34,9 +34,9 @@ use OC\Authentication\Token\IToken;
 use OC\Authentication\Token\IWipeableToken;
 use OC\Authentication\Token\RemoteWipe;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\ILogger;
 use OCP\IUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Test\TestCase;
 
 class RemoteWipeTest extends TestCase {
@@ -47,7 +47,7 @@ class RemoteWipeTest extends TestCase {
 	/** @var IEventDispatcher|MockObject */
 	private $eventDispatcher;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var RemoteWipe */
@@ -58,7 +58,7 @@ class RemoteWipeTest extends TestCase {
 
 		$this->tokenProvider = $this->createMock(IProvider::class);
 		$this->eventDispatcher = $this->createMock(IEventDispatcher::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->remoteWipe = new RemoteWipe(
 			$this->tokenProvider,

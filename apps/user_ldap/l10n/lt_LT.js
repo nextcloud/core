@@ -52,7 +52,7 @@ OC.L10N.register(
     "The \"%uid\" placeholder is missing. It will be replaced with the login name when querying LDAP / AD." : "Trūksta \"%u\" vietaženklio. Jis bus pakeistas prisijungimo vardu, siunčiant užklausas LDAP / AD. ",
     "Please provide a login name to test against" : "Pateikite prisijungimo vardą, kurį norite patikrinti",
     "Password change rejected. Hint: " : "Slaptažodžio keitimas atmestas. Patarimas: ",
-    "Please login with the new password" : "Prisijunkite su nauju slaptažodžiu",
+    "Please login with the new password" : "Prisijunkite naudodami naują slaptažodį",
     "LDAP User backend" : "LDAP naudotojo vidinė pusė",
     "Your password will expire tomorrow." : "Jūsų slaptažodžio galiojimo laikas pasibaigs rytoj.",
     "Your password will expire today." : "Jūsų slaptažodžio galiojimo laikas baigiasi šiandien.",
@@ -174,7 +174,6 @@ OC.L10N.register(
     "UUID Attribute for Users:" : "UUID požymis naudotojams:",
     "UUID Attribute for Groups:" : "UUID požymis grupėms:",
     "Username-LDAP User Mapping" : "Naudotojo vardo - LDAP naudotojo sąsaja",
-    "Clear Username-LDAP User Mapping" : "Išvalyti naudotojo vardo - LDAP naudotojo sąsają",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Palikite tuščią naudotojo vardui (numatytoji reikšmė).  Priešingu atveju, nurodykite LDAP/AD požymį."
+    "Clear Username-LDAP User Mapping" : "Išvalyti naudotojo vardo - LDAP naudotojo sąsają"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

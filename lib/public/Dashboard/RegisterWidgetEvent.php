@@ -16,7 +16,7 @@ declare(strict_types=1);
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
@@ -36,7 +36,6 @@ use OCP\EventDispatcher\Event;
  * they are needed. Deprecated right away so we can drop it again after 19 is EOL
  * and backward compatible apps can use OCP\AppFramework\Bootstrap\IBootstrap
  *
- * @package OCP\Dashboard
  * @since 20.0.0
  * @deprecated 20.0.0
  */

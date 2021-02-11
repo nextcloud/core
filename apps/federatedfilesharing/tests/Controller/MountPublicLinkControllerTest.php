@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @copyright Copyright (c) 2016, Björn Schießle <bjoern@schiessle.org>
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -34,6 +35,7 @@ use OCA\FederatedFileSharing\AddressHandler;
 use OCA\FederatedFileSharing\Controller\MountPublicLinkController;
 use OCA\FederatedFileSharing\FederatedShareProvider;
 use OCP\AppFramework\Http;
+use OCP\Contacts\IManager as IContactsManager;
 use OCP\Federation\ICloudIdManager;
 use OCP\Files\IRootFolder;
 use OCP\Http\Client\IClientService;
@@ -46,6 +48,8 @@ use OCP\Share\IManager;
 use OCP\Share\IShare;
 
 class MountPublicLinkControllerTest extends \Test\TestCase {
+	/** @var IContactsManager|\PHPUnit\Framework\MockObject\MockObject */
+	protected $contactsManager;
 
 	/** @var  MountPublicLinkController */
 	private $controller;
@@ -102,7 +106,8 @@ class MountPublicLinkControllerTest extends \Test\TestCase {
 		$this->l10n = $this->getMockBuilder(IL10N::class)->disableOriginalConstructor()->getMock();
 		$this->userSession = $this->getMockBuilder(IUserSession::class)->disableOriginalConstructor()->getMock();
 		$this->clientService = $this->getMockBuilder('OCP\Http\Client\IClientService')->disableOriginalConstructor()->getMock();
-		$this->cloudIdManager = new CloudIdManager();
+		$this->contactsManager = $this->createMock(IContactsManager::class);
+		$this->cloudIdManager = new CloudIdManager($this->contactsManager);
 
 		$this->controller = new MountPublicLinkController(
 			'federatedfilesharing', $this->request,

@@ -1,0 +1,19 @@
+{
+	"name": "NextcloudServer",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "nextclouddev",
+	"postCreateCommand": ".devcontainer/setup.sh",
+	"forwardPorts": [
+		80,
+		8080,
+		8025
+	],
+	"runArgs": [
+		"--privileged"
+	],
+	"extensions": [
+		"felixfbecker.php-debug",
+		"felixfbecker.php-intellisense",
+		"ms-azuretools.vscode-docker"
+	],
+}

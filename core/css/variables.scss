@@ -40,6 +40,9 @@ $color-background-hover: nc-darken($color-main-background, 4%) !default;
 $color-background-dark: nc-darken($color-main-background, 7%) !default;
 $color-background-darker: nc-darken($color-main-background, 14%) !default;
 
+$color-placeholder-light: nc-darken($color-main-background, 10%) !default;
+$color-placeholder-dark: nc-darken($color-main-background, 20%) !default;
+
 $color-primary: #0082c9 !default;
 $color-primary-light: mix($color-primary, $color-main-background, 10%) !default;
 $color-primary-text: #ffffff !default;
@@ -84,6 +87,9 @@ $border-radius-large: 10px !default;
 $border-radius-pill: 100px !default;
 
 $font-face: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Cantarell, Ubuntu, 'Helvetica Neue', Arial, 'Noto Color Emoji', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol' !default;
+$default-font-size: 15px;
+
+$default-line-height: 24px;
 
 $animation-quick: 100ms;
 $animation-slow: 300ms;

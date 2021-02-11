@@ -30,10 +30,10 @@ use OC\Authentication\Listeners\UserDeletedTokenCleanupListener;
 use OC\Authentication\Token\IToken;
 use OC\Authentication\Token\Manager;
 use OCP\EventDispatcher\Event;
-use OCP\ILogger;
 use OCP\IUser;
 use OCP\User\Events\UserDeletedEvent;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use Test\TestCase;
 
 class UserDeletedTokenCleanupListenerTest extends TestCase {
@@ -42,7 +42,7 @@ class UserDeletedTokenCleanupListenerTest extends TestCase {
 	/** @var Manager|MockObject */
 	private $manager;
 
-	/** @var ILogger|MockObject */
+	/** @var LoggerInterface|MockObject */
 	private $logger;
 
 	/** @var UserDeletedTokenCleanupListener */
@@ -52,7 +52,7 @@ class UserDeletedTokenCleanupListenerTest extends TestCase {
 		parent::setUp();
 
 		$this->manager = $this->createMock(Manager::class);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 
 		$this->listener = new UserDeletedTokenCleanupListener(
 			$this->manager,
@@ -63,7 +63,7 @@ class UserDeletedTokenCleanupListenerTest extends TestCase {
 	public function testHandleUnrelated(): void {
 		$event = new Event();
 		$this->manager->expects($this->never())->method('getTokenByUser');
-		$this->logger->expects($this->never())->method('logException');
+		$this->logger->expects($this->never())->method('error');
 
 		$this->listener->handle($event);
 	}
@@ -78,8 +78,7 @@ class UserDeletedTokenCleanupListenerTest extends TestCase {
 			->with('user123')
 			->willThrowException($exception);
 		$this->logger->expects($this->once())
-			->method('logException')
-			->with($exception, $this->anything());
+			->method('error');
 
 		$this->listener->handle($event);
 	}
@@ -110,7 +109,7 @@ class UserDeletedTokenCleanupListenerTest extends TestCase {
 				['user123', 3]
 			);
 		$this->logger->expects($this->never())
-			->method('logException');
+			->method('error');
 
 		$this->listener->handle($event);
 	}

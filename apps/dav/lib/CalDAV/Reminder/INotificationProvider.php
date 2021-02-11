@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2019, Georg Ehrke
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -47,5 +48,5 @@ interface INotificationProvider {
 	 */
 	public function send(VEvent $vevent,
 						 string $calendarDisplayName,
-						 array $users=[]): void;
+						 array $users = []): void;
 }

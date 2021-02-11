@@ -2,7 +2,9 @@
 /**
  * @copyright Copyright (c) 2016 Lukas Reschke <lukas@statuscode.ch>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -90,14 +92,14 @@ class AdminTest extends TestCase {
 			->with('')
 			->willReturn('asdf:asdf');
 		$params = [
-			'encryptionEnabled'    => false,
-			'visibilityType'       => BackendService::VISIBILITY_ADMIN,
-			'storages'             => ['a', 'b', 'c'],
-			'backends'             => ['d', 'e', 'f'],
-			'authMechanisms'       => ['g', 'h', 'i'],
-			'dependencies'         => \OCA\Files_External\MountConfig::dependencyMessage($this->backendService->getBackends()),
-			'allowUserMounting'    => true,
-			'globalCredentials'    => 'asdf:asdf',
+			'encryptionEnabled' => false,
+			'visibilityType' => BackendService::VISIBILITY_ADMIN,
+			'storages' => ['a', 'b', 'c'],
+			'backends' => ['d', 'e', 'f'],
+			'authMechanisms' => ['g', 'h', 'i'],
+			'dependencies' => \OCA\Files_External\MountConfig::dependencyMessage($this->backendService->getBackends()),
+			'allowUserMounting' => true,
+			'globalCredentials' => 'asdf:asdf',
 			'globalCredentialsUid' => '',
 		];
 		$expected = new TemplateResponse('files_external', 'settings', $params, '');

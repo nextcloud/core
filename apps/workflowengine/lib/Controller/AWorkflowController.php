@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\WorkflowEngine\Controller;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
 use OCA\WorkflowEngine\Helper\ScopeContext;
 use OCA\WorkflowEngine\Manager;
 use OCP\AppFramework\Http\DataResponse;
@@ -112,7 +112,7 @@ abstract class AWorkflowController extends OCSController {
 			throw new OCSBadRequestException($e->getMessage(), $e);
 		} catch (\DomainException $e) {
 			throw new OCSForbiddenException($e->getMessage(), $e);
-		} catch (DBALException $e) {
+		} catch (Exception $e) {
 			throw new OCSException('An internal error occurred', $e->getCode(), $e);
 		}
 	}
@@ -139,7 +139,7 @@ abstract class AWorkflowController extends OCSController {
 			throw new OCSBadRequestException($e->getMessage(), $e);
 		} catch (\DomainException $e) {
 			throw new OCSForbiddenException($e->getMessage(), $e);
-		} catch (DBALException $e) {
+		} catch (Exception $e) {
 			throw new OCSException('An internal error occurred', $e->getCode(), $e);
 		}
 	}
@@ -157,7 +157,7 @@ abstract class AWorkflowController extends OCSController {
 			throw new OCSBadRequestException($e->getMessage(), $e);
 		} catch (\DomainException $e) {
 			throw new OCSForbiddenException($e->getMessage(), $e);
-		} catch (DBALException $e) {
+		} catch (Exception $e) {
 			throw new OCSException('An internal error occurred', $e->getCode(), $e);
 		}
 	}

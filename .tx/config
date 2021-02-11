@@ -133,3 +133,51 @@ file_filter = translationfiles/<lang>/accessibility.po
 source_file = translationfiles/templates/accessibility.pot
 source_lang = en
 type = PO
+
+[nextcloud.provisioning_api]
+file_filter = translationfiles/<lang>/provisioning_api.po
+source_file = translationfiles/templates/provisioning_api.pot
+source_lang = en
+type = PO
+
+[nextcloud.lookup_server_connector]
+file_filter = translationfiles/<lang>/lookup_server_connector.po
+source_file = translationfiles/templates/lookup_server_connector.pot
+source_lang = en
+type = PO
+
+[nextcloud.dashboard-shipped-with-server]
+file_filter = translationfiles/<lang>/dashboard.po
+source_file = translationfiles/templates/dashboard.pot
+source_lang = en
+type = PO
+
+[nextcloud.contactsinteraction]
+file_filter = translationfiles/<lang>/contactsinteraction.po
+source_file = translationfiles/templates/contactsinteraction.pot
+source_lang = en
+type = PO
+
+[nextcloud.cloud_federation_api]
+file_filter = translationfiles/<lang>/cloud_federation_api.po
+source_file = translationfiles/templates/cloud_federation_api.pot
+source_lang = en
+type = PO
+
+[nextcloud.admin_audit]
+file_filter = translationfiles/<lang>/admin_audit.po
+source_file = translationfiles/templates/admin_audit.pot
+source_lang = en
+type = PO
+
+[nextcloud.user_status]
+file_filter = translationfiles/<lang>/user_status.po
+source_file = translationfiles/templates/user_status.pot
+source_lang = en
+type = PO
+
+[nextcloud.weather_status]
+file_filter = translationfiles/<lang>/weather_status.po
+source_file = translationfiles/templates/weather_status.pot
+source_lang = en
+type = PO

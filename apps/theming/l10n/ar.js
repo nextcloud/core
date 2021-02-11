@@ -17,7 +17,6 @@ OC.L10N.register(
     "Could not write file to disk" : "لم يستطع كتابة ملف للقرص",
     "A PHP extension stopped the file upload" : "اضافة البي اچ بي PHP اوقفت رفع الملف",
     "No file uploaded" : "لم يتم رفع الملف",
-    "Unsupported image type" : "صيغة الصورة غير مقبولة",
     "Theming" : "تخصيص القالب",
     "Privacy policy" : "سياسة الخصوصية",
     "Open documentation" : "فتح الدليل",

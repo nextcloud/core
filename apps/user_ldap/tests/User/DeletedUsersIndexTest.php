@@ -4,6 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -29,6 +30,7 @@ use OCA\User_LDAP\Mapping\UserMapping;
 use OCA\User_LDAP\User\DeletedUsersIndex;
 use OCP\IConfig;
 use OCP\IDBConnection;
+use OCP\Share\IManager;
 
 /**
  * Class DeletedUsersIndexTest
@@ -49,6 +51,8 @@ class DeletedUsersIndexTest extends \Test\TestCase {
 
 	/** @var UserMapping|\PHPUnit\Framework\MockObject\MockObject */
 	protected $mapping;
+	/** @var IManager|\PHPUnit\Framework\MockObject\MockObject */
+	protected $shareManager;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -61,8 +65,9 @@ class DeletedUsersIndexTest extends \Test\TestCase {
 		$this->config->deleteAppFromAllUsers('user_ldap');
 
 		$this->mapping = $this->createMock(UserMapping::class);
+		$this->shareManager = $this->createMock(IManager::class);
 
-		$this->dui = new DeletedUsersIndex($this->config, $this->db, $this->mapping);
+		$this->dui = new DeletedUsersIndex($this->config, $this->mapping, $this->shareManager);
 	}
 
 	protected function tearDown(): void {

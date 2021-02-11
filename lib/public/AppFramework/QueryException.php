@@ -35,7 +35,6 @@ use Psr\Container\ContainerExceptionInterface;
  *
  * The class extends `NotFoundExceptionInterface` since 20.0.0
  *
- * @package OCP\AppFramework
  * @since 8.1.0
  * @deprecated 20.0.0 catch \Psr\Container\ContainerExceptionInterface
  */

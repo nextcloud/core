@@ -26,6 +26,7 @@
 			:key="share.id"
 			:file-info="fileInfo"
 			:share="share"
+			:is-unique="isUnique(share)"
 			@remove:share="removeShare" />
 	</ul>
 </template>
@@ -34,6 +35,7 @@
 // eslint-disable-next-line no-unused-vars
 import Share from '../models/Share'
 import SharingEntry from '../components/SharingEntry'
+import ShareTypes from '../mixins/ShareTypes'
 
 export default {
 	name: 'SharingList',
@@ -41,6 +43,8 @@ export default {
 	components: {
 		SharingEntry,
 	},
+
+	mixins: [ShareTypes],
 
 	props: {
 		fileInfo: {
@@ -58,6 +62,13 @@ export default {
 	computed: {
 		hasShares() {
 			return this.shares.length === 0
+		},
+		isUnique() {
+			return (share) => {
+				return [...this.shares].filter((item) => {
+					return share.type === this.SHARE_TYPES.SHARE_TYPE_USER && share.shareWithDisplayName === item.shareWithDisplayName
+				}).length <= 1
+			}
 		},
 	},
 

@@ -11,7 +11,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -76,7 +76,7 @@ class Helper {
 				$timestamp = substr(pathinfo($parts[0], PATHINFO_EXTENSION), 1);
 			}
 			$originalPath = '';
-			$originalName = substr($entryName, 0, -strlen($timestamp)-2);
+			$originalName = substr($entryName, 0, -strlen($timestamp) - 2);
 			if (isset($originalLocations[$originalName][$timestamp])) {
 				$originalPath = $originalLocations[$originalName][$timestamp];
 				if (substr($originalPath, -1) === '/') {

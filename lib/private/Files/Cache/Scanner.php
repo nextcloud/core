@@ -16,7 +16,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -36,6 +36,7 @@
 
 namespace OC\Files\Cache;
 
+use Doctrine\DBAL\Exception;
 use OC\Files\Filesystem;
 use OC\Hooks\BasicEmitter;
 use OCP\Files\Cache\IScanner;
@@ -415,6 +416,10 @@ class Scanner extends BasicEmitter implements IScanner {
 		$childQueue = [];
 		$newChildNames = [];
 		foreach ($newChildren as $fileMeta) {
+			$permissions = isset($fileMeta['scan_permissions']) ? $fileMeta['scan_permissions'] : $fileMeta['permissions'];
+			if ($permissions === 0) {
+				continue;
+			}
 			$file = $fileMeta['name'];
 			$newChildNames[] = $file;
 			$child = $path ? $path . '/' . $file : $file;
@@ -433,7 +438,7 @@ class Scanner extends BasicEmitter implements IScanner {
 						$size += $data['size'];
 					}
 				}
-			} catch (\Doctrine\DBAL\DBALException $ex) {
+			} catch (Exception $ex) {
 				// might happen if inserting duplicate while a scanning
 				// process is running in parallel
 				// log and ignore

@@ -33,8 +33,8 @@ use OC\Authentication\Token\PublicKeyTokenProvider;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
-use OCP\ILogger;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
 use Test\TestCase;
 
 class PublicKeyTokenProviderTest extends TestCase {
@@ -47,7 +47,7 @@ class PublicKeyTokenProviderTest extends TestCase {
 	private $crypto;
 	/** @var IConfig|\PHPUnit\Framework\MockObject\MockObject */
 	private $config;
-	/** @var ILogger|\PHPUnit\Framework\MockObject\MockObject */
+	/** @var LoggerInterface|\PHPUnit\Framework\MockObject\MockObject */
 	private $logger;
 	/** @var ITimeFactory|\PHPUnit\Framework\MockObject\MockObject */
 	private $timeFactory;
@@ -67,7 +67,7 @@ class PublicKeyTokenProviderTest extends TestCase {
 				['secret', '', '1f4h9s'],
 				['openssl', [], []],
 			]);
-		$this->logger = $this->createMock(ILogger::class);
+		$this->logger = $this->createMock(LoggerInterface::class);
 		$this->timeFactory = $this->createMock(ITimeFactory::class);
 		$this->time = 1313131;
 		$this->timeFactory->method('getTime')
@@ -112,6 +112,12 @@ class PublicKeyTokenProviderTest extends TestCase {
 
 	public function testUpdateTokenDebounce() {
 		$tk = new PublicKeyToken();
+
+		$this->config->method('getSystemValueInt')
+			->willReturnCallback(function ($value, $default) {
+				return $default;
+			});
+
 		$tk->setLastActivity($this->time - 30);
 		$this->mapper->expects($this->never())
 			->method('update')
@@ -542,8 +548,7 @@ class PublicKeyTokenProviderTest extends TestCase {
 			IToken::PERMANENT_TOKEN,
 			IToken::REMEMBER);
 
-		$this->mapper->expects($this->once())
-			->method('hasExpiredTokens')
+		$this->mapper->method('hasExpiredTokens')
 			->with($uid)
 			->willReturn(true);
 		$this->mapper->expects($this->once())
@@ -555,21 +560,6 @@ class PublicKeyTokenProviderTest extends TestCase {
 			->with($this->callback(function (PublicKeyToken $t) use ($token1, $token2) {
 				return $t === $token1 || $t === $token2;
 			}));
-
-		$this->tokenProvider->updatePasswords($uid, 'bar2');
-	}
-
-	public function testUpdatePasswordsNotRequired() {
-		$uid = 'myUID';
-
-		$this->mapper->expects($this->once())
-			->method('hasExpiredTokens')
-			->with($uid)
-			->willReturn(false);
-		$this->mapper->expects($this->never())
-			->method('getTokenByUser');
-		$this->mapper->expects($this->never())
-			->method('update');
 
 		$this->tokenProvider->updatePasswords($uid, 'bar2');
 	}

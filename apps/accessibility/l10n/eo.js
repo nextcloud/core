@@ -9,12 +9,6 @@ OC.L10N.register(
     "OpenDyslexic is a free typeface/font designed to mitigate some of the common reading errors caused by dyslexia." : "OpenDyslexic estas tiparo kreita por malpliigi legajn erarojn kaŭzitajn de vortblindeco (medicine „disleksio“).",
     "Accessibility" : "Alirebleco",
     "Accessibility options for nextcloud" : "Alireblecaj opcioj por Nextcloud",
-    "Provides multiple accessibilities options to ease your use of Nextcloud" : "Provizas plurajn alireblecajn opciojn por faciligi vian uzon de Nextcloud.",
-    "High contrast theme" : "Altkontrasta etoso",
-    "A high contrast theme to ease your navigation. Visual quality will be reduced but clarity will be increased." : "Altkontrasta etoso, kiu faciligas vian navigadon. Vida kvalito malpliiĝos, sed klareco pliiĝos.",
-    "Web Content Accessibility Guidelines" : "gvidnormoj pri alirebleco de la TTT-enhavo",
-    "our issue tracker" : "problem-spuradilo",
-    "our design team" : "nian teamon de fasonistoj",
-    "Enable" : "Ŝalti la opcion"
+    "Provides multiple accessibilities options to ease your use of Nextcloud" : "Provizas plurajn alireblecajn opciojn por faciligi vian uzon de Nextcloud."
 },
 "nplurals=2; plural=(n != 1);");

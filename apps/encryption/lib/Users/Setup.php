@@ -5,7 +5,9 @@
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Clark Tomlinson <fallen013@gmail.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -28,40 +30,15 @@ namespace OCA\Encryption\Users;
 
 use OCA\Encryption\Crypto\Crypt;
 use OCA\Encryption\KeyManager;
-use OCP\ILogger;
-use OCP\IUserSession;
 
 class Setup {
-	/**
-	 * @var Crypt
-	 */
+	/** @var Crypt */
 	private $crypt;
-	/**
-	 * @var KeyManager
-	 */
+	/** @var KeyManager */
 	private $keyManager;
-	/**
-	 * @var ILogger
-	 */
-	private $logger;
-	/**
-	 * @var bool|string
-	 */
-	private $user;
 
-
-	/**
-	 * @param ILogger $logger
-	 * @param IUserSession $userSession
-	 * @param Crypt $crypt
-	 * @param KeyManager $keyManager
-	 */
-	public function __construct(ILogger $logger,
-								IUserSession $userSession,
-								Crypt $crypt,
+	public function __construct(Crypt $crypt,
 								KeyManager $keyManager) {
-		$this->logger = $logger;
-		$this->user = $userSession && $userSession->isLoggedIn() ? $userSession->getUser()->getUID() : false;
 		$this->crypt = $crypt;
 		$this->keyManager = $keyManager;
 	}
@@ -73,8 +50,8 @@ class Setup {
 	 */
 	public function setupUser($uid, $password) {
 		if (!$this->keyManager->userHasKeys($uid)) {
-			return $this->keyManager->storeKeyPair($uid, $password,
-				$this->crypt->createKeyPair());
+			$keyPair = $this->crypt->createKeyPair();
+			return is_array($keyPair) ? $this->keyManager->storeKeyPair($uid, $password, $keyPair) : false;
 		}
 		return true;
 	}

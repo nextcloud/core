@@ -6,15 +6,17 @@
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -43,9 +45,11 @@ use OCP\AppFramework\OCS\OCSForbiddenException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\IPreview;
 use OCP\IRequest;
 use OCP\IServerContainer;
 use OCP\Share\IShare;
+use OCP\UserStatus\IManager as IUserStatusManager;
 
 /**
  * Class ApiTest
@@ -72,7 +76,7 @@ class ApiTest extends TestCase {
 		\OC::$server->getConfig()->setAppValue('core', 'shareapi_expire_after_n_days', '7');
 
 		$this->folder = self::TEST_FOLDER_NAME;
-		$this->subfolder  = '/subfolder_share_api_test';
+		$this->subfolder = '/subfolder_share_api_test';
 		$this->subsubfolder = '/subsubfolder_share_api_test';
 
 		$this->filename = '/share-api-test.txt';
@@ -114,6 +118,8 @@ class ApiTest extends TestCase {
 		$config = $this->createMock(IConfig::class);
 		$appManager = $this->createMock(IAppManager::class);
 		$serverContainer = $this->createMock(IServerContainer::class);
+		$userStatusManager = $this->createMock(IUserStatusManager::class);
+		$previewManager = $this->createMock(IPreview::class);
 
 		return new ShareAPIController(
 			self::APP_NAME,
@@ -127,7 +133,9 @@ class ApiTest extends TestCase {
 			$l,
 			$config,
 			$appManager,
-			$serverContainer
+			$serverContainer,
+			$userStatusManager,
+			$previewManager
 		);
 	}
 
@@ -646,7 +654,7 @@ class ApiTest extends TestCase {
 		$share3->setStatus(IShare::STATUS_ACCEPTED);
 		$this->shareManager->updateShare($share3);
 
-		$testValues=[
+		$testValues = [
 			['query' => $this->folder,
 				'expectedResult' => $this->folder . $this->filename],
 			['query' => $this->folder . $this->subfolder,

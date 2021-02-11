@@ -23,7 +23,6 @@ OC.L10N.register(
     "A non-default update server is in use to be checked for updates:" : "Nedefaŭlta servilo por ĝisdatigoj uziĝas por kontroli ĝisdatigojn:",
     "Update channel:" : "Ĝisdatiga kanalo:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Vi povas ĝisdatigi iam ajn al pli nova versio. Sed vi povas neniam malĝisdatigi al pli stabila versio.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Rimarku, ke, post nova eldono, necesos iom da tempo, antaŭ ol ĝi montriĝos ĉi tie. Ni eldonas novajn versiojn laŭgrade al niaj uzantoj, kaj ni kelkfoje preterlasas version, kiam oni trovas problemojn.",
     "Notify members of the following groups about available updates:" : "Sciigi anojn de la jenaj grupoj pri disponeblaj ĝisdatigoj:",
     "Only notification for app updates are available." : "Nur sciigoj pri aplikaĵaj ĝisdatigoj disponeblas.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "La elektita kanalo pri ĝisdatigoj igas la dediĉitajn sciigojn por la servilo neutilaj.",
@@ -41,6 +40,7 @@ OC.L10N.register(
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "La plej freŝa stabila versio. Ĝi taŭgas por ĉiutaga uzo, kaj ĝi ĝisdatiĝos ĉiufoje al la lasta ĉefversio.",
     "Beta" : "Beta",
     "A pre-release version only for testing new features, not for production environments." : "Antaŭeldona versio nur por testi novajn trajtojn; ne taŭgas por produktada medio.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> aplikaĵo havas neniun ĝisdatigon por tiu versio","<strong>%n</strong> aplikaĵoj havas neniun ĝisdatigon por tiu versio"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> aplikaĵo havas neniun ĝisdatigon por tiu versio","<strong>%n</strong> aplikaĵoj havas neniun ĝisdatigon por tiu versio"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Rimarku, ke, post nova eldono, necesos iom da tempo, antaŭ ol ĝi montriĝos ĉi tie. Ni eldonas novajn versiojn laŭgrade al niaj uzantoj, kaj ni kelkfoje preterlasas version, kiam oni trovas problemojn."
 },
 "nplurals=2; plural=(n != 1);");

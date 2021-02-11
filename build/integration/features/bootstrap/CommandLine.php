@@ -3,9 +3,10 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Robin Appelman <robin@icewind.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -22,6 +23,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
+use PHPUnit\Framework\Assert;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
@@ -96,25 +99,6 @@ trait CommandLine {
 	}
 
 	/**
-	 * Finds all lines containing the given text
-	 *
-	 * @param string $input stdout or stderr output
-	 * @param string $text text to search for
-	 * @return array array of lines that matched
-	 */
-	public function findLines($input, $text) {
-		$results = [];
-		// the exception text usually appears after an "[Exception"] row
-		foreach (explode("\n", $input) as $line) {
-			if (strpos($line, $text) >= 0) {
-				$results[] = $line;
-			}
-		}
-
-		return $results;
-	}
-
-	/**
 	 * @Then /^the command was successful$/
 	 */
 	public function theCommandWasSuccessful() {
@@ -158,19 +142,13 @@ trait CommandLine {
 	 * @Then /^the command output contains the text "([^"]*)"$/
 	 */
 	public function theCommandOutputContainsTheText($text) {
-		$lines = $this->findLines($this->lastStdOut, $text);
-		if (empty($lines)) {
-			throw new \Exception('The command did not output the expected text on stdout "' . $exceptionText . '"');
-		}
+		Assert::assertContains($text, $this->lastStdOut, 'The command did not output the expected text on stdout');
 	}
 
 	/**
 	 * @Then /^the command error output contains the text "([^"]*)"$/
 	 */
 	public function theCommandErrorOutputContainsTheText($text) {
-		$lines = $this->findLines($this->lastStdErr, $text);
-		if (empty($lines)) {
-			throw new \Exception('The command did not output the expected text on stderr "' . $exceptionText . '"');
-		}
+		Assert::assertContains($text, $this->lastStdErr, 'The command did not output the expected text on stderr');
 	}
 }

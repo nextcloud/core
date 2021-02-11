@@ -93,9 +93,9 @@ class ServerTest extends TestCase {
 			'settings/admin/server',
 			[
 				'backgroundjobs_mode' => 'ajax',
-				'lastcron'            => false,
-				'cronErrors'          => '',
-				'cronMaxAge'          => 1337,
+				'lastcron' => false,
+				'cronErrors' => '',
+				'cronMaxAge' => 1337,
 				'cli_based_cron_possible' => true,
 				'cli_based_cron_user' => function_exists('posix_getpwuid') ? posix_getpwuid(fileowner(\OC::$configDir . 'config.php'))['name'] : '', // to not explode here because of posix extension not being disabled - which is already checked in the line above
 			],

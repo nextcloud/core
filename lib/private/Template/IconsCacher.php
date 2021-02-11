@@ -79,10 +79,10 @@ class IconsCacher {
 								Factory $appDataFactory,
 								IURLGenerator $urlGenerator,
 								ITimeFactory $timeFactory) {
-		$this->logger       = $logger;
-		$this->appData      = $appDataFactory->get('css');
+		$this->logger = $logger;
+		$this->appData = $appDataFactory->get('css');
 		$this->urlGenerator = $urlGenerator;
-		$this->timeFactory  = $timeFactory;
+		$this->timeFactory = $timeFactory;
 
 		try {
 			$this->folder = $this->appData->getFolder('icons');

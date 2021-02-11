@@ -133,7 +133,6 @@ OC.L10N.register(
     "Add storage" : "Gehitu biltegiratzea",
     "Advanced settings" : "Ezarpen aurreratuak",
     "Allow users to mount external storage" : "Baimendu erabiltzaileek kanpoko biltegiratze zerbitzuak muntatzea",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Kredentzial globalak erabil daitezke kredentzial berdinak dituzten kanpoko hainbat biltegiratzerekin autentifikatzeko.",
-    "Saving..." : "Gordetzen..."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Kredentzial globalak erabil daitezke kredentzial berdinak dituzten kanpoko hainbat biltegiratzerekin autentifikatzeko."
 },
 "nplurals=2; plural=(n != 1);");

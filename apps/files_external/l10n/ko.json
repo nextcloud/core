@@ -129,7 +129,6 @@
     "Add storage" : "저장소 추가",
     "Advanced settings" : "고급 설정",
     "Allow users to mount external storage" : "사용자가 외부 저장소를 마운트하도록 허용",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "전역 인증 정보를 사용하여 같은 인증 정보를 사용하는 여러 외부 저장소에 인증할 수 있습니다.",
-    "Saving..." : "저장 중..."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "전역 인증 정보를 사용하여 같은 인증 정보를 사용하는 여러 외부 저장소에 인증할 수 있습니다."
 },"pluralForm" :"nplurals=1; plural=0;"
 }

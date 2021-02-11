@@ -38,7 +38,7 @@ class DateTimeFormatterTest extends TestCase {
 	}
 
 	protected function getTimestampAgo($time, $seconds = 0, $minutes = 0, $hours = 0, $days = 0, $years = 0) {
-		return $time - $seconds - $minutes * 60 - $hours * 3600 - $days * 24*3600 - $years * 365*24*3600;
+		return $time - $seconds - $minutes * 60 - $hours * 3600 - $days * 24 * 3600 - $years * 365 * 24 * 3600;
 	}
 
 	public function formatTimeSpanData() {

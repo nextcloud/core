@@ -3,9 +3,11 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @copyright Copyright (c) 2018, Georg Ehrke
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Christoph Seitz <christoph.seitz@posteo.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Jakob Sack <mail@jakobsack.de>
  * @author Julius Härtl <jus@bitgrid.net>
@@ -13,7 +15,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  * @author Vinicius Cubas Brand <vinicius@eita.org.br>
  *
  * @license AGPL-3.0
@@ -39,7 +41,9 @@ use OCA\DAV\CalDAV\Proxy\ProxyMapper;
 use OCA\DAV\Traits\PrincipalProxyTrait;
 use OCP\App\IAppManager;
 use OCP\AppFramework\QueryException;
+use OCP\Constants;
 use OCP\IConfig;
+use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -151,6 +155,7 @@ class Principal implements BackendInterface {
 	 */
 	public function getPrincipalByPath($path) {
 		list($prefix, $name) = \Sabre\Uri\split($path);
+		$decodedName = urldecode($name);
 
 		if ($name === 'calendar-proxy-write' || $name === 'calendar-proxy-read') {
 			list($prefix2, $name2) = \Sabre\Uri\split($prefix);
@@ -168,16 +173,32 @@ class Principal implements BackendInterface {
 		}
 
 		if ($prefix === $this->principalPrefix) {
-			$user = $this->userManager->get($name);
+			// Depending on where it is called, it may happen that this function
+			// is called either with a urlencoded version of the name or with a non-urlencoded one.
+			// The urldecode function replaces %## and +, both of which are forbidden in usernames.
+			// Hence there can be no ambiguity here and it is safe to call urldecode on all usernames
+			$user = $this->userManager->get($decodedName);
 
 			if ($user !== null) {
 				return $this->userToPrincipal($user);
 			}
 		} elseif ($prefix === 'principals/circles') {
-			try {
-				return $this->circleToPrincipal($name);
-			} catch (QueryException $e) {
-				return null;
+			if ($this->userSession->getUser() !== null) {
+				// At the time of writing - 2021-01-19 — a mixed state is possible.
+				// The second condition can be removed when this is fixed.
+				return $this->circleToPrincipal($decodedName)
+					?: $this->circleToPrincipal($name);
+			}
+		} elseif ($prefix === 'principals/groups') {
+			// At the time of writing - 2021-01-19 — a mixed state is possible.
+			// The second condition can be removed when this is fixed.
+			$group = $this->groupManager->get($decodedName)
+				?: $this->groupManager->get($name);
+			if ($group instanceof IGroup) {
+				return [
+					'uri' => 'principals/groups/' . $name,
+					'{DAV:}displayname' => $group->getDisplayName(),
+				];
 			}
 		}
 		return null;
@@ -268,6 +289,10 @@ class Principal implements BackendInterface {
 			}
 		}
 
+		$searchLimit = $this->config->getSystemValueInt('sharing.maxAutocompleteResults', Constants::SHARING_MAX_AUTOCOMPLETE_RESULTS_DEFAULT);
+		if ($searchLimit <= 0) {
+			$searchLimit = null;
+		}
 		foreach ($searchProperties as $prop => $value) {
 			switch ($prop) {
 				case '{http://sabredav.org/ns}email-address':
@@ -303,7 +328,7 @@ class Principal implements BackendInterface {
 					break;
 
 				case '{DAV:}displayname':
-					$users = $this->userManager->searchDisplayName($value);
+					$users = $this->userManager->searchDisplayName($value, $searchLimit);
 
 					if (!$allowEnumeration) {
 						$users = \array_filter($users, static function (IUser $user) use ($value) {
@@ -467,9 +492,6 @@ class Principal implements BackendInterface {
 	/**
 	 * @param string $circleUniqueId
 	 * @return array|null
-	 * @throws \OCP\AppFramework\QueryException
-	 * @suppress PhanUndeclaredClassMethod
-	 * @suppress PhanUndeclaredClassCatch
 	 */
 	protected function circleToPrincipal($circleUniqueId) {
 		if (!$this->appManager->isEnabledForUser('circles') || !class_exists('\OCA\Circles\Api\v1\Circles')) {

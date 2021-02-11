@@ -12,19 +12,21 @@
     "{user} mentioned you in a comment on “{file}”" : "{user} mainitsi sinut tiedoston \"{file}\" kommentissa",
     "Edit comment" : "Muokkaa kommenttia",
     "Delete comment" : "Poista kommentti",
+    "No comments yet, start the conversation!" : "Ei kommentteja vielä. Aloita keskustelu!",
+    "Retry" : "Yritä uudelleen",
+    "_%n unread comment_::_%n unread comments_" : ["%n lukematon kommentti","%n lukematonta kommenttia"],
+    "_1 new comment_::_{unread} new comments_" : ["1 uusi kommentti","{unread} uutta kommenttia"],
+    "Comment" : "Kommentti",
+    "Comment deleted" : "Kommentti poistettu",
     "New comment …" : "Uusi kommentti…",
     "Post" : "Lähetä",
     "Cancel" : "Peruuta",
     "[Deleted user]" : "[Poistettu käyttäjä]",
-    "No comments yet, start the conversation!" : "Ei kommentteja vielä. Aloita keskustelu!",
     "More comments …" : "Lisää kommentteja…",
     "Save" : "Tallenna",
     "Allowed characters {count} of {max}" : "Sallittujen merkkien määrä {count}/{max}",
     "Error occurred while retrieving comment with ID {id}" : "Virhe haettaessa kommenttia tunnisteella {id}",
     "Error occurred while updating comment with id {id}" : "Virhe päivittäessä kommenttia tunnisteella {id}",
-    "Error occurred while posting comment" : "Virhe kommenttia lähettäessä",
-    "_%n unread comment_::_%n unread comments_" : ["%n lukematon kommentti","%n lukematonta kommenttia"],
-    "_1 new comment_::_{unread} new comments_" : ["1 uusi kommentti","{unread} uutta kommenttia"],
-    "Comment" : "Kommentti"
+    "Error occurred while posting comment" : "Virhe kommenttia lähettäessä"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

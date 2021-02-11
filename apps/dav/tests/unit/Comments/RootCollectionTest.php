@@ -35,6 +35,7 @@ use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class RootCollectionTest extends \Test\TestCase {
@@ -77,7 +78,7 @@ class RootCollectionTest extends \Test\TestCase {
 			new EventDispatcher(
 				new \Symfony\Component\EventDispatcher\EventDispatcher(),
 				\OC::$server,
-				$this->logger
+				$this->createMock(LoggerInterface::class)
 			),
 			$this->logger
 		);

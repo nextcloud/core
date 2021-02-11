@@ -99,7 +99,6 @@ OC.L10N.register(
     "Available for" : "สามารถใช้ได้สำหรับ",
     "Add storage" : "เพิ่มพื้นที่จัดเก็บข้อมูล",
     "Advanced settings" : "ตั้งค่าขั้นสูง",
-    "Allow users to mount external storage" : "อนุญาตให้ผู้ใช้ติดตั้งการจัดเก็บข้อมูลภายนอก",
-    "Saving..." : "กำลังบันทึกข้อมูล..."
+    "Allow users to mount external storage" : "อนุญาตให้ผู้ใช้ติดตั้งการจัดเก็บข้อมูลภายนอก"
 },
 "nplurals=1; plural=0;");

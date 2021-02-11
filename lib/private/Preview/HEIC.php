@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2018, ownCloud GmbH
  * @copyright Copyright (c) 2018, Sebastian Steinmetz (me@sebastiansteinmetz.ch)
  *
+ * @author J0WI <J0WI@users.noreply.github.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Sebastian Steinmetz <462714+steiny2k@users.noreply.github.com>
@@ -133,7 +134,7 @@ class HEIC extends ProviderV2 {
 				// A bigger image calls for some better resizing algorithm
 				// According to http://www.imagemagick.org/Usage/filter/#lanczos
 				// the catrom filter is almost identical to Lanczos2, but according
-				// to http://php.net/manual/en/imagick.resizeimage.php it is
+				// to https://www.php.net/manual/en/imagick.resizeimage.php it is
 				// significantly faster
 				$bp->resizeImage($maxX, $maxY, \Imagick::FILTER_CATROM, 1, true);
 			}

@@ -23,12 +23,12 @@ OC.L10N.register(
     "A non-default update server is in use to be checked for updates:" : "Güncelleme denetimi için varsayılan sunucudan başka bir sunucu kullanılıyor:",
     "Update channel:" : "Güncelleme kanalı:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Her zaman bir üst sürüme güncelleyebilirsiniz ancak asla daha kararlı bir eski sürüme dönemezsiniz.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Yeni bir sürümün yayınlanmasından sonra burada görüntülenmesinin biraz zaman alabileceğini unutmayın. Yeni sürümleri kullanıcılarımıza zamanla dağıtıyoruz ve bazen sorunlarla karşılaştığımızda bir sürümü atlayabiliyoruz.",
     "Notify members of the following groups about available updates:" : "Yayınlanan güncellemeler şu grupların üyelerine bildirilsin:",
     "Only notification for app updates are available." : "Yalnız uygulama güncellemeleri kullanılabilir.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "Seçilmiş güncelleme kanalı kullanımdan kalkmış sunucu bildirimleri için kullanılıyor.",
     "The selected update channel does not support updates of the server." : "Seçilmiş güncelleme kanalı sunucunun güncellemelerini desteklemiyor.",
     "A new version is available: <strong>{newVersionString}</strong>" : "Yeni bir sürüm yayınlanmış: <strong>{newVersionString}</strong>",
+    "Note that after a new release the update only shows up after the first minor release or later. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found. Learn more about updates and release channels at {link}" : "Yeni bir sürümden sonra güncellemenin yalnız ilk yeni küçük sürüm ya da daha sonraki sürümler yayınlandığında görüntüleneceğini unutmayın. Yeni sürümleri kullanıcılarımıza zamanla dağıtıyoruz ve bazen sorunlarla karşılaştığımızda bir sürümü atlayabiliyoruz. Güncellemeler ve yayın kanalları hakkında ayrıntılı bilgi almak için {link} adresine bakabilirsiniz.",
     "Checked on {lastCheckedDate}" : "Son denetim: {lastCheckedDate}",
     "Checking apps for compatible updates" : "Uyumlu güncellemeler için uygulamalar denetleniyor",
     "Please make sure your config.php does not set <samp>appstoreenabled</samp> to false." : "Lütfen config.php dosyasındaki <samp>appstoreenabled</samp> seçeneğinin false olarak ayarlanmadığından emin olun.",
@@ -41,6 +41,7 @@ OC.L10N.register(
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "Son kararlı sürüm. Normal kullanıma uygundur ve her zaman son büyük sürümü kullanır.",
     "Beta" : "Beta",
     "A pre-release version only for testing new features, not for production environments." : "Yeni özellikleri denemek için kullanılabilecek yayın öncesi sürümü. Üretim ortamları için önerilmez.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> uygulamanın bu sürüm için kullanılabilecek bir güncellemesi yok","<strong>%n</strong> uygulamanın bu sürüm için kullanılabilecek bir güncellemesi yok"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> uygulamanın bu sürüm için kullanılabilecek bir güncellemesi yok","<strong>%n</strong> uygulamanın bu sürüm için kullanılabilecek bir güncellemesi yok"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Yeni bir sürümün yayınlanmasından sonra burada görüntülenmesinin biraz zaman alabileceğini unutmayın. Yeni sürümleri kullanıcılarımıza zamanla dağıtıyoruz ve bazen sorunlarla karşılaştığımızda bir sürümü atlayabiliyoruz."
 },
 "nplurals=2; plural=(n > 1);");

@@ -2,6 +2,7 @@
 /**
  * @copyright 2017, Georg Ehrke <oc.list@georgehrke.com>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  *
  * @license GNU AGPL version 3 or any later version
@@ -26,7 +27,6 @@ namespace OCP\Calendar;
 /**
  * Interface ICalendar
  *
- * @package OCP
  * @since 13.0.0
  */
 interface ICalendar {
@@ -61,7 +61,7 @@ interface ICalendar {
 	 * @return array an array of events/journals/todos which are arrays of key-value-pairs
 	 * @since 13.0.0
 	 */
-	public function search($pattern, array $searchProperties=[], array $options=[], $limit=null, $offset=null);
+	public function search($pattern, array $searchProperties = [], array $options = [], $limit = null, $offset = null);
 
 	/**
 	 * @return integer build up using \OCP\Constants

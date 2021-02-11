@@ -2,7 +2,9 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -41,11 +43,11 @@ class ImportCertificate extends Base {
 	protected function configure() {
 		$this
 			->setName('security:certificates:import')
-			->setDescription('import trusted certificate')
+			->setDescription('import trusted certificate in PEM format')
 			->addArgument(
 				'path',
 				InputArgument::REQUIRED,
-				'path to the certificate to import'
+				'path to the PEM certificate to import'
 			);
 	}
 
@@ -53,7 +55,7 @@ class ImportCertificate extends Base {
 		$path = $input->getArgument('path');
 
 		if (!file_exists($path)) {
-			$output->writeln('<error>certificate not found</error>');
+			$output->writeln('<error>Certificate not found, please provide a path accessible by the web server user</error>');
 			return 1;
 		}
 

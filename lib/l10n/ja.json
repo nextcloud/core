@@ -8,6 +8,7 @@
     "The files of the app %1$s were not replaced correctly. Make sure it is a version compatible with the server." : "アプリ %1$s のファイルが正しく置き換えられませんでした。サーバーと互換性のあるバージョンであることを確認してください。",
     "Sample configuration detected" : "サンプル設定が見つかりました。",
     "It has been detected that the sample configuration has been copied. This can break your installation and is unsupported. Please read the documentation before performing changes on config.php" : "サンプル設定がコピーされてそのままです。このままではインストールが失敗し、サポート対象外になります。config.phpを変更する前にドキュメントを確認してください。",
+    "Other activities" : "その他のアクティビティ",
     "%1$s and %2$s" : "%1$s と %2$s",
     "%1$s, %2$s and %3$s" : "%1$s と %2$s、%3$s",
     "%1$s, %2$s, %3$s and %4$s" : "%1$s と %2$s、%3$s、%4$s",
@@ -20,6 +21,7 @@
     "PHP %s or higher is required." : "PHP %s 以上が必要です。",
     "PHP with a version lower than %s is required." : "%s 以前のバージョンのPHPが必要です。",
     "%sbit or higher PHP required." : "%sbit 以上の新しいバージョンのPHPが必要です。",
+    "The following architectures are supported: %s" : "次のアーキテクチャをサポートしています: %s",
     "The following databases are supported: %s" : "次のデータベースをサポートしています: %s",
     "The command line tool %s could not be found" : "コマンド '%s' は見つかりませんでした。",
     "The library %s is not available." : " %s ライブラリーが利用できません。",
@@ -99,7 +101,6 @@
     "Set an admin username." : "管理者のユーザー名を設定",
     "Set an admin password." : "管理者のパスワードを設定",
     "Can't create or write into the data directory %s" : "%s データディレクトリに作成、書き込みができません",
-    "Invalid Federated Cloud ID" : "無効なクラウド共有ID",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "%s のバックエンドの共有には、OCP\\Share_Backend インターフェースを実装しなければなりません。",
     "Sharing backend %s not found" : "共有バックエンド %s が見つかりません",
     "Sharing backend for %s not found" : "%s のための共有バックエンドが見つかりません",
@@ -224,13 +225,6 @@
     "Storage connection timeout. %s" : "ストレージへの接続がタイムアウト。 %s",
     "Following databases are supported: %s" : "次のデータベースをサポートしています: %s",
     "Following platforms are supported: %s" : "次のプラットフォームをサポートしています: %s",
-    "Overview" : "概要",
-    "Basic settings" : "基本設定",
-    "Sharing" : "共有",
-    "Security" : "セキュリティ",
-    "Groupware" : "グループウェア",
-    "Personal info" : "個人情報",
-    "Mobile & desktop" : "モバイル & デスクトップ",
-    "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s" : "多くの場合、これは Webサーバーにappsディレクトリへの書き込み権限を与えるか、設定ファイルでアプリストアを無効化することで直ります。%s を見てください。"
+    "Invalid Federated Cloud ID" : "無効なクラウド共有ID"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

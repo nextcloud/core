@@ -45,9 +45,9 @@ class ClearGeneratedAvatarCacheTest extends \Test\TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->outputMock    = $this->createMock(IOutput::class);
+		$this->outputMock = $this->createMock(IOutput::class);
 		$this->avatarManager = $this->createMock(AvatarManager::class);
-		$this->config        = $this->createMock(IConfig::class);
+		$this->config = $this->createMock(IConfig::class);
 
 		$this->repair = new ClearGeneratedAvatarCache($this->config, $this->avatarManager);
 	}

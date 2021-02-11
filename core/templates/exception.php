@@ -1,8 +1,24 @@
 <?php
-	/** @var array $_ */
-	/** @var \OCP\IL10N $l */
+/** @var array $_ */
+/** @var \OCP\IL10N $l */
 
 style('core', ['styles', 'header']);
+
+function print_exception(Throwable $e, \OCP\IL10N $l): void {
+	print_unescaped('<pre>');
+	p($e->getTraceAsString());
+	print_unescaped('</pre>');
+
+	if ($e->getPrevious() !== null) {
+		print_unescaped('<br />');
+		print_unescaped('<h4>');
+		p($l->t('Previous'));
+		print_unescaped('</h4>');
+
+		print_exception($e->getPrevious(), $l);
+	}
+}
+
 ?>
 <div class="error error-wide">
 	<h2><?php p($l->t('Internal Server Error')) ?></h2>
@@ -23,9 +39,9 @@ style('core', ['styles', 'header']);
 		<?php endif; ?>
 	</ul>
 
-	<?php if ($_['debugMode']): ?>
+	<?php if (isset($_['debugMode']) && $_['debugMode'] === true): ?>
 		<br />
 		<h3><?php p($l->t('Trace')) ?></h3>
-		<pre><?php p($_['trace']) ?></pre>
+		<?php print_exception($_['exception'], $l); ?>
 	<?php endif; ?>
 </div>

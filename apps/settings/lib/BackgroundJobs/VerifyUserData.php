@@ -9,6 +9,7 @@
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Patrik Kernstock <info@pkern.at>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -30,10 +31,11 @@
 namespace OCA\Settings\BackgroundJobs;
 
 use OC\Accounts\AccountManager;
-use OC\BackgroundJob\Job;
-use OC\BackgroundJob\JobList;
+use OCP\Accounts\IAccountManager;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\IJobList;
+use OCP\BackgroundJob\Job;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
 use OCP\ILogger;
@@ -68,21 +70,14 @@ class VerifyUserData extends Job {
 	/** @var IConfig */
 	private $config;
 
-	/**
-	 * VerifyUserData constructor.
-	 *
-	 * @param AccountManager $accountManager
-	 * @param IUserManager $userManager
-	 * @param IClientService $clientService
-	 * @param ILogger $logger
-	 * @param IConfig $config
-	 */
 	public function __construct(AccountManager $accountManager,
 								IUserManager $userManager,
 								IClientService $clientService,
 								ILogger $logger,
+								ITimeFactory $timeFactory,
 								IConfig $config
 	) {
+		parent::__construct($timeFactory);
 		$this->accountManager = $accountManager;
 		$this->userManager = $userManager;
 		$this->httpClientService = $clientService;
@@ -96,10 +91,10 @@ class VerifyUserData extends Job {
 	/**
 	 * run the job, then remove it from the jobList
 	 *
-	 * @param JobList $jobList
+	 * @param IJobList $jobList
 	 * @param ILogger|null $logger
 	 */
-	public function execute($jobList, ILogger $logger = null) {
+	public function execute(IJobList $jobList, ILogger $logger = null) {
 		if ($this->shouldRun($this->argument)) {
 			parent::execute($jobList, $logger);
 			$jobList->remove($this, $this->argument);
@@ -115,11 +110,11 @@ class VerifyUserData extends Job {
 		$try = (int)$argument['try'] + 1;
 
 		switch ($argument['type']) {
-			case AccountManager::PROPERTY_WEBSITE:
+			case IAccountManager::PROPERTY_WEBSITE:
 				$result = $this->verifyWebsite($argument);
 				break;
-			case AccountManager::PROPERTY_TWITTER:
-			case AccountManager::PROPERTY_EMAIL:
+			case IAccountManager::PROPERTY_TWITTER:
+			case IAccountManager::PROPERTY_EMAIL:
 				$result = $this->verifyViaLookupServer($argument, $argument['type']);
 				break;
 			default:
@@ -165,9 +160,9 @@ class VerifyUserData extends Job {
 			$userData = $this->accountManager->getUser($user);
 
 			if ($publishedCodeSanitized === $argument['verificationCode']) {
-				$userData[AccountManager::PROPERTY_WEBSITE]['verified'] = AccountManager::VERIFIED;
+				$userData[IAccountManager::PROPERTY_WEBSITE]['verified'] = AccountManager::VERIFIED;
 			} else {
-				$userData[AccountManager::PROPERTY_WEBSITE]['verified'] = AccountManager::NOT_VERIFIED;
+				$userData[IAccountManager::PROPERTY_WEBSITE]['verified'] = AccountManager::NOT_VERIFIED;
 			}
 
 			$this->accountManager->updateUser($user, $userData);

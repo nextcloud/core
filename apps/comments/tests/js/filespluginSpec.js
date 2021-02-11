@@ -65,16 +65,18 @@ describe('OCA.Comments.FilesPlugin tests', function() {
 			expect($tr.attr('data-comments-unread')).toEqual('3');
 		});
 		it('clicking icon opens sidebar', function() {
-			var sidebarStub = sinon.stub(fileList, 'showDetailsView');
+			var sidebarTabStub = sinon.stub(OCA.Files.Sidebar, 'setActiveTab');
+			var sidebarStub = sinon.stub(OCA.Files.Sidebar, 'open');
 			var $action, $tr;
 			fileList.setFiles(testFiles);
 			$tr = fileList.findFileEl('One.txt');
 			$action = $tr.find('.action-comment');
 			$action.click();
 
+			expect(sidebarTabStub.calledOnce).toEqual(true);
+			expect(sidebarTabStub.lastCall.args[0]).toEqual('comments');
 			expect(sidebarStub.calledOnce).toEqual(true);
-			expect(sidebarStub.lastCall.args[0]).toEqual('One.txt');
-			expect(sidebarStub.lastCall.args[1]).toEqual('comments');
+			expect(sidebarStub.lastCall.args[0]).toEqual('/One.txt');
 		});
 	});
 	describe('elementToFile', function() {

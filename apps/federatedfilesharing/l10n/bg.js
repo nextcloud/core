@@ -23,12 +23,12 @@ OC.L10N.register(
     "Share with me through my #Nextcloud Federated Cloud ID" : "Споделете с мен, чрез моя #Nextcloud Federated Cloud ID",
     "Sharing" : "Споделяне",
     "Open documentation" : "Отвори документацията",
-    "Allow users on this server to send shares to other servers" : "Позволи на потребители от този сървър да споделят папки  с други сървъри",
     "Allow users on this server to receive shares from other servers" : "Позволи на потребители на този сървър да получават споделени папки от други сървъри",
     "Your Federated Cloud ID:" : "Вашият Federated Cloud ID:",
     "Share it so your friends can share files with you:" : "Споделете, за да могат приятелите ви да споделят файлове, с вас:",
     "Add to your website" : "Добавете към вашия уеб сайт",
     "Share with me via Nextcloud" : "Споделете с мен, чрез Nextcloud",
-    "HTML Code:" : "HTML код:"
+    "HTML Code:" : "HTML код:",
+    "Allow users on this server to send shares to other servers" : "Позволи на потребители от този сървър да споделят папки  с други сървъри"
 },
 "nplurals=2; plural=(n != 1);");

@@ -30,7 +30,6 @@ namespace OCP\Lock;
 /**
  * Class ManuallyLockedException
  *
- * @package OCP\Lock
  * @since 18.0.0
  */
 class ManuallyLockedException extends LockedException {

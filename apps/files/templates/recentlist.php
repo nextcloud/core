@@ -1,4 +1,4 @@
-<?php /** @var $l \OCP\IL10N */ ?>
+<?php /** @var \OCP\IL10N $l */ ?>
 <div id='notification'></div>
 
 <div id="emptycontent" class="hidden"></div>

@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  *
@@ -117,4 +118,11 @@ interface IUserMountCache {
 	 * @since 13.0.0
 	 */
 	public function getUsedSpaceForUsers(array $users);
+
+	/**
+	 * Clear all entries from the in-memory cache
+	 *
+	 * @since 20.0.0
+	 */
+	public function clear(): void;
 }

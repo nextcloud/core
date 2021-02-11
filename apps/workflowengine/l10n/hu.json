@@ -62,25 +62,6 @@
     "Request user agent" : "Böngésző kérés",
     "User group membership" : "Felhasználói csoport tagság",
     "is member of" : "tagja ennek",
-    "is not member of" : "nem tagja ennek",
-    "Example: {placeholder}" : "Például: {placeholder}",
-    "Select tag…" : "Címke választás...",
-    "Start" : "Kezdet",
-    "End" : "Vég",
-    "Select timezone…" : "Időzóna választás...",
-    "Sync clients" : "Szinkron kliensek",
-    "Short rule description" : "A szabály rövid leírása",
-    "Add rule" : "Szabály hozzáadás",
-    "Reset" : "Visszaállítás",
-    "Saving…" : "Mentés...",
-    "Group list is empty" : "Csoport lista üres",
-    "Unable to retrieve the group list" : "Csoportlista betöltése sikertelen",
-    "Saved" : "Elmentve",
-    "Saving failed:" : "Mentés sikertelen:",
-    "Add rule group" : "Szabály csoport hozzáadás",
-    "Tag management" : "Címkekezelés",
-    "Files workflow engine" : "Fájl munkafolyamat motor",
-    "Open documentation" : "Dokumentáció megnyitása",
-    "Loading…" : "Betöltés..."
+    "is not member of" : "nem tagja ennek"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

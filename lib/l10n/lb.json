@@ -62,7 +62,6 @@
     "Dec." : "Dez.",
     "Authentication error" : "Authentifikatioun's Fehler",
     "Storage is temporarily not available" : "Späicherplaatz temporär net erreeschbar",
-    "Following databases are supported: %s" : "Dës Datebanke ginn ënnerstëtzt: %s",
-    "Sharing" : "Gedeelt"
+    "Following databases are supported: %s" : "Dës Datebanke ginn ënnerstëtzt: %s"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -36,7 +36,6 @@ namespace OCP\Activity;
 /**
  * Interface IConsumer
  *
- * @package OCP\Activity
  * @since 6.0.0
  */
 interface IConsumer {

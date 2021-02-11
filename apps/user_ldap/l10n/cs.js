@@ -83,7 +83,7 @@ OC.L10N.register(
     "When logging in, %s will find the user based on the following attributes:" : "Při přihlašování, %s bude hledat uživatele na základě následujících atributů:",
     "LDAP / AD Username:" : "LDAP / AD uživatelské jméno:",
     "Allows login against the LDAP / AD username, which is either \"uid\" or \"sAMAccountName\" and will be detected." : "Umožňuje přihlašování pomocí LDAP/AD uživatelského jména, což je buď „uid“ nebo „sAMAccountName“ a bude zjištěno.",
-    "LDAP / AD Email Address:" : "LDAP/AD e-mailová adresa:",
+    "LDAP / AD Email Address:" : "E-mailová adresa z LDAP/AD:",
     "Allows login against an email attribute. \"mail\" and \"mailPrimaryAddress\" allowed." : "Umožňuje přihlašování pomocí atributu e-mail. Je možné použít „mail“ a „mailPrimaryAddress“.",
     "Other Attributes:" : "Další atributy:",
     "Defines the filter to apply, when login is attempted. \"%%uid\" replaces the username in the login action. Example: \"uid=%%uid\"" : "Definuje filtr který použít při pokusu o přihlášení. „%%uid“ je nahrazeno uživatelským jménem z přihlašovací akce. Příklad: „uid=%%uid“",
@@ -141,7 +141,7 @@ OC.L10N.register(
     "Turn off SSL certificate validation." : "Vypnout ověřování SSL certifikátu.",
     "Not recommended, use it for testing only! If connection only works with this option, import the LDAP server's SSL certificate in your %s server." : "Nedoporučuje se, určeno pouze k testovacímu použití. Pokud spojení funguje jen s touto volbou, importujte SSL certifikát vašeho LDAP serveru na server %s.",
     "Cache Time-To-Live" : "TTL vyrovnávací paměti",
-    "in seconds. A change empties the cache." : "v sekundách. Změna vyprázdní vyrovnávací paměť.",
+    "in seconds. A change empties the cache." : "v sekundách. Změna vyprázdní mezipaměť.",
     "Directory Settings" : "Nastavení adresáře kontaktů",
     "User Display Name Field" : "Kolonka zobrazovaného jména uživatele",
     "The LDAP attribute to use to generate the user's display name." : "LDAP atribut použitý k vytvoření zobrazovaného jména uživatele.",
@@ -150,7 +150,7 @@ OC.L10N.register(
     "Base User Tree" : "Základní uživatelský strom",
     "One User Base DN per line" : "Jedna uživatelská základní DN na řádku",
     "User Search Attributes" : "Atributy vyhledávání uživatelů",
-    "Optional; one attribute per line" : "Volitelné, jeden atribut na řádku",
+    "Optional; one attribute per line" : "Volitelné, každý atribut na zvlášť řádek",
     "Group Display Name Field" : "Kolonka zobrazovaného názvu skupiny",
     "The LDAP attribute to use to generate the groups's display name." : "LDAP atribut použitý k vytvoření zobrazovaného jména skupiny.",
     "Base Group Tree" : "Základní skupinový strom",
@@ -189,7 +189,6 @@ OC.L10N.register(
     "Username-LDAP User Mapping" : "Mapování uživatelských jmen z LDAP",
     "Usernames are used to store and assign metadata. In order to precisely identify and recognize users, each LDAP user will have an internal username. This requires a mapping from username to LDAP user. The created username is mapped to the UUID of the LDAP user. Additionally the DN is cached as well to reduce LDAP interaction, but it is not used for identification. If the DN changes, the changes will be found. The internal username is used all over. Clearing the mappings will have leftovers everywhere. Clearing the mappings is not configuration sensitive, it affects all LDAP configurations! Never clear the mappings in a production environment, only in a testing or experimental stage." : "Uživatelská jména slouží k ukládání a přiřazování metadat. Pro přesnou identifikaci a rozpoznávání uživatelů, každý LDAP uživatel má vnitřní uživatelské jméno. Toto vyžaduje mapování uživatelského jména na LDAP uživatele. Krom toho je uložen do mezipaměti rozlišený název aby se omezila interakce s LDAP, ale není používáno pro identifikaci. Pokud se DN změní, změny budou nalezeny. Vnitřní uživatelské jméno bude použito nade všechno. Čištění mapování bude mít pozůstatky všude. Čištění mapování není citlivé na nastavení, postihuje všechny LDAP nastavení. Nikdy nečistěte mapování v produkčním prostředí, pouze v testovací nebo experimentální fázi.",
     "Clear Username-LDAP User Mapping" : "Zrušit mapování uživatelských jmen LDAPu",
-    "Clear Groupname-LDAP Group Mapping" : "Zrušit mapování názvů skupin LDAPu",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Ponechte prázdné pro uživatelské jméno (výchozí). Jinak uveďte LDAP/AD parametr."
+    "Clear Groupname-LDAP Group Mapping" : "Zrušit mapování názvů skupin LDAPu"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

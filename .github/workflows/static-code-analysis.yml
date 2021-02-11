@@ -1,0 +1,54 @@
+name: Static code analysis
+
+on: [pull_request]
+
+jobs:
+    static-code-analysis:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Checkout submodules
+              shell: bash
+              run: |
+                auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+                git submodule sync --recursive
+                git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+            - name: Set up php7.4
+              uses: shivammathur/setup-php@master
+              with:
+                php-version: 7.4
+                coverage: none
+            - name: Composer install
+              run: composer i
+            - name: Psalm
+              run: composer run psalm -- --monochrome --no-progress --output-format=text --update-baseline || ( git diff -- . ':!lib/composer' && exit 1 )
+            - name: Check diff
+              run: git diff -- . ':!lib/composer'
+            - name: Show potential changes in Psalm baseline
+              run: |
+                bash -c "[[ ! \"`git status --porcelain build/psalm-baseline.xml`\" ]] || ( echo 'Uncommited changes in Psalm baseline' && git status && git diff build/psalm-baseline.xml)"
+
+    static-code-analysis-ocp:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Checkout submodules
+              shell: bash
+              run: |
+                auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+                git submodule sync --recursive
+                git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+            - name: Set up php7.4
+              uses: shivammathur/setup-php@master
+              with:
+                php-version: 7.4
+                coverage: none
+            - name: Composer install
+              run: composer i
+            - name: Psalm
+              run: composer run psalm -- -c psalm-ocp.xml --monochrome --no-progress --output-format=text --update-baseline || ( git diff -- . ':!lib/composer' && exit 1 )
+            - name: Check diff
+              run: git diff -- . ':!lib/composer'
+            - name: Show potential changes in Psalm baseline
+              run: |
+                bash -c "[[ ! \"`git status --porcelain build/psalm-baseline-ocp.xml`\" ]] || ( echo 'Uncommited changes in Psalm baseline' && git status && git diff build/psalm-baseline.xml)"

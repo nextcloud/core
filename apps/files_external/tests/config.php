@@ -4,12 +4,8 @@
  *
  * @author Christian Berendt <berendt@b1-systems.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author hkjolhede <hkjolhede@gmail.com>
- * @author Michael Gapczynski <GapczynskiM@gmail.com>
- * @author Robin Appelman <robin@icewind.nl>
- * @author Ross Nicoll <jrn@jrn.me.uk>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -35,30 +31,30 @@ if (file_exists($privateConfigFile)) {
 
 // this is now more a template now for your private configurations
 return [
-	'ftp'=>[
-		'run'=>false,
-		'host'=>'localhost',
-		'user'=>'test',
-		'password'=>'test',
-		'root'=>'/test',
+	'ftp' => [
+		'run' => false,
+		'host' => 'localhost',
+		'user' => 'test',
+		'password' => 'test',
+		'root' => '/test',
 	],
-	'webdav'=>[
-		'run'=>false,
-		'host'=>'localhost',
-		'user'=>'test',
-		'password'=>'test',
-		'root'=>'',
+	'webdav' => [
+		'run' => false,
+		'host' => 'localhost',
+		'user' => 'test',
+		'password' => 'test',
+		'root' => '',
 		// wait delay in seconds after write operations
 		// (only in tests)
 		// set to higher value for lighttpd webdav
-		'wait'=> 0
+		'wait' => 0
 	],
-	'owncloud'=>[
-		'run'=>false,
-		'host'=>'localhost/owncloud',
-		'user'=>'test',
-		'password'=>'test',
-		'root'=>'',
+	'owncloud' => [
+		'run' => false,
+		'host' => 'localhost/owncloud',
+		'user' => 'test',
+		'password' => 'test',
+		'root' => '',
 	],
 	'swift' => [
 		'run' => false,
@@ -72,19 +68,19 @@ return [
 		//'url' => 'https://identity.api.rackspacecloud.com/v2.0/', //to be used with Rackspace Cloud Files and OpenStack Object Storage
 		//'timeout' => 5 // timeout of HTTP requests in seconds
 	],
-	'smb'=>[
-		'run'=>false,
-		'user'=>'test',
-		'password'=>'test',
-		'host'=>'localhost',
-		'share'=>'/test',
-		'root'=>'/test/',
+	'smb' => [
+		'run' => false,
+		'user' => 'test',
+		'password' => 'test',
+		'host' => 'localhost',
+		'share' => '/test',
+		'root' => '/test/',
 	],
-	'amazons3'=>[
-		'run'=>false,
-		'key'=>'test',
-		'secret'=>'test',
-		'bucket'=>'bucket'
+	'amazons3' => [
+		'run' => false,
+		'key' => 'test',
+		'secret' => 'test',
+		'bucket' => 'bucket'
 		//'hostname' => 'your.host.name',
 		//'port' => '443',
 		//'use_ssl' => 'true',
@@ -92,19 +88,19 @@ return [
 		//'test'=>'true',
 		//'timeout'=>20
 	],
-	'sftp' =>  [
-		'run'=>false,
-		'host'=>'localhost',
-		'user'=>'test',
-		'password'=>'test',
-		'root'=>'/test'
+	'sftp' => [
+		'run' => false,
+		'host' => 'localhost',
+		'user' => 'test',
+		'password' => 'test',
+		'root' => '/test'
 	],
-	'sftp_key' =>  [
-		'run'=>false,
-		'host'=>'localhost',
-		'user'=>'test',
-		'public_key'=>'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDJPTvz3OLonF2KSGEKP/nd4CPmRYvemG2T4rIiNYjDj0U5y+2sKEWbjiUlQl2bsqYuVoJ+/UNJlGQbbZ08kQirFeo1GoWBzqioaTjUJfbLN6TzVVKXxR9YIVmH7Ajg2iEeGCndGgbmnPfj+kF9TR9IH8vMVvtubQwf7uEwB0ALhw== phpseclib-generated-key',
-		'private_key'=>'test',
-		'root'=>'/test'
+	'sftp_key' => [
+		'run' => false,
+		'host' => 'localhost',
+		'user' => 'test',
+		'public_key' => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDJPTvz3OLonF2KSGEKP/nd4CPmRYvemG2T4rIiNYjDj0U5y+2sKEWbjiUlQl2bsqYuVoJ+/UNJlGQbbZ08kQirFeo1GoWBzqioaTjUJfbLN6TzVVKXxR9YIVmH7Ajg2iEeGCndGgbmnPfj+kF9TR9IH8vMVvtubQwf7uEwB0ALhw== phpseclib-generated-key',
+		'private_key' => 'test',
+		'root' => '/test'
 	],
 ];

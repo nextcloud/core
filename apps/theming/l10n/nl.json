@@ -22,7 +22,6 @@
     "Could not write file to disk" : "Kan bestand niet opslaan",
     "A PHP extension stopped the file upload" : "Een PHP extensie heeft de upload gestopt.",
     "No file uploaded" : "Geen bestand geüpload",
-    "Unsupported image type" : "Afbeeldingstype wordt niet ondersteund",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "Je gebruikt al een aangepast thema. Theming app opties kunnen daardoor worden overschreven.",
     "Theming" : "Uiterlijk",
     "Legal notice" : "Juridische bepalingen",

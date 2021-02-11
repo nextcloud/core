@@ -31,7 +31,6 @@ namespace OCP\FullTextSearch\Exceptions;
  *
  * Class FullTextSearchAppNotAvailableException
  *
- * @package OCP\FullTextSearch\Exceptions
  */
 class FullTextSearchAppNotAvailableException extends \Exception {
 }

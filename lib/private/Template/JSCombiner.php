@@ -121,7 +121,9 @@ class JSCombiner {
 		$fileName = $fileName . '.deps';
 		try {
 			$deps = $this->depsCache->get($folder->getName() . '-' . $fileName);
+			$fromCache = true;
 			if ($deps === null || $deps === '') {
+				$fromCache = false;
 				$depFile = $folder->getFile($fileName);
 				$deps = $depFile->getContent();
 			}
@@ -138,10 +140,14 @@ class JSCombiner {
 				return false;
 			}
 
-			foreach ($deps as $file=>$mtime) {
+			foreach ($deps as $file => $mtime) {
 				if (!file_exists($file) || filemtime($file) > $mtime) {
 					return false;
 				}
+			}
+
+			if ($fromCache === false) {
+				$this->depsCache->set($folder->getName() . '-' . $fileName, json_encode($deps));
 			}
 
 			return true;

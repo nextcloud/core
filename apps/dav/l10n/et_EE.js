@@ -44,9 +44,8 @@ OC.L10N.register(
     "Where:" : "Kus:",
     "Description:" : "Kirjeldus:",
     "Invitation canceled" : "Kutse on tühistatud",
-    "Hello %s," : "Tere %s,",
     "Invitation updated" : "Kutse uuendatud",
-    "When:" : "Millal:",
+    "Location:" : "Asukoht:",
     "Link:" : "Link:",
     "Accept" : "Nõustu",
     "Decline" : "Keeldu",
@@ -56,8 +55,7 @@ OC.L10N.register(
     "Tentative" : "Esialgne",
     "Save" : "Salvesta",
     "Send invitations to attendees" : "Saada osalejatele kutsed",
-    "Technical details" : "Tehnilised detailid",
-    "Remote Address: %s" : "Kaugaadress: %s",
-    "Request ID: %s" : "Päringu ID: %s"
+    "Hello %s," : "Tere %s,",
+    "When:" : "Millal:"
 },
 "nplurals=2; plural=(n != 1);");

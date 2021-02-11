@@ -9,6 +9,7 @@
  * @author Florin Peter <github@florin-peter.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author korelstar <korelstar@users.noreply.github.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Michael Gapczynski <GapczynskiM@gmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -17,7 +18,7 @@
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Sam Tuke <mail@samtuke.com>
  * @author Stephan Peijnik <speijnik@anexia-it.com>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -437,12 +438,12 @@ class Filesystem {
 
 			// home mounts are handled seperate since we need to ensure this is mounted before we call the other mount providers
 			$homeMount = $mountConfigManager->getHomeMountForUser($userObject);
+			self::getMountManager()->addMount($homeMount);
+
 			if ($homeMount->getStorageRootId() === -1) {
 				$homeMount->getStorage()->mkdir('');
 				$homeMount->getStorage()->getScanner()->scan('');
 			}
-
-			self::getMountManager()->addMount($homeMount);
 
 			\OC\Files\Filesystem::getStorage($user);
 
@@ -813,7 +814,7 @@ class Filesystem {
 
 		$cacheKey = json_encode([$path, $stripTrailingSlash, $isAbsolutePath, $keepUnicode]);
 
-		if (isset(self::$normalizedPathCache[$cacheKey])) {
+		if ($cacheKey && isset(self::$normalizedPathCache[$cacheKey])) {
 			return self::$normalizedPathCache[$cacheKey];
 		}
 

@@ -29,6 +29,7 @@
     "Can not decrypt this file, probably this is a shared file. Please ask the file owner to reshare the file with you." : "Kan ikke dekryptere denne filen. Dette er sannsynligvis en delt fil. Spør eieren av filen om å dele den med deg på nytt.",
     "Can not read this file, probably this is a shared file. Please ask the file owner to reshare the file with you." : "Kan ikke lese denne filen, som sannsynligvis er en delt fil. Be eieren av filen om å dele den med deg på nytt.",
     "Default encryption module" : "Standard krypteringsmodul",
+    "Default encryption module for server-side encryption" : "Standard krypteringsmodul for kryptering på serverdelen",
     "Hey there,\n\nthe admin enabled server-side-encryption. Your files were encrypted using the password '%s'.\n\nPlease login to the web interface, go to the section 'basic encryption module' of your personal settings and update your encryption password by entering this password into the 'old log-in password' field and your current login-password.\n\n" : "Hei,\n\nAdministratoren har aktivert kryptering på serverdelen. Filene dine har blitt kryptert med passordet '%s'.\n\nlogg inn på web-grensesnittet, gå til seksjonen 'grunnleggende krypteringsmodul' i dine personlige innstillinger og oppdater krypteringspassordet ditt ved å legge inn dette passordet i feltet 'gammelt påloggingspassord' sammen med ditt nåværende påloggingspassord.\n",
     "The share will expire on %s." : "Delingen vil opphøre %s.",
     "Cheers!" : "Ha det!",

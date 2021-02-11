@@ -22,7 +22,7 @@ OC.L10N.register(
     "Your version is up to date." : "Verzió frissítve.",
     "A non-default update server is in use to be checked for updates:" : "Egy nem alapértelmezett szervert használunk a frissítések kereséséhez:",
     "Update channel:" : "Frissítési csatorna:",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Vedd figyelembe, hogy egy firssítés megjelenése után eltarthat egy darabig míg itt megjelenik. Fokozatosan juttatjuk el a frissítéseket a felhaszálóinkhoz és néha kihagyunk egy-egy verziót, ha problémák merülnek fel.",
+    "You can always update to a newer version. But you can never downgrade to a more stable version." : "Bármikor frissíthet egy újabb verzióra, viszont sosem léphet vissza egy stabilabb verzióra.",
     "Notify members of the following groups about available updates:" : "A következő csoport tagjainak értesítése az elérhető frissítésekről:",
     "Only notification for app updates are available." : "Csak az értesítő alkalmazás frissítései érhetők el.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "A kiválasztott frissítési csatorna dedikált értesítéseket jelenít meg a szerver elavulásakor.",
@@ -35,6 +35,7 @@ OC.L10N.register(
     "<strong>All</strong> apps have an update for this version available" : "<strong>Minden</strong> alkalmazás felfrissítve a legújabb verzióra.",
     "View changelog" : "Változásnapló megjelenítése",
     "Beta" : "Béta",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong>  alkalmazásnak nincs elérhető frissítése ehhez a verzióhoz","<strong>%n</strong> alkalmazásnak nincs elérhető frissítése ehhez a verzióhoz"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong>  alkalmazásnak nincs elérhető frissítése ehhez a verzióhoz","<strong>%n</strong> alkalmazásnak nincs elérhető frissítése ehhez a verzióhoz"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Vedd figyelembe, hogy egy firssítés megjelenése után eltarthat egy darabig míg itt megjelenik. Fokozatosan juttatjuk el a frissítéseket a felhaszálóinkhoz és néha kihagyunk egy-egy verziót, ha problémák merülnek fel."
 },
 "nplurals=2; plural=(n != 1);");

@@ -29,18 +29,30 @@ namespace OCA\Comments\Listener;
 
 use OCA\Comments\AppInfo\Application;
 use OCA\Files\Event\LoadSidebar;
+use OCP\Comments\ICommentsManager;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Util;
 
 class LoadSidebarScripts implements IEventListener {
+
+	/** @var ICommentsManager */
+	private $commentsManager;
+
+	public function __construct(ICommentsManager $commentsManager) {
+		$this->commentsManager = $commentsManager;
+	}
+
 	public function handle(Event $event): void {
 		if (!($event instanceof LoadSidebar)) {
 			return;
 		}
 
+		$this->commentsManager->load();
+
 		// TODO: make sure to only include the sidebar script when
 		// we properly split it between files list and sidebar
 		Util::addScript(Application::APP_ID, 'comments');
+		Util::addScript(Application::APP_ID, 'comments-tab');
 	}
 }

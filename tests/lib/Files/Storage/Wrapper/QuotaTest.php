@@ -211,7 +211,16 @@ class QuotaTest extends \Test\Files\Storage\Storage {
 
 	public function testNoMkdirQuotaZero() {
 		$instance = $this->getLimitedStorage(0.0);
-		$this->assertFalse($instance->mkdir('foobar'));
+		$this->assertFalse($instance->mkdir('files'));
+		$this->assertFalse($instance->mkdir('files/foobar'));
+	}
+
+	public function testMkdirQuotaZeroTrashbin() {
+		$instance = $this->getLimitedStorage(0.0);
+		$this->assertTrue($instance->mkdir('files_trashbin'));
+		$this->assertTrue($instance->mkdir('files_trashbin/files'));
+		$this->assertTrue($instance->mkdir('files_versions'));
+		$this->assertTrue($instance->mkdir('cache'));
 	}
 
 	public function testNoTouchQuotaZero() {

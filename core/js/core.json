@@ -2,18 +2,8 @@
 	"libraries": [
 	],
 	"modules": [
-		"share.js",
-		"sharetemplates.js",
-		"sharesocialmanager.js",
-		"shareconfigmodel.js",
-		"shareitemmodel.js",
-		"sharedialogview.js",
-		"sharedialoglinkshareview.js",
-		"sharedialogresharerinfoview.js",
-		"sharedialogshareelistview.js",
 		"public/publicpage.js",
 		"setupchecks.js",
-		"../search/js/search.js",
 		"mimetype.js",
 		"mimetypelist.js"
 	]

@@ -11,7 +11,7 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Sam Tuke <mail@samtuke.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -128,15 +128,15 @@ class OC_Hook {
 	 * @param string $signalClass
 	 * @param string $signalName
 	 */
-	public static function clear($signalClass='', $signalName='') {
+	public static function clear($signalClass = '', $signalName = '') {
 		if ($signalClass) {
 			if ($signalName) {
-				self::$registered[$signalClass][$signalName]=[];
+				self::$registered[$signalClass][$signalName] = [];
 			} else {
-				self::$registered[$signalClass]=[];
+				self::$registered[$signalClass] = [];
 			}
 		} else {
-			self::$registered=[];
+			self::$registered = [];
 		}
 	}
 

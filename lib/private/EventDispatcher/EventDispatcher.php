@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace OC\EventDispatcher;
 
+use Psr\Log\LoggerInterface;
 use function get_class;
 use OC\Broadcast\Events\BroadcastEvent;
 use OCP\Broadcast\Events\IBroadcastEvent;
@@ -35,7 +36,6 @@ use OCP\EventDispatcher\ABroadcastedEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IContainer;
-use OCP\ILogger;
 use OCP\IServerContainer;
 use Symfony\Component\EventDispatcher\EventDispatcher as SymfonyDispatcher;
 
@@ -47,12 +47,12 @@ class EventDispatcher implements IEventDispatcher {
 	/** @var IContainer */
 	private $container;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct(SymfonyDispatcher $dispatcher,
 								IServerContainer $container,
-								ILogger $logger) {
+								LoggerInterface $logger) {
 		$this->dispatcher = $dispatcher;
 		$this->container = $container;
 		$this->logger = $logger;
@@ -81,6 +81,9 @@ class EventDispatcher implements IEventDispatcher {
 		$this->addListener($eventName, $listener, $priority);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public function dispatch(string $eventName,
 							 Event $event): void {
 		$this->dispatcher->dispatch($event, $eventName);

@@ -34,6 +34,7 @@
 		:preserve-search="true"
 		:searchable="true"
 		:user-select="true"
+		open-direction="below"
 		@search-change="asyncFind"
 		@select="addShare">
 		<template #noOptions>
@@ -117,22 +118,16 @@ export default {
 		},
 		inputPlaceholder() {
 			const allowRemoteSharing = this.config.isRemoteShareAllowed
-			const allowMailSharing = this.config.isMailShareAllowed
 
 			if (!this.canReshare) {
 				return t('files_sharing', 'Resharing is not allowed')
 			}
-			if (!allowRemoteSharing && allowMailSharing) {
-				return t('files_sharing', 'Name or email address …')
-			}
-			if (allowRemoteSharing && !allowMailSharing) {
-				return t('files_sharing', 'Name or federated cloud ID …')
-			}
-			if (allowRemoteSharing && allowMailSharing) {
-				return t('files_sharing', 'Name, federated cloud ID or email address …')
+			// We can always search with email addresses for users too
+			if (!allowRemoteSharing) {
+				return t('files_sharing', 'Name or email …')
 			}
 
-			return t('files_sharing', 'Name …')
+			return t('files_sharing', 'Name, email, or Federated Cloud ID …')
 		},
 
 		isValidQuery() {
@@ -192,6 +187,7 @@ export default {
 				this.SHARE_TYPES.SHARE_TYPE_CIRCLE,
 				this.SHARE_TYPES.SHARE_TYPE_ROOM,
 				this.SHARE_TYPES.SHARE_TYPE_GUEST,
+				this.SHARE_TYPES.SHARE_TYPE_DECK,
 			]
 
 			if (OC.getCapabilities().files_sharing.public.enabled === true) {
@@ -246,7 +242,27 @@ export default {
 			// if there is a condition specified, filter it
 			const externalResults = this.externalResults.filter(result => !result.condition || result.condition(this))
 
-			this.suggestions = exactSuggestions.concat(suggestions).concat(externalResults).concat(lookupEntry)
+			const allSuggestions = exactSuggestions.concat(suggestions).concat(externalResults).concat(lookupEntry)
+
+			// Count occurances of display names in order to provide a distinguishable description if needed
+			const nameCounts = allSuggestions.reduce((nameCounts, result) => {
+				if (!result.displayName) {
+					return nameCounts
+				}
+				if (!nameCounts[result.displayName]) {
+					nameCounts[result.displayName] = 0
+				}
+				nameCounts[result.displayName]++
+				return nameCounts
+			}, {})
+
+			this.suggestions = allSuggestions.map(item => {
+				// Make sure that items with duplicate displayName get the shareWith applied as a description
+				if (nameCounts[item.displayName] > 1 && !item.desc) {
+					return { ...item, desc: item.shareWithDisplayNameUnique }
+				}
+				return item
+			})
 
 			this.loading = false
 			console.info('suggestions', this.suggestions)
@@ -279,6 +295,8 @@ export default {
 				return
 			}
 
+			const externalResults = this.externalResults.filter(result => !result.condition || result.condition(this))
+
 			const exact = request.data.ocs.data.exact
 
 			// flatten array of arrays
@@ -287,6 +305,7 @@ export default {
 			// remove invalid data and format to user-select layout
 			this.recommendations = this.filterOutExistingShares(rawRecommendations)
 				.map(share => this.formatForMultiselect(share))
+				.concat(externalResults)
 
 			this.loading = false
 			console.info('recommendations', this.recommendations)
@@ -371,6 +390,8 @@ export default {
 				return 'icon-circle'
 			case this.SHARE_TYPES.SHARE_TYPE_ROOM:
 				return 'icon-room'
+			case this.SHARE_TYPES.SHARE_TYPE_DECK:
+				return 'icon-deck'
 
 			default:
 				return ''
@@ -390,6 +411,8 @@ export default {
 				desc = t('files_sharing', 'on {server}', { server: result.value.server })
 			} else if (result.value.shareType === this.SHARE_TYPES.SHARE_TYPE_EMAIL) {
 				desc = result.value.shareWith
+			} else {
+				desc = result.shareWithDescription ?? ''
 			}
 
 			return {
@@ -399,6 +422,7 @@ export default {
 				isNoUser: result.value.shareType !== this.SHARE_TYPES.SHARE_TYPE_USER,
 				displayName: result.name || result.label,
 				desc,
+				shareWithDisplayNameUnique: result.shareWithDisplayNameUnique || '',
 				icon: this.shareTypeToIcon(result.value.shareType),
 			}
 		},

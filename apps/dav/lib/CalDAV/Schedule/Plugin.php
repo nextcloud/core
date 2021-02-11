@@ -4,6 +4,7 @@
  * @copyright Copyright (c) 2016, Joas Schilling <coding@schilljs.com>
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -207,7 +208,7 @@ class Plugin extends \Sabre\CalDAV\Schedule\Plugin {
 		}
 
 		$dtstart = $vevent->DTSTART;
-		$dtend =  $this->getDTEndFromVEvent($vevent);
+		$dtend = $this->getDTEndFromVEvent($vevent);
 		$uid = $vevent->UID->getValue();
 		$sequence = isset($vevent->SEQUENCE) ? $vevent->SEQUENCE->getValue() : 0;
 		$recurrenceId = isset($vevent->{'RECURRENCE-ID'}) ? $vevent->{'RECURRENCE-ID'}->serialize() : '';
@@ -325,7 +326,7 @@ EOF;
 	 * Returns a list of addresses that are associated with a principal.
 	 *
 	 * @param string $principal
-	 * @return string?
+	 * @return string|null
 	 */
 	protected function getCalendarUserTypeForPrincipal($principal):?string {
 		$calendarUserType = '{' . self::NS_CALDAV . '}calendar-user-type';
@@ -454,20 +455,20 @@ EOF;
 							'start' => $start,
 							'end' => $end,
 						],
-						'comp-filters'   => [],
-						'prop-filters'   => [],
+						'comp-filters' => [],
+						'prop-filters' => [],
 					],
 					[
 						'name' => 'VEVENT',
 						'is-not-defined' => false,
 						'time-range' => null,
-						'comp-filters'   => [],
-						'prop-filters'   => [
+						'comp-filters' => [],
+						'prop-filters' => [
 							[
-								'name'           => 'UID',
+								'name' => 'UID',
 								'is-not-defined' => false,
-								'time-range'     => null,
-								'text-match'     => [
+								'time-range' => null,
+								'text-match' => [
 									'value' => $ignoreUID,
 									'negate-condition' => true,
 									'collation' => 'i;octet',
@@ -548,7 +549,7 @@ EOF;
 	 * @return string
 	 */
 	private function stripOffMailTo(string $email): string {
-		if (stripos($email, 'mailto:')  === 0) {
+		if (stripos($email, 'mailto:') === 0) {
 			return substr($email, 7);
 		}
 

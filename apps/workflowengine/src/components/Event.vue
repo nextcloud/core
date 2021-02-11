@@ -84,10 +84,7 @@ export default {
 	}
 	.isComplex {
 		img {
-			vertical-align: top;
-			padding-top: 4px;
-			padding-bottom: 4px;
-			padding-left: 4px;
+			vertical-align: text-top;
 		}
 		span {
 			padding-top: 2px;
@@ -129,6 +126,11 @@ export default {
 	}
 	.option__title_single {
 		font-weight: 900;
+	}
+
+	.option__icon {
+		width: 16px;
+		height: 16px;
 	}
 
 	.eventlist img,

@@ -9,7 +9,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -189,8 +189,8 @@ class ObjectTree extends CachingTree {
 	 * This method must work recursively and delete the destination
 	 * if it exists
 	 *
-	 * @param string $source
-	 * @param string $destination
+	 * @param string $sourcePath
+	 * @param string $destinationPath
 	 * @throws FileLocked
 	 * @throws Forbidden
 	 * @throws InvalidPath
@@ -201,14 +201,14 @@ class ObjectTree extends CachingTree {
 	 * @throws \Sabre\DAV\Exception\ServiceUnavailable
 	 * @return void
 	 */
-	public function copy($source, $destination) {
+	public function copy($sourcePath, $destinationPath) {
 		if (!$this->fileView) {
 			throw new \Sabre\DAV\Exception\ServiceUnavailable('filesystem not setup');
 		}
 
 
-		$info = $this->fileView->getFileInfo(dirname($destination));
-		if ($this->fileView->file_exists($destination)) {
+		$info = $this->fileView->getFileInfo(dirname($destinationPath));
+		if ($this->fileView->file_exists($destinationPath)) {
 			$destinationPermission = $info && $info->isUpdateable();
 		} else {
 			$destinationPermission = $info && $info->isCreatable();
@@ -218,9 +218,9 @@ class ObjectTree extends CachingTree {
 		}
 
 		// this will trigger existence check
-		$this->getNodeForPath($source);
+		$this->getNodeForPath($sourcePath);
 
-		list($destinationDir, $destinationName) = \Sabre\Uri\split($destination);
+		list($destinationDir, $destinationName) = \Sabre\Uri\split($destinationPath);
 		try {
 			$this->fileView->verifyPath($destinationDir, $destinationName);
 		} catch (\OCP\Files\InvalidPathException $ex) {
@@ -228,7 +228,7 @@ class ObjectTree extends CachingTree {
 		}
 
 		try {
-			$this->fileView->copy($source, $destination);
+			$this->fileView->copy($sourcePath, $destinationPath);
 		} catch (StorageNotAvailableException $e) {
 			throw new \Sabre\DAV\Exception\ServiceUnavailable($e->getMessage());
 		} catch (ForbiddenException $ex) {
@@ -237,7 +237,7 @@ class ObjectTree extends CachingTree {
 			throw new FileLocked($e->getMessage(), $e->getCode(), $e);
 		}
 
-		list($destinationDir,) = \Sabre\Uri\split($destination);
+		list($destinationDir,) = \Sabre\Uri\split($destinationPath);
 		$this->markDirty($destinationDir);
 	}
 }

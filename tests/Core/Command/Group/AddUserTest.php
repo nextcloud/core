@@ -53,7 +53,7 @@ class AddUserTest extends TestCase {
 		parent::setUp();
 
 		$this->groupManager = $this->createMock(IGroupManager::class);
-		$this->userManager =  $this->createMock(IUserManager::class);
+		$this->userManager = $this->createMock(IUserManager::class);
 		$this->command = new AddUser($this->userManager, $this->groupManager);
 
 		$this->input = $this->createMock(InputInterface::class);

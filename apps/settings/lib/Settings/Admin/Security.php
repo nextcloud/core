@@ -81,11 +81,11 @@ class Security implements ISettings {
 
 		$parameters = [
 			// Encryption API
-			'encryptionEnabled'       => $this->manager->isEnabled(),
-			'encryptionReady'         => $this->manager->isReady(),
+			'encryptionEnabled' => $this->manager->isEnabled(),
+			'encryptionReady' => $this->manager->isReady(),
 			'externalBackendsEnabled' => count($this->userManager->getBackends()) > 1,
 			// Modules
-			'encryptionModules'       => $encryptionModuleList,
+			'encryptionModules' => $encryptionModuleList,
 		];
 
 		return new TemplateResponse('settings', 'settings/admin/security', $parameters, '');

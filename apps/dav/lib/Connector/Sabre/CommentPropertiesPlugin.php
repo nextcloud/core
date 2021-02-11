@@ -32,8 +32,8 @@ use Sabre\DAV\PropFind;
 use Sabre\DAV\ServerPlugin;
 
 class CommentPropertiesPlugin extends ServerPlugin {
-	public const PROPERTY_NAME_HREF   = '{http://owncloud.org/ns}comments-href';
-	public const PROPERTY_NAME_COUNT  = '{http://owncloud.org/ns}comments-count';
+	public const PROPERTY_NAME_HREF = '{http://owncloud.org/ns}comments-href';
+	public const PROPERTY_NAME_COUNT = '{http://owncloud.org/ns}comments-count';
 	public const PROPERTY_NAME_UNREAD = '{http://owncloud.org/ns}comments-unread';
 
 	/** @var  \Sabre\DAV\Server */
@@ -46,8 +46,6 @@ class CommentPropertiesPlugin extends ServerPlugin {
 	private $userSession;
 
 	private $cachedUnreadCount = [];
-
-	private $cachedFolders = [];
 
 	public function __construct(ICommentsManager $commentsManager, IUserSession $userSession) {
 		$this->commentsManager = $commentsManager;
@@ -68,6 +66,31 @@ class CommentPropertiesPlugin extends ServerPlugin {
 	public function initialize(\Sabre\DAV\Server $server) {
 		$this->server = $server;
 		$this->server->on('propFind', [$this, 'handleGetProperties']);
+	}
+
+	private function cacheDirectory(Directory $directory) {
+		$children = $directory->getChildren();
+
+		$ids = [];
+		foreach ($children as $child) {
+			if (!($child instanceof File || $child instanceof Directory)) {
+				continue;
+			}
+
+			$id = $child->getId();
+			if ($id === null) {
+				continue;
+			}
+
+			$ids[] = (string)$id;
+		}
+
+		$ids[] = (string) $directory->getId();
+		$unread = $this->commentsManager->getNumberOfUnreadCommentsForObjects('files', $ids, $this->userSession->getUser());
+
+		foreach ($unread as $id => $count) {
+			$this->cachedUnreadCount[(int)$id] = $count;
+		}
 	}
 
 	/**
@@ -91,11 +114,7 @@ class CommentPropertiesPlugin extends ServerPlugin {
 			&& $propFind->getDepth() !== 0
 			&& !is_null($propFind->getStatus(self::PROPERTY_NAME_UNREAD))
 		) {
-			$unreadCounts = $this->commentsManager->getNumberOfUnreadCommentsForFolder($node->getId(), $this->userSession->getUser());
-			$this->cachedFolders[] = $node->getPath();
-			foreach ($unreadCounts as $id => $count) {
-				$this->cachedUnreadCount[$id] = $count;
-			}
+			$this->cacheDirectory($node);
 		}
 
 		$propFind->handle(self::PROPERTY_NAME_COUNT, function () use ($node) {
@@ -109,18 +128,8 @@ class CommentPropertiesPlugin extends ServerPlugin {
 		$propFind->handle(self::PROPERTY_NAME_UNREAD, function () use ($node) {
 			if (isset($this->cachedUnreadCount[$node->getId()])) {
 				return $this->cachedUnreadCount[$node->getId()];
-			} else {
-				list($parentPath,) = \Sabre\Uri\split($node->getPath());
-				if ($parentPath === '') {
-					$parentPath = '/';
-				}
-				// if we already cached the folder this file is in we know there are no comments for this file
-				if (array_search($parentPath, $this->cachedFolders) === false) {
-					return 0;
-				} else {
-					return $this->getUnreadCount($node);
-				}
 			}
+			return $this->getUnreadCount($node);
 		});
 	}
 
@@ -131,7 +140,7 @@ class CommentPropertiesPlugin extends ServerPlugin {
 	 * @return mixed|string
 	 */
 	public function getCommentsLink(Node $node) {
-		$href =  $this->server->getBaseUri();
+		$href = $this->server->getBaseUri();
 		$entryPoint = strpos($href, '/remote.php/');
 		if ($entryPoint === false) {
 			// in case we end up somewhere else, unexpectedly.

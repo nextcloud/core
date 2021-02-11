@@ -353,6 +353,7 @@
 							id: share.file_source,
 							icon: OC.MimeType.getIconUrl(share.mimetype),
 							mimetype: share.mimetype,
+							hasPreview: share.has_preview,
 							tags: share.tags || []
 						}
 						if (share.item_type === 'folder') {

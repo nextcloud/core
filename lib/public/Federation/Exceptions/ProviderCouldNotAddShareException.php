@@ -29,7 +29,6 @@ use OCP\AppFramework\Http;
 /**
  * Class ProviderCouldNotAddShareException
  *
- * @package OCP\Federation\Exceptions
  *
  * @since 14.0.0
  */

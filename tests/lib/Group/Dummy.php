@@ -30,6 +30,6 @@ namespace Test\Group;
 class Dummy extends Backend {
 	protected function setUp(): void {
 		parent::setUp();
-		$this->backend=new \Test\Util\Group\Dummy();
+		$this->backend = new \Test\Util\Group\Dummy();
 	}
 }

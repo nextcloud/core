@@ -229,6 +229,7 @@ audio, canvas, embed, iframe, img, input, object, video {
 @include icon-black-white('quota', 'actions', 1, true);
 @include icon-black-white('rename', 'actions', 1, true);
 @include icon-black-white('screen', 'actions', 1, true);
+@include icon-black-white('template-add', 'actions', 1, true);
 
 .icon-screen-white {
 	filter: drop-shadow(1px 1px 4px var(--color-box-shadow));
@@ -307,6 +308,7 @@ audio, canvas, embed, iframe, img, input, object, video {
 @include icon-black-white('upload', 'actions', 1, true);
 @include icon-black-white('user', 'actions', 1, true);
 @include icon-black-white('group', 'actions', 1, true);
+@include icon-black-white('filter', 'actions', 1, true);
 
 @include icon-black-white('video', 'actions', 2, true);
 .icon-video-white {
@@ -488,6 +490,10 @@ audio, canvas, embed, iframe, img, input, object, video {
 
 .icon-category-workflow {
 	@include icon-color('workflow', 'categories', $color-black, 1, true);
+}
+
+.icon-category-dashboard {
+	@include icon-color('dashboard', 'categories', $color-black, 1, true);
 }
 
 .icon-talk {

@@ -30,6 +30,7 @@ declare(strict_types=1);
 	   title="<?php p($l->t('Open documentation'));?>"
 	   href="<?php p(link_to_docs('user-2fa')); ?>"></a>
 	<p class="settings-hint"><?php p($l->t('Use a second factor besides your password to increase security for your account.'));?></p>
+	<p class="settings-hint"><?php p($l->t('If you use third party applications to connect to Nextcloud, please make sure to create and configure an app password for each before enabling second factor authentication.'));?></p>
 	<ul>
 	<?php foreach ($_['twoFactorProviderData']['providers'] as $data) { ?>
 		<li>

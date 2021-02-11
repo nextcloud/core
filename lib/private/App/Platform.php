@@ -4,6 +4,7 @@
  *
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -96,5 +97,9 @@ class Platform {
 	public function getLibraryVersion($name) {
 		$repo = new PlatformRepository();
 		return $repo->findLibrary($name);
+	}
+
+	public function getArchitecture(): string {
+		return php_uname('m');
 	}
 }

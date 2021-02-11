@@ -24,7 +24,6 @@ namespace OCP\Files;
 
 /**
  * Interface IMimeTypeLoader
- * @package OCP\Files
  * @since 8.2.0
  *
  * Interface to load mimetypes

@@ -1,9 +1,12 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2020, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -19,11 +22,13 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCP\AppFramework\Services;
+
+use Closure;
 
 /**
  * @since 20.0.0
@@ -53,6 +58,7 @@ interface IInitialState {
 	 *
 	 * @param string $key
 	 * @param Closure $closure returns a primitive or an object that implements JsonSerializable
+	 * @psalm-param Closure():int|Closure():float|Closure():string|Closure():\JsonSerializable $closure
 	 */
-	public function provideLazyInitialState(string $key, \Closure $closure): void;
+	public function provideLazyInitialState(string $key, Closure $closure): void;
 }

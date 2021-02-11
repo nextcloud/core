@@ -28,7 +28,6 @@ namespace OCP\Calendar;
  *
  * Provider for metadata of a resource or a room
  *
- * @package OCP\Calendar
  * @since 17.0.0
  */
 interface IMetadataProvider {

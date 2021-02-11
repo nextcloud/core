@@ -1,8 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2017 Lukas Reschke <lukas@statuscode.ch>
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  *
  * @license GNU AGPL version 3 or any later version
@@ -26,9 +30,15 @@ namespace OC\AppFramework\Middleware\Security;
 
 use OC\AppFramework\Utility\ControllerMethodReflector;
 use OC\Security\Bruteforce\Throttler;
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Http\TooManyRequestsResponse;
 use OCP\AppFramework\Middleware;
+use OCP\AppFramework\OCS\OCSException;
+use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use OCP\Security\Bruteforce\MaxDelayReached;
 
 /**
  * Class BruteForceMiddleware performs the bruteforce protection for controllers
@@ -66,7 +76,7 @@ class BruteForceMiddleware extends Middleware {
 
 		if ($this->reflector->hasAnnotation('BruteForceProtection')) {
 			$action = $this->reflector->getAnnotationParameter('BruteForceProtection', 'action');
-			$this->throttler->sleepDelay($this->request->getRemoteAddress(), $action);
+			$this->throttler->sleepDelayOrThrowOnMax($this->request->getRemoteAddress(), $action);
 		}
 	}
 
@@ -82,5 +92,24 @@ class BruteForceMiddleware extends Middleware {
 		}
 
 		return parent::afterController($controller, $methodName, $response);
+	}
+
+	/**
+	 * @param Controller $controller
+	 * @param string $methodName
+	 * @param \Exception $exception
+	 * @throws \Exception
+	 * @return Response
+	 */
+	public function afterException($controller, $methodName, \Exception $exception): Response {
+		if ($exception instanceof MaxDelayReached) {
+			if ($controller instanceof OCSController) {
+				throw new OCSException($exception->getMessage(), Http::STATUS_TOO_MANY_REQUESTS);
+			}
+
+			return new TooManyRequestsResponse();
+		}
+
+		throw $exception;
 	}
 }

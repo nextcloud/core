@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2017 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -73,16 +74,11 @@ abstract class AbstractUUIDFixTest extends TestCase {
 			->willReturn(['s01', 's03']);
 	}
 
-	protected function mockProxy($className) {
-		$this->proxy = $this->createMock($className);
+	protected function instantiateJob($className) {
+		$this->job = new $className($this->mapper, $this->proxy);
 		$this->proxy->expects($this->any())
 			->method('getLDAPAccess')
 			->willReturn($this->access);
-	}
-
-	protected function instantiateJob($className) {
-		$this->job = new $className($this->mapper, $this->ldap, $this->config, $this->helper);
-		$this->job->overrideProxy($this->proxy);
 	}
 
 	public function testRunSingleRecord() {

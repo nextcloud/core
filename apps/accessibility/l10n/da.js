@@ -14,14 +14,6 @@ OC.L10N.register(
     "Accessibility options for nextcloud" : "Handicapvenlige indstillinger for nextcloud",
     "Provides multiple accessibilities options to ease your use of Nextcloud" : "Tilbyder flere handicapvenlige indstillinger til at lette brugen af Nextcloud",
     "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines}Web Content Accessibility Guidelines{linkend} 2.1 on AA level, with the high contrast theme even on AAA level." : "Universel adgang er meget vigtig for os. Vi følger web standarder og sikrer os at gøre alt tilgængeligt også uden mus, eller med hjælpesoftware såsom screenreaders. Vi søger at følge reglerne{guidelines}Web Content Accessibility Guidelines{linkend} 2.1 og AA endda med højt kontrast tema på AAA niveau.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Tøv ikke med at rapportere problemer på vores issuetracker {issuetracker} hvis du finder nogen{linkend}. Og hvis du vil deltage, så kom med {designteam} i vores designteam{linkend}!",
-    "High contrast theme" : "Højkontrasttema",
-    "A high contrast theme to ease your navigation. Visual quality will be reduced but clarity will be increased." : "Et højkontrasttema letter navigationen. Presentation af lavere kvalitet, men tydeligere.",
-    "Web Content Accessibility Guidelines" : "Handicapvenlige retningslinjer for Web sider",
-    "our issue tracker" : "vores problem følger",
-    "our design team" : "vores designteam",
-    "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines} 2.1 on AA level, with the high contrast theme even on AAA level." : "Universel adgang er meget vigtig for os. Vi følger web standarder og sikrer os at gøre alt tilgængeligt også uden mus, eller med hjælpesoftware såsom screenreaders. Vi søger at følge reglerne på niveau  {guidelines} 2.1 og AA endda med højt kontrast tema på AAA niveau.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}. And if you want to get involved, come join {designteam}!" : "Tøv ikke med at rapportere problemer, hvis du finder nogen {issuetracker}. Og hvis du vil deltage, så kom med {designteam}!",
-    "Enable" : "Aktivér"
+    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Tøv ikke med at rapportere problemer på vores issuetracker {issuetracker} hvis du finder nogen{linkend}. Og hvis du vil deltage, så kom med {designteam} i vores designteam{linkend}!"
 },
 "nplurals=2; plural=(n != 1);");

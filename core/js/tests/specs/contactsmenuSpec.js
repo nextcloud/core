@@ -243,13 +243,13 @@ describe('Contacts menu', function() {
 
 			// Open the first one
 			$menuEl.find('.contact').eq(0).find('.other-actions').click();
-			expect($menuEl.find('.contact').eq(0).find('.menu').css('display')).toBe('block');
+			expect($menuEl.find('.contact').eq(0).find('.menu').css('display')).toBe('');
 			expect($menuEl.find('.contact').eq(1).find('.menu').css('display')).toBe('none');
 
 			// Open the second one
 			$menuEl.find('.contact').eq(1).find('.other-actions').click();
 			expect($menuEl.find('.contact').eq(0).find('.menu').css('display')).toBe('none');
-			expect($menuEl.find('.contact').eq(1).find('.menu').css('display')).toBe('block');
+			expect($menuEl.find('.contact').eq(1).find('.menu').css('display')).toBe('');
 
 			// Close the second one
 			$menuEl.find('.contact').eq(1).find('.other-actions').click();

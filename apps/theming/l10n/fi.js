@@ -24,7 +24,6 @@ OC.L10N.register(
     "Could not write file to disk" : "Tiedostoa ei voitu kirjoittaa levylle",
     "A PHP extension stopped the file upload" : "PHP-laajennus pysäytti tiedoston lähettämisen",
     "No file uploaded" : "Ei tiedostoa lähetetty",
-    "Unsupported image type" : "Ei-tuettu kuvatiedostomuoto",
     "Theming" : "Teema",
     "Legal notice" : "Lainopillinen huomautus",
     "Privacy policy" : "Yksityisyyskäytäntö",

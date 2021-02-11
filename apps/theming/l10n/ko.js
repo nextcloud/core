@@ -21,7 +21,6 @@ OC.L10N.register(
     "Could not write file to disk" : "디스크에 파일을 쓸 수 없음",
     "A PHP extension stopped the file upload" : "PHP 확장 기능에서 파일 업로드를 차단함",
     "No file uploaded" : "업로드한 파일 없음",
-    "Unsupported image type" : "지원하지 않는 사진 형식",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "사용자 정의 테마를 사용하고 있습니다. 테마 앱에서 해당 설정을 덮어쓸 수 있습니다.",
     "Theming" : "테마",
     "Legal notice" : "법적 고지",

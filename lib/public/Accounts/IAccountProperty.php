@@ -29,7 +29,6 @@ namespace OCP\Accounts;
 /**
  * Interface IAccountProperty
  *
- * @package OCP\Account
  * @since 15.0.0
  */
 interface IAccountProperty extends \JsonSerializable {

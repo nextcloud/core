@@ -31,6 +31,7 @@ namespace OCA\DAV\Tests\unit\CardDAV;
 use OC\Accounts\AccountManager;
 use OCA\DAV\CardDAV\CardDavBackend;
 use OCA\DAV\CardDAV\SyncService;
+use OCP\Accounts\IAccountManager;
 use OCP\ILogger;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -132,36 +133,36 @@ class SyncServiceTest extends TestCase {
 		$accountManager = $this->getMockBuilder(AccountManager::class)->disableOriginalConstructor()->getMock();
 		$accountManager->expects($this->any())->method('getUser')
 			->willReturn([
-				AccountManager::PROPERTY_DISPLAYNAME =>
+				IAccountManager::PROPERTY_DISPLAYNAME =>
 					[
 						'value' => $user->getDisplayName(),
 						'scope' => AccountManager::VISIBILITY_CONTACTS_ONLY,
 					],
-				AccountManager::PROPERTY_ADDRESS =>
+				IAccountManager::PROPERTY_ADDRESS =>
 					[
 						'value' => '',
 						'scope' => AccountManager::VISIBILITY_PRIVATE,
 					],
-				AccountManager::PROPERTY_WEBSITE =>
+				IAccountManager::PROPERTY_WEBSITE =>
 					[
 						'value' => '',
 						'scope' => AccountManager::VISIBILITY_PRIVATE,
 					],
-				AccountManager::PROPERTY_EMAIL =>
+				IAccountManager::PROPERTY_EMAIL =>
 					[
 						'value' => $user->getEMailAddress(),
 						'scope' => AccountManager::VISIBILITY_CONTACTS_ONLY,
 					],
-				AccountManager::PROPERTY_AVATAR =>
+				IAccountManager::PROPERTY_AVATAR =>
 					[
 						'scope' => AccountManager::VISIBILITY_CONTACTS_ONLY
 					],
-				AccountManager::PROPERTY_PHONE =>
+				IAccountManager::PROPERTY_PHONE =>
 					[
 						'value' => '',
 						'scope' => AccountManager::VISIBILITY_PRIVATE,
 					],
-				AccountManager::PROPERTY_TWITTER =>
+				IAccountManager::PROPERTY_TWITTER =>
 					[
 						'value' => '',
 						'scope' => AccountManager::VISIBILITY_PRIVATE,

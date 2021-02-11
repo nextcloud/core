@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2018, ownCloud GmbH
  *
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0

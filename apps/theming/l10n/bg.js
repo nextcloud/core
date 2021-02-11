@@ -15,7 +15,6 @@ OC.L10N.register(
     "No file was uploaded" : "Нито един файл не е качен",
     "Missing a temporary folder" : "Липсва временна папка",
     "No file uploaded" : "Няма качен файл",
-    "Unsupported image type" : "Неподдържан тип изображение",
     "Theming" : "Теми",
     "Open documentation" : "Отвори документацията",
     "Theming makes it possible to easily customize the look and feel of your instance and supported clients. This will be visible for all users." : "Чрез темите можете бързо и лесно за персонализирате вида на Nextcloud. Промените ще бъдат видими за всички потребители.",

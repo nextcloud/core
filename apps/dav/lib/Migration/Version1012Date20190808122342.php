@@ -7,6 +7,7 @@ declare(strict_types=1);
  *
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -28,7 +29,7 @@ declare(strict_types=1);
 
 namespace OCA\DAV\Migration;
 
-use Doctrine\DBAL\Types\Types;
+use OCP\DB\Types;
 use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
@@ -69,7 +70,7 @@ class Version1012Date20190808122342 extends SimpleMigrationStep {
 				'length' => 11,
 			]);
 			$table->addColumn('is_recurring', Types::SMALLINT, [
-				'notnull' => true,
+				'notnull' => false,
 				'length' => 1,
 			]);
 			$table->addColumn('uid', Types::STRING, [

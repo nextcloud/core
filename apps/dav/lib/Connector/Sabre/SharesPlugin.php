@@ -3,11 +3,13 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Tobias Kaminsky <tobias@kaminsky.me>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -120,6 +122,7 @@ class SharesPlugin extends \Sabre\DAV\ServerPlugin {
 			IShare::TYPE_EMAIL,
 			IShare::TYPE_ROOM,
 			IShare::TYPE_CIRCLE,
+			IShare::TYPE_DECK,
 		];
 		foreach ($requestedShareTypes as $requestedShareType) {
 			$shares = $this->shareManager->getSharesBy(

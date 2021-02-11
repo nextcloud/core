@@ -82,7 +82,7 @@ class PublicKeyTokenMapperTest extends TestCase {
 			'token' => $qb->createNamedParameter('1504445f1524fc801035448a95681a9378ba2e83930c814546c56e5d6ebde221198792fd900c88ed5ead0555780dad1ebce3370d7e154941cd5de87eb419899b'),
 			'type' => $qb->createNamedParameter(IToken::TEMPORARY_TOKEN),
 			'last_activity' => $qb->createNamedParameter($this->time - 60 * 60 * 24 * 3, IQueryBuilder::PARAM_INT), // Three days ago
-			'last_check' => $this->time -  10, // 10secs ago
+			'last_check' => $this->time - 10, // 10secs ago
 			'public_key' => $qb->createNamedParameter('public key'),
 			'private_key' => $qb->createNamedParameter('private key'),
 			'version' => $qb->createNamedParameter(2),

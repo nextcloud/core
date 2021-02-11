@@ -77,7 +77,6 @@ class CheckerTest extends TestCase {
 			$this->config,
 			$this->cacheFactory,
 			$this->appManager,
-			\OC::$server->getTempManager(),
 			$this->mimeTypeDetector
 		);
 	}
@@ -110,7 +109,7 @@ class CheckerTest extends TestCase {
 
 	public function testWriteAppSignatureWrongPermissions() {
 		$this->expectException(\Exception::class);
-		$this->expectExceptionMessageRegExp('/[a-zA-Z\\/_-]+ is not writable/');
+		$this->expectExceptionMessageMatches('/[a-zA-Z\\/_-]+ is not writable/');
 
 		$this->fileAccessHelper
 			->expects($this->once())
@@ -507,7 +506,7 @@ class CheckerTest extends TestCase {
 
 	public function testWriteCoreSignatureWrongPermissions() {
 		$this->expectException(\Exception::class);
-		$this->expectExceptionMessageRegExp('/[a-zA-Z\\/_-]+ is not writable/');
+		$this->expectExceptionMessageMatches('/[a-zA-Z\\/_-]+ is not writable/');
 
 		$this->fileAccessHelper
 			->expects($this->at(0))
@@ -881,6 +880,9 @@ class CheckerTest extends TestCase {
 				 	'text/x-shellscript' => 'text/code',
 				 	'web' => 'text/code',
 				 	'application/internet-shortcut' => 'link',
+				 	'application/km' => 'mindmap',
+				 	'application/x-freemind' => 'mindmap',
+				 	'application/vnd.xmind.workbook' => 'mindmap'
 				 ]);
 
 		$this->mimeTypeDetector
@@ -989,6 +991,9 @@ class CheckerTest extends TestCase {
 				 	'text/x-shellscript' => 'text/code',
 				 	'web' => 'text/code',
 				 	'application/internet-shortcut' => 'link',
+				 	'application/km' => 'mindmap',
+				 	'application/x-freemind' => 'mindmap',
+				 	'application/vnd.xmind.workbook' => 'mindmap'
 				 ]);
 
 		$this->environmentHelper
@@ -997,9 +1002,9 @@ class CheckerTest extends TestCase {
 			->willReturn(\OC::$SERVERROOT . '/tests/data/integritycheck/mimetypeListModified');
 		$signatureDataFile = '{
     "hashes": {
-        "mimetypelist.js": "dc48de7ad4baa030c5e563350c9a80b274bad783f6f5adbf1595ecef6c6a32e52890a24cb26cddb0aa20193ba52c001150c68d8bfb567f0aed566f4029a190a3"
+        "mimetypelist.js": "23a3fa45757b26795f5cf8f94d9e5bce76fc916288a6458679311b312c167adcf4158ccb2c5c3db791fa0b87703b6c5863afb6c9d790b8cbac5ab3ae8c3418fb"
     },
-    "signature": "dtNDyufRB1jOG3e\/\/Ng6O3ZPnX5wgt3rrD9SpRQ66cpWlixwvGaI6knH85MkWm3q1c+hTYBipJ\/o+nJxHWoxydMXm+F6mC5MvXWfESB\/ag4fvKe0fg25yKstzlrpIyWwcnmOhLE\/sd7D8LZOQXk72PXsIJw4vX2YPyf3peHLevlUkVhB+mfYGDQJfrtPHjJII0Do+TV2MA0qm42q7SO\/zf7Ly24nZP3AoY5bYDMewlrczS2xz9tMN2ikZZcDgHvmC2W4RkaFP9E8ZeAZphKVjyQn6HdSu7EDlJgJ1YtoqTetFzNy\/q7+ODiJDB0KUzKocEDcXF2n2cTKXKCrklB6tEhEnjADhhQNxQouq2soc0ouIujifyH2zBL0sawNxGje5wpuchhCPnWcvQnSJbK1oXnv\/0wSGsp0iSslvx9NXAZ+nQbJnIuodLBl7XuTxxPVa8jDwFdJ7mLrs79ZfN2Op4qF10PiFRoz5VztJm4KWcaWnm\/Xqxke\/6yxY+gU2c6aH\/plwzkcxhdDJjNI\/d+G+b6NSadfcrduO+gTeHK\/go68mx0k1XxCln4Qu31nPmJZcboTvAtHvHXoeqZVAzMpT+jrq+vZ3oVAvFfNpvH4CA3eZebfkV13wV4RaSETyz5QNbnBL24C26aAhkzdShKHJc4NSNV9XdFqN74XEzSZGoc=",
+    "signature": "rqdAbS1evGMhv5vQEhFwDoDgumY1La+xAEgF8TdJjyE1uEjV5442LgnIbolqH5WmGkU4EEjcIJWXEhxbtr7P1EO8WT0v7mVJBmAT0p5Gi3nxz9z9gp7mAbjfBH8McYxNzy92XbdYgiNMqi5tltYRCBXTVw1Rexh9dFc7jmLQIfpAFImR9sQG5eqGUGm+L70o34EToDnEg6Finqj4Ii5aGaGTf+DMz6wZRM2vfeegw5pxgv7EjW4R2dVTGSwwvjQbBSDzMqJHGPXkAlpnqgPDXfSLsRYXVYoRGfD6gXJ8WkjCtceQhW3FG7zMzGykogQtxWDgvbTZsz1PlzBR82UZj144ustqmCNf+ZFSwzjKpQil0hiNZmgmAGPn7frwKbDwE6TAqvqfNbpNy1GcP+eNmTn8C+tmKgyGSkqx67w8NgEn9mmPkubZk6Q/cQ/GIVprY27iPQc5irdV+COi6ZWl+WfO6BNRewlsiAYAe1XQwf4wJ5qGFzKNUd9ovWUfgh61ZthIZEVFcTGMmH4cjymnGxpbqiow4di7RQNuCKTRowmrKAWb58KUGEXxy5Nrr9M8SSn5N232iV6HSEWf5QwoKpZ2Zv9BdTXv0Rzx3MO/NWhj2O0UBmCqL1VI/uem9HoC0751GTnMSk36bIVWflJm6fimVvF7OAvZpZgNKBbtJVs=",
     "certificate": "-----BEGIN CERTIFICATE-----\r\nMIIEvjCCAqagAwIBAgIUc\/0FxYrsgSs9rDxp03EJmbjN0NwwDQYJKoZIhvcNAQEF\r\nBQAwIzEhMB8GA1UECgwYb3duQ2xvdWQgQ29kZSBTaWduaW5nIENBMB4XDTE1MTEw\r\nMzIxMDMzM1oXDTE2MTEwMzIxMDMzM1owDzENMAsGA1UEAwwEY29yZTCCAiIwDQYJ\r\nKoZIhvcNAQEBBQADggIPADCCAgoCggIBALb6EgHpkAqZbO5vRO8XSh7G7XGWHw5s\r\niOf4RwPXR6SE9bWZEm\/b72SfWk\/\/J6AbrD8WiOzBuT\/ODy6k5T1arEdHO+Pux0W1\r\nMxYJJI4kH74KKgMpC0SB0Rt+8WrMqV1r3hhJ46df6Xr\/xolP3oD+eLbShPcblhdS\r\nVtkZEkoev8Sh6L2wDCeHDyPxzvj1w2dTdGVO9Kztn0xIlyfEBakqvBWtcxyi3Ln0\r\nklnxlMx3tPDUE4kqvpia9qNiB1AN2PV93eNr5\/2riAzIssMFSCarWCx0AKYb54+d\r\nxLpcYFyqPJ0ydBCkF78DD45RCZet6PNYkdzgbqlUWEGGomkuDoJbBg4wzgzO0D77\r\nH87KFhYW8tKFFvF1V3AHl\/sFQ9tDHaxM9Y0pZ2jPp\/ccdiqnmdkBxBDqsiRvHvVB\r\nCn6qpb4vWGFC7vHOBfYspmEL1zLlKXZv3ezMZEZw7O9ZvUP3VO\/wAtd2vUW8UFiq\r\ns2v1QnNLN6jNh51obcwmrBvWhJy9vQIdtIjQbDxqWTHh1zUSrw9wrlklCBZ\/zrM0\r\ni8nfCFwTxWRxp3H9KoECzO\/zS5R5KIS7s3\/wq\/w9T2Ie4rcecgXwDizwnn0C\/aKc\r\nbDIjujpL1s9HO05pcD\/V3wKcPZ1izymBkmMyIbL52iRVN5FTVHeZdXPpFuq+CTQJ\r\nQ238lC+A\/KOVAgMBAAEwDQYJKoZIhvcNAQEFBQADggIBAGoKTnh8RfJV4sQItVC2\r\nAvfJagkrIqZ3iiQTUBQGTKBsTnAqE1H7QgUSV9vSd+8rgvHkyZsRjmtyR1e3A6Ji\r\noNCXUbExC\/0iCPUqdHZIVb+Lc\/vWuv4ByFMybGPydgtLoEUX2ZrKFWmcgZFDUSRd\r\n9Uj26vtUhCC4bU4jgu6hIrR9IuxOBLQUxGTRZyAcXvj7obqRAEZwFAKQgFpfpqTb\r\nH+kjcbZSaAlLVSF7vBc1syyI8RGYbqpwvtREqJtl5IEIwe6huEqJ3zPnlP2th\/55\r\ncf3Fovj6JJgbb9XFxrdnsOsDOu\/tpnaRWlvv5ib4+SzG5wWFT5UUEo4Wg2STQiiX\r\nuVSRQxK1LE1yg84bs3NZk9FSQh4B8vZVuRr5FaJsZZkwlFlhRO\/\/+TJtXRbyNgsf\r\noMRZGi8DLGU2SGEAHcRH\/QZHq\/XDUWVzdxrSBYcy7GSpT7UDVzGv1rEJUrn5veP1\r\n0KmauAqtiIaYRm4f6YBsn0INcZxzIPZ0p8qFtVZBPeHhvQtvOt0iXI\/XUxEWOa2F\r\nK2EqhErgMK\/N07U1JJJay5tYZRtvkGq46oP\/5kQG8hYST0MDK6VihJoPpvCmAm4E\r\npEYKQ96x6A4EH9Y9mZlYozH\/eqmxPbTK8n89\/p7Ydun4rI+B2iiLnY8REWWy6+UQ\r\nV204fGUkJqW5CrKy3P3XvY9X\r\n-----END CERTIFICATE-----"
 }';
 		$this->fileAccessHelper
@@ -1273,7 +1278,6 @@ class CheckerTest extends TestCase {
 				$this->config,
 				$this->cacheFactory,
 				$this->appManager,
-				\OC::$server->getTempManager(),
 				$this->mimeTypeDetector,
 			])
 			->setMethods([

@@ -26,7 +26,6 @@ namespace OCP\Activity;
 /**
  * Interface IProvider
  *
- * @package OCP\Activity
  * @since 11.0.0
  */
 interface IProvider {

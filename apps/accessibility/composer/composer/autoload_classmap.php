@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = $vendorDir;
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'OCA\\Accessibility\\AccessibilityProvider' => $baseDir . '/../lib/AccessibilityProvider.php',
     'OCA\\Accessibility\\AppInfo\\Application' => $baseDir . '/../lib/AppInfo/Application.php',
     'OCA\\Accessibility\\Controller\\AccessibilityController' => $baseDir . '/../lib/Controller/AccessibilityController.php',

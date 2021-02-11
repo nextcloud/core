@@ -29,14 +29,29 @@ use OCP\EventDispatcher\Event;
 /**
  * Class CommentsEvent
  *
- * @package OCP\Comments
  * @since 9.0.0
  */
 class CommentsEvent extends Event {
-	public const EVENT_ADD        = 'OCP\Comments\ICommentsManager::addComment';
+
+	/**
+	 * @deprecated 22.0.0
+	 */
+	public const EVENT_ADD = 'OCP\Comments\ICommentsManager::addComment';
+
+	/**
+	 * @deprecated 22.0.0
+	 */
 	public const EVENT_PRE_UPDATE = 'OCP\Comments\ICommentsManager::preUpdateComment';
-	public const EVENT_UPDATE     = 'OCP\Comments\ICommentsManager::updateComment';
-	public const EVENT_DELETE     = 'OCP\Comments\ICommentsManager::deleteComment';
+
+	/**
+	 * @deprecated 22.0.0
+	 */
+	public const EVENT_UPDATE = 'OCP\Comments\ICommentsManager::updateComment';
+
+	/**
+	 * @deprecated 22.0.0
+	 */
+	public const EVENT_DELETE = 'OCP\Comments\ICommentsManager::deleteComment';
 
 	/** @var string */
 	protected $event;

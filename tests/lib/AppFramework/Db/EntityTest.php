@@ -123,11 +123,11 @@ class EntityTest extends \Test\TestCase {
 	public function testSetterMarksFieldUpdated() {
 		$this->entity->setId(3);
 
-		$this->assertContains('id', $this->entity->getUpdatedFields());
+		$this->assertContains('id', array_keys($this->entity->getUpdatedFields()));
 	}
 
 
-	
+
 	public function testCallShouldOnlyWorkForGetterSetter() {
 		$this->expectException(\BadFunctionCallException::class);
 
@@ -135,14 +135,14 @@ class EntityTest extends \Test\TestCase {
 	}
 
 
-	
+
 	public function testGetterShouldFailIfAttributeNotDefined() {
 		$this->expectException(\BadFunctionCallException::class);
 
 		$this->entity->getTest();
 	}
 
-	
+
 	public function testSetterShouldFailIfAttributeNotDefined() {
 		$this->expectException(\BadFunctionCallException::class);
 
@@ -243,7 +243,7 @@ class EntityTest extends \Test\TestCase {
 		$this->assertThat($entity->isAnotherBool(), new IsType(IsType::TYPE_BOOL));
 	}
 
-	
+
 	public function testIsGetterShoudFailForOtherType() {
 		$this->expectException(\BadFunctionCallException::class);
 

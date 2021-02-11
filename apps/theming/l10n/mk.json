@@ -22,8 +22,7 @@
     "Could not write file to disk" : "Неможе да се запишува на дискот",
     "A PHP extension stopped the file upload" : "PHP додаток го стопираше прикачувањето на датотеката",
     "No file uploaded" : "Нема прикачено дадотека",
-    "Unsupported image type" : "Неподржан вид на слика",
-    "You are already using a custom theme. Theming app settings might be overwritten by that." : "Вие веќе користите сопствена тема. Апликацијата за сопствена тема може да ја пребрише истата.",
+    "You are already using a custom theme. Theming app settings might be overwritten by that." : "Веќе користите сопствена тема. Апликацијата за сопствена тема може да ја пребрише истата.",
     "Theming" : "Теми",
     "Legal notice" : "Правно известување",
     "Privacy policy" : "Политика за приватност",
@@ -46,8 +45,8 @@
     "Privacy policy link" : "Политика за приватност",
     "Header logo" : "Лого на заглавие",
     "Upload new header logo" : "Прикачи ново лого на заглавие",
-    "Favicon" : "Favicon",
-    "Upload new favicon" : "Прикачи нова favicon",
-    "Install the Imagemagick PHP extension with support for SVG images to automatically generate favicons based on the uploaded logo and color." : "Инсталирај Imagemagick додаток за PHP со што ќе се овозможи поддршка за SVG сликите автоматски да генерираат favicon базирано на прикаченото лого и боја."
+    "Favicon" : "Фавикон",
+    "Upload new favicon" : "Прикачи нов Фавикон",
+    "Install the Imagemagick PHP extension with support for SVG images to automatically generate favicons based on the uploaded logo and color." : "Инсталирај Imagemagick додаток за PHP со што ќе се овозможи поддршка за SVG сликите автоматски да генерираат Фавикон базирано на прикаченото лого и боја."
 },"pluralForm" :"nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;"
 }

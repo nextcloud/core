@@ -35,7 +35,6 @@ namespace OCP\AppFramework\Http;
  * notice that Nextcloud ships already with sensible defaults and those policies
  * should require no modification at all for most use-cases.
  *
- * @package OCP\AppFramework\Http
  * @since 17.0.0
  */
 class FeaturePolicy extends EmptyFeaturePolicy {

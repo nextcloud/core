@@ -12,14 +12,6 @@
     "Accessibility options for nextcloud" : "Opciones de accesibilidad para nextcloud",
     "Provides multiple accessibilities options to ease your use of Nextcloud" : "Ofrece múltiples opciones de accesibilidad para facilitarte el uso de Nextcloud",
     "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines}Web Content Accessibility Guidelines{linkend} 2.1 on AA level, with the high contrast theme even on AAA level." : "El acceso universal es muy importante para nosotros. Seguimos los estándares web y verificamos que todo es manejable sin ratón y con software de asistencia, como un lector de pantalla. Nuestro objetivo es cumplir con las {guidelines}Web Content Accessibility Guidelines{linkend} 2.1 en nivel AA y, con el tema de alto contraste, en nivel AAA.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Si encuentra algún problema, no dude en informar del mismo en el {issuetracker}nuestro seguimiento de problemas{linkend}. Y si desea estar involucrado, ¡únase al {designteam}nuestro equipo de desarrollo{linkend}!",
-    "High contrast theme" : "Tema de alto contraste",
-    "A high contrast theme to ease your navigation. Visual quality will be reduced but clarity will be increased." : "Tema de alto contraste para facilitar la navegación. Se reducirá la calidad visual pero se aumentará la claridad.",
-    "Web Content Accessibility Guidelines" : "Guía de accesibilidad para contenido web",
-    "our issue tracker" : "nuestro rastreador de problemas",
-    "our design team" : "nuestro equipo de diseño",
-    "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines} 2.1 on AA level, with the high contrast theme even on AAA level." : "El acceso universal es muy importante para nosotros. Seguimos los estándares web y verificamos que todo es manejable sin ratón y con software de asistencia, como un lector de pantalla. Nuestro objetivo es cumplir con las {guidelines} 2.1 en nivel AA y, con el tema de alto contraste, en nivel AAA.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}. And if you want to get involved, come join {designteam}!" : "Si encuentra algún problema, no dude en informar del mismo en el {issuetracker}. Y si desea estar involucrado, ¡únase al {designteam}!",
-    "Enable" : "Activa"
+    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Si encuentra algún problema, no dude en informar del mismo en el {issuetracker}nuestro seguimiento de problemas{linkend}. Y si desea estar involucrado, ¡únase al {designteam}nuestro equipo de desarrollo{linkend}!"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

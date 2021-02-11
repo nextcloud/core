@@ -43,6 +43,7 @@ class Version1004Date20170924124212 extends SimpleMigrationStep {
 
 		$table = $schema->getTable('cards');
 		$table->addIndex(['addressbookid'], 'cards_abid');
+		$table->addIndex(['addressbookid', 'uri'], 'cards_abiduri');
 
 		$table = $schema->getTable('cards_properties');
 		$table->addIndex(['addressbookid'], 'cards_prop_abid');

@@ -12,14 +12,6 @@
     "Accessibility options for nextcloud" : "Nextcloud erişebilirlik ayarları",
     "Provides multiple accessibilities options to ease your use of Nextcloud" : "Nextcloud kullanımınızı kolaylaştıracak çeşitli erişebilirlik seçenekleri sunar",
     "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines}Web Content Accessibility Guidelines{linkend} 2.1 on AA level, with the high contrast theme even on AAA level." : "Uygulamalarımızı herkesin kullanabilmesini çok önemsiyoruz. Web standartlarını izleyerek, işlemlerin fare olmadan da yapılabilmesini ve ekran okuyucular gibi yardımcı yazılımların kullanılabilmesini sağlıyoruz. AAA düzeyinde yüksek karşıtlık teması ile AA düzeyinde {guidelines}Web İçeriği Erişilebilirlik Kuralları{linkend} 2.1 ile uyumlu olmayı amaçladık.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Bir sorunla karşılaşırsanız, bunları {issuetracker}sorun izleyicimiz{linkend} üzerinden bildirmekten çekinmeyin. Katkıda bulunmak istiyorsanız {designteam}tasarım ekibimize{linkend} katılın!",
-    "High contrast theme" : "Yüksek renk karşıtlıklı tema",
-    "A high contrast theme to ease your navigation. Visual quality will be reduced but clarity will be increased." : "Yüksek renk karşıtlıklı tema gezinmeyi kolaylaştırır. Görsel kalite azalır ancak netlik artar.",
-    "Web Content Accessibility Guidelines" : "Web İçeriği Erişebilirlik Kılavuzları",
-    "our issue tracker" : "sorun kayıt sistemimiz",
-    "our design team" : "geliştirme ekibimiz",
-    "Universal access is very important to us. We follow web standards and check to make everything usable also without mouse, and assistive software such as screenreaders. We aim to be compliant with the {guidelines} 2.1 on AA level, with the high contrast theme even on AAA level." : "Uygulamalarımızı herkesin kullanabilmesini çok önemsiyoruz. Web standartlarını izleyerek, işlemlerin fare olmadan da yapılabilmesini ve ekran okuyucular gibi yardımcı yazılımların kullanılabilmesini sağlıyoruz. AAA düzeyinde yüksek karşıtlık teması ile {guidelines}AA 2.1 düzeyinde {linkend} uyumlu olmayı amaçladık.",
-    "If you find any issues, don’t hesitate to report them on {issuetracker}. And if you want to get involved, come join {designteam}!" : "Bir sorunla karşılaşırsanız, bunları {issuetracker}sorun üzerinden bildirmekten çekinmeyin. Katkıda bulunmak istiyorsanız {designteam} katılın!",
-    "Enable" : "Etkinleştir"
+    "If you find any issues, don’t hesitate to report them on {issuetracker}our issue tracker{linkend}. And if you want to get involved, come join {designteam}our design team{linkend}!" : "Bir sorunla karşılaşırsanız, bunları {issuetracker}sorun izleyicimiz{linkend} üzerinden bildirmekten çekinmeyin. Katkıda bulunmak istiyorsanız {designteam}tasarım ekibimize{linkend} katılın!"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

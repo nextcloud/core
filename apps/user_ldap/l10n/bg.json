@@ -102,7 +102,6 @@
     "Override UUID detection" : "Промени UUID откриването",
     "By default, the UUID attribute is automatically detected. The UUID attribute is used to doubtlessly identify LDAP users and groups. Also, the internal username will be created based on the UUID, if not specified otherwise above. You can override the setting and pass an attribute of your choice. You must make sure that the attribute of your choice can be fetched for both users and groups and it is unique. Leave it empty for default behavior. Changes will have effect only on newly mapped (added) LDAP users and groups." : "Обикновено UUID атрибутът ще бъде намерен автоматично. UUID атрибута се използва, за да се идентифицират еднозначно LDAP потребители и групи. Освен това ще бъде генерирано вътрешното име базирано на UUID-то, ако такова не е посочено по-горе. Можете да промените настройката и да използвате атрибут по свой избор. Наложително е атрибутът да бъде уникален както за потребителите така и за групите. Промените ще се отразят само за новодобавени (map-нати) LDAP потребители.",
     "UUID Attribute for Users:" : "UUID атрибут за потребителите:",
-    "UUID Attribute for Groups:" : "UUID атрибут за групите:",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Оставете празно за потребителско име (стандартно). Или посочете LDAP/AD атрибут."
+    "UUID Attribute for Groups:" : "UUID атрибут за групите:"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -14,7 +14,6 @@ OC.L10N.register(
     "No file was uploaded" : "Ingen fil uploadet",
     "Missing a temporary folder" : "Manglende midlertidig mappe.",
     "No file uploaded" : "Ingen fil uploadet",
-    "Unsupported image type" : "Ikke-understøttet billede format",
     "Theming" : "Temaer",
     "Legal notice" : "Juridisk notits",
     "Privacy policy" : "Fortrolighedspolitik",

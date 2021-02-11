@@ -287,7 +287,7 @@ With help from many libraries and frameworks including:
 			chdir($buildDir);
 		}
 		$timestampChanges = explode(PHP_EOL, $out);
-		$timestampChanges = array_slice($timestampChanges, 0, count($timestampChanges)-1);
+		$timestampChanges = array_slice($timestampChanges, 0, count($timestampChanges) - 1);
 		foreach ($timestampChanges as $timestamp) {
 			if ((int)$timestamp < $deadlineTimestamp) {
 				return;

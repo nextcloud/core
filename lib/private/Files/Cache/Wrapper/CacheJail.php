@@ -2,7 +2,6 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Ari Selseng <ari@selseng.net>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Jagszent <daniel@jagszent.de>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -254,9 +253,9 @@ class CacheJail extends CacheWrapper {
 	 * @param string|boolean $path
 	 * @param array $data (optional) meta data of the folder
 	 */
-	public function correctFolderSize($path, $data = null, $isBackgroundSize = false) {
+	public function correctFolderSize($path, $data = null, $isBackgroundScan = false) {
 		if ($this->getCache() instanceof Cache) {
-			$this->getCache()->correctFolderSize($this->getSourcePath($path), $data, $isBackgroundSize);
+			$this->getCache()->correctFolderSize($this->getSourcePath($path), $data, $isBackgroundScan);
 		}
 	}
 

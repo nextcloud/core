@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.2.1@ea9cb72143b77e7520c52fa37290bd8d8bc88fd9">
+  <file src="lib/private/legacy/OC_Image.php">
+    <ImplementedReturnTypeMismatch occurrences="1">
+      <code>null|string</code>
+    </ImplementedReturnTypeMismatch>
+  </file>
+  <file src="lib/private/legacy/OC_Template.php">
+    <UndefinedClass occurrences="1">
+      <code>OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/App.php">
+    <UndefinedClass occurrences="2">
+      <code>\OC</code>
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/AppFramework/ApiController.php">
+    <NoInterfaceProperties occurrences="1">
+      <code>$this-&gt;request-&gt;server</code>
+    </NoInterfaceProperties>
+  </file>
+  <file src="lib/public/AppFramework/App.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/AppFramework/Bootstrap/IBootContext.php">
+    <InvalidThrow occurrences="1">
+      <code>ContainerExceptionInterface</code>
+    </InvalidThrow>
+  </file>
+  <file src="lib/public/AppFramework/Db/Entity.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>string</code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$column</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="lib/public/AppFramework/Http/JSONResponse.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>$this-&gt;data</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>array</code>
+    </InvalidReturnType>
+  </file>
+  <file src="lib/public/AppFramework/Http/Response.php">
+    <UndefinedClass occurrences="2">
+      <code>\OC</code>
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/AppFramework/Http/Template/PublicTemplateResponse.php">
+    <InvalidScalarArgument occurrences="1"/>
+  </file>
+  <file src="lib/public/AppFramework/Http/ZipResponse.php">
+    <InvalidArrayAccess occurrences="5">
+      <code>$resource['internalName']</code>
+      <code>$resource['resource']</code>
+      <code>$resource['size']</code>
+      <code>$resource['size']</code>
+      <code>$resource['time']</code>
+    </InvalidArrayAccess>
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>$this-&gt;resources</code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="lib/public/BackgroundJob/Job.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/BackgroundJob/TimedJob.php">
+    <MoreSpecificImplementedParamType occurrences="1">
+      <code>$jobList</code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="lib/public/Contacts/IManager.php">
+    <UndefinedDocblockClass occurrences="1">
+      <code>IAddressBook[]</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="lib/public/Dashboard/Model/WidgetTemplate.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>WidgetSetting</code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>null</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="lib/public/Defaults.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Diagnostics/IQueryLogger.php">
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>mixed</code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="lib/public/Federation/Exceptions/ActionNotSupportedException.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Federation/Exceptions/AuthenticationFailedException.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Federation/Exceptions/BadRequestException.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Federation/Exceptions/ProviderAlreadyExistsException.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Federation/Exceptions/ProviderDoesNotExistsException.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Files.php">
+    <FalsableReturnStatement occurrences="1">
+      <code>\OC_App::getStorage($app)</code>
+    </FalsableReturnStatement>
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Files/LockNotAcquiredException.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Files/StorageAuthException.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Files/StorageBadConfigException.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Files/StorageConnectionException.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Files/StorageNotAvailableException.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Files/StorageTimeoutException.php">
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/FullTextSearch/Model/ISearchRequest.php">
+    <InvalidClass occurrences="1">
+      <code>IsearchRequest</code>
+    </InvalidClass>
+  </file>
+  <file src="lib/public/IAddressBook.php">
+    <InvalidDocblock occurrences="1">
+      <code>public function getUri(): string;</code>
+    </InvalidDocblock>
+  </file>
+  <file src="lib/public/IAvatar.php">
+    <UndefinedDocblockClass occurrences="1">
+      <code>Color</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="lib/public/IContainer.php">
+    <InvalidThrow occurrences="2">
+      <code>ContainerExceptionInterface</code>
+      <code>ContainerExceptionInterface</code>
+    </InvalidThrow>
+  </file>
+  <file src="lib/public/IDBConnection.php">
+    <InvalidClass occurrences="1">
+      <code>PreconditionNotMetException</code>
+    </InvalidClass>
+  </file>
+  <file src="lib/public/Search/SearchResult.php">
+    <InvalidArgument occurrences="1">
+      <code>$cursor</code>
+    </InvalidArgument>
+  </file>
+  <file src="lib/public/Share.php">
+    <InvalidReturnType occurrences="3">
+      <code>array</code>
+      <code>array|bool</code>
+      <code>mixed</code>
+    </InvalidReturnType>
+  </file>
+  <file src="lib/public/Template.php">
+    <UndefinedFunction occurrences="7">
+      <code>\html_select_options($options, $selected, $params)</code>
+      <code>\human_file_size($bytes)</code>
+      <code>\image_path($app, $image)</code>
+      <code>\mimetype_icon($mimetype)</code>
+      <code>\preview_icon($path)</code>
+      <code>\publicPreview_icon($path, $token)</code>
+      <code>\relative_modified_date($timestamp, null, $dateOnly)</code>
+    </UndefinedFunction>
+  </file>
+  <file src="lib/public/User.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>\OC_User::getUser()</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>string</code>
+    </InvalidReturnType>
+    <UndefinedClass occurrences="1">
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/public/Util.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>\OC_Helper::computerFileSize($str)</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>float</code>
+    </InvalidReturnType>
+    <UndefinedClass occurrences="12">
+      <code>\OC</code>
+      <code>\OC</code>
+      <code>\OC</code>
+      <code>\OC</code>
+      <code>\OC</code>
+      <code>\OC</code>
+      <code>\OC</code>
+      <code>\OC</code>
+      <code>\OC</code>
+      <code>\OC</code>
+      <code>\OC</code>
+      <code>\OC</code>
+    </UndefinedClass>
+  </file>
+</files>

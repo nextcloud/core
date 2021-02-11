@@ -29,12 +29,12 @@
 \OC_JSON::checkAppEnabled('user_ldap');
 \OC_JSON::callCheck();
 
-$helper = new \OCA\User_LDAP\Helper(\OC::$server->getConfig());
+$helper = new \OCA\User_LDAP\Helper(\OC::$server->getConfig(), \OC::$server->getDatabaseConnection());
 $serverConnections = $helper->getServerConfigurationPrefixes();
 sort($serverConnections);
 $lk = array_pop($serverConnections);
 $ln = (int)str_replace('s', '', $lk);
-$nk = 's'.str_pad($ln+1, 2, '0', STR_PAD_LEFT);
+$nk = 's'.str_pad($ln + 1, 2, '0', STR_PAD_LEFT);
 
 $resultData = ['configPrefix' => $nk];
 

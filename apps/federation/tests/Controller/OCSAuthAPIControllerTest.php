@@ -5,6 +5,7 @@
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -180,7 +181,7 @@ class OCSAuthAPIControllerTest extends TestCase {
 		try {
 			$result = $ocsAuthApi->getSharedSecret($url, $token);
 			$this->assertTrue($ok);
-			$data =  $result->getData();
+			$data = $result->getData();
 			$this->assertSame('secret', $data['sharedSecret']);
 		} catch (OCSForbiddenException $e) {
 			$this->assertFalse($ok);

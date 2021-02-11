@@ -13,18 +13,19 @@
     "Files app plugin to add comments to files" : "Complemento de aplicación de archivos para agregar comentarios a los archivos.",
     "Edit comment" : "Editar comentario",
     "Delete comment" : "Borrar comentario",
+    "No comments yet, start the conversation!" : "No hay comentarios aún, iniciar la conversación!",
+    "Retry" : "Reintentar",
+    "_%n unread comment_::_%n unread comments_" : ["%n comentarios sin leer","%n comentarios sin leer"],
+    "Comment" : "Comentar",
     "New comment …" : "Nuevo comentario ...",
     "Post" : "Post",
     "Cancel" : "Cancelar",
     "[Deleted user]" : "[Usuario borrado]",
-    "No comments yet, start the conversation!" : "No hay comentarios aún, iniciar la conversación!",
     "More comments …" : "Más comentarios ...",
     "Save" : "Guardar",
     "Allowed characters {count} of {max}" : "Caracteres permitidos {count} of {max}",
     "Error occurred while retrieving comment with ID {id}" : "Se produjo un error al recuperar el comentario con ID {id}",
     "Error occurred while updating comment with id {id}" : "Se ha producido un error al actualizar el comentario con id {id}",
-    "Error occurred while posting comment" : "Se ha producido un error al publicar un comentario",
-    "_%n unread comment_::_%n unread comments_" : ["%n comentarios sin leer","%n comentarios sin leer"],
-    "Comment" : "Comentar"
+    "Error occurred while posting comment" : "Se ha producido un error al publicar un comentario"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

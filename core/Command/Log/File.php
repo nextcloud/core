@@ -4,7 +4,6 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
- * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Pulzer <t.pulzer@kniel.de>
@@ -108,7 +107,7 @@ class File extends Command implements Completion\CompletionAwareInterface {
 		$defaultLogFile = rtrim($dataDir, '/').'/nextcloud.log';
 		$output->writeln('Log file: '.$this->config->getSystemValue('logfile', $defaultLogFile));
 
-		$rotateSize = $this->config->getSystemValue('log_rotate_size', 100*1024*1024);
+		$rotateSize = $this->config->getSystemValue('log_rotate_size', 100 * 1024 * 1024);
 		if ($rotateSize) {
 			$rotateString = \OCP\Util::humanFileSize($rotateSize);
 		} else {

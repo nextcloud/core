@@ -3,7 +3,7 @@
  * @copyright Copyright (c) 2016 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
- * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -50,17 +50,17 @@ class Mail implements ISettings {
 		$parameters = [
 			// Mail
 			'sendmail_is_available' => (bool) \OC_Helper::findBinaryPath('sendmail'),
-			'mail_domain'           => $this->config->getSystemValue('mail_domain', ''),
-			'mail_from_address'     => $this->config->getSystemValue('mail_from_address', ''),
-			'mail_smtpmode'         => $this->config->getSystemValue('mail_smtpmode', ''),
-			'mail_smtpsecure'       => $this->config->getSystemValue('mail_smtpsecure', ''),
-			'mail_smtphost'         => $this->config->getSystemValue('mail_smtphost', ''),
-			'mail_smtpport'         => $this->config->getSystemValue('mail_smtpport', ''),
-			'mail_smtpauthtype'     => $this->config->getSystemValue('mail_smtpauthtype', ''),
-			'mail_smtpauth'         => $this->config->getSystemValue('mail_smtpauth', false),
-			'mail_smtpname'         => $this->config->getSystemValue('mail_smtpname', ''),
-			'mail_smtppassword'     => $this->config->getSystemValue('mail_smtppassword', ''),
-			'mail_sendmailmode'     => $this->config->getSystemValue('mail_sendmailmode', 'smtp'),
+			'mail_domain' => $this->config->getSystemValue('mail_domain', ''),
+			'mail_from_address' => $this->config->getSystemValue('mail_from_address', ''),
+			'mail_smtpmode' => $this->config->getSystemValue('mail_smtpmode', ''),
+			'mail_smtpsecure' => $this->config->getSystemValue('mail_smtpsecure', ''),
+			'mail_smtphost' => $this->config->getSystemValue('mail_smtphost', ''),
+			'mail_smtpport' => $this->config->getSystemValue('mail_smtpport', ''),
+			'mail_smtpauthtype' => $this->config->getSystemValue('mail_smtpauthtype', ''),
+			'mail_smtpauth' => $this->config->getSystemValue('mail_smtpauth', false),
+			'mail_smtpname' => $this->config->getSystemValue('mail_smtpname', ''),
+			'mail_smtppassword' => $this->config->getSystemValue('mail_smtppassword', ''),
+			'mail_sendmailmode' => $this->config->getSystemValue('mail_sendmailmode', 'smtp'),
 		];
 
 		if ($parameters['mail_smtppassword'] !== '') {

@@ -2,9 +2,10 @@
 /**
  * @copyright Copyright (c) 2017, ownCloud GmbH.
  *
+ * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Robin Appelman <robin@icewind.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -30,7 +31,8 @@ require __DIR__ . '/../../vendor/autoload.php';
  * Trashbin functions
  */
 trait Trashbin {
-	use WebDav;
+
+	// WebDav trait is expected to be used in the class that uses this trait.
 
 	/**
 	 * @When User :user empties trashbin

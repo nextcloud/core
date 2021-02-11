@@ -9,7 +9,6 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roger Szabo <roger.szabo@web.de>
- * @author sidey79 <s.butzek@gmx.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -73,7 +72,7 @@ class UserTest extends \Test\TestCase {
 	/** @var string */
 	protected $uid = 'alice';
 	/** @var string */
-	protected $dn  = 'uid=alice,dc=foo,dc=bar';
+	protected $dn = 'uid=alice,dc=foo,dc=bar';
 	/** @var User */
 	protected $user;
 
@@ -824,57 +823,6 @@ class UserTest extends \Test\TestCase {
 		$this->user->updateAvatar();
 	}
 
-	public function testUpdateBeforeFirstLogin() {
-		$this->config->expects($this->at(0))
-			->method('getUserValue')
-			->with($this->equalTo($this->uid), $this->equalTo('user_ldap'),
-				$this->equalTo(User::USER_PREFKEY_FIRSTLOGIN),
-				$this->equalTo(0))
-			->willReturn(0);
-		$this->config->expects($this->at(1))
-			->method('getUserValue')
-			->with($this->equalTo($this->uid), $this->equalTo('user_ldap'),
-				$this->equalTo(User::USER_PREFKEY_LASTREFRESH),
-				$this->equalTo(0))
-			->willReturn(0);
-		$this->config->expects($this->exactly(2))
-			->method('getUserValue');
-		$this->config->expects($this->never())
-			->method('setUserValue');
-
-		$this->user->update();
-	}
-
-	public function testUpdateAfterFirstLogin() {
-		$this->config->expects($this->at(0))
-			->method('getUserValue')
-			->with($this->equalTo($this->uid), $this->equalTo('user_ldap'),
-				$this->equalTo(User::USER_PREFKEY_FIRSTLOGIN),
-				$this->equalTo(0))
-			->willReturn(1);
-		$this->config->expects($this->at(1))
-			->method('getUserValue')
-			->with($this->equalTo($this->uid), $this->equalTo('user_ldap'),
-				$this->equalTo(User::USER_PREFKEY_LASTREFRESH),
-				$this->equalTo(0))
-			->willReturn(0);
-		$this->config->expects($this->exactly(2))
-			->method('getUserValue');
-		$this->config->expects($this->once())
-			->method('setUserValue')
-			->with($this->equalTo($this->uid), $this->equalTo('user_ldap'),
-				$this->equalTo(User::USER_PREFKEY_LASTREFRESH),
-				$this->anything())
-			->willReturn(true);
-
-		$this->connection->expects($this->any())
-			->method('resolveRule')
-			->with('avatar')
-			->willReturn(['jpegphoto', 'thumbnailphoto']);
-
-		$this->user->update();
-	}
-
 	public function extStorageHomeDataProvider() {
 		return [
 			[ 'myFolder', null ],
@@ -916,33 +864,6 @@ class UserTest extends \Test\TestCase {
 
 		$actual = $this->user->updateExtStorageHome($valueFromLDAP);
 		$this->assertSame($expected, $actual);
-	}
-
-	public function testUpdateNoRefresh() {
-		$this->config->expects($this->at(0))
-			->method('getUserValue')
-			->with($this->equalTo($this->uid), $this->equalTo('user_ldap'),
-				$this->equalTo(User::USER_PREFKEY_FIRSTLOGIN),
-				$this->equalTo(0))
-			->willReturn(1);
-		$this->config->expects($this->at(1))
-			->method('getUserValue')
-			->with($this->equalTo($this->uid), $this->equalTo('user_ldap'),
-				$this->equalTo(User::USER_PREFKEY_LASTREFRESH),
-				$this->equalTo(0))
-			->willReturn(time() - 10);
-		$this->config->expects($this->once())
-			->method('getAppValue')
-			->with($this->equalTo('user_ldap'),
-				$this->equalTo('updateAttributesInterval'),
-				$this->anything())
-			->willReturn(1800);
-		$this->config->expects($this->exactly(2))
-			->method('getUserValue');
-		$this->config->expects($this->never())
-			->method('setUserValue');
-
-		$this->user->update();
 	}
 
 	public function testMarkLogin() {
@@ -997,7 +918,6 @@ class UserTest extends \Test\TestCase {
 
 	public function testProcessAttributes() {
 		$requiredMethods = [
-			'markRefreshTime',
 			'updateQuota',
 			'updateEmail',
 			'composeAndStoreDisplayName',

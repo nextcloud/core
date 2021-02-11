@@ -38,7 +38,7 @@ interface ISettings {
 	public function getForm();
 
 	/**
-	 * @return string the section ID, e.g. 'sharing'
+	 * @return string|null the section ID, e.g. 'sharing' or null to not show the setting
 	 * @since 9.1
 	 */
 	public function getSection();

@@ -2,10 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Clark Tomlinson <fallen013@gmail.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  *
  * @license AGPL-3.0
  *
@@ -27,12 +27,13 @@ namespace OCA\Encryption\AppInfo;
 
 \OCP\Util::addscript('encryption', 'encryption');
 
-$encryptionSystemReady = \OC::$server->getEncryptionManager()->isReady();
+$encryptionManager = \OC::$server->getEncryptionManager();
+$encryptionSystemReady = $encryptionManager->isReady();
 
 /** @var Application $app */
 $app = \OC::$server->query(Application::class);
 if ($encryptionSystemReady) {
-	$app->registerEncryptionModule();
-	$app->registerHooks();
-	$app->setUp();
+	$app->registerEncryptionModule($encryptionManager);
+	$app->registerHooks(\OC::$server->getConfig());
+	$app->setUp($encryptionManager);
 }

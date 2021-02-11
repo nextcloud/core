@@ -21,6 +21,7 @@ class ComposerStaticInitTesting
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\Testing\\AlternativeHomeUserBackend' => __DIR__ . '/..' . '/../lib/AlternativeHomeUserBackend.php',
         'OCA\\Testing\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
         'OCA\\Testing\\Controller\\ConfigController' => __DIR__ . '/..' . '/../lib/Controller/ConfigController.php',

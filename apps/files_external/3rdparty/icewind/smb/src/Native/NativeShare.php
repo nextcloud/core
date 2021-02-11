@@ -119,7 +119,7 @@ class NativeShare extends AbstractShare {
 	 * Multibyte unicode safe version of basename()
 	 *
 	 * @param string $path
-	 * @link http://php.net/manual/en/function.basename.php#121405
+	 * @link https://www.php.net/manual/en/function.basename.php#121405
 	 * @return string
 	 */
 	protected static function mb_basename($path) {

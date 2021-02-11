@@ -3,6 +3,7 @@
  * @copyright 2019 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -29,19 +30,17 @@ namespace OC\Authentication\Login;
 use OC\Authentication\Events\LoginFailed;
 use OC\Core\Controller\LoginController;
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\ILogger;
-use OCP\IUserManager;
+use Psr\Log\LoggerInterface;
 
 class LoggedInCheckCommand extends ALoginCommand {
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 	/** @var IEventDispatcher */
 	private $dispatcher;
-	/** @var IUserManager */
-	private $userManager;
 
-	public function __construct(ILogger $logger, IEventDispatcher $dispatcher) {
+	public function __construct(LoggerInterface $logger,
+								IEventDispatcher $dispatcher) {
 		$this->logger = $logger;
 		$this->dispatcher = $dispatcher;
 	}

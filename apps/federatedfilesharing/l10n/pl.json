@@ -18,7 +18,7 @@
     "It is not allowed to send federated group shares from this server." : "Niedozwolone jest wysyłanie grupowych udostępnień federacyjnych z tego serwera.",
     "Sharing %1$s failed, because this item is already shared with %2$s" : "Udostępnianie %1$s nie powiodło się, ponieważ ten element jest już współdzielony z %2$s",
     "Not allowed to create a federated share with the same user" : "Nie można tworzyć udostępniania federacyjnego z tym samym użytkownikiem",
-    "File is already shared with %s" : "Plik jest już współdzielony z %s",
+    "File is already shared with %s" : "Plik jest już udostępniony dla %s",
     "Sharing %1$s failed, could not find %2$s, maybe the server is currently unreachable or uses a self-signed certificate." : "Udostępnianie %1$s nie powiodło się, nie można odnaleźć %2$s, być może serwer jest nieosiągalny lub używa certyfikatu z podpisem własnym.",
     "Could not find share" : "Nie można znaleźć powiązania",
     "Federated sharing" : "Udostępnianie Federacyjne",
@@ -36,7 +36,7 @@
     "Federated Cloud Sharing" : "Udostępnianie Chmury Federacyjnej",
     "Open documentation" : "Otwórz dokumentację",
     "Adjust how people can share between servers." : "Dostosuj w jaki sposób można udostępniać serwery.",
-    "Allow users on this server to send shares to other servers" : "Zezwalaj użytkownikom na tym serwerze wysłać udostępnienia do innych serwerów",
+    "Allow users on this server to send shares to other servers (this option also allows WebDAV access to public shares)" : "Zezwalaj użytkownikom na tym serwerze na wysłanie udostępnień do innych serwerów (opcja ta umożliwia również dostęp WebDAV do udostępnień publicznych)",
     "Allow users on this server to receive shares from other servers" : "Zezwalaj użytkownikom na tym serwerze do otrzymania udostępnień z innych serwerów",
     "Allow users on this server to send shares to groups on other servers" : "Zezwalaj użytkownikom na tym serwerze na udostępnianie dla grup na innych serwerach",
     "Allow users on this server to receive group shares from other servers" : "Zezwalaj użytkownikom na tym serwerze na przyjmowanie udostępnienia od grupy z innych serwerów",
@@ -49,7 +49,6 @@
     "Add to your website" : "Dodaj do swojej strony",
     "Share with me via Nextcloud" : "Udostępnij mi za pomocą Nextcloud",
     "HTML Code:" : "Kod HTML:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Otrzymałeś \"%3$s\" zdalne udostępnienie od %1$s (w imieniu %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Otrzymałeś \"%3$s\" zdalne udostępnienie od %1$s"
+    "Allow users on this server to send shares to other servers" : "Zezwalaj użytkownikom na tym serwerze na wysłanie udostępnień do innych serwerów"
 },"pluralForm" :"nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);"
 }

@@ -8,6 +8,8 @@ declare(strict_types=1);
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Richard Steinmetz <richard@steinmetz.cloud>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Citharel <nextcloud@tcit.fr>
  *
@@ -82,7 +84,7 @@ class EmailProvider extends AbstractProvider {
 	 */
 	public function send(VEvent $vevent,
 						 string $calendarDisplayName,
-						 array $users=[]):void {
+						 array $users = []):void {
 		$fallbackLanguage = $this->getFallbackLanguage();
 
 		$emailAddressesOfSharees = $this->getEMailAddressesOfAllUsersWithWriteAccessToCalendar($users);
@@ -113,6 +115,11 @@ class EmailProvider extends AbstractProvider {
 			$template->addFooter();
 
 			foreach ($emailAddresses as $emailAddress) {
+				if (!$this->mailer->validateMailAddress($emailAddress)) {
+					$this->logger->error('Email address {address} for reminder notification is incorrect', ['app' => 'dav', 'address' => $emailAddress]);
+					continue;
+				}
+
 				$message = $this->mailer->createMessage();
 				$message->setFrom([$fromEMail]);
 				if ($organizer) {
@@ -154,18 +161,18 @@ class EmailProvider extends AbstractProvider {
 								   string $calendarDisplayName,
 								   VEvent $vevent):void {
 		$template->addBodyListItem($calendarDisplayName, $l10n->t('Calendar:'),
-			$this->getAbsoluteImagePath('actions/info.svg'));
+			$this->getAbsoluteImagePath('actions/info.png'));
 
 		$template->addBodyListItem($this->generateDateString($l10n, $vevent), $l10n->t('Date:'),
-			$this->getAbsoluteImagePath('places/calendar.svg'));
+			$this->getAbsoluteImagePath('places/calendar.png'));
 
 		if (isset($vevent->LOCATION)) {
 			$template->addBodyListItem((string) $vevent->LOCATION, $l10n->t('Where:'),
-				$this->getAbsoluteImagePath('actions/address.svg'));
+				$this->getAbsoluteImagePath('actions/address.png'));
 		}
 		if (isset($vevent->DESCRIPTION)) {
 			$template->addBodyListItem((string) $vevent->DESCRIPTION, $l10n->t('Description:'),
-				$this->getAbsoluteImagePath('actions/more.svg'));
+				$this->getAbsoluteImagePath('actions/more.png'));
 		}
 	}
 
@@ -194,6 +201,10 @@ class EmailProvider extends AbstractProvider {
 		}
 
 		$organizerEMail = substr($organizer->getValue(), 7);
+
+		if (!$this->mailer->validateMailAddress($organizerEMail)) {
+			return null;
+		}
 
 		$name = $organizer->offsetGet('CN');
 		if ($name instanceof Parameter) {
@@ -380,9 +391,7 @@ class EmailProvider extends AbstractProvider {
 
 		$diff = $dtstartDt->diff($dtendDt);
 
-		/** @phan-suppress-next-line PhanUndeclaredClassMethod */
 		$dtstartDt = new \DateTime($dtstartDt->format(\DateTime::ATOM));
-		/** @phan-suppress-next-line PhanUndeclaredClassMethod */
 		$dtendDt = new \DateTime($dtendDt->format(\DateTime::ATOM));
 
 		if ($isAllDay) {
@@ -399,9 +408,7 @@ class EmailProvider extends AbstractProvider {
 
 		$startTimezone = $endTimezone = null;
 		if (!$vevent->DTSTART->isFloating()) {
-			/** @phan-suppress-next-line PhanUndeclaredClassMethod */
 			$startTimezone = $vevent->DTSTART->getDateTime()->getTimezone()->getName();
-			/** @phan-suppress-next-line PhanUndeclaredClassMethod */
 			$endTimezone = $this->getDTEndFromEvent($vevent)->getDateTime()->getTimezone()->getName();
 		}
 

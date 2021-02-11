@@ -9,7 +9,7 @@
 Turning the feature off removes shared files and folders on the server for all share recipients, and also on the sync clients and mobile apps. More information is available in the Nextcloud Documentation.
 
 	</description>
-	<version>1.12.0</version>
+	<version>1.13.1</version>
 	<licence>agpl</licence>
 	<author>Michael Gapczynski</author>
 	<author>Bjoern Schiessle</author>
@@ -23,7 +23,7 @@ Turning the feature off removes shared files and folders on the server for all s
 	<category>social</category>
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 	<dependencies>
-		<nextcloud min-version="20" max-version="20"/>
+		<nextcloud min-version="22" max-version="22"/>
 	</dependencies>
 
 	<background-jobs>

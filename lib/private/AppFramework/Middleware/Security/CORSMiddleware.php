@@ -145,7 +145,7 @@ class CORSMiddleware extends Middleware {
 	 */
 	public function afterException($controller, $methodName, \Exception $exception) {
 		if ($exception instanceof SecurityException) {
-			$response =  new JSONResponse(['message' => $exception->getMessage()]);
+			$response = new JSONResponse(['message' => $exception->getMessage()]);
 			if ($exception->getCode() !== 0) {
 				$response->setStatus($exception->getCode());
 			} else {

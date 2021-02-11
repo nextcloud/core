@@ -29,7 +29,6 @@ use OCP\Files\SimpleFS\ISimpleRoot;
 /**
  * Interface IAppData
  *
- * @package OCP\Files
  * @since 11.0.0
  */
 interface IAppData extends ISimpleRoot {

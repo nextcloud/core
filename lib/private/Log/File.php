@@ -7,6 +7,7 @@
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author duritong <peter.meier+github@immerda.ch>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author J0WI <J0WI@users.noreply.github.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -55,7 +56,7 @@ class File extends LogDetails implements IWriter, IFileBased {
 	/** @var SystemConfig */
 	private $config;
 
-	public function __construct(string $path, string $fallbackPath = '', SystemConfig $config) {
+	public function __construct(string $path, string $fallbackPath, SystemConfig $config) {
 		parent::__construct($config);
 		$this->logFile = $path;
 		if (!file_exists($this->logFile)) {
@@ -106,7 +107,7 @@ class File extends LogDetails implements IWriter, IFileBased {
 	 * @param int $offset
 	 * @return array
 	 */
-	public function getEntries(int $limit=50, int $offset=0):array {
+	public function getEntries(int $limit = 50, int $offset = 0):array {
 		$minLevel = $this->config->getValue("loglevel", ILogger::WARN);
 		$entries = [];
 		$handle = @fopen($this->logFile, 'rb');
@@ -117,7 +118,7 @@ class File extends LogDetails implements IWriter, IFileBased {
 			$entriesCount = 0;
 			$lines = 0;
 			// Loop through each character of the file looking for new lines
-			while ($pos >= 0 && ($limit === null ||$entriesCount < $limit)) {
+			while ($pos >= 0 && ($limit === null || $entriesCount < $limit)) {
 				fseek($handle, $pos);
 				$ch = fgetc($handle);
 				if ($ch == "\n" || $pos == 0) {

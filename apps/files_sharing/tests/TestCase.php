@@ -13,7 +13,7 @@
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -73,14 +73,14 @@ abstract class TestCase extends \Test\TestCase {
 		parent::setUpBeforeClass();
 
 		new Application();
-		
+
 		// reset backend
 		\OC_User::clearBackends();
 		\OC::$server->getGroupManager()->clearBackends();
 
 		// clear share hooks
 		\OC_Hook::clear('OCP\\Share');
-		\OC::registerShareHooks();
+		\OC::registerShareHooks(\OC::$server->getSystemConfig());
 
 		// create users
 		$backend = new \Test\Util\User\Dummy();

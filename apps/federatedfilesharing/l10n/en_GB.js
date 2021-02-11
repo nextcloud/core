@@ -33,7 +33,6 @@ OC.L10N.register(
     "Federated Cloud Sharing" : "Federated Cloud Sharing",
     "Open documentation" : "Open documentation",
     "Adjust how people can share between servers." : "Adjust how people can share between servers.",
-    "Allow users on this server to send shares to other servers" : "Allow users on this server to send shares to other servers",
     "Allow users on this server to receive shares from other servers" : "Allow users on this server to receive shares from other servers",
     "Search global and public address book for users" : "Search global and public address book for users",
     "Allow users to publish their data to a global and public address book" : "Allow users to publish their data to a global and public address book",
@@ -43,7 +42,6 @@ OC.L10N.register(
     "Add to your website" : "Add to your website",
     "Share with me via Nextcloud" : "Share with me via Nextcloud",
     "HTML Code:" : "HTML Code:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "You received \"%3$s\" as a remote share from %1$s"
+    "Allow users on this server to send shares to other servers" : "Allow users on this server to send shares to other servers"
 },
 "nplurals=2; plural=(n != 1);");

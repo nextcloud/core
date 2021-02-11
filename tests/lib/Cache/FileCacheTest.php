@@ -82,7 +82,7 @@ class FileCacheTest extends TestCache {
 		$this->rootView = new \OC\Files\View('');
 		$this->rootView->mkdir('/test');
 
-		$this->instance=new \OC\Cache\File();
+		$this->instance = new \OC\Cache\File();
 
 		// forces creation of cache folder for subsequent tests
 		$this->instance->set('hack', 'hack');

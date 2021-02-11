@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2018 Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -33,7 +34,7 @@ interface ICheckPasswordBackend {
 	/**
 	 * @since 14.0.0
 	 *
-	 * @param string $uid The username
+	 * @param string $loginName The loginname
 	 * @param string $password The password
 	 * @return string|bool The uid on success false on failure
 	 */

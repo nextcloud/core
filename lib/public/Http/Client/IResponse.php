@@ -31,7 +31,6 @@ namespace OCP\Http\Client;
 /**
  * Interface IResponse
  *
- * @package OCP\Http
  * @since 8.1.0
  */
 interface IResponse {

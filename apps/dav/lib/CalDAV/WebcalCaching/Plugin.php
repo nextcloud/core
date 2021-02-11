@@ -49,7 +49,7 @@ class Plugin extends ServerPlugin {
 	/**
 	 * @var bool
 	 */
-	private $enabled=false;
+	private $enabled = false;
 
 	/**
 	 * @var Server

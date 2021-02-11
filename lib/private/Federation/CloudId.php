@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2017, Robin Appelman <robin@icewind.nl>
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -36,6 +37,8 @@ class CloudId implements ICloudId {
 	private $user;
 	/** @var string */
 	private $remote;
+	/** @var string|null */
+	private $displayName;
 
 	/**
 	 * CloudId constructor.
@@ -44,10 +47,11 @@ class CloudId implements ICloudId {
 	 * @param string $user
 	 * @param string $remote
 	 */
-	public function __construct(string $id, string $user, string $remote) {
+	public function __construct(string $id, string $user, string $remote, ?string $displayName = null) {
 		$this->id = $id;
 		$this->user = $user;
 		$this->remote = $remote;
+		$this->displayName = $displayName;
 	}
 
 	/**
@@ -60,6 +64,11 @@ class CloudId implements ICloudId {
 	}
 
 	public function getDisplayId(): string {
+		if ($this->displayName) {
+			$atPos = strrpos($this->getId(), '@');
+			$atHost = substr($this->getId(), $atPos);
+			return $this->displayName . $atHost;
+		}
 		return str_replace('https://', '', str_replace('http://', '', $this->getId()));
 	}
 

@@ -12,9 +12,8 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Senorsen <senorsen.zhang@gmail.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -47,17 +46,17 @@ class FTP extends StreamWrapper {
 
 	public function __construct($params) {
 		if (isset($params['host']) && isset($params['user']) && isset($params['password'])) {
-			$this->host=$params['host'];
-			$this->user=$params['user'];
-			$this->password=$params['password'];
+			$this->host = $params['host'];
+			$this->user = $params['user'];
+			$this->password = $params['password'];
 			if (isset($params['secure'])) {
 				$this->secure = $params['secure'];
 			} else {
 				$this->secure = false;
 			}
-			$this->root=isset($params['root'])?$params['root']:'/';
-			if (! $this->root || $this->root[0]!=='/') {
-				$this->root='/'.$this->root;
+			$this->root = isset($params['root'])?$params['root']:'/';
+			if (! $this->root || $this->root[0] !== '/') {
+				$this->root = '/'.$this->root;
 			}
 			if (substr($this->root, -1) !== '/') {
 				$this->root .= '/';
@@ -77,11 +76,11 @@ class FTP extends StreamWrapper {
 	 * @return string
 	 */
 	public function constructUrl($path) {
-		$url='ftp';
+		$url = 'ftp';
 		if ($this->secure) {
-			$url.='s';
+			$url .= 's';
 		}
-		$url.='://'.urlencode($this->user).':'.urlencode($this->password).'@'.$this->host.$this->root.$path;
+		$url .= '://'.urlencode($this->user).':'.urlencode($this->password).'@'.$this->host.$this->root.$path;
 		return $url;
 	}
 
@@ -120,10 +119,10 @@ class FTP extends StreamWrapper {
 			case 'c':
 			case 'c+':
 				//emulate these
-				if (strrpos($path, '.')!==false) {
-					$ext=substr($path, strrpos($path, '.'));
+				if (strrpos($path, '.') !== false) {
+					$ext = substr($path, strrpos($path, '.'));
 				} else {
-					$ext='';
+					$ext = '';
 				}
 				$tmpFile = \OC::$server->getTempManager()->getTemporaryFile();
 				if ($this->file_exists($path)) {

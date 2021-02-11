@@ -26,7 +26,6 @@ namespace OCP\Log;
 /**
  * Interface IWriter
  *
- * @package OCP\Log
  * @since 14.0.0
  */
 interface IWriter {

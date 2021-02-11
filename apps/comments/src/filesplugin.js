@@ -45,8 +45,6 @@
 				return
 			}
 
-			fileList.registerTabView(new OCA.Comments.CommentsTabView('commentsTabView'))
-
 			const oldGetWebdavProperties = fileList._getWebdavProperties
 			fileList._getWebdavProperties = function() {
 				const props = oldGetWebdavProperties.apply(this, arguments)
@@ -104,7 +102,8 @@
 				actionHandler(fileName, context) {
 					context.$file.find('.action-comment').tooltip('hide')
 					// open sidebar in comments section
-					context.fileList.showDetailsView(fileName, 'comments')
+					OCA.Files.Sidebar.setActiveTab('comments')
+					OCA.Files.Sidebar.open('/' + fileName)
 				},
 			})
 

@@ -31,7 +31,6 @@ namespace OCP\Lock;
 /**
  * Interface ILockingProvider
  *
- * @package OCP\Lock
  * @since 8.1.0
  */
 interface ILockingProvider {

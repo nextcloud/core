@@ -21,6 +21,7 @@ class ComposerStaticInitWorkflowEngine
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\WorkflowEngine\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
         'OCA\\WorkflowEngine\\BackgroundJobs\\Rotate' => __DIR__ . '/..' . '/../lib/BackgroundJobs/Rotate.php',
         'OCA\\WorkflowEngine\\Check\\AbstractStringCheck' => __DIR__ . '/..' . '/../lib/Check/AbstractStringCheck.php',

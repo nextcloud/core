@@ -20,7 +20,6 @@ OC.L10N.register(
     "Missing a temporary folder" : "Ontbrekende tydelike gids",
     "A PHP extension stopped the file upload" : "’n PHP-uitbreiding het die oplaai gestaak",
     "No file uploaded" : "Geen lêer opgelaai",
-    "Unsupported image type" : "Onondersteunde beeldtipe",
     "Legal notice" : "Regskennisgewing",
     "Privacy policy" : "Privaatheidsbeleid",
     "Adjust the Nextcloud theme" : "Pas die Nextcloud-tema aan",

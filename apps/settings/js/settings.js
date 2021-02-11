@@ -8,6 +8,15 @@ OC.Settings = _.extend(OC.Settings, {
 
 	_cachedGroups: null,
 
+	escapeHTML: function (text) {
+		return text.toString()
+			.split('&').join('&amp;')
+			.split('<').join('&lt;')
+			.split('>').join('&gt;')
+			.split('"').join('&quot;')
+			.split('\'').join('&#039;');
+	},
+
 	/**
      * Setup selection box for group selection.
      *
@@ -75,10 +84,10 @@ OC.Settings = _.extend(OC.Settings, {
 								callback(selection);
 							},
 							formatResult: function(element) {
-								return escapeHTML(element.displayname);
+								return self.escapeHTML(element.displayname);
 							},
 							formatSelection: function(element) {
-								return escapeHTML(element.displayname);
+								return self.escapeHTML(element.displayname);
 							},
 							escapeMarkup: function(m) {
 								// prevent double markup escape

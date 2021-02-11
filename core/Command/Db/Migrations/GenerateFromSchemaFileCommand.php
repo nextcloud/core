@@ -26,12 +26,12 @@
 namespace OC\Core\Command\Db\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
+use OC\DB\Connection;
 use OC\DB\MDB2SchemaReader;
 use OC\DB\MigrationService;
 use OC\Migration\ConsoleOutput;
 use OCP\App\IAppManager;
 use OCP\IConfig;
-use OCP\IDBConnection;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -40,7 +40,7 @@ class GenerateFromSchemaFileCommand extends GenerateCommand {
 	/** @var IConfig */
 	protected $config;
 
-	public function __construct(IConfig $config, IAppManager $appManager, IDBConnection $connection) {
+	public function __construct(IConfig $config, IAppManager $appManager, Connection $connection) {
 		parent::__construct($connection, $appManager);
 		$this->config = $config;
 	}

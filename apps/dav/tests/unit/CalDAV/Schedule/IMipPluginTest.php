@@ -136,6 +136,7 @@ class IMipPluginTest extends TestCase {
 
 	public function testDelivery() {
 		$this->config
+	  ->expects($this->at(1))
 			->method('getAppValue')
 			->with('dav', 'invitation_link_recipients', 'yes')
 			->willReturn('yes');
@@ -148,6 +149,7 @@ class IMipPluginTest extends TestCase {
 
 	public function testFailedDelivery() {
 		$this->config
+	  ->expects($this->at(1))
 			->method('getAppValue')
 			->with('dav', 'invitation_link_recipients', 'yes')
 			->willReturn('yes');
@@ -163,6 +165,7 @@ class IMipPluginTest extends TestCase {
 
 	public function testDeliveryWithNoCommonName() {
 		$this->config
+	  ->expects($this->at(1))
 			->method('getAppValue')
 			->with('dav', 'invitation_link_recipients', 'yes')
 			->willReturn('yes');
@@ -188,9 +191,8 @@ class IMipPluginTest extends TestCase {
 	 */
 	public function testNoMessageSendForPastEvents(array $veventParams, bool $expectsMail) {
 		$this->config
-			->method('getAppValue')
-			->with('dav', 'invitation_link_recipients', 'yes')
-			->willReturn('yes');
+	  ->method('getAppValue')
+	  ->willReturn('yes');
 
 		$message = $this->_testMessage($veventParams);
 
@@ -228,6 +230,7 @@ class IMipPluginTest extends TestCase {
 
 		$this->_expectSend($recipient, true, $has_buttons);
 		$this->config
+	  ->expects($this->at(1))
 			->method('getAppValue')
 			->with('dav', 'invitation_link_recipients', 'yes')
 			->willReturn($config_setting);
@@ -252,14 +255,13 @@ class IMipPluginTest extends TestCase {
 	public function testMessageSendWhenEventWithoutName() {
 		$this->config
 			->method('getAppValue')
-			->with('dav', 'invitation_link_recipients', 'yes')
 			->willReturn('yes');
 
 		$message = $this->_testMessage(['SUMMARY' => '']);
 		$this->_expectSend('frodo@hobb.it', true, true,'Invitation: Untitled event');
 		$this->emailTemplate->expects($this->once())
 			->method('addHeading')
-			->with('Mr. Wizard invited you to »Untitled event«');
+			->with('Invitation');
 		$this->plugin->schedule($message);
 		$this->assertEquals('1.1', $message->getScheduleStatus());
 	}

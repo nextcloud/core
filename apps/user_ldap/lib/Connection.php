@@ -120,7 +120,7 @@ class Connection extends LDAPUtility {
 		if ($memcache->isAvailable()) {
 			$this->cache = $memcache->createDistributed();
 		}
-		$helper = new Helper(\OC::$server->getConfig());
+		$helper = new Helper(\OC::$server->getConfig(), \OC::$server->getDatabaseConnection());
 		$this->doNotValidate = !in_array($this->configPrefix,
 			$helper->getServerConfigurationPrefixes());
 	}
@@ -145,11 +145,7 @@ class Connection extends LDAPUtility {
 		$this->dontDestruct = true;
 	}
 
-	/**
-	 * @param string $name
-	 * @return bool|mixed
-	 */
-	public function __get($name) {
+	public function __get(string $name) {
 		if (!$this->configured) {
 			$this->readConfiguration();
 		}
@@ -273,7 +269,7 @@ class Connection extends LDAPUtility {
 			|| !$this->configuration->ldapConfigurationActive) {
 			return null;
 		}
-		$key   = $this->getCacheKey($key);
+		$key = $this->getCacheKey($key);
 		$value = base64_encode(json_encode($value));
 		$this->cache->set($key, $value, $this->configuration->ldapCacheTTL);
 	}
@@ -371,7 +367,7 @@ class Connection extends LDAPUtility {
 			}
 		}
 
-		foreach (['ldapExpertUUIDUserAttr'  => 'ldapUuidUserAttribute',
+		foreach (['ldapExpertUUIDUserAttr' => 'ldapUuidUserAttribute',
 			'ldapExpertUUIDGroupAttr' => 'ldapUuidGroupAttribute']
 				as $expertSetting => $effectiveSetting) {
 			$uuidOverride = $this->configuration->$expertSetting;
@@ -466,7 +462,7 @@ class Connection extends LDAPUtility {
 		$agent = $this->configuration->ldapAgentName;
 		$pwd = $this->configuration->ldapAgentPassword;
 		if (
-			($agent === ''  && $pwd !== '')
+			($agent === '' && $pwd !== '')
 			|| ($agent !== '' && $pwd === '')
 		) {
 			\OCP\Util::writeLog(

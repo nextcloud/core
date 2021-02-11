@@ -31,7 +31,6 @@ namespace OCP;
 /**
  * Interface IUser
  *
- * @package OCP
  * @since 8.0.0
  */
 interface IUser {

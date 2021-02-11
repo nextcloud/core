@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2018 John Molakvoæ <skjnldsv@protonmail.com>
  * @copyright Copyright (c) 2019 Janis Köhr <janiskoehr@icloud.com>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  *
  * @license GNU AGPL version 3 or any later version
@@ -74,13 +75,13 @@ class Personal implements ISettings {
 								IURLGenerator $urlGenerator,
 								AccessibilityProvider $accessibilityProvider,
 								IInitialStateService $initialStateService) {
-		$this->appName               = $appName;
-		$this->config                = $config;
-		$this->userSession           = $userSession;
-		$this->l                     = $l;
-		$this->urlGenerator          = $urlGenerator;
+		$this->appName = $appName;
+		$this->config = $config;
+		$this->userSession = $userSession;
+		$this->l = $l;
+		$this->urlGenerator = $urlGenerator;
 		$this->accessibilityProvider = $accessibilityProvider;
-		$this->initialStateService   = $initialStateService;
+		$this->initialStateService = $initialStateService;
 	}
 
 	/**
@@ -93,14 +94,14 @@ class Personal implements ISettings {
 
 		$availableConfig = [
 			'themes' => $this->accessibilityProvider->getThemes(),
-			'fonts'  => $this->accessibilityProvider->getFonts(),
+			'fonts' => $this->accessibilityProvider->getFonts(),
 			'highcontrast' => $this->accessibilityProvider->getHighContrast()
 		];
 
 		$userConfig = [
 			'highcontrast' => $this->config->getUserValue($this->userSession->getUser()->getUID(), $this->appName, 'highcontrast', false),
-			'theme'  => $this->config->getUserValue($this->userSession->getUser()->getUID(), $this->appName, 'theme', false),
-			'font'   => $this->config->getUserValue($this->userSession->getUser()->getUID(), $this->appName, 'font', false)
+			'theme' => $this->config->getUserValue($this->userSession->getUser()->getUID(), $this->appName, 'theme', false),
+			'font' => $this->config->getUserValue($this->userSession->getUser()->getUID(), $this->appName, 'font', false)
 		];
 
 		$this->initialStateService->provideInitialState($this->appName, 'available-config', $availableConfig);

@@ -3,6 +3,7 @@
  *
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -82,9 +83,8 @@ class BackupCodeStorageTest extends TestCase {
 			->method('insert')
 			->with($this->equalTo($row));
 		$this->eventDispatcher->expects($this->once())
-			->method('dispatch')
+			->method('dispatchTyped')
 			->with(
-				$this->equalTo(CodesGenerated::class),
 				$this->equalTo(new CodesGenerated($user))
 			);
 

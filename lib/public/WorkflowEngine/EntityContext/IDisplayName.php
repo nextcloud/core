@@ -29,7 +29,6 @@ namespace OCP\WorkflowEngine\EntityContext;
 /**
  * Interface IDisplayName
  *
- * @package OCP\WorkflowEngine\EntityContext
  *
  * @since 18.0.0
  */

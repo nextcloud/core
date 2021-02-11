@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
@@ -14,7 +15,7 @@
  * @author phisch <git@philippschaffrath.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -824,7 +825,7 @@ class DefaultShareProvider implements IShareProvider {
 		$pathSections = explode('/', $data['path'], 2);
 		// FIXME: would not detect rare md5'd home storage case properly
 		if ($pathSections[0] !== 'files'
-				&& in_array(explode(':', $data['storage_string_id'], 2)[0], ['home', 'object'])) {
+			&& (strpos($data['storage_string_id'], 'home::') === 0 || strpos($data['storage_string_id'], 'object::user') === 0)) {
 			return false;
 		}
 		return true;
@@ -874,6 +875,11 @@ class DefaultShareProvider implements IShareProvider {
 			$cursor = $qb->execute();
 
 			while ($data = $cursor->fetch()) {
+				if ($data['fileid'] && $data['path'] === null) {
+					$data['path'] = (string) $data['path'];
+					$data['name'] = (string) $data['name'];
+					$data['checksum'] = (string) $data['checksum'];
+				}
 				if ($this->isAccessibleResult($data)) {
 					$shares[] = $this->createShare($data);
 				}
@@ -881,7 +887,7 @@ class DefaultShareProvider implements IShareProvider {
 			$cursor->closeCursor();
 		} elseif ($shareType === IShare::TYPE_GROUP) {
 			$user = $this->userManager->get($userId);
-			$allGroups = $this->groupManager->getUserGroupIds($user);
+			$allGroups = ($user instanceof IUser) ? $this->groupManager->getUserGroupIds($user) : [];
 
 			/** @var Share[] $shares2 */
 			$shares2 = [];
@@ -1004,7 +1010,7 @@ class DefaultShareProvider implements IShareProvider {
 			->setShareType((int)$data['share_type'])
 			->setPermissions((int)$data['permissions'])
 			->setTarget($data['file_target'])
-			->setNote($data['note'])
+			->setNote((string)$data['note'])
 			->setMailSend((bool)$data['mail_send'])
 			->setStatus((int)$data['accepted'])
 			->setLabel($data['label']);

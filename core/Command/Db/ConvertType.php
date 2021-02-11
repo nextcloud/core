@@ -33,9 +33,10 @@
 
 namespace OC\Core\Command\Db;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Schema\AbstractAsset;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Types\Type;
+use OCP\DB\Types;
 use OC\DB\Connection;
 use OC\DB\ConnectionFactory;
 use OC\DB\MigrationService;
@@ -52,6 +53,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
+use function preg_match;
+use function preg_quote;
 
 class ConvertType extends Command implements CompletionAwareInterface {
 	/**
@@ -192,7 +195,8 @@ class ConvertType extends Command implements CompletionAwareInterface {
 		$this->validateInput($input, $output);
 		$this->readPassword($input, $output);
 
-		$fromDB = \OC::$server->getDatabaseConnection();
+		/** @var Connection $fromDB */
+		$fromDB = \OC::$server->get(Connection::class);
 		$toDB = $this->getToDBConnection($input, $output);
 
 		if ($input->getOption('clear-schema')) {
@@ -283,9 +287,14 @@ class ConvertType extends Command implements CompletionAwareInterface {
 	}
 
 	protected function getTables(Connection $db) {
-		$filterExpression = '/^' . preg_quote($this->config->getSystemValue('dbtableprefix', 'oc_')) . '/';
-		$db->getConfiguration()->
-			setFilterSchemaAssetsExpression($filterExpression);
+		$db->getConfiguration()->setSchemaAssetsFilter(function ($asset) {
+			/** @var string|AbstractAsset $asset */
+			$filterExpression = '/^' . preg_quote($this->config->getSystemValue('dbtableprefix', 'oc_')) . '/';
+			if ($asset instanceof AbstractAsset) {
+				return preg_match($filterExpression, $asset->getName()) !== false;
+			}
+			return preg_match($filterExpression, $asset) !== false;
+		});
 		return $db->getSchemaManager()->listTableNames();
 	}
 
@@ -295,7 +304,6 @@ class ConvertType extends Command implements CompletionAwareInterface {
 	 * @param Table $table
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
-	 * @suppress SqlInjectionChecker
 	 */
 	protected function copyTable(Connection $fromDB, Connection $toDB, Table $table, InputInterface $input, OutputInterface $output) {
 		if ($table->getName() === $toDB->getPrefix() . 'migrations') {
@@ -310,10 +318,10 @@ class ConvertType extends Command implements CompletionAwareInterface {
 		$query->select($query->func()->count('*', 'num_entries'))
 			->from($table->getName());
 		$result = $query->execute();
-		$count = $result->fetchColumn();
+		$count = $result->fetchOne();
 		$result->closeCursor();
 
-		$numChunks = ceil($count/$chunkSize);
+		$numChunks = ceil($count / $chunkSize);
 		if ($numChunks > 1) {
 			$output->writeln('chunked query, ' . $numChunks . ' chunks');
 		}
@@ -331,7 +339,7 @@ class ConvertType extends Command implements CompletionAwareInterface {
 
 		try {
 			$orderColumns = $table->getPrimaryKeyColumns();
-		} catch (DBALException $e) {
+		} catch (Exception $e) {
 			$orderColumns = [];
 			foreach ($table->getColumns() as $column) {
 				$orderColumns[] = $column->getName();
@@ -385,11 +393,11 @@ class ConvertType extends Command implements CompletionAwareInterface {
 		$type = $table->getColumn($columnName)->getType()->getName();
 
 		switch ($type) {
-			case Type::BLOB:
-			case Type::TEXT:
+			case Types::BLOB:
+			case Types::TEXT:
 				$this->columnTypes[$tableName][$columnName] = IQueryBuilder::PARAM_LOB;
 				break;
-			case Type::BOOLEAN:
+			case Types::BOOLEAN:
 				$this->columnTypes[$tableName][$columnName] = IQueryBuilder::PARAM_BOOL;
 				break;
 			default:
@@ -433,11 +441,11 @@ class ConvertType extends Command implements CompletionAwareInterface {
 		}
 
 		$this->config->setSystemValues([
-			'dbtype'		=> $type,
-			'dbname'		=> $dbName,
-			'dbhost'		=> $dbHost,
-			'dbuser'		=> $username,
-			'dbpassword'	=> $password,
+			'dbtype' => $type,
+			'dbname' => $dbName,
+			'dbhost' => $dbHost,
+			'dbuser' => $username,
+			'dbpassword' => $password,
 		]);
 	}
 

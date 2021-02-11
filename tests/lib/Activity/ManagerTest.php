@@ -24,6 +24,7 @@
 namespace Test\Activity;
 
 use OCP\IConfig;
+use OCP\IL10N;
 use OCP\IRequest;
 use OCP\IUser;
 use OCP\IUserSession;

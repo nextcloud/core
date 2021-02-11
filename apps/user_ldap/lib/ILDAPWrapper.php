@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author J0WI <J0WI@users.noreply.github.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -100,7 +101,7 @@ interface ILDAPWrapper {
 	 * @param string $dn
 	 * @param int @withAttrib
 	 * @return array|false
-	 * @link http://www.php.net/manual/en/function.ldap-explode-dn.php
+	 * @link https://www.php.net/manual/en/function.ldap-explode-dn.php
 	 */
 	public function explodeDN($dn, $withAttrib);
 

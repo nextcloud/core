@@ -89,6 +89,8 @@ class LegacyDBTest extends \Test\TestCase {
 		$this->assertTrue((bool)$result);
 		$row = $result->fetchRow();
 		$this->assertFalse($row);
+		$result->closeCursor();
+
 		$query = OC_DB::prepare('INSERT INTO `*PREFIX*'.$this->table2.'` (`fullname`,`uri`) VALUES (?,?)');
 		$result = $query->execute(['fullname test', 'uri_1']);
 		$this->assertEquals(1, $result);
@@ -100,6 +102,7 @@ class LegacyDBTest extends \Test\TestCase {
 		$this->assertEquals($row['fullname'], 'fullname test');
 		$row = $result->fetchRow();
 		$this->assertFalse((bool)$row); //PDO returns false, MDB2 returns null
+		$result->closeCursor();
 	}
 
 	/**
@@ -112,6 +115,7 @@ class LegacyDBTest extends \Test\TestCase {
 		$query = OC_DB::prepare('SELECT `fullname`,`uri` FROM `*PREFIX*'.$this->table2.'` WHERE `uri` = ?');
 		$result = $query->execute(['uri_2']);
 		$this->assertTrue((bool)$result);
+		$result->closeCursor();
 	}
 
 	public function testUNIX_TIMESTAMP() {
@@ -121,6 +125,7 @@ class LegacyDBTest extends \Test\TestCase {
 		$query = OC_DB::prepare('SELECT `fullname`,`uri` FROM `*PREFIX*'.$this->table2.'` WHERE `uri` = ?');
 		$result = $query->execute(['uri_3']);
 		$this->assertTrue((bool)$result);
+		$result->closeCursor();
 	}
 
 	public function testLastInsertId() {
@@ -143,7 +148,12 @@ class LegacyDBTest extends \Test\TestCase {
 		$result = $query->execute([$expected, 'uri_1', 'This is a vCard']);
 		$this->assertEquals(1, $result);
 
-		$actual = OC_DB::prepare("SELECT `fullname` FROM `$table`")->execute()->fetchOne();
+		$query = OC_DB::prepare("SELECT `fullname` FROM `$table`");
+
+		$result = $query->execute();
+		$actual = $result->fetchOne();
+		$result->closeCursor();
+
 		$this->assertSame($expected, $actual);
 	}
 
@@ -162,6 +172,7 @@ class LegacyDBTest extends \Test\TestCase {
 		$result = $query->execute();
 		$this->assertTrue((bool)$result);
 		$row = $result->fetchRow();
+		$result->closeCursor();
 		$this->assertArrayHasKey($rowname, $row);
 		$this->assertEquals($expect, $row[$rowname]);
 		$query = OC_DB::prepare('DELETE FROM `' . $table . '`');
@@ -227,14 +238,17 @@ class LegacyDBTest extends \Test\TestCase {
 		$query = OC_DB::prepare("SELECT * FROM `$table` WHERE `fullname` LIKE ?");
 		$result = $query->execute(['foobar']);
 		$this->assertCount(0, $result->fetchAll());
+		$result->closeCursor();
 
 		$query = OC_DB::prepare("SELECT * FROM `$table` WHERE `fullname` ILIKE ?");
 		$result = $query->execute(['foobar']);
 		$this->assertCount(1, $result->fetchAll());
+		$result->closeCursor();
 
 		$query = OC_DB::prepare("SELECT * FROM `$table` WHERE `fullname` ILIKE ?");
 		$result = $query->execute(['foo']);
 		$this->assertCount(0, $result->fetchAll());
+		$result->closeCursor();
 	}
 
 	public function testILIKEWildcard() {
@@ -246,26 +260,32 @@ class LegacyDBTest extends \Test\TestCase {
 		$query = OC_DB::prepare("SELECT * FROM `$table` WHERE `fullname` LIKE ?");
 		$result = $query->execute(['%bar']);
 		$this->assertCount(0, $result->fetchAll());
+		$result->closeCursor();
 
 		$query = OC_DB::prepare("SELECT * FROM `$table` WHERE `fullname` LIKE ?");
 		$result = $query->execute(['foo%']);
 		$this->assertCount(0, $result->fetchAll());
+		$result->closeCursor();
 
 		$query = OC_DB::prepare("SELECT * FROM `$table` WHERE `fullname` LIKE ?");
 		$result = $query->execute(['%ba%']);
 		$this->assertCount(0, $result->fetchAll());
+		$result->closeCursor();
 
 		$query = OC_DB::prepare("SELECT * FROM `$table` WHERE `fullname` ILIKE ?");
 		$result = $query->execute(['%bar']);
 		$this->assertCount(1, $result->fetchAll());
+		$result->closeCursor();
 
 		$query = OC_DB::prepare("SELECT * FROM `$table` WHERE `fullname` ILIKE ?");
 		$result = $query->execute(['foo%']);
 		$this->assertCount(1, $result->fetchAll());
+		$result->closeCursor();
 
 		$query = OC_DB::prepare("SELECT * FROM `$table` WHERE `fullname` ILIKE ?");
 		$result = $query->execute(['%ba%']);
 		$this->assertCount(1, $result->fetchAll());
+		$result->closeCursor();
 	}
 
 	/**
@@ -282,7 +302,11 @@ class LegacyDBTest extends \Test\TestCase {
 		$result = $query->execute([$expected]);
 		$this->assertEquals(1, $result);
 
-		$actual = OC_DB::prepare("SELECT `textfield` FROM `$table`")->execute()->fetchOne();
+		$query = OC_DB::prepare("SELECT `textfield` FROM `$table`");
+
+		$result = $query->execute();
+		$actual = $result->fetchOne();
+		$result->closeCursor();
 		$this->assertSame($expected, $actual);
 	}
 

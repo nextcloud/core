@@ -38,7 +38,7 @@ OC.L10N.register(
     "Federated Cloud Sharing" : "Federated Cloud Sharing",
     "Open documentation" : "Open documentatie",
     "Adjust how people can share between servers." : "Aanpassen hoe mensen tussen servers kunnen delen.",
-    "Allow users on this server to send shares to other servers" : "Toestaan dat gebruikers op deze server shares sturen naar andere servers",
+    "Allow users on this server to send shares to other servers (this option also allows WebDAV access to public shares)" : "Sta gebruikers toe om op deze server shares naar andere servers te sturen (deze optie staat ook WebDAV toegang toe tot openbare shares).",
     "Allow users on this server to receive shares from other servers" : "Toestaan dat gebruikers op deze server shares ontvangen van andere servers",
     "Allow users on this server to send shares to groups on other servers" : "Sta gebruikers op deze server toe om shares naar groepen op andere servers te delen",
     "Allow users on this server to receive group shares from other servers" : "Sta gebruikers op deze server toe om shares van groepen op andere servers te ontvangen",
@@ -51,7 +51,6 @@ OC.L10N.register(
     "Add to your website" : "Toevoegen aan je website",
     "Share with me via Nextcloud" : "Deel met mij via Nextcloud",
     "HTML Code:" : "HTML Code:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Je ontving \"%3$s\" als een extern deel verzoek van %1$s (namens %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Je ontving \"%3$s\" als een extern deel verzoek van %1$s"
+    "Allow users on this server to send shares to other servers" : "Toestaan dat gebruikers op deze server shares sturen naar andere servers"
 },
 "nplurals=2; plural=(n != 1);");

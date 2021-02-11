@@ -1,0 +1,9 @@
+OC.L10N.register(
+    "contactsinteraction",
+    {
+    "Recently contacted" : "Nedávno kontaktovaní",
+    "Contacts Interaction" : "Napojenia na kontakty",
+    "Manages interaction between users and contacts" : "Spravuje interakciu medzi používateľmi a kontaktmi",
+    "Collect data about user and contacts interactions and provide an address book for the data" : "Zhromaždiť údaje o interakciách používateľov a kontaktov a poskytnúť adresár pre údaje"
+},
+"nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

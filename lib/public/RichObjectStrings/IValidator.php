@@ -27,7 +27,6 @@ namespace OCP\RichObjectStrings;
 /**
  * Class Validator
  *
- * @package OCP\RichObjectStrings
  * @since 11.0.0
  */
 interface IValidator {

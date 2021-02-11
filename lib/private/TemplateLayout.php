@@ -3,7 +3,6 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
- * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christopher Schäpers <kondou@ts.unde.re>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Clark Tomlinson <fallen013@gmail.com>
@@ -44,6 +43,7 @@
 
 namespace OC;
 
+use bantu\IniGetWrapper\IniGetWrapper;
 use OC\Search\SearchQuery;
 use OC\Template\JSCombiner;
 use OC\Template\JSConfigHelper;
@@ -129,7 +129,7 @@ class TemplateLayout extends \OC_Template {
 			if (\OC_User::getUser() === false) {
 				$this->assign('userAvatarSet', false);
 			} else {
-				$this->assign('userAvatarSet', \OC::$server->getAvatarManager()->getAvatar(\OC_User::getUser())->exists());
+				$this->assign('userAvatarSet', true);
 				$this->assign('userAvatarVersion', $this->config->getUserValue(\OC_User::getUser(), 'avatar', 'version', 0));
 			}
 
@@ -193,21 +193,24 @@ class TemplateLayout extends \OC_Template {
 		$jsFiles = self::findJavascriptFiles(\OC_Util::$scripts);
 		$this->assign('jsfiles', []);
 		if ($this->config->getSystemValue('installed', false) && $renderAs != TemplateResponse::RENDER_AS_ERROR) {
+			// this is on purpose outside of the if statement below so that the initial state is prefilled (done in the getConfig() call)
+			// see https://github.com/nextcloud/server/pull/22636 for details
+			$jsConfigHelper = new JSConfigHelper(
+				\OC::$server->getL10N('lib'),
+				\OC::$server->query(Defaults::class),
+				\OC::$server->getAppManager(),
+				\OC::$server->getSession(),
+				\OC::$server->getUserSession()->getUser(),
+				$this->config,
+				\OC::$server->getGroupManager(),
+				\OC::$server->get(IniGetWrapper::class),
+				\OC::$server->getURLGenerator(),
+				\OC::$server->getCapabilitiesManager(),
+				\OC::$server->query(IInitialStateService::class)
+			);
+			$config = $jsConfigHelper->getConfig();
 			if (\OC::$server->getContentSecurityPolicyNonceManager()->browserSupportsCspV3()) {
-				$jsConfigHelper = new JSConfigHelper(
-					\OC::$server->getL10N('lib'),
-					\OC::$server->query(Defaults::class),
-					\OC::$server->getAppManager(),
-					\OC::$server->getSession(),
-					\OC::$server->getUserSession()->getUser(),
-					$this->config,
-					\OC::$server->getGroupManager(),
-					\OC::$server->getIniWrapper(),
-					\OC::$server->getURLGenerator(),
-					\OC::$server->getCapabilitiesManager(),
-					\OC::$server->query(IInitialStateService::class)
-				);
-				$this->assign('inline_ocjs', $jsConfigHelper->getConfig());
+				$this->assign('inline_ocjs', $config);
 			} else {
 				$this->append('jsfiles', \OC::$server->getURLGenerator()->linkToRoute('core.OCJS.getConfig', ['v' => self::$versionHash]));
 			}
@@ -259,7 +262,7 @@ class TemplateLayout extends \OC_Template {
 				}
 			}
 		}
-		
+
 		$this->assign('initialStates', $this->initialState->getInitialStates());
 	}
 

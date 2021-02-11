@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Adrian Brzezinski <adrian.brzezinski@eo.pl>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -86,13 +87,13 @@ class Swift implements IObjectStore {
 		if (filesize($tmpFile) < SWIFT_SEGMENT_SIZE) {
 			$this->getContainer()->createObject([
 				'name' => $urn,
-				'stream' => stream_for($handle)
+				'stream' => stream_for($handle),
 			]);
 		} else {
 			$this->getContainer()->createLargeObject([
 				'name' => $urn,
 				'stream' => stream_for($handle),
-				'segmentSize' => SWIFT_SEGMENT_SIZE
+				'segmentSize' => SWIFT_SEGMENT_SIZE,
 			]);
 		}
 	}
@@ -113,7 +114,7 @@ class Swift implements IObjectStore {
 					'stream' => true,
 					'headers' => [
 						'X-Auth-Token' => $tokenId,
-						'Cache-Control' => 'no-cache'
+						'Cache-Control' => 'no-cache',
 					],
 				]
 			);
@@ -147,5 +148,11 @@ class Swift implements IObjectStore {
 
 	public function objectExists($urn) {
 		return $this->getContainer()->objectExists($urn);
+	}
+
+	public function copyObject($from, $to) {
+		$this->getContainer()->getObject($from)->copy([
+			'destination' => $this->getContainer()->name . '/' . $to
+		]);
 	}
 }

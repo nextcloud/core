@@ -16,9 +16,6 @@
     "An error occurred while generating your backup codes" : "S'ha produït un error mentre es generaven els codis de seguretat",
     "{name} backup codes" : "Codis de seguretat {name}",
     "Use one of the backup codes you saved when setting up two-factor authentication." : "Feu servir un dels codis de seguretat que heu desat quan he configurat l’autenticació de dos factors.",
-    "Submit" : "Envia",
-    "function" : "funció",
-    "_" : "_",
-    "_icon-loading-small_::_generate-backup-codes_" : ["icon-loading-small","generate-backup-codes"]
+    "Submit" : "Envia"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

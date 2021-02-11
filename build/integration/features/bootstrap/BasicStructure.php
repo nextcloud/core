@@ -14,7 +14,6 @@
  * @author Sergio Bertolin <sbertolin@solidgear.es>
  * @author Sergio Bertolín <sbertolin@solidgear.es>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -44,9 +43,9 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 trait BasicStructure {
 	use Auth;
+	use Avatar;
 	use Download;
 	use Mail;
-	use Trashbin;
 
 	/** @var string */
 	private $currentUser = '';
@@ -178,7 +177,7 @@ trait BasicStructure {
 		$options = [];
 		if ($this->currentUser === 'admin') {
 			$options['auth'] = $this->adminUser;
-		} else {
+		} elseif (strpos($this->currentUser, 'anonymous') !== 0) {
 			$options['auth'] = [$this->currentUser, $this->regularUser];
 		}
 		$options['headers'] = [
@@ -218,7 +217,7 @@ trait BasicStructure {
 		$options = [];
 		if ($this->currentUser === 'admin') {
 			$options['auth'] = $this->adminUser;
-		} else {
+		} elseif (strpos($this->currentUser, 'anonymous') !== 0) {
 			$options['auth'] = [$this->currentUser, $this->regularUser];
 		}
 		if ($body instanceof TableNode) {
@@ -307,21 +306,31 @@ trait BasicStructure {
 	 * @When Sending a :method to :url with requesttoken
 	 * @param string $method
 	 * @param string $url
+	 * @param TableNode|array|null $body
 	 */
-	public function sendingAToWithRequesttoken($method, $url) {
+	public function sendingAToWithRequesttoken($method, $url, $body = null) {
 		$baseUrl = substr($this->baseUrl, 0, -5);
+
+		$options = [
+			'cookies' => $this->cookieJar,
+			'headers' => [
+				'requesttoken' => $this->requestToken
+			],
+		];
+
+		if ($body instanceof TableNode) {
+			$fd = $body->getRowsHash();
+			$options['form_params'] = $fd;
+		} elseif ($body) {
+			$options = array_merge($options, $body);
+		}
 
 		$client = new Client();
 		try {
 			$this->response = $client->request(
 				$method,
 				$baseUrl . $url,
-				[
-					'cookies' => $this->cookieJar,
-					'headers' => [
-						'requesttoken' => $this->requestToken
-					]
-				]
+				$options
 			);
 		} catch (ClientException $e) {
 			$this->response = $e->getResponse();

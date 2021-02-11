@@ -22,11 +22,24 @@
 <template>
 	<Modal
 		size="normal"
-		:title="$t('user_status', 'Set a custom status')"
+		:title="$t('user_status', 'Set status')"
 		@close="closeModal">
 		<div class="set-status-modal">
+			<!-- Status selector -->
 			<div class="set-status-modal__header">
-				<h3>{{ $t('user_status', 'Set a custom status') }}</h3>
+				<h3>{{ $t('user_status', 'Online status') }}</h3>
+			</div>
+			<div class="set-status-modal__online-status">
+				<OnlineStatusSelect v-for="status in statuses"
+					:key="status.type"
+					v-bind="status"
+					:checked="status.type === statusType"
+					@select="changeStatus" />
+			</div>
+
+			<!-- Status message -->
+			<div class="set-status-modal__header">
+				<h3>{{ $t('user_status', 'Status message') }}</h3>
 			</div>
 			<div class="set-status-modal__custom-input">
 				<EmojiPicker @select="setIcon">
@@ -36,8 +49,10 @@
 					</button>
 				</EmojiPicker>
 				<CustomMessageInput
+					ref="customMessageInput"
 					:message="message"
-					@change="setMessage" />
+					@change="setMessage"
+					@submit="saveStatus" />
 			</div>
 			<PredefinedStatusesList
 				@selectStatus="selectPredefinedMessage" />
@@ -45,11 +60,11 @@
 				:clear-at="clearAt"
 				@selectClearAt="setClearAt" />
 			<div class="status-buttons">
-				<button class="status-buttons__select" @click="clearStatus">
-					{{ $t('user_status', 'Clear custom status') }}
+				<button class="status-buttons__select" :disabled="isSavingStatus" @click="clearStatus">
+					{{ $t('user_status', 'Clear status message') }}
 				</button>
-				<button class="status-buttons__primary primary" @click="saveStatus">
-					{{ $t('user_status', 'Set status') }}
+				<button class="status-buttons__primary primary" :disabled="isSavingStatus" @click="saveStatus">
+					{{ $t('user_status', 'Set status message') }}
 				</button>
 			</div>
 		</div>
@@ -57,27 +72,37 @@
 </template>
 
 <script>
+import { showError } from '@nextcloud/dialogs'
 import EmojiPicker from '@nextcloud/vue/dist/Components/EmojiPicker'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
+
+import { getAllStatusOptions } from '../services/statusOptionsService'
+import OnlineStatusMixin from '../mixins/OnlineStatusMixin'
 import PredefinedStatusesList from './PredefinedStatusesList'
 import CustomMessageInput from './CustomMessageInput'
 import ClearAtSelect from './ClearAtSelect'
-import { showError } from '@nextcloud/dialogs'
+import OnlineStatusSelect from './OnlineStatusSelect'
 
 export default {
 	name: 'SetStatusModal',
+
 	components: {
+		ClearAtSelect,
+		CustomMessageInput,
 		EmojiPicker,
 		Modal,
-		CustomMessageInput,
+		OnlineStatusSelect,
 		PredefinedStatusesList,
-		ClearAtSelect,
 	},
+	mixins: [OnlineStatusMixin],
+
 	data() {
 		return {
-			icon: null,
-			message: null,
 			clearAt: null,
+			icon: null,
+			message: '',
+			isSavingStatus: false,
+			statuses: getAllStatusOptions(),
 		}
 	},
 	computed: {
@@ -90,13 +115,14 @@ export default {
 			return this.icon || '😀'
 		},
 	},
+
 	/**
 	 * Loads the current status when a user opens dialog
 	 */
 	mounted() {
 		this.messageId = this.$store.state.userStatus.messageId
 		this.icon = this.$store.state.userStatus.icon
-		this.message = this.$store.state.userStatus.message
+		this.message = this.$store.state.userStatus.message || ''
 
 		if (this.$store.state.userStatus.clearAt !== null) {
 			this.clearAt = {
@@ -120,6 +146,9 @@ export default {
 		setIcon(icon) {
 			this.messageId = null
 			this.icon = icon
+			this.$nextTick(() => {
+				this.$refs.customMessageInput.focus()
+			})
 		},
 		/**
 		 * Sets a new message
@@ -155,6 +184,10 @@ export default {
 		 * @returns {Promise<void>}
 		 */
 		async saveStatus() {
+			if (this.isSavingStatus) {
+				return
+			}
+
 			try {
 				this.isSavingStatus = true
 
@@ -208,6 +241,21 @@ export default {
 	min-width: 500px;
 	min-height: 200px;
 	padding: 8px 20px 20px 20px;
+	// Enable scrollbar for too long content, same way as in Dashboard customize
+	max-height: 70vh;
+	overflow: auto;
+
+	&__header {
+		text-align: center;
+		font-weight: bold;
+	}
+
+	&__online-status {
+		display: grid;
+		// Space between the two sections
+		margin-bottom: 40px;
+		grid-template-columns: 1fr 1fr;
+	}
 
 	&__custom-input {
 		display: flex;
@@ -216,12 +264,12 @@ export default {
 
 		.custom-input__emoji-button {
 			flex-basis: 40px;
-			width: 40px;
 			flex-grow: 0;
-			border-radius: var(--border-radius) 0 0 var(--border-radius);
+			width: 40px;
 			height: 34px;
 			margin-right: 0;
 			border-right: none;
+			border-radius: var(--border-radius) 0 0 var(--border-radius);
 		}
 	}
 
@@ -233,4 +281,5 @@ export default {
 		}
 	}
 }
+
 </style>

@@ -4,6 +4,7 @@
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -130,7 +131,7 @@ class EnablePluginTest extends TestCase {
 		$this->server->xml->expects($this->once())
 			->method('parse')
 			->willReturnCallback(function ($requestBody, $url, &$documentType) {
-				$documentType =  '{http://nextcloud.com/ns}disable-birthday-calendar';
+				$documentType = '{http://nextcloud.com/ns}disable-birthday-calendar';
 			});
 
 		$this->config->expects($this->never())

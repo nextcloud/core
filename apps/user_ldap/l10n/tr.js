@@ -8,8 +8,8 @@ OC.L10N.register(
     "Valid configuration, but binding failed. Please check the server settings and credentials." : "Yapılandırma geçerli ancak bağlantı kurulamadı. Lütfen sunucu ayarları ve kimlik doğrulama bilgilerini denetleyin.",
     "Invalid configuration. Please have a look at the logs for further details." : "Yapılandırma geçersiz. Lütfen ayrıntılı bilgi almak için günlük dosyasına bakın.",
     "No action specified" : "Hehrangi bir işlem belirtilmemiş",
-    "No configuration specified" : "Herhangi bir yapılandırma belirtilmemiş",
-    "No data specified" : "Herhangi bir veri belirtilmemiş",
+    "No configuration specified" : "Henüz bir yapılandırma belirtilmemiş",
+    "No data specified" : "Henüz bir veri belirtilmemiş",
     " Could not set configuration %s" : "%s yapılandırması ayarlanamadı",
     "Action does not exist" : "İşlem bulunamadı",
     "Renewing …" : "Yenileniyor …",
@@ -114,7 +114,7 @@ OC.L10N.register(
     "Verify settings and count users" : "Ayarları doğrula ve kullanıcıları say",
     "Saving" : "Kaydediliyor",
     "Back" : "Geri",
-    "Continue" : "Devam",
+    "Continue" : "Sürdür",
     "Please renew your password." : "Lütfen parolanızı yenileyin.",
     "An internal error occurred." : "İçeride bir sorun çıktı.",
     "Please try again or contact your administrator." : "Lütfen yeniden deneyin ya da yöneticinizle görüşün.",
@@ -189,7 +189,6 @@ OC.L10N.register(
     "Username-LDAP User Mapping" : "Kullanıcı Adı-LDAP Kullanıcısı Eşleştirme",
     "Usernames are used to store and assign metadata. In order to precisely identify and recognize users, each LDAP user will have an internal username. This requires a mapping from username to LDAP user. The created username is mapped to the UUID of the LDAP user. Additionally the DN is cached as well to reduce LDAP interaction, but it is not used for identification. If the DN changes, the changes will be found. The internal username is used all over. Clearing the mappings will have leftovers everywhere. Clearing the mappings is not configuration sensitive, it affects all LDAP configurations! Never clear the mappings in a production environment, only in a testing or experimental stage." : "Kullanıcı adları, üst veri depolaması ve ataması için kullanılır. Kullanıcıları kesin olarak belirlemek ve algılamak için, her LDAP kullanıcısına bir iç kullanıcı verilir. Bu kullanıcı adı ile LDAP kullanıcısının eşleştirilmesi gerekir. Oluşturulan kullanıcı adı LDAP kullanıcısının UUID değeri ile eşleştirilir. Bunun yanında LDAP etkileşimini azaltmak için DN ön belleğe alınır ancak bu işlem kimlik belirleme için kullanılmaz. DN üzerinde yapılan değişiklikler aktarılır. İç kullanıcı her yerde kullanıldığından, bir eşleştirmeyi kaldırmak pek çok yerde kalıntılar bırakır. Eşleştirmeleri kaldırmak yalnız yapılandırmaya bağlı değildir, tüm LDAP yapılandırmalarını etkiler! Üretim ortamında eşleştirmeleri asla kaldırmayın, yalnız sınama ya da deney aşamalarında kullanın.",
     "Clear Username-LDAP User Mapping" : "Kullanıcı Adı-LDAP Kullanıcısı Eşleştirmesini Kaldır",
-    "Clear Groupname-LDAP Group Mapping" : "Grup Adı-LDAP Grubu Eşleştirmesini Kaldır",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "Kullanıcı adının kullanılması için boş bırakın (varsayılan) ya da bir LDAP/AD özniteliği belirtin."
+    "Clear Groupname-LDAP Group Mapping" : "Grup Adı-LDAP Grubu Eşleştirmesini Kaldır"
 },
 "nplurals=2; plural=(n > 1);");

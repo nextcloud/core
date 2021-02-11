@@ -2,6 +2,7 @@
 /**
  * @copyright 2017 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Julius Härtl <jus@bitgrid.net>
@@ -26,6 +27,7 @@
 namespace OC\Contacts\ContactsMenu;
 
 use OCP\App\IAppManager;
+use OCP\Constants;
 use OCP\Contacts\ContactsMenu\IEntry;
 use OCP\IConfig;
 use OCP\IUser;
@@ -62,7 +64,7 @@ class Manager {
 	 * @return array
 	 */
 	public function getEntries(IUser $user, $filter) {
-		$maxAutocompleteResults = $this->config->getSystemValueInt('sharing.maxAutocompleteResults', 25);
+		$maxAutocompleteResults = max(0, $this->config->getSystemValueInt('sharing.maxAutocompleteResults', Constants::SHARING_MAX_AUTOCOMPLETE_RESULTS_DEFAULT));
 		$minSearchStringLength = $this->config->getSystemValueInt('sharing.minSearchStringLength', 0);
 		$topEntries = [];
 		if (strlen($filter) >= $minSearchStringLength) {

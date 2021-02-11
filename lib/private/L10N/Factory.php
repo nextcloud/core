@@ -9,6 +9,7 @@
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author GretaD <gretadoci@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -65,6 +66,11 @@ class Factory implements IFactory {
 	/**
 	 * @var array
 	 */
+	protected $localeCache = [];
+
+	/**
+	 * @var array
+	 */
 	protected $availableLocales = [];
 
 	/**
@@ -117,7 +123,7 @@ class Factory implements IFactory {
 		return new LazyL10N(function () use ($app, $lang, $locale) {
 			$app = \OC_App::cleanAppId($app);
 			if ($lang !== null) {
-				$lang = str_replace(['\0', '/', '\\', '..'], '', (string)$lang);
+				$lang = str_replace(['\0', '/', '\\', '..'], '', $lang);
 			}
 
 			$forceLang = $this->config->getSystemValue('force_language', false);
@@ -390,12 +396,14 @@ class Factory implements IFactory {
 			return true;
 		}
 
-		$locales = $this->findAvailableLocales();
-		$userLocale = array_filter($locales, function ($value) use ($locale) {
-			return $locale === $value['code'];
-		});
+		if ($this->localeCache === []) {
+			$locales = $this->findAvailableLocales();
+			foreach ($locales as $l) {
+				$this->localeCache[$l['code']] = true;
+			}
+		}
 
-		return !empty($userLocale);
+		return isset($this->localeCache[$locale]);
 	}
 
 	/**
@@ -609,7 +617,7 @@ class Factory implements IFactory {
 		$forceLanguage = $this->config->getSystemValue('force_language', false);
 		if ($forceLanguage !== false) {
 			$l = $this->get('lib', $forceLanguage);
-			$potentialName = (string) $l->t('__language_name__');
+			$potentialName = $l->t('__language_name__');
 
 			return [
 				'commonlanguages' => [[
@@ -628,7 +636,7 @@ class Factory implements IFactory {
 		foreach ($languageCodes as $lang) {
 			$l = $this->get('lib', $lang);
 			// TRANSLATORS this is the language name for the language switcher in the personal settings and should be the localized version
-			$potentialName = (string) $l->t('__language_name__');
+			$potentialName = $l->t('__language_name__');
 			if ($l->getLanguageCode() === $lang && $potentialName[0] !== '_') {//first check if the language name is in the translation file
 				$ln = [
 					'code' => $lang,

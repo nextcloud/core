@@ -85,6 +85,7 @@ OC.L10N.register(
     "{actor} removed you from the share named {file}" : "{actor} lõpetas sinuga {file} jagamise",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "Fail või kaust mis on jagatud e-posti või avaliku lingiga  <strong>laeti alla</strong>",
     "A file or folder was shared from <strong>another server</strong>" : "Fail või kaust jagati <strong>teisest serverist</strong>",
+    "Files" : "Failid",
     "A file or folder has been <strong>shared</strong>" : "Fail või kataloog on <strong>jagatud</strong>",
     "Shared link" : "Jagatud link",
     "Wrong share ID, share doesn't exist" : "Vale jagamise ID, sellist jagamist ei eksisteeri",
@@ -147,7 +148,6 @@ OC.L10N.register(
     "Password protect" : "Parooliga kaitsmine",
     "Share link" : "Jaga link",
     "Resharing is not allowed" : "Edasijagamine pole lubatud",
-    "Name …" : "Nimi ...",
     "Searching …" : "Otsin ...",
     "Expires {relativetime}" : "Aegub {relativetime}",
     "this share just expired." : "see jagamine aegus äsja",
@@ -171,8 +171,6 @@ OC.L10N.register(
     "Upload files to %s" : "Laadi failid %s",
     "Note" : "Märge",
     "Select or drop files" : "Vali või lohista failid",
-    "Uploaded files:" : "Üleslaetud failid:",
-    "could not delete share" : "ei saanud jagamist eemaldada",
-    "Uploading files…" : "Failide üleslaadimine…"
+    "Uploaded files:" : "Üleslaetud failid:"
 },
 "nplurals=2; plural=(n != 1);");

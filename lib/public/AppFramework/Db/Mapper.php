@@ -49,7 +49,7 @@ abstract class Mapper {
 	 * @since 7.0.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	public function __construct(IDBConnection $db, $tableName, $entityClass=null) {
+	public function __construct(IDBConnection $db, $tableName, $entityClass = null) {
 		$this->db = $db;
 		$this->tableName = '*PREFIX*' . $tableName;
 
@@ -113,7 +113,7 @@ abstract class Mapper {
 			$values .= '?';
 
 			// only append colon if there are more entries
-			if ($i < count($properties)-1) {
+			if ($i < count($properties) - 1) {
 				$columns .= ',';
 				$values .= ',';
 			}
@@ -175,7 +175,7 @@ abstract class Mapper {
 			$columns .= '`' . $column . '` = ?';
 
 			// only append colon if there are more entries
-			if ($i < count($properties)-1) {
+			if ($i < count($properties) - 1) {
 				$columns .= ',';
 			}
 
@@ -233,7 +233,7 @@ abstract class Mapper {
 	 * @since 7.0.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	protected function execute($sql, array $params=[], $limit=null, $offset=null) {
+	protected function execute($sql, array $params = [], $limit = null, $offset = null) {
 		$query = $this->db->prepare($sql, $limit, $offset);
 
 		if ($this->isAssocArray($params)) {
@@ -269,7 +269,7 @@ abstract class Mapper {
 	 * @since 7.0.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	protected function findOneQuery($sql, array $params=[], $limit=null, $offset=null) {
+	protected function findOneQuery($sql, array $params = [], $limit = null, $offset = null) {
 		$stmt = $this->execute($sql, $params, $limit, $offset);
 		$row = $stmt->fetch();
 
@@ -305,7 +305,7 @@ abstract class Mapper {
 	 * @since 9.1.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	private function buildDebugMessage($msg, $sql, array $params=[], $limit=null, $offset=null) {
+	private function buildDebugMessage($msg, $sql, array $params = [], $limit = null, $offset = null) {
 		return $msg .
 					': query "' .	$sql . '"; ' .
 					'parameters ' . print_r($params, true) . '; ' .
@@ -337,7 +337,7 @@ abstract class Mapper {
 	 * @since 7.0.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	protected function findEntities($sql, array $params=[], $limit=null, $offset=null) {
+	protected function findEntities($sql, array $params = [], $limit = null, $offset = null) {
 		$stmt = $this->execute($sql, $params, $limit, $offset);
 
 		$entities = [];
@@ -365,7 +365,7 @@ abstract class Mapper {
 	 * @since 7.0.0
 	 * @deprecated 14.0.0 Move over to QBMapper
 	 */
-	protected function findEntity($sql, array $params=[], $limit=null, $offset=null) {
+	protected function findEntity($sql, array $params = [], $limit = null, $offset = null) {
 		return $this->mapRowToEntity($this->findOneQuery($sql, $params, $limit, $offset));
 	}
 }

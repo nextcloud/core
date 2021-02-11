@@ -216,32 +216,19 @@ class UtilTest extends TestCase {
 
 	public function dataIsBackgroundThemed() {
 		return [
-			[false, false, false],
-			['png', true, true],
-			['backgroundColor', false, false],
+			['', false],
+			['png', true],
+			['backgroundColor', false],
 		];
 	}
 	/**
 	 * @dataProvider dataIsBackgroundThemed
 	 */
-	public function testIsBackgroundThemed($backgroundMime, $fileFound, $expected) {
+	public function testIsBackgroundThemed($backgroundMime, $expected) {
 		$this->config->expects($this->once())
 			->method('getAppValue')
-			->with('theming', 'backgroundMime', false)
+			->with('theming', 'backgroundMime', '')
 			->willReturn($backgroundMime);
-		$folder = $this->createMock(ISimpleFolder::class);
-		if ($fileFound) {
-			$folder->expects($this->once())
-				->method('getFile')
-				->willReturn($this->createMock(ISimpleFile::class));
-		} else {
-			$folder->expects($this->once())
-				->method('getFile')
-				->willThrowException(new NotFoundException());
-		}
-		$this->appData->expects($this->once())
-			->method('getFolder')
-			->willReturn($folder);
 		$this->assertEquals($expected, $this->util->isBackgroundThemed());
 	}
 }

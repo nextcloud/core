@@ -26,10 +26,19 @@
 			:is-no-user="share.type !== SHARE_TYPES.SHARE_TYPE_USER"
 			:user="share.shareWith"
 			:display-name="share.shareWithDisplayName"
+			:tooltip-message="share.type === SHARE_TYPES.SHARE_TYPE_USER ? share.shareWith : ''"
+			:menu-position="'left'"
 			:url="share.shareWithAvatar" />
-		<div v-tooltip.auto="tooltip" class="sharing-entry__desc">
-			<h5>{{ title }}</h5>
-		</div>
+		<component :is="share.shareWithLink ? 'a' : 'div'"
+			:href="share.shareWithLink"
+			v-tooltip.auto="tooltip"
+			class="sharing-entry__desc">
+			<h5>{{ title }}<span v-if="!isUnique" class="sharing-entry__desc-unique"> ({{ share.shareWithDisplayNameUnique }})</span></h5>
+			<p v-if="hasStatus">
+				<span>{{ share.status.icon || '' }}</span>
+				<span>{{ share.status.message || '' }}</span>
+			</p>
+		</component>
 		<Actions
 			menu-align="right"
 			class="sharing-entry__actions"
@@ -66,6 +75,7 @@
 
 				<!-- reshare permission -->
 				<ActionCheckbox
+					v-if="config.isResharingAllowed"
 					ref="canReshare"
 					:checked.sync="canReshare"
 					:value="permissionsShare"
@@ -75,9 +85,9 @@
 
 				<!-- expiration date -->
 				<ActionCheckbox :checked.sync="hasExpirationDate"
-					:disabled="config.isDefaultExpireDateEnforced || saving"
+					:disabled="config.isDefaultInternalExpireDateEnforced || saving"
 					@uncheck="onExpirationDisable">
-					{{ config.isDefaultExpireDateEnforced
+					{{ config.isDefaultInternalExpireDateEnforced
 						? t('files_sharing', 'Expiration date enforced')
 						: t('files_sharing', 'Set expiration date') }}
 				</ActionCheckbox>
@@ -342,6 +352,17 @@ export default {
 				&& moment().add(1 + this.config.defaultInternalExpireDate, 'days')
 		},
 
+		/**
+		 * @returns {bool}
+		 */
+		hasStatus() {
+			if (this.share.type !== this.SHARE_TYPES.SHARE_TYPE_USER) {
+				return false
+			}
+
+			return (typeof this.share.status === 'object' && !Array.isArray(this.share.status))
+		},
+
 	},
 
 	methods: {
@@ -379,6 +400,9 @@ export default {
 		padding: 8px;
 		line-height: 1.2em;
 		p {
+			color: var(--color-text-maxcontrast);
+		}
+		&-unique {
 			color: var(--color-text-maxcontrast);
 		}
 	}

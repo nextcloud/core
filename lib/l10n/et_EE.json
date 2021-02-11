@@ -27,6 +27,7 @@
     "next year" : "järgmine aasta",
     "last year" : "viimasel aastal",
     "_%n year ago_::_%n years ago_" : ["%n aasta tagasi","%n aastat tagasi"],
+    "_%n hour ago_::_%n hours ago_" : ["%n tund tagasi","%n tundi tagasi"],
     "in a few seconds" : "mõne sekundi jooksul",
     "seconds ago" : "sekundit tagasi",
     "File name is a reserved word" : "Failinimi sisaldab keelatud sõna",
@@ -56,7 +57,6 @@
     "Set an admin username." : "Määra admin kasutajanimi.",
     "Set an admin password." : "Määra admini parool.",
     "Can't create or write into the data directory %s" : "Ei suuda luua või kirjutada andmete kataloogi %s",
-    "Invalid Federated Cloud ID" : "Vigane liitpilve ID",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "Jagamise tagarakend %s peab kasutusele võtma OCP\\Share_Backend liidese",
     "Sharing backend %s not found" : "Jagamise tagarakendit %s ei leitud",
     "Sharing backend for %s not found" : "Jagamise tagarakendit %s jaoks ei leitud",
@@ -147,12 +147,6 @@
     "Storage is temporarily not available" : "Salvestusruum pole ajutiselt kättesaadav",
     "Following databases are supported: %s" : "Toetatud on järgnevad andmebaasid: %s",
     "Following platforms are supported: %s" : "Toetatud on järgnevad platformid: %s",
-    "Overview" : "Ülevaade",
-    "Basic settings" : "Põhiseaded",
-    "Sharing" : "Jagamine",
-    "Security" : "Turvalisus",
-    "Groupware" : "Grupitöö",
-    "Personal info" : "Isiklik info",
-    "Mobile & desktop" : "Mobiil ja töölaud"
+    "Invalid Federated Cloud ID" : "Vigane liitpilve ID"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

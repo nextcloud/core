@@ -120,10 +120,13 @@ class Share extends \OC\Share\Constants {
 	 * @return mixed Return depends on format
 	 * @since 5.0.0
 	 * @deprecated 17.0.0
+	 *
+	 * Refactoring notes:
+	 *   * defacto $parameters and $format is always the default and therefore is removed in the subsequent call
 	 */
 	public static function getItemShared($itemType, $itemSource, $format = self::FORMAT_NONE,
 										 $parameters = null, $includeCollections = false) {
-		return \OC\Share\Share::getItemShared($itemType, $itemSource, $format, $parameters, $includeCollections);
+		return \OC\Share\Share::getItemShared($itemType, $itemSource, self::FORMAT_NONE, null, $includeCollections);
 	}
 
 	/**

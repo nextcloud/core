@@ -39,8 +39,8 @@ use OC\Authentication\Exceptions\PasswordlessTokenException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
-use OCP\ILogger;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
 
 class DefaultTokenProvider implements IProvider {
 
@@ -53,7 +53,7 @@ class DefaultTokenProvider implements IProvider {
 	/** @var IConfig */
 	private $config;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var ITimeFactory */
@@ -62,7 +62,7 @@ class DefaultTokenProvider implements IProvider {
 	public function __construct(DefaultTokenMapper $mapper,
 								ICrypto $crypto,
 								IConfig $config,
-								ILogger $logger,
+								LoggerInterface $logger,
 								ITimeFactory $time) {
 		$this->mapper = $mapper;
 		$this->crypto = $crypto;

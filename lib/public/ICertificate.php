@@ -26,7 +26,6 @@ namespace OCP;
 /**
  * Interface ICertificate
  *
- * @package OCP
  * @since 8.0.0
  */
 interface ICertificate {

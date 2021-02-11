@@ -53,13 +53,17 @@ export default {
 		async createShare({ path, permissions, shareType, shareWith, publicUpload, password, sendPasswordByTalk, expireDate, label }) {
 			try {
 				const request = await axios.post(shareUrl, { path, permissions, shareType, shareWith, publicUpload, password, sendPasswordByTalk, expireDate, label })
-				if (!('ocs' in request.data)) {
+				if (!request?.data?.ocs) {
 					throw request
 				}
 				return new Share(request.data.ocs.data)
 			} catch (error) {
 				console.error('Error while creating share', error)
-				OC.Notification.showTemporary(t('files_sharing', 'Error creating the share'), { type: 'error' })
+				const errorMessage = error?.response?.data?.ocs?.meta?.message
+				OC.Notification.showTemporary(
+					errorMessage ? t('files_sharing', 'Error creating the share: {errorMessage}', { errorMessage }) : t('files_sharing', 'Error creating the share'),
+					{ type: 'error' }
+				)
 				throw error
 			}
 		},
@@ -73,13 +77,17 @@ export default {
 		async deleteShare(id) {
 			try {
 				const request = await axios.delete(shareUrl + `/${id}`)
-				if (!('ocs' in request.data)) {
+				if (!request?.data?.ocs) {
 					throw request
 				}
 				return true
 			} catch (error) {
 				console.error('Error while deleting share', error)
-				OC.Notification.showTemporary(t('files_sharing', 'Error deleting the share'), { type: 'error' })
+				const errorMessage = error?.response?.data?.ocs?.meta?.message
+				OC.Notification.showTemporary(
+					errorMessage ? t('files_sharing', 'Error deleting the share: {errorMessage}', { errorMessage }) : t('files_sharing', 'Error deleting the share'),
+					{ type: 'error' }
+				)
 				throw error
 			}
 		},
@@ -93,14 +101,18 @@ export default {
 		async updateShare(id, properties) {
 			try {
 				const request = await axios.put(shareUrl + `/${id}`, properties, headers)
-				if (!('ocs' in request.data)) {
+				if (!request?.data?.ocs) {
 					throw request
 				}
 				return true
 			} catch (error) {
 				console.error('Error while updating share', error)
 				if (error.response.status !== 400) {
-					OC.Notification.showTemporary(t('files_sharing', 'Error updating the share'), { type: 'error' })
+					const errorMessage = error?.response?.data?.ocs?.meta?.message
+					OC.Notification.showTemporary(
+						errorMessage ? t('files_sharing', 'Error updating the share: {errorMessage}', { errorMessage }) : t('files_sharing', 'Error updating the share'),
+						{ type: 'error' }
+					)
 				}
 				const message = error.response.data.ocs.meta.message
 				throw new Error(message)

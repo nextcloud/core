@@ -12,8 +12,9 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Valdnet <47037905+Valdnet@users.noreply.github.com>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -46,7 +47,7 @@ $eventSource = \OC::$server->createEventSource();
 // need to send an initial message to force-init the event source,
 // which will then trigger its own CSRF check and produces its own CSRF error
 // message
-$eventSource->send('success', (string)$l->t('Preparing update'));
+$eventSource->send('success', $l->t('Preparing update'));
 
 class FeedBackHandler {
 	/** @var integer */
@@ -82,23 +83,23 @@ class FeedBackHandler {
 				if (empty($desc)) {
 					$desc = $this->currentStep;
 				}
-				$this->eventSource->send('success', (string)$this->l10n->t('[%d / %d]: %s', [$this->progressStateStep, $this->progressStateMax, $desc]));
+				$this->eventSource->send('success', $this->l10n->t('[%d / %d]: %s', [$this->progressStateStep, $this->progressStateMax, $desc]));
 				break;
 			case '\OC\Repair::finishProgress':
 				$this->progressStateMax = $this->progressStateStep;
-				$this->eventSource->send('success', (string)$this->l10n->t('[%d / %d]: %s', [$this->progressStateStep, $this->progressStateMax, $this->currentStep]));
+				$this->eventSource->send('success', $this->l10n->t('[%d / %d]: %s', [$this->progressStateStep, $this->progressStateMax, $this->currentStep]));
 				break;
 			case '\OC\Repair::step':
-				$this->eventSource->send('success', (string)$this->l10n->t('Repair step:') . ' ' . $event->getArgument(0));
+				$this->eventSource->send('success', $this->l10n->t('Repair step:') . ' ' . $event->getArgument(0));
 				break;
 			case '\OC\Repair::info':
-				$this->eventSource->send('success', (string)$this->l10n->t('Repair info:') . ' ' . $event->getArgument(0));
+				$this->eventSource->send('success', $this->l10n->t('Repair info:') . ' ' . $event->getArgument(0));
 				break;
 			case '\OC\Repair::warning':
-				$this->eventSource->send('notice', (string)$this->l10n->t('Repair warning:') . ' ' . $event->getArgument(0));
+				$this->eventSource->send('notice', $this->l10n->t('Repair warning:') . ' ' . $event->getArgument(0));
 				break;
 			case '\OC\Repair::error':
-				$this->eventSource->send('notice', (string)$this->l10n->t('Repair error:') . ' ' . $event->getArgument(0));
+				$this->eventSource->send('notice', $this->l10n->t('Repair error:') . ' ' . $event->getArgument(0));
 				break;
 		}
 	}
@@ -107,7 +108,7 @@ class FeedBackHandler {
 if (\OCP\Util::needUpgrade()) {
 	$config = \OC::$server->getSystemConfig();
 	if ($config->getValue('upgrade.disable-web', false)) {
-		$eventSource->send('failure', (string)$l->t('Please use the command line updater because automatic updating is disabled in the config.php.'));
+		$eventSource->send('failure', $l->t('Please use the command line updater because automatic updating is disabled in the config.php.'));
 		$eventSource->close();
 		exit();
 	}
@@ -129,12 +130,12 @@ if (\OCP\Util::needUpgrade()) {
 	$dispatcher = \OC::$server->getEventDispatcher();
 	$dispatcher->addListener('\OC\DB\Migrator::executeSql', function ($event) use ($eventSource, $l) {
 		if ($event instanceof GenericEvent) {
-			$eventSource->send('success', (string)$l->t('[%d / %d]: %s', [$event[0], $event[1], $event->getSubject()]));
+			$eventSource->send('success', $l->t('[%d / %d]: %s', [$event[0], $event[1], $event->getSubject()]));
 		}
 	});
 	$dispatcher->addListener('\OC\DB\Migrator::checkTable', function ($event) use ($eventSource, $l) {
 		if ($event instanceof GenericEvent) {
-			$eventSource->send('success', (string)$l->t('[%d / %d]: Checking table %s', [$event[0], $event[1], $event->getSubject()]));
+			$eventSource->send('success', $l->t('[%d / %d]: Checking table %s', [$event[0], $event[1], $event->getSubject()]));
 		}
 	});
 	$feedBack = new FeedBackHandler($eventSource, $l);
@@ -147,49 +148,49 @@ if (\OCP\Util::needUpgrade()) {
 	$dispatcher->addListener('\OC\Repair::error', [$feedBack, 'handleRepairFeedback']);
 
 	$updater->listen('\OC\Updater', 'maintenanceEnabled', function () use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Turned on maintenance mode'));
+		$eventSource->send('success', $l->t('Turned on maintenance mode'));
 	});
 	$updater->listen('\OC\Updater', 'maintenanceDisabled', function () use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Turned off maintenance mode'));
+		$eventSource->send('success', $l->t('Turned off maintenance mode'));
 	});
 	$updater->listen('\OC\Updater', 'maintenanceActive', function () use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Maintenance mode is kept active'));
+		$eventSource->send('success', $l->t('Maintenance mode is kept active'));
 	});
 	$updater->listen('\OC\Updater', 'dbUpgradeBefore', function () use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Updating database schema'));
+		$eventSource->send('success', $l->t('Updating database schema'));
 	});
 	$updater->listen('\OC\Updater', 'dbUpgrade', function () use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Updated database'));
+		$eventSource->send('success', $l->t('Updated database'));
 	});
 	$updater->listen('\OC\Updater', 'dbSimulateUpgradeBefore', function () use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Checking whether the database schema can be updated (this can take a long time depending on the database size)'));
+		$eventSource->send('success', $l->t('Checking whether the database schema can be updated (this can take a long time depending on the database size)'));
 	});
 	$updater->listen('\OC\Updater', 'dbSimulateUpgrade', function () use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Checked database schema update'));
+		$eventSource->send('success', $l->t('Checked database schema update'));
 	});
 	$updater->listen('\OC\Updater', 'appUpgradeCheckBefore', function () use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Checking updates of apps'));
+		$eventSource->send('success', $l->t('Checking updates of apps'));
 	});
 	$updater->listen('\OC\Updater', 'checkAppStoreAppBefore', function ($app) use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Checking for update of app "%s" in appstore', [$app]));
+		$eventSource->send('success', $l->t('Checking for update of app "%s" in appstore', [$app]));
 	});
 	$updater->listen('\OC\Updater', 'upgradeAppStoreApp', function ($app) use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Update app "%s" from appstore', [$app]));
+		$eventSource->send('success', $l->t('Update app "%s" from appstore', [$app]));
 	});
 	$updater->listen('\OC\Updater', 'checkAppStoreApp', function ($app) use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Checked for update of app "%s" in appstore', [$app]));
+		$eventSource->send('success', $l->t('Checked for update of app "%s" in appstore', [$app]));
 	});
 	$updater->listen('\OC\Updater', 'appSimulateUpdate', function ($app) use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Checking whether the database schema for %s can be updated (this can take a long time depending on the database size)', [$app]));
+		$eventSource->send('success', $l->t('Checking whether the database schema for %s can be updated (this can take a long time depending on the database size)', [$app]));
 	});
 	$updater->listen('\OC\Updater', 'appUpgradeCheck', function () use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Checked database schema update for apps'));
+		$eventSource->send('success', $l->t('Checked database schema update for apps'));
 	});
 	$updater->listen('\OC\Updater', 'appUpgrade', function ($app, $version) use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Updated "%1$s" to %2$s', [$app, $version]));
+		$eventSource->send('success', $l->t('Updated "%1$s" to %2$s', [$app, $version]));
 	});
 	$updater->listen('\OC\Updater', 'incompatibleAppDisabled', function ($app) use (&$incompatibleApps) {
-		$incompatibleApps[]= $app;
+		$incompatibleApps[] = $app;
 	});
 	$updater->listen('\OC\Updater', 'failure', function ($message) use ($eventSource, $config) {
 		$eventSource->send('failure', $message);
@@ -197,16 +198,16 @@ if (\OCP\Util::needUpgrade()) {
 		$config->setSystemValue('maintenance', false);
 	});
 	$updater->listen('\OC\Updater', 'setDebugLogLevel', function ($logLevel, $logLevelName) use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Set log level to debug'));
+		$eventSource->send('success', $l->t('Set log level to debug'));
 	});
 	$updater->listen('\OC\Updater', 'resetLogLevel', function ($logLevel, $logLevelName) use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Reset log level'));
+		$eventSource->send('success', $l->t('Reset log level'));
 	});
 	$updater->listen('\OC\Updater', 'startCheckCodeIntegrity', function () use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Starting code integrity check'));
+		$eventSource->send('success', $l->t('Starting code integrity check'));
 	});
 	$updater->listen('\OC\Updater', 'finishedCheckCodeIntegrity', function () use ($eventSource, $l) {
-		$eventSource->send('success', (string)$l->t('Finished code integrity check'));
+		$eventSource->send('success', $l->t('Finished code integrity check'));
 	});
 
 	try {
@@ -223,15 +224,14 @@ if (\OCP\Util::needUpgrade()) {
 
 	$disabledApps = [];
 	foreach ($incompatibleApps as $app) {
-		$disabledApps[$app] = (string) $l->t('%s (incompatible)', [$app]);
+		$disabledApps[$app] = $l->t('%s (incompatible)', [$app]);
 	}
 
 	if (!empty($disabledApps)) {
-		$eventSource->send('notice',
-			(string)$l->t('The following apps have been disabled: %s', [implode(', ', $disabledApps)]));
+		$eventSource->send('notice', $l->t('The following apps have been disabled: %s', [implode(', ', $disabledApps)]));
 	}
 } else {
-	$eventSource->send('notice', (string)$l->t('Already up to date'));
+	$eventSource->send('notice', $l->t('Already up to date'));
 }
 
 $eventSource->send('done', '');

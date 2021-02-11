@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = $vendorDir;
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'OCA\\ContactsInteraction\\AddressBook' => $baseDir . '/../lib/AddressBook.php',
     'OCA\\ContactsInteraction\\AddressBookProvider' => $baseDir . '/../lib/AddressBookProvider.php',
     'OCA\\ContactsInteraction\\AppInfo\\Application' => $baseDir . '/../lib/AppInfo/Application.php',

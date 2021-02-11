@@ -4,6 +4,7 @@
  *
  * @author Arne Hamann <kontakt+github@arne.email>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author call-me-matt <nextcloud@matthiasheinisch.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Georg Ehrke <oc.list@georgehrke.com>
@@ -82,7 +83,6 @@ class AddressBookImpl implements IAddressBook {
 	/**
 	 * @return string defining the unique uri
 	 * @since 16.0.0
-	 * @return string
 	 */
 	public function getUri(): string {
 		return $this->addressBookInfo['uri'];
@@ -147,7 +147,22 @@ class AddressBookImpl implements IAddressBook {
 		}
 
 		foreach ($properties as $key => $value) {
-			$vCard->$key = $vCard->createProperty($key, $value);
+			if (is_array($value)) {
+				$vCard->remove($key);
+				foreach ($value as $entry) {
+					if (($key === "ADR" || $key === "PHOTO") && is_string($entry["value"])) {
+						$entry["value"] = stripslashes($entry["value"]);
+						$entry["value"] = explode(';', $entry["value"]);
+					}
+					$property = $vCard->createProperty($key, $entry["value"]);
+					if (isset($entry["type"])) {
+						$property->add('TYPE', $entry["type"]);
+					}
+					$vCard->add($property);
+				}
+			} elseif ($key !== 'URI') {
+				$vCard->$key = $vCard->createProperty($key, $value);
+			}
 		}
 
 		if ($update) {

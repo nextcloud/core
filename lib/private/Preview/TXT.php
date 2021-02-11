@@ -76,7 +76,7 @@ class TXT extends ProviderV2 {
 		imagecolorallocate($image, 255, 255, 255);
 		$textColor = imagecolorallocate($image, 0, 0, 0);
 
-		$fontFile  = __DIR__;
+		$fontFile = __DIR__;
 		$fontFile .= '/../../../core';
 		$fontFile .= '/fonts/NotoSans-Regular.ttf';
 
@@ -85,7 +85,7 @@ class TXT extends ProviderV2 {
 		foreach ($lines as $index => $line) {
 			$index = $index + 1;
 
-			$x = (int) 1;
+			$x = 1;
 			$y = (int) ($index * $lineSize);
 
 			if ($canUseTTF === true) {

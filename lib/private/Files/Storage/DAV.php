@@ -7,6 +7,7 @@
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Carlos Cerrillo <ccerrillo@gmail.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -16,7 +17,8 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -121,9 +123,6 @@ class DAV extends Common {
 			if ($this->secure === true) {
 				// inject mock for testing
 				$this->certManager = \OC::$server->getCertificateManager();
-				if (is_null($this->certManager)) { //no user
-					$this->certManager = \OC::$server->getCertificateManager(null);
-				}
 			}
 			$this->root = $params['root'] ?? '/';
 			$this->root = '/' . ltrim($this->root, '/');
@@ -488,8 +487,8 @@ class DAV extends Common {
 
 	/**
 	 * @param string $path
-	 * @param string $data
-	 * @return int
+	 * @param mixed $data
+	 * @return int|false
 	 */
 	public function file_put_contents($path, $data) {
 		$path = $this->cleanPath($path);

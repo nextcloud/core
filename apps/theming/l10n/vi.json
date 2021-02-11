@@ -22,7 +22,6 @@
     "Could not write file to disk" : "Không thể ghi tệp lên hệ thống",
     "A PHP extension stopped the file upload" : "Một chức năng mở rộng của PHP đã dừng tải tệp lên",
     "No file uploaded" : "Không có tệp nào được tải lên",
-    "Unsupported image type" : "Loại hình ảnh không được hỗ trợ",
     "You are already using a custom theme. Theming app settings might be overwritten by that." : "Bạn đang sử dụng 1 chủ đề riêng. Các thiết lập của ứng dụng Chủ đề có thể bị ghi đè bởi nó.",
     "Theming" : "Điều chỉnh giao diện",
     "Legal notice" : "Thông cáo pháp lý",

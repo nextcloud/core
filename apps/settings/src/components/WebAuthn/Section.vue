@@ -26,10 +26,10 @@
 			{{ t('settings', 'Set up your account for passwordless authentication following the FIDO2 standard.') }}
 		</p>
 		<p v-if="devices.length === 0">
-			{{ t('twofactor_u2f', 'No devices configured.') }}
+			{{ t('settings', 'No devices configured.') }}
 		</p>
 		<p v-else>
-			{{ t('twofactor_u2f', 'The following devices are configured for your account:') }}
+			{{ t('settings', 'The following devices are configured for your account:') }}
 		</p>
 		<Device v-for="device in sortedDevices"
 			:key="device.id"

@@ -10,6 +10,7 @@ use OCP\AppFramework\Http\Response;
 use OCP\DirectEditing\ACreateEmpty;
 use OCP\DirectEditing\IEditor;
 use OCP\DirectEditing\IToken;
+use OCP\Encryption\IManager;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\IDBConnection;
@@ -104,6 +105,10 @@ class ManagerTest extends TestCase {
 	 * @var MockObject|Folder
 	 */
 	private $userFolder;
+	/**
+	 * @var MockObject|IManager
+	 */
+	private $encryptionManager;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -116,6 +121,7 @@ class ManagerTest extends TestCase {
 		$this->rootFolder = $this->createMock(IRootFolder::class);
 		$this->userFolder = $this->createMock(Folder::class);
 		$this->l10n = $this->createMock(IL10N::class);
+		$this->encryptionManager = $this->createMock(IManager::class);
 
 		$l10nFactory = $this->createMock(IFactory::class);
 		$l10nFactory->expects($this->once())
@@ -128,7 +134,7 @@ class ManagerTest extends TestCase {
 			->willReturn($this->userFolder);
 
 		$this->manager = new Manager(
-			$this->random, $this->connection, $this->userSession, $this->rootFolder, $l10nFactory
+			$this->random, $this->connection, $this->userSession, $this->rootFolder, $l10nFactory, $this->encryptionManager
 		);
 
 		$this->manager->registerDirectEditor($this->editor);

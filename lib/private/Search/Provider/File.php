@@ -6,6 +6,7 @@
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jakob Sack <mail@jakobsack.de>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -43,6 +44,7 @@ class File extends \OCP\Search\Provider {
 	 * @deprecated 20.0.0
 	 */
 	public function search($query) {
+		\OC_Util::setupFS();
 		$files = Filesystem::search($query);
 		$results = [];
 		// edit results

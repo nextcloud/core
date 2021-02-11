@@ -181,4 +181,28 @@ class PredefinedStatusServiceTest extends TestCase {
 			['unknown-id', false],
 		];
 	}
+
+	public function testGetDefaultStatusById(): void {
+		$this->l10n->expects($this->exactly(5))
+			->method('t')
+			->withConsecutive(
+				['In a meeting'],
+				['Commuting'],
+				['Working remotely'],
+				['Out sick'],
+				['Vacationing']
+			)
+			->willReturnArgument(0);
+
+		$this->assertEquals([
+			'id' => 'vacationing',
+			'icon' => '🌴',
+			'message' => 'Vacationing',
+			'clearAt' => null,
+		], $this->service->getDefaultStatusById('vacationing'));
+	}
+
+	public function testGetDefaultStatusByUnknownId(): void {
+		$this->assertNull($this->service->getDefaultStatusById('unknown'));
+	}
 }

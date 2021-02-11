@@ -4,6 +4,7 @@
  *
  * @author Guillaume COMPAGNON <gcompagnon@outlook.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julien Veyssier <eneiluj@posteo.net>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
  *
@@ -68,7 +69,7 @@ class Capabilities implements IPublicCapability {
 	 * @return array
 	 */
 	public function getCapabilities() {
-		$backgroundLogo = $this->config->getAppValue('theming', 'backgroundMime', false);
+		$backgroundLogo = $this->config->getAppValue('theming', 'backgroundMime', '');
 		$color = $this->theming->getColorPrimary();
 		return [
 			'theming' => [
@@ -81,10 +82,10 @@ class Capabilities implements IPublicCapability {
 				'color-element-bright' => $this->util->elementColor($color),
 				'color-element-dark' => $this->util->elementColor($color, false),
 				'logo' => $this->url->getAbsoluteURL($this->theming->getLogo()),
-				'background' => $backgroundLogo === 'backgroundColor' || ($backgroundLogo === false && $this->theming->getColorPrimary() !== '#0082c9') ?
+				'background' => $backgroundLogo === 'backgroundColor' || ($backgroundLogo === '' && $this->theming->getColorPrimary() !== '#0082c9') ?
 					$this->theming->getColorPrimary() :
 					$this->url->getAbsoluteURL($this->theming->getBackground()),
-				'background-plain' => $backgroundLogo === 'backgroundColor' || ($backgroundLogo === false && $this->theming->getColorPrimary() !== '#0082c9'),
+				'background-plain' => $backgroundLogo === 'backgroundColor' || ($backgroundLogo === '' && $this->theming->getColorPrimary() !== '#0082c9'),
 				'background-default' => !$this->util->isBackgroundThemed(),
 				'logoheader' => $this->url->getAbsoluteURL($this->theming->getLogo()),
 				'favicon' => $this->url->getAbsoluteURL($this->theming->getLogo()),

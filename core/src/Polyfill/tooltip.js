@@ -25,11 +25,15 @@ $.prototype.tooltip = (function(tooltip) {
 			return tooltip.call(this, config)
 		} catch (ex) {
 			if (ex instanceof TypeError && config === 'destroy') {
-				console.error('Deprecated call $.tooltip(\'destroy\') has been deprecated and should be removed')
+				if (window.TESTING === undefined) {
+					console.error('Deprecated call $.tooltip(\'destroy\') has been deprecated and should be removed')
+				}
 				return tooltip.call(this, 'dispose')
 			}
 			if (ex instanceof TypeError && config === 'fixTitle') {
-				console.error('Deprecated call $.tooltip(\'fixTitle\') has been deprecated and should be removed')
+				if (window.TESTING === undefined) {
+					console.error('Deprecated call $.tooltip(\'fixTitle\') has been deprecated and should be removed')
+				}
 				return tooltip.call(this, '_fixTitle')
 			}
 		}

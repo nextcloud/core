@@ -13,14 +13,19 @@
     },
     "require": {
         "ext-json": "*",
-        "ext-pdo": "*"
-    },
+        "ext-libxml": "*",
+        "ext-pdo": "*",
+        "ext-simplexml": "*",
+        "ext-xmlreader": "*"
+	},
     "require-dev": {
-        "nextcloud/coding-standard": "^0.3.0"
+        "nextcloud/coding-standard": "^0.3.0",
+        "vimeo/psalm": "^4.0"
     },
     "scripts": {
         "cs:fix": "php-cs-fixer fix",
         "cs:check": "php-cs-fixer fix --dry-run --diff",
-        "lint": "find . -name \\*.php -not -path './lib/composer/*' -not -path './build/.phan/*' -print0 | xargs -0 -n1 php -l"
+        "lint": "find . -name \\*.php -not -path './lib/composer/*' -not -path './build/stubs/*' -print0 | xargs -0 -n1 php -l",
+        "psalm": "psalm"
     }
 }

@@ -49,31 +49,31 @@ abstract class Backend extends \Test\TestCase {
 
 	public function testAddRemove() {
 		//get the number of groups we start with, in case there are exising groups
-		$startCount=count($this->backend->getUsers());
+		$startCount = count($this->backend->getUsers());
 
-		$name1=$this->getUser();
-		$name2=$this->getUser();
+		$name1 = $this->getUser();
+		$name2 = $this->getUser();
 		$this->backend->createUser($name1, '');
-		$count=count($this->backend->getUsers())-$startCount;
+		$count = count($this->backend->getUsers()) - $startCount;
 		$this->assertEquals(1, $count);
-		$this->assertTrue((array_search($name1, $this->backend->getUsers())!==false));
-		$this->assertFalse((array_search($name2, $this->backend->getUsers())!==false));
+		$this->assertTrue((array_search($name1, $this->backend->getUsers()) !== false));
+		$this->assertFalse((array_search($name2, $this->backend->getUsers()) !== false));
 		$this->backend->createUser($name2, '');
-		$count=count($this->backend->getUsers())-$startCount;
+		$count = count($this->backend->getUsers()) - $startCount;
 		$this->assertEquals(2, $count);
-		$this->assertTrue((array_search($name1, $this->backend->getUsers())!==false));
-		$this->assertTrue((array_search($name2, $this->backend->getUsers())!==false));
+		$this->assertTrue((array_search($name1, $this->backend->getUsers()) !== false));
+		$this->assertTrue((array_search($name2, $this->backend->getUsers()) !== false));
 
 		$this->backend->deleteUser($name2);
-		$count=count($this->backend->getUsers())-$startCount;
+		$count = count($this->backend->getUsers()) - $startCount;
 		$this->assertEquals(1, $count);
-		$this->assertTrue((array_search($name1, $this->backend->getUsers())!==false));
-		$this->assertFalse((array_search($name2, $this->backend->getUsers())!==false));
+		$this->assertTrue((array_search($name1, $this->backend->getUsers()) !== false));
+		$this->assertFalse((array_search($name2, $this->backend->getUsers()) !== false));
 	}
 
 	public function testLogin() {
-		$name1=$this->getUser();
-		$name2=$this->getUser();
+		$name1 = $this->getUser();
+		$name2 = $this->getUser();
 
 		$this->assertFalse($this->backend->userExists($name1));
 		$this->assertFalse($this->backend->userExists($name2));

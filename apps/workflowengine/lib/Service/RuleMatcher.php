@@ -62,6 +62,8 @@ class RuleMatcher implements IRuleMatcher {
 	protected $entity;
 	/** @var Logger */
 	protected $logger;
+	/** @var string */
+	protected $eventName;
 
 	public function __construct(
 		IUserSession $session,
@@ -99,6 +101,13 @@ class RuleMatcher implements IRuleMatcher {
 			throw new RuntimeException('This method must not be called more than once');
 		}
 		$this->entity = $entity;
+	}
+
+	public function setEventName(string $eventName): void {
+		if ($this->eventName !== null) {
+			throw new RuntimeException('This method must not be called more than once');
+		}
+		$this->eventName = $eventName;
 	}
 
 	public function getEntity(): IEntity {
@@ -155,6 +164,11 @@ class RuleMatcher implements IRuleMatcher {
 
 		$matches = [];
 		foreach ($operations as $operation) {
+			$configuredEvents = json_decode($operation['events'], true);
+			if ($this->eventName !== null && !in_array($this->eventName, $configuredEvents)) {
+				continue;
+			}
+
 			$checkIds = json_decode($operation['checks'], true);
 			$checks = $this->manager->getChecks($checkIds);
 

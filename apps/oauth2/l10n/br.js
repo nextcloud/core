@@ -1,19 +1,19 @@
 OC.L10N.register(
     "oauth2",
     {
-    "Your client is not authorized to connect. Please inform the administrator of your client." : "N'eo ket aotreet ho kliant d'en em kenstagañ. Galvit administratour ho kliant.",
+    "Your client is not authorized to connect. Please inform the administrator of your client." : "N'eo ket aotreet ho kliant d'en em kenstagañ. Galvit merour ho kliant.",
     "Your redirect URL needs to be a full URL for example: https://yourdomain.com/path" : "Ho adhenter URL en deus ezhomm bezhañ un URL klog da skouer : https://yourdomain.com/path",
     "OAuth 2.0" : "OAuth 2.0",
     "Allows OAuth2 compatible authentication from other web applications." : "Oatreit an dilesa a glot gant OAuth 2.0 diouzh ho meziant web.",
-    "The OAuth2 app allows administrators to configure the built-in authentication workflow to also allow OAuth2 compatible authentication from other web applications." : "Aotreant a raio ar meziant OAuth 2.0 an administratourienn da arventennoù evit an dilesa red-labour e-barzh evit aotreañ an dilesa a glot gant OAuth 2.0 eus meziantoù web all.",
+    "The OAuth2 app allows administrators to configure the built-in authentication workflow to also allow OAuth2 compatible authentication from other web applications." : "Aotreant a raio ar meziant OAuth 2.0 ar merour da arventennoù evit an dilesa red-labour e-barzh evit aotreañ an dilesa a glot gant OAuth 2.0 eus meziantoù web all.",
     "OAuth 2.0 clients" : "Kliant OAuth 2.0",
     "OAuth 2.0 allows external services to request access to {instanceName}." : "Aotreañ a ra OAuth 2.0 ar servijourienn diavaez da goulenn tizhout {instanceName}.",
+    "Add client" : "Ouzhoennañ kliant",
     "Name" : "Anv",
     "Redirection URI" : "Adhent URL",
+    "Add" : "Ouzhpennañ",
     "Client Identifier" : "Anavezer Kliant",
     "Secret" : "Sekret",
-    "Add client" : "Ouzhoennañ kliant",
-    "Add" : "Ouzhpennañ",
     "Show client secret" : "Diskouez sekret ar kliant",
     "Delete" : "Dilemel"
 },

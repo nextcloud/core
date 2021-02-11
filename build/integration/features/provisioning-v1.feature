@@ -71,12 +71,12 @@ Feature: provisioning
 		And the HTTP status code should be "200"
 		And sending "PUT" to "/cloud/users/brand-new-user" with
 			| key | email |
-			| value | brand-new-user@gmail.com |
+			| value | no-reply@nextcloud.com |
 		And the OCS status code should be "100"
 		And the HTTP status code should be "200"
 		And sending "PUT" to "/cloud/users/brand-new-user" with
 			| key | phone |
-			| value | 0123 456 789 |
+			| value | +49 711 / 25 24 28-90 |
 		And the OCS status code should be "100"
 		And the HTTP status code should be "200"
 		And sending "PUT" to "/cloud/users/brand-new-user" with
@@ -97,11 +97,28 @@ Feature: provisioning
 		Then user "brand-new-user" has
 			| id | brand-new-user |
 			| displayname | Brand New User |
-			| email | brand-new-user@gmail.com |
-			| phone | 0123 456 789 |
+			| email | no-reply@nextcloud.com |
+			| phone | +4971125242890 |
 			| address | Foo Bar Town |
 			| website | https://nextcloud.com |
 			| twitter | Nextcloud |
+
+	Scenario: Search by phone number
+		Given As an "admin"
+		And user "phone-user" exists
+		And sending "PUT" to "/cloud/users/phone-user" with
+			| key | phone |
+			| value | +49 711 / 25 24 28-90 |
+		And the OCS status code should be "100"
+		And the HTTP status code should be "200"
+		Then search users by phone for region "DE" with
+			| random-string1 | 0711 / 123 456 78 |
+			| random-string1 | 0711 / 252 428-90 |
+			| random-string2 | 0711 / 90-824 252 |
+		And the OCS status code should be "100"
+		And the HTTP status code should be "200"
+		Then phone matches returned are
+			| random-string1 | phone-user@localhost:8080 |
 
 	Scenario: Create a group
 		Given As an "admin"
@@ -349,6 +366,7 @@ Feature: provisioning
 			| user_status |
 			| viewer |
 			| workflowengine |
+			| weather_status |
 			| files_external |
 			| oauth2 |
 

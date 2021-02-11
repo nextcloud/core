@@ -31,7 +31,6 @@ use RuntimeException;
 /**
  * Class IRuleMatcher
  *
- * @package OCP\WorkflowEngine
  *
  * @since 18.0.0
  */
@@ -78,4 +77,14 @@ interface IRuleMatcher extends IFileCheck {
 	 * @since 18.0.0
 	 */
 	public function getEntity(): IEntity;
+
+	/**
+	 * this method can be called once to set the event name that is currently
+	 * being processed. The workflow engine takes care of this usually, only an
+	 * IComplexOperation might want to make use of it.
+	 *
+	 * @throws RuntimeException
+	 * @since 20.0.0
+	 */
+	public function setEventName(string $eventName): void;
 }

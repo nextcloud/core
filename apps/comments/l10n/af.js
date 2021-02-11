@@ -15,18 +15,19 @@ OC.L10N.register(
     "Files app plugin to add comments to files" : "Lêertoepinprop om kommentaar op lêers te lewer",
     "Edit comment" : "Wysig kommentaar",
     "Delete comment" : "Skrap kommentaar",
+    "No comments yet, start the conversation!" : "Nog geen kommentaar, begin die gesprek!",
+    "Retry" : "Herprobeer",
+    "_%n unread comment_::_%n unread comments_" : ["%n ongelese kommentaar","%n ongelese kommentare"],
+    "Comment" : "Kommentaar",
     "New comment …" : "Nuwe kommentaar…",
     "Post" : "Plaas",
     "Cancel" : "Kanselleer",
     "[Deleted user]" : "[Geskrapte gebruiker]",
-    "No comments yet, start the conversation!" : "Nog geen kommentaar, begin die gesprek!",
     "More comments …" : "Nog kommentare …",
     "Save" : "Bewaar",
     "Allowed characters {count} of {max}" : "Toegelate karakters {telling} van {maks}",
     "Error occurred while retrieving comment with ID {id}" : "’n Fout het voorgekom toe kommentaar met ID {id} opgehaal is",
     "Error occurred while updating comment with id {id}" : "’n Fout het voorgekom toe kommentaar met ID {id} bygewerk is",
-    "Error occurred while posting comment" : "’n Fout het voorgekom toe kommentaar geplaas is",
-    "_%n unread comment_::_%n unread comments_" : ["%n ongelese kommentaar","%n ongelese kommentare"],
-    "Comment" : "Kommentaar"
+    "Error occurred while posting comment" : "’n Fout het voorgekom toe kommentaar geplaas is"
 },
 "nplurals=2; plural=(n != 1);");

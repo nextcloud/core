@@ -1,12 +1,12 @@
 { "translations": {
     "OAuth 2.0" : "O.Auth 2.0",
     "OAuth 2.0 clients" : "Klientë OAuth 2.0",
+    "Add client" : "Shto klient",
     "Name" : "Emri",
     "Redirection URI" : "URI Ridrejtimi",
+    "Add" : "Shto ",
     "Client Identifier" : "Identifikues Klienti",
     "Secret" : "Sekret",
-    "Add client" : "Shto klient",
-    "Add" : "Shto ",
     "Delete" : "Delete"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

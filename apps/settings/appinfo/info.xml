@@ -5,7 +5,7 @@
 	<name>Nextcloud settings</name>
 	<summary>Nextcloud settings</summary>
 	<description>Nextcloud settings</description>
-	<version>1.2.0</version>
+	<version>1.3.0</version>
 	<licence>agpl</licence>
 	<author>Nextcloud</author>
 	<namespace>Settings</namespace>
@@ -14,7 +14,7 @@
 	<category>customization</category>
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 	<dependencies>
-		<nextcloud min-version="20" max-version="20"/>
+		<nextcloud min-version="22" max-version="22"/>
 	</dependencies>
 
 	<settings>

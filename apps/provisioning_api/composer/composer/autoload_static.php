@@ -21,6 +21,7 @@ class ComposerStaticInitProvisioning_API
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'OCA\\Provisioning_API\\AppInfo\\Application' => __DIR__ . '/..' . '/../lib/AppInfo/Application.php',
         'OCA\\Provisioning_API\\Controller\\AUserData' => __DIR__ . '/..' . '/../lib/Controller/AUserData.php',
         'OCA\\Provisioning_API\\Controller\\AppConfigController' => __DIR__ . '/..' . '/../lib/Controller/AppConfigController.php',

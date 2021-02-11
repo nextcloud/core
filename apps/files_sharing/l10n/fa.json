@@ -91,6 +91,7 @@
     "Share for file {file} expired" : "برای اشتراک {پرونده }منقضی شد",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "یک پرونده یا پوشه به اشتراک گذاشته شده از طریق پست یا از طریق لینک عمومی بارگیری شد",
     "A file or folder was shared from <strong>another server</strong>" : "یک پرونده یا پوشه از سرور دیگر به اشتراک گذاشته شد",
+    "Files" : "فایل‌ها",
     "A file or folder has been <strong>shared</strong>" : "فایل یا پوشه ای به <strong>اشتراک</strong> گذاشته شد",
     "Shared link" : "پیوند به اشتراک گذاری شده",
     "Wrong share ID, share doesn't exist" : "شناسه اشتراك اشتباه ، اشتراك وجود ندارد",
@@ -178,10 +179,6 @@
     "Error, please enter proper password and/or expiration date" : "خطا ، لطفاً رمز عبور مناسب و یا تاریخ انقضا را وارد کنید",
     "No recommendations. Start typing." : "هیچ توصیه ای نیست شروع به تایپ کنید.",
     "Resharing is not allowed" : "اشتراک گذاری مجدد مجاز نمی باشد",
-    "Name or email address …" : "نام یا آدرس ایمیل…",
-    "Name or federated cloud ID …" : "نام یا شناسه ابر فدرال شده ...",
-    "Name, federated cloud ID or email address …" : "نام ، شناسه ابر فدرال شده یا آدرس ایمیل…",
-    "Name …" : "نام …",
     "Searching …" : "جستجوکردن …",
     "No elements found." : "عنصری یافت نشد",
     "Search globally" : "در سطح جهان جستجو کنید",
@@ -222,8 +219,6 @@
     "Note" : "یادداشت",
     "Select or drop files" : "پرونده ها را انتخاب یا رها کنید",
     "Uploaded files:" : "پرونده های بارگذاری شده:",
-    "By uploading files, you agree to the %1$sterms of service%2$s." : "%2$sبا بارگذاری پرونده ها ، شما با %1$sشرایط خدمات موافقت می کنید",
-    "could not delete share" : "نتوانست اشتراک را حذف کند",
-    "Uploading files…" : "بارگذاری پرونده ها ..."
+    "By uploading files, you agree to the %1$sterms of service%2$s." : "%2$sبا بارگذاری پرونده ها ، شما با %1$sشرایط خدمات موافقت می کنید"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

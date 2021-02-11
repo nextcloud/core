@@ -56,4 +56,10 @@ interface ICacheEvent {
 	 * @since 16.0.0
 	 */
 	public function getFileId(): int;
+
+	/**
+	 * @return int
+	 * @since 21.0.0
+	 */
+	public function getStorageId(): int;
 }

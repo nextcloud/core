@@ -26,6 +26,9 @@ declare(strict_types=1);
 
 namespace OCA\Settings\Settings\Personal\Security;
 
+use Exception;
+use OC\Authentication\TwoFactorAuth\MandatoryTwoFactor;
+use OCA\TwoFactorBackupCodes\Provider\BackupCodesProvider;
 use function array_filter;
 use function array_map;
 use function is_null;
@@ -42,6 +45,9 @@ class TwoFactor implements ISettings {
 	/** @var ProviderLoader */
 	private $providerLoader;
 
+	/** @var MandatoryTwoFactor */
+	private $mandatoryTwoFactor;
+
 	/** @var IUserSession */
 	private $userSession;
 
@@ -52,10 +58,12 @@ class TwoFactor implements ISettings {
 	private $config;
 
 	public function __construct(ProviderLoader $providerLoader,
+								MandatoryTwoFactor $mandatoryTwoFactor,
 								IUserSession $userSession,
 								IConfig $config,
 								?string $UserId) {
 		$this->providerLoader = $providerLoader;
+		$this->mandatoryTwoFactor = $mandatoryTwoFactor;
 		$this->userSession = $userSession;
 		$this->uid = $UserId;
 		$this->config = $config;
@@ -68,12 +76,44 @@ class TwoFactor implements ISettings {
 		]);
 	}
 
-	public function getSection(): string {
+	public function getSection(): ?string {
+		if (!$this->shouldShow()) {
+			return null;
+		}
 		return 'security';
 	}
 
 	public function getPriority(): int {
 		return 15;
+	}
+
+	private function shouldShow(): bool {
+		$user = $this->userSession->getUser();
+		if (is_null($user)) {
+			// Actually impossible, but still …
+			return false;
+		}
+
+		// Anyone who's supposed to use 2FA should see 2FA settings
+		if ($this->mandatoryTwoFactor->isEnforcedFor($user)) {
+			return true;
+		}
+
+		// If there is at least one provider with personal settings but it's not
+		// the backup codes provider, then these settings should show.
+		try {
+			$providers = $this->providerLoader->getProviders($user);
+		} catch (Exception $e) {
+			// Let's hope for the best
+			return true;
+		}
+		foreach ($providers as $provider) {
+			if ($provider instanceof IProvidesPersonalSettings
+				&& !($provider instanceof BackupCodesProvider)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private function getTwoFactorProviderData(): array {

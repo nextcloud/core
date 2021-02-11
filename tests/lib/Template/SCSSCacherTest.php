@@ -23,6 +23,7 @@
 
 namespace Test\Template;
 
+use OC\AppConfig;
 use OC\Files\AppData\AppData;
 use OC\Files\AppData\Factory;
 use OC\Template\IconsCacher;
@@ -55,11 +56,15 @@ class SCSSCacherTest extends \Test\TestCase {
 	/** @var ICache|\PHPUnit\Framework\MockObject\MockObject */
 	protected $depsCache;
 	/** @var ICacheFactory|\PHPUnit\Framework\MockObject\MockObject */
+	protected $isCachedCache;
+	/** @var ICacheFactory|\PHPUnit\Framework\MockObject\MockObject */
 	protected $cacheFactory;
 	/** @var IconsCacher|\PHPUnit\Framework\MockObject\MockObject */
 	protected $iconsCacher;
 	/** @var ITimeFactory|\PHPUnit\Framework\MockObject\MockObject */
 	protected $timeFactory;
+	/** @var AppConfig|\PHPUnit\Framework\MockObject\MockObject */
+	protected $appConfig;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -78,11 +83,22 @@ class SCSSCacherTest extends \Test\TestCase {
 			->willReturn('http://localhost/nextcloud');
 
 		$this->config = $this->createMock(IConfig::class);
+		$this->config->expects($this->any())
+			->method('getAppValue')
+			->will($this->returnCallback(function ($appId, $configKey, $defaultValue) {
+				return $defaultValue;
+			}));
 		$this->cacheFactory = $this->createMock(ICacheFactory::class);
 		$this->depsCache = $this->createMock(ICache::class);
-		$this->cacheFactory->expects($this->at(0))
+		$this->isCachedCache = $this->createMock(ICache::class);
+		$this->cacheFactory
 			->method('createDistributed')
-			->willReturn($this->depsCache);
+			->withConsecutive()
+			->willReturnOnConsecutiveCalls(
+				$this->depsCache,
+				$this->isCachedCache,
+				$this->createMock(ICache::class)
+			);
 
 		$this->themingDefaults = $this->createMock(ThemingDefaults::class);
 		$this->themingDefaults->expects($this->any())->method('getScssVariables')->willReturn([]);
@@ -91,6 +107,8 @@ class SCSSCacherTest extends \Test\TestCase {
 		$this->iconsCacher->expects($this->any())
 			->method('getCachedCSS')
 			->willReturn($iconsFile);
+
+		$this->appConfig = $this->createMock(AppConfig::class);
 
 		$this->scssCacher = new SCSSCacher(
 			$this->logger,
@@ -101,7 +119,8 @@ class SCSSCacherTest extends \Test\TestCase {
 			\OC::$SERVERROOT,
 			$this->cacheFactory,
 			$this->iconsCacher,
-			$this->timeFactory
+			$this->timeFactory,
+			$this->appConfig
 		);
 	}
 
@@ -526,11 +545,10 @@ class SCSSCacherTest extends \Test\TestCase {
 			->method('getDirectoryListing')
 			->willReturn([$file]);
 
-		$cache = $this->createMock(ICache::class);
-		$this->cacheFactory->expects($this->exactly(2))
-			->method('createDistributed')
-			->willReturn($cache);
-		$cache->expects($this->exactly(2))
+		$this->depsCache->expects($this->once())
+			->method('clear')
+			->with('');
+		$this->isCachedCache->expects($this->once())
 			->method('clear')
 			->with('');
 		$this->appData->expects($this->once())

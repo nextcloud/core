@@ -26,7 +26,6 @@ namespace OCP\Calendar\Resource;
 /**
  * Interface IResource
  *
- * @package OCP\Calendar\Resource
  * @since 14.0.0
  */
 interface IResource {

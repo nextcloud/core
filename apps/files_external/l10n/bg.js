@@ -68,7 +68,6 @@ OC.L10N.register(
     "Available for" : "Достъпно за",
     "Add storage" : "Добави хранилище",
     "Advanced settings" : "Допълнителни настройки",
-    "Allow users to mount external storage" : "Разреши на потребителите да монтират външни хранилища",
-    "Saving..." : "Запазване..."
+    "Allow users to mount external storage" : "Разреши на потребителите да монтират външни хранилища"
 },
 "nplurals=2; plural=(n != 1);");

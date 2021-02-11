@@ -1,4 +1,4 @@
-/*
+/**
  * @copyright Copyright (c) 2018 John Molakvoæ <skjnldsv@protonmail.com>
  *
  * @author John Molakvoæ <skjnldsv@protonmail.com>
@@ -26,8 +26,8 @@ import Router from 'vue-router'
 import { generateUrl } from '@nextcloud/router'
 
 // Dynamic loading
-const Users = () => import('./views/Users')
-const Apps = () => import('./views/Apps')
+const Users = () => import(/* webpackChunkName: 'settings-users' */'./views/Users')
+const Apps = () => import(/* webpackChunkName: 'settings-apps' */'./views/Apps')
 
 Vue.use(Router)
 

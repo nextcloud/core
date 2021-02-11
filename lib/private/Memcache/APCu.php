@@ -5,7 +5,7 @@
  * @author Andreas Fischer <bantu@owncloud.com>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Clark Tomlinson <fallen013@gmail.com>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -28,6 +28,7 @@
 
 namespace OC\Memcache;
 
+use bantu\IniGetWrapper\IniGetWrapper;
 use OCP\IMemcache;
 
 class APCu extends Cache implements IMemcache {
@@ -154,9 +155,9 @@ class APCu extends Cache implements IMemcache {
 	public static function isAvailable() {
 		if (!extension_loaded('apcu')) {
 			return false;
-		} elseif (!\OC::$server->getIniWrapper()->getBool('apc.enabled')) {
+		} elseif (!\OC::$server->get(IniGetWrapper::class)->getBool('apc.enabled')) {
 			return false;
-		} elseif (!\OC::$server->getIniWrapper()->getBool('apc.enable_cli') && \OC::$CLI) {
+		} elseif (!\OC::$server->get(IniGetWrapper::class)->getBool('apc.enable_cli') && \OC::$CLI) {
 			return false;
 		} elseif (
 				version_compare(phpversion('apc') ?: '0.0.0', '4.0.6') === -1 &&

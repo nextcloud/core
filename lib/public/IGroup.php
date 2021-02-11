@@ -8,7 +8,7 @@
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -31,7 +31,6 @@ namespace OCP;
 /**
  * Interface IGroup
  *
- * @package OCP
  * @since 8.0.0
  */
 interface IGroup {

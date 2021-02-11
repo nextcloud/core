@@ -23,12 +23,12 @@ OC.L10N.register(
     "A non-default update server is in use to be checked for updates:" : "Stai utilizzando un server non predefinito per controllare gli aggiornamenti:",
     "Update channel:" : "Canale di aggiornamento:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Puoi aggiornare sempre a una nuova versione. Ma non puoi mai tornare a una versione precedente.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Nota che, dopo una nuova versione, potrebbe essere necessario del tempo prima che sia mostrato qui. Rilasciamo nel tempo nuove versioni ai nostri utenti e, a volte, saltiamo una versione, se troviamo dei problemi.",
     "Notify members of the following groups about available updates:" : "Notifica ai membri dei seguenti gruppi la disponibilità di aggiornamenti:",
     "Only notification for app updates are available." : "Sono disponibili solo le notifiche per gli aggiornamenti delle applicazioni.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "Il canale di aggiornamento selezionato rende obsolete le notifiche dedicate al server.",
     "The selected update channel does not support updates of the server." : "Il canale di aggiornamento selezionato non supporta gli aggiornamenti del server.",
     "A new version is available: <strong>{newVersionString}</strong>" : "Una nuova versione è disponibile: <strong>{newVersionString}</strong>",
+    "Note that after a new release the update only shows up after the first minor release or later. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found. Learn more about updates and release channels at {link}" : "Nota che, dopo una nuova versione, l'aggiornamento viene visualizzato solo dopo la prima versione minore o successivamente. Rilasciamo nel tempo nuove versioni ai nostri utenti e, a volte, saltiamo una versione, se troviamo dei problemi. Ulteriori informazioni sugli aggiornamenti e sui canali di rilascio su {link} ",
     "Checked on {lastCheckedDate}" : "Controllato il {lastCheckedDate}",
     "Checking apps for compatible updates" : "Controlla le applicazioni per aggiornamenti compatibili",
     "Please make sure your config.php does not set <samp>appstoreenabled</samp> to false." : "Assicurati che il tuo config.php non abbia <samp>appstoreenabled</samp> impostata a false.",
@@ -41,6 +41,7 @@ OC.L10N.register(
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "La versione stabile più recente. È appropriata per l'utilizzo di tutti i giorni e sarà sempre aggiornata all'ultima versione principale.",
     "Beta" : "Beta",
     "A pre-release version only for testing new features, not for production environments." : "Una versione pre-rilascio solo per provare le nuove funzionalità, non per ambienti di produzione.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> applicazione non ha un aggiornamento disponibile per questa versione","<strong>%n</strong> applicazioni non hanno un aggiornamento disponibile per questa versione"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> applicazione non ha un aggiornamento disponibile per questa versione","<strong>%n</strong> applicazioni non hanno un aggiornamento disponibile per questa versione"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Nota che, dopo una nuova versione, potrebbe essere necessario del tempo prima che sia mostrato qui. Rilasciamo nel tempo nuove versioni ai nostri utenti e, a volte, saltiamo una versione, se troviamo dei problemi."
 },
 "nplurals=2; plural=(n != 1);");

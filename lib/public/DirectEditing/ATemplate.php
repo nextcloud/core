@@ -28,7 +28,6 @@ use JsonSerializable;
 /**
  * Class ATemplate
  *
- * @package OCP\DirectEditing
  * @since 18.0.0
  */
 abstract class ATemplate implements JsonSerializable {

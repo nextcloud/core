@@ -17,7 +17,7 @@
  * @author Ross Nicoll <jrn@jrn.me.uk>
  * @author SA <stephen@mthosting.net>
  * @author Senorsen <senorsen.zhang@gmail.com>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -86,7 +86,7 @@ class SFTP extends \OC\Files\Storage\Common {
 		// Register sftp://
 		Stream::register();
 
-		$parsedHost =  $this->splitHost($params['host']);
+		$parsedHost = $this->splitHost($params['host']);
 
 		$this->host = $parsedHost[0];
 		$this->port = $parsedHost[1];
@@ -141,6 +141,7 @@ class SFTP extends \OC\Files\Storage\Common {
 
 		$login = false;
 		foreach ($this->auth as $auth) {
+			/** @psalm-suppress TooManyArguments */
 			$login = $this->client->login($this->user, $auth);
 			if ($login === true) {
 				break;
@@ -404,7 +405,7 @@ class SFTP extends \OC\Files\Storage\Common {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function touch($path, $mtime=null) {
+	public function touch($path, $mtime = null) {
 		try {
 			if (!is_null($mtime)) {
 				return false;
@@ -427,15 +428,6 @@ class SFTP extends \OC\Files\Storage\Common {
 	 */
 	public function getFile($path, $target) {
 		$this->getConnection()->get($path, $target);
-	}
-
-	/**
-	 * @param string $path
-	 * @param string $target
-	 * @throws \Exception
-	 */
-	public function uploadFile($path, $target) {
-		$this->getConnection()->put($target, $path, NET_SFTP_LOCAL_FILE);
 	}
 
 	/**

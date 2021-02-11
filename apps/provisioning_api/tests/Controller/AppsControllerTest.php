@@ -101,7 +101,7 @@ class AppsControllerTest extends \OCA\Provisioning_API\Tests\TestCase {
 		$result = $this->api->getApps('disabled');
 		$data = $result->getData();
 		$apps = (new \OC_App)->listAllApps();
-		$list =  [];
+		$list = [];
 		foreach ($apps as $app) {
 			$list[] = $app['id'];
 		}

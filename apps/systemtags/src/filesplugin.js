@@ -31,9 +31,14 @@
 				return
 			}
 
-			const systemTagsInfoView = new OCA.SystemTags.SystemTagsInfoView()
-			fileList.registerDetailView(systemTagsInfoView)
-			OCA.SystemTags.View = systemTagsInfoView
+			// only create and attach once
+			// FIXME: this should likely be done on a different code path now
+			// for the sidebar to only have it registered once
+			if (!OCA.SystemTags.View) {
+				const systemTagsInfoView = new OCA.SystemTags.SystemTagsInfoView()
+				fileList.registerDetailView(systemTagsInfoView)
+				OCA.SystemTags.View = systemTagsInfoView
+			}
 		},
 	}
 

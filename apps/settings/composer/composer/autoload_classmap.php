@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = $vendorDir;
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'OCA\\Settings\\Activity\\GroupProvider' => $baseDir . '/../lib/Activity/GroupProvider.php',
     'OCA\\Settings\\Activity\\GroupSetting' => $baseDir . '/../lib/Activity/GroupSetting.php',
     'OCA\\Settings\\Activity\\Provider' => $baseDir . '/../lib/Activity/Provider.php',
@@ -25,9 +26,11 @@ return array(
     'OCA\\Settings\\Controller\\LogSettingsController' => $baseDir . '/../lib/Controller/LogSettingsController.php',
     'OCA\\Settings\\Controller\\MailSettingsController' => $baseDir . '/../lib/Controller/MailSettingsController.php',
     'OCA\\Settings\\Controller\\PersonalSettingsController' => $baseDir . '/../lib/Controller/PersonalSettingsController.php',
+    'OCA\\Settings\\Controller\\ReasonsController' => $baseDir . '/../lib/Controller/ReasonsController.php',
     'OCA\\Settings\\Controller\\TwoFactorSettingsController' => $baseDir . '/../lib/Controller/TwoFactorSettingsController.php',
     'OCA\\Settings\\Controller\\UsersController' => $baseDir . '/../lib/Controller/UsersController.php',
     'OCA\\Settings\\Controller\\WebAuthnController' => $baseDir . '/../lib/Controller/WebAuthnController.php',
+    'OCA\\Settings\\Events\\BeforeTemplateRenderedEvent' => $baseDir . '/../lib/Events/BeforeTemplateRenderedEvent.php',
     'OCA\\Settings\\Hooks' => $baseDir . '/../lib/Hooks.php',
     'OCA\\Settings\\Mailer\\NewUserMailHelper' => $baseDir . '/../lib/Mailer/NewUserMailHelper.php',
     'OCA\\Settings\\Middleware\\SubadminMiddleware' => $baseDir . '/../lib/Middleware/SubadminMiddleware.php',
@@ -54,6 +57,9 @@ return array(
     'OCA\\Settings\\Settings\\Personal\\Security\\TwoFactor' => $baseDir . '/../lib/Settings/Personal/Security/TwoFactor.php',
     'OCA\\Settings\\Settings\\Personal\\Security\\WebAuthn' => $baseDir . '/../lib/Settings/Personal/Security/WebAuthn.php',
     'OCA\\Settings\\Settings\\Personal\\ServerDevNotice' => $baseDir . '/../lib/Settings/Personal/ServerDevNotice.php',
+    'OCA\\Settings\\SetupChecks\\CheckUserCertificates' => $baseDir . '/../lib/SetupChecks/CheckUserCertificates.php',
+    'OCA\\Settings\\SetupChecks\\LegacySSEKeyFormat' => $baseDir . '/../lib/SetupChecks/LegacySSEKeyFormat.php',
     'OCA\\Settings\\SetupChecks\\PhpDefaultCharset' => $baseDir . '/../lib/SetupChecks/PhpDefaultCharset.php',
     'OCA\\Settings\\SetupChecks\\PhpOutputBuffering' => $baseDir . '/../lib/SetupChecks/PhpOutputBuffering.php',
+    'OCA\\Settings\\SetupChecks\\SupportedDatabase' => $baseDir . '/../lib/SetupChecks/SupportedDatabase.php',
 );

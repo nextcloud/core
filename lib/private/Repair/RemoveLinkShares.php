@@ -30,8 +30,8 @@ declare(strict_types=1);
 
 namespace OC\Repair;
 
-use Doctrine\DBAL\Driver\Statement;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\DB\IResult;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IConfig;
 use OCP\IDBConnection;
@@ -138,10 +138,8 @@ class RemoveLinkShares implements IRepairStep {
 
 	/**
 	 * Get the cursor to fetch all the shares
-	 *
-	 * @return \Doctrine\DBAL\Driver\Statement
 	 */
-	private function getShares(): Statement {
+	private function getShares(): IResult {
 		$subQuery = $this->connection->getQueryBuilder();
 		$subQuery->select('*')
 			->from('share')
@@ -160,7 +158,9 @@ class RemoveLinkShares implements IRepairStep {
 				$query->expr()->eq('s2.share_type', $query->expr()->literal(2, IQueryBuilder::PARAM_INT))
 			))
 			->andWhere($query->expr()->eq('s1.item_source', 's2.item_source'));
-		return $query->execute();
+		/** @var IResult $result */
+		$result = $query->execute();
+		return $result;
 	}
 
 	/**
@@ -210,13 +210,13 @@ class RemoveLinkShares implements IRepairStep {
 	private function repair(IOutput $output, int $total): void {
 		$output->startProgress($total);
 
-		$shareCursor = $this->getShares();
-		while ($data = $shareCursor->fetch()) {
+		$shareResult = $this->getShares();
+		while ($data = $shareResult->fetch()) {
 			$this->processShare($data);
 			$output->advance();
 		}
 		$output->finishProgress();
-		$shareCursor->closeCursor();
+		$shareResult->closeCursor();
 
 		// Notifiy all admins
 		$adminGroup = $this->groupManager->get('admin');

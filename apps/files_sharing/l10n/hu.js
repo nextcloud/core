@@ -80,6 +80,7 @@ OC.L10N.register(
     "{actor} removed you from the share named {file}" : "{actor} eltávolított a {file} nevű megosztásból",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "Egy e-mailben vagy nyilvános hivatkozással megosztott fájl vagy mappa <strong>letöltve</strong>",
     "A file or folder was shared from <strong>another server</strong>" : "Egy fájl vagy mappa meg lett osztva egy <strong>másik szerverről</strong>",
+    "Files" : "Fájlok",
     "A file or folder has been <strong>shared</strong>" : "Egy fájl vagy mappa <strong>megosztva</strong>",
     "Wrong share ID, share doesn't exist" : "Hibás megosztás ID, a megosztás nem létezik",
     "Could not delete share" : "A megosztás nem törölhető",
@@ -165,8 +166,6 @@ OC.L10N.register(
     "Note" : "Megjegyzés",
     "Select or drop files" : "Válassz ki vagy dobj ide fájlokat",
     "Uploaded files:" : "Feltöltött fájlok:",
-    "By uploading files, you agree to the %1$sterms of service%2$s." : "Fájlok feltöltésével elfogadja a %1$sszolgáltatási feltételek %2$s.",
-    "could not delete share" : "a megosztás nem törölhető",
-    "Uploading files…" : "Fájlok feltöltése..."
+    "By uploading files, you agree to the %1$sterms of service%2$s." : "Fájlok feltöltésével elfogadja a %1$sszolgáltatási feltételek %2$s."
 },
 "nplurals=2; plural=(n != 1);");

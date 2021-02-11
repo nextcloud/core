@@ -46,12 +46,12 @@ interface IUserSession {
 	/**
 	 * Do a user login
 	 *
-	 * @param string $user the username
+	 * @param string $uid the username
 	 * @param string $password the password
 	 * @return bool true if successful
 	 * @since 6.0.0
 	 */
-	public function login($user, $password);
+	public function login($uid, $password);
 
 	/**
 	 * Logs the user out including all the session data

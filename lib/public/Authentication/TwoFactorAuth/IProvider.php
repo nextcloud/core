@@ -36,9 +36,14 @@ interface IProvider {
 
 	/**
 	 * @since 14.0.0
+	 * @deprecated 22.0.0
 	 */
 	public const EVENT_SUCCESS = self::class . '::success';
-	public const EVENT_FAILED  = self::class . '::failed';
+
+	/**
+	 * @deprecated 22.0.0
+	 */
+	public const EVENT_FAILED = self::class . '::failed';
 
 	/**
 	 * Get unique identifier of this 2FA provider

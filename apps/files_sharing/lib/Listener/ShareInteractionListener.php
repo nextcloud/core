@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @copyright 2020 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -72,6 +73,7 @@ class ShareInteractionListener implements IEventListener {
 			return;
 		}
 		$actor = $this->userManager->get($share->getSharedBy());
+		$sharedWith = $this->userManager->get($share->getSharedWith());
 		if ($actor === null) {
 			$this->logger->warning('Share was not created by a user, can\'t emit interaction event');
 			return;
@@ -80,6 +82,9 @@ class ShareInteractionListener implements IEventListener {
 		switch ($share->getShareType()) {
 			case IShare::TYPE_USER:
 				$interactionEvent->setUid($share->getSharedWith());
+				if ($sharedWith !== null) {
+					$interactionEvent->setFederatedCloudId($sharedWith->getCloudId());
+				}
 				break;
 			case IShare::TYPE_EMAIL:
 				$interactionEvent->setEmail($share->getSharedWith());

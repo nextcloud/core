@@ -99,7 +99,7 @@ class HasPhotoPlugin extends ServerPlugin {
 	 */
 	public function getPluginInfo() {
 		return [
-			'name'        => $this->getPluginName(),
+			'name' => $this->getPluginName(),
 			'description' => 'Return a boolean stating if the vcard have a photo property set or not.'
 		];
 	}

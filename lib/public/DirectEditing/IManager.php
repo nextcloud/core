@@ -33,7 +33,6 @@ use RuntimeException;
 /**
  * Interface IManager
  *
- * @package OCP\DirectEditing
  * @since 18.0.0
  */
 interface IManager {
@@ -85,4 +84,12 @@ interface IManager {
 	 * @return int number of deleted tokens
 	 */
 	public function cleanup(): int;
+
+	/**
+	 * Check if direct editing is enabled
+	 *
+	 * @since 20.0.0
+	 * @return bool
+	 */
+	public function isEnabled(): bool;
 }

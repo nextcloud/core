@@ -206,7 +206,7 @@ class Notification implements INotification {
 		if ($id === '' || isset($id[64])) {
 			throw new \InvalidArgumentException('The given object id is invalid');
 		}
-		$this->objectId = (string) $id;
+		$this->objectId = $id;
 		return $this;
 	}
 

@@ -30,7 +30,8 @@ class FakeManager implements ICommentsManager {
 		string $objectId,
 		int $lastKnownCommentId,
 		string $sortDirection = 'asc',
-		int $limit = 30
+		int $limit = 30,
+		bool $includeLastKnown = false
 	): array {
 		return [];
 	}
@@ -81,6 +82,30 @@ class FakeManager implements ICommentsManager {
 	public function getNumberOfUnreadCommentsForFolder($folderId, IUser $user) {
 	}
 
+	public function getNumberOfUnreadCommentsForObjects(string $objectType, array $objectIds, IUser $user, $verb = ''): array {
+		return [];
+	}
+
+
 	public function getActorsInTree($id) {
+	}
+
+	public function load(): void {
+	}
+
+	public function searchForObjects(string $search, string $objectType, array $objectIds, string $verb, int $offset, int $limit = 50): array {
+		return [];
+	}
+
+	public function getNumberOfCommentsForObjectSinceComment(string $objectType, string $objectId, int $lastRead, string $verb = ''): int {
+		return 0;
+	}
+
+	public function getLastCommentBeforeDate(string $objectType, string $objectId, \DateTime $beforeDate, string $verb = ''): int {
+		return 0;
+	}
+
+	public function getLastCommentDateByActor(string $objectType, string $objectId, string $verb, string $actorType, array $actors): array {
+		return [];
 	}
 }

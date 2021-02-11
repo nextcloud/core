@@ -93,7 +93,6 @@
     "Set an admin username." : "Stilltu notandanafn kerfisstjóra.",
     "Set an admin password." : "Stilltu lykilorð kerfisstjóra.",
     "Can't create or write into the data directory %s" : "Gat ekki búið til eða skrifað í gagnamöppuna %s",
-    "Invalid Federated Cloud ID" : "Ógilt skýjasambandsauðkenni (Federated Cloud ID)",
     "Sharing backend %s must implement the interface OCP\\Share_Backend" : "Deilingarbakendinn %s verður að vera settur upp fyrir viðmótið OCP\\Share_Backend",
     "Sharing backend %s not found" : "Deilingarbakendinn %s fannst ekki",
     "Sharing backend for %s not found" : "Deilingarbakendi fyrir %s fannst ekki",
@@ -217,13 +216,6 @@
     "Storage connection timeout. %s" : "Gagnageymsla féll á tíma. %s",
     "Following databases are supported: %s" : "Eftirfarandi gagnagrunnar eru studdir: %s",
     "Following platforms are supported: %s" : "Eftirfarandi stýrikerfi eru studd: %s",
-    "Overview" : "Yfirlit",
-    "Basic settings" : "Grunnstillingar",
-    "Sharing" : "Deiling",
-    "Security" : "Öryggi",
-    "Groupware" : "Hópvinnukerfi",
-    "Personal info" : "Persónulegar upplýsingar",
-    "Mobile & desktop" : "Farsímar og borðtölvur",
-    "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s" : "Þetta er venjulega hægt að laga með því að gefa vefþjóninum skrifréttindi í forritamöppuna með því að gera forritabúðina óvirka í stillingaskránni. Sjá %s"
+    "Invalid Federated Cloud ID" : "Ógilt skýjasambandsauðkenni (Federated Cloud ID)"
 },"pluralForm" :"nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
 }

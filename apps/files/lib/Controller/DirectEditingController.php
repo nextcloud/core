@@ -76,6 +76,9 @@ class DirectEditingController extends OCSController {
 	 * @NoAdminRequired
 	 */
 	public function create(string $path, string $editorId, string $creatorId, string $templateId = null): DataResponse {
+		if (!$this->directEditingManager->isEnabled()) {
+			return new DataResponse(['message' => 'Direct editing is not enabled'], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
 		$this->eventDispatcher->dispatchTyped(new RegisterDirectEditorEvent($this->directEditingManager));
 
 		try {
@@ -85,7 +88,7 @@ class DirectEditingController extends OCSController {
 			]);
 		} catch (Exception $e) {
 			$this->logger->logException($e, ['message' => 'Exception when creating a new file through direct editing']);
-			return new DataResponse('Failed to create file: ' . $e->getMessage(), Http::STATUS_FORBIDDEN);
+			return new DataResponse(['message' => 'Failed to create file: ' . $e->getMessage()], Http::STATUS_FORBIDDEN);
 		}
 	}
 
@@ -93,6 +96,9 @@ class DirectEditingController extends OCSController {
 	 * @NoAdminRequired
 	 */
 	public function open(string $path, string $editorId = null): DataResponse {
+		if (!$this->directEditingManager->isEnabled()) {
+			return new DataResponse(['message' => 'Direct editing is not enabled'], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
 		$this->eventDispatcher->dispatchTyped(new RegisterDirectEditorEvent($this->directEditingManager));
 
 		try {
@@ -102,7 +108,7 @@ class DirectEditingController extends OCSController {
 			]);
 		} catch (Exception $e) {
 			$this->logger->logException($e, ['message' => 'Exception when opening a file through direct editing']);
-			return new DataResponse('Failed to open file: ' . $e->getMessage(), Http::STATUS_FORBIDDEN);
+			return new DataResponse(['message' => 'Failed to open file: ' . $e->getMessage()], Http::STATUS_FORBIDDEN);
 		}
 	}
 
@@ -112,13 +118,16 @@ class DirectEditingController extends OCSController {
 	 * @NoAdminRequired
 	 */
 	public function templates(string $editorId, string $creatorId): DataResponse {
+		if (!$this->directEditingManager->isEnabled()) {
+			return new DataResponse(['message' => 'Direct editing is not enabled'], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
 		$this->eventDispatcher->dispatchTyped(new RegisterDirectEditorEvent($this->directEditingManager));
 
 		try {
 			return new DataResponse($this->directEditingManager->getTemplates($editorId, $creatorId));
 		} catch (Exception $e) {
 			$this->logger->logException($e);
-			return new DataResponse('Failed to obtain template list: ' . $e->getMessage(), Http::STATUS_INTERNAL_SERVER_ERROR);
+			return new DataResponse(['message' => 'Failed to obtain template list: ' . $e->getMessage()], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
 }

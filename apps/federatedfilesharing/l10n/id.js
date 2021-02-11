@@ -28,7 +28,6 @@ OC.L10N.register(
     "Sharing" : "Berbagi",
     "Federated Cloud Sharing" : "Federated Cloud Sharing",
     "Open documentation" : "Buka dokumentasi",
-    "Allow users on this server to send shares to other servers" : "Izinkan para pengguna di server ini untuk mengirimkan berbagi ke server lainnya.",
     "Allow users on this server to receive shares from other servers" : "Izinkan para pengguna di server ini untuk menerima berbagi ke server lainnya.",
     "Search global and public address book for users" : "Cari alamat buku global dan alamat publik untuk pengguna",
     "Federated Cloud" : "Federated Cloud",
@@ -36,7 +35,6 @@ OC.L10N.register(
     "Add to your website" : "Tambahkan pada situs web Anda",
     "Share with me via Nextcloud" : "Dibagikan pada saya via Nextcloud",
     "HTML Code:" : "Kode HTML:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Anda menerima \"%3$s\" sebagai berbagi jauh dari %1$s (atas nama %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Anda menerima \"%3$s\" sebagai berbagi jauh dari %1$s"
+    "Allow users on this server to send shares to other servers" : "Izinkan para pengguna di server ini untuk mengirimkan berbagi ke server lainnya."
 },
 "nplurals=1; plural=0;");

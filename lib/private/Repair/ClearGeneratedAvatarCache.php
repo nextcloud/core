@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2018 John Molakvoæ <skjnldsv@protonmail.com>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Michael Weimann <mail@michael-weimann.eu>
  *
@@ -38,7 +39,7 @@ class ClearGeneratedAvatarCache implements IRepairStep {
 	private $config;
 
 	public function __construct(IConfig $config, AvatarManager $avatarManager) {
-		$this->config        = $config;
+		$this->config = $config;
 		$this->avatarManager = $avatarManager;
 	}
 

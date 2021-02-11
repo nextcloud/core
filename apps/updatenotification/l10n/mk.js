@@ -5,7 +5,7 @@ OC.L10N.register(
     "Channel updated" : "Каналот е ажуриран",
     "Update notifications" : "Известувања за ажурирање",
     "The update server could not be reached since %d days to check for new updates." : "Серверот за ажурирање не е проверен %d дена.",
-    "Please check the Nextcloud and server log files for errors." : "Проверете ги записите во Nextcloud и записите во серверот за грешките.",
+    "Please check the Nextcloud and server log files for errors." : "Проверете ги записите во Cloud-от и записите во серверот за грешките.",
     "Update to %1$s is available." : "Достапно е аурирање во верзија %1$s.",
     "Update for %1$s to version %2$s is available." : "Достапно е ажурирање од %1$s во верзија %2$s.",
     "Update for {app} to version %s is available." : "Достапно е ажурирање за {app} во верзија %s.",
@@ -16,14 +16,13 @@ OC.L10N.register(
     "View in store" : "Преглед во продавницата за апликации",
     "Apps with available updates" : "Апликации со достапни ажурирања",
     "Open updater" : "Стартувај го надградувачот",
-    "Download now" : "Превземи",
+    "Download now" : "Преземи",
     "What's new?" : "Што е ново",
     "The update check is not yet finished. Please refresh the page." : "Сеуште нема извшено проверка за ажурирање, Ве молиме рефреширајте ја страната.",
     "Your version is up to date." : "Вашата верзија е ажурирана.",
     "A non-default update server is in use to be checked for updates:" : "Нестандарден сервер е поставен за проверка за ажурирање:",
     "Update channel:" : "Канал за ажурирање:",
     "You can always update to a newer version. But you can never downgrade to a more stable version." : "Секогаш можете да ажурирате на нова верзија. Но никогаш нема да можете да се вратите на постара верзија.",
-    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Можно е да треба некое време додека новата верзија се прикаже овде. Ние испорачуваме нови до нашите корисници но од време на време некој верзии ги прескокнуваме поради пројандени проблеми во истите.",
     "Notify members of the following groups about available updates:" : "Извести ги членовите на овие групи за достапните ажурирања:",
     "Only notification for app updates are available." : "Известувања само за достапни ажурирања на апликации.",
     "The selected update channel makes dedicated notifications for the server obsolete." : "Избраниот канал за ажурирање ќе овозможи известувања за застарениот сервер.",
@@ -41,6 +40,7 @@ OC.L10N.register(
     "The most recent stable version. It is suited for regular use and will always update to the latest major version." : "Најнова стабилна верзија. Корисно за редовна употреба и секогаш ќе се ажурира до последната најнова верзија.",
     "Beta" : "Бета",
     "A pre-release version only for testing new features, not for production environments." : "Неиздадена верзија само за тестирање на новите можности, не е за редовна употреба.",
-    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> апликација нема ажурирање за оваа веријза","<strong>%n</strong> апликации немаат ажурирања за оваа веријза"]
+    "_<strong>%n</strong> app has no update for this version available_::_<strong>%n</strong> apps have no update for this version available_" : ["<strong>%n</strong> апликација нема ажурирање за оваа веријза","<strong>%n</strong> апликации немаат ажурирања за оваа веријза"],
+    "Note that after a new release it can take some time before it shows up here. We roll out new versions spread out over time to our users and sometimes skip a version when issues are found." : "Можно е да треба некое време додека новата верзија се прикаже овде. Ние испорачуваме нови до нашите корисници но од време на време некој верзии ги прескокнуваме поради пројандени проблеми во истите."
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

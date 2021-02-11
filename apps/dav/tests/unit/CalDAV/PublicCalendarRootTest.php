@@ -36,6 +36,7 @@ use OCA\DAV\CalDAV\Calendar;
 use OCA\DAV\CalDAV\PublicCalendar;
 use OCA\DAV\CalDAV\PublicCalendarRoot;
 use OCA\DAV\Connector\Sabre\Principal;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IL10N;
@@ -83,7 +84,8 @@ class PublicCalendarRootTest extends TestCase {
 		$this->groupManager = $this->createMock(IGroupManager::class);
 		$this->random = \OC::$server->getSecureRandom();
 		$this->logger = $this->createMock(ILogger::class);
-		$dispatcher = $this->createMock(EventDispatcherInterface::class);
+		$dispatcher = $this->createMock(IEventDispatcher::class);
+		$legacyDispatcher = $this->createMock(EventDispatcherInterface::class);
 
 		$this->principal->expects($this->any())->method('getGroupMembership')
 			->withAnyParameters()
@@ -100,7 +102,8 @@ class PublicCalendarRootTest extends TestCase {
 			$this->groupManager,
 			$this->random,
 			$this->logger,
-			$dispatcher
+			$dispatcher,
+			$legacyDispatcher
 		);
 		$this->l10n = $this->getMockBuilder(IL10N::class)
 			->disableOriginalConstructor()->getMock();

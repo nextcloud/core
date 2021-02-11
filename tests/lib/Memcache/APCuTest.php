@@ -17,7 +17,7 @@ class APCuTest extends Cache {
 			$this->markTestSkipped('The APCu extension is not available.');
 			return;
 		}
-		$this->instance=new \OC\Memcache\APCu($this->getUniqueID());
+		$this->instance = new \OC\Memcache\APCu($this->getUniqueID());
 	}
 
 	public function testCasIntChanged() {

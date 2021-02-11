@@ -32,7 +32,6 @@ OC.L10N.register(
     "Delete file" : "Skrap lêer",
     "Delete folder" : "Skrap vouer",
     "Disconnect storage" : "Ontkoppel berging",
-    "Unshare" : "Ontdeel",
     "Could not load info for file \"{file}\"" : "Kon nie inligting vir lêer: “{file}” laai nie ",
     "Files" : "Lêers",
     "Details" : "Besonderhede",
@@ -70,7 +69,6 @@ OC.L10N.register(
     "\"{name}\" is an invalid file name." : "\"{name}\" is nie 'n geldige lêer naam nie.",
     "File name cannot be empty." : "Lêernaam kan nie leeg wees nie.",
     "\"/\" is not allowed inside a file name." : "\"/\" word nie binne 'n lêernaam toegelaat nie.",
-    "Your storage is almost full ({usedSpacePercent}%)" : "U stoorspasie is amper vol ({usedSpacePercent}%)",
     "_matches '{filter}'_::_match '{filter}'_" : ["pas '{filter}'","pas '{filter}'"],
     "View in folder" : "Vertoon in gids",
     "Copied!" : "Gekopieer!",
@@ -110,9 +108,6 @@ OC.L10N.register(
     "{user} renamed {oldfile} to {newfile}" : "{user} het die naam van {oldfile} na {newfile} verander",
     "You moved {oldfile} to {newfile}" : "U het {oldfile} na {newfile} geskuif",
     "{user} moved {oldfile} to {newfile}" : "{user} het {oldfile} na {newfile} geskuif",
-    "A new file or folder has been <strong>created</strong>" : "'n Lêer of gids is <strong>geskep</strong>",
-    "A file or folder has been <strong>deleted</strong>" : "'n Lêer of gids is <strong>geskrap</strong>",
-    "A file or folder has been <strong>restored</strong>" : "'n Lêer of gids is <strong>herstel</strong>",
     "All files" : "Alle lêers",
     "Unlimited" : "Onbeperkte",
     "Upload (max. %s)" : "Oplaai (maks. %s)",
@@ -137,6 +132,10 @@ OC.L10N.register(
     "Shared by link" : "Gedeel per skakel",
     "Text file" : "Tekslêer",
     "New text file.txt" : "Nuwe tekslêer.txt",
-    "Use this address to <a href=\"%s\" target=\"_blank\" rel=\"noreferrer noopener\">access your Files via WebDAV</a>" : "Gebruik dié adres vir <a href=\"%s\" target=\"_blank\" rel=\"noreferrer noopener\">toegang tot lêers d.m.v. WebDAV</a>"
+    "Unshare" : "Ontdeel",
+    "Your storage is almost full ({usedSpacePercent}%)" : "U stoorspasie is amper vol ({usedSpacePercent}%)",
+    "A new file or folder has been <strong>created</strong>" : "'n Lêer of gids is <strong>geskep</strong>",
+    "A file or folder has been <strong>deleted</strong>" : "'n Lêer of gids is <strong>geskrap</strong>",
+    "A file or folder has been <strong>restored</strong>" : "'n Lêer of gids is <strong>herstel</strong>"
 },
 "nplurals=2; plural=(n != 1);");

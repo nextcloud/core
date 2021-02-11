@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
@@ -26,6 +28,7 @@
 namespace OCA\DAV\CardDAV;
 
 use OC\Accounts\AccountManager;
+use OCP\Accounts\IAccountManager;
 use OCP\IImage;
 use OCP\IUser;
 use Sabre\VObject\Component\VCard;
@@ -62,8 +65,8 @@ class Converter {
 
 		$publish = false;
 
-		if ($image !== null && isset($userData[AccountManager::PROPERTY_AVATAR])) {
-			$userData[AccountManager::PROPERTY_AVATAR]['value'] = true;
+		if ($image !== null && isset($userData[IAccountManager::PROPERTY_AVATAR])) {
+			$userData[IAccountManager::PROPERTY_AVATAR]['value'] = true;
 		}
 
 		foreach ($userData as $property => $value) {
@@ -76,28 +79,28 @@ class Converter {
 			if ($shareWithTrustedServers && !$emptyValue) {
 				$publish = true;
 				switch ($property) {
-					case AccountManager::PROPERTY_DISPLAYNAME:
+					case IAccountManager::PROPERTY_DISPLAYNAME:
 						$vCard->add(new Text($vCard, 'FN', $value['value']));
 						$vCard->add(new Text($vCard, 'N', $this->splitFullName($value['value'])));
 						break;
-					case AccountManager::PROPERTY_AVATAR:
+					case IAccountManager::PROPERTY_AVATAR:
 						if ($image !== null) {
 							$vCard->add('PHOTO', $image->data(), ['ENCODING' => 'b', 'TYPE' => $image->mimeType()]);
 						}
 						break;
-					case AccountManager::PROPERTY_EMAIL:
+					case IAccountManager::PROPERTY_EMAIL:
 						$vCard->add(new Text($vCard, 'EMAIL', $value['value'], ['TYPE' => 'OTHER']));
 						break;
-					case AccountManager::PROPERTY_WEBSITE:
+					case IAccountManager::PROPERTY_WEBSITE:
 						$vCard->add(new Text($vCard, 'URL', $value['value']));
 						break;
-					case AccountManager::PROPERTY_PHONE:
+					case IAccountManager::PROPERTY_PHONE:
 						$vCard->add(new Text($vCard, 'TEL', $value['value'], ['TYPE' => 'OTHER']));
 						break;
-					case AccountManager::PROPERTY_ADDRESS:
+					case IAccountManager::PROPERTY_ADDRESS:
 						$vCard->add(new Text($vCard, 'ADR', $value['value'], ['TYPE' => 'OTHER']));
 						break;
-					case AccountManager::PROPERTY_TWITTER:
+					case IAccountManager::PROPERTY_TWITTER:
 						$vCard->add(new Text($vCard, 'X-SOCIALPROFILE', $value['value'], ['TYPE' => 'TWITTER']));
 						break;
 				}
@@ -124,9 +127,9 @@ class Converter {
 		$elements = explode(' ', $fullName);
 		$result = ['', '', '', '', ''];
 		if (count($elements) > 2) {
-			$result[0] = implode(' ', array_slice($elements, count($elements)-1));
+			$result[0] = implode(' ', array_slice($elements, count($elements) - 1));
 			$result[1] = $elements[0];
-			$result[2] = implode(' ', array_slice($elements, 1, count($elements)-2));
+			$result[2] = implode(' ', array_slice($elements, 1, count($elements) - 2));
 		} elseif (count($elements) === 2) {
 			$result[0] = $elements[1];
 			$result[1] = $elements[0];

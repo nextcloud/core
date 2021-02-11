@@ -30,7 +30,6 @@ use OCP\AppFramework\Http;
 /**
  * Class DataDisplayResponse
  *
- * @package OCP\AppFramework\Http
  * @since 8.1.0
  */
 class DataDisplayResponse extends Response {
@@ -48,8 +47,8 @@ class DataDisplayResponse extends Response {
 	 * @param array $headers additional key value based headers
 	 * @since 8.1.0
 	 */
-	public function __construct($data='', $statusCode=Http::STATUS_OK,
-								$headers=[]) {
+	public function __construct($data = '', $statusCode = Http::STATUS_OK,
+								$headers = []) {
 		parent::__construct();
 
 		$this->data = $data;

@@ -27,7 +27,6 @@ namespace OCP\Comments;
 /**
  * Interface ICommentsEventHandler
  *
- * @package OCP\Comments
  * @since 11.0.0
  */
 interface ICommentsEventHandler {

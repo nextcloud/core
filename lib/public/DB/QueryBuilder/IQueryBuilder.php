@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author J0WI <J0WI@users.noreply.github.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Robin Appelman <robin@icewind.nl>
@@ -27,6 +29,8 @@
 namespace OCP\DB\QueryBuilder;
 
 use Doctrine\DBAL\Connection;
+use OCP\DB\Exception;
+use OCP\DB\IResult;
 
 /**
  * This class provides a wrapper around Doctrine's QueryBuilder
@@ -146,7 +150,12 @@ interface IQueryBuilder {
 	 * Uses {@see Connection::executeQuery} for select statements and {@see Connection::executeUpdate}
 	 * for insert, update and delete statements.
 	 *
-	 * @return \Doctrine\DBAL\Driver\Statement|int
+	 * Warning: until Nextcloud 20, this method could return a \Doctrine\DBAL\Driver\Statement but since
+	 *          that interface changed in a breaking way the adapter \OCP\DB\QueryBuilder\IStatement is returned
+	 *          to bridge old code to the new API
+	 *
+	 * @return IResult|int
+	 * @throws Exception since 21.0.0
 	 * @since 8.2.0
 	 */
 	public function execute();
@@ -277,7 +286,7 @@ interface IQueryBuilder {
 	 * Gets the maximum number of results the query object was set to retrieve (the "limit").
 	 * Returns NULL if {@link setMaxResults} was not applied to this query builder.
 	 *
-	 * @return integer The maximum number of results.
+	 * @return int|null The maximum number of results.
 	 * @since 8.2.0
 	 */
 	public function getMaxResults();
@@ -521,7 +530,7 @@ interface IQueryBuilder {
 	 * </code>
 	 *
 	 * @param string $key The column to set.
-	 * @param string $value The value, expression, placeholder, etc.
+	 * @param ILiteral|IParameter|IQueryFunction|string $value The value, expression, placeholder, etc.
 	 *
 	 * @return $this This QueryBuilder instance.
 	 * @since 8.2.0
@@ -650,7 +659,7 @@ interface IQueryBuilder {
 	 * </code>
 	 *
 	 * @param string $column The column into which the value should be inserted.
-	 * @param string $value The value that should be inserted into the column.
+	 * @param IParameter|string $value The value that should be inserted into the column.
 	 *
 	 * @return $this This QueryBuilder instance.
 	 * @since 8.2.0
@@ -784,7 +793,7 @@ interface IQueryBuilder {
 	 * placeholder for you. An automatic placeholder will be of the name
 	 * ':dcValue1', ':dcValue2' etc.
 	 *
-	 * For more information see {@link http://php.net/pdostatement-bindparam}
+	 * For more information see {@link https://www.php.net/pdostatement-bindparam}
 	 *
 	 * Example:
 	 * <code>

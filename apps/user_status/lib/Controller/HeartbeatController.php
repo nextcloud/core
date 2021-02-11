@@ -33,6 +33,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IRequest;
 use OCP\IUserSession;
 use OCP\User\Events\UserLiveStatusEvent;
+use OCP\UserStatus\IUserStatus;
 
 class HeartbeatController extends Controller {
 
@@ -51,6 +52,8 @@ class HeartbeatController extends Controller {
 	 * @param string $appName
 	 * @param IRequest $request
 	 * @param IEventDispatcher $eventDispatcher
+	 * @param IUserSession $userSession
+	 * @param ITimeFactory $timeFactory
 	 */
 	public function __construct(string $appName,
 								IRequest $request,
@@ -70,7 +73,7 @@ class HeartbeatController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function heartbeat(string $status): JSONResponse {
-		if (!\in_array($status, ['online', 'away'])) {
+		if (!\in_array($status, [IUserStatus::ONLINE, IUserStatus::AWAY], true)) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		}
 

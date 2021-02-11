@@ -30,7 +30,7 @@
 
 namespace OC\DB;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\ColumnDiff;
 use Doctrine\DBAL\Schema\ForeignKeyConstraint;
@@ -113,7 +113,7 @@ class OracleMigrator extends Migrator {
 	 * @param Schema $targetSchema
 	 * @param \Doctrine\DBAL\Connection $connection
 	 * @return \Doctrine\DBAL\Schema\SchemaDiff
-	 * @throws DBALException
+	 * @throws Exception
 	 */
 	protected function getDiff(Schema $targetSchema, \Doctrine\DBAL\Connection $connection) {
 		$schemaDiff = parent::getDiff($targetSchema, $connection);
@@ -128,10 +128,10 @@ class OracleMigrator extends Migrator {
 				array_map(function (Index $index) {
 					return $this->quoteIndex($index);
 				}, $table->getIndexes()),
+				[],
 				array_map(function (ForeignKeyConstraint $fck) {
 					return $this->quoteForeignKeyConstraint($fck);
 				}, $table->getForeignKeys()),
-				0,
 				$table->getOptions()
 			);
 		}, $schemaDiff->newTables);
@@ -141,8 +141,8 @@ class OracleMigrator extends Migrator {
 				$this->connection->quoteIdentifier($table->getName()),
 				$table->getColumns(),
 				$table->getIndexes(),
+				[],
 				$table->getForeignKeys(),
-				0,
 				$table->getOptions()
 			);
 		}, $schemaDiff->removedTables);

@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = $vendorDir;
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'OCA\\Testing\\AlternativeHomeUserBackend' => $baseDir . '/../lib/AlternativeHomeUserBackend.php',
     'OCA\\Testing\\AppInfo\\Application' => $baseDir . '/../lib/AppInfo/Application.php',
     'OCA\\Testing\\Controller\\ConfigController' => $baseDir . '/../lib/Controller/ConfigController.php',

@@ -4,6 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -30,6 +31,7 @@
 
 namespace OC\Group;
 
+use OC\Group\Manager as GroupManager;
 use OCP\IGroupManager;
 use OCP\IUserSession;
 
@@ -44,7 +46,7 @@ class MetaData {
 	protected $isAdmin;
 	/** @var array */
 	protected $metaData = [];
-	/** @var IGroupManager */
+	/** @var GroupManager */
 	protected $groupManager;
 	/** @var bool */
 	protected $sorting = false;
@@ -55,7 +57,6 @@ class MetaData {
 	 * @param string $user the uid of the current user
 	 * @param bool $isAdmin whether the current users is an admin
 	 * @param IGroupManager $groupManager
-	 * @param IUserManager $userManager
 	 * @param IUserSession $userSession
 	 */
 	public function __construct(

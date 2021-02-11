@@ -1,0 +1,5 @@
+{ "translations": {
+    "Lookup Server Connector" : "Bilatu zerbitzari-konektorea",
+    "Sync public user information with the lookup server" : "Sinkronizatu erabiltzaile publiko baten informazioa bilaketa-zerbitzariarekin"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

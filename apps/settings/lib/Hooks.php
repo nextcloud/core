@@ -5,7 +5,6 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
- * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Thomas Citharel <nextcloud@tcit.fr>
  *
@@ -182,6 +181,9 @@ class Hooks {
 			$event->setAuthor($actor->getUID())
 				->setSubject($subject);
 		} else {
+			if ($this->config->getAppValue('settings', 'disable_activity.email_address_changed_by_admin', 'no') === 'yes') {
+				return;
+			}
 			$text = $l->t('Your email address on %s was changed by an administrator.', [$instanceUrl]);
 			$event->setSubject(Provider::EMAIL_CHANGED);
 		}

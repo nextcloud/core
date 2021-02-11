@@ -87,7 +87,6 @@ OC.L10N.register(
     "Configuration" : "Seadistamine",
     "Available for" : "Saadaval",
     "Add storage" : "Lisa andmehoidla",
-    "Advanced settings" : "Lisavalikud",
-    "Saving..." : "Salvestamine..."
+    "Advanced settings" : "Lisavalikud"
 },
 "nplurals=2; plural=(n != 1);");

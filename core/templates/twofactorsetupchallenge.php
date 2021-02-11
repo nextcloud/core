@@ -1,9 +1,9 @@
 <?php
-/** @var $l \OCP\IL10N */
-/** @var $_ array */
-/* @var $provider OCP\Authentication\TwoFactorAuth\IProvider */
+/** @var \OCP\IL10N $l */
+/** @var array $_ */
+/** @var \OCP\Authentication\TwoFactorAuth\IProvider $provider */
 $provider = $_['provider'];
-/* @var $template string */
+/* @var string $template */
 $template = $_['template'];
 ?>
 

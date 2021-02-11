@@ -70,7 +70,6 @@ use OCP\FullTextSearch\Model\ISearchTemplate;
  *
  * @since 15.0.0
  *
- * @package OCP\FullTextSearch
  */
 interface IFullTextSearchProvider {
 

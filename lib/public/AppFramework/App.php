@@ -7,6 +7,7 @@ declare(strict_types=1);
  *
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -40,12 +41,12 @@ declare(strict_types=1);
 namespace OCP\AppFramework;
 
 use OC\AppFramework\Routing\RouteConfig;
+use OC\Route\Router;
 use OC\ServerContainer;
 use OCP\Route\IRouter;
 
 /**
  * Class App
- * @package OCP\AppFramework
  *
  * Any application must inherit this call - all controller instances to be used are
  * to be registered using IContainer::registerService
@@ -66,7 +67,7 @@ class App {
 	 * @return string the starting namespace for the app
 	 * @since 8.0.0
 	 */
-	public static function buildAppNamespace(string $appId, string $topNamespace='OCA\\'): string {
+	public static function buildAppNamespace(string $appId, string $topNamespace = 'OCA\\'): string {
 		return \OC\AppFramework\App::buildAppNamespace($appId, $topNamespace);
 	}
 
@@ -146,6 +147,10 @@ class App {
 	 * @deprecated 20.0.0 Just return an array from your routes.php
 	 */
 	public function registerRoutes(IRouter $router, array $routes) {
+		if (!($router instanceof Router)) {
+			throw new \RuntimeException('Can only setup routes with real router');
+		}
+
 		$routeConfig = new RouteConfig($this->container, $router, $routes);
 		$routeConfig->register();
 	}

@@ -41,7 +41,7 @@ class CommonTest extends \OC\Files\Storage\Common {
 	private $storage;
 
 	public function __construct($params) {
-		$this->storage=new \OC\Files\Storage\Local($params);
+		$this->storage = new \OC\Files\Storage\Local($params);
 	}
 
 	public function getId() {
@@ -80,7 +80,7 @@ class CommonTest extends \OC\Files\Storage\Common {
 	public function free_space($path) {
 		return $this->storage->free_space($path);
 	}
-	public function touch($path, $mtime=null) {
+	public function touch($path, $mtime = null) {
 		return $this->storage->touch($path, $mtime);
 	}
 }

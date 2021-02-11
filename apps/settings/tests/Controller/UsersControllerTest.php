@@ -2,9 +2,12 @@
 /**
  * @copyright 2014-2015 Lukas Reschke lukas@owncloud.com
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -30,11 +33,13 @@ use OC\Accounts\AccountManager;
 use OC\Encryption\Exceptions\ModuleDoesNotExistsException;
 use OC\Group\Manager;
 use OCA\Settings\Controller\UsersController;
+use OCP\Accounts\IAccountManager;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Http;
 use OCP\BackgroundJob\IJobList;
 use OCP\Encryption\IEncryptionModule;
 use OCP\Encryption\IManager;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IAvatarManager;
 use OCP\IConfig;
 use OCP\IGroupManager;
@@ -54,7 +59,6 @@ use OCP\Security\ISecureRandom;
  * @package Tests\Settings\Controller
  */
 class UsersControllerTest extends \Test\TestCase {
-
 	/** @var IGroupManager|\PHPUnit\Framework\MockObject\MockObject */
 	private $groupManager;
 	/** @var IUserManager|\PHPUnit\Framework\MockObject\MockObject */
@@ -89,6 +93,8 @@ class UsersControllerTest extends \Test\TestCase {
 	private $encryptionManager;
 	/** @var  IEncryptionModule  | \PHPUnit\Framework\MockObject\MockObject */
 	private $encryptionModule;
+	/** @var IEventDispatcher|\PHPUnit\Framework\MockObject\MockObject */
+	private $dispatcher;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -105,6 +111,7 @@ class UsersControllerTest extends \Test\TestCase {
 		$this->securityManager = $this->getMockBuilder(\OC\Security\IdentityProof\Manager::class)->disableOriginalConstructor()->getMock();
 		$this->jobList = $this->createMock(IJobList::class);
 		$this->encryptionManager = $this->createMock(IManager::class);
+		$this->dispatcher = $this->createMock(IEventDispatcher::class);
 
 		$this->l->method('t')
 			->willReturnCallback(function ($text, $parameters = []) {
@@ -139,7 +146,8 @@ class UsersControllerTest extends \Test\TestCase {
 				$this->accountManager,
 				$this->securityManager,
 				$this->jobList,
-				$this->encryptionManager
+				$this->encryptionManager,
+				$this->dispatcher
 			);
 		} else {
 			return $this->getMockBuilder(UsersController::class)
@@ -159,7 +167,8 @@ class UsersControllerTest extends \Test\TestCase {
 						$this->accountManager,
 						$this->securityManager,
 						$this->jobList,
-						$this->encryptionManager
+						$this->encryptionManager,
+						$this->dispatcher
 					]
 				)->setMethods($mockedMethods)->getMock();
 		}
@@ -190,41 +199,41 @@ class UsersControllerTest extends \Test\TestCase {
 				->method('getUser')
 				->with($user)
 				->willReturn([
-					AccountManager::PROPERTY_DISPLAYNAME =>
+					IAccountManager::PROPERTY_DISPLAYNAME =>
 						[
 							'value' => 'Display name',
 							'scope' => AccountManager::VISIBILITY_CONTACTS_ONLY,
 							'verified' => AccountManager::NOT_VERIFIED,
 						],
-					AccountManager::PROPERTY_ADDRESS =>
+					IAccountManager::PROPERTY_ADDRESS =>
 						[
 							'value' => '',
 							'scope' => AccountManager::VISIBILITY_PRIVATE,
 							'verified' => AccountManager::NOT_VERIFIED,
 						],
-					AccountManager::PROPERTY_WEBSITE =>
+					IAccountManager::PROPERTY_WEBSITE =>
 						[
 							'value' => '',
 							'scope' => AccountManager::VISIBILITY_PRIVATE,
 							'verified' => AccountManager::NOT_VERIFIED,
 						],
-					AccountManager::PROPERTY_EMAIL =>
+					IAccountManager::PROPERTY_EMAIL =>
 						[
 							'value' => '',
 							'scope' => AccountManager::VISIBILITY_CONTACTS_ONLY,
 							'verified' => AccountManager::NOT_VERIFIED,
 						],
-					AccountManager::PROPERTY_AVATAR =>
+					IAccountManager::PROPERTY_AVATAR =>
 						[
 							'scope' => AccountManager::VISIBILITY_CONTACTS_ONLY
 						],
-					AccountManager::PROPERTY_PHONE =>
+					IAccountManager::PROPERTY_PHONE =>
 						[
 							'value' => '',
 							'scope' => AccountManager::VISIBILITY_PRIVATE,
 							'verified' => AccountManager::NOT_VERIFIED,
 						],
-					AccountManager::PROPERTY_TWITTER =>
+					IAccountManager::PROPERTY_TWITTER =>
 						[
 							'value' => '',
 							'scope' => AccountManager::VISIBILITY_PRIVATE,
@@ -232,12 +241,14 @@ class UsersControllerTest extends \Test\TestCase {
 						],
 				]);
 
-			$controller->expects($this->once())->method('saveUserSettings');
+			$controller->expects($this->once())
+				->method('saveUserSettings')
+				->willReturnArgument(1);
 		} else {
 			$controller->expects($this->never())->method('saveUserSettings');
 		}
 
-		$result = $controller->setUserSettings(
+		$result = $controller->setUserSettings(//
 			AccountManager::VISIBILITY_CONTACTS_ONLY,
 			'displayName',
 			AccountManager::VISIBILITY_CONTACTS_ONLY,
@@ -283,21 +294,21 @@ class UsersControllerTest extends \Test\TestCase {
 		$user->method('getEMailAddress')->willReturn($oldEmailAddress);
 		$user->method('canChangeDisplayName')->willReturn(true);
 
-		if ($data[AccountManager::PROPERTY_EMAIL]['value'] === $oldEmailAddress ||
-			($oldEmailAddress === null && $data[AccountManager::PROPERTY_EMAIL]['value'] === '')) {
+		if ($data[IAccountManager::PROPERTY_EMAIL]['value'] === $oldEmailAddress ||
+			($oldEmailAddress === null && $data[IAccountManager::PROPERTY_EMAIL]['value'] === '')) {
 			$user->expects($this->never())->method('setEMailAddress');
 		} else {
 			$user->expects($this->once())->method('setEMailAddress')
-				->with($data[AccountManager::PROPERTY_EMAIL]['value'])
+				->with($data[IAccountManager::PROPERTY_EMAIL]['value'])
 				->willReturn(true);
 		}
 
-		if ($data[AccountManager::PROPERTY_DISPLAYNAME]['value'] === $oldDisplayName ||
-			($oldDisplayName === null && $data[AccountManager::PROPERTY_DISPLAYNAME]['value'] === '')) {
+		if ($data[IAccountManager::PROPERTY_DISPLAYNAME]['value'] === $oldDisplayName ||
+			($oldDisplayName === null && $data[IAccountManager::PROPERTY_DISPLAYNAME]['value'] === '')) {
 			$user->expects($this->never())->method('setDisplayName');
 		} else {
 			$user->expects($this->once())->method('setDisplayName')
-				->with($data[AccountManager::PROPERTY_DISPLAYNAME]['value'])
+				->with($data[IAccountManager::PROPERTY_DISPLAYNAME]['value'])
 				->willReturn(true);
 		}
 
@@ -311,48 +322,48 @@ class UsersControllerTest extends \Test\TestCase {
 		return [
 			[
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
+					IAccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
 				],
 				'john@example.com',
 				'john doe'
 			],
 			[
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
+					IAccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
 				],
 				'johnNew@example.com',
 				'john New doe'
 			],
 			[
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
+					IAccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
 				],
 				'johnNew@example.com',
 				'john doe'
 			],
 			[
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
+					IAccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
 				],
 				'john@example.com',
 				'john New doe'
 			],
 			[
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => ''],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
+					IAccountManager::PROPERTY_EMAIL => ['value' => ''],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
 				],
 				null,
 				'john New doe'
 			],
 			[
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
+					IAccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
 				],
 				'john@example.com',
 				null
@@ -385,14 +396,14 @@ class UsersControllerTest extends \Test\TestCase {
 		$user->method('getDisplayName')->willReturn($oldDisplayName);
 		$user->method('getEMailAddress')->willReturn($oldEmailAddress);
 
-		if ($data[AccountManager::PROPERTY_EMAIL]['value'] !== $oldEmailAddress) {
+		if ($data[IAccountManager::PROPERTY_EMAIL]['value'] !== $oldEmailAddress) {
 			$user->method('canChangeDisplayName')
 				->willReturn($canChangeEmail);
 		}
 
-		if ($data[AccountManager::PROPERTY_DISPLAYNAME]['value'] !== $oldDisplayName) {
+		if ($data[IAccountManager::PROPERTY_DISPLAYNAME]['value'] !== $oldDisplayName) {
 			$user->method('setDisplayName')
-				->with($data[AccountManager::PROPERTY_DISPLAYNAME]['value'])
+				->with($data[IAccountManager::PROPERTY_DISPLAYNAME]['value'])
 				->willReturn($setDisplayNameResult);
 		}
 
@@ -404,8 +415,8 @@ class UsersControllerTest extends \Test\TestCase {
 		return [
 			[
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
+					IAccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
 				],
 				'johnNew@example.com',
 				'john New doe',
@@ -414,8 +425,8 @@ class UsersControllerTest extends \Test\TestCase {
 			],
 			[
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
+					IAccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
 				],
 				'johnNew@example.com',
 				'john New doe',
@@ -424,8 +435,8 @@ class UsersControllerTest extends \Test\TestCase {
 			],
 			[
 				[
-					AccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
-					AccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
+					IAccountManager::PROPERTY_EMAIL => ['value' => 'john@example.com'],
+					IAccountManager::PROPERTY_DISPLAYNAME => ['value' => 'john doe'],
 				],
 				'johnNew@example.com',
 				'john New doe',
@@ -449,7 +460,7 @@ class UsersControllerTest extends \Test\TestCase {
 		$signature = 'theSignature';
 
 		$code = $message . ' ' . $signature;
-		if ($type === AccountManager::PROPERTY_TWITTER) {
+		if ($type === IAccountManager::PROPERTY_TWITTER) {
 			$code = $message . ' ' . md5($signature);
 		}
 
@@ -464,7 +475,7 @@ class UsersControllerTest extends \Test\TestCase {
 		$controller->expects($this->any())->method('getCurrentTime')->willReturn(1234567);
 
 		if ($onlyVerificationCode === false) {
-			$this->accountManager->expects($this->once())->method('updateUser')->with($user, $expectedData);
+			$this->accountManager->expects($this->once())->method('updateUser')->with($user, $expectedData)->willReturnArgument(1);
 			$this->jobList->expects($this->once())->method('add')
 				->with('OCA\Settings\BackgroundJobs\VerifyUserData',
 					[
@@ -486,25 +497,25 @@ class UsersControllerTest extends \Test\TestCase {
 
 	public function dataTestGetVerificationCode() {
 		$accountDataBefore = [
-			AccountManager::PROPERTY_WEBSITE => ['value' => 'https://nextcloud.com', 'verified' => AccountManager::NOT_VERIFIED],
-			AccountManager::PROPERTY_TWITTER => ['value' => '@nextclouders', 'verified' => AccountManager::NOT_VERIFIED, 'signature' => 'theSignature'],
+			IAccountManager::PROPERTY_WEBSITE => ['value' => 'https://nextcloud.com', 'verified' => AccountManager::NOT_VERIFIED],
+			IAccountManager::PROPERTY_TWITTER => ['value' => '@nextclouders', 'verified' => AccountManager::NOT_VERIFIED, 'signature' => 'theSignature'],
 		];
 
 		$accountDataAfterWebsite = [
-			AccountManager::PROPERTY_WEBSITE => ['value' => 'https://nextcloud.com', 'verified' => AccountManager::VERIFICATION_IN_PROGRESS, 'signature' => 'theSignature'],
-			AccountManager::PROPERTY_TWITTER => ['value' => '@nextclouders', 'verified' => AccountManager::NOT_VERIFIED, 'signature' => 'theSignature'],
+			IAccountManager::PROPERTY_WEBSITE => ['value' => 'https://nextcloud.com', 'verified' => AccountManager::VERIFICATION_IN_PROGRESS, 'signature' => 'theSignature'],
+			IAccountManager::PROPERTY_TWITTER => ['value' => '@nextclouders', 'verified' => AccountManager::NOT_VERIFIED, 'signature' => 'theSignature'],
 		];
 
 		$accountDataAfterTwitter = [
-			AccountManager::PROPERTY_WEBSITE => ['value' => 'https://nextcloud.com', 'verified' => AccountManager::NOT_VERIFIED],
-			AccountManager::PROPERTY_TWITTER => ['value' => '@nextclouders', 'verified' => AccountManager::VERIFICATION_IN_PROGRESS, 'signature' => 'theSignature'],
+			IAccountManager::PROPERTY_WEBSITE => ['value' => 'https://nextcloud.com', 'verified' => AccountManager::NOT_VERIFIED],
+			IAccountManager::PROPERTY_TWITTER => ['value' => '@nextclouders', 'verified' => AccountManager::VERIFICATION_IN_PROGRESS, 'signature' => 'theSignature'],
 		];
 
 		return [
-			['verify-twitter', AccountManager::PROPERTY_TWITTER, $accountDataBefore, $accountDataAfterTwitter, false],
-			['verify-website', AccountManager::PROPERTY_WEBSITE, $accountDataBefore, $accountDataAfterWebsite, false],
-			['verify-twitter', AccountManager::PROPERTY_TWITTER, $accountDataBefore, $accountDataAfterTwitter, true],
-			['verify-website', AccountManager::PROPERTY_WEBSITE, $accountDataBefore, $accountDataAfterWebsite, true],
+			['verify-twitter', IAccountManager::PROPERTY_TWITTER, $accountDataBefore, $accountDataAfterTwitter, false],
+			['verify-website', IAccountManager::PROPERTY_WEBSITE, $accountDataBefore, $accountDataAfterWebsite, false],
+			['verify-twitter', IAccountManager::PROPERTY_TWITTER, $accountDataBefore, $accountDataAfterTwitter, true],
+			['verify-website', IAccountManager::PROPERTY_WEBSITE, $accountDataBefore, $accountDataAfterWebsite, true],
 		];
 	}
 

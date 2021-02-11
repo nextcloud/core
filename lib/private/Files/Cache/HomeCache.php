@@ -5,10 +5,11 @@
  * @author Andreas Fischer <bantu@owncloud.com>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
- * @author Vincent Petry <pvince81@owncloud.com>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -52,12 +53,19 @@ class HomeCache extends Cache {
 		}
 		if ($entry && $entry['mimetype'] === 'httpd/unix-directory') {
 			$id = $entry['fileid'];
-			$sql = 'SELECT SUM(`size`) AS f1 ' .
-			   'FROM `*PREFIX*filecache` ' .
-				'WHERE `parent` = ? AND `storage` = ? AND `size` >= 0';
-			$result = \OC_DB::executeAudited($sql, [$id, $this->getNumericStorageId()]);
-			if ($row = $result->fetchRow()) {
-				$result->closeCursor();
+
+			$query = $this->connection->getQueryBuilder();
+			$query->selectAlias($query->func()->sum('size'), 'f1')
+				->from('filecache')
+				->where($query->expr()->eq('parent', $query->createNamedParameter($id)))
+				->andWhere($query->expr()->eq('storage', $query->createNamedParameter($this->getNumericStorageId())))
+				->andWhere($query->expr()->gte('size', $query->createNamedParameter(0)));
+
+			$result = $query->execute();
+			$row = $result->fetch();
+			$result->closeCursor();
+
+			if ($row) {
 				list($sum) = array_values($row);
 				$totalSize = 0 + $sum;
 				$entry['size'] += 0;
@@ -65,6 +73,7 @@ class HomeCache extends Cache {
 					$this->update($id, ['size' => $totalSize]);
 				}
 			}
+			$result->closeCursor();
 		}
 		return $totalSize;
 	}

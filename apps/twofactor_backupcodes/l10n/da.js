@@ -12,7 +12,6 @@ OC.L10N.register(
     "Regenerate backup codes" : "Regenerer backup-koder",
     "If you regenerate backup codes, you automatically invalidate old codes." : "Hvis gu genere nye backup koder vil de gamle koder blive  ubrugelige.",
     "An error occurred while generating your backup codes" : "Der opstod en fejl under genereringen af dine backup-koder",
-    "Submit" : "Tilføj",
-    "_" : "_"
+    "Submit" : "Tilføj"
 },
 "nplurals=2; plural=(n != 1);");

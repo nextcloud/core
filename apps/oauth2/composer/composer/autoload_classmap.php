@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = $vendorDir;
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'OCA\\OAuth2\\Controller\\LoginRedirectorController' => $baseDir . '/../lib/Controller/LoginRedirectorController.php',
     'OCA\\OAuth2\\Controller\\OauthApiController' => $baseDir . '/../lib/Controller/OauthApiController.php',
     'OCA\\OAuth2\\Controller\\SettingsController' => $baseDir . '/../lib/Controller/SettingsController.php',

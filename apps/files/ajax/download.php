@@ -42,14 +42,28 @@ if (!is_array($files_list)) {
 }
 
 /**
+ * @psalm-taint-escape cookie
+ */
+function cleanCookieInput(string $value): string {
+	if (strlen($value) > 32) {
+		return '';
+	}
+	if (preg_match('!^[a-zA-Z0-9]+$!', $_GET['downloadStartSecret']) !== 1) {
+		return '';
+	}
+	return $value;
+}
+
+/**
  * this sets a cookie to be able to recognize the start of the download
  * the content must not be longer than 32 characters and must only contain
  * alphanumeric characters
  */
-if (isset($_GET['downloadStartSecret'])
-	&& !isset($_GET['downloadStartSecret'][32])
-	&& preg_match('!^[a-zA-Z0-9]+$!', $_GET['downloadStartSecret']) === 1) {
-	setcookie('ocDownloadStarted', $_GET['downloadStartSecret'], time() + 20, '/');
+if (isset($_GET['downloadStartSecret'])) {
+	$value = cleanCookieInput($_GET['downloadStartSecret']);
+	if ($value !== '') {
+		setcookie('ocDownloadStarted', $value, time() + 20, '/');
+	}
 }
 
 $server_params = [ 'head' => \OC::$server->getRequest()->getMethod() === 'HEAD' ];

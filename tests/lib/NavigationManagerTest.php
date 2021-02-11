@@ -44,12 +44,12 @@ class NavigationManagerTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->appManager        = $this->createMock(AppManager::class);
-		$this->urlGenerator      = $this->createMock(IURLGenerator::class);
-		$this->l10nFac           = $this->createMock(IFactory::class);
-		$this->userSession       = $this->createMock(IUserSession::class);
-		$this->groupManager      = $this->createMock(Manager::class);
-		$this->config            = $this->createMock(IConfig::class);
+		$this->appManager = $this->createMock(AppManager::class);
+		$this->urlGenerator = $this->createMock(IURLGenerator::class);
+		$this->l10nFac = $this->createMock(IFactory::class);
+		$this->userSession = $this->createMock(IUserSession::class);
+		$this->groupManager = $this->createMock(Manager::class);
+		$this->config = $this->createMock(IConfig::class);
 		$this->navigationManager = new NavigationManager(
 			$this->appManager,
 			$this->urlGenerator,
@@ -65,43 +65,43 @@ class NavigationManagerTest extends TestCase {
 	public function addArrayData() {
 		return [
 			[
-				'entry id'  => [
-					'id'      => 'entry id',
-					'name'    => 'link text',
-					'order'   => 1,
-					'icon'    => 'optional',
-					'href'    => 'url',
-					'type'    => 'settings',
+				'entry id' => [
+					'id' => 'entry id',
+					'name' => 'link text',
+					'order' => 1,
+					'icon' => 'optional',
+					'href' => 'url',
+					'type' => 'settings',
 					'classes' => ''
 				],
 				'entry id2' => [
-					'id'      => 'entry id',
-					'name'    => 'link text',
-					'order'   => 1,
-					'icon'    => 'optional',
-					'href'    => 'url',
-					'active'  => false,
-					'type'    => 'settings',
+					'id' => 'entry id',
+					'name' => 'link text',
+					'order' => 1,
+					'icon' => 'optional',
+					'href' => 'url',
+					'active' => false,
+					'type' => 'settings',
 					'classes' => ''
 				]
 			],
 			[
-				'entry id'  => [
-					'id'     => 'entry id',
-					'name'   => 'link text',
-					'order'  => 1,
+				'entry id' => [
+					'id' => 'entry id',
+					'name' => 'link text',
+					'order' => 1,
 					//'icon'	=> 'optional',
-					'href'   => 'url',
+					'href' => 'url',
 					'active' => true
 				],
 				'entry id2' => [
-					'id'      => 'entry id',
-					'name'    => 'link text',
-					'order'   => 1,
-					'icon'    => '',
-					'href'    => 'url',
-					'active'  => false,
-					'type'    => 'link',
+					'id' => 'entry id',
+					'name' => 'link text',
+					'order' => 1,
+					'icon' => '',
+					'href' => 'url',
+					'active' => false,
+					'type' => 'link',
 					'classes' => ''
 				]
 			]
@@ -161,11 +161,11 @@ class NavigationManagerTest extends TestCase {
 
 	public function testAddArrayClearGetAll() {
 		$entry = [
-			'id'    => 'entry id',
-			'name'  => 'link text',
+			'id' => 'entry id',
+			'name' => 'link text',
 			'order' => 1,
-			'icon'  => 'optional',
-			'href'  => 'url'
+			'icon' => 'optional',
+			'href' => 'url'
 		];
 
 		$this->assertEmpty($this->navigationManager->getAll(), 'Expected no navigation entry exists');
@@ -178,11 +178,11 @@ class NavigationManagerTest extends TestCase {
 		$this->assertEmpty($this->navigationManager->getAll(), 'Expected no navigation entry exists');
 
 		$entry = [
-			'id'    => 'entry id',
-			'name'  => 'link text',
+			'id' => 'entry id',
+			'name' => 'link text',
 			'order' => 1,
-			'icon'  => 'optional',
-			'href'  => 'url'
+			'icon' => 'optional',
+			'href' => 'url'
 		];
 
 		global $testAddClosureNumberOfCalls;
@@ -243,35 +243,35 @@ class NavigationManagerTest extends TestCase {
 	public function providesNavigationConfig() {
 		$apps = [
 			'core_apps' => [
-				'id'      => 'core_apps',
-				'order'   => 4,
-				'href'    => '/apps/test/',
-				'icon'    => '/apps/settings/img/apps.svg',
-				'name'    => 'Apps',
-				'active'  => false,
-				'type'    => 'settings',
+				'id' => 'core_apps',
+				'order' => 4,
+				'href' => '/apps/test/',
+				'icon' => '/apps/settings/img/apps.svg',
+				'name' => 'Apps',
+				'active' => false,
+				'type' => 'settings',
 				'classes' => ''
 			]
 		];
 		$defaults = [
 			'settings' => [
-				'id'      => 'settings',
-				'order'   => 2,
-				'href'    => '/apps/test/',
-				'icon'    => '/apps/settings/img/admin.svg',
-				'name'    => 'Settings',
-				'active'  => false,
-				'type'    => 'settings',
+				'id' => 'settings',
+				'order' => 2,
+				'href' => '/apps/test/',
+				'icon' => '/apps/settings/img/admin.svg',
+				'name' => 'Settings',
+				'active' => false,
+				'type' => 'settings',
 				'classes' => ''
 			],
 			'logout' => [
-				'id'      => 'logout',
-				'order'   => 99999,
-				'href'    => 'https://example.com/logout?requesttoken='. urlencode(\OCP\Util::callRegister()),
-				'icon'    => '/apps/core/img/actions/logout.svg',
-				'name'    => 'Log out',
-				'active'  => false,
-				'type'    => 'settings',
+				'id' => 'logout',
+				'order' => 99999,
+				'href' => 'https://example.com/logout?requesttoken='. urlencode(\OCP\Util::callRegister()),
+				'icon' => '/apps/core/img/actions/logout.svg',
+				'name' => 'Log out',
+				'active' => false,
+				'type' => 'settings',
 				'classes' => ''
 			]
 		];
@@ -281,13 +281,13 @@ class NavigationManagerTest extends TestCase {
 				array_merge(
 					['settings' => $defaults['settings']],
 					['test' => [
-						'id'      => 'test',
-						'order'   => 100,
-						'href'    => '/apps/test/',
-						'icon'    => '/apps/test/img/app.svg',
-						'name'    => 'Test',
-						'active'  => false,
-						'type'    => 'link',
+						'id' => 'test',
+						'order' => 100,
+						'href' => '/apps/test/',
+						'icon' => '/apps/test/img/app.svg',
+						'name' => 'Test',
+						'active' => false,
+						'type' => 'link',
 						'classes' => ''
 					]],
 					['logout' => $defaults['logout']]
@@ -302,13 +302,13 @@ class NavigationManagerTest extends TestCase {
 				array_merge(
 					['settings' => $defaults['settings']],
 					['test' => [
-						'id'      => 'test',
-						'order'   => 100,
-						'href'    => '/apps/test/',
-						'icon'    => '/apps/test/img/app.svg',
-						'name'    => 'Test',
-						'active'  => false,
-						'type'    => 'settings',
+						'id' => 'test',
+						'order' => 100,
+						'href' => '/apps/test/',
+						'icon' => '/apps/test/img/app.svg',
+						'name' => 'Test',
+						'active' => false,
+						'type' => 'settings',
 						'classes' => ''
 					]],
 					['logout' => $defaults['logout']]
@@ -324,13 +324,13 @@ class NavigationManagerTest extends TestCase {
 					['settings' => $defaults['settings']],
 					$apps,
 					['test' => [
-						'id'      => 'test',
-						'order'   => 100,
-						'href'    => '/apps/test/',
-						'icon'    => '/apps/test/img/app.svg',
-						'name'    => 'Test',
-						'active'  => false,
-						'type'    => 'link',
+						'id' => 'test',
+						'order' => 100,
+						'href' => '/apps/test/',
+						'icon' => '/apps/test/img/app.svg',
+						'name' => 'Test',
+						'active' => false,
+						'type' => 'link',
 						'classes' => ''
 					]],
 					['logout' => $defaults['logout']]
@@ -359,8 +359,8 @@ class NavigationManagerTest extends TestCase {
 				$defaults,
 				['navigations' => [[
 					'@attributes' => ['role' => 'admin'],
-					'route'       => 'test.page.index',
-					'name'        => 'Test'
+					'route' => 'test.page.index',
+					'name' => 'Test'
 				]]]
 			]
 		];

@@ -23,5 +23,11 @@ import { loadState } from '@nextcloud/initial-state'
 
 OCA.Accessibility = loadState('accessibility', 'data')
 if (OCA.Accessibility.theme !== false) {
-	document.body.classList.add(OCA.Accessibility.theme)
+	document.body.classList.add(`theme--${OCA.Accessibility.theme}`)
+} else {
+	document.body.classList.add('theme--light')
+}
+
+if (OCA.Accessibility.highcontrast !== false) {
+	document.body.classList.add('theme--highcontrast')
 }
