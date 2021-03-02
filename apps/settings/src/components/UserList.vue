@@ -472,7 +472,14 @@ export default {
 				search: this.searchQuery,
 			})
 				.then((response) => {
-					response ? $state.loaded() : $state.complete()
+					// we loaded something
+					if (this.filteredUsers.length > 0) {
+						$state.loaded()
+					}
+					// no more results
+					if (!response) {
+						$state.complete()
+					}
 				})
 		},
 
