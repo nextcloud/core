@@ -171,12 +171,16 @@ class Application extends App implements IBootstrap {
 	 * @throws \OCP\AppFramework\QueryException
 	 */
 	public function onChangeInfo(array $parameters) {
-		if ($parameters['feature'] !== 'eMailAddress') {
-			return;
+		if ($parameters['feature'] === 'eMailAddress') {
+			/** @var Hooks $hooks */
+			$hooks = $this->getContainer()->query(Hooks::class);
+			$hooks->onChangeEmail($parameters['user'], $parameters['old_value']);
 		}
 
-		/** @var Hooks $hooks */
-		$hooks = $this->getContainer()->query(Hooks::class);
-		$hooks->onChangeEmail($parameters['user'], $parameters['old_value']);
+		if ($parameters['feature'] === 'displayName') {
+			/** @var Hooks $hooks */
+			$hooks = $this->getContainer()->query(Hooks::class);
+			$hooks->onChangeDisplayName($parameters['user'], $parameters['old_value']);
+		}
 	}
 }

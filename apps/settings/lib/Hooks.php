@@ -215,6 +215,33 @@ class Hooks {
 		}
 	}
 
+	public function onChangeDisplayName(IUser $user, string $oldDisplayName) {
+		if ($oldDisplayName === $user->getDisplayName() ||
+			$user->getLastLogin() === 0) {
+			// display name didn't really change or user didn't login,
+			// so don't create activities.
+			return;
+		}
+
+		$event = $this->activityManager->generateEvent();
+		$event->setApp('settings')
+			->setType('personal_settings')
+			->setAffectedUser($user->getUID());
+
+		$actor = $this->userSession->getUser();
+		if ($actor instanceof IUser) {
+			$subject = Provider::DISPLAY_NAME_CHANGED_SELF;
+			if ($actor->getUID() !== $user->getUID()) {
+				$subject = Provider::DISPLAY_NAME_CHANGED_BY;
+			}
+			$event->setAuthor($actor->getUID())
+				->setSubject($subject, ['actor' => $actor->getUID()]);
+		} else {
+			$event->setSubject(Provider::DISPLAY_NAME_CHANGED);
+		}
+		$this->activityManager->publish($event);
+	}
+
 	/**
 	 * @param IGroup $group
 	 * @param IUser $user

@@ -46,6 +46,9 @@ class Provider implements IProvider {
 	public const EMAIL_CHANGED_BY = 'email_changed_by';
 	public const EMAIL_CHANGED_SELF = 'email_changed_self';
 	public const EMAIL_CHANGED = 'email_changed';
+	public const DISPLAY_NAME_CHANGED_BY = 'displayname_changed_by';
+	public const DISPLAY_NAME_CHANGED_SELF = 'displayname_changed_self';
+	public const DISPLAY_NAME_CHANGED = 'displayname_changed';
 	public const APP_TOKEN_CREATED = 'app_token_created';
 	public const APP_TOKEN_DELETED = 'app_token_deleted';
 	public const APP_TOKEN_RENAMED = 'app_token_renamed';
@@ -115,6 +118,12 @@ class Provider implements IProvider {
 			$subject = $this->l->t('You changed your email address');
 		} elseif ($event->getSubject() === self::EMAIL_CHANGED) {
 			$subject = $this->l->t('Your email address was changed by an administrator');
+		} elseif ($event->getSubject() === self::DISPLAY_NAME_CHANGED_BY) {
+			$subject = $this->l->t('{actor} changed your display name');
+		} elseif ($event->getSubject() === self::DISPLAY_NAME_CHANGED_SELF) {
+			$subject = $this->l->t('You changed your display name');
+		} elseif ($event->getSubject() === self::DISPLAY_NAME_CHANGED) {
+			$subject = $this->l->t('Your display name was changed by the system');
 		} elseif ($event->getSubject() === self::APP_TOKEN_CREATED) {
 			$subject = $this->l->t('You created app password "{token}"');
 		} elseif ($event->getSubject() === self::APP_TOKEN_DELETED) {
@@ -150,11 +159,17 @@ class Provider implements IProvider {
 			case self::PASSWORD_RESET_SELF:
 			case self::EMAIL_CHANGED_SELF:
 			case self::EMAIL_CHANGED:
+			case self::DISPLAY_NAME_CHANGED_SELF:
+			case self::DISPLAY_NAME_CHANGED:
 				return [];
 			case self::PASSWORD_CHANGED_BY:
 			case self::EMAIL_CHANGED_BY:
 				return [
 					'actor' => $this->generateUserParameter($parameters[0]),
+				];
+			case self::DISPLAY_NAME_CHANGED_BY:
+				return [
+					'actor' => $this->generateUserParameter($parameters['actor']),
 				];
 			case self::APP_TOKEN_CREATED:
 			case self::APP_TOKEN_DELETED:
