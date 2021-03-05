@@ -24,7 +24,7 @@ $default-height: 34px;
 
 /* Simple selector to allow easy overriding */
 select,
-button,
+button:not(.button-vue),
 input,
 textarea,
 div[contenteditable=true],
@@ -43,7 +43,7 @@ div[contenteditable=false] {
 /* Default global values */
 div.select2-drop .select2-search input, // TODO: REMOVE WHEN DROPPING SELECT2
 select,
-button, .button,
+button:not(.button-vue), .button:not(.button-vue),
 input:not([type='range']),
 textarea,
 div[contenteditable=true],
@@ -168,8 +168,8 @@ input {
 
 /* 'Click' inputs */
 select,
-button, .button,
-input[type='button'],
+button:not(.button-vue), .button:not(.button-vue),
+input[type='button']:not(.button-vue),
 input[type='submit'],
 input[type='reset'] {
 	padding: 6px 16px;
@@ -184,7 +184,7 @@ input[type='reset'] {
 	}
 }
 select,
-button, .button {
+button:not(.button-vue), .button:not(.button-vue) {
 	* {
 		cursor: pointer;
 	}
@@ -197,8 +197,8 @@ button, .button {
 }
 
 /* Buttons */
-button, .button,
-input[type='button'],
+button:not(.button-vue), .button:not(.button-vue),
+input[type='button']:not(.button-vue),
 input[type='submit'],
 input[type='reset'] {
 	font-weight: bold;
@@ -215,7 +215,7 @@ input[type='reset'] {
 		color: #fff !important;
 	}
 }
-button, .button {
+button:not(.button-vue), .button:not(.button-vue) {
 	> span {
 		/* icon position inside buttons */
 		&[class^='icon-'],

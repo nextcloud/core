@@ -81,6 +81,12 @@ $color-box-shadow: transparentize(nc-darken($color-main-background, 70%), 0.5) !
 $color-border: nc-darken($color-main-background, 7%) !default;
 // darker border like inputs or very visible elements
 $color-border-dark: nc-darken($color-main-background, 14%) !default;
+
+// Ripple effect
+$color-ripple: nc-darken($color-main-background, 30%);
+$color-ripple-primary: nc-lighten($color-primary-active, 20%);
+
+
 $border-radius: 3px !default;
 $border-radius-large: 10px !default;
 // Pill-style button, value is large so big buttons also have correct roundness

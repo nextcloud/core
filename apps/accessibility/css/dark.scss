@@ -21,6 +21,9 @@ $color-box-shadow: transparentize(darken($color-main-background, 70%), 0.5);
 $color-border: lighten($color-main-background, 7%);
 $color-border-dark: lighten($color-main-background, 14%);
 
+// Ripple effect
+$color-ripple: rgba(255, 255, 255, .4);
+
 #app-navigation > ul > li > a:first-child,
 #app-navigation > ul > li > ul > li > a:first-child,
 #contactsmenu-menu a,
