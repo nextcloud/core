@@ -278,6 +278,7 @@ class ConfigAPIController extends OCSController {
 	 *     <ldapPagingSize>500</ldapPagingSize>
 	 *     <turnOnPasswordChange>1</turnOnPasswordChange>
 	 *     <ldapDynamicGroupMemberURL></ldapDynamicGroupMemberURL>
+	 *     <ldapCustomMemberOf></ldapCustomMemberOf>
 	 *   </data>
 	 * </ocs>
 	 *

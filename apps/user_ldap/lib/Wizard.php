@@ -870,7 +870,8 @@ class Wizard extends LDAPUtility {
 		if (!$cr) {
 			throw new \Exception('Could not connect to LDAP');
 		}
-		$result = $this->access->countUsers('memberOf=*', ['memberOf'], 1);
+		$attribute = $this->access->getMemberOfAttribute();
+		$result = $this->access->countUsers($attribute . '=*', [$attribute], 1);
 		if (is_int($result) && $result > 0) {
 			return true;
 		}
@@ -921,7 +922,7 @@ class Wizard extends LDAPUtility {
 							if ($dn === false || $dn === '') {
 								continue;
 							}
-							$filterPart = '(memberof=' . $dn . ')';
+							$filterPart = '(' . $this->access->getMemberOfAttribute() . '=' . $dn . ')';
 							if (isset($attrs['primaryGroupToken'])) {
 								$pgt = $attrs['primaryGroupToken'][0];
 								$primaryFilterPart = '(primaryGroupID=' . $pgt .')';

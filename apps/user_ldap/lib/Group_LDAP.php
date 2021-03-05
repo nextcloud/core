@@ -270,7 +270,7 @@ class Group_LDAP extends BackendUtility implements GroupInterface, IGroupLDAP, I
 			$filter = $this->access->combineFilterWithAnd([
 				$this->access->connection->ldapUserFilter,
 				$this->access->connection->ldapUserDisplayName . '=*',
-				'memberof:1.2.840.113556.1.4.1941:=' . $dnGroup
+				$this->access->getMemberOfAttribute() . ':1.2.840.113556.1.4.1941:=' . $dnGroup
 			]);
 			$memberRecords = $this->access->fetchListOfUsers(
 				$filter,
@@ -322,7 +322,7 @@ class Group_LDAP extends BackendUtility implements GroupInterface, IGroupLDAP, I
 	 * @throws ServerNotAvailableException
 	 */
 	private function _getGroupDNsFromMemberOf(string $dn): array {
-		$groups = $this->access->readAttribute($dn, 'memberOf');
+		$groups = $this->access->readAttribute($dn, $this->access->getMemberOfAttribute());
 		if (!is_array($groups)) {
 			return [];
 		}
@@ -331,7 +331,7 @@ class Group_LDAP extends BackendUtility implements GroupInterface, IGroupLDAP, I
 			if (isset($this->cachedNestedGroups[$groupDN])) {
 				$nestedGroups = $this->cachedNestedGroups[$groupDN];
 			} else {
-				$nestedGroups = $this->access->readAttribute($groupDN, 'memberOf');
+				$nestedGroups = $this->access->readAttribute($groupDN, $this->access->getMemberOfAttribute());
 				if (!is_array($nestedGroups)) {
 					$nestedGroups = [];
 				}

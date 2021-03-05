@@ -227,9 +227,9 @@ class User {
 
 		//memberOf groups
 		$cacheKey = 'getMemberOf'.$this->getUsername();
-		$groups = false;
-		if (isset($ldapEntry['memberof'])) {
-			$groups = $ldapEntry['memberof'];
+		$groups = $this->access->getMemberOfValuesFromRecord($ldapEntry);
+		if ($groups === null) {
+			$groups = false;
 		}
 		$this->connection->writeToCache($cacheKey, $groups);
 
@@ -322,17 +322,6 @@ class User {
 		//false will apply default behaviour as defined and done by OC_User
 		$this->config->setUserValue($this->getUsername(), 'user_ldap', 'homePath', '');
 		return false;
-	}
-
-	public function getMemberOfGroups() {
-		$cacheKey = 'getMemberOf'.$this->getUsername();
-		$memberOfGroups = $this->connection->getFromCache($cacheKey);
-		if (!is_null($memberOfGroups)) {
-			return $memberOfGroups;
-		}
-		$groupDNs = $this->access->readAttribute($this->getDN(), 'memberOf');
-		$this->connection->writeToCache($cacheKey, $groupDNs);
-		return $groupDNs;
 	}
 
 	/**

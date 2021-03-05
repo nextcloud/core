@@ -168,7 +168,7 @@ class Manager {
 	 * @return string[]
 	 */
 	public function getAttributes($minimal = false) {
-		$baseAttributes = array_merge(Access::UUID_ATTRIBUTES, ['dn', 'uid', 'samaccountname', 'memberof']);
+		$baseAttributes = array_merge(Access::UUID_ATTRIBUTES, ['dn', 'uid', 'samaccountname']);
 		$attributes = [
 			$this->access->getConnection()->ldapExpertUUIDUserAttr,
 			$this->access->getConnection()->ldapQuotaAttribute,
@@ -176,6 +176,7 @@ class Manager {
 			$this->access->getConnection()->ldapUserDisplayName,
 			$this->access->getConnection()->ldapUserDisplayName2,
 			$this->access->getConnection()->ldapExtStorageHomeAttribute,
+			$this->access->getMemberOfAttribute()
 		];
 
 		$homeRule = $this->access->getConnection()->homeFolderNamingRule;
