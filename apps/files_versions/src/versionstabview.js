@@ -9,7 +9,8 @@
  */
 
 import ItemTemplate from './templates/item.handlebars'
-import Template from './templates/template.handlebars';
+import Template from './templates/template.handlebars'
+import { emit } from '@nextcloud/event-bus'
 
 (function() {
 	/**
@@ -25,6 +26,7 @@ import Template from './templates/template.handlebars';
 
 		events: {
 			'click .revertVersion': '_onClickRevertVersion',
+			'click .downloadVersion': '_onClickDownloadVersion',
 		},
 
 		initialize() {
@@ -68,6 +70,15 @@ import Template from './templates/template.handlebars';
 			const revision = $target.attr('data-revision')
 
 			const versionModel = this.collection.get(revision)
+			const restoreStartedEventState = {
+				preventDefault: false,
+				fileInfoModel,
+				versionModel,
+			}
+			emit('files_versions:restore:started', restoreStartedEventState)
+			if (restoreStartedEventState.preventDefault) {
+				return
+			}
 			versionModel.revert({
 				success() {
 					// reset and re-fetch the updated collection
@@ -86,6 +97,10 @@ import Template from './templates/template.handlebars';
 						// temp dummy, until we can do a PROPFIND
 						etag: versionModel.get('id') + versionModel.get('timestamp'),
 					})
+					emit('files_versions:restore:finished', {
+						fileInfoModel,
+						versionModel,
+					})
 				},
 
 				error() {
@@ -101,12 +116,36 @@ import Template from './templates/template.handlebars';
 						type: 'error',
 					}
 					)
+					emit('files_versions:restore:failed', {
+						fileInfoModel,
+						versionModel,
+					})
 				},
 			})
 
 			// spinner
 			this._toggleLoading(true)
 			fileInfoModel.trigger('busy', fileInfoModel, true)
+		},
+
+		_onClickDownloadVersion(ev) {
+			let $target = $(ev.target)
+			const fileInfoModel = this.collection.getFileInfo()
+			if (!$target.is('li')) {
+				$target = $target.closest('li')
+			}
+			const revision = $target.attr('data-revision')
+			const versionModel = this.collection.get(revision)
+
+			const downloadVersionEventState = {
+				preventDefault: false,
+				fileInfoModel,
+				versionModel,
+			}
+			emit('files_versions:download:triggered', downloadVersionEventState)
+			if (downloadVersionEventState.preventDefault) {
+				ev.preventDefault()
+			}
 		},
 
 		_toggleLoading(state) {
