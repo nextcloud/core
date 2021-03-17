@@ -155,6 +155,10 @@
 				return;
 			}
 
+			if (OC.appConfig.core.disableStorageWarning === true) {
+				return;
+			}
+
 			var usedSpacePercent = $('#usedSpacePercent').val(),
 				owner = $('#owner').val(),
 				ownerDisplayName = $('#ownerDisplayName').val(),

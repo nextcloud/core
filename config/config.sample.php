@@ -818,6 +818,16 @@ $CONFIG = [
 'config_is_read_only' => false,
 
 /**
+ * Disable the storage notification warning. Scenario is, to use only group
+ * folders and no user directories. Setting the users quota to 0 B would result
+ * to a storage warning. With this setting, the warning can be disabled.
+ *
+ * Defaults to ``false``
+ */
+
+'files.disable.storage.warning' => false,
+
+/**
  * Logging
  */
 
