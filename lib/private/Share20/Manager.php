@@ -193,7 +193,7 @@ class Manager implements IManager {
 		if ($password === null) {
 			// No password is set, check if this is allowed.
 			if ($this->shareApiLinkEnforcePassword()) {
-				throw new \InvalidArgumentException('Passwords are enforced for link shares');
+				throw new \InvalidArgumentException($this->l->t('Passwords are enforced for link shares'));
 			}
 
 			return;
