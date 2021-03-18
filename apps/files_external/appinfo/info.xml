@@ -47,6 +47,7 @@ External storage can be configured using the GUI or at the command line. This se
 		<command>OCA\Files_External\Command\Backends</command>
 		<command>OCA\Files_External\Command\Verify</command>
 		<command>OCA\Files_External\Command\Notify</command>
+		<command>OCA\Files_External\Command\Scan</command>
 	</commands>
 
 	<settings>
