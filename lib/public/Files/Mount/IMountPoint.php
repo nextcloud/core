@@ -48,7 +48,7 @@ interface IMountPoint {
 	/**
 	 * Get the storage that is mounted
 	 *
-	 * @return \OC\Files\Storage\Storage
+	 * @return \OCP\Files\Storage\IStorage
 	 * @since 8.0.0
 	 */
 	public function getStorage();

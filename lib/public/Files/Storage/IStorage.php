@@ -433,10 +433,12 @@ interface IStorage {
 	public function getOwner($path);
 
 	/**
+	 * @param string $path
+	 * @param IStorage|null $storage
 	 * @return ICache
 	 * @since 9.0.0
 	 */
-	public function getCache();
+	public function getCache($path = '', $storage = null);
 
 	/**
 	 * @return IPropagator

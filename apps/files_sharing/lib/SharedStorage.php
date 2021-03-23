@@ -369,11 +369,6 @@ class SharedStorage extends \OC\Files\Storage\Wrapper\Jail implements ISharedSto
 		return $this->superShare->getNodeType();
 	}
 
-	/**
-	 * @param string $path
-	 * @param null $storage
-	 * @return Cache
-	 */
 	public function getCache($path = '', $storage = null) {
 		if ($this->cache) {
 			return $this->cache;

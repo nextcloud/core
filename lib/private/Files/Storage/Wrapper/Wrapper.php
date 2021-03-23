@@ -386,7 +386,7 @@ class Wrapper implements \OC\Files\Storage\Storage, ILockingStorage, IWriteStrea
 	 * get a cache instance for the storage
 	 *
 	 * @param string $path
-	 * @param \OC\Files\Storage\Storage (optional) the storage to pass to the cache
+	 * @param \OC\Files\Storage\Storage|null (optional) the storage to pass to the cache
 	 * @return \OC\Files\Cache\Cache
 	 */
 	public function getCache($path = '', $storage = null) {
