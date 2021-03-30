@@ -1033,6 +1033,7 @@ class OC {
 	 *
 	 * @param OCP\IRequest $request
 	 * @return boolean
+	 * @throws \OC\User\LoginException
 	 */
 	public static function handleLogin(OCP\IRequest $request) {
 		$userSession = self::$server->getUserSession();

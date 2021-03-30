@@ -577,6 +577,7 @@ class Session implements IUserSession, Emitter {
 	 * @param IRequest $request
 	 * @param OC\Security\Bruteforce\Throttler $throttler
 	 * @return boolean if the login was successful
+	 * @throws LoginException
 	 */
 	public function tryBasicAuthLogin(IRequest $request,
 									  OC\Security\Bruteforce\Throttler $throttler) {
@@ -599,8 +600,9 @@ class Session implements IUserSession, Emitter {
 
 					return true;
 				}
+				throw new LoginException('Basic auth failed while credentials provided');
 			} catch (PasswordLoginForbiddenException $ex) {
-				// Nothing to do
+				throw new LoginException('Password login not allowed', 0, $ex);
 			}
 		}
 		return false;
