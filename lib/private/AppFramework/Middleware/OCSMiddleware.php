@@ -34,6 +34,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCSController;
@@ -107,6 +108,8 @@ class OCSMiddleware extends Middleware {
 				if ($response instanceof JSONResponse) {
 					/** @var DataResponse $response */
 					$message = $response->getData()['message'];
+				} elseif ($response instanceof TemplateResponse) {
+					$message = $response->getParams()['message'];
 				}
 
 				return $this->buildNewResponse($controller, API::RESPOND_UNAUTHORISED, $message);
