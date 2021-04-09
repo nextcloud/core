@@ -61,6 +61,7 @@ use OCP\Files\NotPermittedException;
 use OCP\Lock\ILockingProvider;
 use OCP\Lock\LockedException;
 use OCP\User;
+use Psr\Log\LoggerInterface;
 
 class Trashbin {
 
@@ -989,7 +990,7 @@ class Trashbin {
 		$query = new CacheQueryBuilder(
 			\OC::$server->getDatabaseConnection(),
 			\OC::$server->getSystemConfig(),
-			\OC::$server->getLogger(),
+			\OC::$server->get(LoggerInterface::class),
 			$cache
 		);
 		$normalizedParentPath = ltrim(Filesystem::normalizePath(dirname('files_trashbin/versions/'. $filename)), '/');

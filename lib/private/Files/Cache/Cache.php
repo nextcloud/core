@@ -55,6 +55,7 @@ use OCP\Files\IMimeTypeLoader;
 use OCP\Files\Search\ISearchQuery;
 use OCP\Files\Storage\IStorage;
 use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
 
 /**
  * Metadata cache for a storage
@@ -125,7 +126,7 @@ class Cache implements ICache {
 		return new CacheQueryBuilder(
 			$this->connection,
 			\OC::$server->getSystemConfig(),
-			\OC::$server->getLogger(),
+			\OC::$server->get(LoggerInterface::class),
 			$this
 		);
 	}

@@ -25,8 +25,8 @@ use OC\DB\ConnectionAdapter;
 use OC\Security\CredentialsManager;
 use OC\SystemConfig;
 use OCP\IDBConnection;
-use OCP\ILogger;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
 
 /**
  * @group DB
@@ -102,7 +102,7 @@ class CredentialsManagerTest extends \Test\TestCase {
 			->setConstructorArgs([
 				$this->dbConnectionAdapter,
 				$this->createMock(SystemConfig::class),
-				$this->createMock(ILogger::class),
+				$this->createMock(LoggerInterface::class),
 			])
 			->setMethods(['execute'])
 			->getMock();

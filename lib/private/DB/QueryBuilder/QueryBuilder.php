@@ -54,6 +54,7 @@ use OCP\DB\QueryBuilder\IParameter;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\DB\QueryBuilder\IQueryFunction;
 use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class QueryBuilder implements IQueryBuilder {
 
@@ -63,7 +64,7 @@ class QueryBuilder implements IQueryBuilder {
 	/** @var SystemConfig */
 	private $systemConfig;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var \Doctrine\DBAL\Query\QueryBuilder */
@@ -83,9 +84,9 @@ class QueryBuilder implements IQueryBuilder {
 	 *
 	 * @param ConnectionAdapter $connection
 	 * @param SystemConfig $systemConfig
-	 * @param ILogger $logger
+	 * @param LoggerInterface $logger
 	 */
-	public function __construct(ConnectionAdapter $connection, SystemConfig $systemConfig, ILogger $logger) {
+	public function __construct(ConnectionAdapter $connection, SystemConfig $systemConfig, LoggerInterface  $logger) {
 		$this->connection = $connection;
 		$this->systemConfig = $systemConfig;
 		$this->logger = $logger;

@@ -30,7 +30,7 @@ use OC\DB\QueryBuilder\QueryBuilder;
 use OC\SystemConfig;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 /**
  * Query builder with commonly used helpers for filecache queries
@@ -39,7 +39,7 @@ class CacheQueryBuilder extends QueryBuilder {
 	private $cache;
 	private $alias = null;
 
-	public function __construct(IDBConnection $connection, SystemConfig $systemConfig, ILogger $logger, Cache $cache) {
+	public function __construct(IDBConnection $connection, SystemConfig $systemConfig, LoggerInterface $logger, Cache $cache) {
 		parent::__construct($connection, $systemConfig, $logger);
 
 		$this->cache = $cache;
