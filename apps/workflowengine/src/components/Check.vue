@@ -1,4 +1,27 @@
+<!--
+  - @copyright Copyright (c) 2019 Julius Härtl <jus@bitgrid.net>
+  -
+  - @author Julius Härtl <jus@bitgrid.net>
+  -
+  - @license GNU AGPL version 3 or any later version
+  -
+  - This program is free software: you can redistribute it and/or modify
+  - it under the terms of the GNU Affero General Public License as
+  - published by the Free Software Foundation, either version 3 of the
+  - License, or (at your option) any later version.
+  -
+  - This program is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU Affero General Public License for more details.
+  -
+  - You should have received a copy of the GNU Affero General Public License
+  - along with this program. If not, see <http://www.gnu.org/licenses/>.
+  -
+  -->
+
 <template>
+	<!-- eslint-disable vue/no-mutating-props -->
 	<div v-click-outside="hideDelete" class="check" @click="showDelete">
 		<Multiselect ref="checkSelector"
 			v-model="currentOption"
@@ -125,6 +148,7 @@ export default {
 			if (this.currentOption && this.currentOption.validate) {
 				this.valid = !!this.currentOption.validate(this.check)
 			}
+			// eslint-disable-next-line vue/no-mutating-props
 			this.check.invalid = !this.valid
 			this.$emit('validate', this.valid)
 		},
@@ -133,7 +157,9 @@ export default {
 			if (this.check.class !== this.currentOption.class || matchingOperator === -1) {
 				this.currentOperator = this.operators[0]
 			}
+			// eslint-disable-next-line vue/no-mutating-props
 			this.check.class = this.currentOption.class
+			// eslint-disable-next-line vue/no-mutating-props
 			this.check.operator = this.currentOperator.operator
 
 			this.validate()
@@ -175,18 +201,22 @@ export default {
 			text-overflow: ellipsis;
 		}
 	}
+
 	input[type=text] {
 		margin: 0;
 	}
+
 	::placeholder {
 		font-size: 10px;
 	}
+
 	button.action-item.action-item--single.icon-close {
 		height: 44px;
 		width: 44px;
 		margin-top: -5px;
 		margin-bottom: -5px;
 	}
+
 	.invalid {
 		border: 1px solid var(--color-error) !important;
 	}

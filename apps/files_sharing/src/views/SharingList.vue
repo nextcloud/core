@@ -79,8 +79,7 @@ export default {
 		 * @param {Share} share the share to remove
 		 */
 		removeShare(share) {
-			const index = this.shares.findIndex(item => item === share)
-			this.shares.splice(index, 1)
+			this.$emit('remove', share)
 		},
 	},
 }

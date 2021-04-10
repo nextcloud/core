@@ -266,7 +266,7 @@ export default {
 		padding: calc(var(--margin) * 2) var(--margin);
 		position: sticky;
 		bottom: 0;
-		background-image: linear-gradient(0, var(--gradient-main-background));
+		background-image: linear-gradient(to bottom, var(--gradient-main-background));
 
 		button, input[type='submit'] {
 			height: 44px;
@@ -274,7 +274,7 @@ export default {
 	}
 
 	// Make sure we're relative for the loading emptycontent on top
-	/deep/ .modal-container {
+	::v-deep .modal-container {
 		position: relative;
 		overflow-y: auto !important;
 	}

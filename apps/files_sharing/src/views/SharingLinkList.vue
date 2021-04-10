@@ -112,8 +112,17 @@ export default {
 		 * @param {Function} resolve a function to run after the share is added and its component initialized
 		 */
 		addShare(share, resolve) {
-			this.shares.unshift(share)
-			this.awaitForShare(share, resolve)
+			// Send the event and wait for it to be finished to resolve
+			this.$emit('add', share, newShare => this.awaitForShare(newShare, resolve))
+		},
+
+		/**
+		 * Remove a share from the shares list
+		 *
+		 * @param {Share} share the share to remove
+		 */
+		removeShare(share) {
+			this.$emit('remove', share)
 		},
 
 		/**
@@ -131,16 +140,6 @@ export default {
 					resolve(newShare)
 				}
 			})
-		},
-
-		/**
-		 * Remove a share from the shares list
-		 *
-		 * @param {Share} share the share to remove
-		 */
-		removeShare(share) {
-			const index = this.shares.findIndex(item => item === share)
-			this.shares.splice(index, 1)
 		},
 	},
 }

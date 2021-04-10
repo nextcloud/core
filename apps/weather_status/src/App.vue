@@ -460,71 +460,90 @@ export default {
 .icon-weather-status {
 	background-image: url('./../img/app-dark.svg');
 }
+
 body.theme--dark .icon-weather-status {
 	background-image: url('./../img/app.svg');
 }
+
 .icon-clearsky-day {
 	background-image: url('./../img/sun.svg');
 }
+
 .icon-clearsky-night {
 	background-image: url('./../img/moon.svg');
 }
+
 .icon-cloudy {
 	background-image: url('./../img/cloud-cloud.svg');
 }
+
 .icon-fair-day {
 	background-image: url('./../img/sun-small-cloud.svg');
 }
+
 .icon-fair-night {
 	background-image: url('./../img/moon-small-cloud.svg');
 }
+
 .icon-partlycloudy-day {
 	background-image: url('./../img/sun-cloud.svg');
 }
+
 .icon-partlycloudy-night {
 	background-image: url('./../img/moon-cloud.svg');
 }
+
 .icon-fog {
 	background-image: url('./../img/fog.svg');
 }
+
 .icon-lightrain {
 	background-image: url('./../img/light-rain.svg');
 }
+
 .icon-rain {
 	background-image: url('./../img/rain.svg');
 }
+
 .icon-heavyrain {
 	background-image: url('./../img/heavy-rain.svg');
 }
+
 .icon-light-rainshowers-day {
 	background-image: url('./../img/sun-cloud-light-rain.svg');
 }
+
 .icon-light-rainshowers-night {
 	background-image: url('./../img/moon-cloud-light-rain.svg');
 }
+
 .icon-rainshowers-day {
 	background-image: url('./../img/sun-cloud-rain.svg');
 }
+
 .icon-rainshowers-night {
 	background-image: url('./../img/moon-cloud-rain.svg');
 }
+
 .icon-heavy-rainshowers-day {
 	background-image: url('./../img/sun-cloud-heavy-rain.svg');
 }
+
 .icon-heavy-rainshowers-night {
 	background-image: url('./../img/moon-cloud-heavy-rain.svg');
 }
+
 .icon-crosshair {
-    background-color: var(--color-main-text);
-    padding: 0 !important;
-    mask: url(./../img/cross.svg) no-repeat;
-    mask-size: 18px 18px;
-    mask-position: center;
-    -webkit-mask: url(./../img/cross.svg) no-repeat;
-    -webkit-mask-size: 18px 18px;
-    -webkit-mask-position: center;
-    min-width: 44px !important;
-    min-height: 44px !important;
+	background-color: var(--color-main-text);
+	padding: 0 !important;
+	mask: url(./../img/cross.svg) no-repeat;
+	mask-size: 18px 18px;
+	mask-position: center;
+	-webkit-mask: url(./../img/cross.svg) no-repeat;
+	-webkit-mask-size: 18px 18px;
+	-webkit-mask-position: center;
+	min-width: 44px !important;
+	min-height: 44px !important;
 }
 
 li:not(.inline) .weather-status-menu-item {

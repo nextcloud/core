@@ -688,6 +688,7 @@ export default {
 	.row--menu-opened {
 		z-index: 1 !important;
 	}
+
 	.row::v-deep .multiselect__single {
 		z-index: auto !important;
 	}

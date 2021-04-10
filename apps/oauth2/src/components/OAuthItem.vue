@@ -92,10 +92,12 @@ export default {
 		padding: 10px;
 		vertical-align: middle;
 	}
+
 	td code {
 		display: inline-block;
 		vertical-align: middle;
 	}
+
 	table.inline td {
 		border: none;
 		padding: 5px;

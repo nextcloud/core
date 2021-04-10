@@ -55,13 +55,16 @@
 				ref="linkShareList"
 				:can-reshare="canReshare"
 				:file-info="fileInfo"
-				:shares="linkShares" />
+				:shares="linkShares"
+				@add="onNewLinkShare"
+				@remove="onRemoveLinkShare" />
 
 			<!-- other shares list -->
 			<SharingList v-if="!loading"
 				ref="shareList"
+				:file-info="fileInfo"
 				:shares="shares"
-				:file-info="fileInfo" />
+				@remove="onRemoveShare" />
 
 			<!-- inherited shares -->
 			<SharingInherited v-if="canReshare && !loading" :file-info="fileInfo" />
@@ -336,6 +339,37 @@ export default {
 					resolve(newShare)
 				}
 			})
+		},
+
+		/**
+		 * Add a share link to the shares list
+		 *
+		 * @param {Share} share the share to remove
+		 * @param {Function} resolve resolve after array update
+		 */
+		onNewLinkShare(share, resolve) {
+			this.linkShares.unshift(share)
+			resolve(share)
+		},
+
+		/**
+		 * Remove a share link from the shares list
+		 *
+		 * @param {Share} share the share to remove
+		 */
+		onRemoveLinkShare(share) {
+			const index = this.linkShares.findIndex(item => item === share)
+			this.shares.splice(index, 1)
+		},
+
+		/**
+		 * Remove a share from the shares list
+		 *
+		 * @param {Share} share the share to remove
+		 */
+		onRemoveShare(share) {
+			const index = this.shares.findIndex(item => item === share)
+			this.shares.splice(index, 1)
 		},
 	},
 }

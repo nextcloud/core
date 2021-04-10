@@ -1,4 +1,27 @@
+<!--
+  - @copyright Copyright (c) 2019 Julius Härtl <jus@bitgrid.net>
+  -
+  - @author Julius Härtl <jus@bitgrid.net>
+  -
+  - @license GNU AGPL version 3 or any later version
+  -
+  - This program is free software: you can redistribute it and/or modify
+  - it under the terms of the GNU Affero General Public License as
+  - published by the Free Software Foundation, either version 3 of the
+  - License, or (at your option) any later version.
+  -
+  - This program is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU Affero General Public License for more details.
+  -
+  - You should have received a copy of the GNU Affero General Public License
+  - along with this program. If not, see <http://www.gnu.org/licenses/>.
+  -
+  -->
+
 <template>
+	<!-- eslint-disable vue/no-mutating-props -->
 	<div v-if="operation" class="section rule" :style="{ borderLeftColor: operation.color || '' }">
 		<div class="trigger">
 			<p>
@@ -189,18 +212,22 @@ export default {
 		display: block;
 		margin: 3px 10px 3px auto;
 	}
+
 	.status-button.primary {
 		padding-left: 32px;
 		background-position: 10px center;
 	}
+
 	.status-button:not(.primary) {
 		background-color: var(--color-main-background);
 	}
+
 	.status-button.invalid {
 		background-color: var(--color-warning);
 		color: #fff;
 		border: none;
 	}
+
 	.status-button.icon-checkmark {
 		border: 1px solid var(--color-success);
 	}
@@ -229,6 +256,7 @@ export default {
 			margin-right: 20px;
 		}
 	}
+
 	.trigger p, .action p {
 		min-height: 34px;
 		display: flex;
@@ -245,8 +273,9 @@ export default {
 			max-width: 300px;
 		}
 	}
+
 	.trigger p:first-child span {
-			padding-top: 3px;
+		padding-top: 3px;
 	}
 
 	.check--add {

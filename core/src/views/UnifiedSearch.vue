@@ -650,7 +650,8 @@ $input-padding: 6px;
 	}
 
 	&__filters {
-		margin: $margin / 2 $margin;
+		margin: $margin / 2;
+		margin-left: $margin;
 		ul {
 			display: inline-flex;
 			justify-content: space-between;
@@ -721,10 +722,6 @@ $input-padding: 6px;
 		}
 	}
 
-	&__filters {
-		margin-right: $margin / 2;
-	}
-
 	&__results {
 		&::before {
 			display: block;
@@ -744,7 +741,7 @@ $input-padding: 6px;
 
 		::v-deep .empty-content__title {
 			font-weight: normal;
-            font-size: var(--default-font-size);
+			font-size: var(--default-font-size);
 			padding: 0 15px;
 			text-align: center;
 		}

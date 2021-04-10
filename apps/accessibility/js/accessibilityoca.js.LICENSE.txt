@@ -1,7 +1,7 @@
 /**
- * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @copyright Copyright (c) 2020 Roeland Jago Douma <roeland@famdouma.nl>
  *
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Jan C. Borchardt <hey@jancborchardt.net>
  * @author John Molakvoæ <skjnldsv@protonmail.com>
  *
  * @license GNU AGPL version 3 or any later version
@@ -20,19 +20,3 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-require('jsdom-global')()
-const chai = require('chai')
-const sinon = require('sinon')
-const sinonChai = require('sinon-chai')
-
-chai.use(sinonChai)
-global.expect = chai.expect
-global.sinon = sinon
-
-// https://github.com/vuejs/vue-test-utils/issues/936
-// better fix for "TypeError: Super expression must either be null or
-// a function" than pinning an old version of prettier.
-//
-// https://github.com/vuejs/vue-cli/issues/2128#issuecomment-453109575
-window.Date = Date

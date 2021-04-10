@@ -30,31 +30,35 @@ lint-fix-watch:
 clean:
 	rm -rf apps/accessibility/js/
 	rm -rf apps/comments/js/
-	rm -rf apps/files/js/dist/
+	rm -rf apps/dashboard/js/
 	rm -rf apps/files_sharing/js/dist/
 	rm -rf apps/files_trashbin/js/
 	rm -rf apps/files_versions/js/
+	rm -rf apps/files/js/dist/
 	rm -rf apps/oauth2/js/
 	rm -rf apps/settings/js/vue-*
 	rm -rf apps/systemtags/js/systemtags.*
 	rm -rf apps/twofactor_backupcodes/js
 	rm -rf apps/updatenotification/js/updatenotification.*
 	rm -rf apps/user_status/js/
+	rm -rf apps/weather_status/js/
 	rm -rf apps/workflowengine/js/
 	rm -rf core/js/dist
 
 clean-git: clean
 	git checkout -- apps/accessibility/js/
 	git checkout -- apps/comments/js/
-	git checkout -- apps/files/js/dist/
+	git checkout -- apps/dashboard/js/
 	git checkout -- apps/files_sharing/js/dist/
 	git checkout -- apps/files_trashbin/js/
 	git checkout -- apps/files_versions/js/
+	git checkout -- apps/files/js/dist/
 	git checkout -- apps/oauth2/js/
 	git checkout -- apps/settings/js/vue-*
 	git checkout -- apps/systemtags/js/systemtags.*
 	git checkout -- apps/twofactor_backupcodes/js
 	git checkout -- apps/updatenotification/js/updatenotification.*
 	git checkout -- apps/user_status/js/
+	git checkout -- apps/weather_status/js/
 	git checkout -- apps/workflowengine/js/
 	git checkout -- core/js/dist

@@ -230,10 +230,12 @@ export default {
 .middle-align {
 	vertical-align: middle;
 }
+
 p {
 	margin-top: 12px;
 	margin-bottom: 12px;
 }
+
 .new-owner-row {
 	display: flex;
 
@@ -251,6 +253,7 @@ p {
 		max-width: 280px;
 	}
 }
+
 .transfer-select-row {
 	span {
 		margin-right: 8px;

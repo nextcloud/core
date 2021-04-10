@@ -5,14 +5,17 @@
 	background: var(--color-main-background) none;
 	color: var(--color-main-text);
 }
+
 .ui-widget-content a {
 	color: var(--color-main-text);
 }
+
 .ui-widget-header {
 	border: none;
 	color: var(--color-main-text);
 	background-image: none;
 }
+
 .ui-widget-header a {
 	color: var(--color-main-text);
 }
@@ -27,11 +30,13 @@
 	font-weight: bold;
 	color: #555;
 }
+
 .ui-state-default a,
 .ui-state-default a:link,
 .ui-state-default a:visited {
 	color: #555;
 }
+
 .ui-state-hover,
 .ui-widget-content .ui-state-hover,
 .ui-widget-header .ui-state-hover,
@@ -43,12 +48,14 @@
 	font-weight: bold;
 	color: var(--color-main-text);
 }
+
 .ui-state-hover a,
 .ui-state-hover a:hover,
 .ui-state-hover a:link,
 .ui-state-hover a:visited {
 	color: var(--color-main-text);
 }
+
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
@@ -57,6 +64,7 @@
 	font-weight: bold;
 	color: var(--color-main-text);
 }
+
 .ui-state-active a,
 .ui-state-active a:link,
 .ui-state-active a:visited {
@@ -73,11 +81,13 @@
 	color: var(--color-text-light);
 	font-weight: 600;
 }
+
 .ui-state-highlight a,
 .ui-widget-content .ui-state-highlight a,
 .ui-widget-header .ui-state-highlight a {
 	color: var(--color-text-lighter);
 }
+
 .ui-state-error,
 .ui-widget-content .ui-state-error,
 .ui-widget-header .ui-state-error {
@@ -85,11 +95,13 @@
 	background: var(--color-error) none;
 	color: #ffffff;
 }
+
 .ui-state-error a,
 .ui-widget-content .ui-state-error a,
 .ui-widget-header .ui-state-error a {
 	color: #ffffff;
 }
+
 .ui-state-error-text,
 .ui-widget-content .ui-state-error-text,
 .ui-widget-header .ui-state-error-text {
@@ -101,20 +113,25 @@
 .ui-state-default .ui-icon {
 	background-image: url('images/ui-icons_1d2d44_256x240.png');
 }
+
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon {
 	background-image: url('images/ui-icons_1d2d44_256x240.png');
 }
+
 .ui-state-active .ui-icon {
 	background-image: url('images/ui-icons_1d2d44_256x240.png');
 }
+
 .ui-state-highlight .ui-icon {
 	background-image: url('images/ui-icons_ffffff_256x240.png');
 }
+
 .ui-state-error .ui-icon,
 .ui-state-error-text .ui-icon {
 	background-image: url('images/ui-icons_ffd27a_256x240.png');
 }
+
 .ui-icon.ui-icon-none {
 	display: none;
 }
@@ -126,6 +143,7 @@
 	background: #666666 url('images/ui-bg_diagonals-thick_20_666666_40x40.png') 50% 50% repeat;
 	opacity: .5;
 }
+
 .ui-widget-shadow {
 	margin: -5px 0 0 -5px;
 	padding: 5px;

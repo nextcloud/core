@@ -15,9 +15,11 @@
 	max-width: calc(100% - 20px);
 	overflow: auto;
 }
+
 .oc-dialog-title {
 	background: var(--color-main-background);
 }
+
 .oc-dialog-buttonrow {
 	position: relative;
 	display: flex;
@@ -31,8 +33,8 @@
 	background-image: linear-gradient(rgba(255, 255, 255, 0.0), var(--color-main-background));
 
 	&.twobuttons {
-        justify-content: space-between;
-    }
+		justify-content: space-between;
+	}
 
 	&.onebutton,
 	&.twobuttons.aside {
@@ -40,8 +42,8 @@
 	}
 
 	button {
-	    white-space: nowrap;
-	    overflow: hidden;
+		white-space: nowrap;
+		overflow: hidden;
 		text-overflow: ellipsis;
 		height: 44px;
 		min-width: 44px;

@@ -173,10 +173,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.body-login-container {
-
-}
-
 p.loading, p.loading-error {
 	height: 100px;
 }

@@ -135,6 +135,7 @@ export default {
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
+
 	.multiselect::v-deep .multiselect__single {
 		width: 100%;
 		display: flex;
@@ -142,11 +143,13 @@ export default {
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
+
 	.option__icon {
 		display: inline-block;
 		min-width: 30px;
 		background-position: left;
 	}
+
 	.option__title {
 		white-space: nowrap;
 		overflow: hidden;

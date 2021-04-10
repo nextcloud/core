@@ -24,15 +24,12 @@
 
 import Vue from 'vue'
 import VTooltip from 'v-tooltip'
-import { sync } from 'vuex-router-sync'
 
 import App from './App.vue'
 import router from './router'
 import store from './store'
 
 Vue.use(VTooltip, { defaultHtml: false })
-
-sync(store, router)
 
 // CSP config for webpack dynamic chunk loading
 // eslint-disable-next-line

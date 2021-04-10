@@ -142,6 +142,7 @@ export default {
 	.multiselect, input[type='text'] {
 		width: 100%;
 	}
+
 	.multiselect >>> .multiselect__content-wrapper li>span,
 	.multiselect >>> .multiselect__single {
 		display: flex;

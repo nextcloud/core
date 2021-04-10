@@ -246,6 +246,7 @@ export default {
 	border-color: var(--color-error);
 	background: var(--color-main-background);
 }
+
 .force:hover,
 .force:active {
 	color: var(--color-main-background);

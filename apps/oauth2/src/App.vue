@@ -91,6 +91,7 @@ export default {
 		deleteClient(id) {
 			axios.delete(generateUrl('apps/oauth2/clients/{id}', { id }))
 				.then((response) => {
+					// eslint-disable-next-line vue/no-mutating-props
 					this.clients = this.clients.filter(client => client.id !== id)
 				})
 		},
@@ -104,6 +105,7 @@ export default {
 					redirectUri: this.newClient.redirectUri,
 				}
 			).then(response => {
+				// eslint-disable-next-line vue/no-mutating-props
 				this.clients.push(response.data)
 
 				this.newClient.name = ''

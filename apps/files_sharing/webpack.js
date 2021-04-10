@@ -38,6 +38,5 @@ module.exports = {
 		publicPath: '/js/',
 		filename: '[name].js',
 		chunkFilename: 'files_sharing.[id].js?v=[chunkhash]',
-		jsonpFunction: 'webpackJsonpFilesSharing',
 	},
 }

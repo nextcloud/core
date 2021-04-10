@@ -187,13 +187,14 @@ export default {
 </script>
 
 <style lang="scss">
-	.cellText {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
+.cellText {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
-	.icon-more {
-		background-color: var(--color-main-background);
-		border: 0;
-	}
+
+.icon-more {
+	background-color: var(--color-main-background);
+	border: 0;
+}
 </style>

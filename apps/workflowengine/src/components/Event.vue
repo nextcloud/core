@@ -1,3 +1,25 @@
+<!--
+  - @copyright Copyright (c) 2019 Julius Härtl <jus@bitgrid.net>
+  -
+  - @author Julius Härtl <jus@bitgrid.net>
+  -
+  - @license GNU AGPL version 3 or any later version
+  -
+  - This program is free software: you can redistribute it and/or modify
+  - it under the terms of the GNU Affero General Public License as
+  - published by the Free Software Foundation, either version 3 of the
+  - License, or (at your option) any later version.
+  -
+  - This program is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU Affero General Public License for more details.
+  -
+  - You should have received a copy of the GNU Affero General Public License
+  - along with this program. If not, see <http://www.gnu.org/licenses/>.
+  -
+  -->
+
 <template>
 	<div class="event">
 		<div v-if="operation.isComplex && operation.fixedEntity !== ''" class="isComplex">
@@ -12,7 +34,7 @@
 			:auto-limit="false"
 			:disabled="allEvents.length <= 1"
 			@input="updateEvent">
-			<template slot="selection" slot-scope="{ values, search, isOpen }">
+			<template slot="selection" slot-scope="{ values, isOpen }">
 				<div v-if="values.length && !isOpen" class="eventlist">
 					<img class="option__icon" :src="values[0].entity.icon">
 					<span v-for="(value, index) in values" :key="value.id" class="text option__title option__title_single">{{ value.displayName }} <span v-if="index+1 < values.length">, </span></span>
@@ -82,6 +104,7 @@ export default {
 	.event {
 		margin-bottom: 5px;
 	}
+
 	.isComplex {
 		img {
 			vertical-align: text-top;
@@ -91,14 +114,17 @@ export default {
 			display: inline-block;
 		}
 	}
+
 	.multiselect {
 		width: 100%;
 		max-width: 550px;
 		margin-top: 4px;
 	}
+
 	.multiselect::v-deep .multiselect__single {
 		display: flex;
 	}
+
 	.multiselect:not(.multiselect--active)::v-deep .multiselect__tags {
 		background-color: var(--color-main-background) !important;
 		border: 1px solid transparent;
@@ -124,6 +150,7 @@ export default {
 		margin-left: 5px;
 		color: var(--color-main-text);
 	}
+
 	.option__title_single {
 		font-weight: 900;
 	}

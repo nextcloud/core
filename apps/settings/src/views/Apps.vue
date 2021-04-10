@@ -355,19 +355,19 @@ export default {
 	}
 }
 
-	.app-sidebar-tabs__release {
-		h2 {
-			border-bottom: 1px solid var(--color-border);
-		}
+.app-sidebar-tabs__release {
+	h2 {
+		border-bottom: 1px solid var(--color-border);
+	}
 
-		// Overwrite changelog heading styles
-		::v-deep {
-			h3 {
-				font-size: 20px;
-			}
-			h4 {
-				font-size: 17px;
-			}
+	// Overwrite changelog heading styles
+	::v-deep {
+		h3 {
+			font-size: 20px;
+		}
+		h4 {
+			font-size: 17px;
 		}
 	}
+}
 </style>

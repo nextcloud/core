@@ -529,6 +529,7 @@ export default {
 	#updatenotification .update-menu .icon-star:focus {
 		background-image: var(--icon-star-000);
 	}
+
 	#updatenotification .topMargin {
 		margin-top: 15px;
 	}

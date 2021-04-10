@@ -456,7 +456,7 @@ export default {
 	}
 
 	&.sortable-ghost {
-		 opacity: 0.1;
+		opacity: 0.1;
 	}
 
 	& > .panel--header {

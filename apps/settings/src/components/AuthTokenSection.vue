@@ -94,6 +94,7 @@ export default {
 			return axios.post(this.baseUrl, data)
 				.then(resp => resp.data)
 				.then(tap(() => console.debug('app token created')))
+				// eslint-disable-next-line vue/no-mutating-props
 				.then(tap(data => this.tokens.push(data.deviceToken)))
 				.catch(err => {
 					console.error.bind('could not create app password', err)
@@ -142,6 +143,7 @@ export default {
 		deleteToken(token) {
 			console.debug('deleting app token', token)
 
+			// eslint-disable-next-line vue/no-mutating-props
 			this.tokens = this.tokens.filter(t => t !== token)
 
 			return axios.delete(this.baseUrl + '/' + token.id)
@@ -152,6 +154,7 @@ export default {
 					OC.Notification.showTemporary(t('core', 'Error while deleting the token'))
 
 					// Restore
+					// eslint-disable-next-line vue/no-mutating-props
 					this.tokens.push(token)
 				})
 		},
@@ -177,7 +180,3 @@ export default {
 	},
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -9,6 +9,7 @@
 	float: left;
 	border-bottom: 1px solid rgba(100,100,100,.1);
 }
+
 .versionsTabView li:last-child {
 	border-bottom: none;
 }
@@ -30,7 +31,7 @@
 
 .versionsTabView .preview-container {
 	display: inline-block;
-  vertical-align: top;
+	vertical-align: top;
 }
 
 .versionsTabView img {

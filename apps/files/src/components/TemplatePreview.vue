@@ -210,7 +210,7 @@ export default {
 	&__title {
 		overflow: hidden;
 		// also count preview border
-		max-width: calc(var(--width) + 2*2px);
+		max-width: calc(var(--width) + 2 * 2px);
 		padding: var(--margin);
 		white-space: nowrap;
 		text-overflow: ellipsis;

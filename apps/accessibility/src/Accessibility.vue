@@ -128,6 +128,7 @@ export default {
 					},
 				})
 
+				// eslint-disable-next-line vue/no-mutating-props
 				this.userConfig[type] = id
 
 				// Remove old link
