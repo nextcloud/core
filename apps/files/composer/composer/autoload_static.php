@@ -68,6 +68,7 @@ class ComposerStaticInitFiles
         'OCA\\Files\\Service\\OwnershipTransferService' => __DIR__ . '/..' . '/../lib/Service/OwnershipTransferService.php',
         'OCA\\Files\\Service\\TagService' => __DIR__ . '/..' . '/../lib/Service/TagService.php',
         'OCA\\Files\\Settings\\PersonalSettings' => __DIR__ . '/..' . '/../lib/Settings/PersonalSettings.php',
+        'OCA\\Files\\SidebarNavigationManager' => __DIR__ . '/..' . '/../lib/SidebarNavigationManager.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

@@ -50,44 +50,44 @@ $application->registerRoutes(
 			],
 
 			[
-				'name' => 'API#getThumbnail',
+				'name' => 'Api#getThumbnail',
 				'url' => '/api/v1/thumbnail/{x}/{y}/{file}',
 				'verb' => 'GET',
 				'requirements' => ['file' => '.+']
 			],
 			[
-				'name' => 'API#updateFileTags',
+				'name' => 'Api#updateFileTags',
 				'url' => '/api/v1/files/{path}',
 				'verb' => 'POST',
 				'requirements' => ['path' => '.+'],
 			],
 			[
-				'name' => 'API#getRecentFiles',
+				'name' => 'Api#getRecentFiles',
 				'url' => '/api/v1/recent/',
 				'verb' => 'GET'
 			],
 			[
-				'name' => 'API#updateFileSorting',
+				'name' => 'Api#updateFileSorting',
 				'url' => '/api/v1/sorting',
 				'verb' => 'POST'
 			],
 			[
-				'name' => 'API#showHiddenFiles',
+				'name' => 'Api#showHiddenFiles',
 				'url' => '/api/v1/showhidden',
 				'verb' => 'POST'
 			],
 			[
-				'name' => 'API#cropImagePreviews',
+				'name' => 'Api#cropImagePreviews',
 				'url' => '/api/v1/cropimagepreviews',
 				'verb' => 'POST'
 			],
 			[
-				'name' => 'API#showGridView',
+				'name' => 'Api#showGridView',
 				'url' => '/api/v1/showgridview',
 				'verb' => 'POST'
 			],
 			[
-				'name' => 'API#getGridView',
+				'name' => 'Api#getGridView',
 				'url' => '/api/v1/showgridview',
 				'verb' => 'GET'
 			],
@@ -102,12 +102,12 @@ $application->registerRoutes(
 				'verb' => 'GET',
 			],
 			[
-				'name' => 'API#toggleShowFolder',
+				'name' => 'Api#toggleShowFolder',
 				'url' => '/api/v1/toggleShowFolder/{key}',
 				'verb' => 'POST'
 			],
 			[
-				'name' => 'API#getNodeType',
+				'name' => 'Api#getNodeType',
 				'url' => '/api/v1/quickaccess/get/NodeType',
 				'verb' => 'GET',
 			],

@@ -37,6 +37,7 @@ namespace OCA\Files\Controller;
 use OCA\Files\Activity\Helper;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\Files\Event\LoadSidebar;
+use OCA\Files\SidebarNavigationManager;
 use OCA\Viewer\Event\LoadViewer;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
@@ -86,6 +87,8 @@ class ViewController extends Controller {
 	private $initialState;
 	/** @var ITemplateManager */
 	private $templateManager;
+	/** @var SidebarNavigationManager */
+	private $navigationManager;
 
 	public function __construct(string $appName,
 		IRequest $request,
@@ -98,7 +101,8 @@ class ViewController extends Controller {
 		IRootFolder $rootFolder,
 		Helper $activityHelper,
 		IInitialState $initialState,
-		ITemplateManager $templateManager
+		ITemplateManager $templateManager,
+		SidebarNavigationManager $navigationManager
 	) {
 		parent::__construct($appName, $request);
 		$this->appName = $appName;
@@ -113,6 +117,7 @@ class ViewController extends Controller {
 		$this->activityHelper = $activityHelper;
 		$this->initialState = $initialState;
 		$this->templateManager = $templateManager;
+		$this->navigationManager = $navigationManager;
 	}
 
 	/**
@@ -233,7 +238,7 @@ class ViewController extends Controller {
 			$navBarPositionPosition++;
 		}
 
-		$navItems = \OCA\Files\App::getNavigationManager()->getAll();
+		$navItems = $this->navigationManager->getAll();
 
 		// add the favorites entry in menu
 		$navItems['favorites']['sublist'] = $favoritesSublistArray;

@@ -26,6 +26,7 @@
  *
  */
 
+use OCA\Files\SidebarNavigationManager;
 use OCA\Files_External\Config\ConfigAdapter;
 
 require_once __DIR__ . '/../3rdparty/autoload.php';
@@ -36,7 +37,8 @@ require_once __DIR__ . '/../3rdparty/autoload.php';
 
 $appContainer = \OCA\Files_External\MountConfig::$app->getContainer();
 
-\OCA\Files\App::getNavigationManager()->add(function () {
+$navigationManager = $appContainer->get(SidebarNavigationManager::class);
+$navigationManager->add(function () {
 	$l = \OC::$server->getL10N('files_external');
 	return [
 		'id' => 'extstoragemounts',

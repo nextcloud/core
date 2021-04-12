@@ -31,6 +31,7 @@
 namespace OCA\Files_Sharing\AppInfo;
 
 use OC\AppFramework\Utility\SimpleContainer;
+use OCA\Files\SidebarNavigationManager;
 use OCA\Files_Sharing\Capabilities;
 use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
 use OCA\Files_Sharing\External\Manager;
@@ -172,9 +173,10 @@ class Application extends App {
 			return;
 		}
 
+		/** @var SidebarNavigationManager $navigationManager */
+		$navigationManager = $this->getContainer()->get(SidebarNavigationManager::class);
 		// show_Quick_Access stored as string
-		\OCA\Files\App::getNavigationManager()->add(function () {
-			$config = \OC::$server->getConfig();
+		$navigationManager->add(function () use ($config) {
 			$l = \OC::$server->getL10N('files_sharing');
 
 			$sharingSublistArray = [];

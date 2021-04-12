@@ -177,7 +177,7 @@ class NavigationManager implements INavigationManager {
 		return $this->activeEntry;
 	}
 
-	private function init() {
+	protected function init() {
 		if ($this->init) {
 			return;
 		}

@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace OCA\SystemTags\AppInfo;
 
+use OCA\Files\SidebarNavigationManager;
 use OCA\SystemTags\Activity\Listener;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
@@ -77,15 +78,17 @@ class Application extends App implements IBootstrap {
 			$dispatcher->addListener(MapperEvent::EVENT_UNASSIGN, $mapperListener);
 		});
 
-		\OCA\Files\App::getNavigationManager()->add(function () {
-			$l = \OC::$server->getL10N(self::APP_ID);
-			return [
-				'id' => 'systemtagsfilter',
-				'appname' => self::APP_ID,
-				'script' => 'list.php',
-				'order' => 25,
-				'name' => $l->t('Tags'),
-			];
+		$context->injectFn(function (SidebarNavigationManager $navigationManager) {
+			$navigationManager->add(function () {
+				$l = \OC::$server->getL10N(self::APP_ID);
+				return [
+					'id' => 'systemtagsfilter',
+					'appname' => self::APP_ID,
+					'script' => 'list.php',
+					'order' => 25,
+					'name' => $l->t('Tags'),
+				];
+			});
 		});
 	}
 }

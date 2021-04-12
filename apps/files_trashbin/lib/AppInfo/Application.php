@@ -27,6 +27,7 @@
 namespace OCA\Files_Trashbin\AppInfo;
 
 use OCA\DAV\Connector\Sabre\Principal;
+use OCA\Files\SidebarNavigationManager;
 use OCA\Files_Trashbin\Capabilities;
 use OCA\Files_Trashbin\Expiration;
 use OCA\Files_Trashbin\Trash\ITrashManager;
@@ -65,16 +66,18 @@ class Application extends App implements IBootstrap {
 		// pre and post-rename, disable trash logic for the copy+unlink case
 		\OCP\Util::connectHook('OC_Filesystem', 'delete', 'OCA\Files_Trashbin\Trashbin', 'ensureFileScannedHook');
 
-		\OCA\Files\App::getNavigationManager()->add(function () {
-			$l = \OC::$server->getL10N('files_trashbin');
-			return [
-				'id' => 'trashbin',
-				'appname' => 'files_trashbin',
-				'script' => 'list.php',
-				'order' => 50,
-				'name' => $l->t('Deleted files'),
-				'classes' => 'pinned',
-			];
+		$context->injectFn(function (SidebarNavigationManager $navigationManager) {
+			$navigationManager->add(function () {
+				$l = \OC::$server->getL10N('files_trashbin');
+				return [
+					'id' => 'trashbin',
+					'appname' => 'files_trashbin',
+					'script' => 'list.php',
+					'order' => 50,
+					'name' => $l->t('Deleted files'),
+					'classes' => 'pinned',
+				];
+			});
 		});
 	}
 

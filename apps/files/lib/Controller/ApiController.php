@@ -38,7 +38,9 @@
 namespace OCA\Files\Controller;
 
 use OC\Files\Node\Node;
+use OCA\Files\AppInfo\Application;
 use OCA\Files\Service\TagService;
+use OCA\Files\SidebarNavigationManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -47,6 +49,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\Files\File;
 use OCP\Files\Folder;
+use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\IConfig;
 use OCP\IPreview;
@@ -73,32 +76,37 @@ class ApiController extends Controller {
 	private $config;
 	/** @var Folder */
 	private $userFolder;
+	/** @var SidebarNavigationManager */
+	private $navigationManager;
 
 	/**
-	 * @param string $appName
 	 * @param IRequest $request
 	 * @param IUserSession $userSession
 	 * @param TagService $tagService
 	 * @param IPreview $previewManager
 	 * @param IManager $shareManager
 	 * @param IConfig $config
-	 * @param Folder $userFolder
+	 * @param IRootFolder $rootFolder
+	 * @param SidebarNavigationManager $navigationManager
 	 */
-	public function __construct($appName,
-								IRequest $request,
-								IUserSession $userSession,
-								TagService $tagService,
-								IPreview $previewManager,
-								IManager $shareManager,
-								IConfig $config,
-								Folder $userFolder) {
-		parent::__construct($appName, $request);
+	public function __construct(
+		IRequest $request,
+		IUserSession $userSession,
+		TagService $tagService,
+		IPreview $previewManager,
+		IManager $shareManager,
+		IConfig $config,
+		IRootFolder $rootFolder,
+		SidebarNavigationManager $navigationManager
+	) {
+		parent::__construct(Application::APP_ID, $request);
 		$this->userSession = $userSession;
 		$this->tagService = $tagService;
 		$this->previewManager = $previewManager;
 		$this->shareManager = $shareManager;
 		$this->config = $config;
-		$this->userFolder = $userFolder;
+		$this->userFolder = $rootFolder->getUserFolder($userSession->getUser()->getUID());
+		$this->navigationManager = $navigationManager;
 	}
 
 	/**
@@ -331,7 +339,7 @@ class ApiController extends Controller {
 	 */
 	public function toggleShowFolder(int $show, string $key) {
 		// ensure the edited key exists
-		$navItems = \OCA\Files\App::getNavigationManager()->getAll();
+		$navItems = $this->navigationManager->getAll();
 		foreach ($navItems as $item) {
 			// check if data is valid
 			if (($show === 0 || $show === 1) && isset($item['expandedState']) && $key === $item['expandedState']) {
