@@ -1,9 +1,8 @@
 <?php
 /**
- * @copyright 2017, Georg Ehrke <oc.list@georgehrke.com>
+ * @copyright 2020, Thomas Citharel <nextcloud@tcit.fr>
  *
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -24,33 +23,52 @@
 
 namespace OCP\Calendar;
 
+use Sabre\VObject\Component\VCalendar;
+
 /**
- * Interface ICalendar
+ * Interface ICalendarV2
  *
- * @since 13.0.0
- * @deprecated 20.0.0
+ * @package OCP
+ * @since 20.0.0
  */
-interface ICalendar {
+interface ICalendarV2 {
 
 	/**
 	 * @return string defining the technical unique key
-	 * @since 13.0.0
+	 * @since 20.0.0
 	 */
-	public function getKey();
+	public function getKey(): string;
 
 	/**
 	 * In comparison to getKey() this function returns a human readable (maybe translated) name
 	 * @return null|string
-	 * @since 13.0.0
+	 * @since 20.0.0
 	 */
-	public function getDisplayName();
+	public function getDisplayName(): ?string;
 
 	/**
 	 * Calendar color
 	 * @return null|string
-	 * @since 13.0.0
+	 * @since 20.0.0
 	 */
-	public function getDisplayColor();
+	public function getDisplayColor(): ?string;
+
+	/**
+	 * Whether the calendar is writeable
+	 *
+	 * @return bool
+	 * @since 20.0.0
+	 */
+	public function isWriteable(): bool;
+
+	/**
+	 * Get a calendar object by it's URI
+	 *
+	 * @param string $uri
+	 * @return ICalendarObjectV2|null
+	 * @since 20.0.0
+	 */
+	public function getByUri(string $uri): ?ICalendarObjectV2;
 
 	/**
 	 * @param string $pattern which should match within the $searchProperties
@@ -60,13 +78,16 @@ interface ICalendar {
 	 * @param integer|null $limit - limit number of search results
 	 * @param integer|null $offset - offset for paging of search results
 	 * @return array an array of events/journals/todos which are arrays of key-value-pairs
-	 * @since 13.0.0
+	 * @since 19.0.0
 	 */
-	public function search($pattern, array $searchProperties = [], array $options = [], $limit = null, $offset = null);
+	public function search(string $pattern, array $searchProperties=[], array $options=[], int $limit=null, int $offset=null): array;
 
 	/**
-	 * @return integer build up using \OCP\Constants
-	 * @since 13.0.0
+	 * Create a new calendar object into a calendar. Accepts a VCalendar object for calendar data.
+	 *
+	 * @param VCalendar $vObject
+	 * @return ICalendarObjectV2|null
+	 * @since 20.0.0
 	 */
-	public function getPermissions();
+	public function create(VCalendar $vObject): ?ICalendarObjectV2;
 }

@@ -29,8 +29,9 @@ namespace OCA\DAV\Tests\unit\CalDAV;
 use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\DAV\CalDAV\Calendar;
 use OCA\DAV\CalDAV\CalendarImpl;
+use Test\TestCase;
 
-class CalendarImplTest extends \Test\TestCase {
+class CalendarImplTest extends TestCase {
 
 	/** @var CalendarImpl */
 	private $calendarImpl;

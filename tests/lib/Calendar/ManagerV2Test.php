@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2017, Georg Ehrke <oc.list@georgehrke.com>
+ * @copyright 2020, Thomas Citharel <nextcloud@tcit.fr>
  *
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Thomas Citharel <nextcloud@tcit.fr>
@@ -24,35 +24,36 @@
 
 namespace Test\Calendar;
 
-use OC\Calendar\Manager;
-use OCP\Calendar\ICalendar;
+use OC\Calendar\ManagerV2;
+use OCP\Calendar\ICalendarV2;
+use PHPUnit\Framework\MockObject\MockObject;
 use Test\TestCase;
 
-class ManagerTest extends TestCase {
+class ManagerV2Test extends TestCase {
 
-	/** @var Manager */
+	/** @var ManagerV2 */
 	private $manager;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->manager = new Manager();
+		$this->manager = new ManagerV2();
 	}
 
 	/**
 	 * @dataProvider searchProvider
 	 */
 	public function testSearch($search1, $search2, $expected) {
-		/** @var ICalendar | \PHPUnit\Framework\MockObject\MockObject $calendar1 */
-		$calendar1 = $this->createMock(ICalendar::class);
+		/** @var ICalendarV2 | MockObject $calendar1 */
+		$calendar1 = $this->createMock(ICalendarV2::class);
 		$calendar1->method('getKey')->willReturn('simple:1');
 		$calendar1->expects($this->once())
 			->method('search')
 			->with('', [], [], null, null)
 			->willReturn($search1);
 
-		/** @var ICalendar | \PHPUnit\Framework\MockObject\MockObject $calendar2 */
-		$calendar2 = $this->createMock(ICalendar::class);
+		/** @var ICalendarV2 | MockObject $calendar2 */
+		$calendar2 = $this->createMock(ICalendarV2::class);
 		$calendar2->method('getKey')->willReturn('simple:2');
 		$calendar2->expects($this->once())
 			->method('search')
@@ -70,8 +71,8 @@ class ManagerTest extends TestCase {
 	 * @dataProvider searchProvider
 	 */
 	public function testSearchOptions($search1, $search2, $expected) {
-		/** @var ICalendar | \PHPUnit\Framework\MockObject\MockObject $calendar1 */
-		$calendar1 = $this->createMock(ICalendar::class);
+		/** @var ICalendarV2 | MockObject $calendar1 */
+		$calendar1 = $this->createMock(ICalendarV2::class);
 		$calendar1->method('getKey')->willReturn('simple:1');
 		$calendar1->expects($this->once())
 			->method('search')
@@ -79,8 +80,8 @@ class ManagerTest extends TestCase {
 				['timerange' => ['start' => null, 'end' => null]], 5, 20)
 			->willReturn($search1);
 
-		/** @var ICalendar | \PHPUnit\Framework\MockObject\MockObject $calendar2 */
-		$calendar2 = $this->createMock(ICalendar::class);
+		/** @var ICalendarV2 | MockObject $calendar2 */
+		$calendar2 = $this->createMock(ICalendarV2::class);
 		$calendar2->method('getKey')->willReturn('simple:2');
 		$calendar2->expects($this->once())
 			->method('search')
@@ -151,12 +152,12 @@ class ManagerTest extends TestCase {
 	}
 
 	public function testRegisterUnregister() {
-		/** @var ICalendar | \PHPUnit\Framework\MockObject\MockObject $calendar1 */
-		$calendar1 = $this->createMock(ICalendar::class);
+		/** @var ICalendarV2 | MockObject $calendar1 */
+		$calendar1 = $this->createMock(ICalendarV2::class);
 		$calendar1->method('getKey')->willReturn('key1');
 
-		/** @var ICalendar | \PHPUnit\Framework\MockObject\MockObject $calendar2 */
-		$calendar2 = $this->createMock(ICalendar::class);
+		/** @var ICalendarV2 | MockObject $calendar2 */
+		$calendar2 = $this->createMock(ICalendarV2::class);
 		$calendar2->method('getKey')->willReturn('key2');
 
 		$this->manager->registerCalendar($calendar1);
@@ -175,12 +176,12 @@ class ManagerTest extends TestCase {
 	}
 
 	public function testGetCalendars() {
-		/** @var ICalendar | \PHPUnit\Framework\MockObject\MockObject $calendar1 */
-		$calendar1 = $this->createMock(ICalendar::class);
+		/** @var ICalendarV2 | MockObject $calendar1 */
+		$calendar1 = $this->createMock(ICalendarV2::class);
 		$calendar1->method('getKey')->willReturn('key1');
 
-		/** @var ICalendar | \PHPUnit\Framework\MockObject\MockObject $calendar2 */
-		$calendar2 = $this->createMock(ICalendar::class);
+		/** @var ICalendarV2 | MockObject $calendar2 */
+		$calendar2 = $this->createMock(ICalendarV2::class);
 		$calendar2->method('getKey')->willReturn('key2');
 
 		$this->manager->registerCalendar($calendar1);
@@ -188,6 +189,7 @@ class ManagerTest extends TestCase {
 
 		$result = $this->manager->getCalendars();
 		$this->assertCount(2, $result);
+		$this->assertContainsOnlyInstancesOf(ICalendarV2::class, $result);
 		$this->assertContains($calendar1, $result);
 		$this->assertContains($calendar2, $result);
 
@@ -198,14 +200,44 @@ class ManagerTest extends TestCase {
 		$this->assertCount(0, $result);
 	}
 
+	public function testGetCalendar() {
+		/** @var ICalendarV2 | MockObject $calendar1 */
+		$calendar1 = $this->createMock(ICalendarV2::class);
+		$calendar1->method('getKey')->willReturn('key1');
+
+		/** @var ICalendarV2 | MockObject $calendar2 */
+		$calendar2 = $this->createMock(ICalendarV2::class);
+		$calendar2->method('getKey')->willReturn('key2');
+
+		$this->manager->registerCalendar($calendar1);
+		$this->manager->registerCalendar($calendar2);
+
+		$result = $this->manager->getCalendar('key1');
+		$this->assertEquals($calendar1, $result);
+		$this->assertInstanceOf(ICalendarV2::class, $result);
+
+		$result = $this->manager->getCalendar('key2');
+		$this->assertEquals($calendar1, $result);
+		$this->assertInstanceOf(ICalendarV2::class, $result);
+
+		$result = $this->manager->getCalendar('key3');
+		$this->assertNull($result);
+
+		$this->manager->clear();
+
+		$result = $this->manager->getCalendar('key1');
+
+		$this->assertNull($result);
+	}
+
 	public function testEnabledIfNot() {
 		$isEnabled = $this->manager->isEnabled();
 		$this->assertFalse($isEnabled);
 	}
 
 	public function testIfEnabledIfSo() {
-		/** @var ICalendar | \PHPUnit\Framework\MockObject\MockObject $calendar */
-		$calendar = $this->createMock(ICalendar::class);
+		/** @var ICalendarV2 | MockObject $calendar */
+		$calendar = $this->createMock(ICalendarV2::class);
 		$this->manager->registerCalendar($calendar);
 
 		$isEnabled = $this->manager->isEnabled();

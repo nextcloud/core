@@ -1,9 +1,8 @@
 <?php
 /**
- * @copyright 2017, Georg Ehrke <oc.list@georgehrke.com>
+ * @copyright 2020, Thomas Citharel <nextcloud@tcit.fr>
  *
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -24,20 +23,21 @@
 
 namespace OC\Calendar;
 
-use OCP\Calendar\ICalendar;
-use OCP\Calendar\IManager;
+use OCP\Calendar\ICalendarV2;
+use OCP\Calendar\IManagerV2;
+use OCP\Calendar\ICalendarObjectV2;
 
-class Manager implements IManager {
+class ManagerV2 implements IManagerV2 {
 
 	/**
-	 * @var ICalendar[] holds all registered calendars
+	 * @var ICalendarV2[] holds all registered calendars
 	 */
-	private $calendars = [];
+	private $calendars=[];
 
 	/**
 	 * @var \Closure[] to call to load/register calendar providers
 	 */
-	private $calendarLoaders = [];
+	private $calendarLoaders=[];
 
 	/**
 	 * This function is used to search and find objects within the user's calendars.
@@ -49,10 +49,10 @@ class Manager implements IManager {
 	 * 	['timerange' => ['start' => new DateTime(...), 'end' => new DateTime(...)]]
 	 * @param integer|null $limit - limit number of search results
 	 * @param integer|null $offset - offset for paging of search results
-	 * @return array an array of events/journals/todos which are arrays of arrays of key-value-pairs
+	 * @return ICalendarObjectV2[] an array of events/journals/todos which are arrays of arrays of key-value-pairs
 	 * @since 13.0.0
 	 */
-	public function search($pattern, array $searchProperties = [], array $options = [], $limit = null, $offset = null) {
+	public function search($pattern, array $searchProperties=[], array $options=[], int $limit = null, int $offset=null): array {
 		$this->loadCalendars();
 		$result = [];
 		foreach ($this->calendars as $calendar) {
@@ -72,29 +72,29 @@ class Manager implements IManager {
 	 * @return bool true if enabled, false if not
 	 * @since 13.0.0
 	 */
-	public function isEnabled() {
+	public function isEnabled(): bool {
 		return !empty($this->calendars) || !empty($this->calendarLoaders);
 	}
 
 	/**
 	 * Registers a calendar
 	 *
-	 * @param ICalendar $calendar
+	 * @param ICalendarV2 $calendar
 	 * @return void
 	 * @since 13.0.0
 	 */
-	public function registerCalendar(ICalendar $calendar) {
+	public function registerCalendar(ICalendarV2 $calendar): void {
 		$this->calendars[$calendar->getKey()] = $calendar;
 	}
 
 	/**
 	 * Unregisters a calendar
 	 *
-	 * @param ICalendar $calendar
+	 * @param ICalendarV2 $calendar
 	 * @return void
 	 * @since 13.0.0
 	 */
-	public function unregisterCalendar(ICalendar $calendar) {
+	public function unregisterCalendar(ICalendarV2 $calendar): void {
 		unset($this->calendars[$calendar->getKey()]);
 	}
 
@@ -106,15 +106,15 @@ class Manager implements IManager {
 	 * @return void
 	 * @since 13.0.0
 	 */
-	public function register(\Closure $callable) {
+	public function register(\Closure $callable): void {
 		$this->calendarLoaders[] = $callable;
 	}
 
 	/**
-	 * @return ICalendar[]
+	 * @return ICalendarV2[]
 	 * @since 13.0.0
 	 */
-	public function getCalendars() {
+	public function getCalendars(): array {
 		$this->loadCalendars();
 
 		return array_values($this->calendars);
@@ -125,7 +125,7 @@ class Manager implements IManager {
 	 * @return void
 	 * @since 13.0.0
 	 */
-	public function clear() {
+	public function clear(): void {
 		$this->calendars = [];
 		$this->calendarLoaders = [];
 	}
@@ -138,5 +138,16 @@ class Manager implements IManager {
 			$callable($this);
 		}
 		$this->calendarLoaders = [];
+	}
+
+	/**
+	 * Get a calendar by it's key
+	 *
+	 * @param string $key
+	 * @return ICalendarV2|null
+	 * @since 21.0.0
+	 */
+	public function getCalendar(string $key): ?ICalendarV2 {
+		return isset($this->calendars[$key]) ? $this->calendars[$key] : null;
 	}
 }

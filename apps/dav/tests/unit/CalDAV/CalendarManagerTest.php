@@ -6,6 +6,7 @@
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -27,14 +28,19 @@
 namespace OCA\DAV\Tests\unit\CalDAV;
 
 use OC\Calendar\Manager;
+use OC\Calendar\ManagerV2;
 use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\DAV\CalDAV\CalendarImpl;
+use OCA\DAV\CalDAV\CalendarImplV2;
 use OCA\DAV\CalDAV\CalendarManager;
 use OCP\Calendar\IManager;
+use OCP\Calendar\IManagerV2;
 use OCP\IConfig;
 use OCP\IL10N;
+use PHPUnit\Framework\MockObject\MockObject;
+use Test\TestCase;
 
-class CalendarManagerTest extends \Test\TestCase {
+class CalendarManagerTest extends TestCase {
 
 	/** @var CalDavBackend | \PHPUnit\Framework\MockObject\MockObject */
 	private $backend;
@@ -85,5 +91,35 @@ class CalendarManagerTest extends \Test\TestCase {
 			});
 
 		$this->manager->setupCalendarProvider($calendarManager, 'user123');
+	}
+
+	public function testSetupCalendarProviderV2() {
+		$this->backend->expects($this->once())
+			->method('getCalendarsForUser')
+			->with('principals/users/user123')
+			->willReturn([
+				['id' => 123, 'uri' => 'blablub1'],
+				['id' => 456, 'uri' => 'blablub2'],
+			]);
+
+		/** @var IManagerV2 | MockObject $calendarManager */
+		$calendarManager = $this->createMock(ManagerV2::class);
+		$calendarManager->expects($this->at(0))
+			->method('registerCalendar')
+			->willReturnCallback(function () {
+				$parameter = func_get_arg(0);
+				$this->assertInstanceOf(CalendarImplV2::class, $parameter);
+				$this->assertEquals(123, $parameter->getKey());
+			});
+
+		$calendarManager->expects($this->at(1))
+			->method('registerCalendar')
+			->willReturnCallback(function () {
+				$parameter = func_get_arg(0);
+				$this->assertInstanceOf(CalendarImplV2::class, $parameter);
+				$this->assertEquals(456, $parameter->getKey());
+			});
+
+		$this->manager->setupCalendarProviderV2($calendarManager, 'user123');
 	}
 }

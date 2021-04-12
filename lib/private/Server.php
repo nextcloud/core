@@ -1382,6 +1382,13 @@ class Server extends ServerContainer implements IServerContainer {
 	}
 
 	/**
+	 * @return \OCP\Calendar\IManagerV2
+	 */
+	public function getCalendarManagerV2() {
+		return $this->query(\OC\Calendar\ManagerV2::class);
+	}
+
+	/**
 	 * @return \OCP\Calendar\Resource\IManager
 	 * @deprecated 20.0.0
 	 */

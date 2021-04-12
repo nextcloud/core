@@ -1,9 +1,8 @@
 <?php
 /**
- * @copyright 2017, Georg Ehrke <oc.list@georgehrke.com>
+ * @copyright 2020, Thomas Citharel <nextcloud@tcit.fr>
  *
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Georg Ehrke <oc.list@georgehrke.com>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -24,38 +23,42 @@
 
 namespace OCP\Calendar;
 
+use Closure;
+
 /**
  * This class provides access to the Nextcloud CalDAV backend.
- * Use this class exclusively if you want to access calendars.
+ * Use this class exclusively if you want to access and manage calendars.
  *
- * Events/Journals/Todos in general will be expressed as an array of key-value-pairs.
- * The keys will match the property names defined in https://tools.ietf.org/html/rfc5545
+ * Events/Journals/Todos are expressed as instances of ICalendarObjectV2
  *
- * [
- *   'id' => 123,
- *   'type' => 'VEVENT',
- *   'calendar-key' => 42,
- *   'objects' => [
- *     [
- *       'SUMMARY' => ['FooBar', []],
- *       'DTSTART' => ['20171001T123456', ['TZID' => 'EUROPE/BERLIN']],
- *       'DURATION' => ['P1D', []],
- * 	     'ATTENDEE' => [
- *         ['mailto:bla@blub.com', ['CN' => 'Mr. Bla Blub']]
- *       ],
- *       'VALARM' => [
- * 	       [
- *           'TRIGGER' => ['19980101T050000Z', ['VALUE' => DATE-TIME]]
- *         ]
- *       ]
- *     ],
- *   ]
- * ]
- *
- * @since 13.0.0
- * @deprecated 20.0.0
+ * @since 21.0.0
  */
-interface IManager {
+interface IManagerV2 {
+
+	/**
+	 * Check if calendars are available
+	 *
+	 * @return bool true if enabled, false if not
+	 * @since 21.0.0
+	 */
+	public function isEnabled(): bool;
+
+	/**
+	 * Get all registered calendars
+	 *
+	 * @return ICalendarV2[]
+	 * @since 21.0.0
+	 */
+	public function getCalendars(): array;
+
+	/**
+	 * Get a calendar by it's key
+	 *
+	 * @param string $key
+	 * @return ICalendarV2|null
+	 * @since 21.0.0
+	 */
+	public function getCalendar(string $key): ?ICalendarV2;
 
 	/**
 	 * This function is used to search and find objects within the user's calendars.
@@ -67,57 +70,43 @@ interface IManager {
 	 * 	['timerange' => ['start' => new DateTime(...), 'end' => new DateTime(...)]]
 	 * @param integer|null $limit - limit number of search results
 	 * @param integer|null $offset - offset for paging of search results
-	 * @return array an array of events/journals/todos which are arrays of arrays of key-value-pairs
-	 * @since 13.0.0
+	 * @return ICalendarObjectV2[]
+	 * @since 21.0.0
 	 */
-	public function search($pattern, array $searchProperties = [], array $options = [], $limit = null, $offset = null);
-
-	/**
-	 * Check if calendars are available
-	 *
-	 * @return bool true if enabled, false if not
-	 * @since 13.0.0
-	 */
-	public function isEnabled();
+	public function search(string $pattern, array $searchProperties=[], array $options=[], int $limit=null, int $offset=null): array;
 
 	/**
 	 * Registers a calendar
 	 *
-	 * @param ICalendar $calendar
+	 * @param ICalendarV2 $calendar
 	 * @return void
-	 * @since 13.0.0
+	 * @since 21.0.0
 	 */
-	public function registerCalendar(ICalendar $calendar);
+	public function registerCalendar(ICalendarV2 $calendar): void;
 
 	/**
 	 * Unregisters a calendar
 	 *
-	 * @param ICalendar $calendar
+	 * @param ICalendarV2 $calendar
 	 * @return void
-	 * @since 13.0.0
+	 * @since 21.0.0
 	 */
-	public function unregisterCalendar(ICalendar $calendar);
+	public function unregisterCalendar(ICalendarV2 $calendar): void;
 
 	/**
 	 * In order to improve lazy loading a closure can be registered which will be called in case
 	 * calendars are actually requested
 	 *
-	 * @param \Closure $callable
+	 * @param Closure $callable
 	 * @return void
-	 * @since 13.0.0
+	 * @since 21.0.0
 	 */
-	public function register(\Closure $callable);
-
-	/**
-	 * @return ICalendar[]
-	 * @since 13.0.0
-	 */
-	public function getCalendars();
+	public function register(Closure $callable): void;
 
 	/**
 	 * removes all registered calendar instances
 	 * @return void
-	 * @since 13.0.0
+	 * @since 21.0.0
 	 */
-	public function clear();
+	public function clear(): void;
 }
