@@ -4308,16 +4308,6 @@
       <code>$second</code>
     </InvalidScalarArgument>
   </file>
-  <file src="lib/private/Preview/Office.php">
-    <ForbiddenCode occurrences="3">
-      <code>shell_exec($exec)</code>
-      <code>shell_exec('command -v libreoffice')</code>
-      <code>shell_exec('command -v openoffice')</code>
-    </ForbiddenCode>
-    <ImplicitToStringCast occurrences="1">
-      <code>$png</code>
-    </ImplicitToStringCast>
-  </file>
   <file src="lib/private/Preview/ProviderV1Adapter.php">
     <InvalidReturnStatement occurrences="1">
       <code>$thumbnail === false ? null: $thumbnail</code>
@@ -4338,12 +4328,6 @@
     <ImplicitToStringCast occurrences="1">
       <code>$svg</code>
     </ImplicitToStringCast>
-  </file>
-  <file src="lib/private/PreviewManager.php">
-    <ForbiddenCode occurrences="2">
-      <code>shell_exec('command -v libreoffice')</code>
-      <code>shell_exec('command -v openoffice')</code>
-    </ForbiddenCode>
   </file>
   <file src="lib/private/RedisFactory.php">
     <InvalidPropertyAssignmentValue occurrences="2">

@@ -30,18 +30,23 @@
 namespace OC\Preview;
 
 use OCP\Files\File;
+use OCP\Files\FileInfo;
 use OCP\IImage;
 use OCP\ILogger;
 
 abstract class Office extends ProviderV2 {
-	private $cmd;
+	/**
+	 * {@inheritDoc}
+	 */
+	public function isAvailable(FileInfo $file): bool {
+		return is_string($this->options['officeBinary']);
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function getThumbnail(File $file, int $maxX, int $maxY): ?IImage {
-		$this->initCmd();
-		if (is_null($this->cmd)) {
+		if (!is_string($this->options['officeBinary'])) {
 			return null;
 		}
 
@@ -52,9 +57,14 @@ abstract class Office extends ProviderV2 {
 		$defaultParameters = ' -env:UserInstallation=file://' . escapeshellarg($tmpDir . '/owncloud-' . \OC_Util::getInstanceId() . '/') . ' --headless --nologo --nofirststartwizard --invisible --norestore --convert-to png --outdir ';
 		$clParameters = \OC::$server->getConfig()->getSystemValue('preview_office_cl_parameters', $defaultParameters);
 
-		$exec = $this->cmd . $clParameters . escapeshellarg($tmpDir) . ' ' . escapeshellarg($absPath);
+		$cmd = $this->options['officeBinary'] . $clParameters . escapeshellarg($tmpDir) . ' ' . escapeshellarg($absPath);
 
-		shell_exec($exec);
+		exec($cmd, $output, $returnCode);
+
+		if ($returnCode !== 0) {
+			$this->cleanTmpFiles();
+			return null;
+		}
 
 		//create imagick object from png
 		$pngPreview = null;
@@ -75,7 +85,7 @@ abstract class Office extends ProviderV2 {
 		}
 
 		$image = new \OC_Image();
-		$image->loadFromData($png);
+		$image->loadFromData((string) $png);
 
 		$this->cleanTmpFiles();
 		unlink($pngPreview);
@@ -86,30 +96,5 @@ abstract class Office extends ProviderV2 {
 			return $image;
 		}
 		return null;
-	}
-
-	private function initCmd() {
-		$cmd = '';
-
-		$libreOfficePath = \OC::$server->getConfig()->getSystemValue('preview_libreoffice_path', null);
-		if (is_string($libreOfficePath)) {
-			$cmd = $libreOfficePath;
-		}
-
-		$whichLibreOffice = shell_exec('command -v libreoffice');
-		if ($cmd === '' && !empty($whichLibreOffice)) {
-			$cmd = 'libreoffice';
-		}
-
-		$whichOpenOffice = shell_exec('command -v openoffice');
-		if ($cmd === '' && !empty($whichOpenOffice)) {
-			$cmd = 'openoffice';
-		}
-
-		if ($cmd === '') {
-			$cmd = null;
-		}
-
-		$this->cmd = $cmd;
 	}
 }

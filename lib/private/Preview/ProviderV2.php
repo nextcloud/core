@@ -32,8 +32,10 @@ use OCP\IImage;
 use OCP\Preview\IProviderV2;
 
 abstract class ProviderV2 implements IProviderV2 {
-	private $options;
+	/** @var array */
+	protected $options;
 
+	/** @var array */
 	private $tmpFiles = [];
 
 	/**

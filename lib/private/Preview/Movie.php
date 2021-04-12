@@ -31,17 +31,48 @@
 namespace OC\Preview;
 
 use OCP\Files\File;
+use OCP\Files\FileInfo;
 use OCP\IImage;
 
 class Movie extends ProviderV2 {
+
+	/**
+	 * @deprecated 22.0.0 pass option to \OCP\Preview\ProviderV2
+	 * @var string
+	 */
 	public static $avconvBinary;
+
+	/**
+	 * @deprecated 22.0.0 pass option to \OCP\Preview\ProviderV2
+	 * @var string
+	 */
 	public static $ffmpegBinary;
+
+	/** @var string */
+	private $binary;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function getMimeType(): string {
 		return '/video\/.*/';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function isAvailable(FileInfo $file): bool {
+		// TODO: remove when avconv is dropped
+		if (is_null($this->binary)) {
+			if (isset($this->options['movieBinary'])) {
+				$this->binary = $this->options['movieBinary'];
+			} elseif (is_string(self::$avconvBinary)) {
+				$this->binary = self::$avconvBinary;
+			} elseif (is_string(self::$ffmpegBinary)) {
+				$this->binary = self::$ffmpegBinary;
+			}
+		}
+		return is_string($this->binary);
 	}
 
 	/**
@@ -73,19 +104,39 @@ class Movie extends ProviderV2 {
 	 * @return null|\OCP\IImage
 	 */
 	private function generateThumbNail($maxX, $maxY, $absPath, $second): ?IImage {
+		// TODO: remove when avconv is dropped
+		if (is_null($this->binary)) {
+			if (isset($this->options['movieBinary'])) {
+				$this->binary = $this->options['movieBinary'];
+			} elseif (is_string(self::$avconvBinary)) {
+				$this->binary = self::$avconvBinary;
+			} elseif (is_string(self::$ffmpegBinary)) {
+				$this->binary = self::$ffmpegBinary;
+			}
+		}
+		if (!is_string($this->binary)) {
+			return null;
+		}
+
 		$tmpPath = \OC::$server->getTempManager()->getTemporaryFile();
 
-		if (self::$avconvBinary) {
-			$cmd = self::$avconvBinary . ' -y -ss ' . escapeshellarg($second) .
+		$binaryType = substr(strrchr($this->binary, '/'), 1);
+
+		if ($binaryType === 'avconv') {
+			$cmd = $this->binary . ' -y -ss ' . escapeshellarg($second) .
 				' -i ' . escapeshellarg($absPath) .
 				' -an -f mjpeg -vframes 1 -vsync 1 ' . escapeshellarg($tmpPath) .
 				' > /dev/null 2>&1';
-		} else {
-			$cmd = self::$ffmpegBinary . ' -y -ss ' . escapeshellarg($second) .
+		} elseif ($binaryType === 'ffmpeg') {
+			$cmd = $this->binary . ' -y -ss ' . escapeshellarg($second) .
 				' -i ' . escapeshellarg($absPath) .
 				' -f mjpeg -vframes 1' .
 				' ' . escapeshellarg($tmpPath) .
 				' > /dev/null 2>&1';
+		} else {
+			// Not supported
+			unlink($tmpPath);
+			return null;
 		}
 
 		exec($cmd, $output, $returnCode);

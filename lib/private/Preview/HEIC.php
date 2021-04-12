@@ -31,6 +31,7 @@ declare(strict_types=1);
 namespace OC\Preview;
 
 use OCP\Files\File;
+use OCP\Files\FileInfo;
 use OCP\IImage;
 use OCP\ILogger;
 
@@ -50,7 +51,7 @@ class HEIC extends ProviderV2 {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function isAvailable(\OCP\Files\FileInfo $file): bool {
+	public function isAvailable(FileInfo $file): bool {
 		return in_array('HEIC', \Imagick::queryFormats("HEI*"));
 	}
 

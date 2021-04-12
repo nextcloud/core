@@ -395,41 +395,34 @@ class PreviewManager implements IPreview {
 			}
 
 			if (count($checkImagick->queryFormats('PDF')) === 1) {
-				if (\OC_Helper::is_function_enabled('shell_exec')) {
-					$officeFound = is_string($this->config->getSystemValue('preview_libreoffice_path', null));
+				// Office requires openoffice or libreoffice
+				$officeBinary = $this->config->getSystemValue('preview_libreoffice_path', null);
+				if (is_null($officeBinary)) {
+					$officeBinary = \OC_Helper::findBinaryPath('libreoffice');
+				}
+				if (is_null($officeBinary)) {
+					$officeBinary = \OC_Helper::findBinaryPath('openoffice');
+				}
 
-					if (!$officeFound) {
-						//let's see if there is libreoffice or openoffice on this machine
-						$whichLibreOffice = shell_exec('command -v libreoffice');
-						$officeFound = !empty($whichLibreOffice);
-						if (!$officeFound) {
-							$whichOpenOffice = shell_exec('command -v openoffice');
-							$officeFound = !empty($whichOpenOffice);
-						}
-					}
-
-					if ($officeFound) {
-						$this->registerCoreProvider(Preview\MSOfficeDoc::class, '/application\/msword/');
-						$this->registerCoreProvider(Preview\MSOffice2003::class, '/application\/vnd.ms-.*/');
-						$this->registerCoreProvider(Preview\MSOffice2007::class, '/application\/vnd.openxmlformats-officedocument.*/');
-						$this->registerCoreProvider(Preview\OpenDocument::class, '/application\/vnd.oasis.opendocument.*/');
-						$this->registerCoreProvider(Preview\StarOffice::class, '/application\/vnd.sun.xml.*/');
-					}
+				if (is_string($officeBinary)) {
+					$this->registerCoreProvider(Preview\MSOfficeDoc::class, '/application\/msword/', ["officeBinary" => $officeBinary]);
+					$this->registerCoreProvider(Preview\MSOffice2003::class, '/application\/vnd.ms-.*/', ["officeBinary" => $officeBinary]);
+					$this->registerCoreProvider(Preview\MSOffice2007::class, '/application\/vnd.openxmlformats-officedocument.*/', ["officeBinary" => $officeBinary]);
+					$this->registerCoreProvider(Preview\OpenDocument::class, '/application\/vnd.oasis.opendocument.*/', ["officeBinary" => $officeBinary]);
+					$this->registerCoreProvider(Preview\StarOffice::class, '/application\/vnd.sun.xml.*/', ["officeBinary" => $officeBinary]);
 				}
 			}
 		}
 
 		// Video requires avconv or ffmpeg
 		if (in_array(Preview\Movie::class, $this->getEnabledDefaultProvider())) {
-			$avconvBinary = \OC_Helper::findBinaryPath('avconv');
-			$ffmpegBinary = $avconvBinary ? null : \OC_Helper::findBinaryPath('ffmpeg');
+			$movieBinary = \OC_Helper::findBinaryPath('avconv');
+			if (is_null($movieBinary)) {
+				$movieBinary = \OC_Helper::findBinaryPath('ffmpeg');
+			}
 
-			if ($avconvBinary || $ffmpegBinary) {
-				// FIXME // a bit hacky but didn't want to use subclasses
-				\OC\Preview\Movie::$avconvBinary = $avconvBinary;
-				\OC\Preview\Movie::$ffmpegBinary = $ffmpegBinary;
-
-				$this->registerCoreProvider(Preview\Movie::class, '/video\/.*/');
+			if (is_string($movieBinary)) {
+				$this->registerCoreProvider(Preview\Movie::class, '/video\/.*/', ["movieBinary" => $movieBinary]);
 			}
 		}
 	}
