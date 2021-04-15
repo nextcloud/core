@@ -1820,7 +1820,7 @@ class ManagerTest extends \Test\TestCase {
 		$data = [];
 
 		// No exclude groups
-		$data[] = ['no', null, null, null, false];
+		$data[] = ['no', null, null, [], false];
 
 		// empty exclude list, user no groups
 		$data[] = ['yes', '', json_encode(['']), [], false];

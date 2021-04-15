@@ -12,10 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      # do not stop on another job's failure
       fail-fast: false
       matrix:
-        php-versions: [ '7.4' ]
+        php-versions: [ '7.3', '7.4', '8.0' ]
         databases: [ 'oci' ]
 
     name: php${{ matrix.php-versions }}-${{ matrix.databases }}
@@ -41,8 +40,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, iconv, fileinfo, intl, sqlite, pdo_sqlite, oci8
-          tools: phpunit:8.5.2
+          extensions: mbstring, iconv, fileinfo, intl, sqlite, pdo_sqlite, oci8, gd, imagick
+          tools: phpunit:9
           coverage: none
 
       - name: Set up Nextcloud
