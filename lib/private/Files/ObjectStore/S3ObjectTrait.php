@@ -91,6 +91,7 @@ trait S3ObjectTrait {
 			'bucket' => $this->bucket,
 			'key' => $urn,
 			'part_size' => $this->uploadPartSize,
+			'concurrency' => $this->config->getSystemValue('objectstore.arguments.concurrency', 5),
 		]);
 
 		try {
