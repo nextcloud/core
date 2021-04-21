@@ -464,16 +464,21 @@ class Session implements IUserSession, Emitter {
 			// Failed, maybe the user used their email address
 			$users = $this->manager->getByEmail($user);
 			if (!(\count($users) === 1 && $this->login($users[0]->getUID(), $password))) {
-				$this->logger->warning('Login failed: \'' . $user . '\' (Remote IP: \'' . \OC::$server->getRequest()->getRemoteAddress() . '\')', ['app' => 'core']);
 
-				$throttler->registerAttempt('login', $request->getRemoteAddress(), ['user' => $user]);
+				// Failed, try username from DOMAIN\USERNAME syntax, if applicable
+				$nonDomainUser = preg_replace("/^(?:NC|NEXTCLOUD|WORKGROUP)\\\(.*)/", "\${1}", $user);
+				if ($nonDomainUser === $user || !$this->login($nonDomainUser, $password)) {
+					$this->logger->warning('Login failed: \'' . $user . '\' (Remote IP: \'' . \OC::$server->getRequest()->getRemoteAddress() . '\')', ['app' => 'core']);
 
-				$this->dispatcher->dispatchTyped(new OC\Authentication\Events\LoginFailed($user));
+					$throttler->registerAttempt('login', $request->getRemoteAddress(), ['user' => $user]);
 
-				if ($currentDelay === 0) {
-					$throttler->sleepDelay($request->getRemoteAddress(), 'login');
+					$this->dispatcher->dispatchTyped(new OC\Authentication\Events\LoginFailed($user));
+
+					if ($currentDelay === 0) {
+						$throttler->sleepDelay($request->getRemoteAddress(), 'login');
+					}
+					return false;
 				}
-				return false;
 			}
 		}
 
