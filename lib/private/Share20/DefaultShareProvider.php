@@ -204,32 +204,24 @@ class DefaultShareProvider implements IShareProvider {
 		$qb->setValue('file_target', $qb->createNamedParameter($share->getTarget()));
 
 		// Set the time this share was created
-		$qb->setValue('stime', $qb->createNamedParameter(time()));
+		$time = time();
+		$qb->setValue('stime', $qb->createNamedParameter($time));
 
 		// insert the data and fetch the id of the share
-		$this->dbConn->beginTransaction();
-		$qb->execute();
-		$id = $this->dbConn->lastInsertId('*PREFIX*share');
+		$qb->executeUpdate();
 
-		// Now fetch the inserted share and create a complete share object
-		$qb = $this->dbConn->getQueryBuilder();
-		$qb->select('*')
-			->from('share')
-			->where($qb->expr()->eq('id', $qb->createNamedParameter($id)));
+		// Update mandatory data
+		$id = $qb->getLastInsertId();
+		$share->setId($id);
+		$share->setProviderId($this->identifier());
 
-		$cursor = $qb->execute();
-		$data = $cursor->fetch();
-		$this->dbConn->commit();
-		$cursor->closeCursor();
-
-		if ($data === false) {
-			throw new ShareNotFound('Newly created share could not be found');
-		}
+		$shareTime = new \DateTime();
+		$shareTime->setTimestamp($time);
+		$share->setShareTime($shareTime);
 
 		$mailSendValue = $share->getMailSend();
-		$data['mail_send'] = ($mailSendValue === null) ? true : $mailSendValue;
+		$share->setMailSend(($mailSendValue === null) ? true : $mailSendValue);
 
-		$share = $this->createShare($data);
 		return $share;
 	}
 
