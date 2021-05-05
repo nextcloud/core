@@ -32,6 +32,8 @@ import Vue from 'vue'
 import TemplatePickerView from './views/TemplatePicker'
 import { showError } from '@nextcloud/dialogs'
 
+import './legacy/filelistSearch'
+
 // Set up logger
 const logger = getLoggerBuilder()
 	.setApp('files')

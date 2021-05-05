@@ -5,7 +5,7 @@
 
 <input type="hidden" name="dir" value="" id="dir">
 
-<div class="nofilterresults hidden">
+<div class="nofilterresults emptycontent hidden">
 	<div class="icon-search"></div>
 	<h2><?php p($l->t('No entries found in this folder')); ?></h2>
 	<p></p>
