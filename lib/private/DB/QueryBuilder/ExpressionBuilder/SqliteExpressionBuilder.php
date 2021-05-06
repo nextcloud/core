@@ -23,6 +23,12 @@
 
 namespace OC\DB\QueryBuilder\ExpressionBuilder;
 
+use OC\DB\QueryBuilder\QueryFunction;
+use OCP\DB\QueryBuilder\ILiteral;
+use OCP\DB\QueryBuilder\IParameter;
+use OCP\DB\QueryBuilder\IQueryBuilder;
+use OCP\DB\QueryBuilder\IQueryFunction;
+
 class SqliteExpressionBuilder extends ExpressionBuilder {
 	/**
 	 * @inheritdoc
@@ -33,5 +39,106 @@ class SqliteExpressionBuilder extends ExpressionBuilder {
 
 	public function iLike($x, $y, $type = null): string {
 		return $this->like($this->functionBuilder->lower($x), $this->functionBuilder->lower($y), $type);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function comparison($x, string $operator, $y, $type = null): string {
+		$x = $this->prepareColumn($x, $type);
+		$y = $this->prepareColumn($y, $type);
+
+		return $this->expressionBuilder->comparison($x, $operator, $y);
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function eq($x, $y, $type = null): string {
+		$x = $this->prepareColumn($x, $type);
+		$y = $this->prepareColumn($y, $type);
+
+		return $this->expressionBuilder->eq($x, $y);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function neq($x, $y, $type = null): string {
+		$x = $this->prepareColumn($x, $type);
+		$y = $this->prepareColumn($y, $type);
+
+		return $this->expressionBuilder->neq($x, $y);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function lt($x, $y, $type = null): string {
+		$x = $this->prepareColumn($x, $type);
+		$y = $this->prepareColumn($y, $type);
+
+		return $this->expressionBuilder->lt($x, $y);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function lte($x, $y, $type = null): string {
+		$x = $this->prepareColumn($x, $type);
+		$y = $this->prepareColumn($y, $type);
+
+		return $this->expressionBuilder->lte($x, $y);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function gt($x, $y, $type = null): string {
+		$x = $this->prepareColumn($x, $type);
+		$y = $this->prepareColumn($y, $type);
+
+		return $this->expressionBuilder->gt($x, $y);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function gte($x, $y, $type = null): string {
+		$x = $this->prepareColumn($x, $type);
+		$y = $this->prepareColumn($y, $type);
+
+		return $this->expressionBuilder->gte($x, $y);
+	}
+
+	/**
+	 * @param mixed $column
+	 * @param mixed|null $type
+	 * @return array|IQueryFunction|string
+	 */
+	protected function prepareColumn($column, $type) {
+		if ($type === IQueryBuilder::PARAM_DATE && !is_array($column) && !($column instanceof IParameter) && !($column instanceof ILiteral)) {
+			$column = $this->castColumn($column, $type);
+		} else {
+			$column = $this->helper->quoteColumnNames($column);
+		}
+		return $column;
+	}
+
+	/**
+	 * Returns a IQueryFunction that casts the column to the given type
+	 *
+	 * @param string $column
+	 * @param mixed $type One of IQueryBuilder::PARAM_*
+	 * @return IQueryFunction
+	 */
+	public function castColumn(string $column, $type): IQueryFunction {
+		if ($type === IQueryBuilder::PARAM_DATE) {
+			$column = $this->helper->quoteColumnName($column);
+			return new QueryFunction('DATETIME(' . $column . ')');
+		}
+
+		return parent::castColumn($column, $type);
 	}
 }
