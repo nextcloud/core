@@ -4,7 +4,10 @@
         "optimize-autoloader": true
     },
     "autoload" : {
-			"psr-4": {
+		"files": [
+			"lib/public/Log/functions.php"
+		],
+		"psr-4": {
 			"": "lib/private/legacy",
             "OC\\": "lib/private",
             "OC\\Core\\": "core/",
