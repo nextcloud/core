@@ -97,6 +97,7 @@ use OC\Files\Node\Root;
 use OC\Files\Storage\StorageFactory;
 use OC\Files\Template\TemplateManager;
 use OC\Files\Type\Loader;
+use OC\Files\Utils\DownloadManager;
 use OC\Files\View;
 use OC\FullTextSearch\FullTextSearchManager;
 use OC\Http\Client\ClientService;
@@ -174,6 +175,7 @@ use OCP\Files\Mount\IMountManager;
 use OCP\Files\NotFoundException;
 use OCP\Files\Storage\IStorageFactory;
 use OCP\Files\Template\ITemplateManager;
+use OCP\Files\Utils\IDownloadManager;
 use OCP\FullTextSearch\IFullTextSearchManager;
 use OCP\GlobalScale\IConfig;
 use OCP\Group\Events\BeforeGroupCreatedEvent;
@@ -1364,6 +1366,8 @@ class Server extends ServerContainer implements IServerContainer {
 		$this->registerAlias(IInitialStateService::class, InitialStateService::class);
 
 		$this->registerAlias(\OCP\UserStatus\IManager::class, \OC\UserStatus\Manager::class);
+
+		$this->registerAlias(IDownloadManager::class, DownloadManager::class);
 
 		$this->connectDispatcher();
 	}

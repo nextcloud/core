@@ -621,7 +621,7 @@
 						};
 
 						context.fileList.showFileBusyState(filename, true);
-						OCA.Files.Files.handleDownload(url, disableLoadingState);
+						OCA.Files.Files.handleDownload(filename, dir, disableLoadingState);
 					}
 				}
 			});

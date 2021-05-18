@@ -52,17 +52,23 @@ use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
 use OCA\Viewer\Event\LoadViewer;
 use OCP\Accounts\IAccountManager;
 use OCP\AppFramework\AuthPublicShareController;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\NotFoundResponse;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\Template\ExternalShareMenuAction;
 use OCP\AppFramework\Http\Template\LinkMenuAction;
 use OCP\AppFramework\Http\Template\PublicTemplateResponse;
 use OCP\AppFramework\Http\Template\SimpleMenuAction;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\Constants;
 use OCP\Defaults;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
+use OCP\Files\Utils\IDownloadManager;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ILogger;
@@ -112,6 +118,8 @@ class ShareController extends AuthPublicShareController {
 
 	/** @var Share\IShare */
 	protected $share;
+	/** @var IDownloadManager */
+	private $downloadManager;
 
 	/**
 	 * @param string $appName
@@ -146,7 +154,9 @@ class ShareController extends AuthPublicShareController {
 								IAccountManager $accountManager,
 								IEventDispatcher $eventDispatcher,
 								IL10N $l10n,
-								Defaults $defaults) {
+								Defaults $defaults,
+								IDownloadManager $downloadManager
+	) {
 		parent::__construct($appName, $request, $session, $urlGenerator);
 
 		$this->config = $config;
@@ -161,6 +171,7 @@ class ShareController extends AuthPublicShareController {
 		$this->l10n = $l10n;
 		$this->defaults = $defaults;
 		$this->shareManager = $shareManager;
+		$this->downloadManager = $downloadManager;
 	}
 
 	/**
@@ -387,14 +398,14 @@ class ShareController extends AuthPublicShareController {
 				$freeSpace = (INF > 0) ? INF: PHP_INT_MAX; // work around https://bugs.php.net/bug.php?id=69188
 			}
 
-			$hideFileList = !($share->getPermissions() & \OCP\Constants::PERMISSION_READ);
+			$hideFileList = !($share->getPermissions() & Constants::PERMISSION_READ);
 			$maxUploadFilesize = $freeSpace;
 
 			$folder = new Template('files', 'list', '');
 
 			$folder->assign('dir', $shareNode->getRelativePath($folderNode->getPath()));
 			$folder->assign('dirToken', $this->getToken());
-			$folder->assign('permissions', \OCP\Constants::PERMISSION_READ);
+			$folder->assign('permissions', Constants::PERMISSION_READ);
 			$folder->assign('isPublic', true);
 			$folder->assign('hideFileList', $hideFileList);
 			$folder->assign('publicUploadEnabled', 'no');
@@ -462,6 +473,7 @@ class ShareController extends AuthPublicShareController {
 		\OCP\Util::addScript('files', 'fileactionsmenu');
 		\OCP\Util::addScript('files', 'jquery.fileupload');
 		\OCP\Util::addScript('files_sharing', 'files_drop');
+		\OCP\Util::addScript('files', 'dist/download');
 
 		if (isset($shareTmpl['folder'])) {
 			// JS required for folders
@@ -502,7 +514,7 @@ class ShareController extends AuthPublicShareController {
 			$response->setHeaderDetails($this->l10n->t('shared by %s', [$shareTmpl['shareOwner']]));
 		}
 
-		$isNoneFileDropFolder = $shareIsFolder === false || $share->getPermissions() !== \OCP\Constants::PERMISSION_CREATE;
+		$isNoneFileDropFolder = $shareIsFolder === false || $share->getPermissions() !== Constants::PERMISSION_CREATE;
 
 		if ($isNoneFileDropFolder && !$share->getHideDownload()) {
 			\OCP\Util::addScript('files_sharing', 'public_note');
@@ -542,29 +554,54 @@ class ShareController extends AuthPublicShareController {
 	 * @PublicPage
 	 * @NoCSRFRequired
 	 * @NoSameSiteCookieRequired
-	 *
-	 * @param string $token
-	 * @param string $files
-	 * @param string $path
-	 * @param string $downloadStartSecret
-	 * @return void|\OCP\AppFramework\Http\Response
-	 * @throws NotFoundException
 	 */
-	public function downloadShare($token, $files = null, $path = '', $downloadStartSecret = '') {
+	public function registerDownload(string $token, string $files = '', string $path = '', string $downloadStartSecret = ''): Response {
+
 		\OC_User::setIncognitoMode(true);
 
 		$share = $this->shareManager->getShareByToken($token);
+		if (!($share->getPermissions() & Constants::PERMISSION_READ)) {
+			return new DataResponse('Share has no read permission', Http::STATUS_FORBIDDEN);
+		}
+		if (!$this->validateShare($share)) {
+			return new DataResponse('Share has not been found', Http::STATUS_NOT_FOUND);
+		}
 
-		if (!($share->getPermissions() & \OCP\Constants::PERMISSION_READ)) {
-			return new \OCP\AppFramework\Http\DataResponse('Share has no read permission');
+		$token = $this->downloadManager->register([
+			'token' => $token,
+			'files' => $files,
+			'path' => $path,
+			'downloadStartSecret' => $downloadStartSecret,
+		]);
+
+		return new JSONResponse(['token' => $token]);
+	}
+
+	/**
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 * @NoSameSiteCookieRequired
+	 *
+	 * @return void|\OCP\AppFramework\Http\Response
+	 * @throws NotFoundException
+	 */
+	public function downloadShare(string $downloadToken) {
+		$data = $this->downloadManager->retrieve($downloadToken);
+
+		\OC_User::setIncognitoMode(true);
+
+		$share = $this->shareManager->getShareByToken($data['token']);
+
+		if (!($share->getPermissions() & Constants::PERMISSION_READ)) {
+			return new DataResponse('Share has no read permission');
 		}
 
 		$files_list = null;
-		if (!is_null($files)) { // download selected files
-			$files_list = json_decode($files);
+		if (!is_null($data['files'])) { // download selected files
+			$files_list = json_decode($data['files']);
 			// in case we get only a single file
 			if ($files_list === null) {
-				$files_list = [$files];
+				$files_list = [$data['files']];
 			}
 			// Just in case $files is a single int like '1234'
 			if (!is_array($files_list)) {
@@ -579,7 +616,6 @@ class ShareController extends AuthPublicShareController {
 		$userFolder = $this->rootFolder->getUserFolder($share->getShareOwner());
 		$originalSharePath = $userFolder->getRelativePath($share->getNode()->getPath());
 
-
 		// Single file share
 		if ($share->getNode() instanceof \OCP\Files\File) {
 			// Single file download
@@ -591,9 +627,9 @@ class ShareController extends AuthPublicShareController {
 			$node = $share->getNode();
 
 			// Try to get the path
-			if ($path !== '') {
+			if ($data['path'] !== '') {
 				try {
-					$node = $node->get($path);
+					$node = $node->get($data['path']);
 				} catch (NotFoundException $e) {
 					$this->emitAccessShareHook($share, 404, 'Share not found');
 					return new NotFoundResponse();
@@ -628,12 +664,12 @@ class ShareController extends AuthPublicShareController {
 		 * the content must not be longer than 32 characters and must only contain
 		 * alphanumeric characters
 		 */
-		if (!empty($downloadStartSecret)
-			&& !isset($downloadStartSecret[32])
-			&& preg_match('!^[a-zA-Z0-9]+$!', $downloadStartSecret) === 1) {
+		if (!empty($data['downloadStartSecret'])
+			&& !isset($data['downloadStartSecret'][32])
+			&& preg_match('!^[a-zA-Z0-9]+$!', $data['downloadStartSecret']) === 1) {
 
 			// FIXME: set on the response once we use an actual app framework response
-			setcookie('ocDownloadStarted', $downloadStartSecret, time() + 20, '/');
+			setcookie('ocDownloadStarted', $data['downloadStartSecret'], time() + 20, '/');
 		}
 
 		$this->emitAccessShareHook($share);
@@ -648,7 +684,7 @@ class ShareController extends AuthPublicShareController {
 		}
 
 		// download selected files
-		if (!is_null($files) && $files !== '') {
+		if (!is_null($data['files']) && $data['files'] !== '') {
 			// FIXME: The exit is required here because otherwise the AppFramework is trying to add headers as well
 			// after dispatching the request which results in a "Cannot modify header information" notice.
 			OC_Files::get($originalSharePath, $files_list, $server_params);

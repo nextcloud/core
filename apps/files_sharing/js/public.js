@@ -295,6 +295,20 @@ OCA.Sharing.PublicApp = {
 			$('#download').click(function (e) {
 				e.preventDefault();
 				OC.redirect(FileList.getDownloadUrl());
+
+				var path = dir || this.getCurrentDirectory();
+				if (_.isArray(filename)) {
+					filename = JSON.stringify(filename);
+				}
+				var params = {
+					path: path
+				};
+				if (filename) {
+					params.files = filename;
+				}
+
+
+				OCA.Files.Download.get()
 			});
 
 			if (hideDownload === 'true') {

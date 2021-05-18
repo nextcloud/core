@@ -191,6 +191,7 @@ class ViewController extends Controller {
 		\OCP\Util::addStyle('files', 'merged');
 		\OCP\Util::addScript('files', 'merged-index');
 		\OCP\Util::addScript('files', 'dist/templates');
+		\OCP\Util::addScript('files', 'dist/download');
 
 		// mostly for the home storage's free space
 		// FIXME: Make non static

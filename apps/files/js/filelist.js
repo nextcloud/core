@@ -1034,11 +1034,11 @@
 			};
 
 			if(this.getSelectedFiles().length > 1) {
-				OCA.Files.Files.handleDownload(this.getDownloadUrl(files, dir, true), disableLoadingState);
+				OCA.Files.Files.handleDownload(files, dir, disableLoadingState);
 			}
 			else {
 				var first = this.getSelectedFiles()[0];
-				OCA.Files.Files.handleDownload(this.getDownloadUrl(first.name, dir, true), disableLoadingState);
+				OCA.Files.Files.handleDownload(first.name, dir, disableLoadingState);
 			}
 			event.preventDefault();
 		},
@@ -1338,8 +1338,7 @@
 
 					}
 					else {
-						var url = this.getDownloadUrl(filename, dir, true);
-						OCA.Files.Files.handleDownload(url);
+						OCA.Files.Files.handleDownload(filename, dir, undefined);
 					}
 				}
 				this.triedActionOnce = true;

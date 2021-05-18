@@ -363,26 +363,24 @@
 		 * - browser now adds this cookie for the domain
 		 * - JS periodically checks for this cookie and then knows when the download has started to call the callback
 		 *
-		 * @param {string} url download URL
+		 * @param {string} files
+		 * @param {string} dir
 		 * @param {Function} callback function to call once the download has started
 		 */
-		handleDownload: function(url, callback) {
+		handleDownload: function(files, dir, callback) {
 			var randomToken = Math.random().toString(36).substring(2),
 				checkForDownloadCookie = function() {
 					if (!OC.Util.isCookieSetToValue('ocDownloadStarted', randomToken)){
 						return false;
 					} else {
-						callback();
+						if (callback !== undefined) {
+							callback();
+						}
 						return true;
 					}
 				};
 
-			if (url.indexOf('?') >= 0) {
-				url += '&';
-			} else {
-				url += '?';
-			}
-			OC.redirect(url + 'downloadStartSecret=' + randomToken);
+			OCA.Files.download(files, dir, randomToken);
 			OC.Util.waitFor(checkForDownloadCookie, 500);
 		}
 	};

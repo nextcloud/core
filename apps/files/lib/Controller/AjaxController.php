@@ -26,15 +26,37 @@ declare(strict_types=1);
 
 namespace OCA\Files\Controller;
 
+use OC_Files;
 use OCA\Files\Helper;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Files\NotFoundException;
+use OCP\Files\Utils\IDownloadManager;
+use OCP\IConfig;
 use OCP\IRequest;
+use OCP\ISession;
 
 class AjaxController extends Controller {
-	public function __construct(string $appName, IRequest $request) {
+	/** @var ISession */
+	private $session;
+	/** @var IConfig */
+	private $config;
+
+	/** @var IDownloadManager */
+	private $downloadManager;
+
+	public function __construct(
+		string $appName,
+		IRequest $request,
+		ISession $session,
+		IConfig $config,
+		IDownloadManager $downloadManager
+	) {
 		parent::__construct($appName, $request);
+		$this->session = $session;
+		$this->request = $request;
+		$this->config = $config;
+		$this->downloadManager = $downloadManager;
 	}
 
 	/**
@@ -55,5 +77,47 @@ class AjaxController extends Controller {
 				],
 			]);
 		}
+	}
+
+	/**
+	 * @NoAdminRequired
+	 */
+	public function registerDownload($files, string $dir = '', string $downloadStartSecret = '') {
+		if (is_string($files)) {
+			$files = [$files];
+		} elseif (!is_array($files)) {
+			throw new \InvalidArgumentException('Invalid argument for files');
+		}
+
+		$token = $this->downloadManager->register([
+			'files' => $files,
+			'dir' => $dir,
+			'downloadStartSecret' => $downloadStartSecret,
+		]);
+
+		return new JSONResponse(['token' => $token]);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+	public function download(string $token) {
+
+		$data = $this->downloadManager->retrieve($token);
+		$this->session->close();
+
+		if (strlen($data['downloadStartSecret']) <= 32
+			&& (preg_match('!^[a-zA-Z0-9]+$!', $data['downloadStartSecret']) === 1)
+		) {
+			setcookie('ocDownloadStarted', $data['downloadStartSecret'], time() + 20, '/');
+		}
+
+		$serverParams = [ 'head' => $this->request->getMethod() === 'HEAD' ];
+		if (isset($_SERVER['HTTP_RANGE'])) {
+			$serverParams['range'] = $this->request->getHeader('Range');
+		}
+
+		OC_Files::get($data['dir'], $data['files'], $serverParams);
 	}
 }
