@@ -71,6 +71,9 @@ class SharedStorageTest extends TestCase {
 
 		\OC\Files\Filesystem::getLoader()->removeStorageWrapper('oc_trashbin');
 
+		\OC\Share\Share::unregisterBackend('file');
+		\OC\Share\Share::unregisterBackend('folder');
+
 		parent::tearDown();
 	}
 

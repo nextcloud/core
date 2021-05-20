@@ -90,6 +90,15 @@ class Share extends Constants {
 	}
 
 	/**
+	 * Unregister a sharing backend
+	 * @param string $itemType Item type
+	 * @internal FOR TESTING ONLY
+	 */
+	public static function unregisterBackend($itemType) {
+		unset(self::$backendTypes[$itemType]);
+	}
+
+	/**
 	 * Get the items of item type shared with the current user
 	 * @param string $itemType
 	 * @param int $format (optional) Format type must be defined by the backend
