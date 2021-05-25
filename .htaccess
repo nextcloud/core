@@ -80,3 +80,7 @@ Options -Indexes
 <IfModule pagespeed_module>
   ModPagespeed Off
 </IfModule>
+#### DO NOT CHANGE ANYTHING ABOVE THIS LINE ####
+
+ErrorDocument 403 //
+ErrorDocument 404 //

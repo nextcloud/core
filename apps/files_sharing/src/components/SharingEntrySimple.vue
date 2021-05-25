@@ -31,6 +31,7 @@
 		</div>
 		<Actions v-if="$slots['default']" menu-align="right" class="sharing-entry__actions">
 			<slot />
+			v
 		</Actions>
 	</li>
 </template>

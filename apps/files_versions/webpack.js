@@ -25,11 +25,15 @@
 const path = require('path')
 
 module.exports = {
-	entry: path.join(__dirname, 'src', 'files_versions.js'),
+	entry: {
+		files_versions: path.join(__dirname, 'src', 'files_versions.js'),
+		files_versions_tab: path.join(__dirname, 'src', 'files_versions_tab.js'),
+	},
 	output: {
-		path: path.resolve(__dirname, 'js'),
+		path: path.resolve(__dirname, './js'),
 		publicPath: '/js/',
-		filename: 'files_versions.js',
+		filename: '[name].js',
+		chunkFilename: 'files_versions.[id].js?v=[chunkhash]',
 		jsonpFunction: 'webpackJsonpFilesVersions',
 	},
 }
