@@ -290,42 +290,6 @@ trigger:
 
 ---
 kind: pipeline
-name: mariadb10.1-php7.3
-
-steps:
-- name: submodules
-  image: docker:git
-  commands:
-    - git submodule update --init
-- name: mariadb10.1-php7.3
-  image: nextcloudci/php7.3:php7.3-5
-  commands:
-    - bash tests/drone-run-php-tests.sh || exit 0
-    - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mariadb
-
-services:
-- name: cache
-  image: redis
-- name: mariadb
-  image: mariadb:10.1
-  environment:
-    MYSQL_ROOT_PASSWORD: owncloud
-    MYSQL_USER: oc_autotest
-    MYSQL_PASSWORD: owncloud
-    MYSQL_DATABASE: oc_autotest
-  tmpfs:
-    - /var/lib/mysql
-
-trigger:
-  branch:
-    - master
-    - stable*
-  event:
-    - pull_request
-    - push
-
----
-kind: pipeline
 name: mariadb10.2-php7.3
 
 steps:
@@ -420,6 +384,42 @@ services:
   image: redis
 - name: mariadb
   image: mariadb:10.4
+  environment:
+    MYSQL_ROOT_PASSWORD: owncloud
+    MYSQL_USER: oc_autotest
+    MYSQL_PASSWORD: owncloud
+    MYSQL_DATABASE: oc_autotest
+  tmpfs:
+    - /var/lib/mysql
+
+trigger:
+  branch:
+    - master
+    - stable*
+  event:
+    - pull_request
+    - push
+
+---
+kind: pipeline
+name: mariadb10.5-php7.4
+
+steps:
+- name: submodules
+  image: docker:git
+  commands:
+    - git submodule update --init
+- name: mariadb10.5-php7.4
+  image: nextcloudci/php7.4:php7.4-3
+  commands:
+    - bash tests/drone-run-php-tests.sh || exit 0
+    - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mariadb
+
+services:
+- name: cache
+  image: redis
+- name: mariadb
+  image: mariadb:10.5
   environment:
     MYSQL_ROOT_PASSWORD: owncloud
     MYSQL_USER: oc_autotest
