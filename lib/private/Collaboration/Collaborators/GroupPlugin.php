@@ -38,8 +38,14 @@ use OCP\IUserSession;
 use OCP\Share\IShare;
 
 class GroupPlugin implements ISearchPlugin {
+	/** @var bool */
 	protected $shareeEnumeration;
+	/** @var bool */
 	protected $shareWithGroupOnly;
+	/** @var bool */
+	protected $shareeEnumerationInGroupOnly;
+	/** @var bool */
+	protected $groupSharingDisabled;
 
 	/** @var IGroupManager */
 	private $groupManager;
@@ -56,9 +62,14 @@ class GroupPlugin implements ISearchPlugin {
 		$this->shareeEnumeration = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes') === 'yes';
 		$this->shareWithGroupOnly = $this->config->getAppValue('core', 'shareapi_only_share_with_group_members', 'no') === 'yes';
 		$this->shareeEnumerationInGroupOnly = $this->shareeEnumeration && $this->config->getAppValue('core', 'shareapi_restrict_user_enumeration_to_group', 'no') === 'yes';
+		$this->groupSharingDisabled = $this->config->getAppValue('core', 'shareapi_allow_group_sharing', 'yes') === 'no';
 	}
 
 	public function search($search, $limit, $offset, ISearchResult $searchResult) {
+		if ($this->groupSharingDisabled) {
+			return false;
+		}
+
 		$hasMoreResults = false;
 		$result = ['wide' => [], 'exact' => []];
 

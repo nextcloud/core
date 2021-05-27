@@ -192,7 +192,9 @@ class ShareesAPIController extends OCSController {
 				$shareTypes[] = IShare::TYPE_DECK;
 			}
 		} else {
-			$shareTypes[] = IShare::TYPE_GROUP;
+			if ($this->shareManager->allowGroupSharing()) {
+				$shareTypes[] = IShare::TYPE_GROUP;
+			}
 			$shareTypes[] = IShare::TYPE_EMAIL;
 		}
 
