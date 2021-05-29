@@ -142,7 +142,7 @@ class SMB extends Common implements INotifyStorage {
 	private function splitUser($user) {
 		if (strpos($user, '/')) {
 			return explode('/', $user, 2);
-		} elseif (strpos($user, '\\')) {
+		} elseif (strpos($user, '\\') !== false) {
 			return explode('\\', $user);
 		} else {
 			return [null, $user];
@@ -219,7 +219,7 @@ class SMB extends Common implements INotifyStorage {
 	private function getACL(IFileInfo $file): ?ACL {
 		$acls = $file->getAcls();
 		foreach ($acls as $user => $acl) {
-			[, $user] = explode('\\', $user); // strip domain
+			[, $user] = $this->splitUser($user); // strip domain
 			if ($user === $this->server->getAuth()->getUsername()) {
 				return $acl;
 			}
