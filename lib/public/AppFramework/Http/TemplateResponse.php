@@ -117,6 +117,7 @@ class TemplateResponse extends Response {
 
 		$this->setContentSecurityPolicy(new ContentSecurityPolicy());
 		$this->setFeaturePolicy(new FeaturePolicy());
+		$this->setPermissionPolicy(new PermissionPolicy());
 	}
 
 

@@ -1,12 +1,9 @@
 <?php
 
 declare(strict_types=1);
-
 /**
- * @copyright Copyright (c) 2019, Roeland Jago Douma <roeland@famdouma.nl>
+ * @copyright Copyright (c) 2020, Roeland Jago Douma <roeland@famdouma.nl>
  *
- * @author Christoph Wurst <christoph@winzerhof-wurst.at>
- * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -22,41 +19,38 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-namespace OCP\Security\FeaturePolicy;
+namespace OCP\Security\PermissionPolicy;
 
-use OC\Security\FeaturePolicy\FeaturePolicyManager;
-use OCP\AppFramework\Http\EmptyFeaturePolicy;
+use OC\Security\PermissionPolicy\PermissionPolicyManager;
+use OCP\AppFramework\Http\EmptyPermissionPolicy;
 use OCP\EventDispatcher\Event;
 
 /**
  * Event that allows to register a feature policy header to a request.
  *
- * @since 17.0.0
- * @depreacted 21.0.0 use AddPermissionPolicyEvent
+ * @since 21.0.0
  */
-class AddFeaturePolicyEvent extends Event {
+class AddPermissionsPolicyEvent extends Event {
 
-	/** @var FeaturePolicyManager */
+	/** @var PermissionPolicyManager */
 	private $policyManager;
 
 	/**
-	 * @since 17.0.0
-	 * @depreacted 21.0.0 use AddPermissionPolicyEvent
+	 * @since 21.0.0
 	 */
-	public function __construct(FeaturePolicyManager $policyManager) {
+	public function __construct(PermissionPolicyManager $policyManager) {
 		parent::__construct();
 		$this->policyManager = $policyManager;
 	}
 
 	/**
-	 * @since 17.0.0
-	 * @depreacted 21.0.0 use AddPermissionPolicyEvent
+	 * @since 21.0.0
 	 */
-	public function addPolicy(EmptyFeaturePolicy $policy) {
+	public function addPolicy(EmptyPermissionPolicy $policy) {
 		$this->policyManager->addDefaultPolicy($policy);
 	}
 }

@@ -91,6 +91,9 @@ class Response {
 	/** @var FeaturePolicy */
 	private $featurePolicy;
 
+	/** @var PermissionPolicy */
+	private $permissionPolicy;
+
 	/** @var bool */
 	private $throttled = false;
 	/** @var array */
@@ -254,7 +257,7 @@ class Response {
 		}
 
 		$this->headers['Content-Security-Policy'] = $this->getContentSecurityPolicy()->buildPolicy();
-		$this->headers['Feature-Policy'] = $this->getFeaturePolicy()->buildPolicy();
+		$this->headers['Permissions-Policy'] = $this->getPermissionPolicy()->buildPolicy();
 		$this->headers['X-Robots-Tag'] = 'none';
 
 		if ($this->ETag) {
@@ -314,6 +317,7 @@ class Response {
 
 	/**
 	 * @since 17.0.0
+	 * @depreacted 21.0.0 Use getPermissionPolicy
 	 */
 	public function getFeaturePolicy(): EmptyFeaturePolicy {
 		if ($this->featurePolicy === null) {
@@ -324,9 +328,30 @@ class Response {
 
 	/**
 	 * @since 17.0.0
+	 * @depreacted 21.0.0 Use setPermissionPolicy
 	 */
 	public function setFeaturePolicy(EmptyFeaturePolicy $featurePolicy): self {
 		$this->featurePolicy = $featurePolicy;
+
+		return $this;
+	}
+
+	/**
+	 * @since 21.0.0
+	 */
+	public function getPermissionPolicy(): EmptyPermissionPolicy {
+		if ($this->permissionPolicy === null) {
+			$this->setPermissionPolicy(new EmptyPermissionPolicy());
+		}
+		return $this->permissionPolicy;
+	}
+
+	/**
+	 * @since 17.0.0
+	 * @depreacted 21.0.0 Use setPermissionPolicy
+	 */
+	public function setPermissionPolicy(EmptyPermissionPolicy $permissionPolicy): self {
+		$this->permissionPolicy = $permissionPolicy;
 
 		return $this;
 	}

@@ -25,30 +25,37 @@ declare(strict_types=1);
 
 namespace Test\AppFramework\Middleware\Security;
 
-use OC\AppFramework\Middleware\Security\FeaturePolicyMiddleware;
+use OC\AppFramework\Middleware\Security\PermissionPolicyMiddleware;
 use OC\Security\FeaturePolicy\FeaturePolicy;
 use OC\Security\FeaturePolicy\FeaturePolicyManager;
+use OC\Security\PermissionPolicy\PermissionPolicy;
+use OC\Security\PermissionPolicy\PermissionPolicyManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\EmptyFeaturePolicy;
+use OCP\AppFramework\Http\EmptyPermissionPolicy;
 use OCP\AppFramework\Http\Response;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class FeaturePolicyMiddlewareTest extends \Test\TestCase {
+class PermissionPolicyMiddlewareTest extends \Test\TestCase {
 
-	/** @var FeaturePolicyMiddleware|MockObject */
+	/** @var PermissionPolicyMiddleware|MockObject */
 	private $middleware;
 	/** @var Controller|MockObject */
 	private $controller;
 	/** @var FeaturePolicyManager|MockObject */
-	private $manager;
+	private $featurePolicyManager;
+	/** @var PermissionPolicyManager|MockObject */
+	private $permissionPolicyManager;
 
 	protected function setUp(): void {
 		parent::setUp();
 
 		$this->controller = $this->createMock(Controller::class);
-		$this->manager = $this->createMock(FeaturePolicyManager::class);
-		$this->middleware = new FeaturePolicyMiddleware(
-			$this->manager
+		$this->featurePolicyManager = $this->createMock(FeaturePolicyManager::class);
+		$this->permissionPolicyManager = $this->createMock(PermissionPolicyManager::class);
+		$this->middleware = new PermissionPolicyMiddleware(
+			$this->featurePolicyManager,
+			$this->permissionPolicyManager
 		);
 	}
 
@@ -62,25 +69,49 @@ class FeaturePolicyMiddlewareTest extends \Test\TestCase {
 		$mergedPolicy->addAllowedGeoLocationDomain('mergedPolicy');
 		$response->method('getFeaturePolicy')
 			->willReturn($currentPolicy);
-		$this->manager->method('getDefaultPolicy')
+		$this->featurePolicyManager->method('getDefaultPolicy')
 			->willReturn($defaultPolicy);
-		$this->manager->method('mergePolicies')
+		$this->featurePolicyManager->method('mergePolicies')
 			->with($defaultPolicy, $currentPolicy)
 			->willReturn($mergedPolicy);
 		$response->expects($this->once())
 			->method('setFeaturePolicy')
 			->with($mergedPolicy);
 
+		$defaultPermissionPolicy = new PermissionPolicy();
+		$this->permissionPolicyManager->method('getDefaultPolicy')
+			->willReturn($defaultPermissionPolicy);
+		$currentPermissionPolicy = new PermissionPolicy();
+		$response->method('getPermissionPolicy')
+			->willReturn($currentPermissionPolicy);
+		$mergedPermissionPolicy = new PermissionPolicy();
+		$this->permissionPolicyManager->method('mergePolicies')
+			->with($defaultPermissionPolicy, $currentPermissionPolicy)
+			->willReturn($mergedPermissionPolicy);
+		$mergedPermissionPolicyWithFeaturePolicy = new PermissionPolicy();
+		$this->permissionPolicyManager->method('mergeFeaturePolicy')
+			->with($mergedPermissionPolicy, $currentPolicy)
+			->willReturn($mergedPermissionPolicyWithFeaturePolicy);
+
+		$response->expects($this->once())
+			->method('setPermissionPolicy')
+			->with($mergedPermissionPolicy);
+
 		$this->middleware->afterController($this->controller, 'test', $response);
 	}
 
-	public function testAfterControllerEmptyCSP() {
+	public function testAfterControllerEmpty() {
 		$response = $this->createMock(Response::class);
 		$emptyPolicy = new EmptyFeaturePolicy();
+		$emptyPermissionPolicy = new EmptyPermissionPolicy();
 		$response->method('getFeaturePolicy')
 			->willReturn($emptyPolicy);
+		$response->method('getPermissionPolicy')
+			->willReturn($emptyPermissionPolicy);
 		$response->expects($this->never())
 			->method('setFeaturePolicy');
+		$response->expects($this->never())
+			->method('setPermissionPolicy');
 
 		$this->middleware->afterController($this->controller, 'test', $response);
 	}

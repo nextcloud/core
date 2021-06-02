@@ -28,18 +28,25 @@ namespace OC\AppFramework\Middleware\Security;
 
 use OC\Security\FeaturePolicy\FeaturePolicy;
 use OC\Security\FeaturePolicy\FeaturePolicyManager;
+use OC\Security\PermissionPolicy\PermissionPolicy;
+use OC\Security\PermissionPolicy\PermissionPolicyManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\EmptyFeaturePolicy;
+use OCP\AppFramework\Http\EmptyPermissionPolicy;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
 
-class FeaturePolicyMiddleware extends Middleware {
+class PermissionPolicyMiddleware extends Middleware {
 
 	/** @var FeaturePolicyManager */
-	private $policyManager;
+	private $featurePolicyManager;
 
-	public function __construct(FeaturePolicyManager $policyManager) {
-		$this->policyManager = $policyManager;
+	/** @var PermissionPolicyManager */
+	private $permissionPolicyManager;
+
+	public function __construct(FeaturePolicyManager $featurePolicyManager, PermissionPolicyManager $permissionPolicyManager) {
+		$this->featurePolicyManager = $featurePolicyManager;
+		$this->permissionPolicyManager = $permissionPolicyManager;
 	}
 
 	/**
@@ -52,15 +59,20 @@ class FeaturePolicyMiddleware extends Middleware {
 	 * @return Response
 	 */
 	public function afterController($controller, $methodName, Response $response): Response {
-		$policy = !is_null($response->getFeaturePolicy()) ? $response->getFeaturePolicy() : new FeaturePolicy();
-
-		if (get_class($policy) === EmptyFeaturePolicy::class) {
-			return $response;
+		$featurePolicy = !is_null($response->getFeaturePolicy()) ? $response->getFeaturePolicy() : new FeaturePolicy();
+		if (get_class($featurePolicy) !== EmptyFeaturePolicy::class) {
+			$defaultPolicy = $this->featurePolicyManager->getDefaultPolicy();
+			$defaultPolicy = $this->featurePolicyManager->mergePolicies($defaultPolicy, $featurePolicy);
+			$response->setFeaturePolicy($defaultPolicy);
 		}
 
-		$defaultPolicy = $this->policyManager->getDefaultPolicy();
-		$defaultPolicy = $this->policyManager->mergePolicies($defaultPolicy, $policy);
-		$response->setFeaturePolicy($defaultPolicy);
+		$permissionPolicy = !is_null($response->getPermissionPolicy()) ? $response->getPermissionPolicy() : new PermissionPolicy();
+		if (get_class($permissionPolicy) !== EmptyPermissionPolicy::class) {
+			$defaultPolicy = $this->permissionPolicyManager->getDefaultPolicy();
+			$defaultPolicy = $this->permissionPolicyManager->mergePolicies($defaultPolicy, $permissionPolicy);
+			$defaultPolicy = $this->permissionPolicyManager->mergeFeaturePolicy($defaultPolicy, $response->getFeaturePolicy());
+			$response->setPermissionPolicy($defaultPolicy);
+		}
 
 		return $response;
 	}

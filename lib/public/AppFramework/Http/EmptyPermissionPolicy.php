@@ -1,9 +1,8 @@
 <?php
 
 declare(strict_types=1);
-
 /**
- * @copyright Copyright (c) 2019, Roeland Jago Douma <roeland@famdouma.nl>
+ * @copyright Copyright (c) 2020, Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -20,24 +19,23 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCP\AppFramework\Http;
 
 /**
- * Class EmptyFeaturePolicy is a simple helper which allows applications
- * to modify the FeaturePolicy sent by Nextcloud. Per default the policy
+ * Class EmptyPermissionsPolicy is a simple helper which allows applications
+ * to modify the PermissionPolicy sent by Nextcloud. Per default the policy
  * is forbidding everything.
  *
- * As alternative with sane exemptions look at FeaturePolicy
+ * As alternative with sane exemptions look at PermissionPolicy
  *
  * @see \OCP\AppFramework\Http\FeaturePolicy
- * @since 17.0.0
- * @depreacted 21.0.0 Use \OCP\AppFramework\Http\EmptyPermissionPolicy
+ * @since 21.0.0
  */
-class EmptyFeaturePolicy {
+class EmptyPermissionPolicy {
 
 	/** @var string[] of allowed domains to autoplay media */
 	protected $autoplayDomains = null;
@@ -62,8 +60,7 @@ class EmptyFeaturePolicy {
 	 *
 	 * @param string $domain Domain to whitelist. Any passed value needs to be properly sanitized.
 	 * @return $this
-	 * @since 17.0.0
-	 * @depreacted 21.0.0 Use \OCP\AppFramework\Http\EmptyPermissionPolicy
+	 * @since 21.0.0
 	 */
 	public function addAllowedAutoplayDomain(string $domain): self {
 		$this->autoplayDomains[] = $domain;
@@ -75,8 +72,7 @@ class EmptyFeaturePolicy {
 	 *
 	 * @param string $domain Domain to whitelist. Any passed value needs to be properly sanitized.
 	 * @return $this
-	 * @since 17.0.0
-	 * @depreacted 21.0.0 Use \OCP\AppFramework\Http\EmptyPermissionPolicy
+	 * @since 21.0.0
 	 */
 	public function addAllowedCameraDomain(string $domain): self {
 		$this->cameraDomains[] = $domain;
@@ -88,8 +84,7 @@ class EmptyFeaturePolicy {
 	 *
 	 * @param string $domain Domain to whitelist. Any passed value needs to be properly sanitized.
 	 * @return $this
-	 * @since 17.0.0
-	 * @depreacted 21.0.0 Use \OCP\AppFramework\Http\EmptyPermissionPolicy
+	 * @since 21.0.0
 	 */
 	public function addAllowedFullScreenDomain(string $domain): self {
 		$this->fullscreenDomains[] = $domain;
@@ -101,8 +96,7 @@ class EmptyFeaturePolicy {
 	 *
 	 * @param string $domain Domain to whitelist. Any passed value needs to be properly sanitized.
 	 * @return $this
-	 * @since 17.0.0
-	 * @depreacted 21.0.0 Use \OCP\AppFramework\Http\EmptyPermissionPolicy
+	 * @since 21.0.0
 	 */
 	public function addAllowedGeoLocationDomain(string $domain): self {
 		$this->geolocationDomains[] = $domain;
@@ -114,8 +108,7 @@ class EmptyFeaturePolicy {
 	 *
 	 * @param string $domain Domain to whitelist. Any passed value needs to be properly sanitized.
 	 * @return $this
-	 * @since 17.0.0
-	 * @depreacted 21.0.0 Use \OCP\AppFramework\Http\EmptyPermissionPolicy
+	 * @since 21.0.0
 	 */
 	public function addAllowedMicrophoneDomain(string $domain): self {
 		$this->microphoneDomains[] = $domain;
@@ -127,8 +120,7 @@ class EmptyFeaturePolicy {
 	 *
 	 * @param string $domain Domain to whitelist. Any passed value needs to be properly sanitized.
 	 * @return $this
-	 * @since 17.0.0
-	 * @depreacted 21.0.0 Use \OCP\AppFramework\Http\EmptyPermissionPolicy
+	 * @since 21.0.0
 	 */
 	public function addAllowedPaymentDomain(string $domain): self {
 		$this->paymentDomains[] = $domain;
@@ -139,54 +131,43 @@ class EmptyFeaturePolicy {
 	 * Get the generated Feature-Policy as a string
 	 *
 	 * @return string
-	 * @since 17.0.0
-	 * @depreacted 21.0.0 Use \OCP\AppFramework\Http\EmptyPermissionPolicy
+	 * @since 21.0.0
 	 */
 	public function buildPolicy(): string {
 		$policy = '';
 
-		if (empty($this->autoplayDomains)) {
-			$policy .= "autoplay 'none';";
-		} else {
-			$policy .= 'autoplay ' . implode(' ', $this->autoplayDomains);
-			$policy .= ';';
+		$policy .= 'autoplay=(' . implode(' ', $this->formatDomainList($this->autoplayDomains)) . ') ';
+		$policy .= 'camera=(' . implode(' ', $this->formatDomainList($this->cameraDomains)) . ') ';
+		$policy .= 'fullscreen=(' . implode(' ', $this->formatDomainList($this->fullscreenDomains)) . ') ';
+		$policy .= 'geolocation=(' . implode(' ', $this->formatDomainList($this->geolocationDomains)) . ') ';
+		$policy .= 'microphone=(' . implode(' ', $this->formatDomainList($this->microphoneDomains)) . ') ';
+		$policy .= 'payment=(' . implode(' ', $this->formatDomainList($this->paymentDomains)) . ') ';
+
+		return rtrim($policy, ' ');
+	}
+
+	private function formatDomainList(?array $domains): array {
+		if ($domains === null) {
+			return [];
 		}
 
-		if (empty($this->cameraDomains)) {
-			$policy .= "camera 'none';";
-		} else {
-			$policy .= 'camera ' . implode(' ', $this->cameraDomains);
-			$policy .= ';';
+		$result = [];
+
+		foreach ($domains as $domain) {
+			if (!is_string($domain)) {
+				// Ignore wrong entries
+				continue;
+			}
+
+			if ($domain === '\'self\'') {
+				$domain = 'self';
+			}
+
+			$result[] = $domain;
 		}
 
-		if (empty($this->fullscreenDomains)) {
-			$policy .= "fullscreen 'none';";
-		} else {
-			$policy .= 'fullscreen ' . implode(' ', $this->fullscreenDomains);
-			$policy .= ';';
-		}
+		$result = array_unique($result);
 
-		if (empty($this->geolocationDomains)) {
-			$policy .= "geolocation 'none';";
-		} else {
-			$policy .= 'geolocation ' . implode(' ', $this->geolocationDomains);
-			$policy .= ';';
-		}
-
-		if (empty($this->microphoneDomains)) {
-			$policy .= "microphone 'none';";
-		} else {
-			$policy .= 'microphone ' . implode(' ', $this->microphoneDomains);
-			$policy .= ';';
-		}
-
-		if (empty($this->paymentDomains)) {
-			$policy .= "payment 'none';";
-		} else {
-			$policy .= 'payment ' . implode(' ', $this->paymentDomains);
-			$policy .= ';';
-		}
-
-		return rtrim($policy, ';');
+		return $result;
 	}
 }

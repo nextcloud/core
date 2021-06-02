@@ -1,9 +1,8 @@
 <?php
 
 declare(strict_types=1);
-
 /**
- * @copyright Copyright (c) 2019, Roeland Jago Douma <roeland@famdouma.nl>
+ * @copyright Copyright (c) 2020, Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -20,34 +19,33 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCP\AppFramework\Http;
 
 /**
- * Class FeaturePolicy is a simple helper which allows applications to
- * modify the Feature-Policy sent by Nextcloud. Per default only autoplay is allowed
+ * Class PermissionPolicy is a simple helper which allows applications to
+ * modify the Permission-Policy sent by Nextcloud. Per default only autoplay is allowed
  * from the same domain and full screen as well from the same domain.
  *
  * Even if a value gets modified above defaults will still get appended. Please
  * notice that Nextcloud ships already with sensible defaults and those policies
  * should require no modification at all for most use-cases.
  *
- * @since 17.0.0
- * @depreacted 21.0.0 use \OCP\AppFramework\Http\PermissionPolicy
+ * @since 21.0.0
  */
-class FeaturePolicy extends EmptyFeaturePolicy {
+class PermissionPolicy extends EmptyPermissionPolicy {
 	protected $autoplayDomains = [
-		'\'self\'',
+		'self',
 	];
 
 	/** @var string[] of allowed domains that can access the camera */
 	protected $cameraDomains = [];
 
 	protected $fullscreenDomains = [
-		'\'self\'',
+		'self',
 	];
 
 	/** @var string[] of allowed domains that can use the geolocation of the device */
