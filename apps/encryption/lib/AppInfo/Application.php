@@ -39,10 +39,14 @@ use OCA\Encryption\Recovery;
 use OCA\Encryption\Session;
 use OCA\Encryption\Users\Setup;
 use OCA\Encryption\Util;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\Encryption\IManager;
 use OCP\IConfig;
 
-class Application extends \OCP\AppFramework\App {
+class Application extends \OCP\AppFramework\App implements IBootstrap {
+
 	/**
 	 * @param array $urlParams
 	 */
@@ -105,5 +109,20 @@ class Application extends \OCP\AppFramework\App {
 				$container->getServer()->getL10N($container->getAppName())
 			);
 			});
+	}
+
+	public function register(IRegistrationContext $context): void {
+	}
+
+	public function boot(IBootContext $context): void {
+		$encryptionManager = $context->getServerContainer()->getEncryptionManager();
+		$encryptionSystemReady = $encryptionManager->isReady();
+
+		if ($encryptionSystemReady) {
+			$this->registerEncryptionModule($encryptionManager);
+			$this->registerHooks(\OC::$server->getConfig());
+			$this->setUp($encryptionManager);
+		}
+		\OCP\Util::addScript('encryption', 'encryption');
 	}
 }

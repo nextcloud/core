@@ -12,6 +12,7 @@ use OC\Encryption\EncryptionWrapper;
 use OC\Files\Filesystem;
 use OC\Memcache\ArrayCache;
 use OCA\Encryption\AppInfo\Application;
+use OCA\Encryption\Crypto\Encryption;
 use OCA\Encryption\KeyManager;
 use OCA\Encryption\Users\Setup;
 use OCP\Encryption\IManager;
@@ -86,15 +87,16 @@ trait EncryptionTrait {
 			$this->markTestSkipped('Encryption not ready');
 		}
 
-		\OC_App::loadApp('encryption');
-
-		$this->encryptionApp = new Application([], $isReady);
-
 		$this->config = \OC::$server->getConfig();
 		$this->encryptionWasEnabled = $this->config->getAppValue('core', 'encryption_enabled', 'no');
 		$this->originalEncryptionModule = $this->config->getAppValue('core', 'default_encryption_module');
 		$this->config->setAppValue('core', 'default_encryption_module', \OCA\Encryption\Crypto\Encryption::ID);
 		$this->config->setAppValue('core', 'encryption_enabled', 'yes');
+
+		\OC_App::loadApp('encryption');
+
+		$this->encryptionApp = new Application();
+
 		$this->assertTrue(\OC::$server->getEncryptionManager()->isEnabled());
 	}
 
@@ -104,5 +106,6 @@ trait EncryptionTrait {
 			$this->config->setAppValue('core', 'default_encryption_module', $this->originalEncryptionModule);
 			$this->config->deleteAppValue('encryption', 'useMasterKey');
 		}
+		\OC::$server->getEncryptionManager()->unregisterEncryptionModule(Encryption::ID);
 	}
 }
