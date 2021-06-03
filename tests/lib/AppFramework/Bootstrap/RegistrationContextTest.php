@@ -60,8 +60,6 @@ class RegistrationContextTest extends TestCase {
 		$container->expects($this->once())
 			->method('registerCapability')
 			->with($name);
-		$this->logger->expects($this->never())
-			->method('logException');
 
 		$this->context->for('myapp')->registerCapability($name);
 		$this->context->delegateCapabilityRegistrations([
@@ -76,8 +74,6 @@ class RegistrationContextTest extends TestCase {
 		$dispatcher->expects($this->once())
 			->method('addServiceListener')
 			->with($event, $service, 0);
-		$this->logger->expects($this->never())
-			->method('logException');
 
 		$this->context->for('myapp')->registerEventListener($event, $service);
 		$this->context->delegateEventListenerRegistrations($dispatcher);
@@ -98,8 +94,6 @@ class RegistrationContextTest extends TestCase {
 		$container->expects($this->once())
 			->method('registerService')
 			->with($service, $factory, $shared);
-		$this->logger->expects($this->never())
-			->method('logException');
 
 		$this->context->for('myapp')->registerService($service, $factory, $shared);
 		$this->context->delegateContainerRegistrations([
@@ -117,8 +111,6 @@ class RegistrationContextTest extends TestCase {
 		$container->expects($this->once())
 			->method('registerAlias')
 			->with($alias, $target);
-		$this->logger->expects($this->never())
-			->method('logException');
 
 		$this->context->for('myapp')->registerServiceAlias($alias, $target);
 		$this->context->delegateContainerRegistrations([
@@ -136,8 +128,6 @@ class RegistrationContextTest extends TestCase {
 		$container->expects($this->once())
 			->method('registerParameter')
 			->with($name, $value);
-		$this->logger->expects($this->never())
-			->method('logException');
 
 		$this->context->for('myapp')->registerParameter($name, $value);
 		$this->context->delegateContainerRegistrations([
@@ -154,8 +144,6 @@ class RegistrationContextTest extends TestCase {
 		$container->expects($this->once())
 			->method('registerMiddleware')
 			->with($name);
-		$this->logger->expects($this->never())
-			->method('logException');
 
 		$this->context->for('myapp')->registerMiddleware($name);
 		$this->context->delegateMiddlewareRegistrations([

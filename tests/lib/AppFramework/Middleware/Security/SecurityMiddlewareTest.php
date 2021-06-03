@@ -506,7 +506,7 @@ class SecurityMiddlewareTest extends \Test\TestCase {
 			->willReturn('http://localhost/nextcloud/index.php/login?redirect_url=nextcloud/index.php/apps/specialapp');
 		$this->logger
 			->expects($this->once())
-			->method('logException');
+			->method('debug');
 		$response = $this->middleware->afterException(
 			$this->controller,
 			'test',
@@ -576,7 +576,7 @@ class SecurityMiddlewareTest extends \Test\TestCase {
 		$this->middleware = $this->getMiddleware(false, false, false);
 		$this->logger
 			->expects($this->once())
-			->method('logException');
+			->method('debug');
 		$response = $this->middleware->afterException(
 			$this->controller,
 			'test',

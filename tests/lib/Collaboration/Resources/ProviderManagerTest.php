@@ -82,7 +82,7 @@ class ProviderManagerTest extends TestCase {
 			->willThrowException(new QueryException('A meaningful error message'));
 
 		$this->logger->expects($this->once())
-			->method('logException');
+			->method('error');
 
 		$this->providerManager->registerResourceProvider('InvalidResourceProvider');
 		$resourceProviders = $this->providerManager->getResourceProviders();
@@ -101,7 +101,7 @@ class ProviderManagerTest extends TestCase {
 			->willReturn($this->createMock(ResourceProvider::class));
 
 		$this->logger->expects($this->once())
-			->method('logException');
+			->method('error');
 
 		$this->providerManager->registerResourceProvider('InvalidResourceProvider');
 		$this->providerManager->registerResourceProvider(ResourceProvider::class);

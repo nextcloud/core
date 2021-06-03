@@ -1,0 +1,119 @@
+name: PHPUnit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - stable*
+
+env:
+  php-extensions: apcu,cli,ctype,curl,dom,fileinfo,gd,iconv,intl,json,ldap,mbstring,memcached,mysql,oci8,openssl,pdo_sqlite,pgsql,posix,redis,sqlite,xml,zip
+
+jobs:
+  phpunit-nodb:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        php-versions: ["7.3", "7.4", "8.0"]
+
+    steps:
+      - name: Checkout server
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Set up php ${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: ${{ env.php-extensions }}
+          tools: phpunit:9.5.4
+          coverage: none
+
+      - name: PHPUnit
+        env:
+          NOCOVERAGE: true
+          TEST_SELECTION: NODB
+        run: bash autotest.sh sqlite
+
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - "6379:6379"
+      memcached:
+        image: memcached
+        ports:
+          - "11211:11211"
+
+  phpunit-sqlite:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        php-versions: ["7.3", "7.4", "8.0"]
+
+    steps:
+      - name: Checkout server
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Set up php ${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: ${{ env.php-extensions }}
+          tools: phpunit:9.5.4
+          coverage: none
+
+      - name: PHPUnit
+        env:
+          NOCOVERAGE: true
+        run: bash autotest.sh sqlite
+
+  phpunit-oci8:
+    runs-on: ubuntu-20.04
+    # oci takes more time
+    needs: [phpunit-nodb, phpunit-sqlite]
+
+    strategy:
+      matrix:
+        php-versions: ["7.4"]
+
+    services:
+      oracle:
+        image: deepdiver/docker-oracle-xe-11g # "wnameless/oracle-xe-11g-r2"
+        ports:
+          - "1521:1521"
+
+    steps:
+      - name: Checkout server
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Set up php ${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: ${{ env.php-extensions }}
+          tools: phpunit:8.5.2
+          coverage: none
+
+      - name: Set up Nextcloud
+        run: |
+          mkdir data
+          ./occ maintenance:install --verbose --database=oci --database-name=XE --database-host=127.0.0.1 --database-port=1521 --database-user=autotest --database-pass=owncloud --admin-user admin --admin-pass admin
+          php -f index.php
+
+      - name: PHPUnit
+        working-directory: tests
+        run: phpunit --configuration phpunit-autotest.xml --group DB,SLOWDB

@@ -62,6 +62,8 @@ class GuestAvatarTest extends TestCase {
 	 * @return void
 	 */
 	public function testGet() {
+		$this->markTestSkipped('Test relies on PHP GD output.');
+
 		$avatar = $this->guestAvatar->getFile(32);
 		self::assertInstanceOf(InMemoryFile::class, $avatar);
 		$expectedFile = file_get_contents(

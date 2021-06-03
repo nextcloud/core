@@ -3,29 +3,35 @@ on: pull_request
 
 jobs:
   php-linters:
+    name: php${{ matrix.php-versions }} lint
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         php-versions: ['7.3', '7.4', '8.0']
-    name: php${{ matrix.php-versions }} lint
+
     steps:
     - name: Checkout
       uses: actions/checkout@master
+
     - name: Set up php${{ matrix.php-versions }}
       uses: shivammathur/setup-php@master
       with:
         php-version: ${{ matrix.php-versions }}
         extensions: ctype,curl,dom,fileinfo,gd,iconv,intl,json,mbstring,openssl,pdo_sqlite,posix,sqlite,xml,zip
         coverage: none
+
     - name: Lint
       run: composer run lint
 
   php-cs-fixer:
     name: php-cs check
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout
       uses: actions/checkout@master
+
     - name: Set up php
       uses: shivammathur/setup-php@master
       with:
@@ -33,8 +39,10 @@ jobs:
         extensions: ctype,curl,dom,fileinfo,gd,iconv,intl,json,mbstring,openssl,pdo_sqlite,posix,sqlite,xml,zip
         coverage: none
         tools: cs2pr
+
     - name: Install dependencies
       run: composer i
+
     - name: Run coding standards check
       run: |
         composer run cs:check -- --format=checkstyle | cs2pr
@@ -42,13 +50,13 @@ jobs:
       shell: bash
 
   node:
+    name: eslint node${{ matrix.node-version }}
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [12.x]
 
-    name: eslint node${{ matrix.node-version }}
     steps:
       - uses: actions/checkout@v2
 

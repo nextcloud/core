@@ -89,7 +89,7 @@ class CoordinatorTest extends TestCase {
 			->with(\OCA\Settings\AppInfo\Application::class)
 			->willThrowException(new QueryException(""));
 		$this->logger->expects($this->once())
-			->method('logException');
+			->method('error');
 
 		$this->coordinator->bootApp($appId);
 	}
