@@ -23,6 +23,7 @@
  * @author Sylvia van Os <sylvia@hackerchick.me>
  * @author timm2k <timm2k@gmx.de>
  * @author Timo Förster <tfoerster@webfoersterei.de>
+ * @author Markus Frei <markus.frei@linuxfabrik.ch>
  *
  * @license AGPL-3.0
  *
@@ -433,19 +434,31 @@ Raw output
 			return false;
 		}
 
+		// `opcache.save_comments=1` is a must, because disabling this configuration directive breaks
+		// Nextcloud - it relies on comment parsing for annotations.
 		if (!$this->iniGetWrapper->getBool('opcache.save_comments')) {
 			return false;
 		}
 
-		if ($this->iniGetWrapper->getNumeric('opcache.max_accelerated_files') < 10000) {
+		// from php.net:
+		// The maximum number of keys (and therefore scripts) in the OPcache hash table. The actual
+		// value used will be the first number in the set of prime numbers { 223, 463, 983, 1979,
+		// 3907, 7963, 16229, 32531, 65407, 130987, 262237, 524521, 1048793 } that is greater than
+		// or equal to the configured value. The minimum value is 200. The maximum value is 1000000.
+		// Values outside of this range are clamped to the permissible range.
+		if ($this->iniGetWrapper->getNumeric('opcache.max_accelerated_files') <= 7963) {
 			return false;
 		}
 
+		// There were some mentions of specific apps capable of throwing the memory requirement here
+		// upwards toward/on/above 128 MB. Given that it is the suggested value.
 		if ($this->iniGetWrapper->getNumeric('opcache.memory_consumption') < 128) {
 			return false;
 		}
 
-		if ($this->iniGetWrapper->getNumeric('opcache.interned_strings_buffer') < 8) {
+		// 8 MB memory used to store interned strings is not enough (if you configure "8", you get
+		// 6 MB Buffer Size). 16 MB seem to be enough (you will get 12 MB Buffer Size)
+		if ($this->iniGetWrapper->getNumeric('opcache.interned_strings_buffer') < 16) {
 			return false;
 		}
 
