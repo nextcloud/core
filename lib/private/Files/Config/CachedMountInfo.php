@@ -68,7 +68,7 @@ class CachedMountInfo implements ICachedMountInfo {
 	 * @param int|null $mountId
 	 * @param string $rootInternalPath
 	 */
-	public function __construct(IUser $user, $storageId, $rootId, $mountPoint, $mountId = null, $rootInternalPath = '') {
+	public function __construct(IUser $user, int $storageId, int $rootId, string $mountPoint, ?int $mountId, string $rootInternalPath) {
 		$this->user = $user;
 		$this->storageId = $storageId;
 		$this->rootId = $rootId;
