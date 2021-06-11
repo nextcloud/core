@@ -31,6 +31,7 @@ namespace OC\Security\IdentityProof;
 
 use OC\Files\AppData\Factory;
 use OCP\Files\IAppData;
+use OCP\Files\SimpleFS\ISimpleFolder;
 use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IUser;
@@ -107,12 +108,37 @@ class Manager {
 		} catch (\Exception $e) {
 		}
 		$folder = $this->appData->getFolder($id);
-		$folder->newFile('private')
-			->putContent($this->crypto->encrypt($privateKey));
-		$folder->newFile('public')
-			->putContent($publicKey);
+		$folder->newFile('private_enc')
+			->putContent($this->encrypt($privateKey, $id));
+		$folder->newFile('public_enc')
+			->putContent($this->encrypt($publicKey,  $id));
 
 		return new Key($publicKey, $privateKey);
+	}
+
+	private function encrypt(string $key, string $id): string {
+		$data = [
+			'key' => $key,
+			'id' => $id,
+			'version' => 1
+		];
+
+		return $this->crypto->encrypt(json_encode($data));
+	}
+
+	private function decrypt(string $cipherText, string $id): string {
+		$plain = $this->crypto->decrypt($cipherText);
+		$data = json_decode($plain, true);
+
+		if ($data['version'] !== 1) {
+			throw new \RuntimeException('Invalid version');
+		}
+
+		if ($data['id'] !== $id) {
+			throw new \RuntimeException($data['id'] . ' does not match ' . $id);
+		}
+
+		return $data['key'];
 	}
 
 	/**
@@ -125,14 +151,38 @@ class Manager {
 	protected function retrieveKey(string $id): Key {
 		try {
 			$folder = $this->appData->getFolder($id);
-			$privateKey = $this->crypto->decrypt(
-				$folder->getFile('private')->getContent()
+
+			$this->migrate($folder, $id);
+
+			$privateKey = $this->decrypt(
+				$folder->getFile('private_enc')->getContent(),
+				$id
 			);
-			$publicKey = $folder->getFile('public')->getContent();
+			$publicKey = $this->decrypt(
+				$folder->getFile('public_enc')->getContent(),
+				$id
+			);
+
 			return new Key($publicKey, $privateKey);
 		} catch (\Exception $e) {
 			return $this->generateKey($id);
 		}
+	}
+
+	private function migrate(ISimpleFolder $folder, string $id): void {
+		if (!$folder->fileExists('private') && !$folder->fileExists('public')) {
+			return;
+		}
+
+		$private = $folder->getFile('private');
+		$folder->newFile('private_enc')
+			->putContent($this->encrypt($this->crypto->decrypt($private->getContent()), $id));
+		$private->delete();
+
+		$public = $folder->getFile('public');
+		$folder->newFile('public_enc')
+			->putContent($this->encrypt($public->getContent(), $id));
+		$public->delete();
 	}
 
 	/**
