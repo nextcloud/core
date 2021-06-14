@@ -1,6 +1,8 @@
+<?php
 /**
- * @copyright Copyright (c) 2021 François Freitag <mail@franek.fr>
+ * @copyright 2017, Georg Ehrke <oc.list@georgehrke.com>
  *
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author François Freitag <mail@franek.fr>
  *
  * @license GNU AGPL version 3 or any later version
@@ -16,20 +18,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-const path = require('path')
+script('dav', 'settings-personal-availability');
 
-module.exports = {
-	entry: {
-		'settings-admin-caldav': path.join(__dirname, 'src', 'settings.js'),
-		'settings-personal-availability': path.join(__dirname, 'src', 'settings-personal-availability.js'),
-	},
-	output: {
-		path: path.resolve(__dirname, './js'),
-		publicPath: '/js/',
-		filename: '[name].js',
-	},
-}
+?>
+
+<div id="settings-personal-availability"></div>

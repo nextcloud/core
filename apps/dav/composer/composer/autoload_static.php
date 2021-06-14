@@ -286,6 +286,7 @@ class ComposerStaticInitDAV
         'OCA\\DAV\\Search\\EventsSearchProvider' => __DIR__ . '/..' . '/../lib/Search/EventsSearchProvider.php',
         'OCA\\DAV\\Search\\TasksSearchProvider' => __DIR__ . '/..' . '/../lib/Search/TasksSearchProvider.php',
         'OCA\\DAV\\Server' => __DIR__ . '/..' . '/../lib/Server.php',
+        'OCA\\DAV\\Settings\\AvailabilitySettings' => __DIR__ . '/..' . '/../lib/Settings/AvailabilitySettings.php',
         'OCA\\DAV\\Settings\\CalDAVSettings' => __DIR__ . '/..' . '/../lib/Settings/CalDAVSettings.php',
         'OCA\\DAV\\Storage\\PublicOwnerWrapper' => __DIR__ . '/..' . '/../lib/Storage/PublicOwnerWrapper.php',
         'OCA\\DAV\\SystemTag\\SystemTagMappingNode' => __DIR__ . '/..' . '/../lib/SystemTag/SystemTagMappingNode.php',
