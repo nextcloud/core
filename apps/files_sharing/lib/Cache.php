@@ -32,6 +32,7 @@ use OC\Files\Cache\FailedCache;
 use OC\Files\Cache\Wrapper\CacheJail;
 use OC\Files\Storage\Wrapper\Jail;
 use OCP\Files\Cache\ICacheEntry;
+use OCP\Files\NotFoundException;
 use OCP\Files\StorageNotAvailableException;
 
 /**
@@ -183,17 +184,22 @@ class Cache extends CacheJail {
 
 	public function search($pattern) {
 		// Do the normal search on the whole storage for non files
-		if ($this->storage->getItemType() !== 'file') {
-			return parent::search($pattern);
+		try {
+			if ($this->storage->getItemType() !== 'file') {
+				return parent::search($pattern);
+			}
+
+			$regex = '/' . str_replace('%', '.*', $pattern) . '/i';
+
+			$data = $this->get('');
+			if (preg_match($regex, $data->getName()) === 1) {
+				return [$data];
+			}
+
+			return [];
+		} catch (NotFoundException $e) {
+			// Node for share not found
+			return [];
 		}
-
-		$regex = '/' . str_replace('%', '.*', $pattern) . '/i';
-
-		$data = $this->get('');
-		if (preg_match($regex, $data->getName()) === 1) {
-			return [$data];
-		}
-
-		return [];
 	}
 }
