@@ -40,7 +40,7 @@ use ZipStreamer\ZipStreamer;
 
 class Streamer {
 	// array of regexp. Matching user agents will get tar instead of zip
-	private $preferTarFor = [ '/macintosh|mac os x/i' ];
+	private $preferTarFor = [ '/macintosh|mac os x|linux/i' ];
 
 	// streamer instance
 	private $streamerInstance;
