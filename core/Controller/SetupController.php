@@ -64,7 +64,7 @@ class SetupController {
 			$post['dbpass'] = $post['dbpassword'];
 		}
 
-		if (!is_file(\OC::$configDir.'/CAN_INSTALL')) {
+		if (!$this->setupHelper->canInstallExists()) {
 			$this->displaySetupForbidden();
 			return;
 		}
@@ -112,10 +112,8 @@ class SetupController {
 		}
 		\OC::$server->getIntegrityCodeChecker()->runInstanceVerification();
 
-		if (\OC_Util::getChannel() !== 'git' && is_file(\OC::$configDir.'/CAN_INSTALL')) {
-			if (!unlink(\OC::$configDir.'/CAN_INSTALL')) {
-				\OC_Template::printGuestPage('', 'installation_incomplete');
-			}
+		if ($this->setupHelper->canInstallExists()) {
+			\OC_Template::printGuestPage('', 'installation_incomplete');
 		}
 
 		if ($installRecommended) {
