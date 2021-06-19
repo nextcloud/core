@@ -421,7 +421,7 @@ class Setup {
 
 			//and we are done
 			$config->setSystemValue('installed', true);
-			if (self::canInstallExists()) {
+			if (self::shouldRemoveCanInstallFile()) {
 				unlink(\OC::$configDir.'/CAN_INSTALL');
 			}
 
@@ -612,7 +612,14 @@ class Setup {
 	/**
 	 * @return bool
 	 */
-	public function canInstallExists() {
+	public function shouldRemoveCanInstallFile() {
 		return \OC_Util::getChannel() !== 'git' && is_file(\OC::$configDir.'/CAN_INSTALL');
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function canInstallFileExists() {
+		return is_file(\OC::$configDir.'/CAN_INSTALL');
 	}
 }

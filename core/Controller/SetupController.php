@@ -64,7 +64,7 @@ class SetupController {
 			$post['dbpass'] = $post['dbpassword'];
 		}
 
-		if (!$this->setupHelper->canInstallExists()) {
+		if (!$this->setupHelper->canInstallFileExists()) {
 			$this->displaySetupForbidden();
 			return;
 		}
@@ -112,7 +112,7 @@ class SetupController {
 		}
 		\OC::$server->getIntegrityCodeChecker()->runInstanceVerification();
 
-		if ($this->setupHelper->canInstallExists()) {
+		if ($this->setupHelper->shouldRemoveCanInstallFile()) {
 			\OC_Template::printGuestPage('', 'installation_incomplete');
 		}
 
