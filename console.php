@@ -59,12 +59,14 @@ try {
 
 	set_exception_handler('exceptionHandler');
 
+	$config = \OC::$server->getConfig();
+
 	if (!function_exists('posix_getuid')) {
 		echo "The posix extensions are required - see https://www.php.net/manual/en/book.posix.php" . PHP_EOL;
 		exit(1);
 	}
 	$user = posix_getuid();
-	$configUser = fileowner(OC::$configDir . 'config.php');
+	$configUser = fileowner($config->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data'));
 	if ($user !== $configUser) {
 		echo "Console has to be executed with the user that owns the file config/config.php" . PHP_EOL;
 		echo "Current user id: " . $user . PHP_EOL;
@@ -89,7 +91,7 @@ try {
 	}
 
 	$application = new Application(
-		\OC::$server->getConfig(),
+		$config,
 		\OC::$server->getEventDispatcher(),
 		\OC::$server->getRequest(),
 		\OC::$server->get(\Psr\Log\LoggerInterface::class),
