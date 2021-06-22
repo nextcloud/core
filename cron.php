@@ -95,7 +95,7 @@ try {
 		}
 
 		$user = posix_getuid();
-		$configUser = fileowner(OC::$configDir . 'config.php');
+		$configUser = fileowner($config->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data'));
 		if ($user !== $configUser) {
 			echo "Console has to be executed with the user that owns the file config/config.php" . PHP_EOL;
 			echo "Current user id: " . $user . PHP_EOL;
