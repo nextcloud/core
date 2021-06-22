@@ -123,7 +123,9 @@ module.exports = []
 
 			],
 		},
-		plugins: [new VueLoaderPlugin()],
+		plugins: [
+			new VueLoaderPlugin(),
+		],
 		resolve: {
 			alias: {
 				OC: path.resolve(__dirname, './core/src/OC'),

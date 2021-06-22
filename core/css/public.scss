@@ -46,12 +46,6 @@ $footer-height: 65px;
 		padding-top: 0;
 	}
 
-	/* force layout to make sure the content element's height matches its contents' height */
-	.ie #content {
-		display: inline-block;
-	}
-
-
 	p.info {
 		margin: 20px auto;
 		text-shadow: 0 0 2px rgba(0, 0, 0, .4);

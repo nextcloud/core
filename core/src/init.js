@@ -28,7 +28,6 @@
 import _ from 'underscore'
 import $ from 'jquery'
 import moment from 'moment'
-import cssVars from 'css-vars-ponyfill'
 
 import { initSessionHeartBeat } from './session-heartbeat'
 import OC from './OC/index'
@@ -112,30 +111,6 @@ moment.locale(OC.getLocale())
  * Initializes core
  */
 export const initCore = () => {
-	const userAgent = window.navigator.userAgent
-	const msie = userAgent.indexOf('MSIE ')
-	const trident = userAgent.indexOf('Trident/')
-	const edge = userAgent.indexOf('Edge/')
-
-	if (msie > 0 || trident > 0) {
-		// (IE 10 or older) || IE 11
-		$('html').addClass('ie')
-	} else if (edge > 0) {
-		// for edge
-		$('html').addClass('edge')
-	}
-
-	// css variables fallback for IE
-	if (msie > 0 || trident > 0 || edge > 0) {
-		console.info('Legacy browser detected, applying css vars polyfill')
-		cssVars({
-			watch: true,
-			//  set edge < 16 as incompatible
-			onlyLegacy: !(/Edge\/([0-9]{2})\./i.test(navigator.userAgent)
-				&& parseInt(/Edge\/([0-9]{2})\./i.exec(navigator.userAgent)[1]) < 16),
-		})
-	}
-
 	$(window).on('unload.main', () => { OC._unloadCalled = true })
 	$(window).on('beforeunload.main', () => {
 		// super-trick thanks to http://stackoverflow.com/a/4651049

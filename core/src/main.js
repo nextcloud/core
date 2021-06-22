@@ -36,6 +36,9 @@ import './globals'
 import './jquery/index'
 import { initCore } from './init'
 import { registerAppsSlideToggle } from './OC/apps'
+import { testSupportedBrowser } from './utils/RedirectUnsupportedBrowsers'
+
+testSupportedBrowser()
 
 window.addEventListener('DOMContentLoaded', function() {
 	initCore()

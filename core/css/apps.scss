@@ -853,16 +853,6 @@ $popoveritem-height: 44px;
 $popovericon-size: 16px;
 $outter-margin: ($popoveritem-height - $popovericon-size) / 2;
 
-.ie,
-.edge {
-	.bubble, .bubble:after,
-	.popovermenu, .popovermenu:after,
-	#app-navigation .app-navigation-entry-menu,
-	#app-navigation .app-navigation-entry-menu:after {
-		border: 1px solid var(--color-border);
-	}
-}
-
 .bubble,
 .app-navigation-entry-menu,
 .popovermenu {

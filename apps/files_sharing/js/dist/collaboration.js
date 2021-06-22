@@ -21,5 +21,5 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-r.p=OC.linkTo("files_sharing","js/dist/"),r.nc=btoa(OC.requestToken),window.OCP.Collaboration.registerType("file",{action:()=>new Promise((e,n)=>{OC.dialogs.filepicker(t("files_sharing","Link to a file"),(function(t){OC.Files.getClient().getFileInfo(t).then((n,t)=>{e(t.id)}).fail(()=>{n(new Error("Cannot get fileinfo"))})}),!1,null,!1,OC.dialogs.FILEPICKER_TYPE_CHOOSE,"",{allowDirectoryChooser:!0})}),typeString:t("files_sharing","Link to a file"),typeIconClass:"icon-files-dark"})}});
+r.p=OC.linkTo("files_sharing","js/dist/"),r.nc=btoa(OC.requestToken),window.OCP.Collaboration.registerType("file",{action:function(){return new Promise((function(e,n){OC.dialogs.filepicker(t("files_sharing","Link to a file"),(function(t){OC.Files.getClient().getFileInfo(t).then((function(n,t){e(t.id)})).fail((function(){n(new Error("Cannot get fileinfo"))}))}),!1,null,!1,OC.dialogs.FILEPICKER_TYPE_CHOOSE,"",{allowDirectoryChooser:!0})}))},typeString:t("files_sharing","Link to a file"),typeIconClass:"icon-files-dark"})}});
 //# sourceMappingURL=collaboration.js.map
