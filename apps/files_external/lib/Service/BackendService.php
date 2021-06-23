@@ -27,12 +27,14 @@
 namespace OCA\Files_External\Service;
 
 use OCA\Files_External\Config\IConfigHandler;
+use OCA\Files_External\Events\LoadAdditionalStorageBackendsEvent;
 use OCA\Files_External\Lib\Auth\AuthMechanism;
 
 use OCA\Files_External\Lib\Backend\Backend;
 use OCA\Files_External\Lib\Config\IAuthMechanismProvider;
 use OCA\Files_External\Lib\Config\IBackendProvider;
 use OCP\EventDispatcher\GenericEvent;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 
 /**
@@ -116,6 +118,9 @@ class BackendService {
 				'OCA\\Files_External::loadAdditionalBackends',
 				new GenericEvent()
 			);
+			/** @var IEventDispatcher $dispatcher */
+			$dispatcher = \OC::$server->get(IEventDispatcher::class);
+			$dispatcher->dispatchTyped(new LoadAdditionalStorageBackendsEvent());
 			$eventSent = true;
 		}
 	}
