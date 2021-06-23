@@ -47,6 +47,7 @@ use OCA\DAV\Events\CardDeletedEvent;
 use OCA\DAV\Events\CardUpdatedEvent;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\EventDispatcher\IEventDispatcher;
+use OCP\IConfig;
 use OCP\IDBConnection;
 use OCP\IGroupManager;
 use OCP\IUser;
@@ -97,6 +98,9 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 	/** @var IEventDispatcher */
 	private $dispatcher;
 
+	/** @var IConfig */
+	private $config;
+
 	/** @var EventDispatcherInterface */
 	private $legacyDispatcher;
 
@@ -111,18 +115,21 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 	 * @param IGroupManager $groupManager
 	 * @param IEventDispatcher $dispatcher
 	 * @param EventDispatcherInterface $legacyDispatcher
+	 * @param IConfig $config
 	 */
 	public function __construct(IDBConnection $db,
 								Principal $principalBackend,
 								IUserManager $userManager,
 								IGroupManager $groupManager,
 								IEventDispatcher $dispatcher,
-								EventDispatcherInterface $legacyDispatcher) {
+								EventDispatcherInterface $legacyDispatcher,
+								IConfig $config) {
 		$this->db = $db;
 		$this->principalBackend = $principalBackend;
 		$this->userManager = $userManager;
 		$this->dispatcher = $dispatcher;
 		$this->legacyDispatcher = $legacyDispatcher;
+		$this->config = $config;
 		$this->sharingBackend = new Backend($this->db, $this->userManager, $groupManager, $principalBackend, 'addressbook');
 	}
 
@@ -242,6 +249,34 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 			$this->addOwnerPrincipal($addressBooks[$row['id']]);
 		}
 		$result->closeCursor();
+
+		// query for system addressbooks
+		$includeSystemAddressBook = $this->config->getAppValue('dav', 'exposeSystemAddressBook', 'no') === 'yes';
+		if ($includeSystemAddressBook) {
+			$principalUri="principals/system/system";
+			$query = $this->db->getQueryBuilder();
+			$query->select(['id', 'uri', 'displayname', 'principaluri', 'description', 'synctoken'])
+				->from('addressbooks')
+				->where($query->expr()->eq('principaluri', $query->createNamedParameter($principalUri)));
+			$result = $query->execute();
+
+			while ($row = $result->fetch()) {
+				$addressBooks[$row['id']] = [
+					'id' => $row['id'],
+					'uri' => "system-address-book",
+					'principaluri' => $principalUriOriginal,
+					'{DAV:}displayname' => "System address book",
+					'{' . Plugin::NS_CARDDAV . '}addressbook-description' => $row['description'],
+					'{http://calendarserver.org/ns/}getctag' => $row['synctoken'],
+					'{http://sabredav.org/ns}sync-token' => $row['synctoken'] ?: '0',
+					'{' . \OCA\DAV\DAV\Sharing\Plugin::NS_OWNCLOUD . '}owner-principal' => $row['principaluri'],
+					$readOnlyPropertyName => true,
+				];
+
+				$this->addOwnerPrincipal($addressBooks[$row['id']]);
+			}
+			$result->closeCursor();
+		}
 
 		return array_values($addressBooks);
 	}

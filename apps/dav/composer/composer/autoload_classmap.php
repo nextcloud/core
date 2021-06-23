@@ -272,6 +272,7 @@ return array(
     'OCA\\DAV\\Search\\TasksSearchProvider' => $baseDir . '/../lib/Search/TasksSearchProvider.php',
     'OCA\\DAV\\Server' => $baseDir . '/../lib/Server.php',
     'OCA\\DAV\\Settings\\CalDAVSettings' => $baseDir . '/../lib/Settings/CalDAVSettings.php',
+    'OCA\\DAV\\Settings\\CardDAVSettings' => $baseDir . '/../lib/Settings/CardDAVSettings.php',
     'OCA\\DAV\\Storage\\PublicOwnerWrapper' => $baseDir . '/../lib/Storage/PublicOwnerWrapper.php',
     'OCA\\DAV\\SystemTag\\SystemTagMappingNode' => $baseDir . '/../lib/SystemTag/SystemTagMappingNode.php',
     'OCA\\DAV\\SystemTag\\SystemTagNode' => $baseDir . '/../lib/SystemTag/SystemTagNode.php',

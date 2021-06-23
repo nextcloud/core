@@ -58,7 +58,7 @@ $principalBackend = new Principal(
 	'principals/'
 );
 $db = \OC::$server->getDatabaseConnection();
-$cardDavBackend = new CardDavBackend($db, $principalBackend, \OC::$server->getUserManager(), \OC::$server->getGroupManager(), \OC::$server->get(\OCP\EventDispatcher\IEventDispatcher::class), \OC::$server->getEventDispatcher());
+$cardDavBackend = new CardDavBackend($db, $principalBackend, \OC::$server->getUserManager(), \OC::$server->getGroupManager(), \OC::$server->get(\OCP\EventDispatcher\IEventDispatcher::class), \OC::$server->getEventDispatcher(), \OC::$server->getConfig());
 
 $debugging = \OC::$server->getConfig()->getSystemValue('debug', false);
 

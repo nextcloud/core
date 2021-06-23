@@ -139,11 +139,11 @@ class RootCollection extends SimpleCollection {
 		);
 
 		$pluginManager = new PluginManager(\OC::$server, \OC::$server->query(IAppManager::class));
-		$usersCardDavBackend = new CardDavBackend($db, $userPrincipalBackend, $userManager, $groupManager, $dispatcher, $legacyDispatcher);
+		$usersCardDavBackend = new CardDavBackend($db, $userPrincipalBackend, $userManager, $groupManager, $dispatcher, $legacyDispatcher, \OC::$server->getConfig());
 		$usersAddressBookRoot = new AddressBookRoot($userPrincipalBackend, $usersCardDavBackend, $pluginManager, 'principals/users');
 		$usersAddressBookRoot->disableListing = $disableListing;
 
-		$systemCardDavBackend = new CardDavBackend($db, $userPrincipalBackend, $userManager, $groupManager, $dispatcher, $legacyDispatcher);
+		$systemCardDavBackend = new CardDavBackend($db, $userPrincipalBackend, $userManager, $groupManager, $dispatcher, $legacyDispatcher,  \OC::$server->getConfig());
 		$systemAddressBookRoot = new AddressBookRoot(new SystemPrincipalBackend(), $systemCardDavBackend, $pluginManager, 'principals/system');
 		$systemAddressBookRoot->disableListing = $disableListing;
 

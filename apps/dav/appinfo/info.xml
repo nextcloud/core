@@ -59,6 +59,7 @@
 
 	<settings>
 		<admin>OCA\DAV\Settings\CalDAVSettings</admin>
+		<admin>OCA\DAV\Settings\CardDAVSettings</admin>
 	</settings>
 
 	<activity>
