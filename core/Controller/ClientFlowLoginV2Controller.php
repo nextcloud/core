@@ -42,6 +42,8 @@ use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
 use OCP\Security\ISecureRandom;
+use OCP\IConfig;
+use OCP\IServerContainer;
 
 class ClientFlowLoginV2Controller extends Controller {
 	public const TOKEN_NAME = 'client.flow.v2.login.token';
@@ -61,6 +63,14 @@ class ClientFlowLoginV2Controller extends Controller {
 	private $userId;
 	/** @var IL10N */
 	private $l10n;
+	/** @var serverContainer */
+	private $serverContainer;
+	/** @var IConfig */
+	private $config;
+	/** @var boolean */
+	private $userAvatarSet;
+	/** @var string */
+	private $userAvatarVersion;
 
 	public function __construct(string $appName,
 								IRequest $request,
@@ -70,7 +80,8 @@ class ClientFlowLoginV2Controller extends Controller {
 								ISecureRandom $random,
 								Defaults $defaults,
 								?string $userId,
-								IL10N $l10n) {
+								IL10N $l10n,
+				IServerContainer $serverContainer) {
 		parent::__construct($appName, $request);
 		$this->loginFlowV2Service = $loginFlowV2Service;
 		$this->urlGenerator = $urlGenerator;
@@ -79,6 +90,20 @@ class ClientFlowLoginV2Controller extends Controller {
 		$this->defaults = $defaults;
 		$this->userId = $userId;
 		$this->l10n = $l10n;
+		$this->serverContainer = $serverContainer;
+		$this->config = $this->serverContainer->getConfig();
+		$this->userAvatarSet = false;
+		$this->userAvatarVersion = "Test1234";
+
+		if (\OC_User::getUser() === false) {
+			$this->userAvatarSet = false;
+		
+			$this->userAvatarVersion = "false";
+		} else {
+			$this->userAvatarSet = true;
+			$this->userAvatarVersion = $this->config->getUserValue(\OC_User::getUser(), 'avatar', 'version', 0);
+			$this->userAvatarVersion = "true";
+		}
 	}
 
 	/**
