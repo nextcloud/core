@@ -63,7 +63,8 @@ $maxUploadFilesize = min($upload_max_filesize, $post_max_size);
 			<?php else: ?>
 				<?php if ($_['previewEnabled'] && substr($_['mimetype'], 0, strpos($_['mimetype'], '/')) == 'audio'): ?>
 					<div id="imgframe">
-						<audio tabindex="0" controls="" preload="none" style="width: 100%; max-width: <?php p($_['previewMaxX']); ?>px; max-height: <?php p($_['previewMaxY']); ?>px">
+						<audio tabindex="0" controls="" preload="none" style="width: 100%; max-width: <?php p($_['previewMaxX']); ?>px; max-height: <?php p($_['previewMaxY']); ?>px"
+							   <?php if ($_['hideDownload']) { ?>controlsList="nodownload" <?php } ?>>
 							<source src="<?php p($_['downloadURL']); ?>" type="<?php p($_['mimetype']); ?>" />
 						</audio>
 					</div>
