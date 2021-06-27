@@ -1052,6 +1052,14 @@ $CONFIG = [
 	'--convert-to png --outdir ',
 
 /**
+ * Set the URL of the Imaginary service to send image previews to.
+ * Also requires the OC\Preview\Imaginary provider to be enabled.
+ *
+ * See https://github.com/h2non/imaginary
+ */
+'preview_imaginary_url' => 'http://imaginary-host:9000/'
+
+/**
  * Only register providers that have been explicitly enabled
  *
  * The following providers are disabled by default due to performance or privacy
