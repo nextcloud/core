@@ -38,6 +38,7 @@
  */
 namespace OCA\User_LDAP;
 
+use Exception;
 use OC\ServerNotAvailableException;
 use OC\User\Backend;
 use OC\User\NoUserException;
@@ -78,7 +79,7 @@ class User_LDAP extends BackendUtility implements \OCP\IUserBackend, \OCP\UserIn
 	 *
 	 * @param string $uid the Nextcloud user name
 	 * @return boolean either the user can or cannot
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function canChangeAvatar($uid) {
 		if ($this->userPluginManager->implementsActions(Backend::PROVIDE_AVATAR)) {
@@ -105,7 +106,7 @@ class User_LDAP extends BackendUtility implements \OCP\IUserBackend, \OCP\UserIn
 	 *
 	 * @param string $loginName
 	 * @return string|false
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function loginName2UserName($loginName) {
 		$cacheKey = 'loginName2UserName-' . $loginName;
@@ -215,7 +216,7 @@ class User_LDAP extends BackendUtility implements \OCP\IUserBackend, \OCP\UserIn
 		$user = $this->access->userManager->get($uid);
 
 		if (!$user instanceof User) {
-			throw new \Exception('LDAP setPassword: Could not get user object for uid ' . $uid .
+			throw new Exception('LDAP setPassword: Could not get user object for uid ' . $uid .
 				'. Maybe the LDAP entry has no set display name attribute?');
 		}
 		if ($user->getUsername() !== false && $this->access->setPassword($user->getDN(), $password)) {
@@ -286,7 +287,7 @@ class User_LDAP extends BackendUtility implements \OCP\IUserBackend, \OCP\UserIn
 	 * @param string|\OCA\User_LDAP\User\User $user either the Nextcloud user
 	 * name or an instance of that user
 	 * @return bool
-	 * @throws \Exception
+	 * @throws Exception
 	 * @throws \OC\ServerNotAvailableException
 	 */
 	public function userExistsOnLDAP($user) {
@@ -323,7 +324,7 @@ class User_LDAP extends BackendUtility implements \OCP\IUserBackend, \OCP\UserIn
 				return true;
 			} catch (ServerNotAvailableException $e) {
 				throw $e;
-			} catch (\Exception $e) {
+			} catch (Exception $e) {
 				$this->access->connection->writeToCache($cacheKey, false);
 				return false;
 			}
@@ -341,7 +342,7 @@ class User_LDAP extends BackendUtility implements \OCP\IUserBackend, \OCP\UserIn
 	 * check if a user exists
 	 * @param string $uid the username
 	 * @return boolean
-	 * @throws \Exception when connection could not be established
+	 * @throws Exception when connection could not be established
 	 */
 	public function userExists($uid) {
 		$userExists = $this->access->connection->getFromCache('userExists'.$uid);
@@ -398,7 +399,7 @@ class User_LDAP extends BackendUtility implements \OCP\IUserBackend, \OCP\UserIn
 	 * @param string $uid the username
 	 * @return bool|string
 	 * @throws NoUserException
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function getHome($uid) {
 		// user Exists check required as it is not done in user proxy!
@@ -430,8 +431,10 @@ class User_LDAP extends BackendUtility implements \OCP\IUserBackend, \OCP\UserIn
 
 	/**
 	 * get display name of the user
+	 *
 	 * @param string $uid user ID of the user
 	 * @return string|false display name
+	 * @throws Exception
 	 */
 	public function getDisplayName($uid) {
 		if ($this->userPluginManager->implementsActions(Backend::GET_DISPLAYNAME)) {
@@ -442,44 +445,11 @@ class User_LDAP extends BackendUtility implements \OCP\IUserBackend, \OCP\UserIn
 			return false;
 		}
 
-		$cacheKey = 'getDisplayName'.$uid;
-		if (!is_null($displayName = $this->access->connection->getFromCache($cacheKey))) {
-			return $displayName;
+		$user = $this->access->userManager->get($uid);
+		if (null === $user) {
+			return false;
 		}
-
-		//Check whether the display name is configured to have a 2nd feature
-		$additionalAttribute = $this->access->connection->ldapUserDisplayName2;
-		$displayName2 = '';
-		if ($additionalAttribute !== '') {
-			$displayName2 = $this->access->readAttribute(
-				$this->access->username2dn($uid),
-				$additionalAttribute);
-		}
-
-		$displayName = $this->access->readAttribute(
-			$this->access->username2dn($uid),
-			$this->access->connection->ldapUserDisplayName);
-
-		if ($displayName && (count($displayName) > 0)) {
-			$displayName = $displayName[0];
-
-			if (is_array($displayName2)) {
-				$displayName2 = count($displayName2) > 0 ? $displayName2[0] : '';
-			}
-
-			$user = $this->access->userManager->get($uid);
-			if ($user instanceof User) {
-				$displayName = $user->composeAndStoreDisplayName($displayName, $displayName2);
-				$this->access->connection->writeToCache($cacheKey, $displayName);
-			}
-			if ($user instanceof OfflineUser) {
-				/** @var OfflineUser $user*/
-				$displayName = $user->getDisplayName();
-			}
-			return $displayName;
-		}
-
-		return null;
+		return $user->getDisplayName();
 	}
 
 	/**
@@ -491,7 +461,7 @@ class User_LDAP extends BackendUtility implements \OCP\IUserBackend, \OCP\UserIn
 	public function setDisplayName($uid, $displayName) {
 		if ($this->userPluginManager->implementsActions(Backend::SET_DISPLAYNAME)) {
 			$this->userPluginManager->setDisplayName($uid, $displayName);
-			$this->access->cacheUserDisplayName($uid, $displayName);
+			$this->access->storeUserDisplayName($uid, $displayName);
 			return $displayName;
 		}
 		return false;

@@ -191,11 +191,6 @@ class User {
 		}
 		if ($displayName !== '') {
 			$this->composeAndStoreDisplayName($displayName, $displayName2);
-			$this->access->cacheUserDisplayName(
-				$this->getUsername(),
-				$displayName,
-				$displayName2
-			);
 		}
 		unset($attr);
 
@@ -403,6 +398,10 @@ class User {
 		return $displayName;
 	}
 
+	public function getDisplayName(): ?string {
+		return $this->config->getUserValue($this->uid, 'user_ldap', 'displayName', null);
+	}
+
 	/**
 	 * Stores the LDAP Username in the Database
 	 * @param string $userName
@@ -431,20 +430,11 @@ class User {
 	 * @param string $valueFromLDAP if known, to save an LDAP read request
 	 * @return null
 	 */
-	public function updateEmail($valueFromLDAP = null) {
+	public function updateEmail(string $valueFromLDAP) {
 		if ($this->wasRefreshed('email')) {
 			return;
 		}
 		$email = (string)$valueFromLDAP;
-		if (is_null($valueFromLDAP)) {
-			$emailAttribute = $this->connection->ldapEmailAttribute;
-			if ($emailAttribute !== '') {
-				$aEmail = $this->access->readAttribute($this->dn, $emailAttribute);
-				if (is_array($aEmail) && (count($aEmail) > 0)) {
-					$email = (string)$aEmail[0];
-				}
-			}
-		}
 		if ($email !== '') {
 			$user = $this->userManager->get($this->uid);
 			if (!is_null($user)) {
@@ -488,17 +478,8 @@ class User {
 		}
 
 		$quota = false;
-		if (is_null($valueFromLDAP) && $quotaAttribute !== '') {
-			$aQuota = $this->access->readAttribute($this->dn, $quotaAttribute);
-			if ($aQuota && (count($aQuota) > 0) && $this->verifyQuotaValue($aQuota[0])) {
-				$quota = $aQuota[0];
-			} elseif (is_array($aQuota) && isset($aQuota[0])) {
-				$this->log->log('no suitable LDAP quota found for user ' . $this->uid . ': [' . $aQuota[0] . ']', ILogger::DEBUG);
-			}
-		} elseif ($this->verifyQuotaValue($valueFromLDAP)) {
+		if ($valueFromLDAP !== null && $this->verifyQuotaValue($valueFromLDAP)) {
 			$quota = $valueFromLDAP;
-		} else {
-			$this->log->log('no suitable LDAP quota found for user ' . $this->uid . ': [' . $valueFromLDAP . ']', ILogger::DEBUG);
 		}
 
 		if ($quota === false && $this->verifyQuotaValue($defaultQuota)) {
