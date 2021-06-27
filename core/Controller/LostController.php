@@ -198,6 +198,15 @@ class LostController extends Controller {
 			throw new \Exception($this->l10n->t('Couldn\'t reset password because the token is invalid'));
 		}
 
+		if($this->config->getUserValue($userId, 'core', 'initial') === 'true')
+
+			$token = $this->config->getUserKeys($userId, 'login_token')[0];
+			$token = str_replace('/', 'A', $token);
+			
+			if($token === $token) {
+				return true;
+		}
+
 		$encryptedToken = $this->config->getUserValue($userId, 'core', 'lostpassword', null);
 		if ($encryptedToken === null) {
 			throw new \Exception($this->l10n->t('Couldn\'t reset password because the token is invalid'));
@@ -316,6 +325,7 @@ class LostController extends Controller {
 			$this->twoFactorManager->clearTwoFactorPending($userId);
 
 			$this->config->deleteUserValue($userId, 'core', 'lostpassword');
+			$this->config->deleteUserValue($userId, 'core', 'initial');
 			@\OC::$server->getUserSession()->unsetMagicInCookie();
 		} catch (HintException $e) {
 			return $this->error($e->getHint());

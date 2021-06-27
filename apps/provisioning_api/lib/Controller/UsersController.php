@@ -450,6 +450,9 @@ class UsersController extends AUserData {
 						);
 					}
 				}
+			} else {
+				//Password was provided by the admin
+				$this->editUser($userid, 'initial', 'true');
 			}
 
 			return new DataResponse(['id' => $userid]);
@@ -682,6 +685,7 @@ class UsersController extends AUserData {
 				$permittedFields[] = IAccountManager::PROPERTY_WEBSITE;
 				$permittedFields[] = IAccountManager::PROPERTY_TWITTER;
 				$permittedFields[] = 'quota';
+				$permittedFields[] = 'initial';
 			} else {
 				// No rights
 				throw new OCSException('', OCSController::RESPOND_NOT_FOUND);
@@ -783,6 +787,9 @@ class UsersController extends AUserData {
 						throw new OCSException('Invalid ' . $e->getMessage(), 102);
 					}
 				}
+				break;
+			case 'initial':
+				$this->config->setUserValue($targetUser->getUID(), 'core', 'initial', $value);
 				break;
 			default:
 				throw new OCSException('', 103);

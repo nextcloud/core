@@ -320,6 +320,13 @@ class LoginController extends Controller {
 				$result->getErrorMessage()
 			);
 		}
+		
+		if($this->config->getUserValue($user, 'core', 'initial') === 'true') {
+			$token = $this->config->getUserKeys($user, 'login_token')[0];
+			$token = str_replace('/', 'A', $token);
+			return new RedirectResponse(
+				$this->urlGenerator->linkToRouteAbsolute('core.lost.resetform', ['userId' => $user, 'token' => $token]));
+		}
 
 		if ($result->getRedirectUrl() !== null) {
 			return new RedirectResponse($result->getRedirectUrl());
