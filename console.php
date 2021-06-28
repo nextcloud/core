@@ -63,10 +63,18 @@ try {
 		echo "The posix extensions are required - see https://www.php.net/manual/en/book.posix.php" . PHP_EOL;
 		exit(1);
 	}
-	$user = posix_getuid();
-	$configUser = fileowner(OC::$configDir . 'config.php');
-	if ($user !== $configUser) {
+	$user = posix_getpwuid(posix_getuid());
+	$configUser = posix_getpwuid(fileowner(OC::$configDir.'config.php'));
+	$configGroup = posix_getgrgid(filegroup(OC::$configDir.'config.php'));
+	$perms = fileperms(OC::$configDir.'config.php');
+	/*
+	 * Ok to run console if either:
+	 *      - the user owns the config file
+	 *      - the main user group or one of his groups is the group of the file AND the file is group writable
+	 */
+	if (($user['name'] !== $configUser['name']) && (!((in_array($user['name'],$configGroup['members']) || $user['gid'] == $configGroup['gid']) && ($perms & 0x0010)))) {
 		echo "Console has to be executed with the user that owns the file config/config.php" . PHP_EOL;
+		echo "or who can write it via group membership." . PHP_EOL;
 		echo "Current user id: " . $user . PHP_EOL;
 		echo "Owner id of config.php: " . $configUser . PHP_EOL;
 		echo "Try adding 'sudo -u #" . $configUser . "' to the beginning of the command (without the single quotes)" . PHP_EOL;
