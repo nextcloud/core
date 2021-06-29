@@ -95,6 +95,7 @@ class Streamer {
 	 * @param string $name
 	 */
 	public function sendHeaders($name) {
+		header('X-Accel-Buffering: no');
 		$extension = $this->streamerInstance instanceof ZipStreamer ? '.zip' : '.tar';
 		$fullName = $name . $extension;
 		$this->streamerInstance->sendHeaders($fullName);

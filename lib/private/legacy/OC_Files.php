@@ -98,6 +98,7 @@ class OC_Files {
 			}
 		}
 		header('Content-Type: '.$type, true);
+		header('X-Accel-Buffering: no');
 	}
 
 	/**
