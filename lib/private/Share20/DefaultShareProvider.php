@@ -222,7 +222,7 @@ class DefaultShareProvider implements IShareProvider {
 		$cursor->closeCursor();
 
 		if ($data === false) {
-			throw new ShareNotFound();
+			throw new ShareNotFound('Newly created share could not be found');
 		}
 
 		$mailSendValue = $share->getMailSend();

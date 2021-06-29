@@ -27,4 +27,18 @@ namespace OCP\Share\Exceptions;
  * @since 9.0.0
  */
 class ShareNotFound extends GenericShareException {
+
+	/**
+	 * @param string $message
+	 * @param string $hint
+	 * @param int $code
+	 * @param \Exception|null $previous
+	 * @since 9.0.0
+	 */
+	public function __construct($message = '', ...$arguments) {
+		if (empty($message)) {
+			$message = 'Share not found';
+		}
+		parent::__construct($message, ...$arguments);
+	}
 }
