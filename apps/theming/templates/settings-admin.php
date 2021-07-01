@@ -136,7 +136,7 @@ style('theming', 'settings-admin');
 	<div class="theming-hints">
 		<?php if (!$_['canThemeIcons']) { ?>
 			<p class="info">
-				<a href="<?php p($_['iconDocs']); ?>">
+				<a href="<?php p($_['iconDocs']); ?> target="_blank">
 					<em>
 						<?php p($l->t('Install the Imagemagick PHP extension with support for SVG images to automatically generate favicons based on the uploaded logo and color.')); ?> ↗
 					</em>
