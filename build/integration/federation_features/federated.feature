@@ -278,13 +278,230 @@ Feature: federated
 
 
 
+	Scenario: List federated share from another server not accepted yet
+		Given Using server "LOCAL"
+		And user "user0" exists
+		Given Using server "REMOTE"
+		And user "user1" exists
+		# Rename file so it has a unique name in the target server (as the target
+		# server may have its own /textfile0.txt" file)
+		And User "user1" copies file "/textfile0.txt" to "/remote-share.txt"
+		And User "user1" from server "REMOTE" shares "/remote-share.txt" with user "user0" from server "LOCAL"
+		And Using server "LOCAL"
+		When As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		Then the list of returned shares has 0 shares
+
+	Scenario: List federated share from another server
+		Given Using server "LOCAL"
+		And user "user0" exists
+		Given Using server "REMOTE"
+		And user "user1" exists
+		# Rename file so it has a unique name in the target server (as the target
+		# server may have its own /textfile0.txt" file)
+		And User "user1" copies file "/textfile0.txt" to "/remote-share.txt"
+		And User "user1" from server "REMOTE" shares "/remote-share.txt" with user "user0" from server "LOCAL"
+		And Using server "LOCAL"
+		And User "user0" from server "LOCAL" accepts last pending share
+		When As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		Then the list of returned shares has 1 shares
+		And remote share 0 is returned with
+			| remote      | http://localhost:8180/ |
+			| name        | /remote-share.txt |
+			| owner       | user1 |
+			| user        | user0 |
+			| mountpoint  | /remote-share.txt |
+			| mimetype    | text/plain |
+			| mtime        | A_NUMBER |
+			| permissions | 27 |
+			| type        | file |
+			| file_id     | A_NUMBER |
+
+	Scenario: List federated share from another server no longer reachable
+		Given Using server "LOCAL"
+		And user "user0" exists
+		Given Using server "REMOTE"
+		And user "user1" exists
+		# Rename file so it has a unique name in the target server (as the target
+		# server may have its own /textfile0.txt" file)
+		And User "user1" copies file "/textfile0.txt" to "/remote-share.txt"
+		And User "user1" from server "REMOTE" shares "/remote-share.txt" with user "user0" from server "LOCAL"
+		And Using server "LOCAL"
+		And User "user0" from server "LOCAL" accepts last pending share
+		And remote server is stopped
+		When As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		Then the list of returned shares has 1 shares
+		And remote share 0 is returned with
+			| remote      | http://localhost:8180/ |
+			| name        | /remote-share.txt |
+			| owner       | user1 |
+			| user        | user0 |
+			| mountpoint  | /remote-share.txt |
+
+	Scenario: List federated share from another server no longer reachable after caching the file entry
+		Given Using server "LOCAL"
+		And user "user0" exists
+		Given Using server "REMOTE"
+		And user "user1" exists
+		# Rename file so it has a unique name in the target server (as the target
+		# server may have its own /textfile0.txt" file)
+		And User "user1" copies file "/textfile0.txt" to "/remote-share.txt"
+		And User "user1" from server "REMOTE" shares "/remote-share.txt" with user "user0" from server "LOCAL"
+		And Using server "LOCAL"
+		And User "user0" from server "LOCAL" accepts last pending share
+		# Checking that the file exists caches the file entry, which causes an
+		# exception to be thrown when getting the file info if the remote server is
+		# unreachable.
+		And as "user0" the file "/remote-share.txt" exists
+		And remote server is stopped
+		When As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		Then the list of returned shares has 1 shares
+		And remote share 0 is returned with
+			| remote      | http://localhost:8180/ |
+			| name        | /remote-share.txt |
+			| owner       | user1 |
+			| user        | user0 |
+			| mountpoint  | /remote-share.txt |
 
 
 
+	Scenario: Delete federated share with another server
+		Given Using server "LOCAL"
+		And user "user0" exists
+		Given Using server "REMOTE"
+		And user "user1" exists
+		# Rename file so it has a unique name in the target server (as the target
+		# server may have its own /textfile0.txt" file)
+		And User "user1" copies file "/textfile0.txt" to "/remote-share.txt"
+		And User "user1" from server "REMOTE" shares "/remote-share.txt" with user "user0" from server "LOCAL"
+		And As an "user1"
+		And sending "GET" to "/apps/files_sharing/api/v1/shares"
+		And the list of returned shares has 1 shares
+		And Using server "LOCAL"
+		And User "user0" from server "LOCAL" accepts last pending share
+		And as "user0" the file "/remote-share.txt" exists
+		And As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		And the list of returned shares has 1 shares
+		And Using server "REMOTE"
+		When As an "user1"
+		And Deleting last share
+		Then the OCS status code should be "100"
+		And the HTTP status code should be "200"
+		And As an "user1"
+		And sending "GET" to "/apps/files_sharing/api/v1/shares"
+		And the list of returned shares has 0 shares
+		And Using server "LOCAL"
+		And as "user0" the file "/remote-share.txt" does not exist
+		And As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		And the list of returned shares has 0 shares
 
+	Scenario: Delete federated share from another server
+		Given Using server "LOCAL"
+		And user "user0" exists
+		Given Using server "REMOTE"
+		And user "user1" exists
+		# Rename file so it has a unique name in the target server (as the target
+		# server may have its own /textfile0.txt" file)
+		And User "user1" copies file "/textfile0.txt" to "/remote-share.txt"
+		And User "user1" from server "REMOTE" shares "/remote-share.txt" with user "user0" from server "LOCAL"
+		And As an "user1"
+		And sending "GET" to "/apps/files_sharing/api/v1/shares"
+		And the list of returned shares has 1 shares
+		And Using server "LOCAL"
+		And User "user0" from server "LOCAL" accepts last pending share
+		And as "user0" the file "/remote-share.txt" exists
+		And As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		And the list of returned shares has 1 shares
+		When user "user0" deletes last accepted remote share
+		Then the OCS status code should be "100"
+		And the HTTP status code should be "200"
+		And as "user0" the file "/remote-share.txt" does not exist
+		And As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		And the list of returned shares has 0 shares
+		And Using server "REMOTE"
+		And As an "user1"
+		And sending "GET" to "/apps/files_sharing/api/v1/shares"
+		And the list of returned shares has 0 shares
 
+	Scenario: Delete federated share from another server no longer reachable
+		Given Using server "LOCAL"
+		And user "user0" exists
+		Given Using server "REMOTE"
+		And user "user1" exists
+		# Rename file so it has a unique name in the target server (as the target
+		# server may have its own /textfile0.txt" file)
+		And User "user1" copies file "/textfile0.txt" to "/remote-share.txt"
+		And User "user1" from server "REMOTE" shares "/remote-share.txt" with user "user0" from server "LOCAL"
+		And Using server "LOCAL"
+		And User "user0" from server "LOCAL" accepts last pending share
+		And as "user0" the file "/remote-share.txt" exists
+		And As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		And the list of returned shares has 1 shares
+		And remote server is stopped
+		When user "user0" deletes last accepted remote share
+		Then the OCS status code should be "100"
+		And the HTTP status code should be "200"
+		And as "user0" the file "/remote-share.txt" does not exist
+		And As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		And the list of returned shares has 0 shares
 
+	Scenario: Delete federated share file from another server
+		Given Using server "LOCAL"
+		And user "user0" exists
+		Given Using server "REMOTE"
+		And user "user1" exists
+		# Rename file so it has a unique name in the target server (as the target
+		# server may have its own /textfile0.txt" file)
+		And User "user1" copies file "/textfile0.txt" to "/remote-share.txt"
+		And User "user1" from server "REMOTE" shares "/remote-share.txt" with user "user0" from server "LOCAL"
+		And As an "user1"
+		And sending "GET" to "/apps/files_sharing/api/v1/shares"
+		And the list of returned shares has 1 shares
+		And Using server "LOCAL"
+		And User "user0" from server "LOCAL" accepts last pending share
+		And as "user0" the file "/remote-share.txt" exists
+		And As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		And the list of returned shares has 1 shares
+		When User "user0" deletes file "/remote-share.txt"
+		Then the HTTP status code should be "204"
+		And as "user0" the file "/remote-share.txt" does not exist
+		And As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		And the list of returned shares has 0 shares
+		And Using server "REMOTE"
+		And As an "user1"
+		And sending "GET" to "/apps/files_sharing/api/v1/shares"
+		And the list of returned shares has 0 shares
 
-
-
-
+	Scenario: Delete federated share file from another server no longer reachable
+		Given Using server "LOCAL"
+		And user "user0" exists
+		Given Using server "REMOTE"
+		And user "user1" exists
+		# Rename file so it has a unique name in the target server (as the target
+		# server may have its own /textfile0.txt" file)
+		And User "user1" copies file "/textfile0.txt" to "/remote-share.txt"
+		And User "user1" from server "REMOTE" shares "/remote-share.txt" with user "user0" from server "LOCAL"
+		And Using server "LOCAL"
+		And User "user0" from server "LOCAL" accepts last pending share
+		And as "user0" the file "/remote-share.txt" exists
+		And As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		And the list of returned shares has 1 shares
+		And remote server is stopped
+		When User "user0" deletes file "/remote-share.txt"
+		Then the HTTP status code should be "204"
+		And as "user0" the file "/remote-share.txt" does not exist
+		And As an "user0"
+		And sending "GET" to "/apps/files_sharing/api/v1/remote_shares"
+		And the list of returned shares has 0 shares

@@ -38,11 +38,10 @@ php -S localhost:$PORT -t ../.. &
 PHPPID=$!
 echo $PHPPID
 
+# The federated server is started and stopped by the tests themselves
 PORT_FED=$((8180 + $EXECUTOR_NUMBER))
 echo $PORT_FED
-php -S localhost:$PORT_FED -t ../.. &
-PHPPID_FED=$!
-echo $PHPPID_FED
+export PORT_FED
 
 export TEST_SERVER_URL="http://localhost:$PORT/ocs/"
 export TEST_SERVER_FED_URL="http://localhost:$PORT_FED/ocs/"
@@ -65,7 +64,6 @@ vendor/bin/behat --strict -f junit -f pretty $TAGS $SCENARIO_TO_RUN
 RESULT=$?
 
 kill $PHPPID
-kill $PHPPID_FED
 
 if [ "$INSTALLED" == "true" ]; then
 

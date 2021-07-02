@@ -28,6 +28,7 @@
  */
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Gherkin\Node\TableNode;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
@@ -38,6 +39,29 @@ class FederationContext implements Context, SnippetAcceptingContext {
 	use WebDav;
 	use AppConfiguration;
 	use CommandLine;
+
+	/** @var string */
+	private static $phpFederatedServerPid = '';
+
+	/** @var string */
+	private $lastAcceptedRemoteShareId;
+
+	/**
+	 * @BeforeScenario
+	 * @AfterScenario
+	 *
+	 * The server is started also after the scenarios to ensure that it is
+	 * properly cleaned up if stopped.
+	 */
+	public function startFederatedServer() {
+		if (self::$phpFederatedServerPid !== '') {
+			return;
+		}
+
+		$port = getenv('PORT_FED');
+
+		self::$phpFederatedServerPid = exec('php -S localhost:' . $port . ' -t ../../ >/dev/null & echo $!');
+	}
 
 	/**
 	 * @BeforeScenario
@@ -94,6 +118,37 @@ class FederationContext implements Context, SnippetAcceptingContext {
 	}
 
 	/**
+	 * @Then remote share :count is returned with
+	 *
+	 * @param int $number
+	 * @param TableNode $body
+	 */
+	public function remoteShareXIsReturnedWith(int $number, TableNode $body) {
+		$this->theHTTPStatusCodeShouldBe('200');
+		$this->theOCSStatusCodeShouldBe('100');
+
+		if (!($body instanceof TableNode)) {
+			return;
+		}
+
+		$returnedShare = $this->getXmlResponse()->data[0];
+		if ($returnedShare->element) {
+			$returnedShare = $returnedShare->element[$number];
+		}
+
+		$defaultExpectedFields = [
+			'id' => 'A_NUMBER',
+			'remote_id' => 'A_NUMBER',
+			'accepted' => '1',
+		];
+		$expectedFields = array_merge($defaultExpectedFields, $body->getRowsHash());
+
+		foreach ($expectedFields as $field => $value) {
+			$this->assertFieldIsInReturnedShare($field, $value, $returnedShare);
+		}
+	}
+
+	/**
 	 * @When /^User "([^"]*)" from server "(LOCAL|REMOTE)" accepts last pending share$/
 	 * @param string $user
 	 * @param string $server
@@ -109,6 +164,30 @@ class FederationContext implements Context, SnippetAcceptingContext {
 		$this->theHTTPStatusCodeShouldBe('200');
 		$this->theOCSStatusCodeShouldBe('100');
 		$this->usingServer($previous);
+
+		$this->lastAcceptedRemoteShareId = $share_id;
+	}
+
+	/**
+	 * @When /^user "([^"]*)" deletes last accepted remote share$/
+	 * @param string $user
+	 */
+	public function deleteLastAcceptedRemoteShare($user) {
+		$this->asAn($user);
+		$this->sendingToWith('DELETE', "/apps/files_sharing/api/v1/remote_shares/" . $this->lastAcceptedRemoteShareId, null);
+	}
+
+	/**
+	 * @When /^remote server is stopped$/
+	 */
+	public function remoteServerIsStopped() {
+		if (self::$phpFederatedServerPid === '') {
+			return;
+		}
+
+		exec('kill ' . self::$phpFederatedServerPid);
+
+		self::$phpFederatedServerPid = '';
 	}
 
 	protected function resetAppConfigs() {
