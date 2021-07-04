@@ -33,6 +33,7 @@ declare(strict_types=1);
  */
 namespace OC\Core\Command\Db;
 
+use OC\AppFramework\Maintenance\OptionalIndexManager;
 use OC\DB\Connection;
 use OC\DB\SchemaWrapper;
 use OCP\IDBConnection;
@@ -58,11 +59,17 @@ class AddMissingIndices extends Command {
 	/** @var EventDispatcherInterface */
 	private $dispatcher;
 
-	public function __construct(Connection $connection, EventDispatcherInterface $dispatcher) {
+	/** @var OptionalIndexManager */
+	private $indexManager;
+
+	public function __construct(Connection $connection,
+								EventDispatcherInterface $dispatcher,
+								OptionalIndexManager $indexManager) {
 		parent::__construct();
 
 		$this->connection = $connection;
 		$this->dispatcher = $dispatcher;
+		$this->indexManager = $indexManager;
 	}
 
 	protected function configure() {
@@ -77,7 +84,19 @@ class AddMissingIndices extends Command {
 		// Dispatch event so apps can also update indexes if needed
 		$event = new GenericEvent($output);
 		$this->dispatcher->dispatch(IDBConnection::ADD_MISSING_INDEXES_EVENT, $event);
+
+		$this->addOptionalIndexed($output);
+
 		return 0;
+	}
+
+	private function addOptionalIndexed(OutputInterface $output): void {
+		$indexes = $this->indexManager->getPending();
+
+		foreach ($indexes as $index) {
+			$output->writeln('<info>Adding additional ' . $index->getName() . ' index to the ' . $index->getTable() . ' this can take some time …</info>');
+			$index->add();
+		}
 	}
 
 	/**

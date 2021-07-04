@@ -32,6 +32,7 @@ use Closure;
 use OC\Support\CrashReport\Registry;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\AppFramework\Maintenance\IOptionalIndex;
 use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Services\InitialStateProvider;
 use OCP\Authentication\IAlternativeLogin;
@@ -91,6 +92,9 @@ class RegistrationContext {
 
 	/** @var ServiceRegistration<INotifier>[] */
 	private $notifierServices = [];
+
+	/** @var ServiceRegistration<IOptionalIndex> */
+	private $optionalIndexes = [];
 
 	/** @var ServiceRegistration<\OCP\Authentication\TwoFactorAuth\IProvider>[] */
 	private $twoFactorProviders = [];
@@ -219,6 +223,13 @@ class RegistrationContext {
 				);
 			}
 
+			public function registerOptionalIndex(string $class): void {
+				$this->context->registerOptionalIndex(
+					$this->appId,
+					$class
+				);
+			}
+
 			public function registerTwoFactorProvider(string $twoFactorProviderClass): void {
 				$this->context->registerTwoFactorProvider(
 					$this->appId,
@@ -296,6 +307,10 @@ class RegistrationContext {
 		$this->notifierServices[] = new ServiceRegistration($appId, $class);
 	}
 
+	public function registerOptionalIndex(string $appId, string $class): void {
+		$this->optionalIndexes[] = new ServiceRegistration($appId, $class);
+	}
+
 	public function registerTwoFactorProvider(string $appId, string $class): void {
 		$this->twoFactorProviders[] = new ServiceRegistration($appId, $class);
 	}
@@ -321,6 +336,7 @@ class RegistrationContext {
 			} catch (Throwable $e) {
 				$this->logger->error("Error during capability registration of $appId: " . $e->getMessage(), [
 					'exception' => $e,
+
 				]);
 			}
 		}
@@ -337,6 +353,7 @@ class RegistrationContext {
 				$appId = $registration->getAppId();
 				$this->logger->error("Error during crash reporter registration of $appId: " . $e->getMessage(), [
 					'exception' => $e,
+
 				]);
 			}
 		}
@@ -353,6 +370,7 @@ class RegistrationContext {
 				$appId = $panel->getAppId();
 				$this->logger->error("Error during dashboard registration of $appId: " . $e->getMessage(), [
 					'exception' => $e,
+
 				]);
 			}
 		}
@@ -370,6 +388,7 @@ class RegistrationContext {
 				$appId = $registration->getAppId();
 				$this->logger->error("Error during event listener registration of $appId: " . $e->getMessage(), [
 					'exception' => $e,
+
 				]);
 			}
 		}
@@ -403,6 +422,7 @@ class RegistrationContext {
 			} catch (Throwable $e) {
 				$this->logger->error("Error during service registration of $appId: " . $e->getMessage(), [
 					'exception' => $e,
+
 				]);
 			}
 		}
@@ -427,6 +447,7 @@ class RegistrationContext {
 			} catch (Throwable $e) {
 				$this->logger->error("Error during service alias registration of $appId: " . $e->getMessage(), [
 					'exception' => $e,
+
 				]);
 			}
 		}
@@ -451,6 +472,7 @@ class RegistrationContext {
 			} catch (Throwable $e) {
 				$this->logger->error("Error during service parameter registration of $appId: " . $e->getMessage(), [
 					'exception' => $e,
+
 				]);
 			}
 		}
@@ -477,6 +499,7 @@ class RegistrationContext {
 			} catch (Throwable $e) {
 				$this->logger->error("Error during capability registration of $appId: " . $e->getMessage(), [
 					'exception' => $e,
+
 				]);
 			}
 		}
@@ -522,6 +545,13 @@ class RegistrationContext {
 	 */
 	public function getNotifierServices(): array {
 		return $this->notifierServices;
+	}
+
+	/**
+	 * @return ServiceRegistration<IOptionalIndex>[]
+	 */
+	public function getOptionalIndexes(): array {
+		return $this->optionalIndexes;
 	}
 
 	/**
