@@ -28,10 +28,12 @@ namespace OCP\User\Backend;
 
 /**
  * @since 14.0.0
+ * @deprecated 21.0.0
  */
 interface ICheckPasswordBackend {
 	/**
 	 * @since 14.0.0
+	 * @deprecated 21.0.0
 	 *
 	 * @param string $loginName The loginname
 	 * @param string $password The password

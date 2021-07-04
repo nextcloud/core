@@ -28,6 +28,7 @@ namespace OCP\User\Backend;
 
 /**
  * @since 17.0.0
+ * @deprecated 21.0.0
  */
 interface IGetRealUIDBackend {
 
@@ -39,6 +40,7 @@ interface IGetRealUIDBackend {
 	 * This little function makes sure that the used UID will be correct hen using the user object
 	 *
 	 * @since 17.0.0
+	 * @deprecated 21.0.0
 	 * @param string $uid
 	 * @return string
 	 */

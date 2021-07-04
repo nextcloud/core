@@ -29,6 +29,7 @@ use OCP\UserInterface;
 /**
  * Abstract base class for user management. Provides methods for querying backend
  * capabilities.
+ * @deprecated 21.0.0 use \OCP\Public\User\Backend\AbstractUserBackEnd instead
  */
 abstract class Backend implements UserInterface {
 	/**

@@ -27,11 +27,14 @@ namespace OCP\User\Backend;
 
 /**
  * @since 15.0.0
+ * @deprecated 21.0.0
  */
 interface IPasswordConfirmationBackend {
 
 	/**
 	 * @since 15.0.0
+	 * @deprecated 21.0.0 Use @see \OCP\User\Backend\Action\ICheckPassword::canCheckPasswordCurrently()
+	 * instead.
 	 */
 	public function canConfirmPassword(string $uid): bool;
 }

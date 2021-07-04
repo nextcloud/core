@@ -32,6 +32,7 @@ use OCP\UserInterface;
 
 /**
  * @since 14.0.0
+ * @deprecated 21.0.0 use \OCP\Public\User\Backend\AbstractUserBackEnd instead
  */
 abstract class ABackend implements IUserBackend, UserInterface {
 

@@ -3,9 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright (c) 2018 Roeland Jago Douma <roeland@famdouma.nl>
- *
- * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @copyright Copyright (c) 2020, Alexey Abel <dev@abelonline.de>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,27 +14,33 @@ declare(strict_types=1);
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace OCP\User\Backend;
 
 /**
- * @since 14.0.0
- * @deprecated  21.0.0
+ * Class AbstractUserBackend should be used as a base for all user back ends, e.g. implemented by apps.
+ * Additionally implement any number of interfaces in OCP\User\Backend\Action.
+ *
+ * @package OCP\User\Backend
+ * @since 21.0.0
  */
-interface IGetHomeBackend {
+class AbstractUserBackend {
 
-	/**
-	 * @since 14.0.0
-	 * @deprecated 21.0.0
-	 *
-	 * @param string $uid the username
-	 * @return string|bool Datadir on success false on failure
-	 */
-	public function getHome(string $uid);
+	/** @var string */
+	private $backEndName;
+
+	public function __construct(string $backEndName) {
+		$this->backEndName = $backEndName;
+	}
+
+	public function getName(): string {
+		return $this->backEndName;
+	}
 }

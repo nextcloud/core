@@ -27,11 +27,13 @@ namespace OCP\User\Backend;
 
 /**
  * @since 14.0.0
+ * @deprecated 21.0.0 Use \OCP\User\Backend\Action\ISetPassword instead
  */
 interface ISetPasswordBackend {
 
 	/**
 	 * @since 14.0.0
+	 * @deprecated 21.0.0 Use \OCP\User\Backend\Action\ISetPassword::setPassword() instead
 	 *
 	 * @param string $uid The username
 	 * @param string $password The new password

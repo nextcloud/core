@@ -27,11 +27,13 @@ namespace OCP\User\Backend;
 
 /**
  * @since 14.0.0
+ * @deprecated 21.0.0
  */
 interface IGetDisplayNameBackend {
 
 	/**
 	 * @since 14.0.0
+	 * @deprecated 21.0.0
 	 *
 	 * @param string $uid user ID of the user
 	 * @return string display name
