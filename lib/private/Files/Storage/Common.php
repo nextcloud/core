@@ -612,6 +612,7 @@ abstract class Common implements Storage, ILockingStorage, IWriteStreamStorage {
 			$dh = $sourceStorage->opendir($sourceInternalPath);
 			$result = $this->mkdir($targetInternalPath);
 			if (is_resource($dh)) {
+				$result = true;
 				while ($result and ($file = readdir($dh)) !== false) {
 					if (!Filesystem::isIgnoredDir($file)) {
 						$result &= $this->copyFromStorage($sourceStorage, $sourceInternalPath . '/' . $file, $targetInternalPath . '/' . $file);

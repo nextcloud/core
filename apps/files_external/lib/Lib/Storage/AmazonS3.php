@@ -318,6 +318,7 @@ class AmazonS3 extends \OC\Files\Storage\Common {
 				}
 				// we reached the end when the list is no longer truncated
 			} while ($objects['IsTruncated']);
+			$this->deleteObject($path);
 		} catch (S3Exception $e) {
 			\OC::$server->getLogger()->logException($e, ['app' => 'files_external']);
 			return false;
