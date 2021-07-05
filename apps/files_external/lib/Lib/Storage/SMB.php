@@ -191,13 +191,15 @@ class SMB extends Common implements INotifyStorage {
 			return $this->statCache[$path];
 		} catch (ConnectException $e) {
 			$this->throwUnavailable($e);
+		} catch (NotFoundException $e) {
+			throw new \OCP\Files\NotFoundException($e->getMessage(), 0, $e);
 		} catch (ForbiddenException $e) {
 			// with php-smbclient, this exceptions is thrown when the provided password is invalid.
 			// Possible is also ForbiddenException with a different error code, so we check it.
 			if ($e->getCode() === 1) {
 				$this->throwUnavailable($e);
 			}
-			throw $e;
+			throw new \OCP\Files\ForbiddenException($e->getMessage(), false, $e);
 		}
 	}
 
@@ -276,6 +278,8 @@ class SMB extends Common implements INotifyStorage {
 		} catch (ConnectException $e) {
 			$this->logger->logException($e, ['message' => 'Error while getting folder content']);
 			throw new StorageNotAvailableException($e->getMessage(), $e->getCode(), $e);
+		} catch (NotFoundException $e) {
+			throw new \OCP\Files\NotFoundException($e->getMessage(), 0, $e);
 		}
 	}
 
@@ -714,6 +718,10 @@ class SMB extends Common implements INotifyStorage {
 	public function test() {
 		try {
 			return parent::test();
+		} catch (StorageAuthException $e) {
+			return false;
+		} catch (ForbiddenException $e) {
+			return false;
 		} catch (Exception $e) {
 			$this->logger->logException($e);
 			return false;

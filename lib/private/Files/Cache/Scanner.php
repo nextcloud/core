@@ -40,6 +40,7 @@ use OC\Files\Filesystem;
 use OC\Hooks\BasicEmitter;
 use OCP\Files\Cache\IScanner;
 use OCP\Files\ForbiddenException;
+use OCP\Files\NotFoundException;
 use OCP\ILogger;
 use OCP\Lock\ILockingProvider;
 
@@ -335,10 +336,15 @@ class Scanner extends BasicEmitter implements IScanner {
 			}
 		}
 		try {
-			$data = $this->scanFile($path, $reuse, -1, null, $lock);
-			if ($data and $data['mimetype'] === 'httpd/unix-directory') {
-				$size = $this->scanChildren($path, $recursive, $reuse, $data['fileid'], $lock);
-				$data['size'] = $size;
+			try {
+				$data = $this->scanFile($path, $reuse, -1, null, $lock);
+				if ($data and $data['mimetype'] === 'httpd/unix-directory') {
+					$size = $this->scanChildren($path, $recursive, $reuse, $data['fileid'], $lock);
+					$data['size'] = $size;
+				}
+			} catch (NotFoundException $e) {
+				$this->removeFromCache($path);
+				return null;
 			}
 		} finally {
 			if ($lock) {
