@@ -1,13 +1,11 @@
 <?php
 /**
  * @copyright Copyright (c) 2017 Robin Appelman <robin@icewind.nl>
- *
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Florent <florent@coppint.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- *
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +20,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 namespace OC\Files\ObjectStore;
 
@@ -35,26 +32,37 @@ use OC\Files\Stream\SeekableHttpStream;
 
 trait S3ObjectTrait {
 	/**
-	 * Returns the connection
+	 * Returns the connection.
 	 *
 	 * @return S3Client connected client
+	 *
 	 * @throws \Exception if connection could not be made
 	 */
 	abstract protected function getConnection();
 
+	/* compute configured encryption headers for put operations */
+	abstract protected function getSseKmsPutParameters();
+
+	/* compute configured encryption headers for get operations */
+	abstract protected function getSseKmsGetParameters();
+
 	/**
 	 * @param string $urn the unified resource name used to identify the object
+	 *
 	 * @return resource stream with the read data
+	 *
 	 * @throws \Exception when something goes wrong, message will be logged
+	 *
 	 * @since 7.0.0
 	 */
 	public function readObject($urn) {
 		return SeekableHttpStream::open(function ($range) use ($urn) {
-			$command = $this->getConnection()->getCommand('GetObject', [
+			$s3params = [
 				'Bucket' => $this->bucket,
 				'Key' => $urn,
-				'Range' => 'bytes=' . $range,
-			]);
+				'Range' => 'bytes='.$range,
+			] + $this->getSseKmsGetParameters();
+			$command = $this->getConnection()->getCommand('GetObject', $s3params);
 			$request = \Aws\serialize($command);
 			$headers = [];
 			foreach ($request->getHeaders() as $key => $values) {
@@ -70,6 +78,7 @@ trait S3ObjectTrait {
 			];
 
 			$context = stream_context_create($opts);
+
 			return fopen($request->getUri(), 'r', false, $context);
 		});
 	}
@@ -87,32 +96,46 @@ trait S3ObjectTrait {
 			$count += $read;
 		});
 
-		$uploader = new MultipartUploader($this->getConnection(), $countStream, [
+		$s3params = [
 			'bucket' => $this->bucket,
 			'key' => $urn,
 			'part_size' => $this->uploadPartSize,
 			'params' => [
 				'ContentType' => $mimetype
-			]
-		]);
+			] + $this->getSseKmsPutParameters(),
+		];
+		$uploader = new MultipartUploader($this->getConnection(), $countStream, $s3params);
 
 		try {
 			$uploader->upload();
 		} catch (S3MultipartUploadException $e) {
 			// This is an empty file so just touch it then
 			if ($count === 0 && feof($countStream)) {
-				$uploader = new ObjectUploader($this->getConnection(), $this->bucket, $urn, '');
+				$s3params = [
+					'params' => $this->getSseKmsPutParameters(),
+				];
+				$uploader = new ObjectUploader($this->getConnection(), $this->bucket, $urn, '', 'private', $s3params);
 				$uploader->upload();
 			} else {
 				throw $e;
+			}
+		} finally {
+			// this handles [S3] fclose(): supplied resource is not a valid stream resource #23373
+			// see https://stackoverflow.com/questions/11247507/fclose-18-is-not-a-valid-stream-resource/11247555
+			// which also recommends the solution
+			if (is_resource($countStream)) {
+				fclose($countStream);
 			}
 		}
 	}
 
 	/**
 	 * @param string $urn the unified resource name used to identify the object
+	 *
 	 * @return void
+	 *
 	 * @throws \Exception when something goes wrong, message will be logged
+	 *
 	 * @since 7.0.0
 	 */
 	public function deleteObject($urn) {
@@ -125,8 +148,13 @@ trait S3ObjectTrait {
 	public function objectExists($urn) {
 		return $this->getConnection()->doesObjectExist($this->bucket, $urn);
 	}
-
+	
+	/**
+	 * S3 copy command with SSE KMS key handling.
+	 */
 	public function copyObject($from, $to) {
-		$this->getConnection()->copy($this->getBucket(), $from, $this->getBucket(), $to);
+		$this->getConnection()->copy($this->getBucket(), $from, $this->getBucket(), $to, 'private', [
+			'params' => $this->getSseKmsPutParameters(),
+		]);
 	}
 }

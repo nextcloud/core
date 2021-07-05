@@ -62,7 +62,7 @@ class NonSeekableStream extends Wrapper {
 class S3Test extends ObjectStoreTest {
 	protected function getInstance() {
 		$config = \OC::$server->getConfig()->getSystemValue('objectstore');
-		if (!is_array($config) || $config['class'] !== 'OC\\Files\\ObjectStore\\S3') {
+		if (!is_array($config) || $config['class'] !== '\\OC\\Files\\ObjectStore\\S3') {
 			$this->markTestSkipped('objectstore not configured for s3');
 		}
 
@@ -70,11 +70,6 @@ class S3Test extends ObjectStoreTest {
 	}
 
 	public function testUploadNonSeekable() {
-		$config = \OC::$server->getConfig()->getSystemValue('objectstore');
-		if (!is_array($config) || $config['class'] !== 'OC\\Files\\ObjectStore\\S3') {
-			$this->markTestSkipped('objectstore not configured for s3');
-		}
-
 		$s3 = $this->getInstance();
 
 		$s3->writeObject('multiparttest', NonSeekableStream::wrap(fopen(__FILE__, 'r')));
