@@ -35,34 +35,33 @@ use OCP\Files\Storage\IStorageFactory;
 use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IUser;
+use OCP\IUserManager;
 use OCP\Share\IManager;
 use OCP\Share\IShare;
 
 class MountProvider implements IMountProvider {
-	/**
-	 * @var \OCP\IConfig
-	 */
+	/** @var \OCP\IConfig */
 	protected $config;
 
-	/**
-	 * @var IManager
-	 */
+	/** @var IManager */
 	protected $shareManager;
 
-	/**
-	 * @var ILogger
-	 */
+	/** @var ILogger */
 	protected $logger;
+
+	/** @var IUserManager */
+	private $userManager;
 
 	/**
 	 * @param \OCP\IConfig $config
 	 * @param IManager $shareManager
 	 * @param ILogger $logger
 	 */
-	public function __construct(IConfig $config, IManager $shareManager, ILogger $logger) {
+	public function __construct(IConfig $config, IManager $shareManager, ILogger $logger, IUserManager $userManager) {
 		$this->config = $config;
 		$this->shareManager = $shareManager;
 		$this->logger = $logger;
+		$this->userManager = $userManager;
 	}
 
 
@@ -87,6 +86,19 @@ class MountProvider implements IMountProvider {
 		});
 
 		$superShares = $this->buildSuperShares($shares, $user);
+
+		$superShares = array_filter($superShares, function (array $share) {
+			$user = $this->userManager->get($share[0]->getShareOwner());
+			if ($user === null) {
+				return false;
+			}
+
+			if ($user->isEnabled() === false) {
+				return false;
+			}
+
+			return true;
+		});
 
 		$mounts = [];
 		$view = new View('/' . $user->getUID() . '/files');
