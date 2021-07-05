@@ -78,6 +78,7 @@ class AccountPropertyTest extends TestCase {
 			// current values
 			[IAccountManager::SCOPE_PRIVATE, IAccountManager::SCOPE_PRIVATE],
 			[IAccountManager::SCOPE_LOCAL, IAccountManager::SCOPE_LOCAL],
+			[IAccountManager::SCOPE_FEDERATED, IAccountManager::SCOPE_FEDERATED],
 			[IAccountManager::SCOPE_PUBLISHED, IAccountManager::SCOPE_PUBLISHED],
 			// legacy values
 			[IAccountManager::VISIBILITY_PRIVATE, IAccountManager::SCOPE_LOCAL],

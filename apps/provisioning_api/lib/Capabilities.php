@@ -41,20 +41,23 @@ class Capabilities implements ICapability {
 	 * @return array Array containing the apps capabilities
 	 */
 	public function getCapabilities() {
-		$federationScopesEnabled = false;
+		$federatedScopeEnabled = $this->appManager->isEnabledForUser('federation');
+
+		$publishedScopeEnabled = false;
 
 		$federatedFileSharingEnabled = $this->appManager->isEnabledForUser('federatedfilesharing');
 		if ($federatedFileSharingEnabled) {
 			/** @var FederatedShareProvider $shareProvider */
 			$shareProvider = \OC::$server->query(FederatedShareProvider::class);
-			$federationScopesEnabled = $shareProvider->isLookupServerUploadEnabled();
+			$publishedScopeEnabled = $shareProvider->isLookupServerUploadEnabled();
 		}
 
 		return [
 			'provisioning_api' => [
 				'version' => $this->appManager->getAppVersion('provisioning_api'),
 				'AccountPropertyScopesVersion' => 2,
-				'AccountPropertyScopesFederationEnabled' => $federationScopesEnabled,
+				'AccountPropertyScopesFederatedEnabled' => $federatedScopeEnabled,
+				'AccountPropertyScopesPublishedEnabled' => $publishedScopeEnabled,
 			]
 		];
 	}

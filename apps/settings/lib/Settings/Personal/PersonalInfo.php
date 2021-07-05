@@ -85,6 +85,7 @@ class PersonalInfo implements ISettings {
 	}
 
 	public function getForm(): TemplateResponse {
+		$federationEnabled = $this->appManager->isEnabledForUser('federation');
 		$federatedFileSharingEnabled = $this->appManager->isEnabledForUser('federatedfilesharing');
 		$lookupServerUploadEnabled = false;
 		if ($federatedFileSharingEnabled) {
@@ -117,6 +118,7 @@ class PersonalInfo implements ISettings {
 			'usage_relative' => round($storageInfo['relative']),
 			'quota' => $storageInfo['quota'],
 			'avatarChangeSupported' => $user->canChangeAvatar(),
+			'federationEnabled' => $federationEnabled,
 			'lookupServerUploadEnabled' => $lookupServerUploadEnabled,
 			'avatarScope' => $account->getProperty(IAccountManager::PROPERTY_AVATAR)->getScope(),
 			'displayNameChangeSupported' => $user->canChangeDisplayName(),
