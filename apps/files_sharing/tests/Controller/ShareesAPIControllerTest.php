@@ -36,8 +36,10 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\OCS\OCSBadRequestException;
 use OCP\Collaboration\Collaborators\ISearch;
 use OCP\IConfig;
+use OCP\IGroupManager;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUserManager;
 use OCP\Share\IShare;
 use OCP\Share\IManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -65,6 +67,12 @@ class ShareesAPIControllerTest extends TestCase {
 	/** @var  ISearch|MockObject */
 	protected $collaboratorSearch;
 
+	/** @var IGroupManager|\PHPUnit\Framework\MockObject\MockObject */
+	private $groupManager;
+
+	/** @var IUserManager|\PHPUnit\Framework\MockObject\MockObject */
+	private $userManager;
+
 	protected function setUp(): void {
 		parent::setUp();
 
@@ -80,6 +88,10 @@ class ShareesAPIControllerTest extends TestCase {
 
 		$this->collaboratorSearch = $this->createMock(ISearch::class);
 
+		$this->groupManager = $this->createMock(IGroupManager::class);
+
+		$this->userManager = $this->createMock(IUserManager::class);
+
 		$this->sharees = new ShareesAPIController(
 			$this->uid,
 			'files_sharing',
@@ -87,7 +99,9 @@ class ShareesAPIControllerTest extends TestCase {
 			$configMock,
 			$urlGeneratorMock,
 			$this->shareManager,
-			$this->collaboratorSearch
+			$this->collaboratorSearch,
+			$this->groupManager,
+			$this->userManager
 		);
 	}
 
@@ -242,10 +256,12 @@ class ShareesAPIControllerTest extends TestCase {
 
 		/** @var IConfig|MockObject $config */
 		$config = $this->createMock(IConfig::class);
-		$config->expects($this->exactly(1))
+
+		$config->expects($this->exactly(2))
 			->method('getAppValue')
 			->with($this->anything(), $this->anything(), $this->anything())
 			->willReturnMap([
+				['core', 'shareapi_exclude_groups', 'no', 'no'],
 				['files_sharing', 'lookupServerEnabled', 'yes', 'yes'],
 			]);
 
@@ -269,7 +285,9 @@ class ShareesAPIControllerTest extends TestCase {
 				$config,
 				$urlGenerator,
 				$this->shareManager,
-				$this->collaboratorSearch
+				$this->collaboratorSearch,
+				$this->groupManager,
+				$this->userManager
 			])
 			->setMethods(['isRemoteSharingAllowed', 'shareProviderExists', 'isRemoteGroupSharingAllowed'])
 			->getMock();
@@ -345,8 +363,12 @@ class ShareesAPIControllerTest extends TestCase {
 
 		/** @var IConfig|MockObject $config */
 		$config = $this->createMock(IConfig::class);
-		$config->expects($this->never())
-			->method('getAppValue');
+		$config->expects($this->exactly(1))
+			->method('getAppValue')
+			->with($this->anything(), $this->anything(), $this->anything())
+			->willReturnMap([
+				['core', 'shareapi_exclude_groups', 'no', 'no'],
+			]);
 
 		/** @var string */
 		$uid = 'test123';
@@ -364,7 +386,9 @@ class ShareesAPIControllerTest extends TestCase {
 				$config,
 				$urlGenerator,
 				$this->shareManager,
-				$this->collaboratorSearch
+				$this->collaboratorSearch,
+				$this->groupManager,
+				$this->userManager
 			])
 			->setMethods(['isRemoteSharingAllowed'])
 			->getMock();
