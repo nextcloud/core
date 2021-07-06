@@ -140,11 +140,26 @@ class FilesystemTest extends \Test\TestCase {
 			['/foo/.bar', '/foo/.bar/'],
 			['/foo/.bar/', '/foo/.bar/', false],
 			['/foo/.bar/tee', '/foo/.bar/tee'],
+			['/foo/bar.', '/foo/bar./'],
+			['/foo/bar./', '/foo/bar./', false],
+			['/foo/bar./tee', '/foo/bar./tee'],
+			['/foo/.bar.', '/foo/.bar./'],
+			['/foo/.bar./', '/foo/.bar./', false],
+			['/foo/.bar./tee', '/foo/.bar./tee'],
 
-			['/foo/bar', '/.///././//./foo/.///././//./bar/./././.'],
-			['/foo/bar/', '/.///././//./foo/.///././//./bar/./././.', false],
-			['/foo/bar', '/.///././//./foo/.///././//./bar/././././'],
-			['/foo/bar/', '/.///././//./foo/.///././//./bar/././././', false],
+			['/foo/bar', '/.////././//./foo/.///././//./bar/././/./.'],
+			['/foo/bar/', '/.////././//./foo/.///././//./bar/./././.', false],
+			['/foo/bar', '/.////././//./foo/.///././//./bar/././/././'],
+			['/foo/bar/', '/.////././//./foo/.///././//./bar/././/././', false],
+			['/foo/.bar', '/.////././//./foo/./././/./.bar/././/././'],
+			['/foo/.bar/', '/.////././//./foo/./././/./.bar/././/././', false],
+			['/foo/.bar/tee./', '/.////././//./foo/./././/./.bar/tee././/././', false],
+			['/foo/bar.', '/.////././//./foo/./././/./bar./././/././'],
+			['/foo/bar./', '/.////././//./foo/./././/./bar./././/././', false],
+			['/foo/bar./tee./', '/.////././//./foo/./././/./bar./tee././/././', false],
+			['/foo/.bar.', '/.////././//./foo/./././/./.bar./././/././'],
+			['/foo/.bar./', '/.////././//./foo/./././/./.bar./././././', false],
+			['/foo/.bar./tee./', '/.////././//./foo/./././/./.bar./tee././././', false],
 
 			// Windows paths
 			['/', ''],
@@ -186,7 +201,9 @@ class FilesystemTest extends \Test\TestCase {
 
 			// normalize does not resolve '..' (by design)
 			['/foo/..', '/foo/../'],
+			['/foo/../bar', '/foo/../bar/.'],
 			['/foo/..', '\\foo\\..\\'],
+			['/foo/../bar', '\\foo\\..\\bar'],
 		];
 	}
 

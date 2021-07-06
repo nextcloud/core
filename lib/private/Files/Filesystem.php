@@ -808,10 +808,10 @@ class Filesystem {
 		$path = '/' . $path;
 
 		$patterns = [
-			'/\\\\/s',          // no windows style slashes
-			'/\/\.(\/\.)?\//s', // remove '/./'
-			'/\/{2,}/s',        // remove sequence of slashes
-			'/\/\.$/s',         // remove trailing /.
+			'#\\\\#s',       // no windows style '\\' slashes
+			'#/\.(/\.)*/#s', // remove '/./'
+			'#\//+#s',       // remove sequence of slashes
+			'#/\.$#s',       // remove trailing '/.'
 		];
 
 		do {
