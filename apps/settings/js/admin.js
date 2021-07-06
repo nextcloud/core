@@ -79,15 +79,24 @@ window.addEventListener('DOMContentLoaded', function(){
 				value = 'no';
 			}
 		}
+		if ((this.id === 'shareapiExpireAfterNDays' || this.id === 'shareapiInternalExpireAfterNDays') && value === '') {
+			value = '7'
+		}
 		OCP.AppConfig.setValue('core', $(this).attr('name'), value);
 	});
 
 	$('#shareapiDefaultExpireDate').change(function() {
 		$("#setDefaultExpireDate").toggleClass('hidden', !this.checked);
+		if (this.checked) {
+			$('#shareapiExpireAfterNDays').trigger('change');
+		}
 	});
 
 	$('#shareapiDefaultInternalExpireDate').change(function() {
 		$("#setDefaultInternalExpireDate").toggleClass('hidden', !this.checked);
+		if (this.checked) {
+			$('#shareapiInternalExpireAfterNDays').trigger('change');
+		}
 	});
 
 	$('#shareapiDefaultRemoteExpireDate').change(function() {
