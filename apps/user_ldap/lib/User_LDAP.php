@@ -290,7 +290,7 @@ class User_LDAP extends BackendUtility implements \OCP\IUserBackend, \OCP\UserIn
 	 * @throws \OC\ServerNotAvailableException
 	 */
 	public function userExistsOnLDAP($user) {
-		if (is_string($user)) {
+		if (!is_object($user)) {
 			$user = $this->access->userManager->get($user);
 		}
 		if (is_null($user)) {
