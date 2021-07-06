@@ -24,12 +24,15 @@
  */
 namespace OCA\Comments\Activity;
 
+use OC\User\NoUserException;
 use OCP\Activity\IManager;
 use OCP\App\IAppManager;
 use OCP\Comments\CommentsEvent;
 use OCP\Files\Config\IMountProviderCollection;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
+use OCP\Files\NotPermittedException;
+use OCP\IConfig;
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\Share\IShareHelper;
@@ -39,14 +42,16 @@ class Listener {
 	protected $activityManager;
 	/** @var IUserSession */
 	protected $session;
-	/** @var \OCP\App\IAppManager */
+	/** @var IAppManager */
 	protected $appManager;
-	/** @var \OCP\Files\Config\IMountProviderCollection */
+	/** @var IMountProviderCollection */
 	protected $mountCollection;
-	/** @var \OCP\Files\IRootFolder */
+	/** @var IRootFolder */
 	protected $rootFolder;
 	/** @var IShareHelper */
 	protected $shareHelper;
+	/** @var IConfig */
+	protected $config;
 
 	/**
 	 * Listener constructor.
@@ -57,23 +62,28 @@ class Listener {
 	 * @param IMountProviderCollection $mountCollection
 	 * @param IRootFolder $rootFolder
 	 * @param IShareHelper $shareHelper
+	 * @param IConfig $config
 	 */
 	public function __construct(IManager $activityManager,
 								IUserSession $session,
 								IAppManager $appManager,
 								IMountProviderCollection $mountCollection,
 								IRootFolder $rootFolder,
-								IShareHelper $shareHelper) {
+								IShareHelper $shareHelper,
+								IConfig $config) {
 		$this->activityManager = $activityManager;
 		$this->session = $session;
 		$this->appManager = $appManager;
 		$this->mountCollection = $mountCollection;
 		$this->rootFolder = $rootFolder;
 		$this->shareHelper = $shareHelper;
+		$this->config = $config;
 	}
 
 	/**
 	 * @param CommentsEvent $event
+	 * @throws NotPermittedException
+	 * @throws NoUserException
 	 */
 	public function commentEvent(CommentsEvent $event) {
 		if ($event->getComment()->getObjectType() !== 'files'
@@ -100,6 +110,9 @@ class Listener {
 				$node = array_shift($nodes);
 				$al = $this->shareHelper->getPathsForAccessList($node);
 				$users += $al['users'];
+			}
+			if ($this->config->getSystemValueBool('activity_use_cached_mountpoints', false)) {
+				$users += [$owner => $this->getVisiblePath($mount->getPath())];
 			}
 		}
 
@@ -131,5 +144,21 @@ class Listener {
 			]);
 			$this->activityManager->publish($activity);
 		}
+	}
+
+	/**
+	 * @param string $absolutePath
+	 * @return string
+	 */
+	protected function getVisiblePath(string $absolutePath): string {
+		$sections = explode('/', $absolutePath, 4);
+
+		$path = '/';
+		if (isset($sections[3])) {
+			// Not the case when a file in root is renamed
+			$path .= $sections[3];
+		}
+
+		return $path;
 	}
 }
