@@ -97,6 +97,9 @@ class SMB extends Common implements INotifyStorage {
 	/** @var bool */
 	protected $checkAcl;
 
+	/** @var bool */
+	protected $isSharedStorage;
+
 	public function __construct($params) {
 		if (!isset($params['host'])) {
 			throw new \Exception('Invalid configuration, no host provided');
@@ -134,6 +137,7 @@ class SMB extends Common implements INotifyStorage {
 
 		$this->showHidden = isset($params['show_hidden']) && $params['show_hidden'];
 		$this->checkAcl = isset($params['check_acl']) && $params['check_acl'];
+		$this->isSharedStorage = isset($params['shared']) && $params['shared'];
 
 		$this->statCache = new CappedMemoryCache();
 		parent::__construct($params);
@@ -156,6 +160,12 @@ class SMB extends Common implements INotifyStorage {
 		// FIXME: double slash to keep compatible with the old storage ids,
 		// failure to do so will lead to creation of a new storage id and
 		// loss of shares from the storage
+		
+		// If this is shared storage, generate the same file IDs for all users
+		if ($this->isSharedStorage) {
+			return 'smb::' . $this->server->getHost() . '//' . $this->share->getName() . '/' . $this->root;
+		}
+		
 		return 'smb::' . $this->server->getAuth()->getUsername() . '@' . $this->server->getHost() . '//' . $this->share->getName() . '/' . $this->root;
 	}
 

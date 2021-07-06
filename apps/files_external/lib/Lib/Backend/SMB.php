@@ -60,6 +60,9 @@ class SMB extends Backend {
 					->setType(DefinitionParameter::VALUE_BOOLEAN)
 					->setFlag(DefinitionParameter::FLAG_OPTIONAL)
 					->setTooltip($l->t("Check the ACL's of each file or folder inside a directory to filter out items where the user has no read permissions, comes with a performance penalty")),
+				(new DefinitionParameter('shared',$l->t('Shared storage')))
+					->setType(DefinitionParameter::VALUE_BOOLEAN)
+					->setFlag(DefinitionParameter::FLAG_OPTIONAL),
 				(new DefinitionParameter('timeout', $l->t('Timeout')))
 					->setType(DefinitionParameter::VALUE_HIDDEN)
 					->setFlag(DefinitionParameter::FLAG_OPTIONAL),

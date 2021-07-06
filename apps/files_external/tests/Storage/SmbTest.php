@@ -95,6 +95,19 @@ class SmbTest extends \Test\Files\Storage\Storage {
 		$this->instance = null;
 	}
 
+	public function testSharedStorageId() {
+		$this->instance = new SMB([
+			'host' => 'testhost',
+			'user' => 'testuser',
+			'password' => 'somepass',
+			'share' => 'someshare',
+			'root' => 'someroot',
+			'shared' => true
+		]);
+		$this->assertEquals('smb::testhost//someshare//someroot/', $this->instance->getId());
+		$this->instance = null;
+	}
+
 	public function testNotifyGetChanges() {
 		$notifyHandler = $this->instance->notify('');
 		sleep(1); //give time for the notify to start
