@@ -37,7 +37,7 @@ class UpdateConfig extends Command {
 	];
 
 	public const SUPPORTED_IMAGE_KEYS = [
-		'background', 'logo', 'favicon', 'logoheader'
+		'background', 'logo', 'emailLogo', 'favicon', 'logoheader'
 	];
 
 	private $themingDefaults;

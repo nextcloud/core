@@ -78,6 +78,16 @@ style('theming', 'settings-admin');
 		</form>
 	</div>
 	<div>
+		<form class="uploadButton" method="post" action="<?php p($_['uploadLogoRoute']) ?>" data-image-key="emailLogo">
+			<input type="hidden" id="theming-emailLogoMime" value="<?php p($_['images']['emailLogo']['mime']); ?>" />
+			<input type="hidden" name="key" value="emailLogo" />
+			<label for="upload-email-logo"><span><?php p($l->t('Email Logo')) ?></span></label>
+			<input id="upload-email-logo" class="fileupload" name="image" type="file" />
+			<label for="upload-email-logo" class="button icon-upload svg" id="upload-email-log" title="<?php p($l->t('Upload new email logo')) ?>"></label>
+			<div data-setting="emailLogoMime" data-toggle="tooltip" data-original-title="<?php p($l->t('Reset to default')); ?>" class="theme-undo icon icon-history"></div>
+		</form>
+	</div>
+	<div>
 		<form class="uploadButton" method="post" action="<?php p($_['uploadLogoRoute']) ?>" data-image-key="background">
 			<input type="hidden" id="theming-backgroundMime" value="<?php p($_['images']['background']['mime']); ?>" />
 			<input type="hidden" name="key" value="background" />

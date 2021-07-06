@@ -379,7 +379,7 @@ EOF;
 		}
 		$this->headerAdded = true;
 
-		$logoUrl = $this->urlGenerator->getAbsoluteURL($this->themingDefaults->getLogo(false));
+		$logoUrl = $this->urlGenerator->getAbsoluteURL($this->themingDefaults->getEmailLogo());
 		$this->htmlBody .= vsprintf($this->header, [$this->themingDefaults->getColorPrimary(), $logoUrl, $this->themingDefaults->getName()]);
 	}
 

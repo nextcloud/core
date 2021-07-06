@@ -53,7 +53,7 @@ class ImageManager {
 	/** @var IURLGenerator */
 	private $urlGenerator;
 	/** @var array */
-	private $supportedImageKeys = ['background', 'logo', 'logoheader', 'favicon'];
+	private $supportedImageKeys = ['background', 'logo', 'emailLogo', 'logoheader', 'favicon'];
 	/** @var ICacheFactory */
 	private $cacheFactory;
 	/** @var ILogger */
@@ -86,6 +86,7 @@ class ImageManager {
 
 		switch ($key) {
 			case 'logo':
+			case 'emailLogo':
 			case 'logoheader':
 			case 'favicon':
 				return $this->urlGenerator->imagePath('core', 'logo/logo.png') . '?v=' . $cacheBusterCounter;

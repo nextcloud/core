@@ -81,6 +81,7 @@ class Capabilities implements IPublicCapability {
 				'color-element-bright' => $this->util->elementColor($color),
 				'color-element-dark' => $this->util->elementColor($color, false),
 				'logo' => $this->url->getAbsoluteURL($this->theming->getLogo()),
+				'emailLogo' => $this->url->getAbsoluteURL($this->theming->getEmailLogo()),
 				'background' => $backgroundLogo === 'backgroundColor' || ($backgroundLogo === '' && $this->theming->getColorPrimary() !== '#0082c9') ?
 					$this->theming->getColorPrimary() :
 					$this->url->getAbsoluteURL($this->theming->getBackground()),

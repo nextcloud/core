@@ -327,6 +327,20 @@ class OC_Defaults {
 		return $logo . '?v=' . hash('sha1', implode('.', \OCP\Util::getVersion()));
 	}
 
+	/**
+	 * Themed email logo url
+	 *
+	 * @return string
+	 */
+	public function getEmailLogo() {
+		if ($this->themeExist('getEmailLogo')) {
+			return $this->theme->getEmailLogo();
+		}
+
+		$logo = \OC::$server->getURLGenerator()->imagePath('core', 'logo/logo.png');
+		return $logo . '?v=' . hash('sha1', implode('.', \OCP\Util::getVersion()));
+	}
+
 	public function getTextColorPrimary() {
 		if ($this->themeExist('getTextColorPrimary')) {
 			return $this->theme->getTextColorPrimary();

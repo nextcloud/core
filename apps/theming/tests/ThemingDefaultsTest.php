@@ -633,6 +633,24 @@ class ThemingDefaultsTest extends TestCase {
 		$this->assertEquals('custom-logo' . '?v=0', $this->template->getLogo());
 	}
 
+	public function testGetEmailLogoCustom() {
+		$this->config
+			->expects($this->at(0))
+			->method('getAppValue')
+			->with('theming', 'emailLogoMime', false)
+			->willReturn('image/svg+xml');
+		$this->config
+			->expects($this->at(1))
+			->method('getAppValue')
+			->with('theming', 'cachebuster', '0')
+			->willReturn('0');
+		$this->urlGenerator->expects($this->once())
+			->method('linkToRoute')
+			->with('theming.Theming.getImage')
+			->willReturn('custom-email-logo?v=0');
+		$this->assertEquals('custom-email-logo' . '?v=0', $this->template->getEmailLogo());
+	}
+
 	public function testGetScssVariablesCached() {
 		$this->config->expects($this->any())->method('getAppValue')->with('theming', 'cachebuster', '0')->willReturn('1');
 		$this->cacheFactory->expects($this->once())
@@ -646,14 +664,15 @@ class ThemingDefaultsTest extends TestCase {
 	public function testGetScssVariables() {
 		$this->config->expects($this->at(0))->method('getAppValue')->with('theming', 'cachebuster', '0')->willReturn('0');
 		$this->config->expects($this->at(1))->method('getAppValue')->with('theming', 'logoMime', false)->willReturn('jpeg');
-		$this->config->expects($this->at(2))->method('getAppValue')->with('theming', 'backgroundMime', false)->willReturn('jpeg');
-		$this->config->expects($this->at(3))->method('getAppValue')->with('theming', 'logoheaderMime', false)->willReturn('jpeg');
-		$this->config->expects($this->at(4))->method('getAppValue')->with('theming', 'faviconMime', false)->willReturn('jpeg');
+		$this->config->expects($this->at(2))->method('getAppValue')->with('theming', 'emailLogoMime', false)->willReturn('jpeg');
+		$this->config->expects($this->at(3))->method('getAppValue')->with('theming', 'backgroundMime', false)->willReturn('jpeg');
+		$this->config->expects($this->at(4))->method('getAppValue')->with('theming', 'logoheaderMime', false)->willReturn('jpeg');
+		$this->config->expects($this->at(5))->method('getAppValue')->with('theming', 'faviconMime', false)->willReturn('jpeg');
 
-		$this->config->expects($this->at(5))->method('getAppValue')->with('theming', 'color', null)->willReturn($this->defaults->getColorPrimary());
-		$this->config->expects($this->at(6))->method('getAppValue')->with('theming', 'color', $this->defaults->getColorPrimary())->willReturn($this->defaults->getColorPrimary());
+		$this->config->expects($this->at(6))->method('getAppValue')->with('theming', 'color', null)->willReturn($this->defaults->getColorPrimary());
 		$this->config->expects($this->at(7))->method('getAppValue')->with('theming', 'color', $this->defaults->getColorPrimary())->willReturn($this->defaults->getColorPrimary());
 		$this->config->expects($this->at(8))->method('getAppValue')->with('theming', 'color', $this->defaults->getColorPrimary())->willReturn($this->defaults->getColorPrimary());
+		$this->config->expects($this->at(9))->method('getAppValue')->with('theming', 'color', $this->defaults->getColorPrimary())->willReturn($this->defaults->getColorPrimary());
 
 		$this->util->expects($this->any())->method('invertTextColor')->with($this->defaults->getColorPrimary())->willReturn(false);
 		$this->util->expects($this->any())->method('elementColor')->with($this->defaults->getColorPrimary())->willReturn('#aaaaaa');
@@ -663,15 +682,18 @@ class ThemingDefaultsTest extends TestCase {
 			->willReturn($this->cache);
 		$this->cache->expects($this->once())->method('get')->with('getScssVariables')->willReturn(null);
 		$this->imageManager->expects($this->at(0))->method('getImageUrl')->with('logo')->willReturn('custom-logo?v=0');
-		$this->imageManager->expects($this->at(1))->method('getImageUrl')->with('logoheader')->willReturn('custom-logoheader?v=0');
-		$this->imageManager->expects($this->at(2))->method('getImageUrl')->with('favicon')->willReturn('custom-favicon?v=0');
-		$this->imageManager->expects($this->at(3))->method('getImageUrl')->with('background')->willReturn('custom-background?v=0');
+		$this->imageManager->expects($this->at(1))->method('getImageUrl')->with('emailLogo')->willReturn('custom-emailLogo?v=0');
+		$this->imageManager->expects($this->at(2))->method('getImageUrl')->with('logoheader')->willReturn('custom-logoheader?v=0');
+		$this->imageManager->expects($this->at(3))->method('getImageUrl')->with('favicon')->willReturn('custom-favicon?v=0');
+		$this->imageManager->expects($this->at(4))->method('getImageUrl')->with('background')->willReturn('custom-background?v=0');
 
 		$expected = [
 			'theming-cachebuster' => '\'0\'',
 			'theming-logo-mime' => '\'jpeg\'',
+			'theming-email-logo-mime' => '\'jpeg\'',
 			'theming-background-mime' => '\'jpeg\'',
 			'image-logo' => "url('custom-logo?v=0')",
+			'image-email-logo' => "url('custom-emailLogo?v=0')",
 			'image-login-background' => "url('custom-background?v=0')",
 			'color-primary' => $this->defaults->getColorPrimary(),
 			'color-primary-text' => '#ffffff',

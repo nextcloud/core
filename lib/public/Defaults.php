@@ -181,11 +181,22 @@ class Defaults {
 	 * Themed logo url
 	 *
 	 * @param bool $useSvg Whether to point to the SVG image or a fallback
+	 * @param bool $emailLogo Whether to return the email logo (if one exists)
 	 * @return string
 	 * @since 12.0.0
 	 */
 	public function getLogo(bool $useSvg = true): string {
 		return $this->defaults->getLogo($useSvg);
+	}
+
+	/**
+	 * Themed email logo url
+	 *
+	 * @return string
+	 * @since 12.0.0
+	 */
+	public function getEmailLogo(): string {
+		return $this->defaults->getEmailLogo();
 	}
 
 	/**
