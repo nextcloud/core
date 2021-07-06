@@ -120,7 +120,8 @@ final class JrdResponse implements IResponse {
 	 * @param string|null $type https://tools.ietf.org/html/rfc7033#section-4.4.4.2
 	 * @param string|null $href https://tools.ietf.org/html/rfc7033#section-4.4.4.3
 	 * @param string[]|null $titles https://tools.ietf.org/html/rfc7033#section-4.4.4.4
-	 * @param string|null $properties https://tools.ietf.org/html/rfc7033#section-4.4.4.5
+	 * @param string[]|null $properties https://tools.ietf.org/html/rfc7033#section-4.4.4.5
+	 * @param string[] $entries
 	 *
 	 * @psalm-param array<string,(string|null)>|null $properties https://tools.ietf.org/html/rfc7033#section-4.4.4.5
 	 *
@@ -131,14 +132,21 @@ final class JrdResponse implements IResponse {
 							?string $type,
 							?string $href,
 							?array $titles = [],
-							?array $properties = []): self {
-		$this->links[] = array_filter([
-			'rel' => $rel,
-			'type' => $type,
-			'href' => $href,
-			'titles' => $titles,
-			'properties' => $properties,
-		]);
+							?array $properties = [],
+							array $entries = []
+	): self {
+		$this->links[] = array_filter(
+			array_merge(
+				[
+					'rel'        => $rel,
+					'type'       => $type,
+					'href'       => $href,
+					'titles'     => $titles,
+					'properties' => $properties
+				],
+				$entries
+			)
+		);
 
 		return $this;
 	}
