@@ -206,23 +206,23 @@ select[multiple=multiple] + button {
 }
 
 .ldap_grey {
-	color: #777;
+	color: #dark;
 }
 
 #ldapSettings {
-	background-color: white;
+	background-color: dark;
 	padding: 0;
 }
 
 #ldapSettings > fieldset {
-	background-color: white;
+	background-color: dark;
 }
 
 #ldapSettings ul.ui-tabs-nav .ui-tabs-active,
 #ldapSettings ul.ui-tabs-nav .ui-tabs-active > a {
-	background-color: white;
+	background-color: dark;
 }
 
 #ldapSettings div.ui-accordion-content {
-	background: white;
+	background: dark;
 }
