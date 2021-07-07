@@ -58,15 +58,14 @@ class SchemaWrapper implements ISchemaWrapper {
 	 *
 	 * @return array
 	 */
-	public function getTableNamesWithoutPrefix() {
-		$tableNames = $this->schema->getTableNames();
+	public function getTableNamesWithoutPrefix(): array {
 		return array_map(function ($tableName) {
 			if (strpos($tableName, $this->connection->getPrefix()) === 0) {
 				return substr($tableName, strlen($this->connection->getPrefix()));
 			}
 
 			return $tableName;
-		}, $tableNames);
+		}, $this->getTableNames());
 	}
 
 	// Overwritten methods
@@ -74,8 +73,15 @@ class SchemaWrapper implements ISchemaWrapper {
 	/**
 	 * @return array
 	 */
-	public function getTableNames() {
-		return $this->schema->getTableNames();
+	public function getTableNames(): array {
+		return array_map(static function (string $fullName) {
+			$pos = strpos($fullName, '.');
+			if ($pos === false) {
+				return $fullName;
+			}
+
+			return substr($fullName, $pos + 1);
+		}, $this->schema->getTableNames());
 	}
 
 	/**
