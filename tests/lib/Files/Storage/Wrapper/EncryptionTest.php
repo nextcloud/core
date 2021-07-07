@@ -584,6 +584,14 @@ class EncryptionTest extends Storage {
 					$this->arrayCache
 				]
 			)->getMock();
+		
+		$cache = $this->getMockBuilder('\OC\Files\Cache\Cache')
+			->disableOriginalConstructor()->getMock();
+		$cache->expects($this->any())
+			->method('get')
+			->willReturnCallback(function ($path) {
+				return ['encrypted' => true, 'path' => $path];
+			});
 
 		$instance = $this->getMockBuilder('\OC\Files\Storage\Wrapper\Encryption')
 			->setConstructorArgs(
@@ -597,9 +605,11 @@ class EncryptionTest extends Storage {
 					$this->encryptionManager, $util, $this->logger, $this->file, null, $this->keyStore, $this->update, $this->mountManager, $this->arrayCache
 				]
 			)
-			->setMethods(['readFirstBlock', 'parseRawHeader'])
+			->setMethods(['getCache','readFirstBlock', 'parseRawHeader'])
 			->getMock();
-
+		
+		$instance->expects($this->once())->method('getCache')->willReturn($cache);
+		
 		$instance->expects($this->once())->method(('parseRawHeader'))
 			->willReturn([Util::HEADER_ENCRYPTION_MODULE_KEY => 'OC_DEFAULT_MODULE']);
 
@@ -677,8 +687,8 @@ class EncryptionTest extends Storage {
 			->setMethods(['readFirstBlock', 'parseRawHeader', 'getCache'])
 			->getMock();
 
-		$instance->expects($this->once())->method(('parseRawHeader'))->willReturn($header);
-		$instance->expects($this->any())->method('getCache')->willReturn($cache);
+		$instance->expects($this->any())->method(('parseRawHeader'))->willReturn($header);
+		$instance->expects($this->once())->method('getCache')->willReturn($cache);
 
 		$result = $this->invokePrivate($instance, 'getHeader', ['test.txt']);
 		$this->assertSameSize($expected, $result);

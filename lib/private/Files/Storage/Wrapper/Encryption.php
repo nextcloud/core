@@ -925,21 +925,20 @@ class Encryption extends Wrapper {
 			$path = $realFile;
 		}
 
-		$firstBlock = $this->readFirstBlock($path);
-		$result = $this->parseRawHeader($firstBlock);
+		$result = [];
+		
+		// first check if it is an encrypted file at all
+		// We would do query to filecache only if we know that entry in filecache exists
+		
+		$info = $this->getCache()->get($path);
+		if (isset($info['encrypted']) && $info['encrypted'] === true) {
+			$firstBlock = $this->readFirstBlock($path);
+			$result = $this->parseRawHeader($firstBlock);
 
-		// if the header doesn't contain a encryption module we check if it is a
-		// legacy file. If true, we add the default encryption module
-		if (!isset($result[Util::HEADER_ENCRYPTION_MODULE_KEY])) {
-			if (!empty($result)) {
+			// if the header doesn't contain a encryption module we check if it is a
+			// legacy file. If true, we add the default encryption module
+			if (!isset($result[Util::HEADER_ENCRYPTION_MODULE_KEY]) && (!empty($result) || $exists)) {
 				$result[Util::HEADER_ENCRYPTION_MODULE_KEY] = 'OC_DEFAULT_MODULE';
-			} elseif ($exists) {
-				// if the header was empty we have to check first if it is a encrypted file at all
-				// We would do query to filecache only if we know that entry in filecache exists
-				$info = $this->getCache()->get($path);
-				if (isset($info['encrypted']) && $info['encrypted'] === true) {
-					$result[Util::HEADER_ENCRYPTION_MODULE_KEY] = 'OC_DEFAULT_MODULE';
-				}
 			}
 		}
 
