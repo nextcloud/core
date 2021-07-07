@@ -40,7 +40,7 @@ use ZipStreamer\ZipStreamer;
 
 class Streamer {
 	// array of regexp. Matching user agents will get tar instead of zip
-	private $preferTarFor = [ '/macintosh|mac os x/i' ];
+	private $preferTarFor = [ '/macintosh|mac os x|linux/i' ];
 
 	// streamer instance
 	private $streamerInstance;
@@ -81,12 +81,20 @@ class Streamer {
 		 * from not fully scanned external storage. And then things fall apart
 		 * if somebody tries to package to much.
 		 */
-		if ($size > 0 && $size < 4 * 1000 * 1000 * 1000 && $numberOfFiles < 65536) {
-			$this->streamerInstance = new ZipStreamer(['zip64' => false]);
-		} elseif ($request->isUserAgent($this->preferTarFor)) {
+
+		// Use TAR no matter what if that is preferred for the current user agent
+		if ($request->isUserAgent($this->preferTarFor)) {
 			$this->streamerInstance = new TarStreamer();
+		// Zip32 as default if size and numberOfFiles allow it
+		} elseif ($size > 0 && $size < 4 * 1000 * 1000 * 1000 && $numberOfFiles < 65536) {
+			$this->streamerInstance = new ZipStreamer(['zip64' => false]);
+		// TODO: Depending on Zip64 support - not sure how one would correctly determine that
 		} else {
-			$this->streamerInstance = new ZipStreamer(['zip64' => PHP_INT_SIZE !== 4]);
+			if (PHP_INT_SIZE !== 4) {
+				$this->streamerInstance = new ZipStreamer(['zip64' => true]);
+			} else {
+				$this->streamerInstance = new TarStreamer();
+			}
 		}
 	}
 
