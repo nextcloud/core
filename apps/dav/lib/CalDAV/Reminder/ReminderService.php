@@ -142,13 +142,13 @@ class ReminderService {
 			}
 
 			$users = $this->getAllUsersWithWriteAccessToCalendar($reminder['calendar_id']);
-			$user = $this->getUserFromPrincipalURI($reminder['principaluri']);
-			if ($user) {
-				$users[] = $user;
+			$userOfReminder = $this->getUserFromPrincipalURI($reminder['principaluri']);
+			if ($userOfReminder) {
+				$users[] = $userOfReminder;
 			}
 
 			$notificationProvider = $this->notificationProviderManager->getProvider($reminder['type']);
-			$notificationProvider->send($vevent, $reminder['displayname'], $users);
+			$notificationProvider->send($vevent, $reminder['displayname'], $users, $userOfReminder);
 
 			$this->deleteOrProcessNext($reminder, $vevent);
 		}

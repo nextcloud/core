@@ -43,9 +43,11 @@ interface INotificationProvider {
 	 * @param VEvent $vevent
 	 * @param string $calendarDisplayName
 	 * @param IUser[] $users
+	 * @param IUser $reminderOwner
 	 * @return void
 	 */
 	public function send(VEvent $vevent,
 						 string $calendarDisplayName,
-						 array $users = []): void;
+						 array $users = [],
+						 IUser $reminderOwner = null): void;
 }

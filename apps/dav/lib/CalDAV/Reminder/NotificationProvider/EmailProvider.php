@@ -36,6 +36,7 @@ use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IURLGenerator;
+use OCP\IUser;
 use OCP\L10N\IFactory as L10NFactory;
 use OCP\Mail\IEMailTemplate;
 use OCP\Mail\IMailer;
@@ -79,15 +80,24 @@ class EmailProvider extends AbstractProvider {
 	 * @param VEvent $vevent
 	 * @param string $calendarDisplayName
 	 * @param array $users
+	 * @param IUser $reminderOwner
 	 * @throws \Exception
 	 */
 	public function send(VEvent $vevent,
 						 string $calendarDisplayName,
-						 array $users = []):void {
+						 array $users = [],
+						 IUser $reminderOwner = null):void {
 		$fallbackLanguage = $this->getFallbackLanguage();
 
 		$emailAddressesOfSharees = $this->getEMailAddressesOfAllUsersWithWriteAccessToCalendar($users);
-		$emailAddressesOfAttendees = $this->getAllEMailAddressesFromEvent($vevent);
+
+		$organizer = $this->getOrganizerEMailAndNameFromEvent($vevent);
+
+		$emailAddressesOfAttendees = [];
+
+		if ($organizer !== null && $reminderOwner instanceof IUser && strcasecmp($reminderOwner->getEMailAddress(), key($organizer)) === 0) {
+			$emailAddressesOfAttendees = $this->getAllEMailAddressesFromEvent($vevent);
+		}
 
 		// Quote from php.net:
 		// If the input arrays have the same string keys, then the later value for that key will overwrite the previous one.
@@ -98,7 +108,6 @@ class EmailProvider extends AbstractProvider {
 		);
 
 		$sortedByLanguage = $this->sortEMailAddressesByLanguage($emailAddresses, $fallbackLanguage);
-		$organizer = $this->getOrganizerEMailAndNameFromEvent($vevent);
 
 		foreach ($sortedByLanguage as $lang => $emailAddresses) {
 			if (!$this->hasL10NForLang($lang)) {

@@ -90,11 +90,13 @@ abstract class AbstractProvider implements INotificationProvider {
 	 * @param VEvent $vevent
 	 * @param string $calendarDisplayName
 	 * @param IUser[] $users
+	 * @param IUser $reminderOwner
 	 * @return void
 	 */
 	abstract public function send(VEvent $vevent,
 						   string $calendarDisplayName,
-						   array $users = []): void;
+						   array $users = [],
+							IUser $reminderOwner = null): void;
 
 	/**
 	 * @return string
