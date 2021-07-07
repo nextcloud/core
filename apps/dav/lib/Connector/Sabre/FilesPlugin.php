@@ -262,7 +262,6 @@ class FilesPlugin extends ServerPlugin {
 			$filename = $node->getName();
 			if ($this->request->isUserAgent(
 				[
-					Request::USER_AGENT_IE,
 					Request::USER_AGENT_ANDROID_MOBILE_CHROME,
 					Request::USER_AGENT_FREEBOX,
 				])) {

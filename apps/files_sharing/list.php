@@ -37,12 +37,11 @@ $legacyEventDispatcher = \OC::$server->getEventDispatcher();
 $eventDispatcher = \OC::$server->get(OCP\EventDispatcher\IEventDispatcher::class);
 
 $showgridview = $config->getUserValue($userSession->getUser()->getUID(), 'files', 'show_grid', false);
-$isIE = OC_Util::isIe();
 
 $tmpl = new OCP\Template('files_sharing', 'list', '');
 
 // gridview not available for ie
-$tmpl->assign('showgridview', $showgridview && !$isIE);
+$tmpl->assign('showgridview', $showgridview);
 
 // fire script events
 $legacyEventDispatcher->dispatch('\OCP\Collaboration\Resources::loadAdditionalScripts', new GenericEvent());

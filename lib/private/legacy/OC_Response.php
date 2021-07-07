@@ -36,7 +36,6 @@ class OC_Response {
 	public static function setContentDispositionHeader($filename, $type = 'attachment') {
 		if (\OC::$server->getRequest()->isUserAgent(
 			[
-				\OC\AppFramework\Http\Request::USER_AGENT_IE,
 				\OC\AppFramework\Http\Request::USER_AGENT_ANDROID_MOBILE_CHROME,
 				\OC\AppFramework\Http\Request::USER_AGENT_FREEBOX,
 			])) {

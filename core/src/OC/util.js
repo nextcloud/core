@@ -21,7 +21,6 @@
  *
  */
 
-import $ from 'jquery'
 import moment from 'moment'
 
 import History from './util-history'
@@ -139,15 +138,6 @@ export default {
 			return t('core', 'seconds ago')
 		}
 		return moment(timestamp).fromNow()
-	},
-
-	/**
-	 * Returns whether this is IE
-	 *
-	 * @returns {bool} true if this is IE, false otherwise
-	 */
-	isIE() {
-		return $('html').hasClass('ie')
 	},
 
 	/**

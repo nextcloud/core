@@ -933,20 +933,6 @@ class RequestTest extends \Test\TestCase {
 	public function userAgentProvider() {
 		return [
 			[
-				'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0)',
-				[
-					Request::USER_AGENT_IE
-				],
-				true,
-			],
-			[
-				'Mozilla/5.0 (X11; Linux i686; rv:24.0) Gecko/20100101 Firefox/24.0',
-				[
-					Request::USER_AGENT_IE
-				],
-				false,
-			],
-			[
 				'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36',
 				[
 					Request::USER_AGENT_CHROME
@@ -968,24 +954,8 @@ class RequestTest extends \Test\TestCase {
 				true,
 			],
 			[
-				'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0)',
-				[
-					Request::USER_AGENT_ANDROID_MOBILE_CHROME
-				],
-				false,
-			],
-			[
-				'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0)',
-				[
-					Request::USER_AGENT_IE,
-					Request::USER_AGENT_ANDROID_MOBILE_CHROME,
-				],
-				true,
-			],
-			[
 				'Mozilla/5.0 (Linux; Android 4.4; Nexus 4 Build/KRT16S) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.59 Mobile Safari/537.36',
 				[
-					Request::USER_AGENT_IE,
 					Request::USER_AGENT_ANDROID_MOBILE_CHROME,
 				],
 				true,

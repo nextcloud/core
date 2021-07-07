@@ -26,11 +26,10 @@ $config = \OC::$server->getConfig();
 $userSession = \OC::$server->getUserSession();
 
 $showgridview = $config->getUserValue($userSession->getUser()->getUID(), 'files', 'show_grid', false);
-$isIE = OC_Util::isIe();
 
 // renders the controls and table headers template
 $tmpl = new OCP\Template('files', 'simplelist', '');
 
 // gridview not available for ie
-$tmpl->assign('showgridview', $showgridview && !$isIE);
+$tmpl->assign('showgridview', $showgridview);
 $tmpl->printPage();

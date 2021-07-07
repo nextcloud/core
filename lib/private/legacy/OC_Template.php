@@ -120,11 +120,6 @@ class OC_Template extends \OC\Template\Base {
 			}
 			OC_Util::addScript('core', 'dist/main', true);
 
-			if (\OC::$server->getRequest()->isUserAgent([\OC\AppFramework\Http\Request::USER_AGENT_IE])) {
-				// shim for the davclient.js library
-				\OCP\Util::addScript('dist/files_iedavclient');
-			}
-
 			self::$initTemplateEngineFirstRun = false;
 		}
 	}

@@ -61,7 +61,6 @@ class BrowserErrorPagePlugin extends ServerPlugin {
 			return false;
 		}
 		return $request->isUserAgent([
-			Request::USER_AGENT_IE,
 			Request::USER_AGENT_MS_EDGE,
 			Request::USER_AGENT_CHROME,
 			Request::USER_AGENT_FIREFOX,

@@ -93,7 +93,6 @@ import {
 
 // When using capture groups the following parts are extracted the first is used as the version number, the second as the OS
 const userAgentMap = {
-	ie: /(?:MSIE|Trident|Trident\/7.0; rv)[ :](\d+)/,
 	// Microsoft Edge User Agent from https://msdn.microsoft.com/en-us/library/hh869301(v=vs.85).aspx
 	edge: /^Mozilla\/5\.0 \([^)]+\) AppleWebKit\/[0-9.]+ \(KHTML, like Gecko\) Chrome\/[0-9.]+ (?:Mobile Safari|Safari)\/[0-9.]+ Edge\/[0-9.]+$/,
 	// Firefox User Agent from https://developer.mozilla.org/en-US/docs/Web/HTTP/Gecko_user_agent_string_reference
@@ -118,7 +117,6 @@ const userAgentMap = {
 	sailfishBrowser: /(Sailfish).*SailfishBrowser\/(\d+)/,
 }
 const nameMap = {
-	ie: t('setting', 'Internet Explorer'),
 	edge: t('setting', 'Edge'),
 	firefox: t('setting', 'Firefox'),
 	chrome: t('setting', 'Google Chrome'),
@@ -135,7 +133,6 @@ const nameMap = {
 	sailfishBrowser: 'SailfishBrowser',
 }
 const iconMap = {
-	ie: 'icon-desktop',
 	edge: 'icon-desktop',
 	firefox: 'icon-desktop',
 	chrome: 'icon-desktop',
