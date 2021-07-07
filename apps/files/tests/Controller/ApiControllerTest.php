@@ -252,7 +252,7 @@ class ApiControllerTest extends TestCase {
 
 		$this->config->expects($this->once())
 			->method('setUserValue')
-			->with($this->user->getUID(), 'files', 'crop_image_previews', $crop);
+			->with($this->user->getUID(), 'files', 'crop_image_previews', '1');
 
 		$expected = new Http\Response();
 		$actual = $this->apiController->cropImagePreviews($crop);
