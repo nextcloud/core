@@ -504,14 +504,15 @@ class UserTest extends TestCase {
 			->method('deleteUser')
 			->willReturn($result);
 		$emitter = new PublicEmitter();
-		$user = new User('foo', $backend, $this->dispatcher, $emitter);
+		$userId = self::getUniqueID('foo');
+		$user = new User($userId, $backend, $this->dispatcher, $emitter);
 
 		/**
 		 * @param User $user
 		 */
-		$hook = function ($user) use ($test, &$hooksCalled) {
+		$hook = function ($user) use ($test, $userId, &$hooksCalled) {
 			$hooksCalled++;
-			$test->assertEquals('foo', $user->getUID());
+			$test->assertEquals($userId, $user->getUID());
 		};
 
 		$emitter->listen('\OC\User', 'preDelete', $hook);
@@ -527,11 +528,11 @@ class UserTest extends TestCase {
 		if ($result) {
 			$config->expects($this->once())
 				->method('deleteAllUserValues')
-				->with('foo');
+				->with($user->getUID());
 
 			$commentsManager->expects($this->once())
 				->method('deleteReferencesOfActor')
-				->with('users', 'foo');
+				->with('users', $user->getUID());
 			$commentsManager->expects($this->once())
 				->method('deleteReadMarksFromUser')
 				->with($user);
@@ -539,7 +540,7 @@ class UserTest extends TestCase {
 			$notification = $this->createMock(INotification::class);
 			$notification->expects($this->once())
 				->method('setUser')
-				->with('foo');
+				->with($user->getUID());
 
 			$notificationManager->expects($this->once())
 				->method('createNotification')

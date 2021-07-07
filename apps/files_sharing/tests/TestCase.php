@@ -47,10 +47,10 @@ use Test\Traits\MountProviderTrait;
 abstract class TestCase extends \Test\TestCase {
 	use MountProviderTrait;
 
-	public const TEST_FILES_SHARING_API_USER1 = "test-share-user1";
-	public const TEST_FILES_SHARING_API_USER2 = "test-share-user2";
-	public const TEST_FILES_SHARING_API_USER3 = "test-share-user3";
-	public const TEST_FILES_SHARING_API_USER4 = "test-share-user4";
+	public $TEST_FILES_SHARING_API_USER1 = "test-share-user1-";
+	public $TEST_FILES_SHARING_API_USER2 = "test-share-user2-";
+	public $TEST_FILES_SHARING_API_USER3 = "test-share-user3-";
+	public $TEST_FILES_SHARING_API_USER4 = "test-share-user4-";
 
 	public const TEST_FILES_SHARING_API_GROUP1 = "test-share-group1";
 
@@ -68,8 +68,8 @@ abstract class TestCase extends \Test\TestCase {
 	/** @var \OCP\Files\IRootFolder */
 	protected $rootFolder;
 
-	public static function setUpBeforeClass(): void {
-		parent::setUpBeforeClass();
+	protected function setUp(): void {
+		parent::setUp();
 
 		new Application();
 
@@ -81,13 +81,19 @@ abstract class TestCase extends \Test\TestCase {
 		\OC_Hook::clear('OCP\\Share');
 		\OC::registerShareHooks(\OC::$server->getSystemConfig());
 
+		// User Prefix
+		$this->TEST_FILES_SHARING_API_USER1 = self::getUniqueID($this->TEST_FILES_SHARING_API_USER1);
+		$this->TEST_FILES_SHARING_API_USER2 = self::getUniqueID($this->TEST_FILES_SHARING_API_USER2);
+		$this->TEST_FILES_SHARING_API_USER3 = self::getUniqueID($this->TEST_FILES_SHARING_API_USER3);
+		$this->TEST_FILES_SHARING_API_USER4 = self::getUniqueID($this->TEST_FILES_SHARING_API_USER4);
+
 		// create users
 		$backend = new \Test\Util\User\Dummy();
 		\OC_User::useBackend($backend);
-		$backend->createUser(self::TEST_FILES_SHARING_API_USER1, self::TEST_FILES_SHARING_API_USER1);
-		$backend->createUser(self::TEST_FILES_SHARING_API_USER2, self::TEST_FILES_SHARING_API_USER2);
-		$backend->createUser(self::TEST_FILES_SHARING_API_USER3, self::TEST_FILES_SHARING_API_USER3);
-		$backend->createUser(self::TEST_FILES_SHARING_API_USER4, self::TEST_FILES_SHARING_API_USER4);
+		$backend->createUser($this->TEST_FILES_SHARING_API_USER1, $this->TEST_FILES_SHARING_API_USER1);
+		$backend->createUser($this->TEST_FILES_SHARING_API_USER2, $this->TEST_FILES_SHARING_API_USER2);
+		$backend->createUser($this->TEST_FILES_SHARING_API_USER3, $this->TEST_FILES_SHARING_API_USER3);
+		$backend->createUser($this->TEST_FILES_SHARING_API_USER4, $this->TEST_FILES_SHARING_API_USER4);
 
 		// create group
 		$groupBackend = new \Test\Util\Group\Dummy();
@@ -96,56 +102,36 @@ abstract class TestCase extends \Test\TestCase {
 		$groupBackend->createGroup('group1');
 		$groupBackend->createGroup('group2');
 		$groupBackend->createGroup('group3');
-		$groupBackend->addToGroup(self::TEST_FILES_SHARING_API_USER1, 'group');
-		$groupBackend->addToGroup(self::TEST_FILES_SHARING_API_USER2, 'group');
-		$groupBackend->addToGroup(self::TEST_FILES_SHARING_API_USER3, 'group');
-		$groupBackend->addToGroup(self::TEST_FILES_SHARING_API_USER2, 'group1');
-		$groupBackend->addToGroup(self::TEST_FILES_SHARING_API_USER3, 'group2');
-		$groupBackend->addToGroup(self::TEST_FILES_SHARING_API_USER4, 'group3');
-		$groupBackend->addToGroup(self::TEST_FILES_SHARING_API_USER2, self::TEST_FILES_SHARING_API_GROUP1);
+		$groupBackend->addToGroup($this->TEST_FILES_SHARING_API_USER1, 'group');
+		$groupBackend->addToGroup($this->TEST_FILES_SHARING_API_USER2, 'group');
+		$groupBackend->addToGroup($this->TEST_FILES_SHARING_API_USER3, 'group');
+		$groupBackend->addToGroup($this->TEST_FILES_SHARING_API_USER2, 'group1');
+		$groupBackend->addToGroup($this->TEST_FILES_SHARING_API_USER3, 'group2');
+		$groupBackend->addToGroup($this->TEST_FILES_SHARING_API_USER4, 'group3');
+		$groupBackend->addToGroup($this->TEST_FILES_SHARING_API_USER2, self::TEST_FILES_SHARING_API_GROUP1);
 		\OC::$server->getGroupManager()->addBackend($groupBackend);
-	}
-
-	protected function setUp(): void {
-		parent::setUp();
 
 		//login as user1
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 
 		$this->data = 'foobar';
-		$this->view = new \OC\Files\View('/' . self::TEST_FILES_SHARING_API_USER1 . '/files');
+		$this->view = new \OC\Files\View('/' . $this->TEST_FILES_SHARING_API_USER1 . '/files');
 
 		$this->shareManager = \OC::$server->getShareManager();
 		$this->rootFolder = \OC::$server->getRootFolder();
 	}
 
 	protected function tearDown(): void {
-		$qb = \OC::$server->getDatabaseConnection()->getQueryBuilder();
-		$qb->delete('share');
-		$qb->execute();
-
-		$qb = \OC::$server->getDatabaseConnection()->getQueryBuilder();
-		$qb->delete('mounts');
-		$qb->execute();
-
-		$qb = \OC::$server->getDatabaseConnection()->getQueryBuilder();
-		$qb->delete('filecache');
-		$qb->execute();
-
-		parent::tearDown();
-	}
-
-	public static function tearDownAfterClass(): void {
 		// cleanup users
-		$user = \OC::$server->getUserManager()->get(self::TEST_FILES_SHARING_API_USER1);
+		$user = \OC::$server->getUserManager()->get($this->TEST_FILES_SHARING_API_USER1);
 		if ($user !== null) {
 			$user->delete();
 		}
-		$user = \OC::$server->getUserManager()->get(self::TEST_FILES_SHARING_API_USER2);
+		$user = \OC::$server->getUserManager()->get($this->TEST_FILES_SHARING_API_USER2);
 		if ($user !== null) {
 			$user->delete();
 		}
-		$user = \OC::$server->getUserManager()->get(self::TEST_FILES_SHARING_API_USER3);
+		$user = \OC::$server->getUserManager()->get($this->TEST_FILES_SHARING_API_USER3);
 		if ($user !== null) {
 			$user->delete();
 		}
@@ -166,7 +152,19 @@ abstract class TestCase extends \Test\TestCase {
 		\OC::$server->getGroupManager()->clearBackends();
 		\OC::$server->getGroupManager()->addBackend(new \OC\Group\Database());
 
-		parent::tearDownAfterClass();
+		$qb = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+		$qb->delete('share');
+		$qb->execute();
+
+		$qb = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+		$qb->delete('mounts');
+		$qb->execute();
+
+		$qb = \OC::$server->getDatabaseConnection()->getQueryBuilder();
+		$qb->delete('filecache');
+		$qb->execute();
+
+		parent::tearDown();
 	}
 
 	/**

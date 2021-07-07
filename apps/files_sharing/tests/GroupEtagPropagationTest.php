@@ -42,62 +42,62 @@ class GroupEtagPropagationTest extends PropagationTestCase {
 	 * "user4" (in group 3)
 	 */
 	protected function setUpShares() {
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER1] = [];
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER2] = [];
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER3] = [];
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER4] = [];
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER1] = [];
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER2] = [];
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER3] = [];
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER4] = [];
 
 		$this->rootView = new View('');
-		$this->loginAsUser(self::TEST_FILES_SHARING_API_USER1);
-		$view1 = new View('/' . self::TEST_FILES_SHARING_API_USER1 . '/files');
+		$this->loginAsUser($this->TEST_FILES_SHARING_API_USER1);
+		$view1 = new View('/' . $this->TEST_FILES_SHARING_API_USER1 . '/files');
 		$view1->mkdir('/test/sub');
 
 		$share = $this->share(
 			IShare::TYPE_GROUP,
 			'/test',
-			self::TEST_FILES_SHARING_API_USER1,
+			$this->TEST_FILES_SHARING_API_USER1,
 			'group1',
 			\OCP\Constants::PERMISSION_ALL
 		);
-		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER2);
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER1][''] = $view1->getFileInfo('')->getId();
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER1]['test'] = $view1->getFileInfo('test')->getId();
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER1]['test/sub'] = $view1->getFileInfo('test/sub')->getId();
+		$this->shareManager->acceptShare($share, $this->TEST_FILES_SHARING_API_USER2);
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER1][''] = $view1->getFileInfo('')->getId();
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER1]['test'] = $view1->getFileInfo('test')->getId();
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER1]['test/sub'] = $view1->getFileInfo('test/sub')->getId();
 
-		$this->loginAsUser(self::TEST_FILES_SHARING_API_USER2);
-		$view2 = new View('/' . self::TEST_FILES_SHARING_API_USER2 . '/files');
+		$this->loginAsUser($this->TEST_FILES_SHARING_API_USER2);
+		$view2 = new View('/' . $this->TEST_FILES_SHARING_API_USER2 . '/files');
 
 		$share = $this->share(
 			IShare::TYPE_GROUP,
 			'/test',
-			self::TEST_FILES_SHARING_API_USER2,
+			$this->TEST_FILES_SHARING_API_USER2,
 			'group2',
 			\OCP\Constants::PERMISSION_ALL
 		);
-		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER3);
+		$this->shareManager->acceptShare($share, $this->TEST_FILES_SHARING_API_USER3);
 		$share = $this->share(
 			IShare::TYPE_GROUP,
 			'/test/sub',
-			self::TEST_FILES_SHARING_API_USER2,
+			$this->TEST_FILES_SHARING_API_USER2,
 			'group3',
 			\OCP\Constants::PERMISSION_ALL
 		);
-		$this->shareManager->acceptShare($share, self::TEST_FILES_SHARING_API_USER4);
+		$this->shareManager->acceptShare($share, $this->TEST_FILES_SHARING_API_USER4);
 
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER2][''] = $view2->getFileInfo('')->getId();
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER2]['test'] = $view2->getFileInfo('test')->getId();
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER2]['test/sub'] = $view2->getFileInfo('test/sub')->getId();
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER2][''] = $view2->getFileInfo('')->getId();
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER2]['test'] = $view2->getFileInfo('test')->getId();
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER2]['test/sub'] = $view2->getFileInfo('test/sub')->getId();
 
-		$this->loginAsUser(self::TEST_FILES_SHARING_API_USER3);
-		$view3 = new View('/' . self::TEST_FILES_SHARING_API_USER3 . '/files');
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER3][''] = $view3->getFileInfo('')->getId();
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER3]['test'] = $view3->getFileInfo('test')->getId();
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER3]['test/sub'] = $view3->getFileInfo('test/sub')->getId();
+		$this->loginAsUser($this->TEST_FILES_SHARING_API_USER3);
+		$view3 = new View('/' . $this->TEST_FILES_SHARING_API_USER3 . '/files');
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER3][''] = $view3->getFileInfo('')->getId();
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER3]['test'] = $view3->getFileInfo('test')->getId();
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER3]['test/sub'] = $view3->getFileInfo('test/sub')->getId();
 
-		$this->loginAsUser(self::TEST_FILES_SHARING_API_USER4);
-		$view4 = new View('/' . self::TEST_FILES_SHARING_API_USER4 . '/files');
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER4][''] = $view4->getFileInfo('')->getId();
-		$this->fileIds[self::TEST_FILES_SHARING_API_USER4]['sub'] = $view4->getFileInfo('sub')->getId();
+		$this->loginAsUser($this->TEST_FILES_SHARING_API_USER4);
+		$view4 = new View('/' . $this->TEST_FILES_SHARING_API_USER4 . '/files');
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER4][''] = $view4->getFileInfo('')->getId();
+		$this->fileIds[$this->TEST_FILES_SHARING_API_USER4]['sub'] = $view4->getFileInfo('sub')->getId();
 
 		foreach ($this->fileIds as $user => $ids) {
 			$this->loginAsUser($user);
@@ -109,43 +109,43 @@ class GroupEtagPropagationTest extends PropagationTestCase {
 	}
 
 	public function testGroupReShareRecipientWrites() {
-		$this->loginAsUser(self::TEST_FILES_SHARING_API_USER3);
+		$this->loginAsUser($this->TEST_FILES_SHARING_API_USER3);
 
 		Filesystem::file_put_contents('/test/sub/file.txt', 'asd');
 
-		$this->assertEtagsChanged([self::TEST_FILES_SHARING_API_USER1, self::TEST_FILES_SHARING_API_USER2, self::TEST_FILES_SHARING_API_USER3, self::TEST_FILES_SHARING_API_USER4]);
+		$this->assertEtagsChanged([$this->TEST_FILES_SHARING_API_USER1, $this->TEST_FILES_SHARING_API_USER2, $this->TEST_FILES_SHARING_API_USER3, $this->TEST_FILES_SHARING_API_USER4]);
 
 		$this->assertAllUnchanged();
 	}
 
 	public function testGroupReShareSubFolderRecipientWrites() {
-		$this->loginAsUser(self::TEST_FILES_SHARING_API_USER4);
+		$this->loginAsUser($this->TEST_FILES_SHARING_API_USER4);
 
 		Filesystem::file_put_contents('/sub/file.txt', 'asd');
 
-		$this->assertEtagsChanged([self::TEST_FILES_SHARING_API_USER1, self::TEST_FILES_SHARING_API_USER2, self::TEST_FILES_SHARING_API_USER3, self::TEST_FILES_SHARING_API_USER4]);
+		$this->assertEtagsChanged([$this->TEST_FILES_SHARING_API_USER1, $this->TEST_FILES_SHARING_API_USER2, $this->TEST_FILES_SHARING_API_USER3, $this->TEST_FILES_SHARING_API_USER4]);
 
 		$this->assertAllUnchanged();
 	}
 
 	public function testRecipientUnsharesFromSelf() {
-		$this->loginAsUser(self::TEST_FILES_SHARING_API_USER2);
+		$this->loginAsUser($this->TEST_FILES_SHARING_API_USER2);
 		$this->assertTrue(
-			$this->rootView->unlink('/' . self::TEST_FILES_SHARING_API_USER2 . '/files/test')
+			$this->rootView->unlink('/' . $this->TEST_FILES_SHARING_API_USER2 . '/files/test')
 		);
-		$this->assertEtagsChanged([self::TEST_FILES_SHARING_API_USER2]);
+		$this->assertEtagsChanged([$this->TEST_FILES_SHARING_API_USER2]);
 
 		$this->assertAllUnchanged();
 	}
 
 	public function testRecipientUnsharesFromSelfUniqueGroupShare() {
-		$this->loginAsUser(self::TEST_FILES_SHARING_API_USER2);
+		$this->loginAsUser($this->TEST_FILES_SHARING_API_USER2);
 		// rename to create an extra entry in the share table
-		$this->rootView->rename('/' . self::TEST_FILES_SHARING_API_USER2 . '/files/test', '/' . self::TEST_FILES_SHARING_API_USER2 . '/files/test_renamed');
+		$this->rootView->rename('/' . $this->TEST_FILES_SHARING_API_USER2 . '/files/test', '/' . $this->TEST_FILES_SHARING_API_USER2 . '/files/test_renamed');
 		$this->assertTrue(
-			$this->rootView->unlink('/' . self::TEST_FILES_SHARING_API_USER2 . '/files/test_renamed')
+			$this->rootView->unlink('/' . $this->TEST_FILES_SHARING_API_USER2 . '/files/test_renamed')
 		);
-		$this->assertEtagsChanged([self::TEST_FILES_SHARING_API_USER2]);
+		$this->assertEtagsChanged([$this->TEST_FILES_SHARING_API_USER2]);
 
 		$this->assertAllUnchanged();
 	}

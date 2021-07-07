@@ -96,8 +96,8 @@ class ViewTest extends \Test\TestCase {
 		//login
 		$userManager = \OC::$server->getUserManager();
 		$groupManager = \OC::$server->getGroupManager();
-		$this->user = 'test';
-		$this->userObject = $userManager->createUser('test', 'test');
+		$this->user = self::getUniqueID('test');
+		$this->userObject = $userManager->createUser($this->user, 'test');
 
 		$this->groupObject = $groupManager->createGroup('group1');
 		$this->groupObject->addUser($this->userObject);
@@ -2195,7 +2195,7 @@ class ViewTest extends \Test\TestCase {
 	 * Test rename operation: unlock first path when second path was locked
 	 */
 	public function testLockFileRenameUnlockOnException() {
-		self::loginAsUser('test');
+		self::loginAsUser($this->user);
 
 		$view = new View('/' . $this->user . '/files/');
 
@@ -2228,31 +2228,31 @@ class ViewTest extends \Test\TestCase {
 	 * Test rename operation: unlock first path when second path was locked
 	 */
 	public function testGetOwner() {
-		self::loginAsUser('test');
+		self::loginAsUser($this->user);
 
-		$view = new View('/test/files/');
+		$view = new View("/{$this->user}/files/");
 
 		$path = 'foo.txt';
 		$view->file_put_contents($path, 'meh');
 
-		$this->assertEquals('test', $view->getFileInfo($path)->getOwner()->getUID());
+		$this->assertEquals($this->user, $view->getFileInfo($path)->getOwner()->getUID());
 
 		$folderInfo = $view->getDirectoryContent('');
 		$folderInfo = array_values(array_filter($folderInfo, function (FileInfo $info) {
 			return $info->getName() === 'foo.txt';
 		}));
 
-		$this->assertEquals('test', $folderInfo[0]->getOwner()->getUID());
+		$this->assertEquals($this->user, $folderInfo[0]->getOwner()->getUID());
 
 		$subStorage = new Temporary();
-		Filesystem::mount($subStorage, [], '/test/files/asd');
+		Filesystem::mount($subStorage, [], "/{$this->user}/files/asd");
 
 		$folderInfo = $view->getDirectoryContent('');
 		$folderInfo = array_values(array_filter($folderInfo, function (FileInfo $info) {
 			return $info->getName() === 'asd';
 		}));
 
-		$this->assertEquals('test', $folderInfo[0]->getOwner()->getUID());
+		$this->assertEquals($this->user, $folderInfo[0]->getOwner()->getUID());
 	}
 
 	public function lockFileRenameOrCopyCrossStorageDataProvider() {
@@ -2342,8 +2342,7 @@ class ViewTest extends \Test\TestCase {
 	 * Test locks when moving a mount point
 	 */
 	public function testLockMoveMountPoint() {
-		self::loginAsUser('test');
-
+		self::loginAsUser($this->user);
 		[$mount] = $this->createTestMovableMountPoints([
 			$this->user . '/files/substorage',
 		]);

@@ -80,15 +80,15 @@ class UnshareChildrenTest extends TestCase {
 		$this->share(
 			IShare::TYPE_USER,
 			$this->folder,
-			self::TEST_FILES_SHARING_API_USER1,
-			self::TEST_FILES_SHARING_API_USER2,
+			$this->TEST_FILES_SHARING_API_USER1,
+			$this->TEST_FILES_SHARING_API_USER2,
 			\OCP\Constants::PERMISSION_ALL
 		);
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		// one folder should be shared with the user
-		$shares = $this->shareManager->getSharedWith(self::TEST_FILES_SHARING_API_USER2, IShare::TYPE_USER);
+		$shares = $this->shareManager->getSharedWith($this->TEST_FILES_SHARING_API_USER2, IShare::TYPE_USER);
 		$this->assertCount(1, $shares);
 
 		// move shared folder to 'localDir'
@@ -98,13 +98,13 @@ class UnshareChildrenTest extends TestCase {
 
 		\OC\Files\Filesystem::unlink('localDir');
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		// after the parent directory was deleted the share should be unshared
-		$shares = $this->shareManager->getSharedWith(self::TEST_FILES_SHARING_API_USER2, IShare::TYPE_USER);
+		$shares = $this->shareManager->getSharedWith($this->TEST_FILES_SHARING_API_USER2, IShare::TYPE_USER);
 		$this->assertEmpty($shares);
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 
 		// the folder for the owner should still exists
 		$this->assertTrue(\OC\Files\Filesystem::file_exists($this->folder));

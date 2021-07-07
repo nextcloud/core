@@ -58,7 +58,7 @@ class ShareTest extends TestCase {
 	}
 
 	protected function tearDown(): void {
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 		$this->view->unlink($this->filename);
 		$this->view->deleteAll($this->folder);
 
@@ -72,43 +72,43 @@ class ShareTest extends TestCase {
 		$userManager = \OC::$server->getUserManager();
 
 		$testGroup = $groupManager->createGroup('testGroup');
-		$user1 = $userManager->get(self::TEST_FILES_SHARING_API_USER2);
-		$user2 = $userManager->get(self::TEST_FILES_SHARING_API_USER3);
+		$user1 = $userManager->get($this->TEST_FILES_SHARING_API_USER2);
+		$user2 = $userManager->get($this->TEST_FILES_SHARING_API_USER3);
 		$testGroup->addUser($user1);
 		$testGroup->addUser($user2);
 
 		$share1 = $this->share(
 			IShare::TYPE_USER,
 			$this->filename,
-			self::TEST_FILES_SHARING_API_USER1,
-			self::TEST_FILES_SHARING_API_USER2,
+			$this->TEST_FILES_SHARING_API_USER1,
+			$this->TEST_FILES_SHARING_API_USER2,
 			\OCP\Constants::PERMISSION_READ | \OCP\Constants::PERMISSION_UPDATE | \OCP\Constants::PERMISSION_SHARE
 		);
 
 		$share2 = $this->share(
 			IShare::TYPE_GROUP,
 			$this->filename,
-			self::TEST_FILES_SHARING_API_USER1,
+			$this->TEST_FILES_SHARING_API_USER1,
 			'testGroup',
 			\OCP\Constants::PERMISSION_READ | \OCP\Constants::PERMISSION_UPDATE | \OCP\Constants::PERMISSION_SHARE
 		);
-		$this->shareManager->acceptShare($share2, self::TEST_FILES_SHARING_API_USER2);
-		$this->shareManager->acceptShare($share2, self::TEST_FILES_SHARING_API_USER3);
+		$this->shareManager->acceptShare($share2, $this->TEST_FILES_SHARING_API_USER2);
+		$this->shareManager->acceptShare($share2, $this->TEST_FILES_SHARING_API_USER3);
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 		$this->assertTrue(\OC\Files\Filesystem::file_exists($this->filename));
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER3);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER3);
 		$this->assertTrue(\OC\Files\Filesystem::file_exists($this->filename));
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 		\OC\Files\Filesystem::unlink($this->filename);
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 		// both group share and user share should be gone
 		$this->assertFalse(\OC\Files\Filesystem::file_exists($this->filename));
 
 		// for user3 nothing should change
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER3);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER3);
 		$this->assertTrue(\OC\Files\Filesystem::file_exists($this->filename));
 
 		$this->shareManager->deleteShare($share1);
@@ -134,8 +134,8 @@ class ShareTest extends TestCase {
 		$share = $this->share(
 			IShare::TYPE_USER,
 			$this->filename,
-			self::TEST_FILES_SHARING_API_USER1,
-			self::TEST_FILES_SHARING_API_USER2,
+			$this->TEST_FILES_SHARING_API_USER1,
+			$this->TEST_FILES_SHARING_API_USER2,
 			\OCP\Constants::PERMISSION_READ | \OCP\Constants::PERMISSION_UPDATE | \OCP\Constants::PERMISSION_SHARE
 		);
 
@@ -144,12 +144,12 @@ class ShareTest extends TestCase {
 		$share = $this->share(
 			IShare::TYPE_USER,
 			$this->folder,
-			self::TEST_FILES_SHARING_API_USER1,
-			self::TEST_FILES_SHARING_API_USER2,
+			$this->TEST_FILES_SHARING_API_USER1,
+			$this->TEST_FILES_SHARING_API_USER2,
 			\OCP\Constants::PERMISSION_ALL
 		);
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		$this->assertTrue(\OC\Files\Filesystem::file_exists($this->filename));
 		$this->assertTrue(\OC\Files\Filesystem::file_exists('/Shared/subfolder/' . $this->folder));
@@ -161,27 +161,27 @@ class ShareTest extends TestCase {
 	public function testShareWithGroupUniqueName() {
 		$this->markTestSkipped('TODO: Disable because fails on drone');
 
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER1);
 		\OC\Files\Filesystem::file_put_contents('test.txt', 'test');
 
 		$share = $this->share(
 			IShare::TYPE_GROUP,
 			'test.txt',
-			self::TEST_FILES_SHARING_API_USER1,
+			$this->TEST_FILES_SHARING_API_USER1,
 			self::TEST_FILES_SHARING_API_GROUP1,
 			\OCP\Constants::PERMISSION_READ | \OCP\Constants::PERMISSION_UPDATE | \OCP\Constants::PERMISSION_SHARE
 		);
 
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
-		$shares = $this->shareManager->getSharedWith(self::TEST_FILES_SHARING_API_USER2, IShare::TYPE_GROUP);
+		$shares = $this->shareManager->getSharedWith($this->TEST_FILES_SHARING_API_USER2, IShare::TYPE_GROUP);
 		$share = $shares[0];
 		$this->assertSame('/test.txt' ,$share->getTarget());
 		$this->assertSame(19, $share->getPermissions());
 
 		\OC\Files\Filesystem::rename('test.txt', 'new test.txt');
 
-		$shares = $this->shareManager->getSharedWith(self::TEST_FILES_SHARING_API_USER2, IShare::TYPE_GROUP);
+		$shares = $this->shareManager->getSharedWith($this->TEST_FILES_SHARING_API_USER2, IShare::TYPE_GROUP);
 		$share = $shares[0];
 		$this->assertSame('/new test.txt' ,$share->getTarget());
 		$this->assertSame(19, $share->getPermissions());
@@ -189,8 +189,8 @@ class ShareTest extends TestCase {
 		$share->setPermissions(\OCP\Constants::PERMISSION_READ | \OCP\Constants::PERMISSION_UPDATE);
 		$this->shareManager->updateShare($share);
 
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER2);
-		$shares = $this->shareManager->getSharedWith(self::TEST_FILES_SHARING_API_USER2, IShare::TYPE_GROUP);
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER2);
+		$shares = $this->shareManager->getSharedWith($this->TEST_FILES_SHARING_API_USER2, IShare::TYPE_GROUP);
 		$share = $shares[0];
 
 		$this->assertSame('/new test.txt' ,$share->getTarget());
@@ -207,8 +207,8 @@ class ShareTest extends TestCase {
 			$this->share(
 				IShare::TYPE_USER,
 				$this->filename,
-				self::TEST_FILES_SHARING_API_USER1,
-				self::TEST_FILES_SHARING_API_USER2,
+				$this->TEST_FILES_SHARING_API_USER1,
+				$this->TEST_FILES_SHARING_API_USER2,
 				$permission
 			);
 		} catch (\Exception $e) {
@@ -238,15 +238,15 @@ class ShareTest extends TestCase {
 		$this->share(
 			IShare::TYPE_USER,
 			$this->filename,
-			self::TEST_FILES_SHARING_API_USER1,
-			self::TEST_FILES_SHARING_API_USER2,
+			$this->TEST_FILES_SHARING_API_USER1,
+			$this->TEST_FILES_SHARING_API_USER2,
 			\OCP\Constants::PERMISSION_READ
 		);
 
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		$info = \OC\Files\Filesystem::getFileInfo($this->filename);
 
-		$this->assertSame(self::TEST_FILES_SHARING_API_USER1, $info->getOwner()->getUID());
+		$this->assertSame($this->TEST_FILES_SHARING_API_USER1, $info->getOwner()->getUID());
 	}
 }

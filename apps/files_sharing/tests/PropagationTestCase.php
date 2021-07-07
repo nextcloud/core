@@ -98,8 +98,8 @@ abstract class PropagationTestCase extends TestCase {
 	}
 
 	protected function assertAllUnchanged() {
-		$users = [self::TEST_FILES_SHARING_API_USER1, self::TEST_FILES_SHARING_API_USER2,
-			self::TEST_FILES_SHARING_API_USER3, self::TEST_FILES_SHARING_API_USER4];
+		$users = [$this->TEST_FILES_SHARING_API_USER1, $this->TEST_FILES_SHARING_API_USER2,
+			$this->TEST_FILES_SHARING_API_USER3, $this->TEST_FILES_SHARING_API_USER4];
 		$this->assertEtagsNotChanged($users);
 	}
 }

@@ -88,13 +88,13 @@ class UpdaterTest extends TestCase {
 		$this->share(
 			IShare::TYPE_USER,
 			$this->folder,
-			self::TEST_FILES_SHARING_API_USER1,
-			self::TEST_FILES_SHARING_API_USER2,
+			$this->TEST_FILES_SHARING_API_USER1,
+			$this->TEST_FILES_SHARING_API_USER2,
 			\OCP\Constants::PERMISSION_ALL
 		);
 
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER2);
-		$view = new \OC\Files\View('/' . self::TEST_FILES_SHARING_API_USER2 . '/files');
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER2);
+		$view = new \OC\Files\View('/' . $this->TEST_FILES_SHARING_API_USER2 . '/files');
 
 		// check if user2 can see the shared folder
 		$this->assertTrue($view->file_exists($this->folder));
@@ -113,15 +113,15 @@ class UpdaterTest extends TestCase {
 
 		$view->unlink('localFolder');
 
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		// shared folder should be unshared
 		$foldersShared = \OC\Share\Share::getItemsSharedWith('folder');
 		$this->assertTrue(empty($foldersShared));
 
 		// trashbin should contain the local file but not the mount point
-		$rootView = new \OC\Files\View('/' . self::TEST_FILES_SHARING_API_USER2);
-		$trashContent = \OCA\Files_Trashbin\Helper::getTrashFiles('/', self::TEST_FILES_SHARING_API_USER2);
+		$rootView = new \OC\Files\View('/' . $this->TEST_FILES_SHARING_API_USER2);
+		$trashContent = \OCA\Files_Trashbin\Helper::getTrashFiles('/', $this->TEST_FILES_SHARING_API_USER2);
 		$this->assertSame(1, count($trashContent));
 		$firstElement = reset($trashContent);
 		$timestamp = $firstElement['mtime'];
@@ -157,7 +157,7 @@ class UpdaterTest extends TestCase {
 		$oldShareFolder = $config->getSystemValue('share_folder');
 		$config->setSystemValue('share_folder', $shareFolder);
 
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		$beforeShareRoot = \OC\Files\Filesystem::getFileInfo('');
 		$etagBeforeShareRoot = $beforeShareRoot->getEtag();
@@ -167,17 +167,17 @@ class UpdaterTest extends TestCase {
 		$beforeShareDir = \OC\Files\Filesystem::getFileInfo($shareFolder);
 		$etagBeforeShareDir = $beforeShareDir->getEtag();
 
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER1);
 
 		$share = $this->share(
 			IShare::TYPE_USER,
 			$this->folder,
-			self::TEST_FILES_SHARING_API_USER1,
-			self::TEST_FILES_SHARING_API_USER2,
+			$this->TEST_FILES_SHARING_API_USER1,
+			$this->TEST_FILES_SHARING_API_USER2,
 			\OCP\Constants::PERMISSION_ALL
 		);
 
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		$afterShareRoot = \OC\Files\Filesystem::getFileInfo('');
 		$etagAfterShareRoot = $afterShareRoot->getEtag();
@@ -193,7 +193,7 @@ class UpdaterTest extends TestCase {
 		$this->assertTrue($etagBeforeShareDir !== $etagAfterShareDir);
 
 		// cleanup
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER1);
 		$this->shareManager->deleteShare($share);
 
 		$config->setSystemValue('share_folder', $oldShareFolder);
@@ -208,12 +208,12 @@ class UpdaterTest extends TestCase {
 		$share = $this->share(
 			IShare::TYPE_USER,
 			$this->folder,
-			self::TEST_FILES_SHARING_API_USER1,
-			self::TEST_FILES_SHARING_API_USER2,
+			$this->TEST_FILES_SHARING_API_USER1,
+			$this->TEST_FILES_SHARING_API_USER2,
 			\OCP\Constants::PERMISSION_ALL
 		);
 
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		// make sure that the shared folder exists
 		$this->assertTrue(\OC\Files\Filesystem::file_exists($this->folder));
@@ -225,12 +225,12 @@ class UpdaterTest extends TestCase {
 		\OC\Files\Filesystem::rename($this->folder, 'oldTarget/subfolder/' . $this->folder);
 
 		// re-login to make sure that the new mount points are initialized
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		\OC\Files\Filesystem::rename('/oldTarget', '/newTarget/oldTarget');
 
 		// re-login to make sure that the new mount points are initialized
-		$this->loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		$this->loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		$this->assertTrue(\OC\Files\Filesystem::file_exists('/newTarget/oldTarget/subfolder/' . $this->folder));
 

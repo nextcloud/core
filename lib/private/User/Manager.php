@@ -377,6 +377,10 @@ class Manager extends PublicEmitter implements IUserManager {
 			throw new HintException($l->t('The user limit has been reached and the user was not created.'));
 		}
 
+		if (\OC::$server->get(UsernameDuplicationPreventionManager::class)->wasUsed($uid)) {
+			$l = \OC::$server->getL10N('lib');
+			throw new HintException($l->t('The user name has already been used previously.'));
+		}
 		$localBackends = [];
 		foreach ($this->backends as $backend) {
 			if ($backend instanceof Database) {

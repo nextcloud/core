@@ -78,7 +78,7 @@ class FileTest extends TestCase {
 
 		\OC_Hook::clear();
 
-		$this->user = 'test_user';
+		$this->user = self::getUniqueID('test_user');
 		$this->createUser($this->user, 'pass');
 
 		$this->loginAsUser($this->user);

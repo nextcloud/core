@@ -48,6 +48,11 @@ return [
 			'verb' => 'DELETE',
 		],
 		[
+			'name' => 'FlushUsedUserNames#executeFlush',
+			'url' => '/api/v1/flushDupeUsernames',
+			'verb' => 'POST',
+		],
+		[
 			'name' => 'Locking#isLockingEnabled',
 			'url' => '/api/v1/lockprovisioning',
 			'verb' => 'GET',

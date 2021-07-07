@@ -49,24 +49,24 @@ abstract class TestCase extends \Test\TestCase {
 		// create users
 		$backend = new \Test\Util\User\Dummy();
 		\OC_User::useBackend($backend);
-		$backend->createUser(self::TEST_FILES_SHARING_API_USER1, self::TEST_FILES_SHARING_API_USER1);
-		$backend->createUser(self::TEST_FILES_SHARING_API_USER2, self::TEST_FILES_SHARING_API_USER2);
+		$backend->createUser($this->TEST_FILES_SHARING_API_USER1, $this->TEST_FILES_SHARING_API_USER1);
+		$backend->createUser($this->TEST_FILES_SHARING_API_USER2, $this->TEST_FILES_SHARING_API_USER2);
 	}
 
 	protected function setUp(): void {
 		parent::setUp();
 
 		//login as user1
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 	}
 
 	public static function tearDownAfterClass(): void {
 		// cleanup users
-		$user = \OC::$server->getUserManager()->get(self::TEST_FILES_SHARING_API_USER1);
+		$user = \OC::$server->getUserManager()->get($this->TEST_FILES_SHARING_API_USER1);
 		if ($user !== null) {
 			$user->delete();
 		}
-		$user = \OC::$server->getUserManager()->get(self::TEST_FILES_SHARING_API_USER2);
+		$user = \OC::$server->getUserManager()->get($this->TEST_FILES_SHARING_API_USER2);
 		if ($user !== null) {
 			$user->delete();
 		}

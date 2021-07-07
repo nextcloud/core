@@ -68,12 +68,12 @@ class CacheTest extends TestCase {
 
 
 		$userManager = \OC::$server->getUserManager();
-		$userManager->get(self::TEST_FILES_SHARING_API_USER1)->setDisplayName('User One');
-		$userManager->get(self::TEST_FILES_SHARING_API_USER2)->setDisplayName('User Two');
+		$userManager->get($this->TEST_FILES_SHARING_API_USER1)->setDisplayName('User One');
+		$userManager->get($this->TEST_FILES_SHARING_API_USER2)->setDisplayName('User Two');
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 
-		$this->user2View = new \OC\Files\View('/'. self::TEST_FILES_SHARING_API_USER2 . '/files');
+		$this->user2View = new \OC\Files\View('/'. $this->TEST_FILES_SHARING_API_USER2 . '/files');
 
 		// prepare user1's dir structure
 		$this->view->mkdir('container');
@@ -94,14 +94,14 @@ class CacheTest extends TestCase {
 		$this->ownerStorage->getScanner()->scan('');
 
 		// share "shareddir" with user2
-		$rootFolder = \OC::$server->getUserFolder(self::TEST_FILES_SHARING_API_USER1);
+		$rootFolder = \OC::$server->getUserFolder($this->TEST_FILES_SHARING_API_USER1);
 
 		$node = $rootFolder->get('container/shareddir');
 		$share = $this->shareManager->newShare();
 		$share->setNode($node)
 			->setShareType(IShare::TYPE_USER)
-			->setSharedWith(self::TEST_FILES_SHARING_API_USER2)
-			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
+			->setSharedWith($this->TEST_FILES_SHARING_API_USER2)
+			->setSharedBy($this->TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL);
 		$share = $this->shareManager->createShare($share);
 		$share->setStatus(IShare::STATUS_ACCEPTED);
@@ -111,18 +111,18 @@ class CacheTest extends TestCase {
 		$share = $this->shareManager->newShare();
 		$share->setNode($node)
 			->setShareType(IShare::TYPE_USER)
-			->setSharedWith(self::TEST_FILES_SHARING_API_USER2)
-			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
+			->setSharedWith($this->TEST_FILES_SHARING_API_USER2)
+			->setSharedBy($this->TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL & ~(\OCP\Constants::PERMISSION_CREATE | \OCP\Constants::PERMISSION_DELETE));
 		$share = $this->shareManager->createShare($share);
 		$share->setStatus(IShare::STATUS_ACCEPTED);
 		$this->shareManager->updateShare($share);
 
 		// login as user2
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		// retrieve the shared storage
-		$secondView = new \OC\Files\View('/' . self::TEST_FILES_SHARING_API_USER2);
+		$secondView = new \OC\Files\View('/' . $this->TEST_FILES_SHARING_API_USER2);
 		[$this->sharedStorage,] = $secondView->resolvePath('files/shareddir');
 		$this->sharedCache = $this->sharedStorage->getCache();
 	}
@@ -132,9 +132,9 @@ class CacheTest extends TestCase {
 			$this->sharedCache->clear();
 		}
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 
-		$shares = $this->shareManager->getSharesBy(self::TEST_FILES_SHARING_API_USER1, IShare::TYPE_USER);
+		$shares = $this->shareManager->getSharesBy($this->TEST_FILES_SHARING_API_USER1, IShare::TYPE_USER);
 		foreach ($shares as $share) {
 			$this->shareManager->deleteShare($share);
 		}
@@ -258,14 +258,14 @@ class CacheTest extends TestCase {
 					'name' => 'shareddir',
 					'path' => 'files/shareddir',
 					'mimetype' => 'httpd/unix-directory',
-					'uid_owner' => self::TEST_FILES_SHARING_API_USER1,
+					'uid_owner' => $this->TEST_FILES_SHARING_API_USER1,
 					'displayname_owner' => 'User One',
 				],
 				[
 					'name' => 'shared single file.txt',
 					'path' => 'files/shared single file.txt',
 					'mimetype' => 'text/plain',
-					'uid_owner' => self::TEST_FILES_SHARING_API_USER1,
+					'uid_owner' => $this->TEST_FILES_SHARING_API_USER1,
 					'displayname_owner' => 'User One',
 				],
 			],
@@ -282,21 +282,21 @@ class CacheTest extends TestCase {
 					'name' => 'bar.txt',
 					'path' => 'bar.txt',
 					'mimetype' => 'text/plain',
-					'uid_owner' => self::TEST_FILES_SHARING_API_USER1,
+					'uid_owner' => $this->TEST_FILES_SHARING_API_USER1,
 					'displayname_owner' => 'User One',
 				],
 				[
 					'name' => 'emptydir',
 					'path' => 'emptydir',
 					'mimetype' => 'httpd/unix-directory',
-					'uid_owner' => self::TEST_FILES_SHARING_API_USER1,
+					'uid_owner' => $this->TEST_FILES_SHARING_API_USER1,
 					'displayname_owner' => 'User One',
 				],
 				[
 					'name' => 'subdir',
 					'path' => 'subdir',
 					'mimetype' => 'httpd/unix-directory',
-					'uid_owner' => self::TEST_FILES_SHARING_API_USER1,
+					'uid_owner' => $this->TEST_FILES_SHARING_API_USER1,
 					'displayname_owner' => 'User One',
 				],
 			],
@@ -305,23 +305,23 @@ class CacheTest extends TestCase {
 	}
 
 	public function testGetFolderContentsWhenSubSubdirShared() {
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 
-		$rootFolder = \OC::$server->getUserFolder(self::TEST_FILES_SHARING_API_USER1);
+		$rootFolder = \OC::$server->getUserFolder($this->TEST_FILES_SHARING_API_USER1);
 		$node = $rootFolder->get('container/shareddir/subdir');
 		$share = $this->shareManager->newShare();
 		$share->setNode($node)
 			->setShareType(IShare::TYPE_USER)
-			->setSharedWith(self::TEST_FILES_SHARING_API_USER3)
-			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
+			->setSharedWith($this->TEST_FILES_SHARING_API_USER3)
+			->setSharedBy($this->TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL);
 		$share = $this->shareManager->createShare($share);
 		$share->setStatus(IShare::STATUS_ACCEPTED);
 		$this->shareManager->updateShare($share);
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER3);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER3);
 
-		$thirdView = new \OC\Files\View('/' . self::TEST_FILES_SHARING_API_USER3 . '/files');
+		$thirdView = new \OC\Files\View('/' . $this->TEST_FILES_SHARING_API_USER3 . '/files');
 		$results = $thirdView->getDirectoryContent('/subdir');
 
 		$this->verifyFiles(
@@ -330,28 +330,28 @@ class CacheTest extends TestCase {
 					'name' => 'another too.txt',
 					'path' => 'another too.txt',
 					'mimetype' => 'text/plain',
-					'uid_owner' => self::TEST_FILES_SHARING_API_USER1,
+					'uid_owner' => $this->TEST_FILES_SHARING_API_USER1,
 					'displayname_owner' => 'User One',
 				],
 				[
 					'name' => 'another.txt',
 					'path' => 'another.txt',
 					'mimetype' => 'text/plain',
-					'uid_owner' => self::TEST_FILES_SHARING_API_USER1,
+					'uid_owner' => $this->TEST_FILES_SHARING_API_USER1,
 					'displayname_owner' => 'User One',
 				],
 				[
 					'name' => 'not a text file.xml',
 					'path' => 'not a text file.xml',
 					'mimetype' => 'application/xml',
-					'uid_owner' => self::TEST_FILES_SHARING_API_USER1,
+					'uid_owner' => $this->TEST_FILES_SHARING_API_USER1,
 					'displayname_owner' => 'User One',
 				],
 			],
 			$results
 		);
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 
 		$this->shareManager->deleteShare($share);
 	}
@@ -389,17 +389,17 @@ class CacheTest extends TestCase {
 	}
 
 	public function testGetPathByIdDirectShare() {
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 		\OC\Files\Filesystem::file_put_contents('test.txt', 'foo');
 		$info = \OC\Files\Filesystem::getFileInfo('test.txt');
 
-		$rootFolder = \OC::$server->getUserFolder(self::TEST_FILES_SHARING_API_USER1);
+		$rootFolder = \OC::$server->getUserFolder($this->TEST_FILES_SHARING_API_USER1);
 		$node = $rootFolder->get('test.txt');
 		$share = $this->shareManager->newShare();
 		$share->setNode($node)
 			->setShareType(IShare::TYPE_USER)
-			->setSharedWith(self::TEST_FILES_SHARING_API_USER2)
-			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
+			->setSharedWith($this->TEST_FILES_SHARING_API_USER2)
+			->setSharedBy($this->TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_READ | \OCP\Constants::PERMISSION_UPDATE | \OCP\Constants::PERMISSION_SHARE);
 		$share = $this->shareManager->createShare($share);
 		$share->setStatus(IShare::STATUS_ACCEPTED);
@@ -407,9 +407,9 @@ class CacheTest extends TestCase {
 
 		\OC_Util::tearDownFS();
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 		$this->assertTrue(\OC\Files\Filesystem::file_exists('/test.txt'));
-		[$sharedStorage] = \OC\Files\Filesystem::resolvePath('/' . self::TEST_FILES_SHARING_API_USER2 . '/files/test.txt');
+		[$sharedStorage] = \OC\Files\Filesystem::resolvePath('/' . $this->TEST_FILES_SHARING_API_USER2 . '/files/test.txt');
 		/**
 		 * @var \OCA\Files_Sharing\SharedStorage $sharedStorage
 		 */
@@ -419,29 +419,29 @@ class CacheTest extends TestCase {
 	}
 
 	public function testGetPathByIdShareSubFolder() {
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 		\OC\Files\Filesystem::mkdir('foo');
 		\OC\Files\Filesystem::mkdir('foo/bar');
 		\OC\Files\Filesystem::touch('foo/bar/test.txt');
 		$folderInfo = \OC\Files\Filesystem::getFileInfo('foo');
 		$fileInfo = \OC\Files\Filesystem::getFileInfo('foo/bar/test.txt');
 
-		$rootFolder = \OC::$server->getUserFolder(self::TEST_FILES_SHARING_API_USER1);
+		$rootFolder = \OC::$server->getUserFolder($this->TEST_FILES_SHARING_API_USER1);
 		$node = $rootFolder->get('foo');
 		$share = $this->shareManager->newShare();
 		$share->setNode($node)
 			->setShareType(IShare::TYPE_USER)
-			->setSharedWith(self::TEST_FILES_SHARING_API_USER2)
-			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
+			->setSharedWith($this->TEST_FILES_SHARING_API_USER2)
+			->setSharedBy($this->TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL);
 		$share = $this->shareManager->createShare($share);
 		$share->setStatus(IShare::STATUS_ACCEPTED);
 		$this->shareManager->updateShare($share);
 		\OC_Util::tearDownFS();
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 		$this->assertTrue(\OC\Files\Filesystem::file_exists('/foo'));
-		[$sharedStorage] = \OC\Files\Filesystem::resolvePath('/' . self::TEST_FILES_SHARING_API_USER2 . '/files/foo');
+		[$sharedStorage] = \OC\Files\Filesystem::resolvePath('/' . $this->TEST_FILES_SHARING_API_USER2 . '/files/foo');
 		/**
 		 * @var \OCA\Files_Sharing\SharedStorage $sharedStorage
 		 */
@@ -452,28 +452,28 @@ class CacheTest extends TestCase {
 	}
 
 	public function testNumericStorageId() {
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 		\OC\Files\Filesystem::mkdir('foo');
 
-		$rootFolder = \OC::$server->getUserFolder(self::TEST_FILES_SHARING_API_USER1);
+		$rootFolder = \OC::$server->getUserFolder($this->TEST_FILES_SHARING_API_USER1);
 		$node = $rootFolder->get('foo');
 		$share = $this->shareManager->newShare();
 		$share->setNode($node)
 			->setShareType(IShare::TYPE_USER)
-			->setSharedWith(self::TEST_FILES_SHARING_API_USER2)
-			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
+			->setSharedWith($this->TEST_FILES_SHARING_API_USER2)
+			->setSharedBy($this->TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL);
 		$share = $this->shareManager->createShare($share);
 		$share->setStatus(IShare::STATUS_ACCEPTED);
 		$this->shareManager->updateShare($share);
 		\OC_Util::tearDownFS();
 
-		[$sourceStorage] = \OC\Files\Filesystem::resolvePath('/' . self::TEST_FILES_SHARING_API_USER1 . '/files/foo');
+		[$sourceStorage] = \OC\Files\Filesystem::resolvePath('/' . $this->TEST_FILES_SHARING_API_USER1 . '/files/foo');
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 		$this->assertTrue(\OC\Files\Filesystem::file_exists('/foo'));
 		/** @var SharedStorage $sharedStorage */
-		[$sharedStorage] = \OC\Files\Filesystem::resolvePath('/' . self::TEST_FILES_SHARING_API_USER2 . '/files/foo');
+		[$sharedStorage] = \OC\Files\Filesystem::resolvePath('/' . $this->TEST_FILES_SHARING_API_USER2 . '/files/foo');
 
 		$this->assertEquals($sourceStorage->getCache()->getNumericStorageId(), $sharedStorage->getCache()->getNumericStorageId());
 	}
@@ -488,29 +488,29 @@ class CacheTest extends TestCase {
 			'root' => 'jail'
 		]);
 		$sourceStorage->getScanner()->scan('');
-		$this->registerMount(self::TEST_FILES_SHARING_API_USER1, $jailedSource, '/' . self::TEST_FILES_SHARING_API_USER1 . '/files/foo');
+		$this->registerMount($this->TEST_FILES_SHARING_API_USER1, $jailedSource, '/' . $this->TEST_FILES_SHARING_API_USER1 . '/files/foo');
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 
-		$rootFolder = \OC::$server->getUserFolder(self::TEST_FILES_SHARING_API_USER1);
+		$rootFolder = \OC::$server->getUserFolder($this->TEST_FILES_SHARING_API_USER1);
 		$node = $rootFolder->get('foo/sub');
 		$share = $this->shareManager->newShare();
 		$share->setNode($node)
 			->setShareType(IShare::TYPE_USER)
-			->setSharedWith(self::TEST_FILES_SHARING_API_USER2)
-			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
+			->setSharedWith($this->TEST_FILES_SHARING_API_USER2)
+			->setSharedBy($this->TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL);
 		$share = $this->shareManager->createShare($share);
 		$share->setStatus(IShare::STATUS_ACCEPTED);
 		$this->shareManager->updateShare($share);
 		\OC_Util::tearDownFS();
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 		$this->assertEquals('foo', \OC\Files\Filesystem::file_get_contents('/sub/foo.txt'));
 
 		\OC\Files\Filesystem::file_put_contents('/sub/bar.txt', 'bar');
 		/** @var SharedStorage $sharedStorage */
-		[$sharedStorage] = \OC\Files\Filesystem::resolvePath('/' . self::TEST_FILES_SHARING_API_USER2 . '/files/sub');
+		[$sharedStorage] = \OC\Files\Filesystem::resolvePath('/' . $this->TEST_FILES_SHARING_API_USER2 . '/files/sub');
 
 		$this->assertTrue($sharedStorage->getCache()->inCache('bar.txt'));
 
@@ -527,27 +527,27 @@ class CacheTest extends TestCase {
 			'root' => 'jail'
 		]);
 		$sourceStorage->getScanner()->scan('');
-		$this->registerMount(self::TEST_FILES_SHARING_API_USER1, $jailedSource, '/' . self::TEST_FILES_SHARING_API_USER1 . '/files/foo');
+		$this->registerMount($this->TEST_FILES_SHARING_API_USER1, $jailedSource, '/' . $this->TEST_FILES_SHARING_API_USER1 . '/files/foo');
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 
-		$rootFolder = \OC::$server->getUserFolder(self::TEST_FILES_SHARING_API_USER1);
+		$rootFolder = \OC::$server->getUserFolder($this->TEST_FILES_SHARING_API_USER1);
 		$node = $rootFolder->get('foo/sub');
 		$share = $this->shareManager->newShare();
 		$share->setNode($node)
 			->setShareType(IShare::TYPE_USER)
-			->setSharedWith(self::TEST_FILES_SHARING_API_USER2)
-			->setSharedBy(self::TEST_FILES_SHARING_API_USER1)
+			->setSharedWith($this->TEST_FILES_SHARING_API_USER2)
+			->setSharedBy($this->TEST_FILES_SHARING_API_USER1)
 			->setPermissions(\OCP\Constants::PERMISSION_ALL);
 		$share = $this->shareManager->createShare($share);
 		$share->setStatus(IShare::STATUS_ACCEPTED);
 		$this->shareManager->updateShare($share);
 		\OC_Util::tearDownFS();
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		/** @var SharedStorage $sharedStorage */
-		[$sharedStorage] = \OC\Files\Filesystem::resolvePath('/' . self::TEST_FILES_SHARING_API_USER2 . '/files/sub');
+		[$sharedStorage] = \OC\Files\Filesystem::resolvePath('/' . $this->TEST_FILES_SHARING_API_USER2 . '/files/sub');
 
 		$results = $sharedStorage->getCache()->search("foo.txt");
 		$this->assertCount(1, $results);

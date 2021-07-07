@@ -52,10 +52,7 @@ class UpdaterLegacyTest extends \Test\TestCase {
 		$this->scanner->scan('');
 		$this->cache = $this->storage->getCache();
 
-		if (!self::$user) {
-			self::$user = $this->getUniqueID();
-		}
-
+		self::$user = $this->getUniqueID();
 		\OC::$server->getUserManager()->createUser(self::$user, 'password');
 		$this->loginAsUser(self::$user);
 

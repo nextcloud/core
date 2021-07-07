@@ -893,8 +893,8 @@ class FederatedShareProviderTest extends \Test\TestCase {
 		$userManager = \OC::$server->getUserManager();
 		$rootFolder = \OC::$server->getRootFolder();
 
-		$u1 = $userManager->createUser('testFed', md5(time()));
-		$u2 = $userManager->createUser('testFed2', md5(time()));
+		$u1 = $userManager->createUser(self::getUniqueID('testFed'), md5(time()));
+		$u2 = $userManager->createUser(self::getUniqueID('testFed2'), md5(time()));
 
 		$folder1 = $rootFolder->getUserFolder($u1->getUID())->newFolder('foo');
 		$file1 = $folder1->newFile('bar1');
@@ -947,7 +947,7 @@ class FederatedShareProviderTest extends \Test\TestCase {
 		$userManager = \OC::$server->getUserManager();
 		$rootFolder = \OC::$server->getRootFolder();
 
-		$u1 = $userManager->createUser('testFed', md5(time()));
+		$u1 = $userManager->createUser(self::getUniqueID('testFed'), md5(time()));
 
 		$folder1 = $rootFolder->getUserFolder($u1->getUID())->newFolder('foo');
 		$file1 = $folder1->newFile('bar1');

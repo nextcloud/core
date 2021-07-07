@@ -21,9 +21,9 @@ use Psr\Log\LoggerInterface;
  * @group DB
  */
 class AppTest extends \Test\TestCase {
-	public const TEST_USER1 = 'user1';
-	public const TEST_USER2 = 'user2';
-	public const TEST_USER3 = 'user3';
+	public $TEST_USER1 = 'user1-';
+	public $TEST_USER2 = 'user2-';
+	public $TEST_USER3 = 'user3-';
 	public const TEST_GROUP1 = 'group1';
 	public const TEST_GROUP2 = 'group2';
 
@@ -304,6 +304,13 @@ class AppTest extends \Test\TestCase {
 		];
 	}
 
+	public function setUp(): void {
+		parent::setUp();
+		$this->TEST_USER1 = self::getUniqueID($this->TEST_USER1);
+		$this->TEST_USER2 = self::getUniqueID($this->TEST_USER2);
+		$this->TEST_USER3 = self::getUniqueID($this->TEST_USER3);
+	}
+
 	/**
 	 * @dataProvider appVersionsProvider
 	 */
@@ -330,73 +337,6 @@ class AppTest extends \Test\TestCase {
 	 */
 	public function appConfigValuesProvider() {
 		return [
-			// logged in user1
-			[
-				self::TEST_USER1,
-				[
-					'files',
-					'app1',
-					'app3',
-					'appforgroup1',
-					'appforgroup12',
-					'cloud_federation_api',
-					'dav',
-					'federatedfilesharing',
-					'lookup_server_connector',
-					'oauth2',
-					'provisioning_api',
-					'settings',
-					'twofactor_backupcodes',
-					'viewer',
-					'workflowengine',
-				],
-				false
-			],
-			// logged in user2
-			[
-				self::TEST_USER2,
-				[
-					'files',
-					'app1',
-					'app3',
-					'appforgroup12',
-					'appforgroup2',
-					'cloud_federation_api',
-					'dav',
-					'federatedfilesharing',
-					'lookup_server_connector',
-					'oauth2',
-					'provisioning_api',
-					'settings',
-					'twofactor_backupcodes',
-					'viewer',
-					'workflowengine',
-				],
-				false
-			],
-			// logged in user3
-			[
-				self::TEST_USER3,
-				[
-					'files',
-					'app1',
-					'app3',
-					'appforgroup1',
-					'appforgroup12',
-					'appforgroup2',
-					'cloud_federation_api',
-					'dav',
-					'federatedfilesharing',
-					'lookup_server_connector',
-					'oauth2',
-					'provisioning_api',
-					'settings',
-					'twofactor_backupcodes',
-					'viewer',
-					'workflowengine',
-				],
-				false
-			],
 			//  no user, returns all apps
 			[
 				null,
@@ -420,9 +360,76 @@ class AppTest extends \Test\TestCase {
 				],
 				false,
 			],
+			// logged in user1
+			[
+				$this->TEST_USER1,
+				[
+					'files',
+					'app1',
+					'app3',
+					'appforgroup1',
+					'appforgroup12',
+					'cloud_federation_api',
+					'dav',
+					'federatedfilesharing',
+					'lookup_server_connector',
+					'oauth2',
+					'provisioning_api',
+					'settings',
+					'twofactor_backupcodes',
+					'viewer',
+					'workflowengine',
+				],
+				false
+			],
+			// logged in user2
+			[
+				$this->TEST_USER2,
+				[
+					'files',
+					'app1',
+					'app3',
+					'appforgroup12',
+					'appforgroup2',
+					'cloud_federation_api',
+					'dav',
+					'federatedfilesharing',
+					'lookup_server_connector',
+					'oauth2',
+					'provisioning_api',
+					'settings',
+					'twofactor_backupcodes',
+					'viewer',
+					'workflowengine',
+				],
+				false
+			],
+			// logged in user3
+			[
+				$this->TEST_USER3,
+				[
+					'files',
+					'app1',
+					'app3',
+					'appforgroup1',
+					'appforgroup12',
+					'appforgroup2',
+					'cloud_federation_api',
+					'dav',
+					'federatedfilesharing',
+					'lookup_server_connector',
+					'oauth2',
+					'provisioning_api',
+					'settings',
+					'twofactor_backupcodes',
+					'viewer',
+					'workflowengine',
+				],
+				false
+			],
 			//  user given, but ask for all
 			[
-				self::TEST_USER1,
+				$this->TEST_USER1,
 				[
 					'files',
 					'app1',
@@ -446,17 +453,32 @@ class AppTest extends \Test\TestCase {
 		];
 	}
 
+	private function mapDataProviderUserIds(?string $user): ?string {
+		if ($user === 'user1-') {
+			$user = $this->TEST_USER1;
+		} elseif ($user === 'user2-') {
+			$user = $this->TEST_USER2;
+		} elseif ($user === 'user3-') {
+			$user = $this->TEST_USER3;
+		}
+
+		return $user;
+	}
+
 	/**
 	 * Test enabled apps
 	 *
 	 * @dataProvider appConfigValuesProvider
 	 */
 	public function testEnabledApps($user, $expectedApps, $forceAll) {
+		$user = $this->mapDataProviderUserIds($user);
+
 		$userManager = \OC::$server->getUserManager();
 		$groupManager = \OC::$server->getGroupManager();
-		$user1 = $userManager->createUser(self::TEST_USER1, self::TEST_USER1);
-		$user2 = $userManager->createUser(self::TEST_USER2, self::TEST_USER2);
-		$user3 = $userManager->createUser(self::TEST_USER3, self::TEST_USER3);
+
+		$user1 = $userManager->createUser($this->TEST_USER1, $this->TEST_USER1);
+		$user2 = $userManager->createUser($this->TEST_USER2, $this->TEST_USER2);
+		$user3 = $userManager->createUser($this->TEST_USER3, $this->TEST_USER3);
 
 		$group1 = $groupManager->createGroup(self::TEST_GROUP1);
 		$group1->addUser($user1);
@@ -502,9 +524,9 @@ class AppTest extends \Test\TestCase {
 	 */
 	public function testEnabledAppsCache() {
 		$userManager = \OC::$server->getUserManager();
-		$user1 = $userManager->createUser(self::TEST_USER1, self::TEST_USER1);
+		$user1 = $userManager->createUser($this->TEST_USER1, $this->TEST_USER1);
 
-		\OC_User::setUserId(self::TEST_USER1);
+		\OC_User::setUserId($this->TEST_USER1);
 
 		$this->setupAppConfigMock()->expects($this->once())
 			->method('getValues')

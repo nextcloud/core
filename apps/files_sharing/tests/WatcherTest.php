@@ -55,7 +55,7 @@ class WatcherTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 
 		// prepare user1's dir structure
 		$this->view->mkdir('container');
@@ -70,8 +70,8 @@ class WatcherTest extends TestCase {
 		$this->_share = $this->share(
 			IShare::TYPE_USER,
 			'container/shareddir',
-			self::TEST_FILES_SHARING_API_USER1,
-			self::TEST_FILES_SHARING_API_USER2,
+			$this->TEST_FILES_SHARING_API_USER1,
+			$this->TEST_FILES_SHARING_API_USER2,
 			\OCP\Constants::PERMISSION_ALL
 		);
 
@@ -79,10 +79,10 @@ class WatcherTest extends TestCase {
 		$this->shareManager->updateShare($this->_share);
 
 		// login as user2
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER2);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER2);
 
 		// retrieve the shared storage
-		$secondView = new \OC\Files\View('/' . self::TEST_FILES_SHARING_API_USER2);
+		$secondView = new \OC\Files\View('/' . $this->TEST_FILES_SHARING_API_USER2);
 		[$this->sharedStorage, $internalPath] = $secondView->resolvePath('files/shareddir');
 		$this->sharedCache = $this->sharedStorage->getCache();
 	}
@@ -92,7 +92,7 @@ class WatcherTest extends TestCase {
 			$this->sharedCache->clear();
 		}
 
-		self::loginHelper(self::TEST_FILES_SHARING_API_USER1);
+		self::loginHelper($this->TEST_FILES_SHARING_API_USER1);
 
 		if ($this->view) {
 			$this->shareManager->deleteShare($this->_share);
