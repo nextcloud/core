@@ -302,6 +302,15 @@ class RegistrationContext {
 	 */
 	public function delegateCapabilityRegistrations(array $apps): void {
 		while (($registration = array_shift($this->capabilities)) !== null) {
+			$appId = $registration->getAppId();
+			if (!isset($apps[$appId])) {
+				// If we land here something really isn't right. But at least we caught the
+				// notice that is otherwise emitted for the undefined index
+				$this->logger->error("App $appId not loaded for the capability registration");
+
+				continue;
+			}
+
 			try {
 				$apps[$registration['appId']]
 					->getContainer()
@@ -380,6 +389,15 @@ class RegistrationContext {
 	 */
 	public function delegateContainerRegistrations(array $apps): void {
 		while (($registration = array_shift($this->services)) !== null) {
+			$appId = $registration->getAppId();
+			if (!isset($apps[$appId])) {
+				// If we land here something really isn't right. But at least we caught the
+				// notice that is otherwise emitted for the undefined index
+				$this->logger->error("App $appId not loaded for the container service registration");
+
+				continue;
+			}
+
 			try {
 				/**
 				 * Register the service and convert the callable into a \Closure if necessary
@@ -401,6 +419,15 @@ class RegistrationContext {
 		}
 
 		while (($registration = array_shift($this->aliases)) !== null) {
+			$appId = $registration->getAppId();
+			if (!isset($apps[$appId])) {
+				// If we land here something really isn't right. But at least we caught the
+				// notice that is otherwise emitted for the undefined index
+				$this->logger->error("App $appId not loaded for the container alias registration");
+
+				continue;
+			}
+
 			try {
 				$apps[$registration['appId']]
 					->getContainer()
@@ -418,6 +445,15 @@ class RegistrationContext {
 		}
 
 		while (($registration = array_shift($this->parameters)) !== null) {
+			$appId = $registration->getAppId();
+			if (!isset($apps[$appId])) {
+				// If we land here something really isn't right. But at least we caught the
+				// notice that is otherwise emitted for the undefined index
+				$this->logger->error("App $appId not loaded for the container parameter registration");
+
+				continue;
+			}
+
 			try {
 				$apps[$registration['appId']]
 					->getContainer()
@@ -440,6 +476,15 @@ class RegistrationContext {
 	 */
 	public function delegateMiddlewareRegistrations(array $apps): void {
 		while (($middleware = array_shift($this->middlewares)) !== null) {
+			$appId = $middleware->getAppId();
+			if (!isset($apps[$appId])) {
+				// If we land here something really isn't right. But at least we caught the
+				// notice that is otherwise emitted for the undefined index
+				$this->logger->error("App $appId not loaded for the container middleware registration");
+
+				continue;
+			}
+
 			try {
 				$apps[$middleware['appId']]
 					->getContainer()
