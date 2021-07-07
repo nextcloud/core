@@ -291,10 +291,10 @@ class Manager implements IManager {
 		$permissions = 0;
 
 		if (!$isFederatedShare && $share->getNode()->getOwner() && $share->getNode()->getOwner()->getUID() !== $share->getSharedBy()) {
-			$userMounts = array_filter($userFolder->getById($share->getNode()->getId()), function ($mount) {
+			$userMounts = array_filter($userFolder->getById($share->getNode()->getId()), function ($mount) use ($share) {
 				// We need to filter since there might be other mountpoints that contain the file
 				// e.g. if the user has access to the same external storage that the file is originating from
-				return $mount->getStorage()->instanceOfStorage(ISharedStorage::class);
+				return $mount->getStorage()->instanceOfStorage(ISharedStorage::class) && $mount->getPath() === $share->getNode()->getPath();
 			});
 			$userMount = array_shift($userMounts);
 			if ($userMount === null) {
