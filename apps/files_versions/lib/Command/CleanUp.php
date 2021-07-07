@@ -5,6 +5,7 @@
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Daniel Rudolf <nextcloud.com@daniel-rudolf.de>
  *
  * @license AGPL-3.0
  *
@@ -29,6 +30,7 @@ use OCP\IUserManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CleanUp extends Command {
@@ -57,17 +59,35 @@ class CleanUp extends Command {
 				'user_id',
 				InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
 				'delete versions of the given user(s), if no user is given all versions will be deleted'
+			)
+			->addOption(
+				'path',
+				'p',
+				InputOption::VALUE_REQUIRED,
+				'only delete versions of this path, e.g. --path="/alice/files_versions/Music"'
 			);
 	}
 
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$users = $input->getArgument('user_id');
+
+		$path = $input->getOption('path');
+		if ($path) {
+			if (!preg_match('#^/([^/]+)/files_versions(/.*)?$#', $path, $pathMatches)) {
+				$output->writeln("<error>Invalid path given</error>");
+				return 1;
+			}
+
+			$users = [ $pathMatches[1] ];
+			$path = trim($pathMatches[2], '/');
+		}
+
 		if (!empty($users)) {
 			foreach ($users as $user) {
 				if ($this->userManager->userExists($user)) {
 					$output->writeln("Delete versions of   <info>$user</info>");
-					$this->deleteVersions($user);
+					$this->deleteVersions($user, $path);
 				} else {
 					$output->writeln("<error>Unknown user $user</error>");
 					return 1;
@@ -103,13 +123,16 @@ class CleanUp extends Command {
 	/**
 	 * delete versions for the given user
 	 *
-	 * @param string $user
+	 * @param string      $user
+	 * @param string|null $path
 	 */
-	protected function deleteVersions($user) {
+	protected function deleteVersions(string $user, string $path = null): void {
 		\OC_Util::tearDownFS();
 		\OC_Util::setupFS($user);
-		if ($this->rootFolder->nodeExists('/' . $user . '/files_versions')) {
-			$this->rootFolder->get('/' . $user . '/files_versions')->delete();
+
+		$fullPath = '/' . $user . '/files_versions' . ($path ? '/' . $path : '');
+		if ($this->rootFolder->nodeExists($fullPath)) {
+			$this->rootFolder->get($fullPath)->delete();
 		}
 	}
 }
