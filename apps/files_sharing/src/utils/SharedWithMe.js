@@ -34,16 +34,28 @@ const shareWithTitle = function(share) {
 			{ escape: false }
 		)
 	} else if (share.type === OC.Share.SHARE_TYPE_CIRCLE) {
-		return t(
-			'files_sharing',
-			'Shared with you and {circle} by {owner}',
-			{
-				circle: share.shareWithDisplayName,
-				owner: share.ownerDisplayName,
-			},
-			undefined,
-			{ escape: false }
-		)
+		if (share.shareWithDisplayName === ' ') {
+			return t(
+				'files_sharing',
+				'Shared with you by {owner}',
+				{
+					owner: share.ownerDisplayName,
+				},
+				undefined,
+				{ escape: false }
+			)
+		} else {
+			return t(
+				'files_sharing',
+				'Shared with you and {circle} by {owner}',
+				{
+					circle: share.shareWithDisplayName,
+					owner: share.ownerDisplayName,
+				},
+				undefined,
+				{ escape: false }
+			)
+		}
 	} else if (share.type === OC.Share.SHARE_TYPE_ROOM) {
 		if (share.shareWithDisplayName) {
 			return t(
