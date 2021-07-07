@@ -391,7 +391,7 @@ class Encryption extends Wrapper {
 		if ($this->util->isExcluded($fullPath) === false) {
 			$size = $unencryptedSize = 0;
 			$realFile = $this->util->stripPartialFileExtension($path);
-			$targetExists = $this->file_exists($realFile) || $this->file_exists($path);
+			$targetExists = $this->is_file($realFile) || $this->file_exists($path);
 			$targetIsEncrypted = false;
 			if ($targetExists) {
 				// in case the file exists we require the explicit module as
@@ -855,7 +855,7 @@ class Encryption extends Wrapper {
 	 */
 	protected function readFirstBlock($path) {
 		$firstBlock = '';
-		if ($this->storage->file_exists($path)) {
+		if ($this->storage->is_file($path)) {
 			$handle = $this->storage->fopen($path, 'r');
 			$firstBlock = fread($handle, $this->util->getHeaderSize());
 			fclose($handle);
@@ -872,7 +872,7 @@ class Encryption extends Wrapper {
 	protected function getHeaderSize($path) {
 		$headerSize = 0;
 		$realFile = $this->util->stripPartialFileExtension($path);
-		if ($this->storage->file_exists($realFile)) {
+		if ($this->storage->is_file($realFile)) {
 			$path = $realFile;
 		}
 		$firstBlock = $this->readFirstBlock($path);
@@ -920,7 +920,7 @@ class Encryption extends Wrapper {
 	 */
 	protected function getHeader($path) {
 		$realFile = $this->util->stripPartialFileExtension($path);
-		$exists = $this->storage->file_exists($realFile);
+		$exists = $this->storage->is_file($realFile);
 		if ($exists) {
 			$path = $realFile;
 		}
