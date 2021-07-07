@@ -23,5 +23,5 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-!function(t){const r=function(t){const r=this;n.each(t,(function(t,u){n.isFunction(t)||(r[u]=t)})),n.isUndefined(this.id)||(this.id=parseInt(t.id,10)),this.path=t.path||"","dir"===this.type?this.mimetype="httpd/unix-directory":this.mimetype=this.mimetype||"application/octet-stream",this.type||("httpd/unix-directory"===this.mimetype?this.type="dir":this.type="file")};r.prototype={id:null,name:null,path:null,mimetype:null,icon:null,type:null,permissions:null,mtime:null,etag:null,mountType:null,hasPreview:!0,sharePermissions:null,quotaAvailableBytes:-1},t.Files||(t.Files={}),t.Files.FileInfo=r}(OC)}).call(this,r(6))}});
+!function(t){var r=function(t){var r=this;n.each(t,(function(t,u){n.isFunction(t)||(r[u]=t)})),n.isUndefined(this.id)||(this.id=parseInt(t.id,10)),this.path=t.path||"","dir"===this.type?this.mimetype="httpd/unix-directory":this.mimetype=this.mimetype||"application/octet-stream",this.type||("httpd/unix-directory"===this.mimetype?this.type="dir":this.type="file")};r.prototype={id:null,name:null,path:null,mimetype:null,icon:null,type:null,permissions:null,mtime:null,etag:null,mountType:null,hasPreview:!0,sharePermissions:null,quotaAvailableBytes:-1},t.Files||(t.Files={}),t.Files.FileInfo=r}(OC)}).call(this,r(6))}});
 //# sourceMappingURL=files_fileinfo.js.map
