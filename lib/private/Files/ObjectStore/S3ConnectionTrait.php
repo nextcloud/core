@@ -100,18 +100,8 @@ trait S3ConnectionTrait {
 		$scheme = (isset($this->params['use_ssl']) && $this->params['use_ssl'] === false) ? 'http' : 'https';
 		$base_url = $scheme . '://' . $this->params['hostname'] . ':' . $this->params['port'] . '/';
 
-		// Adding explicit credential provider to the beginning chain.
-		// Including environment variables and IAM instance profiles.
-		$provider = CredentialProvider::memoize(
-			CredentialProvider::chain(
-				$this->paramCredentialProvider(),
-				CredentialProvider::env(),
-				CredentialProvider::assumeRoleWithWebIdentityCredentialProvider(),
-				!empty(getenv(EcsCredentialProvider::ENV_URI))
-					? CredentialProvider::ecsCredentials()
-					: CredentialProvider::instanceProfile()
-			)
-		);
+		// Adding default credential provider (skipping AWS shared config files).
+		$provider = CredentialProvider::defaultProvider(['use_aws_shared_config_files' => false]);
 
 		$options = [
 			'version' => isset($this->params['version']) ? $this->params['version'] : 'latest',
