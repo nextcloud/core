@@ -376,21 +376,17 @@ class Manager extends PublicEmitter implements IGroupManager {
 
 		if (!empty($search)) {
 			// only user backends have the capability to do a complex search for users
-			$searchOffset = 0;
-			$searchLimit = $limit * 100;
-			if ($limit === -1) {
-				$searchLimit = 500;
-			}
-
+			$chunkOffset = 0;
+			$chunkLimit = 500;
 			do {
-				$filteredUsers = $this->userManager->searchDisplayName($search, $searchLimit, $searchOffset);
-				foreach ($filteredUsers as $filteredUser) {
-					if ($group->inGroup($filteredUser)) {
-						$groupUsers[] = $filteredUser;
+				$userChunk = $group->searchUsers('', $chunkLimit, $chunkOffset);
+				foreach ($userChunk as $user) {
+					if (mb_stripos($user->getDisplayName(), $search) > -1) {
+						$groupUsers[] = $user;
 					}
 				}
-				$searchOffset += $searchLimit;
-			} while (count($groupUsers) < $searchLimit + $offset && count($filteredUsers) >= $searchLimit);
+				$chunkOffset += $chunkLimit;
+			} while (count($userChunk) !== 0);
 
 			if ($limit === -1) {
 				$groupUsers = array_slice($groupUsers, $offset);
