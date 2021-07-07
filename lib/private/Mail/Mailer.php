@@ -187,6 +187,10 @@ class Mailer implements IMailer {
 		if (empty($message->getFrom())) {
 			$message->setFrom([\OCP\Util::getDefaultEmailAddress('no-reply') => $this->defaults->getName()]);
 		}
+		
+		// Add Auto-Submitted mail header. 'auto-generated' value should be set when email is sent by a script such as CRON jobs, etc.
+		$headers = $message->getSwiftMessage()->getHeaders();
+		$headers->addTextHeader('Auto-Submitted', 'auto-generated');
 
 		$failedRecipients = [];
 
