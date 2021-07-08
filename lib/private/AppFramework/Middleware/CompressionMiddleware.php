@@ -37,6 +37,9 @@ use OCP\IRequest;
 class CompressionMiddleware extends Middleware {
 
 	/** @var bool */
+	private $useBrotli;
+
+	/** @var bool */
 	private $useGZip;
 
 	/** @var IRequest */
@@ -45,43 +48,58 @@ class CompressionMiddleware extends Middleware {
 	public function __construct(IRequest $request) {
 		$this->request = $request;
 		$this->useGZip = false;
+		$this->useBrotli = false;
 	}
 
 	public function afterController($controller, $methodName, Response $response) {
-		// By default we do not gzip
-		$allowGzip = false;
+		// By default we do not compress
+		$allowCompression = false;
 
 		// Only return gzipped content for 200 responses
 		if ($response->getStatus() !== Http::STATUS_OK) {
 			return $response;
 		}
 
-		// Check if we are even asked for gzip
+		// Check if we are even asked for brotli or gzip
 		$header = $this->request->getHeader('Accept-Encoding');
-		if (strpos($header, 'gzip') === false) {
+
+		$allowBrotli = strpos($header, 'br') !== false;
+		$allowGzip = strpos($header, 'gzip') !== false;
+
+		if (($allowGzip === false) && ($allowBrotli === false)) {
 			return $response;
 		}
 
 		// We only allow gzip in some cases
 		if ($response instanceof BaseResponse) {
-			$allowGzip = true;
+			$allowCompression = true;
 		}
 		if ($response instanceof JSONResponse) {
-			$allowGzip = true;
+			$allowCompression = true;
 		}
 		if ($response instanceof TemplateResponse) {
-			$allowGzip = true;
+			$allowCompression = true;
 		}
 
-		if ($allowGzip) {
-			$this->useGZip = true;
-			$response->addHeader('Content-Encoding', 'gzip');
+		if ($allowCompression) {
+			if ($allowBrotli && function_exists('brotli_compress')) {
+				$this->useGZip = false;
+				$this->useBrotli = true;
+				$response->addHeader('Content-Encoding', 'br');
+			} elseif ($allowGzip) {
+				$this->useGZip = true;
+				$response->addHeader('Content-Encoding', 'gzip');
+			}
 		}
 
 		return $response;
 	}
 
 	public function beforeOutput($controller, $methodName, $output) {
+		if ($this->useBrotli) {
+			/** @psalm-suppress UndefinedFunction */
+			return brotli_compress($output);
+		}
 		if (!$this->useGZip) {
 			return $output;
 		}
