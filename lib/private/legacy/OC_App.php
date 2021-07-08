@@ -117,8 +117,12 @@ class OC_App {
 		if ((bool) \OC::$server->getSystemConfig()->getValue('maintenance', false)) {
 			return false;
 		}
+		// If only protected types, don't filter by user (prevents
+		// session invalidation when loading prelogin/authentication
+		// types).
+		$all = \OC::$server->getAppManager()->hasOnlyProtectedAppTypes($types);
 		// Load the enabled apps here
-		$apps = self::getEnabledApps();
+		$apps = self::getEnabledApps(false, $all);
 
 		// Add each apps' folder as allowed class path
 		foreach ($apps as $app) {

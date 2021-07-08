@@ -342,6 +342,21 @@ class AppManager implements IAppManager {
 	}
 
 	/**
+	 * Whether a list of types contains only protected app types
+	 *
+	 * @param string[] $types
+	 * @return bool
+	 */
+	public function hasOnlyProtectedAppTypes($types) {
+		if (empty($types)) {
+			return false;
+		}
+
+		$unprotectedTypes = array_diff($types, $this->protectedAppTypes);
+		return empty($unprotectedTypes);
+	}
+
+	/**
 	 * Enable an app only for specific groups
 	 *
 	 * @param string $appId
