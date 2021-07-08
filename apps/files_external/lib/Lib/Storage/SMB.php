@@ -219,7 +219,7 @@ class SMB extends Common implements INotifyStorage {
 	private function getACL(IFileInfo $file): ?ACL {
 		$acls = $file->getAcls();
 		foreach ($acls as $user => $acl) {
-			[, $user] = explode('\\', $user); // strip domain
+			[, $user] = strpos($user, '\\') ? explode('\\', $user) : ['','']; // strip domain
 			if ($user === $this->server->getAuth()->getUsername()) {
 				return $acl;
 			}
