@@ -1,0 +1,73 @@
+name: FTP
+on:
+  push:
+    branches:
+      - master
+      - stable*
+    paths:
+      - 'apps/files_external/**'
+  pull_request:
+    paths:
+      - 'apps/files_external/**'
+
+env:
+  APP_NAME: files_external
+
+jobs:
+  ftp-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      # do not stop on another job's failure
+      fail-fast: false
+      matrix:
+        php-versions: ['7.4', '8.0']
+        ftpd: ['proftpd', 'vsftpd', 'pure-ftpd']
+
+    name: php${{ matrix.php-versions }}-${{ matrix.ftpd }}
+
+    steps:
+      - name: Checkout server
+        uses: actions/checkout@v2
+
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+
+      - name: Set up ftpd
+        run: |
+          sudo mkdir /tmp/ftp
+          sudo chown -R 0777 /tmp/ftp
+          if [[ "${{ matrix.ftpd }}" == 'proftpd' ]]; then docker run --name ftp -d --net host -e FTP_USERNAME=test -e FTP_PASSWORD=test -v /tmp/ftp:/home/test hauptmedia/proftpd; fi
+          if [[ "${{ matrix.ftpd }}" == 'vsftpd' ]]; then docker run --name ftp -d --net host -e FTP_USER=test -e FTP_PASS=test -e PASV_ADDRESS=127.0.0.1 -v /tmp/ftp:/home/vsftpd/test fauria/vsftpd; fi
+          if [[ "${{ matrix.ftpd }}" == 'pure-ftpd' ]]; then docker run --name ftp -d --net host -e "PUBLICHOST=localhost" -e FTP_USER_NAME=test -e FTP_USER_PASS=test -e FTP_USER_HOME=/home/test -v /tmp/ftp2:/home/test -v /tmp/ftp2:/etc/pure-ftpd/passwd stilliard/pure-ftpd; fi
+      - name: Set up php ${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: phpunit
+          extensions: mbstring, iconv, fileinfo, intl, sqlite, pdo_sqlite, zip, gd
+
+      - name: Set up Nextcloud
+        run: |
+          mkdir data
+          ./occ maintenance:install --verbose --database=sqlite --database-name=nextcloud --database-host=127.0.0.1 --database-user=root --database-pass=rootpassword --admin-user admin --admin-pass password
+          ./occ app:enable --force ${{ env.APP_NAME }}
+          php -S localhost:8080 &
+      - name: smoketest ftp
+        run: |
+          php -r 'var_dump(file_put_contents("ftp://test:test@localhost/ftp.txt", "asd"));'
+          php -r 'var_dump(file_get_contents("ftp://test:test@localhost/ftp.txt"));'
+          php -r 'var_dump(mkdir("ftp://test:test@localhost/asdads"));'
+          ls -l /tmp/ftp
+      - name: PHPUnit
+        run: |
+          echo "<?php return ['run' => true,'host' => 'localhost','user' => 'test','password' => 'test', 'root' => ''];" > apps/${{ env.APP_NAME }}/tests/config.ftp.php
+          phpunit --configuration tests/phpunit-autotest-external.xml apps/files_external/tests/Storage/FtpTest.php
+      - name: ftpd logs
+        if: always()
+        run: |
+          docker logs ftp

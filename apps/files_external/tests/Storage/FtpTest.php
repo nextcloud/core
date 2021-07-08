@@ -48,50 +48,63 @@ class FtpTest extends \Test\Files\Storage\Storage {
 		if (! is_array($this->config) or ! $this->config['run']) {
 			$this->markTestSkipped('FTP backend not configured');
 		}
+		$rootInstance = new FTP($this->config);
+		$rootInstance->mkdir($id);
+
 		$this->config['root'] .= '/' . $id; //make sure we have an new empty folder to work in
 		$this->instance = new FTP($this->config);
-		$this->instance->mkdir('/');
 	}
 
 	protected function tearDown(): void {
 		if ($this->instance) {
-			\OCP\Files::rmdirr($this->instance->constructUrl(''));
+			$this->instance->rmdir('');
 		}
+		$this->instance = null;
 
 		parent::tearDown();
 	}
 
-	public function testConstructUrl() {
-		$config = [ 'host' => 'localhost',
-			'user' => 'ftp',
-			'password' => 'ftp',
-			'root' => '/',
-			'secure' => false ];
-		$instance = new FTP($config);
-		$this->assertEquals('ftp://ftp:ftp@localhost/', $instance->constructUrl(''));
+	/**
+	 * ftp has no proper way to handle spaces at the end of file names
+	 */
+	public function directoryProvider() {
+		return array_filter(parent::directoryProvider(), function ($item) {
+			return substr($item[0], -1) !== ' ';
+		});
+	}
 
-		$config['secure'] = true;
-		$instance = new FTP($config);
-		$this->assertEquals('ftps://ftp:ftp@localhost/', $instance->constructUrl(''));
 
-		$config['secure'] = 'false';
-		$instance = new FTP($config);
-		$this->assertEquals('ftp://ftp:ftp@localhost/', $instance->constructUrl(''));
+	/**
+	 * mtime for folders is only with a minute resolution
+	 */
+	public function testStat() {
+		$textFile = \OC::$SERVERROOT . '/tests/data/lorem.txt';
+		$ctimeStart = time();
+		$this->instance->file_put_contents('/lorem.txt', file_get_contents($textFile));
+		$this->assertTrue($this->instance->isReadable('/lorem.txt'));
+		$ctimeEnd = time();
+		$mTime = $this->instance->filemtime('/lorem.txt');
+		$this->assertTrue($this->instance->hasUpdated('/lorem.txt', $ctimeStart - 5));
+		$this->assertTrue($this->instance->hasUpdated('/', $ctimeStart - 61));
 
-		$config['secure'] = 'true';
-		$instance = new FTP($config);
-		$this->assertEquals('ftps://ftp:ftp@localhost/', $instance->constructUrl(''));
+		// check that ($ctimeStart - 5) <= $mTime <= ($ctimeEnd + 1)
+		$this->assertGreaterThanOrEqual(($ctimeStart - 5), $mTime);
+		$this->assertLessThanOrEqual(($ctimeEnd + 1), $mTime);
+		$this->assertEquals(filesize($textFile), $this->instance->filesize('/lorem.txt'));
 
-		$config['root'] = '';
-		$instance = new FTP($config);
-		$this->assertEquals('ftps://ftp:ftp@localhost/somefile.txt', $instance->constructUrl('somefile.txt'));
+		$stat = $this->instance->stat('/lorem.txt');
+		//only size and mtime are required in the result
+		$this->assertEquals($stat['size'], $this->instance->filesize('/lorem.txt'));
+		$this->assertEquals($stat['mtime'], $mTime);
 
-		$config['root'] = '/abc';
-		$instance = new FTP($config);
-		$this->assertEquals('ftps://ftp:ftp@localhost/abc/somefile.txt', $instance->constructUrl('somefile.txt'));
+		if ($this->instance->touch('/lorem.txt', 100) !== false) {
+			$mTime = $this->instance->filemtime('/lorem.txt');
+			$this->assertEquals($mTime, 100);
+		}
 
-		$config['root'] = '/abc/';
-		$instance = new FTP($config);
-		$this->assertEquals('ftps://ftp:ftp@localhost/abc/somefile.txt', $instance->constructUrl('somefile.txt'));
+		$mtimeStart = time();
+
+		$this->instance->unlink('/lorem.txt');
+		$this->assertTrue($this->instance->hasUpdated('/', $mtimeStart - 61));
 	}
 }
