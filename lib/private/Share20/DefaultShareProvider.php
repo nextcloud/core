@@ -148,6 +148,7 @@ class DefaultShareProvider implements IShareProvider {
 		} elseif ($share->getShareType() === IShare::TYPE_GROUP) {
 			//Set the GID of the group we share with
 			$qb->setValue('share_with', $qb->createNamedParameter($share->getSharedWith()));
+			$qb->setValue('accepted', $qb->createNamedParameter(IShare::STATUS_ACCEPTED));
 
 			//If an expiration date is set store it
 			if ($share->getExpirationDate() !== null) {
