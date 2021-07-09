@@ -536,7 +536,8 @@ class Cache implements ICache {
 	 */
 	public function remove($file) {
 		$entry = $this->get($file);
-
+		// when deleting the entry, encrypted is not save in database, so we ignore it
+		unset($entry['encrypted']);
 		if ($entry) {
 			$query = $this->getQueryBuilder();
 			$query->delete('filecache')
