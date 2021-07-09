@@ -61,7 +61,9 @@ use OCP\Files\InvalidPathException;
 use OCP\Files\Mount\IMountPoint;
 use OCP\Files\NotFoundException;
 use OCP\Files\ReservedWordException;
+use OCP\Files\Storage\IChunkedFileWrite;
 use OCP\Files\Storage\IStorage;
+use OCP\Files\StorageInvalidException;
 use OCP\ILogger;
 use OCP\IUser;
 use OCP\Lock\ILockingProvider;
@@ -705,6 +707,22 @@ class View {
 			$hooks = $this->file_exists($path) ? ['update', 'write'] : ['create', 'write'];
 			return $this->basicOperation('file_put_contents', $path, $hooks, $data);
 		}
+	}
+
+	/**
+	 * @param string $path
+	 * @param string $chunkToken
+	 * @return false|mixed|null
+	 * @throws LockedException
+	 * @throws StorageInvalidException
+	 */
+	public function writeChunkedFile(string $path, string $chunkToken) {
+		/** @var IStorage|null $storage */
+		[$storage, ] = Filesystem::resolvePath($path);
+		if (!$storage || !$storage->instanceOfStorage(IChunkedFileWrite::class)) {
+			throw new StorageInvalidException('path is not a chunked file write storage');
+		}
+		return $this->basicOperation('writeChunkedFile', $path, ['update', 'write'], $chunkToken);
 	}
 
 	/**

@@ -66,6 +66,10 @@ class FutureFile implements \Sabre\DAV\IFile {
 		return AssemblyStream::wrap($nodes);
 	}
 
+	public function getPath() {
+		return $this->root->getFileInfo()->getInternalPath() . '/.file';
+	}
+
 	/**
 	 * @inheritdoc
 	 */

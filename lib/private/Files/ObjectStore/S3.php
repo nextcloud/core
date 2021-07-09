@@ -23,9 +23,12 @@
  */
 namespace OC\Files\ObjectStore;
 
+use Aws\Result;
+use Exception;
 use OCP\Files\ObjectStore\IObjectStore;
+use OCP\Files\ObjectStore\IObjectStoreMultiPartUpload;
 
-class S3 implements IObjectStore {
+class S3 implements IObjectStore, IObjectStoreMultiPartUpload {
 	use S3ConnectionTrait;
 	use S3ObjectTrait;
 
@@ -39,5 +42,50 @@ class S3 implements IObjectStore {
 	 */
 	public function getStorageId() {
 		return $this->id;
+	}
+
+	public function initiateMultipartUpload(string $urn): string {
+		$upload = $this->getConnection()->createMultipartUpload([
+			'Bucket' => $this->bucket,
+			'Key' => $urn,
+		]);
+		$uploadId = $upload->get('UploadId');
+		if ($uploadId === null) {
+			throw new Exception('No upload id returned');
+		}
+		return (string)$uploadId;
+	}
+
+	public function uploadMultipartPart(string $urn, string $uploadId, int $partId, $stream, $size): Result {
+		return $this->getConnection()->uploadPart([
+			'Body' => $stream,
+			'Bucket' => $this->bucket,
+			'Key' => $urn,
+			'ContentLength' => $size,
+			'PartNumber' => $partId,
+			'UploadId' => $uploadId,
+		]);
+	}
+
+	public function completeMultipartUpload(string $urn, string $uploadId, array $result): int {
+		$this->getConnection()->completeMultipartUpload([
+			'Bucket' => $this->bucket,
+			'Key' => $urn,
+			'UploadId' => $uploadId,
+			'MultipartUpload' => ['Parts' => $result],
+		]);
+		$stat = $this->getConnection()->headObject([
+			'Bucket' => $this->bucket,
+			'Key' => $urn,
+		]);
+		return (int)$stat->get('ContentLength');
+	}
+
+	public function abortMultipartUpload($urn, $uploadId): void {
+		$this->getConnection()->abortMultipartUpload([
+			'Bucket' => $this->bucket,
+			'Key' => $urn,
+			'UploadId' => $uploadId
+		]);
 	}
 }

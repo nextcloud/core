@@ -298,6 +298,7 @@ class ComposerStaticInitDAV
         'OCA\\DAV\\Traits\\PrincipalProxyTrait' => __DIR__ . '/..' . '/../lib/Traits/PrincipalProxyTrait.php',
         'OCA\\DAV\\Upload\\AssemblyStream' => __DIR__ . '/..' . '/../lib/Upload/AssemblyStream.php',
         'OCA\\DAV\\Upload\\ChunkingPlugin' => __DIR__ . '/..' . '/../lib/Upload/ChunkingPlugin.php',
+        'OCA\\DAV\\Upload\\ChunkingV2Plugin' => __DIR__ . '/..' . '/../lib/Upload/ChunkingV2Plugin.php',
         'OCA\\DAV\\Upload\\CleanupService' => __DIR__ . '/..' . '/../lib/Upload/CleanupService.php',
         'OCA\\DAV\\Upload\\FutureFile' => __DIR__ . '/..' . '/../lib/Upload/FutureFile.php',
         'OCA\\DAV\\Upload\\RootCollection' => __DIR__ . '/..' . '/../lib/Upload/RootCollection.php',

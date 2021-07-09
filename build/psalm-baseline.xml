@@ -1015,6 +1015,11 @@
       <code>null</code>
     </NullArgument>
   </file>
+  <file src="apps/dav/lib/Upload/ChunkingV2Plugin.php">
+    <UndefinedFunction occurrences="1">
+      <code>Uri\split($destination)</code>
+    </UndefinedFunction>
+  </file>
   <file src="apps/dav/lib/Upload/UploadHome.php">
     <UndefinedFunction occurrences="1">
       <code>\Sabre\Uri\split($this-&gt;principalInfo['uri'])</code>
