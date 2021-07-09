@@ -236,19 +236,29 @@ class JobList implements IJobList {
 	 * @return IJob|null
 	 */
 	public function getById($id) {
+		$row = $this->getDetailsById($id);
+
+		if ($row) {
+			return $this->buildJob($row);
+		}
+
+		return null;
+	}
+
+	public function getDetailsById(int $id): ?array {
 		$query = $this->connection->getQueryBuilder();
 		$query->select('*')
 			->from('jobs')
 			->where($query->expr()->eq('id', $query->createNamedParameter($id, IQueryBuilder::PARAM_INT)));
-		$result = $query->execute();
+		$result = $query->executeQuery();
 		$row = $result->fetch();
 		$result->closeCursor();
 
 		if ($row) {
-			return $this->buildJob($row);
-		} else {
-			return null;
+			return $row;
 		}
+
+		return null;
 	}
 
 	/**
@@ -329,5 +339,20 @@ class JobList implements IJobList {
 			->set('execution_duration', $query->createNamedParameter($timeTaken, IQueryBuilder::PARAM_INT))
 			->where($query->expr()->eq('id', $query->createNamedParameter($job->getId(), IQueryBuilder::PARAM_INT)));
 		$query->execute();
+	}
+
+	/**
+	 * Reset the $job so it executes on the next trigger
+	 *
+	 * @param IJob $job
+	 * @since 22.0.0
+	 */
+	public function resetBackgroundJob(IJob $job): void {
+		$query = $this->connection->getQueryBuilder();
+		$query->update('jobs')
+			->set('last_run',  $query->createNamedParameter(0, IQueryBuilder::PARAM_INT))
+			->set('reserved_at',  $query->createNamedParameter(0, IQueryBuilder::PARAM_INT))
+			->where($query->expr()->eq('id', $query->createNamedParameter($job->getId()), IQueryBuilder::PARAM_INT));
+		$query->executeStatement();
 	}
 }

@@ -117,6 +117,10 @@ class DummyJobList extends \OC\BackgroundJob\JobList {
 		return null;
 	}
 
+	public function getDetailsById(int $id): ?array {
+		return null;
+	}
+
 	/**
 	 * set the lastRun of $job to now
 	 *
@@ -127,5 +131,8 @@ class DummyJobList extends \OC\BackgroundJob\JobList {
 	}
 
 	public function setExecutionTime(IJob $job, $timeTaken) {
+	}
+
+	public function resetBackgroundJob(IJob $job): void {
 	}
 }
