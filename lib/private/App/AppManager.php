@@ -88,6 +88,9 @@ class AppManager implements IAppManager {
 	/** @var string[] $appId => $enabled */
 	private $installedAppsCache;
 
+	/** @var string[] $appId => $enabled */
+	private $enabledAppsCache;
+
 	/** @var string[] */
 	private $shippedApps;
 
@@ -132,7 +135,7 @@ class AppManager implements IAppManager {
 			}
 
 			$this->installedAppsCache = array_filter($values, function ($value) {
-				return $value !== 'no';
+				return $value !== '';
 			});
 			ksort($this->installedAppsCache);
 		}
@@ -146,6 +149,35 @@ class AppManager implements IAppManager {
 	 */
 	public function getInstalledApps() {
 		return array_keys($this->getInstalledAppsValues());
+	}
+	
+	/**
+	 * @return string[] $appId => $enabled
+	 */
+	private function getEnabledAppsValues() {
+		if (!$this->enabledAppsCache) {
+			$values = $this->appConfig->getValues(false, 'enabled');
+
+			$alwaysEnabledApps = $this->getAlwaysEnabledApps();
+			foreach ($alwaysEnabledApps as $appId) {
+				$values[$appId] = 'yes';
+			}
+
+			$this->enabledAppsCache = array_filter($values, function ($value) {
+				return $value !== 'no';
+			});
+			ksort($this->enabledAppsCache);
+		}
+		return $this->enabledAppsCache;
+	}
+
+	/**
+	 * List all enabled apps
+	 *
+	 * @return string[]
+	 */
+	public function getEnabledApps() {
+		return array_keys($this->getEnabledAppsValues());
 	}
 
 	/**

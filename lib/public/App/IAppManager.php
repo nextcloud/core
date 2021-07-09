@@ -157,6 +157,14 @@ interface IAppManager {
 	public function getInstalledApps();
 
 	/**
+	 * List all enabled apps
+	 *
+	 * @return string[]
+	 * @since 23.0.0
+	 */
+	public function getEnabledApps();
+
+	/**
 	 * Clear the cached list of apps when enabling/disabling an app
 	 * @since 8.1.0
 	 */
