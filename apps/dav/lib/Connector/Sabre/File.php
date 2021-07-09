@@ -70,6 +70,8 @@ use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\Exception\NotImplemented;
 use Sabre\DAV\Exception\ServiceUnavailable;
 use Sabre\DAV\IFile;
+use OCP\Files\Events\NodeAddedToCache;
+use OCP\Files\Events\FileCacheUpdated;
 
 class File extends Node implements IFile {
 	protected $request;
@@ -307,6 +309,9 @@ class File extends Node implements IFile {
 
 			// since we skipped the view we need to scan and emit the hooks ourselves
 			$storage->getUpdater()->update($internalPath);
+			$dispatcher = \OC::$server->get("OCP\EventDispatcher\IEventDispatcher");
+			$dispatcher->dispatchTyped(new NodeAddedToCache($storage, $internalPath));
+			$dispatcher->dispatchTyped(new FileCacheUpdated($storage, $internalPath));
 
 			try {
 				$this->changeLock(ILockingProvider::LOCK_SHARED);
