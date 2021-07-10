@@ -37,8 +37,15 @@ class FunctionInjector {
 	/** @var ContainerInterface */
 	private $container;
 
-	public function __construct(ContainerInterface $container) {
+	/**
+	 * @var object[]
+	 * @psalm-var array<class-string, object>
+	 */
+	private $overrides;
+
+	public function __construct(ContainerInterface $container, array $overrides = []) {
 		$this->container = $container;
+		$this->overrides = $overrides;
 	}
 
 	public function injectFn(callable $fn) {
@@ -46,6 +53,10 @@ class FunctionInjector {
 		return $fn(...array_map(function (ReflectionParameter $param) {
 			// First we try by type (more likely these days)
 			if (($type = $param->getType()) !== null) {
+				if (isset($this->overrides[$type->getName()])) {
+					return $this->overrides[$type->getName()];
+				}
+
 				try {
 					return $this->container->get($type->getName());
 				} catch (QueryException $ex) {

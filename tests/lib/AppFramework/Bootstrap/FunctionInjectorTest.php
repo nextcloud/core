@@ -81,4 +81,17 @@ class FunctionInjectorTest extends TestCase {
 		// Nothing to assert. No errors means everything is fine.
 		$this->addToAssertionCount(1);
 	}
+
+	public function testInjectWithOverride(): void {
+		$obj = new class() implements Foo {};
+
+		$injector = new FunctionInjector($this->container, [
+			Foo::class => $obj,
+		]);
+		$injector->injectFn(static function (Foo $f): void {
+		});
+
+		// Nothing to assert. No errors means everything is fine.
+		$this->addToAssertionCount(1);
+	}
 }

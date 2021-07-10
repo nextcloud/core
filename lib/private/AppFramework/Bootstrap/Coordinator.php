@@ -32,6 +32,7 @@ namespace OC\AppFramework\Bootstrap;
 use OC\Support\CrashReport\Registry;
 use OC_App;
 use OCP\AppFramework\App;
+use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\QueryException;
 use OCP\Dashboard\IManager;
@@ -175,7 +176,10 @@ class Coordinator {
 			if ($application instanceof IBootstrap) {
 				/** @var BootContext $context */
 				$context = new BootContext($application->getContainer());
-				$application->boot($context);
+				$injector = new FunctionInjector($application->getContainer(), [
+					IBootContext::class => $context,
+				]);
+				$injector->injectFn([$application, 'boot']);
 			}
 		} catch (QueryException $e) {
 			$this->logger->error("Could not boot $appId: " . $e->getMessage(), [

@@ -63,6 +63,7 @@ use OCP\IUserSession;
 use OCP\Share\IManager as IShareManager;
 use OCP\Util;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'files';
@@ -120,12 +121,16 @@ class Application extends App implements IBootstrap {
 		$context->registerNotifierService(Notifier::class);
 	}
 
-	public function boot(IBootContext $context): void {
-		$context->injectFn(Closure::fromCallable([$this, 'registerCollaboration']));
-		$context->injectFn([Listener::class, 'register']);
-		$context->injectFn(Closure::fromCallable([$this, 'registerSearchProvider']));
+	public function boot(IBootContext $context,
+						 IProviderManager $providerManager,
+						 EventDispatcherInterface $dispatcher,
+						 ISearch $search,
+						 IL10N $l10n): void {
+		$this->registerCollaboration($providerManager);
+		Listener::register($dispatcher);
+		$this->registerSearchProvider($search);
 		$this->registerTemplates();
-		$context->injectFn(Closure::fromCallable([$this, 'registerNavigation']));
+		$this->registerNavigation($l10n);
 		$this->registerHooks();
 	}
 
