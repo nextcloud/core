@@ -702,7 +702,7 @@ abstract class NodeTest extends \Test\TestCase {
 
 
 	public function testMoveParentIsFile() {
-		$this->expectException(\OCP\Files\NotPermittedException::class);
+		$this->expectException(\OCP\Files\NotFoundException::class);
 
 		$this->view->expects($this->never())
 			->method('rename');

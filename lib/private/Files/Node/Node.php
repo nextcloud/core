@@ -5,6 +5,7 @@
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Rudolf <github.com@daniel-rudolf.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -434,6 +435,7 @@ class Node implements \OCP\Files\Node {
 		$targetPath = $this->normalizePath($targetPath);
 		$parent = $this->root->get(dirname($targetPath));
 		if (
+			$this->isDeletable() and
 			$parent instanceof Folder and
 			$this->isValidPath($targetPath) and
 			(
