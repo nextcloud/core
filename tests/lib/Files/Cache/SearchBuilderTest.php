@@ -79,7 +79,7 @@ class SearchBuilderTest extends TestCase {
 		$this->numericStorageId = 10000;
 
 		$this->builder->select(['fileid'])
-			->from('filecache')
+			->from('filecache', 'file') // alias needed for QuerySearchHelper#getOperatorFieldAndValue
 			->where($this->builder->expr()->eq('storage', new Literal($this->numericStorageId)));
 	}
 
