@@ -1,7 +1,12 @@
 <ul>
 	{{#each items}}
+		{{#unless hidden}}
 		<li>
+			{{#if disabled}}
+			<div class="menuitem action action-{{name}} permanent {{#if active}}active{{/if}} disabled" data-action="{{name}}">
+			{{else}}
 			<a href="#" class="menuitem action action-{{name}} permanent {{#if active}}active{{/if}}" data-action="{{name}}">
+			{{/if}}
 				{{#if iconClass}}
 					<span class="icon {{iconClass}}"></span>
 				{{else}}
@@ -11,7 +16,12 @@
 					<strong class="menuitem-text">{{displayName}}</strong><br>
 					<span class="menuitem-text-detail">{{tooltip}}</span>
 				</p>
+			{{#if disabled}}
+			</div>
+			{{else}}
 			</a>
+			{{/if}}
 		</li>
+		{{/unless}}
 	{{/each}}
 </ul>

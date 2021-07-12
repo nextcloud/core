@@ -153,6 +153,9 @@ class AccountManager implements IAccountManager {
 		$updated = true;
 
 		if (isset($data[self::PROPERTY_PHONE]) && $data[self::PROPERTY_PHONE]['value'] !== '') {
+			// Sanitize null value.
+			$data[self::PROPERTY_PHONE]['value'] = $data[self::PROPERTY_PHONE]['value'] ?? '';
+
 			try {
 				$data[self::PROPERTY_PHONE]['value'] = $this->parsePhoneNumber($data[self::PROPERTY_PHONE]['value']);
 			} catch (\InvalidArgumentException $e) {

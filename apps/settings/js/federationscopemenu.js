@@ -23,6 +23,7 @@
 		className: 'federationScopeMenu popovermenu bubble menu menu-center',
 		field: undefined,
 		_scopes: undefined,
+		_excludedScopes: [],
 
 		initialize: function(options) {
 			this.field = options.field;
@@ -58,9 +59,7 @@
 			];
 
 			if (options.excludedScopes && options.excludedScopes.length) {
-				this._scopes = this._scopes.filter(function(scopeEntry) {
-					return options.excludedScopes.indexOf(scopeEntry.name) === -1;
-				})
+				this._excludedScopes = options.excludedScopes
 			}
 		},
 
@@ -121,6 +120,17 @@
 					this._scopes[i].active = true;
 				} else {
 					this._scopes[i].active = false;
+				}
+
+				var isExcludedScope = this._excludedScopes.includes(this._scopes[i].name)
+				if (isExcludedScope && !this._scopes[i].active) {
+					this._scopes[i].hidden = true
+				} else if (isExcludedScope && this._scopes[i].active) {
+					this._scopes[i].hidden = false
+					this._scopes[i].disabled = true
+				} else {
+					this._scopes[i].hidden = false
+					this._scopes[i].disabled = false
 				}
 			}
 

@@ -425,6 +425,16 @@ select {
 						font-weight: bold;
 					}
 				}
+
+				&.disabled {
+					opacity: .5;
+
+					cursor: default;
+
+					* {
+						cursor: default;
+					}
+				}
 			}
 		}
 	}

@@ -380,7 +380,7 @@ class UsersController extends Controller {
 			);
 		}
 
-		$email = strtolower($email);
+		$email = !is_null($email) ? strtolower($email) : $email;
 		if (!empty($email) && !$this->mailer->validateMailAddress($email)) {
 			return new DataResponse(
 				[
@@ -395,15 +395,47 @@ class UsersController extends Controller {
 
 		$data = $this->accountManager->getUser($user);
 		$beforeData = $data;
-		$data[IAccountManager::PROPERTY_AVATAR] = ['scope' => $avatarScope];
-		if ($this->config->getSystemValue('allow_user_to_change_display_name', true) !== false) {
-			$data[IAccountManager::PROPERTY_DISPLAYNAME] = ['value' => $displayname, 'scope' => $displaynameScope];
-			$data[IAccountManager::PROPERTY_EMAIL] = ['value' => $email, 'scope' => $emailScope];
+		if (!is_null($avatarScope)) {
+			$data[IAccountManager::PROPERTY_AVATAR]['scope'] = $avatarScope;
 		}
-		$data[IAccountManager::PROPERTY_WEBSITE] = ['value' => $website, 'scope' => $websiteScope];
-		$data[IAccountManager::PROPERTY_ADDRESS] = ['value' => $address, 'scope' => $addressScope];
-		$data[IAccountManager::PROPERTY_PHONE] = ['value' => $phone, 'scope' => $phoneScope];
-		$data[IAccountManager::PROPERTY_TWITTER] = ['value' => $twitter, 'scope' => $twitterScope];
+		if ($this->config->getSystemValue('allow_user_to_change_display_name', true) !== false) {
+			if (!is_null($displayname)) {
+				$data[IAccountManager::PROPERTY_DISPLAYNAME]['value'] = $displayname;
+			}
+			if (!is_null($displaynameScope)) {
+				$data[IAccountManager::PROPERTY_DISPLAYNAME]['scope'] = $displaynameScope;
+			}
+			if (!is_null($email)) {
+				$data[IAccountManager::PROPERTY_EMAIL]['value'] = $email;
+			}
+			if (!is_null($emailScope)) {
+				$data[IAccountManager::PROPERTY_EMAIL]['scope'] = $emailScope;
+			}
+		}
+		if (!is_null($website)) {
+			$data[IAccountManager::PROPERTY_WEBSITE]['value'] = $website;
+		}
+		if (!is_null($websiteScope)) {
+			$data[IAccountManager::PROPERTY_WEBSITE]['scope'] = $websiteScope;
+		}
+		if (!is_null($address)) {
+			$data[IAccountManager::PROPERTY_ADDRESS]['value'] = $address;
+		}
+		if (!is_null($addressScope)) {
+			$data[IAccountManager::PROPERTY_ADDRESS]['scope'] = $addressScope;
+		}
+		if (!is_null($phone)) {
+			$data[IAccountManager::PROPERTY_PHONE]['value'] = $phone;
+		}
+		if (!is_null($phoneScope)) {
+			$data[IAccountManager::PROPERTY_PHONE]['scope'] = $phoneScope;
+		}
+		if (!is_null($twitter)) {
+			$data[IAccountManager::PROPERTY_TWITTER]['value'] = $twitter;
+		}
+		if (!is_null($twitterScope)) {
+			$data[IAccountManager::PROPERTY_TWITTER]['scope'] = $twitterScope;
+		}
 
 		try {
 			$data = $this->saveUserSettings($user, $data);
@@ -526,14 +558,14 @@ class UsersController extends Controller {
 
 		switch ($account) {
 			case 'verify-twitter':
-				$accountData[IAccountManager::PROPERTY_TWITTER]['verified'] = AccountManager::VERIFICATION_IN_PROGRESS;
+				$accountData[IAccountManager::PROPERTY_TWITTER]['verified'] = IAccountManager::VERIFICATION_IN_PROGRESS;
 				$msg = $this->l10n->t('In order to verify your Twitter account, post the following tweet on Twitter (please make sure to post it without any line breaks):');
 				$code = $codeMd5;
 				$type = IAccountManager::PROPERTY_TWITTER;
 				$accountData[IAccountManager::PROPERTY_TWITTER]['signature'] = $signature;
 				break;
 			case 'verify-website':
-				$accountData[IAccountManager::PROPERTY_WEBSITE]['verified'] = AccountManager::VERIFICATION_IN_PROGRESS;
+				$accountData[IAccountManager::PROPERTY_WEBSITE]['verified'] = IAccountManager::VERIFICATION_IN_PROGRESS;
 				$msg = $this->l10n->t('In order to verify your Website, store the following content in your web-root at \'.well-known/CloudIdVerificationCode.txt\' (please make sure that the complete text is in one line):');
 				$type = IAccountManager::PROPERTY_WEBSITE;
 				$accountData[IAccountManager::PROPERTY_WEBSITE]['signature'] = $signature;

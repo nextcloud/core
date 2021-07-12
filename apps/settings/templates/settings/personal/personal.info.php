@@ -122,9 +122,7 @@ script('settings', [
 				<?php } ?>
 				<span class="icon-checkmark hidden"></span>
 				<span class="icon-error hidden" ></span>
-				<?php if ($_['lookupServerUploadEnabled']) { ?>
 				<input type="hidden" id="displaynamescope" value="<?php p($_['displayNameScope']) ?>">
-				<?php } ?>
 			</form>
 		</div>
 		<div class="personal-settings-setting-box">
@@ -172,9 +170,7 @@ script('settings', [
 				<?php if ($_['displayNameChangeSupported']) { ?>
 					<em><?php p($l->t('For password reset and notifications')); ?></em>
 				<?php } ?>
-				<?php if ($_['lookupServerUploadEnabled']) { ?>
-					<input type="hidden" id="emailscope" value="<?php p($_['emailScope']) ?>">
-				<?php } ?>
+				<input type="hidden" id="emailscope" value="<?php p($_['emailScope']) ?>">
 			</form>
 		</div>
 		<div class="personal-settings-setting-box">
