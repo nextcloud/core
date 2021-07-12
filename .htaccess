@@ -7,6 +7,10 @@
     <IfModule mod_proxy_fcgi.c>
        SetEnvIfNoCase Authorization "(.+)" HTTP_AUTHORIZATION=$1
     </IfModule>
+    <IfModule mod_lsapi.c>
+      SetEnvIfNoCase ^Authorization$ "(.+)" XAUTHORIZATION=$1
+      RequestHeader set XAuthorization %{XAUTHORIZATION}e env=XAUTHORIZATION
+    </IfModule>
   </IfModule>
 
   <IfModule mod_env.c>
@@ -48,6 +52,8 @@
     Header set Cache-Control "max-age=604800"
   </FilesMatch>
 </IfModule>
+
+# PHP 7.x
 <IfModule mod_php7.c>
   php_value mbstring.func_overload 0
   php_value default_charset 'UTF-8'
@@ -56,6 +62,30 @@
     SetEnv htaccessWorking true
   </IfModule>
 </IfModule>
+
+# PHP 8+
+<IfModule mod_php.c>
+  php_value mbstring.func_overload 0
+  php_value default_charset 'UTF-8'
+  php_value output_buffering 0
+  <IfModule mod_env.c>
+    SetEnv htaccessWorking true
+  </IfModule>
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType image/svg+xml svg svgz
+  AddEncoding gzip svgz
+</IfModule>
+
+<IfModule mod_dir.c>
+  DirectoryIndex index.php index.html
+</IfModule>
+
+<IfModule pagespeed_module>
+  ModPagespeed Off
+</IfModule>
+
 <IfModule mod_rewrite.c>
   RewriteEngine on
   RewriteCond %{HTTP_USER_AGENT} DavClnt
@@ -68,15 +98,6 @@
   RewriteRule ^\.well-known/(?!acme-challenge|pki-validation) /index.php [QSA,L]
   RewriteRule ^(?:\.(?!well-known)|autotest|occ|issue|indie|db_|console).* - [R=404,L]
 </IfModule>
-<IfModule mod_mime.c>
-  AddType image/svg+xml svg svgz
-  AddEncoding gzip svgz
-</IfModule>
-<IfModule mod_dir.c>
-  DirectoryIndex index.php index.html
-</IfModule>
+
 AddDefaultCharset utf-8
 Options -Indexes
-<IfModule pagespeed_module>
-  ModPagespeed Off
-</IfModule>
