@@ -30,7 +30,7 @@ declare(strict_types=1);
 
 namespace OCP\AppFramework\Db;
 
-use OCP\DB\Exception;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
@@ -162,11 +162,8 @@ abstract class QBMapper {
 	public function insertOrUpdate(Entity $entity): Entity {
 		try {
 			return $this->insert($entity);
-		} catch (Exception $ex) {
-			if ($ex->getReason() === Exception::REASON_UNIQUE_CONSTRAINT_VIOLATION) {
-				return $this->update($entity);
-			}
-			throw $ex;
+		} catch (UniqueConstraintViolationException $ex) {
+			return $this->update($entity);
 		}
 	}
 
