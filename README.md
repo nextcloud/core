@@ -43,7 +43,7 @@ There are many ways to contribute, of which development is only one! Find out [h
 
 ### Development setup 👩‍💻
 
-1. 🚀 [Set up your local development environment](https://docs.nextcloud.com/server/latest/developer_manual/getting_started/devenv.html)
+1. 🚀 [Set up your local development environment](./DEVENV.md)
 2. 🐛 [Pick a good first issue](https://github.com/nextcloud/server/labels/good%20first%20issue)
 3. 👩‍🔧 Create a branch and make your changes. Remember to sign off your commits using `git commit -sm "Your commit message"`
 4. ⬆ Create a [pull request](https://opensource.guide/how-to-contribute/#opening-a-pull-request) and `@mention` the people from the issue to review
