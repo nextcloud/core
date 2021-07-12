@@ -38,6 +38,7 @@
 namespace OCA\Files\Controller;
 
 use OC\Files\Node\Node;
+use OCA\Files\Capabilities;
 use OCA\Files\Service\TagService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -267,12 +268,9 @@ class ApiController extends Controller {
 	 * @param string $mode
 	 * @param string $direction
 	 * @return Response
-	 * @throws \OCP\PreConditionNotMetException
 	 */
-	public function updateFileSorting($mode, $direction) {
-		$allowedMode = ['name', 'size', 'mtime'];
-		$allowedDirection = ['asc', 'desc'];
-		if (!in_array($mode, $allowedMode) || !in_array($direction, $allowedDirection)) {
+	public function updateFileSorting($mode, $direction): Response {
+		if (!in_array($mode, Capabilities::SORTING_MODES) || !in_array($direction, Capabilities::SORTING_DIRECTIONS)) {
 			$response = new Response();
 			$response->setStatus(Http::STATUS_UNPROCESSABLE_ENTITY);
 			return $response;
@@ -280,6 +278,23 @@ class ApiController extends Controller {
 		$this->config->setUserValue($this->userSession->getUser()->getUID(), 'files', 'file_sorting', $mode);
 		$this->config->setUserValue($this->userSession->getUser()->getUID(), 'files', 'file_sorting_direction', $direction);
 		return new Response();
+	}
+
+
+	/**
+	 * Get the default sort mode
+	 *
+	 * @NoAdminRequired
+	 *
+	 * @return JSONResponse
+	 */
+	public function getFileSorting(): JSONResponse {
+		$file_sorting = $this->config->getUserValue($this->userSession->getUser()->getUID(), 'files', 'file_sorting', Capabilities::SORTING_MODES[0]);
+		$file_sorting_direction = $this->config->getUserValue($this->userSession->getUser()->getUID(), 'files', 'file_sorting_direction', Capabilities::SORTING_DIRECTIONS[0]);
+		return new JSONResponse([
+			'file_sorting' => $file_sorting,
+			'file_sorting_direction' => $file_sorting_direction
+		]);
 	}
 
 	/**

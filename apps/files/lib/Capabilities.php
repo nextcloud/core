@@ -36,6 +36,9 @@ use OCP\IURLGenerator;
  * @package OCA\Files
  */
 class Capabilities implements ICapability {
+	public const SORTING_MODES = ['name', 'size', 'mtime'];
+	public const SORTING_DIRECTIONS = ['asc', 'desc'];
+	
 
 	/** @var IConfig */
 	protected $config;
@@ -70,6 +73,10 @@ class Capabilities implements ICapability {
 				'directEditing' => [
 					'url' => $this->urlGenerator->linkToOCSRouteAbsolute('files.DirectEditing.info'),
 					'etag' => $this->directEditingService->getDirectEditingETag()
+				],
+				'sorting' => [
+					'sorting_modes' => self::SORTING_MODES,
+					'sorting_directions' => self::SORTING_DIRECTIONS
 				]
 			],
 		];

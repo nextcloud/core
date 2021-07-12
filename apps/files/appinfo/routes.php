@@ -68,6 +68,11 @@ $application->registerRoutes(
 				'verb' => 'GET'
 			],
 			[
+				'name' => 'API#getFileSorting',
+				'url' => '/api/v1/sorting',
+				'verb' => 'GET'
+			],
+			[
 				'name' => 'API#updateFileSorting',
 				'url' => '/api/v1/sorting',
 				'verb' => 'POST'
@@ -118,6 +123,7 @@ $application->registerRoutes(
 				'verb' => 'GET'
 			],
 		],
+
 		'ocs' => [
 			[
 				'name' => 'DirectEditing#info',

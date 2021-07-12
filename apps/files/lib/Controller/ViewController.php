@@ -36,6 +36,7 @@
 namespace OCA\Files\Controller;
 
 use OCA\Files\Activity\Helper;
+use OCA\Files\Capabilities;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\Files\Event\LoadSidebar;
 use OCA\Viewer\Event\LoadViewer;
@@ -310,8 +311,8 @@ class ViewController extends Controller {
 		$params['ownerDisplayName'] = $storageInfo['ownerDisplayName'] ?? '';
 		$params['isPublic'] = false;
 		$params['allowShareWithLink'] = $this->shareManager->shareApiAllowLinks() ? 'yes' : 'no';
-		$params['defaultFileSorting'] = $this->config->getUserValue($user, 'files', 'file_sorting', 'name');
-		$params['defaultFileSortingDirection'] = $this->config->getUserValue($user, 'files', 'file_sorting_direction', 'asc');
+		$params['defaultFileSorting'] = $this->config->getUserValue($user, 'files', 'file_sorting', Capabilities::SORTING_MODES[0]);
+		$params['defaultFileSortingDirection'] = $this->config->getUserValue($user, 'files', 'file_sorting_direction', Capabilities::SORTING_DIRECTIONS[0]);
 		$params['showgridview'] = $this->config->getUserValue($user, 'files', 'show_grid', false);
 		$params['isIE'] = \OC_Util::isIe();
 		$showHidden = (bool) $this->config->getUserValue($this->userSession->getUser()->getUID(), 'files', 'show_hidden', false);

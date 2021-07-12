@@ -27,6 +27,7 @@
  */
 namespace OCA\Files\Controller;
 
+use OCA\Files\Capabilities;
 use OCA\Files\Service\TagService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -208,6 +209,42 @@ class ApiControllerTest extends TestCase {
 
 		$expected = new HTTP\Response();
 		$actual = $this->apiController->updateFileSorting($mode, $direction);
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function testUpdateFileSortingWithBadParams() {
+		$mode = 'abcdef';
+		$direction = '123456';
+
+		$this->config->expects($this->never())
+			->method('setUserValue')
+			->with($this->user->getUID(), 'files', 'file_sorting', $mode);
+		$this->config->expects($this->never())
+			->method('setUserValue')
+			->with($this->user->getUID(), 'files', 'file_sorting_direction', $direction);
+
+		$actual = $this->apiController->updateFileSorting($mode, $direction);
+		$this->assertEquals($actual->getStatus(), Http::STATUS_UNPROCESSABLE_ENTITY);
+	}
+
+	public function testGetFileSorting() {
+		$file_sorting = Capabilities::SORTING_MODES[0];
+		$file_sorting_direction = Capabilities::SORTING_DIRECTIONS[0];
+
+		$this->config->expects($this->at(0))
+			->method('getUserValue')
+			->with($this->user->getUID(), 'files', 'file_sorting', $file_sorting)
+			->willReturn($file_sorting);
+		$this->config->expects($this->at(1))
+			->method('getUserValue')
+			->with($this->user->getUID(), 'files', 'file_sorting_direction', $file_sorting_direction)
+			->willReturn($file_sorting_direction);
+
+		$expected = new HTTP\JSONResponse([
+			'file_sorting' => 'name',
+			'file_sorting_direction' => 'asc'
+		]);
+		$actual = $this->apiController->getFileSorting();
 		$this->assertEquals($expected, $actual);
 	}
 
