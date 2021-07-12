@@ -155,6 +155,9 @@
 			if (_.isFunction(action.render)) {
 				actionSpec.render = action.render;
 			}
+			if (_.isFunction(action.shouldRender)) {
+				actionSpec.shouldRender = action.shouldRender;
+			}
 			if (!this.actions[mime]) {
 				this.actions[mime] = {};
 			}
@@ -397,6 +400,11 @@
 		 * @param {OCA.Files.FileActionContext} context rendering context
 		 */
 		_renderInlineAction: function(actionSpec, isDefault, context) {
+			if (actionSpec.shouldRender) {
+				if (!actionSpec.shouldRender(context)) {
+					return;
+				}
+			}
 			var renderFunc = actionSpec.render || _.bind(this._defaultRenderAction, this);
 			var $actionEl = renderFunc(actionSpec, isDefault, context);
 			if (!$actionEl || !$actionEl.length) {

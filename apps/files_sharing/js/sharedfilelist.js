@@ -96,6 +96,14 @@
 					$tr.attr('data-share-permissions', permission)
 				}
 
+				if (fileData.remoteId) {
+					$tr.attr('data-remote-id', fileData.remoteId)
+				}
+
+				if (fileData.shareType) {
+					$tr.attr('data-share-type', fileData.shareType)
+				}
+
 				// add row with expiration date for link only shares - influenced by _createRow of filelist
 				if (this._linksOnly) {
 					var expirationTimestamp = 0
@@ -212,6 +220,18 @@
 					}
 				}
 
+				var pendingRemoteShares = {
+					url: OC.linkToOCS('apps/files_sharing/api/v1/remote_shares', 2) + 'pending',
+					/* jshint camelcase: false */
+					data: {
+						format: 'json'
+					},
+					type: 'GET',
+					beforeSend: function(xhr) {
+						xhr.setRequestHeader('OCS-APIREQUEST', 'true')
+					}
+				}
+
 				var shares = {
 					url: OC.linkToOCS('apps/files_sharing/api/v1') + 'shares',
 					/* jshint camelcase: false */
@@ -245,6 +265,7 @@
 					promises.push($.ajax(deletedShares))
 				} else if (this._showPending) {
 					promises.push($.ajax(pendingShares))
+					promises.push($.ajax(pendingRemoteShares))
 				} else {
 					promises.push($.ajax(shares))
 
@@ -292,7 +313,12 @@
 				}
 
 				if (additionalShares && additionalShares.ocs && additionalShares.ocs.data) {
-					files = files.concat(this._makeFilesFromShares(additionalShares.ocs.data, !this._sharedWithUser))
+					if (this._showPending) {
+						// in this case the second callback is about pending remote shares
+						files = files.concat(this._makeFilesFromRemoteShares(additionalShares.ocs.data))
+					} else {
+						files = files.concat(this._makeFilesFromShares(additionalShares.ocs.data, !this._sharedWithUser))
+					}
 				}
 
 				this.setFiles(files)
@@ -311,10 +337,27 @@
 							mtime: share.mtime * 1000,
 							mimetype: share.mimetype,
 							type: share.type,
+							// remote share types are different and need to be mapped
+							shareType: (parseInt(share.share_type, 10) === 1) ? OC.Share.SHARE_TYPE_REMOTE_GROUP : OC.Share.SHARE_TYPE_REMOTE,
 							id: share.file_id,
 							path: OC.dirname(share.mountpoint),
 							permissions: share.permissions,
 							tags: share.tags || []
+						}
+
+						if (share.remote_id) {
+							// remote share
+							if (share.accepted !== '1') {
+								file.name = OC.basename(share.name)
+								file.path = '/'
+							}
+							file.remoteId = share.remote_id
+							file.shareOwnerId = share.owner
+						}
+
+						if (!file.type) {
+							// pending shares usually have no type, so default to showing a directory icon
+							file.mimetype = 'dir-shared'
 						}
 
 						file.shares = [{

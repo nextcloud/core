@@ -14,6 +14,7 @@
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Stefan Weil <sw@weilnetz.de>
+ * @author Vincent Petry <vincent@nextcloud.com>
  *
  * @license AGPL-3.0
  *
@@ -44,6 +45,7 @@ use OCP\Files\Storage\IStorageFactory;
 use OCP\Http\Client\IClientService;
 use OCP\IDBConnection;
 use OCP\IGroupManager;
+use OCP\ILogger;
 use OCP\IUserManager;
 use OCP\Notification\IManager;
 use OCP\OCS\IDiscoveryService;
@@ -89,18 +91,24 @@ class Manager {
 	/** @var IEventDispatcher */
 	private $eventDispatcher;
 
-	public function __construct(IDBConnection $connection,
-								\OC\Files\Mount\Manager $mountManager,
-								IStorageFactory $storageLoader,
-								IClientService $clientService,
-								IManager $notificationManager,
-								IDiscoveryService $discoveryService,
-								ICloudFederationProviderManager $cloudFederationProviderManager,
-								ICloudFederationFactory $cloudFederationFactory,
-								IGroupManager $groupManager,
-								IUserManager $userManager,
-								?string $uid,
-								IEventDispatcher $eventDispatcher) {
+	/** @var ILogger */
+	private $logger;
+
+	public function __construct(
+		IDBConnection $connection,
+		\OC\Files\Mount\Manager $mountManager,
+		IStorageFactory $storageLoader,
+		IClientService $clientService,
+		IManager $notificationManager,
+		IDiscoveryService $discoveryService,
+		ICloudFederationProviderManager $cloudFederationProviderManager,
+		ICloudFederationFactory $cloudFederationFactory,
+		IGroupManager $groupManager,
+		IUserManager $userManager,
+		?string $uid,
+		IEventDispatcher $eventDispatcher,
+		ILogger $logger
+	) {
 		$this->connection = $connection;
 		$this->mountManager = $mountManager;
 		$this->storageLoader = $storageLoader;
@@ -113,6 +121,7 @@ class Manager {
 		$this->groupManager = $groupManager;
 		$this->userManager = $userManager;
 		$this->eventDispatcher = $eventDispatcher;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -218,7 +227,7 @@ class Manager {
 	 * @param int $id share id
 	 * @return mixed share of false
 	 */
-	public function getShare($id) {
+	private function fetchShare($id) {
 		$getShare = $this->connection->prepare('
 			SELECT `id`, `remote`, `remote_id`, `share_token`, `name`, `owner`, `user`, `mountpoint`, `accepted`, `parent`, `share_type`, `password`, `mountpoint_hash`
 			FROM  `*PREFIX*share_external`
@@ -226,19 +235,65 @@ class Manager {
 		$result = $getShare->execute([$id]);
 		$share = $result->fetch();
 		$result->closeCursor();
+		return $share;
+	}
+
+	private function fetchUserShare($parentId, $uid) {
+		$getShare = $this->connection->prepare('
+			SELECT `id`, `remote`, `remote_id`, `share_token`, `name`, `owner`, `user`, `mountpoint`, `accepted`, `parent`, `share_type`, `password`, `mountpoint_hash`
+			FROM  `*PREFIX*share_external`
+			WHERE `parent` = ? AND `user` = ?');
+		$result = $getShare->execute([$parentId, $uid]);
+		$share = $result->fetch();
+		$result->closeCursor();
+		if ($share !== false) {
+			return $share;
+		}
+		return null;
+	}
+
+	/**
+	 * get share
+	 *
+	 * @param int $id share id
+	 * @return mixed share of false
+	 */
+	public function getShare($id) {
+		$share = $this->fetchShare($id);
 		$validShare = is_array($share) && isset($share['share_type']) && isset($share['user']);
 
 		// check if the user is allowed to access it
 		if ($validShare && (int)$share['share_type'] === IShare::TYPE_USER && $share['user'] === $this->uid) {
 			return $share;
 		} elseif ($validShare && (int)$share['share_type'] === IShare::TYPE_GROUP) {
+			$parentId = (int)$share['parent'];
+			if ($parentId !== -1) {
+				// we just retrieved a sub-share, switch to the parent entry for verification
+				$groupShare = $this->fetchShare($parentId);
+			} else {
+				$groupShare = $share;
+			}
 			$user = $this->userManager->get($this->uid);
-			if ($this->groupManager->get($share['user'])->inGroup($user)) {
+			if ($this->groupManager->get($groupShare['user'])->inGroup($user)) {
 				return $share;
 			}
 		}
 
 		return false;
+	}
+
+	/**
+	 * Updates accepted flag in the database
+	 *
+	 * @param int $id
+	 */
+	private function updateAccepted(int $shareId, bool $accepted) : void {
+		$query = $this->connection->prepare('
+			UPDATE `*PREFIX*share_external`
+			SET `accepted` = ?
+			WHERE `id` = ?');
+		$updateResult = $query->execute([$accepted ? 1 : 0, $shareId]);
+		$updateResult->closeCursor();
 	}
 
 	/**
@@ -268,21 +323,40 @@ class Manager {
 				WHERE `id` = ? AND `user` = ?');
 				$userShareAccepted = $acceptShare->execute([1, $mountPoint, $hash, $id, $this->uid]);
 			} else {
-				try {
-					$this->writeShareToDb(
-						$share['remote'],
-						$share['share_token'],
-						$share['password'],
-						$share['name'],
-						$share['owner'],
-						$this->uid,
-						$mountPoint, $hash, 1,
-						$share['remote_id'],
-						$id,
-						$share['share_type']);
-					$result = true;
-				} catch (Exception $e) {
-					$result = false;
+				$parentId = (int)$share['parent'];
+				if ($parentId !== -1) {
+					// this is the sub-share
+					$subshare = $share;
+				} else {
+					$subshare = $this->fetchUserShare($id, $this->uid);
+				}
+
+				if ($subshare !== null) {
+					try {
+						$this->updateAccepted((int)$subshare['id'], true);
+						$result = true;
+					} catch (Exception $e) {
+						$this->logger->logException($e);
+						$result = false;
+					}
+				} else {
+					try {
+						$this->writeShareToDb(
+							$share['remote'],
+							$share['share_token'],
+							$share['password'],
+							$share['name'],
+							$share['owner'],
+							$this->uid,
+							$mountPoint, $hash, 1,
+							$share['remote_id'],
+							$id,
+							$share['share_type']);
+						$result = true;
+					} catch (Exception $e) {
+						$this->logger->logException($e);
+						$result = false;
+					}
 				}
 			}
 			if ($userShareAccepted !== false) {
@@ -318,23 +392,42 @@ class Manager {
 			$this->processNotification($id);
 			$result = true;
 		} elseif ($share && (int)$share['share_type'] === IShare::TYPE_GROUP) {
-			try {
-				$this->writeShareToDb(
-					$share['remote'],
-					$share['share_token'],
-					$share['password'],
-					$share['name'],
-					$share['owner'],
-					$this->uid,
-					$share['mountpoint'],
-					$share['mountpoint_hash'],
-					0,
-					$share['remote_id'],
-					$id,
-					$share['share_type']);
-				$result = true;
-			} catch (Exception $e) {
-				$result = false;
+			$parentId = (int)$share['parent'];
+			if ($parentId !== -1) {
+				// this is the sub-share
+				$subshare = $share;
+			} else {
+				$subshare = $this->fetchUserShare($id, $this->uid);
+			}
+
+			if ($subshare !== null) {
+				try {
+					$this->updateAccepted((int)$subshare['id'], false);
+					$result = true;
+				} catch (Exception $e) {
+					$this->logger->logException($e);
+					$result = false;
+				}
+			} else {
+				try {
+					$this->writeShareToDb(
+						$share['remote'],
+						$share['share_token'],
+						$share['password'],
+						$share['name'],
+						$share['owner'],
+						$this->uid,
+						$share['mountpoint'],
+						$share['mountpoint_hash'],
+						0,
+						$share['remote_id'],
+						$id,
+						$share['share_type']);
+					$result = true;
+				} catch (Exception $e) {
+					$this->logger->logException($e);
+					$result = false;
+				}
 			}
 			$this->processNotification($id);
 		}
@@ -497,6 +590,10 @@ class Manager {
 
 	public function removeShare($mountPoint): bool {
 		$mountPointObj = $this->mountManager->find($mountPoint);
+		if ($mountPointObj === null) {
+			$this->logger->error('Mount point to remove share not found', ['mountPoint' => $mountPoint]);
+			return false;
+		}
 		$id = $mountPointObj->getStorage()->getCache()->getId('');
 
 		$mountPoint = $this->stripPath($mountPoint);
@@ -519,22 +616,18 @@ class Manager {
 				}
 
 				$query = $this->connection->prepare('
-				DELETE FROM `*PREFIX*share_external`
-				WHERE `id` = ?
+					DELETE FROM `*PREFIX*share_external`
+					WHERE `id` = ?
 				');
 				$deleteResult = $query->execute([(int)$share['id']]);
 				$deleteResult->closeCursor();
 			} elseif ($share !== false && (int)$share['share_type'] === IShare::TYPE_GROUP) {
-				$query = $this->connection->prepare('
-					UPDATE `*PREFIX*share_external`
-					SET `accepted` = ?
-					WHERE `id` = ?');
-				$updateResult = $query->execute([0, (int)$share['id']]);
-				$updateResult->closeCursor();
+				$this->updateAccepted((int)$share['id'], false);
 			}
 
 			$this->removeReShares($id);
 		} catch (\Doctrine\DBAL\Exception $ex) {
+			$this->logger->logException($ex);
 			return false;
 		}
 
@@ -571,15 +664,21 @@ class Manager {
 	 */
 	public function removeUserShares($uid): bool {
 		try {
+			// TODO: use query builder
 			$getShare = $this->connection->prepare('
-				SELECT `remote`, `share_token`, `remote_id`
+				SELECT `id`, `remote`, `share_type`, `share_token`, `remote_id`
 				FROM  `*PREFIX*share_external`
 				WHERE `user` = ?');
 			$result = $getShare->execute([$uid]);
 			$shares = $result->fetchAll();
 			$result->closeCursor();
+			$deletedGroupShares = [];
 			foreach ($shares as $share) {
-				$this->sendFeedbackToRemote($share['remote'], $share['share_token'], $share['remote_id'], 'decline');
+				if ((int)$share['share_type'] === IShare::TYPE_GROUP) {
+					$deletedGroupShares[] = $share['id'];
+				} else {
+					$this->sendFeedbackToRemote($share['remote'], $share['share_token'], $share['remote_id'], 'decline');
+				}
 			}
 
 			$query = $this->connection->prepare('
@@ -588,7 +687,19 @@ class Manager {
 			');
 			$deleteResult = $query->execute([$uid]);
 			$deleteResult->closeCursor();
+
+			// delete sub-entries from deleted parents
+			foreach ($deletedGroupShares as $deletedId) {
+				// TODO: batch this with query builder
+				$query = $this->connection->prepare('
+					DELETE FROM `*PREFIX*share_external`
+					WHERE `parent` = ?
+				');
+				$deleteResult = $query->execute([$deletedId]);
+				$deleteResult->closeCursor();
+			}
 		} catch (\Doctrine\DBAL\Exception $ex) {
+			$this->logger->logException($ex);
 			return false;
 		}
 
@@ -629,14 +740,11 @@ class Manager {
 			$userGroups[] = $group->getGID();
 		}
 
-		$query = 'SELECT `id`, `remote`, `remote_id`, `share_token`, `name`, `owner`, `user`, `mountpoint`, `accepted`
+		// FIXME: use query builder
+		$query = 'SELECT `id`, `share_type`, `parent`, `remote`, `remote_id`, `share_token`, `name`, `owner`, `user`, `mountpoint`, `accepted`
 		          FROM `*PREFIX*share_external`
 				  WHERE (`user` = ? OR `user` IN (?))';
-		$parameters = [$this->uid, implode(',',$userGroups)];
-		if (!is_null($accepted)) {
-			$query .= ' AND `accepted` = ?';
-			$parameters[] = (int) $accepted;
-		}
+		$parameters = [$this->uid, implode(',', $userGroups)];
 		$query .= ' ORDER BY `id` ASC';
 
 		$sharesQuery = $this->connection->prepare($query);
@@ -644,8 +752,26 @@ class Manager {
 			$result = $sharesQuery->execute($parameters);
 			$shares = $result->fetchAll();
 			$result->closeCursor();
-			return $shares;
+
+			// remove parent group share entry if we have a specific user share entry for the user
+			$toRemove = [];
+			foreach ($shares as $share) {
+				if ((int)$share['share_type'] === IShare::TYPE_GROUP && (int)$share['parent'] > 0) {
+					$toRemove[] = $share['parent'];
+				}
+			}
+			$shares = array_filter($shares, function ($share) use ($toRemove) {
+				return !in_array($share['id'], $toRemove, true);
+			});
+
+			if (!is_null($accepted)) {
+				$shares = array_filter($shares, function ($share) use ($accepted) {
+					return (bool)$share['accepted'] === $accepted;
+				});
+			}
+			return array_values($shares);
 		} catch (\Doctrine\DBAL\Exception $e) {
+			$this->logger->logException($e);
 			return [];
 		}
 	}

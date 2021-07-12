@@ -98,7 +98,8 @@ class Application extends App {
 				$server->getGroupManager(),
 				$server->getUserManager(),
 				$uid,
-				$server->query(IEventDispatcher::class)
+				$server->query(IEventDispatcher::class),
+				$server->getLogger()
 			);
 		});
 

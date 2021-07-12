@@ -29,6 +29,11 @@
 			if (this.disallowedLists.indexOf(fileList.id) !== -1) {
 				return;
 			}
+			// lists where the "Open" default action is disabled should
+			// also have the goto action disabled
+			if (fileList._defaultFileActionsDisabled) {
+				return
+			}
 			var fileActions = fileList.fileActions;
 
 			fileActions.registerAction({

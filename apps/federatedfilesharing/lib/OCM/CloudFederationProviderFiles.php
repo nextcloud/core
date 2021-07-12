@@ -250,7 +250,8 @@ class CloudFederationProviderFiles implements ICloudFederationProvider {
 				\OC::$server->getGroupManager(),
 				\OC::$server->getUserManager(),
 				$shareWith,
-				\OC::$server->query(IEventDispatcher::class)
+				\OC::$server->query(IEventDispatcher::class),
+				\OC::$server->getLogger()
 			);
 
 			try {
