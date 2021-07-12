@@ -62,7 +62,7 @@
     "lodash": "^4.17.21",
     "marked": "^1.1.1",
     "moment": "^2.27.0",
-    "moment-timezone": "^0.5.31",
+    "moment-timezone": "^0.5.33",
     "nextcloud-vue-collections": "^0.8.1",
     "p-limit": "^3.0.2",
     "p-queue": "^6.6.2",
