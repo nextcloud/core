@@ -89,13 +89,36 @@ class OauthApiController extends Controller {
 	 * @param string $client_secret
 	 * @return JSONResponse
 	 */
-	public function getToken($grant_type, $code, $refresh_token, $client_id, $client_secret): JSONResponse {
+	public function getToken($grant_type, $code, $refresh_token, $client_id, $client_secret, $username, $password): JSONResponse {
 
 		// We only handle two types
-		if ($grant_type !== 'authorization_code' && $grant_type !== 'refresh_token') {
+		if ($grant_type !== 'authorization_code' && $grant_type !== 'refresh_token' && $grant_type !== 'password') {
 			return new JSONResponse([
 				'error' => 'invalid_grant',
 			], Http::STATUS_BAD_REQUEST);
+		}
+
+		if ($grant_type === 'password') {
+			try {
+				$client = $this->clientMapper->getByIdentifier($client_id);
+			} catch (ClientNotFoundException $e) {
+				return new JSONResponse(['error' => 'invalid_client'], Http::STATUS_BAD_REQUEST);
+			}
+
+			if ($client->getClientIdentifier() !== $client_id || $client->getSecret() !== $client_secret) {
+				return new JSONResponse(['error' => 'invalid_client'], Http::STATUS_BAD_REQUEST);
+			}
+
+			try {
+				$token = $this->tokenProvider->getToken($password);
+				if ($token->getLoginName() !== $username) {
+					return new JSONResponse(['error' => 'Forbidden'], Http::STATUS_FORBIDDEN);
+				}
+			} catch (InvalidTokenException $e) {
+				return new JSONResponse(['error' => 'Invalid app password'], Http::STATUS_FORBIDDEN);
+			}
+
+			return new JSONResponse(['access_token' => 'fake', 'username' => $username], Http::STATUS_OK);
 		}
 
 		// We handle the initial and refresh tokens the same way
