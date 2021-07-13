@@ -401,6 +401,7 @@ class OC {
 		}
 		$tmpl->assign('oldTheme', $oldTheme);
 		$tmpl->printPage();
+		$systemConfig->setValue('theme', $oldTheme);
 	}
 
 	public static function initSession() {
