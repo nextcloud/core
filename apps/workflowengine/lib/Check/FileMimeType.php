@@ -26,6 +26,7 @@
  */
 namespace OCA\WorkflowEngine\Check;
 
+use OC\Files\Storage\Local;
 use OCA\WorkflowEngine\Entity\File;
 use OCP\Files\IMimeTypeDetector;
 use OCP\Files\Storage\IStorage;
@@ -76,7 +77,7 @@ class FileMimeType extends AbstractStringCheck implements IFileCheck {
 	}
 
 	/**
-	 * The mimetype is only cached if the file exists. Otherwise files access
+	 * The mimetype is only cached if the file has a valid mimetype. Otherwise files access
 	 * control will cache "application/octet-stream" for all the target node on:
 	 * rename, move, copy and all other methods which create a new item
 	 *
@@ -91,7 +92,7 @@ class FileMimeType extends AbstractStringCheck implements IFileCheck {
 	 * @return string
 	 */
 	protected function cacheAndReturnMimeType(string $storageId, ?string $path, string $mimeType): string {
-		if ($path !== null && $this->storage->file_exists($path)) {
+		if ($path !== null && $mimeType !== 'application/octet-stream') {
 			$this->mimeType[$storageId][$path] = $mimeType;
 		}
 
@@ -122,12 +123,12 @@ class FileMimeType extends AbstractStringCheck implements IFileCheck {
 		if ($this->mimeType[$this->storage->getId()][$this->path] !== null) {
 			return $this->mimeType[$this->storage->getId()][$this->path];
 		}
-
-		if ($this->storage->is_dir($this->path)) {
-			return $this->cacheAndReturnMimeType($this->storage->getId(), $this->path, 'httpd/unix-directory');
+		$cacheEntry = $this->storage->getCache()->get($this->path);
+		if ($cacheEntry && $cacheEntry->getMimeType() !== 'application/octet-stream') {
+			return $this->cacheAndReturnMimeType($this->storage->getId(), $this->path, $cacheEntry->getMimeType());
 		}
 
-		if ($this->storage->file_exists($this->path)) {
+		if ($this->storage->file_exists($this->path) && $this->storage->instanceOfStorage(Local::class)) {
 			$path = $this->storage->getLocalFile($this->path);
 			$mimeType = $this->mimeTypeDetector->detectContent($path);
 			return $this->cacheAndReturnMimeType($this->storage->getId(), $this->path, $mimeType);
