@@ -41,14 +41,14 @@ if ($_['passwordChangeSupported']) {
 				<label for="pass1" class="hidden-visually"><?php p($l->t('Current password')); ?>: </label>
 				<input type="password" id="pass1" name="oldpassword"
 					   placeholder="<?php p($l->t('Current password'));?>"
-					   autocomplete="off" autocapitalize="none" autocorrect="off" />
+					   autocomplete="current-password" autocapitalize="none" autocorrect="off" />
 
 				<div class="personal-show-container">
 					<label for="pass2" class="hidden-visually"><?php p($l->t('New password'));?>: </label>
 					<input type="password" id="pass2" name="newpassword"
 						   placeholder="<?php p($l->t('New password')); ?>"
 						   data-typetoggle="#personal-show"
-						   autocomplete="off" autocapitalize="none" autocorrect="off" />
+						   autocomplete="new-password" autocapitalize="none" autocorrect="off" />
 					<input type="checkbox" id="personal-show" class="hidden-visually" name="show" /><label for="personal-show" class="personal-show-label"></label>
 				</div>
 

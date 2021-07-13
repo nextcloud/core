@@ -29,6 +29,9 @@
 					v-model="password"
 					type="password"
 					name="password"
+					autocomplete="new-password"
+					autocapitalize="none"
+					autocorrect="off"
 					required
 					:placeholder="t('core', 'New password')">
 			</p>
