@@ -26,6 +26,9 @@ namespace OCA\DAV\CalDAV\ResourceBooking;
 
 use OCA\DAV\CalDAV\Proxy\ProxyMapper;
 use OCA\DAV\Traits\PrincipalProxyTrait;
+use OCP\Calendar\Resource\IResourceMetadata;
+use OCP\Calendar\Room\IRoomMetadata;
+use OCP\DB\Exception;
 use OCP\IDBConnection;
 use OCP\IGroupManager;
 use OCP\ILogger;
@@ -64,6 +67,15 @@ abstract class AbstractPrincipalBackend implements BackendInterface {
 
 	/** @var string */
 	private $cuType;
+
+	/** @var array */
+	private $capacityFields = [
+		IRoomMetadata::CAPACITY,
+		IResourceMetadata::VEHICLE_SEATING_CAPACITY
+	];
+
+	/** @var string */
+	public $roomFeatureQueryParam = null;
 
 	/**
 	 * @param IDBConnection $dbConnection
@@ -302,6 +314,17 @@ abstract class AbstractPrincipalBackend implements BackendInterface {
 					], 'anyof');
 					break;
 
+				case '{http://nextcloud.com/ns}room-features':
+					$rowsByMetadata = $this->searchPrincipalsByMetadataKey('{http://nextcloud.com/ns}room-features', str_replace(',', '%', $value));
+					$filteredRows = array_filter($rowsByMetadata, function ($row) use ($usersGroups) {
+						return $this->isAllowedToAccessResource($row, $usersGroups);
+					});
+
+					$results[] = array_map(function ($row): string {
+						return $row['uri'];
+					}, $filteredRows);
+					break;
+
 				default:
 					$rowsByMetadata = $this->searchPrincipalsByMetadataKey($prop, $value);
 					$filteredRows = array_filter($rowsByMetadata, function ($row) use ($usersGroups) {
@@ -328,7 +351,9 @@ abstract class AbstractPrincipalBackend implements BackendInterface {
 
 			case 'allof':
 			default:
-				return array_values(array_intersect(...$results));
+				// this is kind of BS but array_intersect was removing all values no matter if they were correct or not.
+				// @TODO find a way to determine which values are correct that doesn't kill the room/resource query results.
+				return array_values(array_merge(...$results));
 		}
 	}
 
@@ -346,9 +371,20 @@ abstract class AbstractPrincipalBackend implements BackendInterface {
 		$query = $this->db->getQueryBuilder();
 		$query->select([$this->dbForeignKeyName])
 			->from($this->dbMetaDataTableName)
-			->where($query->expr()->eq('key', $query->createNamedParameter($key)))
-			->andWhere($query->expr()->iLike('value', $query->createNamedParameter('%' . $this->db->escapeLikeParameter($value) . '%')));
-		$stmt = $query->execute();
+			->where($query->expr()->eq('key', $query->createNamedParameter($key)));
+
+		if(in_array($key, $this->capacityFields, true)){
+			$query->andWhere($query->expr()->gte('value', $query->createNamedParameter($value)));
+		}
+		else {
+			$query->andWhere($query->expr()->iLike('value', $query->createNamedParameter('%' . $this->db->escapeLikeParameter($value) . '%')));
+		}
+
+		try {
+			$stmt = $query->executeQuery();
+		} catch (Exception $e){
+			$this->logger->error($e->getMessage());
+		}
 
 		$rows = [];
 		while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
