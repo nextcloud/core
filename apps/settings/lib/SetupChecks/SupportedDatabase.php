@@ -63,7 +63,7 @@ class SupportedDatabase {
 			case MySQL57Platform::class: # extends MySQLPlatform
 			case MariaDb1027Platform::class: # extends MySQLPlatform
 			case MySQLPlatform::class:
-				$result = $this->connection->prepare('SHOW VARIABLES LIKE "version";');
+				$result = $this->connection->prepare("SHOW VARIABLES LIKE 'version';");
 				$result->execute();
 				$row = $result->fetch();
 				$version = strtolower($row['Value']);
