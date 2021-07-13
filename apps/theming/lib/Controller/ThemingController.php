@@ -374,7 +374,11 @@ class ThemingController extends Controller {
 		$cacheBusterValue = $this->config->getAppValue('theming', 'cachebuster', '0');
 		$responseJS = [
 			'name' => $this->themingDefaults->getName(),
-			'start_url' => $this->urlGenerator->getBaseUrl(),
+			'start_url' => $this->urlGenerator->getBaseUrl() . '/',
+			'short_name' => $this->themingDefaults->getName(),
+			'description' => $this->themingDefaults->getName(),
+			'theme_color' => $this->themingDefaults->getColorPrimary(),
+			'background_color' => '#ffffff',
 			'icons' =>
 				[
 					[

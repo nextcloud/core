@@ -36,12 +36,14 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\FileDisplayResponse;
 use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\Http\StreamResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
 use OCP\IRequest;
+use OCP\IURLGenerator;
 
 class JsController extends Controller {
 
@@ -51,11 +53,15 @@ class JsController extends Controller {
 	/** @var ITimeFactory */
 	protected $timeFactory;
 
-	public function __construct($appName, IRequest $request, Factory $appDataFactory, ITimeFactory $timeFactory) {
+	/** @var IURLGenerator */
+	private $urlGenerator;
+
+	public function __construct($appName, IRequest $request, Factory $appDataFactory, ITimeFactory $timeFactory, IURLGenerator $urlGenerator) {
 		parent::__construct($appName, $request);
 
 		$this->appData = $appDataFactory->get('js');
 		$this->timeFactory = $timeFactory;
+		$this->urlGenerator = $urlGenerator;
 	}
 
 	/**
@@ -83,6 +89,29 @@ class JsController extends Controller {
 
 		$ttl = 31536000;
 		$response->addHeader('Cache-Control', 'max-age='.$ttl.', immutable');
+
+		$expires = new \DateTime();
+		$expires->setTimestamp($this->timeFactory->getTime());
+		$expires->add(new \DateInterval('PT'.$ttl.'S'));
+		$response->addHeader('Expires', $expires->format(\DateTime::RFC1123));
+		$response->addHeader('Pragma', 'cache');
+		return $response;
+	}
+
+	/**
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 * @NoSameSiteCookieRequired
+	 *
+	 * @return StreamResponse
+	 */
+	public function getServiceWorker(): Response {
+		$response = new StreamResponse(__DIR__ . '/../js/serviceworker_raw.js');
+
+		$ttl = 31536000;
+		$response->addHeader('Cache-Control', 'max-age='.$ttl.', immutable');
+		$response->addHeader('Content-Type', 'application/javascript');
+		$response->addHeader('Service-Worker-Allowed', $this->urlGenerator->getBaseUrl() . '/');
 
 		$expires = new \DateTime();
 		$expires->setTimestamp($this->timeFactory->getTime());
