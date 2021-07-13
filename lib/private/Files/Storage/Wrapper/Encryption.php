@@ -620,7 +620,7 @@ class Encryption extends Wrapper {
 			return false;
 		}
 
-		$result = $this->copyBetweenStorage($sourceStorage, $sourceInternalPath, $targetInternalPath, $preserveMtime, true);
+		$result = $this->copyBetweenStorage($sourceStorage, $sourceInternalPath, $targetInternalPath, $preserveMtime, false);
 		if ($result) {
 			if ($sourceStorage->is_dir($sourceInternalPath)) {
 				$result &= $sourceStorage->rmdir($sourceInternalPath);
