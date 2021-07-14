@@ -119,7 +119,7 @@
 					context.$file.find('.action-comment').tooltip('hide')
 					// open sidebar in comments section
 					OCA.Files.Sidebar.setActiveTab('comments')
-					OCA.Files.Sidebar.open('/' + fileName)
+					OCA.Files.Sidebar.open(context.dir + '/' + fileName)
 				},
 			})
 
