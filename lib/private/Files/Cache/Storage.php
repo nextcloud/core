@@ -29,6 +29,7 @@
 
 namespace OC\Files\Cache;
 
+use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\Files\Storage\IStorage;
 use Psr\Log\LoggerInterface;
 
@@ -217,6 +218,45 @@ class Storage {
 			$query->delete('filecache')
 				->where($query->expr()->eq('storage', $query->createNamedParameter($numericId)));
 			$query->execute();
+		}
+	}
+
+	/**
+	 * remove the entry for the storage by the mount id
+	 *
+	 * @param int $mountId
+	 */
+	public static function cleanByMountId(int $mountId) {
+		$db = \OC::$server->getDatabaseConnection();
+
+		try {
+			$db->beginTransaction();
+
+			$query = $db->getQueryBuilder();
+			$query->select('storage_id')
+				->from('mounts')
+				->where($query->expr()->eq('mount_id', $query->createNamedParameter($mountId, IQueryBuilder::PARAM_INT)));
+			$storageIds = $query->executeQuery()->fetchAll(\PDO::FETCH_COLUMN);
+
+			$query = $db->getQueryBuilder();
+			$query->delete('filecache')
+				->where($query->expr()->in('storage', $query->createNamedParameter($storageIds, IQueryBuilder::PARAM_INT_ARRAY)));
+			$query->executeStatement();
+
+			$query = $db->getQueryBuilder();
+			$query->delete('storages')
+				->where($query->expr()->eq('numeric_id', $query->createNamedParameter($storageIds, IQueryBuilder::PARAM_INT_ARRAY)));
+			$query->executeStatement();
+
+			$query = $db->getQueryBuilder();
+			$query->delete('mounts')
+				->where($query->expr()->eq('mount_id', $query->createNamedParameter($mountId, IQueryBuilder::PARAM_INT)));
+			$query->executeStatement();
+
+			$db->commit();
+		} catch (\Exception $e) {
+			$db->rollBack();
+			throw $e;
 		}
 	}
 }
