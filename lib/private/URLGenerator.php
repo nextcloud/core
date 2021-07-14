@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Rudolf <github.com@daniel-rudolf.de>
  * @author Felix Epp <work@felixepp.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
@@ -41,10 +42,12 @@ namespace OC;
 
 use OC\Route\Router;
 use OCA\Theming\ThemingDefaults;
+use OCP\App\IAppManager;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUserSession;
 use RuntimeException;
 
 /**
@@ -53,6 +56,10 @@ use RuntimeException;
 class URLGenerator implements IURLGenerator {
 	/** @var IConfig */
 	private $config;
+	/** @var IUserSession */
+	public $userSession;
+	/** @var IAppManager */
+	public $appManager;
 	/** @var ICacheFactory */
 	private $cacheFactory;
 	/** @var IRequest */
@@ -63,10 +70,14 @@ class URLGenerator implements IURLGenerator {
 	private $baseUrl = null;
 
 	public function __construct(IConfig $config,
+								IUserSession $userSession,
+								IAppManager $appManager,
 								ICacheFactory $cacheFactory,
 								IRequest $request,
 								Router $router) {
 		$this->config = $config;
+		$this->userSession = $userSession;
+		$this->appManager = $appManager;
 		$this->cacheFactory = $cacheFactory;
 		$this->request = $request;
 		$this->router = $router;
@@ -265,6 +276,49 @@ class URLGenerator implements IURLGenerator {
 	public function linkToDocs(string $key): string {
 		$theme = \OC::$server->getThemingDefaults();
 		return $theme->buildDocLinkToKey($key);
+	}
+
+	/**
+	 * Returns the URL of the default page based on the system configuration
+	 * and the apps visible for the current user
+	 * @return string
+	 */
+	public function linkToDefaultPageUrl(): string {
+		// Deny the redirect if the URL contains a @
+		// This prevents unvalidated redirects like ?redirect_url=:user@domain.com
+		if (isset($_REQUEST['redirect_url']) && strpos($_REQUEST['redirect_url'], '@') === false) {
+			return $this->getAbsoluteURL(urldecode($_REQUEST['redirect_url']));
+		}
+
+		$defaultPage = \OC::$server->getConfig()->getAppValue('core', 'defaultpage');
+		if ($defaultPage) {
+			return $this->getAbsoluteURL($defaultPage);
+		}
+
+		$appId = 'files';
+		$defaultApps = explode(',', $this->config->getSystemValue('defaultapp', 'dashboard,files'));
+
+		$userId = $this->userSession->isLoggedIn() ? $this->userSession->getUser()->getUID() : null;
+		if ($userId !== null) {
+			$userDefaultApps = explode(',', $this->config->getUserValue($userId, 'core', 'defaultapp'));
+			$defaultApps = array_filter(array_merge($userDefaultApps, $defaultApps));
+		}
+
+		// find the first app that is enabled for the current user
+		foreach ($defaultApps as $defaultApp) {
+			$defaultApp = \OC_App::cleanAppId(strip_tags($defaultApp));
+			if ($this->appManager->isEnabledForUser($defaultApp)) {
+				$appId = $defaultApp;
+				break;
+			}
+		}
+
+		if ($this->config->getSystemValue('htaccess.IgnoreFrontController', false) === true
+			|| getenv('front_controller_active') === 'true') {
+			return $this->getAbsoluteURL('/apps/' . $appId . '/');
+		}
+
+		return $this->getAbsoluteURL('/index.php/apps/' . $appId . '/');
 	}
 
 	/**

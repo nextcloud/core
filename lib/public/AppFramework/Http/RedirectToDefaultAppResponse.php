@@ -26,18 +26,24 @@ declare(strict_types=1);
  */
 namespace OCP\AppFramework\Http;
 
+use OCP\IURLGenerator;
+
 /**
  * Redirects to the default app
+ *
  * @since 16.0.0
+ * @depreacted 23.0.0 Use RedirectResponse() with IURLGenerator::linkToDefaultPageUrl() instead
  */
 class RedirectToDefaultAppResponse extends RedirectResponse {
-
-
 	/**
 	 * Creates a response that redirects to the default app
+	 *
 	 * @since 16.0.0
+	 * @depreacted 23.0.0 Use RedirectResponse() with IURLGenerator::linkToDefaultPageUrl() instead
 	 */
 	public function __construct() {
-		parent::__construct(\OC_Util::getDefaultPageUrl());
+		/** @var IURLGenerator $urlGenerator */
+		$urlGenerator = \OC::$server->get(IURLGenerator::class);
+		parent::__construct($urlGenerator->linkToDefaultPageUrl());
 	}
 }

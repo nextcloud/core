@@ -9,7 +9,6 @@
 namespace Test;
 
 use OC_Util;
-use OCP\App\IAppManager;
 
 /**
  * Class UtilTest
@@ -170,96 +169,6 @@ class UtilTest extends \Test\TestCase {
 	}
 
 	/**
-	 * Test default apps
-	 *
-	 * @dataProvider defaultAppsProvider
-	 * @group DB
-	 */
-	public function testDefaultApps($defaultAppConfig, $expectedPath, $enabledApps) {
-		$oldDefaultApps = \OC::$server->getConfig()->getSystemValue('defaultapp', '');
-		// CLI is doing messy stuff with the webroot, so need to work it around
-		$oldWebRoot = \OC::$WEBROOT;
-		\OC::$WEBROOT = '';
-
-		$appManager = $this->createMock(IAppManager::class);
-		$appManager->expects($this->any())
-			->method('isEnabledForUser')
-			->willReturnCallback(function ($appId) use ($enabledApps) {
-				return in_array($appId, $enabledApps);
-			});
-		Dummy_OC_Util::$appManager = $appManager;
-
-		// need to set a user id to make sure enabled apps are read from cache
-		\OC_User::setUserId($this->getUniqueID());
-		\OC::$server->getConfig()->setSystemValue('defaultapp', $defaultAppConfig);
-		$this->assertEquals('http://localhost/' . $expectedPath, Dummy_OC_Util::getDefaultPageUrl());
-
-		// restore old state
-		\OC::$WEBROOT = $oldWebRoot;
-		\OC::$server->getConfig()->setSystemValue('defaultapp', $oldDefaultApps);
-		\OC_User::setUserId(null);
-	}
-
-	public function defaultAppsProvider() {
-		return [
-			// none specified, default to files
-			[
-				'',
-				'index.php/apps/files/',
-				['files'],
-			],
-			// unexisting or inaccessible app specified, default to files
-			[
-				'unexist',
-				'index.php/apps/files/',
-				['files'],
-			],
-			// non-standard app
-			[
-				'calendar',
-				'index.php/apps/calendar/',
-				['files', 'calendar'],
-			],
-			// non-standard app with fallback
-			[
-				'contacts,calendar',
-				'index.php/apps/calendar/',
-				['files', 'calendar'],
-			],
-		];
-	}
-
-	public function testGetDefaultPageUrlWithRedirectUrlWithoutFrontController() {
-		putenv('front_controller_active=false');
-		\OC::$server->getConfig()->deleteSystemValue('htaccess.IgnoreFrontController');
-
-		$_REQUEST['redirect_url'] = 'myRedirectUrl.com';
-		$this->assertSame('http://localhost'.\OC::$WEBROOT.'/myRedirectUrl.com', OC_Util::getDefaultPageUrl());
-	}
-
-	public function testGetDefaultPageUrlWithRedirectUrlRedirectBypassWithoutFrontController() {
-		putenv('front_controller_active=false');
-		\OC::$server->getConfig()->deleteSystemValue('htaccess.IgnoreFrontController');
-
-		$_REQUEST['redirect_url'] = 'myRedirectUrl.com@foo.com:a';
-		$this->assertSame('http://localhost'.\OC::$WEBROOT.'/index.php/apps/files/', OC_Util::getDefaultPageUrl());
-	}
-
-	public function testGetDefaultPageUrlWithRedirectUrlRedirectBypassWithFrontController() {
-		putenv('front_controller_active=true');
-		$_REQUEST['redirect_url'] = 'myRedirectUrl.com@foo.com:a';
-		$this->assertSame('http://localhost'.\OC::$WEBROOT.'/apps/files/', OC_Util::getDefaultPageUrl());
-	}
-
-	public function testGetDefaultPageUrlWithRedirectUrlWithIgnoreFrontController() {
-		putenv('front_controller_active=false');
-		\OC::$server->getConfig()->setSystemValue('htaccess.IgnoreFrontController', true);
-
-		$_REQUEST['redirect_url'] = 'myRedirectUrl.com@foo.com:a';
-		$this->assertSame('http://localhost'.\OC::$WEBROOT.'/apps/files/', OC_Util::getDefaultPageUrl());
-	}
-
-	/**
 	 * Test needUpgrade() when the core version is increased
 	 */
 	public function testNeedUpgradeCore() {
@@ -388,19 +297,5 @@ class UtilTest extends \Test\TestCase {
 			'core/vendor/myFancyCSSFile1',
 			'myApp/vendor/myFancyCSSFile2',
 		], \OC_Util::$styles);
-	}
-}
-
-/**
- * Dummy OC Util class to make it possible to override the app manager
- */
-class Dummy_OC_Util extends OC_Util {
-	/**
-	 * @var \OCP\App\IAppManager
-	 */
-	public static $appManager;
-
-	protected static function getAppManager() {
-		return self::$appManager;
 	}
 }

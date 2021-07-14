@@ -27,7 +27,6 @@ namespace OC\Core\Controller;
 
 use OC\Authentication\TwoFactorAuth\Manager;
 use OC_User;
-use OC_Util;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\StandaloneTemplateResponse;
@@ -77,7 +76,7 @@ class TwoFactorChallengeController extends Controller {
 	protected function getLogoutUrl() {
 		return OC_User::getLogoutUrl($this->urlGenerator);
 	}
-	
+
 	/**
 	 * @param IProvider[] $providers
 	 */
@@ -197,7 +196,7 @@ class TwoFactorChallengeController extends Controller {
 				if (!is_null($redirect_url)) {
 					return new RedirectResponse($this->urlGenerator->getAbsoluteURL(urldecode($redirect_url)));
 				}
-				return new RedirectResponse(OC_Util::getDefaultPageUrl());
+				return new RedirectResponse($this->urlGenerator->linkToDefaultPageUrl());
 			}
 		} catch (TwoFactorException $e) {
 			/*

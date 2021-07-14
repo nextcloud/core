@@ -38,7 +38,6 @@ use OC\Authentication\WebAuthn\Manager as WebAuthnManager;
 use OC\Security\Bruteforce\Throttler;
 use OC\User\Session;
 use OC_App;
-use OC_Util;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -150,7 +149,7 @@ class LoginController extends Controller {
 	 */
 	public function showLoginForm(string $user = null, string $redirect_url = null): Http\Response {
 		if ($this->userSession->isLoggedIn()) {
-			return new RedirectResponse(OC_Util::getDefaultPageUrl());
+			return new RedirectResponse($this->urlGenerator->linkToDefaultPageUrl());
 		}
 
 		$loginMessages = $this->session->get('loginMessages');
@@ -274,7 +273,7 @@ class LoginController extends Controller {
 				return new RedirectResponse($location);
 			}
 		}
-		return new RedirectResponse(OC_Util::getDefaultPageUrl());
+		return new RedirectResponse($this->urlGenerator->linkToDefaultPageUrl());
 	}
 
 	/**

@@ -98,6 +98,14 @@ interface IURLGenerator {
 	public function linkToDocs(string $key): string;
 
 	/**
+	 * Returns the URL of the default page based on the system configuration
+	 * and the apps visible for the current user
+	 * @return string
+	 * @since 23.0.0
+	 */
+	public function linkToDefaultPageUrl(): string;
+
+	/**
 	 * @return string base url of the current request
 	 * @since 13.0.0
 	 */
