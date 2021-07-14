@@ -36,6 +36,7 @@ use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\DBAL\Query\QueryException;
 use OC\DB\ConnectionAdapter;
+use OC\DB\Exceptions\DbalException;
 use OC\DB\QueryBuilder\ExpressionBuilder\ExpressionBuilder;
 use OC\DB\QueryBuilder\ExpressionBuilder\MySqlExpressionBuilder;
 use OC\DB\QueryBuilder\ExpressionBuilder\OCIExpressionBuilder;
@@ -47,6 +48,7 @@ use OC\DB\QueryBuilder\FunctionBuilder\PgSqlFunctionBuilder;
 use OC\DB\QueryBuilder\FunctionBuilder\SqliteFunctionBuilder;
 use OC\DB\ResultAdapter;
 use OC\SystemConfig;
+use OCP\DB\Exception;
 use OCP\DB\IResult;
 use OCP\DB\QueryBuilder\ICompositeExpression;
 use OCP\DB\QueryBuilder\ILiteral;
@@ -200,6 +202,7 @@ class QueryBuilder implements IQueryBuilder {
 	 * Uses {@see Connection::executeQuery} for select statements and {@see Connection::executeUpdate}
 	 * for insert, update and delete statements.
 	 *
+	 * @throws Exception since 21.0.0
 	 * @return IResult|int
 	 */
 	public function execute() {
@@ -284,7 +287,11 @@ class QueryBuilder implements IQueryBuilder {
 			]);
 		}
 
-		$result = $this->queryBuilder->execute();
+		try {
+			$result = $this->queryBuilder->execute();
+		} catch (\Doctrine\DBAL\Exception $e) {
+			throw DbalException::wrap($e);
+		}
 		if (is_int($result)) {
 			return $result;
 		}
