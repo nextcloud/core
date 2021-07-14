@@ -25,6 +25,7 @@
  * @author timm2k <timm2k@gmx.de>
  * @author Timo Förster <tfoerster@webfoersterei.de>
  * @author Valdnet <47037905+Valdnet@users.noreply.github.com>
+ * @author MichaIng <micha@dietpi.com>
  *
  * @license AGPL-3.0
  *
@@ -220,7 +221,7 @@ class CheckSetupController extends Controller {
 	}
 
 	/**
-	 * Check if the used  SSL lib is outdated. Older OpenSSL and NSS versions do
+	 * Check if the used SSL lib is outdated. Older OpenSSL and NSS versions do
 	 * have multiple bugs which likely lead to problems in combination with
 	 * functionality required by ownCloud such as SNI.
 	 *
@@ -426,31 +427,39 @@ Raw output
 	}
 
 	/**
-	 * Checks whether a PHP opcache is properly set up
-	 * @return bool
+	 * Checks whether a PHP OPcache is properly set up
+	 * @return string[] The list of OPcache setup recommendations
 	 */
-	protected function isOpcacheProperlySetup() {
+	protected function isOpcacheProperlySetup(): array {
+		$recommendations = [];
+
 		if (!$this->iniGetWrapper->getBool('opcache.enable')) {
-			return false;
+			$recommendations[] = 'OPcache is disabled. For better performance, it is recommended to apply <code>opcache.enable=1</code> to your PHP configuration.';
+
+			// Check for saved comments only when OPcache is currently disabled. If it was enabled, opcache.save_comments=0 would break Nextcloud in the first place.
+			if (!$this->iniGetWrapper->getBool('opcache.save_comments')) {
+				$recommendations[] = 'OPcache is configured to remove code comments. With OPcache enabled, <code>opcache.save_comments=1</code> must be set for Nextcloud to function.';
+			}
+		} else {
+			// Mute error when opcache.restrict_api is set and does not permit Nextcloud to use opcache_get_status(). All below conditions will then return false.
+			// ToDo: Add a check for opcache.restrict_api, since it can cause issues when Nextcloud cannot evict cached scripts: https://github.com/nextcloud/server/pull/8188
+			$status = @opcache_get_status(false);
+
+			// Recommend to raise value, if more than 90% of max value is reached
+			if ($status['opcache_statistics']['num_cached_keys'] / $status['opcache_statistics']['max_cached_keys'] > 0.9) {
+				$recommendations[] = 'The maximum number of OPcache keys is nearly exceeded. To assure that all scripts can be hold in cache, it is recommended to apply <code>opcache.max_accelerated_files</code> to your PHP configuration with a value higher than <code>' . ($this->iniGetWrapper->getNumeric('opcache.max_accelerated_files') ?: 'currently') . '</code>.';
+			}
+
+			if ($status['memory_usage']['used_memory'] / $status['memory_usage']['free_memory'] > 9) {
+				$recommendations[] = 'The OPcache buffer is nearly full. To assure that all scripts can be hold in cache, it is recommended to apply <code>opcache.memory_consumption</code> to your PHP configuration with a value higher than <code>' . ($this->iniGetWrapper->getNumeric('opcache.memory_consumption') ?: 'currently') . '</code>.';
+			}
+
+			if ($status['interned_strings_usage']['used_memory'] / $status['interned_strings_usage']['free_memory'] > 9) {
+				$recommendations[] = 'The OPcache interned strings buffer is nearly full. To assure that repeating strings can be effectively cached, it is recommended to apply <code>opcache.interned_strings_buffer</code> to your PHP configuration with a value higher than <code>' . ($this->iniGetWrapper->getNumeric('opcache.interned_strings_buffer') ?: 'currently') . '</code>.';
+			}
 		}
 
-		if (!$this->iniGetWrapper->getBool('opcache.save_comments')) {
-			return false;
-		}
-
-		if ($this->iniGetWrapper->getNumeric('opcache.max_accelerated_files') < 10000) {
-			return false;
-		}
-
-		if ($this->iniGetWrapper->getNumeric('opcache.memory_consumption') < 128) {
-			return false;
-		}
-
-		if ($this->iniGetWrapper->getNumeric('opcache.interned_strings_buffer') < 8) {
-			return false;
-		}
-
-		return true;
+		return $recommendations;
 	}
 
 	/**

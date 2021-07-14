@@ -329,11 +329,16 @@
 								.replace('{linkend}', '</a>'),
 							type: OC.SetupChecks.MESSAGE_TYPE_INFO
 						});
-					} else if(!data.isOpcacheProperlySetup) {
+					} else if(data.isOpcacheProperlySetup.length > 0) {
+						var listOfOPcacheRecommends = "";
+						data.isOpcacheProperlySetup.forEach(function(element){
+							listOfOPcacheRecommends += "<li>" + element + "</li>";
+						});
 						messages.push({
-							msg: t('core', 'The PHP OPcache module is not properly configured. {linkstart}For better performance it is recommended ↗{linkend} to use the following settings in the <code>php.ini</code>:')
-								.replace('{linkstart}', '<a target="_blank" rel="noreferrer noopener" class="external" href="' + data.phpOpcacheDocumentation + '">')
-								.replace('{linkend}', '</a>') + "<pre><code>opcache.enable=1\nopcache.interned_strings_buffer=8\nopcache.max_accelerated_files=10000\nopcache.memory_consumption=128\nopcache.save_comments=1\nopcache.revalidate_freq=1</code></pre>",
+							msg: t(
+								'core',
+								'The PHP OPcache module is not properly configured:'
+							) + "<ul>" + listOfOPcacheRecommends + "</ul>",
 							type: OC.SetupChecks.MESSAGE_TYPE_INFO
 						});
 					}
