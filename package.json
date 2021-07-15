@@ -54,7 +54,7 @@
     "dompurify": "^2.2.8",
     "escape-html": "^1.0.3",
     "handlebars": "^4.7.7",
-    "jcrop": "git+https://github.com/ChristophWurst/Jcrop.git#v0.9.12-npm3",
+    "jcrop": "git+https://github.com/ChristophWurst/Jcrop.git#v2.0.6",
     "jquery": "~3.3",
     "jquery-migrate": "~3.3",
     "jquery-ui": "^1.12.1",
