@@ -20,6 +20,9 @@ $color-box-shadow: $color-main-text;
 $color-border: darken($color-main-background, 50%);
 $color-border-dark: darken($color-main-background, 50%);
 
+$image-logo: url('../../../core/img/logo/logo.svg?v=1') !default;
+$image-logoheader: url('../../../core/img/logo/logo.svg?v=1') !default;
+
 [class^='icon-'], [class*=' icon-'],
 .action,
 #appmenu li a,
