@@ -197,7 +197,9 @@ select {
 		border-color: var(--color-primary) !important;
 	}
 
-	&.icon-file {
+	&.icon-file,
+	&.icon-file-white
+	{
 		padding-left: 48px;
 		background-position: 24px;
 	}

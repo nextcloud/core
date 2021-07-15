@@ -92,7 +92,7 @@ $invert: luma($color-primary) > 0.6;
 }
 
 /* Colorized svg images */
-.icon-file, .icon-filetype-text {
+.icon-file, .icon-filetype-text, .icon-file-white:hover, .icon-file-white:focus {
 	background-image: url(./img/core/filetypes/text.svg?v=#{$theming-cachebuster});
 }
 

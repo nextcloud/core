@@ -1,6 +1,6 @@
 <div class="section development-notice">
 	<p>
-		<a href="<?php p($_['reasons-use-nextcloud-pdf-link']); ?>" id="open-reasons-use-nextcloud-pdf" class="link-button icon-file" target="_blank"><?php p($l->t('Reasons to use Nextcloud in your organization'));?></a>
+		<a href="<?php p($_['reasons-use-nextcloud-pdf-link']); ?>" id="open-reasons-use-nextcloud-pdf" class="link-button icon-file-white" target="_blank"><?php p($l->t('Reasons to use Nextcloud in your organization'));?></a>
 	</p>
 	<p>
 		<?php print_unescaped(str_replace(

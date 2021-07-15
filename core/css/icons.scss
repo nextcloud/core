@@ -389,6 +389,11 @@ audio, canvas, embed, iframe, img, input, object, video {
 	@include icon-color('text', 'filetypes', #969696, 1, true);
 }
 
+.icon-file-white,
+.icon-filetype-text-white {
+	@include icon-color('text', 'filetypes', $color-white, 1, true);
+}
+
 .icon-filetype-file {
 	@include icon-color('file', 'filetypes', #969696, 1, true);
 }
