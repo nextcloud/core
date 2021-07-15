@@ -28,7 +28,7 @@ import { generateOcsUrl } from '@nextcloud/router'
 const scopeValue = loadState('workflowengine', 'scope') === 0 ? 'global' : 'user'
 
 const getApiUrl = (url) => {
-	return generateOcsUrl('apps/workflowengine/api/v1/workflows', 2) + scopeValue + url + '?format=json'
+	return generateOcsUrl('apps/workflowengine/api/v1/workflows/{scopeValue}', { scopeValue }) + url + '?format=json'
 }
 
 export {

@@ -24,6 +24,6 @@ import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
 export const getTemplates = async function() {
-	const response = await axios.get(generateOcsUrl('apps/files/api/v1', 2) + 'templates')
+	const response = await axios.get(generateOcsUrl('apps/files/api/v1/templates'))
 	return response.data.ocs.data
 }

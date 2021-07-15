@@ -84,7 +84,7 @@ export default {
 			}
 
 			this.status.isLoading = true
-			return axios.get(generateOcsUrl('cloud', 2) + 'groups/details?limit=20&search=' + encodeURI(searchQuery)).then((response) => {
+			return axios.get(generateOcsUrl('cloud/groups/details?limit=20&search=') + encodeURI(searchQuery)).then((response) => {
 				response.data.ocs.data.groups.forEach((group) => {
 					this.addGroup({
 						id: group.id,

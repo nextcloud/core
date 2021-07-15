@@ -121,7 +121,7 @@ export default {
 			try {
 				const isDelete = id === ''
 				await axios({
-					url: generateOcsUrl('apps/accessibility/api/v1/config', 2) + type,
+					url: generateOcsUrl('apps/accessibility/api/v1/config/{type}', { type }),
 					method: isDelete ? 'DELETE' : 'PUT',
 					data: {
 						value: id,

@@ -127,7 +127,7 @@ const initTemplatesFolder = async function(name) {
 	const templatePath = (getCurrentDirectory() + `/${name}`).replace('//', '/')
 	try {
 		logger.debug('Initializing the templates directory', { templatePath })
-		const response = await axios.post(generateOcsUrl('apps/files/api/v1/templates', 2) + 'path', {
+		const response = await axios.post(generateOcsUrl('apps/files/api/v1/templates/path'), {
 			templatePath,
 			copySystemTemplates: true,
 		})

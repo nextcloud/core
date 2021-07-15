@@ -38,7 +38,7 @@
     "@nextcloud/moment": "^1.1.1",
     "@nextcloud/password-confirmation": "^1.0.1",
     "@nextcloud/paths": "^2.0.0",
-    "@nextcloud/router": "^1.1.0",
+    "@nextcloud/router": "^2.0.0",
     "@nextcloud/vue": "^3.10.1",
     "@nextcloud/vue-dashboard": "^2.0.1",
     "autosize": "^4.0.2",

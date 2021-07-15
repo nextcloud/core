@@ -199,7 +199,7 @@ export default {
 
 			let request = null
 			try {
-				request = await axios.get(generateOcsUrl('apps/files_sharing/api/v1', 2) + 'sharees', {
+				request = await axios.get(generateOcsUrl('apps/files_sharing/api/v1/sharees'), {
 					params: {
 						format: 'json',
 						itemType: this.fileInfo.type === 'dir' ? 'folder' : 'file',
@@ -290,7 +290,7 @@ export default {
 
 			let request = null
 			try {
-				request = await axios.get(generateOcsUrl('apps/files_sharing/api/v1', 2) + 'sharees_recommended', {
+				request = await axios.get(generateOcsUrl('apps/files_sharing/api/v1/sharees_recommended'), {
 					params: {
 						format: 'json',
 						itemType: this.fileInfo.type,

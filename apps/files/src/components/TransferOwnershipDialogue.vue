@@ -162,7 +162,7 @@ export default {
 
 			this.loadingUsers = true
 			try {
-				const response = await axios.get(generateOcsUrl('apps/files_sharing/api/v1', 2) + 'sharees', {
+				const response = await axios.get(generateOcsUrl('apps/files_sharing/api/v1/sharees'), {
 					params: {
 						format: 'json',
 						itemType: 'file',
@@ -197,7 +197,7 @@ export default {
 			}
 			logger.debug('submit transfer ownership form', data)
 
-			const url = generateOcsUrl('apps/files/api/v1/', 2) + 'transferownership'
+			const url = generateOcsUrl('apps/files/api/v1//transferownership')
 
 			axios.post(url, data)
 				.then(resp => resp.data)
