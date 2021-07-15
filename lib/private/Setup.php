@@ -424,6 +424,9 @@ class Setup {
 
 			//and we are done
 			$config->setSystemValue('installed', true);
+			if (self::shouldRemoveCanInstallFile()) {
+				unlink(\OC::$configDir.'/CAN_INSTALL');
+			}
 
 			// Create a session token for the newly created user
 			// The token provider requires a working db, so it's not injected on setup
@@ -600,5 +603,19 @@ class Setup {
 		require \OC::$SERVERROOT . '/version.php';
 		/** @var string $vendor */
 		return (string)$vendor;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function shouldRemoveCanInstallFile() {
+		return \OC_Util::getChannel() !== 'git' && is_file(\OC::$configDir.'/CAN_INSTALL');
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function canInstallFileExists() {
+		return is_file(\OC::$configDir.'/CAN_INSTALL');
 	}
 }

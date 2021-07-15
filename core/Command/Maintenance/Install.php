@@ -110,6 +110,9 @@ class Install extends Command {
 			$this->printErrors($output, $errors);
 			return 1;
 		}
+		if ($setupHelper->shouldRemoveCanInstallFile()) {
+			$output->writeln('<warn>Could not remove CAN_INSTALL from the config folder. Please remove this file manually.</warn>');
+		}
 		$output->writeln("Nextcloud was successfully installed");
 		return 0;
 	}
