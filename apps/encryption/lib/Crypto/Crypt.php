@@ -686,11 +686,25 @@ class Crypt {
 			throw new MultiKeyDecryptException('Cannot multikey decrypt empty plain content');
 		}
 
+		$prev = null;
+
+		// We need to be able to extract the IV
+		if (strlen($encKeyFile) > 12) {
+			$iv = substr($encKeyFile, -12);
+			$encrypted = substr($encKeyFile, 0, -12);
+
+			if (openssl_open($encrypted, $plainContent, $shareKey, $privateKey, 'aes-256-gcm', $iv)) {
+				return $plainContent;
+			}
+
+			$prev = new MultiKeyDecryptException('multikeydecrypt with share key failed (aes-256-gcm):' . openssl_error_string());
+		}
+
 		if (openssl_open($encKeyFile, $plainContent, $shareKey, $privateKey, 'RC4')) {
 			return $plainContent;
-		} else {
-			throw new MultiKeyDecryptException('multikeydecrypt with share key failed:' . openssl_error_string());
 		}
+
+		throw new MultiKeyDecryptException('multikeydecrypt with share key failed (rc4):' . openssl_error_string(), '', 0, $prev);
 	}
 
 	/**
@@ -711,7 +725,8 @@ class Crypt {
 		$shareKeys = [];
 		$mappedShareKeys = [];
 
-		if (openssl_seal($plainContent, $sealed, $shareKeys, $keyFiles, 'RC4')) {
+		$iv = \random_bytes(12);
+		if (openssl_seal($plainContent, $sealed, $shareKeys, $keyFiles, 'aes-256-gcm', $iv)) {
 			$i = 0;
 
 			// Ensure each shareKey is labelled with its corresponding key id
@@ -722,10 +737,9 @@ class Crypt {
 
 			return [
 				'keys' => $mappedShareKeys,
-				'data' => $sealed
+				'data' => $sealed . $iv,
 			];
-		} else {
-			throw new MultiKeyEncryptException('multikeyencryption failed ' . openssl_error_string());
 		}
+		throw new MultiKeyEncryptException('multikeyencryption failed ' . openssl_error_string());
 	}
 }
