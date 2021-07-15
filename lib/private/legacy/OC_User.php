@@ -172,7 +172,9 @@ class OC_User {
 				$userSession = \OC::$server->getUserSession();
 				$userSession->setLoginName($uid);
 				$request = OC::$server->getRequest();
-				$userSession->createSessionToken($request, $uid, $uid);
+				$secret = $backend->getCurrentUserSecret();
+				$userSession->createSessionToken($request, $uid, $uid, $secret);
+				$pw = $secret === null ? '' : $secret;
 				// setup the filesystem
 				OC_Util::setupFS($uid);
 				// first call the post_login hooks, the login-process needs to be
@@ -184,7 +186,7 @@ class OC_User {
 					'post_login',
 					[
 						'uid' => $uid,
-						'password' => '',
+						'password' => $pw,
 						'isTokenLogin' => false,
 					]
 				);
