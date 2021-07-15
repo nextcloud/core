@@ -89,8 +89,14 @@ class RedisFactory {
 			}
 
 			$this->instance->connect($host, $port, $timeout);
+
+			// Auth if configured
 			if (isset($config['password']) && $config['password'] !== '') {
-				$this->instance->auth($config['password']);
+				if (isset($config['user']) && $config['user'] !== '') {
+					$this->instance->auth([$config['user'], $config['password']]);
+				} else {
+					$this->instance->auth($config['password']);
+				}
 			}
 
 			if (isset($config['dbindex'])) {
