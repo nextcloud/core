@@ -28,10 +28,11 @@ namespace OC\Files\ObjectStore;
 
 use Aws\S3\Exception\S3MultipartUploadException;
 use Aws\S3\MultipartUploader;
-use Aws\S3\ObjectUploader;
 use Aws\S3\S3Client;
-use Icewind\Streams\CallbackWrapper;
+use GuzzleHttp\Psr7\Utils;
 use OC\Files\Stream\SeekableHttpStream;
+use GuzzleHttp\Psr7;
+use Psr\Http\Message\StreamInterface;
 
 trait S3ObjectTrait {
 	/**
@@ -80,6 +81,55 @@ trait S3ObjectTrait {
 	}
 
 	/**
+	 * Single object put helper
+	 * @param string $urn the unified resource name used to identify the object
+	 * @param resource|StreamInterface $stream stream with the data to write
+	 * @param string|null $mimetype the mimetype to set for the remove object @since 22.0.0
+	 * @throws \Exception when something goes wrong, message will be logged
+	 */
+	protected function writeSingle(string $urn, $stream, string $mimetype = null) {
+		$this->getConnection()->putObject([
+			'Bucket' => $this->bucket,
+			'Key' => $urn,
+			'Body' => $stream,
+			'ACL' => 'private',
+			'ContentType' => $mimetype,
+		]);
+	}
+
+
+	/**
+	 * Multipart upload helper that tries to avoid orphaned fragments in S3
+	 * @param string $urn the unified resource name used to identify the object
+	 * @param resource|StreamInterface $stream stream with the data to write
+	 * @param string|null $mimetype the mimetype to set for the remove object
+	 * @throws \Exception when something goes wrong, message will be logged
+	 */
+	protected function writeMultiPart(string $urn, $stream, string $mimetype = null) {
+		$uploader = new MultipartUploader($this->getConnection(), $stream, [
+			'bucket' => $this->bucket,
+			'key' => $urn,
+			'part_size' => $this->uploadPartSize,
+			'params' => [
+				'ContentType' => $mimetype
+			],
+		]);
+
+		try {
+			$uploader->upload();
+		} catch (S3MultipartUploadException $e) {
+			// if anything goes wrong with multipart, make sure that you don´t poison and
+			// slow down s3 bucket with orphaned fragments
+			$uploadInfo = $e->getState()->getId();
+			if ($e->getState()->isInitiated() && (array_key_exists('UploadId', $uploadInfo))) {
+				$this->getConnection()->abortMultipartUpload($uploadInfo);
+			}
+			throw $e;
+		}
+	}
+
+
+	/**
 	 * @param string $urn the unified resource name used to identify the object
 	 * @param resource $stream stream with the data to write
 	 * @param string|null $mimetype the mimetype to set for the remove object @since 22.0.0
@@ -87,30 +137,19 @@ trait S3ObjectTrait {
 	 * @since 7.0.0
 	 */
 	public function writeObject($urn, $stream, string $mimetype = null) {
-		$count = 0;
-		$countStream = CallbackWrapper::wrap($stream, function ($read) use (&$count) {
-			$count += $read;
-		});
+		$psrStream = Utils::streamFor($stream);
 
-		$uploader = new MultipartUploader($this->getConnection(), $countStream, [
-			'bucket' => $this->bucket,
-			'key' => $urn,
-			'part_size' => $this->uploadPartSize,
-			'params' => [
-				'ContentType' => $mimetype
-			]
-		]);
-
-		try {
-			$uploader->upload();
-		} catch (S3MultipartUploadException $e) {
-			// This is an empty file so just touch it then
-			if ($count === 0 && feof($countStream)) {
-				$uploader = new ObjectUploader($this->getConnection(), $this->bucket, $urn, '');
-				$uploader->upload();
-			} else {
-				throw $e;
-			}
+		// ($psrStream->isSeekable() && $psrStream->getSize() !== null) evaluates to true for a On-Seekable stream
+		// so the optimisation does not apply
+		$buffer = new Psr7\Stream(fopen("php://memory", 'rwb+'));
+		Utils::copyToStream($psrStream, $buffer, MultipartUploader::PART_MIN_SIZE);
+		$buffer->seek(0);
+		if ($buffer->getSize() < MultipartUploader::PART_MIN_SIZE) {
+			// buffer is fully seekable, so use it directly for the small upload
+			$this->writeSingle($urn, $buffer, $mimetype);
+		} else {
+			$loadStream = new Psr7\AppendStream([$buffer, $psrStream]);
+			$this->writeMultiPart($urn, $loadStream, $mimetype);
 		}
 	}
 

@@ -26,10 +26,26 @@ use Test\TestCase;
 
 abstract class ObjectStoreTest extends TestCase {
 
+	/** @var string[] */
+	private $cleanup = [];
+
 	/**
 	 * @return \OCP\Files\ObjectStore\IObjectStore
 	 */
 	abstract protected function getInstance();
+
+	protected function cleanupAfter(string $urn) {
+		$this->cleanup[] = $urn;
+	}
+
+	public function tearDown(): void {
+		parent::tearDown();
+
+		$instance = $this->getInstance();
+		foreach ($this->cleanup as $urn) {
+			$instance->deleteObject($urn);
+		}
+	}
 
 	protected function stringToStream($data) {
 		$stream = fopen('php://temp', 'w+');
@@ -110,6 +126,9 @@ abstract class ObjectStoreTest extends TestCase {
 	}
 
 	public function testCopy() {
+		$this->cleanupAfter('source');
+		$this->cleanupAfter('target');
+
 		$stream = $this->stringToStream('foobar');
 
 		$instance = $this->getInstance();
