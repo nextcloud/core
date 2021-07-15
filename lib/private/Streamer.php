@@ -53,7 +53,7 @@ class Streamer {
 	 * @param int $numberOfFiles The number of files (and directories) that will
 	 *        be included in the streamed file
 	 */
-	public function __construct(IRequest $request, int $size, int $numberOfFiles) {
+	public function __construct(IRequest $request, $size, int $numberOfFiles) {
 
 		/**
 		 * zip32 constraints for a basic (without compression, volumes nor
