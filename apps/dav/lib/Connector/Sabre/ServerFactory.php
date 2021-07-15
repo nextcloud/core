@@ -176,6 +176,7 @@ class ServerFactory {
 				)
 			);
 			$server->addPlugin(new \OCA\DAV\Connector\Sabre\QuotaPlugin($view, true));
+			$server->addPlugin(new \OCA\DAV\Connector\Sabre\ChecksumUpdatePlugin());
 
 			if ($this->userSession->isLoggedIn()) {
 				$server->addPlugin(new \OCA\DAV\Connector\Sabre\TagsPlugin($objectTree, $this->tagManager));

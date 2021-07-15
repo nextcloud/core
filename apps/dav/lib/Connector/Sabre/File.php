@@ -343,11 +343,9 @@ class File extends Node implements IFile {
 
 			if (isset($this->request->server['HTTP_OC_CHECKSUM'])) {
 				$checksum = trim($this->request->server['HTTP_OC_CHECKSUM']);
-				$this->fileView->putFileInfo($this->path, ['checksum' => $checksum]);
-				$this->refreshInfo();
+				$this->setChecksum($checksum);
 			} elseif ($this->getChecksum() !== null && $this->getChecksum() !== '') {
-				$this->fileView->putFileInfo($this->path, ['checksum' => '']);
-				$this->refreshInfo();
+				$this->setChecksum('');
 			}
 		} catch (StorageNotAvailableException $e) {
 			throw new ServiceUnavailable("Failed to check file size: " . $e->getMessage(), 0, $e);
@@ -688,9 +686,18 @@ class File extends Node implements IFile {
 		return $this->info->getChecksum();
 	}
 
+	public function setChecksum(string $checksum) {
+		$this->fileView->putFileInfo($this->path, ['checksum' => $checksum]);
+		$this->refreshInfo();
+	}
+
 	protected function header($string) {
 		if (!\OC::$CLI) {
 			\header($string);
 		}
+	}
+
+	public function hash(string $type) {
+		return $this->fileView->hash($type, $this->path);
 	}
 }

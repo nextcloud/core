@@ -140,6 +140,7 @@ return array(
     'OCA\\DAV\\Connector\\Sabre\\BlockLegacyClientPlugin' => $baseDir . '/../lib/Connector/Sabre/BlockLegacyClientPlugin.php',
     'OCA\\DAV\\Connector\\Sabre\\CachingTree' => $baseDir . '/../lib/Connector/Sabre/CachingTree.php',
     'OCA\\DAV\\Connector\\Sabre\\ChecksumList' => $baseDir . '/../lib/Connector/Sabre/ChecksumList.php',
+    'OCA\\DAV\\Connector\\Sabre\\ChecksumUpdatePlugin' => $baseDir . '/../lib/Connector/Sabre/ChecksumUpdatePlugin.php',
     'OCA\\DAV\\Connector\\Sabre\\CommentPropertiesPlugin' => $baseDir . '/../lib/Connector/Sabre/CommentPropertiesPlugin.php',
     'OCA\\DAV\\Connector\\Sabre\\CopyEtagHeaderPlugin' => $baseDir . '/../lib/Connector/Sabre/CopyEtagHeaderPlugin.php',
     'OCA\\DAV\\Connector\\Sabre\\DavAclPlugin' => $baseDir . '/../lib/Connector/Sabre/DavAclPlugin.php',

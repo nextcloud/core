@@ -155,6 +155,7 @@ class ComposerStaticInitDAV
         'OCA\\DAV\\Connector\\Sabre\\BlockLegacyClientPlugin' => __DIR__ . '/..' . '/../lib/Connector/Sabre/BlockLegacyClientPlugin.php',
         'OCA\\DAV\\Connector\\Sabre\\CachingTree' => __DIR__ . '/..' . '/../lib/Connector/Sabre/CachingTree.php',
         'OCA\\DAV\\Connector\\Sabre\\ChecksumList' => __DIR__ . '/..' . '/../lib/Connector/Sabre/ChecksumList.php',
+        'OCA\\DAV\\Connector\\Sabre\\ChecksumUpdatePlugin' => __DIR__ . '/..' . '/../lib/Connector/Sabre/ChecksumUpdatePlugin.php',
         'OCA\\DAV\\Connector\\Sabre\\CommentPropertiesPlugin' => __DIR__ . '/..' . '/../lib/Connector/Sabre/CommentPropertiesPlugin.php',
         'OCA\\DAV\\Connector\\Sabre\\CopyEtagHeaderPlugin' => __DIR__ . '/..' . '/../lib/Connector/Sabre/CopyEtagHeaderPlugin.php',
         'OCA\\DAV\\Connector\\Sabre\\DavAclPlugin' => __DIR__ . '/..' . '/../lib/Connector/Sabre/DavAclPlugin.php',

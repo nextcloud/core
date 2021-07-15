@@ -39,6 +39,7 @@ use OC\Files\Mount\MoveableMount;
 use OC\Files\View;
 use OCA\DAV\Connector\Sabre\Exception\InvalidPath;
 use OCP\Files\FileInfo;
+use OCP\Files\IRootFolder;
 use OCP\Files\StorageNotAvailableException;
 use OCP\Share\IShare;
 use OCP\Share\Exceptions\ShareNotFound;
