@@ -72,7 +72,7 @@
     "select2": "3.5.1",
     "snap.js": "^2.0.9",
     "strengthify": "git+https://github.com/MorrisJobke/strengthify.git#0.5.9",
-    "underscore": "^1.12.0",
+    "underscore": "^1.12.1",
     "url-search-params-polyfill": "^8.1.1",
     "v-click-outside": "^3.1.2",
     "v-tooltip": "^2.1.3",
