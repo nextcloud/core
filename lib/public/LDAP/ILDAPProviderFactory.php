@@ -44,7 +44,7 @@ interface ILDAPProviderFactory {
 	 * @since 11.0.0
 	 */
 	public function __construct(IServerContainer $serverContainer);
-	
+
 	/**
 	 * creates and returns an instance of the ILDAPProvider
 	 *

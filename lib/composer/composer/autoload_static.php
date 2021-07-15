@@ -1179,6 +1179,7 @@ class ComposerStaticInit53792487c5a8370acc0b06b1a864ff4c
         'OC\\L10N\\LanguageIterator' => __DIR__ . '/../../..' . '/lib/private/L10N/LanguageIterator.php',
         'OC\\L10N\\LanguageNotFoundException' => __DIR__ . '/../../..' . '/lib/private/L10N/LanguageNotFoundException.php',
         'OC\\L10N\\LazyL10N' => __DIR__ . '/../../..' . '/lib/private/L10N/LazyL10N.php',
+        'OC\\LDAP\\NullLDAPProviderFactory' => __DIR__ . '/../../..' . '/lib/private/LDAP/NullLDAPProviderFactory.php',
         'OC\\LargeFileHelper' => __DIR__ . '/../../..' . '/lib/private/LargeFileHelper.php',
         'OC\\Lock\\AbstractLockingProvider' => __DIR__ . '/../../..' . '/lib/private/Lock/AbstractLockingProvider.php',
         'OC\\Lock\\DBLockingProvider' => __DIR__ . '/../../..' . '/lib/private/Lock/DBLockingProvider.php',

@@ -197,6 +197,8 @@ use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
 use OCP\L10N\IFactory;
+use OCP\LDAP\ILDAPProvider;
+use OCP\LDAP\ILDAPProviderFactory;
 use OCP\Lock\ILockingProvider;
 use OCP\Log\ILogFactory;
 use OCP\Mail\IMailer;
@@ -1002,10 +1004,13 @@ class Server extends ServerContainer implements IServerContainer {
 			$config = $c->getConfig();
 			$factoryClass = $config->getSystemValue('ldapProviderFactory', null);
 			if (is_null($factoryClass)) {
-				throw new \Exception('ldapProviderFactory not set');
+				return new NullLDAPProviderFactory($this);
 			}
 			/** @var \OCP\LDAP\ILDAPProviderFactory $factory */
-			$factory = new $factoryClass($this);
+			return new $factoryClass($this);
+		});
+		$this->registerService(ILDAPProvider::class, function (ContainerInterface $c) {
+			$factory = $c->get(ILDAPProviderFactory::class);
 			return $factory->getLDAPProvider();
 		});
 		$this->registerService(ILockingProvider::class, function (Server $c) {
