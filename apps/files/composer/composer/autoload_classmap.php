@@ -26,6 +26,7 @@ return array(
     'OCA\\Files\\Collaboration\\Resources\\Listener' => $baseDir . '/../lib/Collaboration/Resources/Listener.php',
     'OCA\\Files\\Collaboration\\Resources\\ResourceProvider' => $baseDir . '/../lib/Collaboration/Resources/ResourceProvider.php',
     'OCA\\Files\\Command\\DeleteOrphanedFiles' => $baseDir . '/../lib/Command/DeleteOrphanedFiles.php',
+    'OCA\\Files\\Command\\RepairTree' => $baseDir . '/../lib/Command/RepairTree.php',
     'OCA\\Files\\Command\\Scan' => $baseDir . '/../lib/Command/Scan.php',
     'OCA\\Files\\Command\\ScanAppData' => $baseDir . '/../lib/Command/ScanAppData.php',
     'OCA\\Files\\Command\\TransferOwnership' => $baseDir . '/../lib/Command/TransferOwnership.php',

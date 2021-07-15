@@ -34,6 +34,7 @@
 		<command>OCA\Files\Command\DeleteOrphanedFiles</command>
 		<command>OCA\Files\Command\TransferOwnership</command>
 		<command>OCA\Files\Command\ScanAppData</command>
+		<command>OCA\Files\Command\RepairTree</command>
 	</commands>
 
 	<activity>

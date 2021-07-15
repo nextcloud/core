@@ -41,6 +41,7 @@ class ComposerStaticInitFiles
         'OCA\\Files\\Collaboration\\Resources\\Listener' => __DIR__ . '/..' . '/../lib/Collaboration/Resources/Listener.php',
         'OCA\\Files\\Collaboration\\Resources\\ResourceProvider' => __DIR__ . '/..' . '/../lib/Collaboration/Resources/ResourceProvider.php',
         'OCA\\Files\\Command\\DeleteOrphanedFiles' => __DIR__ . '/..' . '/../lib/Command/DeleteOrphanedFiles.php',
+        'OCA\\Files\\Command\\RepairTree' => __DIR__ . '/..' . '/../lib/Command/RepairTree.php',
         'OCA\\Files\\Command\\Scan' => __DIR__ . '/..' . '/../lib/Command/Scan.php',
         'OCA\\Files\\Command\\ScanAppData' => __DIR__ . '/..' . '/../lib/Command/ScanAppData.php',
         'OCA\\Files\\Command\\TransferOwnership' => __DIR__ . '/..' . '/../lib/Command/TransferOwnership.php',
