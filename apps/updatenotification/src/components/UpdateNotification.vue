@@ -298,7 +298,7 @@ export default {
 			}
 
 			$.ajax({
-				url: generateOcsUrl('apps/updatenotification/api/v1/applist', 2) + this.newVersion,
+				url: generateOcsUrl('apps/updatenotification/api/v1/applist/') + this.newVersion,
 				type: 'GET',
 				beforeSend(request) {
 					request.setRequestHeader('Accept', 'application/json')
@@ -356,7 +356,7 @@ export default {
 		}.bind(this))
 
 		$.ajax({
-			url: generateOcsUrl('cloud', 2) + '/groups',
+			url: generateOcsUrl('cloud/groups'),
 			dataType: 'json',
 			success: function(data) {
 				const results = []

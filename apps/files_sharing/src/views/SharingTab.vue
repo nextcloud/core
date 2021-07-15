@@ -175,7 +175,7 @@ export default {
 				this.loading = true
 
 				// init params
-				const shareUrl = generateOcsUrl('apps/files_sharing/api/v1', 2) + 'shares'
+				const shareUrl = generateOcsUrl('apps/files_sharing/api/v1/shares')
 				const format = 'json'
 				// TODO: replace with proper getFUllpath implementation of our own FileInfo model
 				const path = (this.fileInfo.path + '/' + this.fileInfo.name).replace('//', '/')

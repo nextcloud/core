@@ -125,7 +125,7 @@ export default {
 	methods: {
 		searchGroup: _.debounce(function(query) {
 			this.loadingGroups = true
-			axios.get(generateOcsUrl(`cloud/groups?offset=0&search=${encodeURIComponent(query)}&limit=20`, 2))
+			axios.get(generateOcsUrl(`cloud/groups?offset=0&search=${encodeURIComponent(query)}&limit=20`))
 				.then(res => res.data.ocs)
 				.then(ocs => ocs.data.groups)
 				.then(groups => { this.groups = _.sortedUniq(_.uniq(this.groups.concat(groups))) })

@@ -45,7 +45,7 @@ const createCancelToken = () => axios.CancelToken.source()
  */
 export async function getTypes() {
 	try {
-		const { data } = await axios.get(generateOcsUrl('search', 2) + 'providers', {
+		const { data } = await axios.get(generateOcsUrl('search/providers'), {
 			params: {
 				// Sending which location we're currently at
 				from: window.location.pathname.replace('/index.php', '') + window.location.search,
@@ -76,7 +76,7 @@ export function search({ type, query, cursor }) {
 	 */
 	const cancelToken = createCancelToken()
 
-	const request = async() => axios.get(generateOcsUrl('search', 2) + `providers/${type}/search`, {
+	const request = async() => axios.get(generateOcsUrl('search/providers/{type}/search', { type }), {
 		cancelToken: cancelToken.token,
 		params: {
 			term: query,
