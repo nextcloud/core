@@ -56,4 +56,12 @@ interface IApacheBackend {
 	 * @since 6.0.0
 	 */
 	public function getCurrentUserId();
+
+	/**
+	 * Optionally returns a stable per-user secret. This secret is for
+	 * instance used to secure file encryption keys.
+	 * @return string|null
+	 * @since 21.0.0
+	 */
+	public function getCurrentUserSecret();
 }
