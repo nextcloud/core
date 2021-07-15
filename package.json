@@ -83,7 +83,7 @@
     "vue-localstorage": "^0.6.2",
     "vue-material-design-icons": "^4.12.1",
     "vue-multiselect": "^2.1.6",
-    "vue-router": "^3.5.1",
+    "vue-router": "^3.5.2",
     "vuedraggable": "^2.24.3",
     "vuex": "^3.6.2",
     "vuex-router-sync": "^5.0.0",
