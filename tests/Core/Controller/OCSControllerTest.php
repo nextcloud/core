@@ -68,12 +68,12 @@ class OCSControllerTest extends TestCase {
 
 	public function testGetConfig() {
 		$this->request->method('getServerHost')
-			->willReturn('awesomehost.io');
+			->willReturn('example.tld');
 
 		$data = [
 			'version' => '1.7',
 			'website' => 'Nextcloud',
-			'host' => 'awesomehost.io',
+			'host' => 'example.tld',
 			'contact' => '',
 			'ssl' => 'false',
 		];
@@ -88,6 +88,10 @@ class OCSControllerTest extends TestCase {
 		$this->userSession->expects($this->once())
 			->method('isLoggedIn')
 			->willReturn(true);
+		$this->request
+			->method('getServerHost')
+			->willReturn('example.tld');
+
 		[$major, $minor, $micro] = \OCP\Util::getVersion();
 
 		$result = [];
@@ -99,6 +103,8 @@ class OCSControllerTest extends TestCase {
 			'edition' => '',
 			'extendedSupport' => false
 		];
+
+		$result['host'] = 'example.tld';
 
 		$capabilities = [
 			'foo' => 'bar',
@@ -121,6 +127,10 @@ class OCSControllerTest extends TestCase {
 		$this->userSession->expects($this->once())
 			->method('isLoggedIn')
 			->willReturn(false);
+		$this->request
+			->method('getServerHost')
+			->willReturn('example.tld');
+
 		[$major, $minor, $micro] = \OCP\Util::getVersion();
 
 		$result = [];
@@ -132,6 +142,8 @@ class OCSControllerTest extends TestCase {
 			'edition' => '',
 			'extendedSupport' => false
 		];
+
+		$result['host'] = 'example.tld';
 
 		$capabilities = [
 			'foo' => 'bar',

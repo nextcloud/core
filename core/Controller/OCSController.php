@@ -102,6 +102,8 @@ class OCSController extends \OCP\AppFramework\OCSController {
 			'extendedSupport' => \OCP\Util::hasExtendedSupport()
 		];
 
+		$result['host'] = $this->request->getServerHost();
+
 		if ($this->userSession->isLoggedIn()) {
 			$result['capabilities'] = $this->capabilitiesManager->getCapabilities();
 		} else {
