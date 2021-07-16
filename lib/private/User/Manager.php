@@ -245,6 +245,25 @@ class Manager extends PublicEmitter implements IUserManager {
 		$loginName = str_replace("\0", '', $loginName);
 		$password = str_replace("\0", '', $password);
 
+		$cachedBackend = $this->cache->get($loginName);
+		if ($cachedBackend !== null && isset($this->backends[$cachedBackend])) {
+			// Cache has the info of the user backend already, so ask that one directly
+			$backend = $this->backends[$cachedBackend];
+			if ($backend->implementsActions(Backend::CHECK_PASSWORD)) {
+				$uid = $backend->checkPassword($loginName, $password);
+				if ($uid !== false) {
+					return $this->getUserObject($uid, $backend);
+				}
+
+				// See comment below
+				$urlDecodedPassword = urldecode($password);
+				$uid = $backend->checkPassword($loginName, $urlDecodedPassword);
+				if ($uid !== false) {
+					return $this->getUserObject($uid, $backend);
+				}
+			}
+		}
+
 		foreach ($this->backends as $backend) {
 			if ($backend->implementsActions(Backend::CHECK_PASSWORD)) {
 				$uid = $backend->checkPassword($loginName, $password);
