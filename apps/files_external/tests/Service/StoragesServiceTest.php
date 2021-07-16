@@ -40,7 +40,11 @@ use OCA\Files_External\Service\BackendService;
 use OCA\Files_External\Service\DBConfigService;
 use OCA\Files_External\Service\StoragesService;
 use OCP\AppFramework\IAppContainer;
+use OCP\Files\Cache\ICache;
 use OCP\Files\Config\IUserMountCache;
+use OCP\Files\Mount\IMountPoint;
+use OCP\Files\Storage\IStorage;
+use OCP\IUser;
 
 class CleaningDBConfig extends DBConfigService {
 	private $mountIds = [];
@@ -279,10 +283,8 @@ abstract class StoragesServiceTest extends \Test\TestCase {
 					'password' => 'testPassword',
 					'root' => 'someroot',
 				],
-				'webdav::test@example.com//someroot/',
-				0
+				'webdav::test@example.com//someroot/'
 			],
-			// special case with $user vars, cannot auto-remove the oc_storages entry
 			[
 				[
 					'host' => 'example.com',
@@ -290,8 +292,7 @@ abstract class StoragesServiceTest extends \Test\TestCase {
 					'password' => 'testPassword',
 					'root' => 'someroot',
 				],
-				'webdav::someone@example.com//someroot/',
-				1
+				'webdav::someone@example.com//someroot/'
 			],
 		];
 	}
@@ -299,7 +300,7 @@ abstract class StoragesServiceTest extends \Test\TestCase {
 	/**
 	 * @dataProvider deleteStorageDataProvider
 	 */
-	public function testDeleteStorage($backendOptions, $rustyStorageId, $expectedCountAfterDeletion) {
+	public function testDeleteStorage($backendOptions, $rustyStorageId) {
 		$backend = $this->backendService->getBackend('identifier:\OCA\Files_External\Lib\Backend\DAV');
 		$authMechanism = $this->backendService->getAuthMechanism('identifier:\Auth\Mechanism');
 		$storage = new StorageConfig(255);
@@ -314,6 +315,31 @@ abstract class StoragesServiceTest extends \Test\TestCase {
 		// manually trigger storage entry because normally it happens on first
 		// access, which isn't possible within this test
 		$storageCache = new \OC\Files\Cache\Storage($rustyStorageId);
+
+		/** @var IUserMountCache $mountCache */
+		$mountCache = \OC::$server->get(IUserMountCache::class);
+		$mountCache->clear();
+		$user = $this->createMock(IUser::class);
+		$user->method('getUID')->willReturn('test');
+		$cache = $this->createMock(ICache::class);
+		$storage = $this->createMock(IStorage::class);
+		$storage->method('getCache')->willReturn($cache);
+		$mount = $this->createMock(IMountPoint::class);
+		$mount->method('getStorage')
+			->willReturn($storage);
+		$mount->method('getStorageId')
+			->willReturn($rustyStorageId);
+		$mount->method('getNumericStorageId')
+			->willReturn($storageCache->getNumericId());
+		$mount->method('getStorageRootId')
+			->willReturn(1);
+		$mount->method('getMountPoint')
+			->willReturn('dummy');
+		$mount->method('getMountId')
+			->willReturn($id);
+		$mountCache->registerMounts($user, [
+			$mount
+		]);
 
 		// get numeric id for later check
 		$numericId = $storageCache->getNumericId();
@@ -338,7 +364,7 @@ abstract class StoragesServiceTest extends \Test\TestCase {
 		$result = $storageCheckQuery->execute();
 		$storages = $result->fetchAll();
 		$result->closeCursor();
-		$this->assertCount($expectedCountAfterDeletion, $storages, "expected $expectedCountAfterDeletion storages, got " . json_encode($storages));
+		$this->assertCount(0, $storages, "expected 0 storages, got " . json_encode($storages));
 	}
 
 	protected function actualDeletedUnexistingStorageTest() {
