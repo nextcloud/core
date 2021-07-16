@@ -53,7 +53,7 @@ class Plugin extends ServerPlugin {
 
 	public function afterGet(RequestInterface $request, ResponseInterface $response) {
 		$path = $request->getPath();
-		if (strpos($path, 'versions') !== 0) {
+		if (!str_starts_with($path, 'versions')) {
 			return;
 		}
 

@@ -43,9 +43,14 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
-use OCP\ILogger;
+use OCP\IConfig;
+use OCP\IGroupManager;
 use OCP\IServerContainer;
+use OCP\IUserManager;
+use OCP\IUserSession;
+use OCP\Share\IManager as IShareManager;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'files_versions';
@@ -67,14 +72,14 @@ class Application extends App implements IBootstrap {
 			/** @var IServerContainer $server */
 			$server = $c->get(IServerContainer::class);
 			return new Principal(
-				$server->getUserManager(),
-				$server->getGroupManager(),
-				$server->getShareManager(),
-				$server->getUserSession(),
-				$server->getAppManager(),
+				$server->get(IUserManager::class),
+				$server->get(IGroupManager::class),
+				$server->get(IShareManager::class),
+				$server->get(IUserSession::class),
+				$server->get(IAppManager::class),
 				$server->get(ProxyMapper::class),
 				$server->get(KnownUserService::class),
-				$server->getConfig()
+				$server->get(IConfig::class)
 			);
 		});
 
@@ -98,7 +103,7 @@ class Application extends App implements IBootstrap {
 		Hooks::connectHooks();
 	}
 
-	public function registerVersionBackends(ContainerInterface $container, IAppManager $appManager, ILogger $logger) {
+	public function registerVersionBackends(ContainerInterface $container, IAppManager $appManager, LoggerInterface $logger): void {
 		foreach ($appManager->getInstalledApps() as $app) {
 			$appInfo = $appManager->getAppInfo($app);
 			if (isset($appInfo['versions'])) {
@@ -116,7 +121,7 @@ class Application extends App implements IBootstrap {
 		}
 	}
 
-	private function loadBackend(array $backend, ContainerInterface $container, ILogger $logger) {
+	private function loadBackend(array $backend, ContainerInterface $container, LoggerInterface $logger): void {
 		/** @var IVersionManager $versionManager */
 		$versionManager = $container->get(IVersionManager::class);
 		$class = $backend['@value'];
@@ -125,7 +130,7 @@ class Application extends App implements IBootstrap {
 			$backendObject = $container->get($class);
 			$versionManager->registerBackend($for, $backendObject);
 		} catch (\Exception $e) {
-			$logger->logException($e);
+			$logger->error($e->getMessage(), ['exception' => $e]);
 		}
 	}
 }

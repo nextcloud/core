@@ -58,14 +58,14 @@ class CreateVersionEvent extends Event {
 	 *
 	 * @return Node
 	 */
-	public function getNode() {
+	public function getNode(): Node {
 		return $this->node;
 	}
 
 	/**
 	 * disable versions for this file
 	 */
-	public function disableVersions() {
+	public function disableVersions(): void {
 		$this->createVersion = false;
 	}
 
@@ -74,7 +74,7 @@ class CreateVersionEvent extends Event {
 	 *
 	 * @return bool
 	 */
-	public function shouldCreateVersion() {
+	public function shouldCreateVersion(): bool {
 		return $this->createVersion;
 	}
 }

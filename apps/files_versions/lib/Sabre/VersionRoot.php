@@ -87,7 +87,7 @@ class VersionRoot implements ICollection {
 			throw new NotFound();
 		}
 
-		return new VersionCollection($userFolder, $node, $this->user, $this->versionManager);
+		return new VersionCollection($node, $this->user, $this->versionManager);
 	}
 
 	public function getChildren(): array {

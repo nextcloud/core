@@ -26,6 +26,7 @@ namespace OCA\Files_Versions;
 
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
+use Psr\Log\LoggerInterface;
 
 class Expiration {
 
@@ -47,8 +48,12 @@ class Expiration {
 	/** @var bool */
 	private $canPurgeToSaveSpace;
 
-	public function __construct(IConfig $config,ITimeFactory $timeFactory) {
+	/** @var LoggerInterface */
+	private $logger;
+
+	public function __construct(IConfig $config, ITimeFactory $timeFactory, LoggerInterface $logger) {
 		$this->timeFactory = $timeFactory;
+		$this->logger = $logger;
 		$this->retentionObligation = $config->getSystemValue('versions_retention_obligation', 'auto');
 
 		if ($this->retentionObligation !== 'disabled') {
@@ -60,14 +65,14 @@ class Expiration {
 	 * Is versions expiration enabled
 	 * @return bool
 	 */
-	public function isEnabled() {
+	public function isEnabled(): bool {
 		return $this->retentionObligation !== 'disabled';
 	}
 
 	/**
 	 * Is default expiration active
 	 */
-	public function shouldAutoExpire() {
+	public function shouldAutoExpire(): bool {
 		return $this->minAge === self::NO_OBLIGATION
 				|| $this->maxAge === self::NO_OBLIGATION;
 	}
@@ -78,7 +83,7 @@ class Expiration {
 	 * @param bool $quotaExceeded
 	 * @return bool
 	 */
-	public function isExpired($timestamp, $quotaExceeded = false) {
+	public function isExpired(int $timestamp, bool $quotaExceeded = false): bool {
 		// No expiration if disabled
 		if (!$this->isEnabled()) {
 			return false;
@@ -117,7 +122,8 @@ class Expiration {
 
 	/**
 	 * Get maximal retention obligation as a timestamp
-	 * @return int
+	 *
+	 * @return int|false
 	 */
 	public function getMaxAgeAsTimestamp() {
 		$maxAge = false;
@@ -132,7 +138,7 @@ class Expiration {
 	 * Read versions_retention_obligation, validate it
 	 * and set private members accordingly
 	 */
-	private function parseRetentionObligation() {
+	private function parseRetentionObligation(): void {
 		$splitValues = explode(',', $this->retentionObligation);
 		if (!isset($splitValues[0])) {
 			$minValue = 'auto';
@@ -150,7 +156,7 @@ class Expiration {
 		// Validate
 		if (!ctype_digit($minValue) && $minValue !== 'auto') {
 			$isValid = false;
-			\OC::$server->getLogger()->warning(
+			$this->logger->warning(
 					$minValue . ' is not a valid value for minimal versions retention obligation. Check versions_retention_obligation in your config.php. Falling back to auto.',
 					['app' => 'files_versions']
 			);
@@ -158,7 +164,7 @@ class Expiration {
 
 		if (!ctype_digit($maxValue) && $maxValue !== 'auto') {
 			$isValid = false;
-			\OC::$server->getLogger()->warning(
+			$this->logger->warning(
 					$maxValue . ' is not a valid value for maximal versions retention obligation. Check versions_retention_obligation in your config.php. Falling back to auto.',
 					['app' => 'files_versions']
 			);
