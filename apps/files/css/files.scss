@@ -233,11 +233,16 @@ table th .columntitle {
 	vertical-align: middle;
 }
 table.multiselect th .columntitle {
-    display: inline-block;
+	display: inline-block;
+	margin-right: -20px;
 }
 table th .columntitle.name {
 	padding-left: 0;
-	margin-left: 50px;
+	margin-left: 44px;
+}
+
+table.multiselect th .columntitle.name {
+	margin-left: 0;
 }
 
 table th .sort-indicator {

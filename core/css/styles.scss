@@ -478,6 +478,9 @@ tr {
 
 .selectedActions > a {
 	opacity: .5;
+	position: relative;
+	top: 2px;
+
 	&:hover, &:focus {
 		opacity: 1;
 	}
