@@ -9,7 +9,6 @@
 OC.MimeTypeList={
 	aliases: {
     "application/coreldraw": "image",
-    "application/test": "image",
     "application/epub+zip": "text",
     "application/font-sfnt": "image",
     "application/font-woff": "image",
@@ -102,7 +101,10 @@ OC.MimeTypeList={
     "text/x-python": "text/code",
     "text/x-shellscript": "text/code",
     "web": "text/code",
-    "application/internet-shortcut": "link"
+    "application/internet-shortcut": "link",
+    "application/km": "mindmap",
+    "application/x-freemind": "mindmap",
+    "application/vnd.xmind.workbook": "mindmap"
 },
 	files: [
     "application",
@@ -119,6 +121,7 @@ OC.MimeTypeList={
     "image",
     "link",
     "location",
+    "mindmap",
     "package-x-generic",
     "text",
     "text-calendar",
