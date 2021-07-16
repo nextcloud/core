@@ -474,7 +474,7 @@ class Setup {
 			if ($webRoot === '') {
 				throw new InvalidArgumentException('overwrite.cli.url is empty');
 			}
-			if (!filter_var($webRoot, FILTER_VALIDATE_URL)) {
+			if (!\OCP\Util::isValidUrl($webRoot)) {
 				throw new InvalidArgumentException('invalid value for overwrite.cli.url');
 			}
 			$webRoot = rtrim(parse_url($webRoot, PHP_URL_PATH), '/');

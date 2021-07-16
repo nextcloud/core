@@ -81,7 +81,7 @@ class SettingsController extends Controller {
 
 	public function addClient(string $name,
 							  string $redirectUri): JSONResponse {
-		if (filter_var($redirectUri, FILTER_VALIDATE_URL) === false) {
+		if (!\OCP\Util::isValidUrl($redirectUri)) {
 			return new JSONResponse(['message' => $this->l->t('Your redirect URL needs to be a full URL for example: https://yourdomain.com/path')], Http::STATUS_BAD_REQUEST);
 		}
 

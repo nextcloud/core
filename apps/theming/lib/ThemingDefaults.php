@@ -203,7 +203,7 @@ class ThemingDefaults extends \OC_Defaults {
 		$divider = '';
 		foreach ($links as $link) {
 			if ($link['url'] !== ''
-				&& filter_var($link['url'], FILTER_VALIDATE_URL)
+				&& \OCP\Util::isValidUrl($link['url'])
 			) {
 				$legalLinks .= $divider . '<a href="' . $link['url'] . '" class="legal" target="_blank"' .
 					' rel="noreferrer noopener">' . $link['text'] . '</a>';

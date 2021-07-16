@@ -54,6 +54,7 @@ use OCP\IL10N;
 use OCP\IRequest;
 use OCP\ITempManager;
 use OCP\IURLGenerator;
+use OCP\Util;
 
 /**
  * Class ThemingController
@@ -142,7 +143,7 @@ class ThemingController extends Controller {
 				if (strlen($value) > 500) {
 					$error = $this->l10n->t('The given web address is too long');
 				}
-				if (!$this->isValidUrl($value)) {
+				if (!Util::isValidUrl($value)) {
 					$error = $this->l10n->t('The given web address is not a valid URL');
 				}
 				break;
@@ -150,7 +151,7 @@ class ThemingController extends Controller {
 				if (strlen($value) > 500) {
 					$error = $this->l10n->t('The given legal notice address is too long');
 				}
-				if (!$this->isValidUrl($value)) {
+				if (!Util::isValidUrl($value)) {
 					$error = $this->l10n->t('The given legal notice address is not a valid URL');
 				}
 				break;
@@ -158,7 +159,7 @@ class ThemingController extends Controller {
 				if (strlen($value) > 500) {
 					$error = $this->l10n->t('The given privacy policy address is too long');
 				}
-				if (!$this->isValidUrl($value)) {
+				if (!Util::isValidUrl($value)) {
 					$error = $this->l10n->t('The given privacy policy address is not a valid URL');
 				}
 				break;
@@ -197,14 +198,6 @@ class ThemingController extends Controller {
 				'status' => 'success'
 			]
 		);
-	}
-
-	/**
-	 * Check that a string is a valid http/https url
-	 */
-	private function isValidUrl(string $url): bool {
-		return ((strpos($url, 'http://') === 0 || strpos($url, 'https://') === 0) &&
-			filter_var($url, FILTER_VALIDATE_URL) !== false);
 	}
 
 	/**

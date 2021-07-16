@@ -513,4 +513,16 @@ class Util {
 		}
 		return self::$needUpgradeCache;
 	}
+
+	/**
+	 * Checks whether the given URL is valid. This function should be
+	 * used instead of filter_var($url, FILTER_VALIDATE_URL) since it
+	 * handles idn urls too.
+	 *
+	 * @return bool true if the url is valid, false otherwise.
+	 * @since 23.0.0
+	 */
+	public static function isValidUrl(string $url): bool {
+		return filter_var(idn_to_ascii($url), FILTER_VALIDATE_URL) !== false;
+	}
 }
