@@ -234,6 +234,12 @@ class Router implements IRouter {
 	 * @return array
 	 */
 	public function findMatchingRoute(string $url): array {
+		// Optionally strip webroot from URL
+		$webroot = \OC::$WEBROOT;
+		if ($webroot !== '' && substr($url, 0, strlen($webroot)) === $webroot) {
+			$url = substr($url, strlen($webroot));
+		}
+
 		if (substr($url, 0, 6) === '/apps/') {
 			// empty string / 'apps' / $app / rest of the route
 			[, , $app,] = explode('/', $url, 4);
