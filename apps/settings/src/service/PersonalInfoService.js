@@ -35,8 +35,7 @@ import { ACCOUNT_PROPERTY_ENUM, SCOPE_SUFFIX } from '../constants/AccountPropert
  */
 export const savePrimaryEmail = async(email) => {
 	const userId = getCurrentUser().uid
-	// TODO upgrade @nextcloud/router to v2.0 so we can remove the .slice() trailing slash hacks (same below)
-	const url = generateOcsUrl(`cloud/users/${userId}`, 2).slice(0, -1)
+	const url = generateOcsUrl(`cloud/users/${userId}`)
 
 	await confirmPassword()
 
@@ -58,7 +57,7 @@ export const savePrimaryEmail = async(email) => {
  */
 export const saveAdditionalEmail = async(email) => {
 	const userId = getCurrentUser().uid
-	const url = generateOcsUrl(`cloud/users/${userId}`, 2).slice(0, -1)
+	const url = generateOcsUrl(`cloud/users/${userId}`)
 
 	await confirmPassword()
 
@@ -78,7 +77,7 @@ export const saveAdditionalEmail = async(email) => {
  */
 export const removeAdditionalEmail = async(email) => {
 	const userId = getCurrentUser().uid
-	const url = generateOcsUrl(`cloud/users/${userId}/${ACCOUNT_PROPERTY_ENUM.EMAIL_COLLECTION}`, 2).slice(0, -1)
+	const url = generateOcsUrl(`cloud/users/${userId}/${ACCOUNT_PROPERTY_ENUM.EMAIL_COLLECTION}`)
 
 	await confirmPassword()
 
@@ -99,7 +98,7 @@ export const removeAdditionalEmail = async(email) => {
  */
 export const updateAdditionalEmail = async(prevEmail, newEmail) => {
 	const userId = getCurrentUser().uid
-	const url = generateOcsUrl(`cloud/users/${userId}/${ACCOUNT_PROPERTY_ENUM.EMAIL_COLLECTION}`, 2).slice(0, -1)
+	const url = generateOcsUrl(`cloud/users/${userId}/${ACCOUNT_PROPERTY_ENUM.EMAIL_COLLECTION}`)
 
 	await confirmPassword()
 
@@ -119,7 +118,7 @@ export const updateAdditionalEmail = async(prevEmail, newEmail) => {
  */
 export const savePrimaryEmailScope = async(scope) => {
 	const userId = getCurrentUser().uid
-	const url = generateOcsUrl(`cloud/users/${userId}`, 2).slice(0, -1)
+	const url = generateOcsUrl(`cloud/users/${userId}`)
 
 	await confirmPassword()
 
@@ -140,7 +139,7 @@ export const savePrimaryEmailScope = async(scope) => {
  */
 export const saveAdditionalEmailScope = async(email, scope) => {
 	const userId = getCurrentUser().uid
-	const url = generateOcsUrl(`cloud/users/${userId}/${ACCOUNT_PROPERTY_ENUM.EMAIL_COLLECTION}${SCOPE_SUFFIX}`, 2).slice(0, -1)
+	const url = generateOcsUrl(`cloud/users/${userId}/${ACCOUNT_PROPERTY_ENUM.EMAIL_COLLECTION}${SCOPE_SUFFIX}`)
 
 	await confirmPassword()
 

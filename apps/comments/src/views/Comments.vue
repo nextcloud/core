@@ -221,7 +221,7 @@ export default {
 		 * @param {Function} callback the callback to process the results with
 		 */
 		async autoComplete(search, callback) {
-			const results = await axios.get(generateOcsUrl('core', 2) + 'autocomplete/get', {
+			const results = await axios.get(generateOcsUrl('core/autocomplete/get'), {
 				params: {
 					search,
 					itemType: 'files',

@@ -30,7 +30,7 @@ import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import Share from '../models/Share'
 
-const shareUrl = generateOcsUrl('apps/files_sharing/api/v1', 2) + 'shares'
+const shareUrl = generateOcsUrl('apps/files_sharing/api/v1/shares')
 const headers = {
 	'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
 }
