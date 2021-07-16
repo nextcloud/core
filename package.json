@@ -44,7 +44,7 @@
     "autosize": "^4.0.4",
     "backbone": "^1.4.0",
     "blueimp-md5": "^2.18.0",
-    "bootstrap": "^4.5.2",
+    "bootstrap": "^4.5.3",
     "clipboard": "^2.0.8",
     "core-js": "^3.6.5",
     "css-vars-ponyfill": "^2.3.2",
