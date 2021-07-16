@@ -633,6 +633,7 @@ class Manager implements ICommentsManager {
 	 * @since 21.0.0
 	 */
 	public function getNumberOfUnreadCommentsForObjects(string $objectType, array $objectIds, IUser $user, $verb = ''): array {
+		$unreadComments = [];
 		$query = $this->dbConn->getQueryBuilder();
 		$query->select('c.object_id', $query->func()->count('c.id', 'num_comments'))
 			->from('comments', 'c')
@@ -642,7 +643,7 @@ class Manager implements ICommentsManager {
 				$query->expr()->eq('c.object_id', 'm.object_id')
 			))
 			->where($query->expr()->eq('c.object_type', $query->createNamedParameter($objectType)))
-			->andWhere($query->expr()->in('c.object_id', $query->createNamedParameter($objectIds, IQueryBuilder::PARAM_STR_ARRAY)))
+			->andWhere($query->expr()->in('c.object_id', $query->createParameter('ids')))
 			->andWhere($query->expr()->orX(
 				$query->expr()->gt('c.creation_timestamp', 'm.marker_datetime'),
 				$query->expr()->isNull('m.marker_datetime')
@@ -653,12 +654,16 @@ class Manager implements ICommentsManager {
 			$query->andWhere($query->expr()->eq('c.verb', $query->createNamedParameter($verb)));
 		}
 
-		$result = $query->execute();
 		$unreadComments = array_fill_keys($objectIds, 0);
-		while ($row = $result->fetch()) {
-			$unreadComments[$row['object_id']] = (int) $row['num_comments'];
+		foreach (array_chunk($objectIds, 1000) as $chunk) {
+			$query->setParameter('ids', $chunk, IQueryBuilder::PARAM_INT_ARRAY);
+
+			$result = $query->executeQuery();
+			while ($row = $result->fetch()) {
+				$unreadComments[$row['object_id']] = (int) $row['num_comments'];
+			}
+			$result->closeCursor();
 		}
-		$result->closeCursor();
 
 		return $unreadComments;
 	}
