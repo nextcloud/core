@@ -359,6 +359,8 @@ audio, canvas, embed, iframe, img, input, object, video {
 @include icon-black-white('disabled-users', 'actions', 1, true);
 @include icon-black-white('user-admin', 'actions', 1, true);
 
+@include icon-black-white('alert-outline', 'actions', 1, true);
+
 /* PLACES ------------------------------------------------------------------- */
 .icon-calendar {
 	@include icon-color('calendar', 'places', $color-white, 1, true);

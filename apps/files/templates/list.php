@@ -5,6 +5,7 @@
 		</div>
 		<div id="file_action_panel"></div>
 		<div class="notCreatable notPublic hidden">
+			<div class="icon-alert-outline"></div>
 			<?php p($l->t('You don’t have permission to upload or create files here'))?>
 		</div>
 	<?php /* Note: the template attributes are here only for the public page. These are normally loaded
