@@ -704,7 +704,7 @@ a.action > img {
 .summary {
 	color: var(--color-text-maxcontrast);
 	/* add whitespace to bottom of files list to correctly show dropdowns */
-	height: 250px;
+	height: 310px;
 }
 #filestable .filesummary {
 	width: 100%;
@@ -1126,6 +1126,7 @@ table.dragshadow td.size {
 		.summary:not(.hidden) {
 			display: inline-block;
 			margin: 0 auto;
+			height: 390px;
 
 			td {
 				padding-top: 50px;
