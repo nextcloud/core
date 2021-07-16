@@ -215,19 +215,34 @@ class ConnectionFactory {
 		}
 
 		// set default table creation options
-		$connectionParams['defaultTableOptions'] = [
+		$defaultTableOptions = [
 			'collate' => 'utf8_bin',
 			'tablePrefix' => $connectionParams['tablePrefix']
 		];
 
 		if ($this->config->getValue('mysql.utf8mb4', false)) {
-			$connectionParams['defaultTableOptions'] = [
+			$defaultTableOptions = [
 				'collate' => 'utf8mb4_bin',
 				'charset' => 'utf8mb4',
 				'row_format' => 'compressed',
 				'tablePrefix' => $connectionParams['tablePrefix']
 			];
 		}
+
+		$configTableOptions = $this->config->getValue('dbdefaulttableoptions', []);
+
+		// prevent user from overriding collation / charset and tablePrefix here (previous behavior.)
+		if (array_key_exists('collate', $configTableOptions)) {
+			unset($configTableOptions['collate']);
+		}
+		if (array_key_exists('charset', $configTableOptions)) {
+			unset($configTableOptions['charset']);
+		}
+		if (array_key_exists('tablePrefix', $configTableOptions)) {
+			unset($configTableOptions['tablePrefix']);
+		}
+
+		$connectionParams['defaultTableOptions'] = array_merge($defaultTableOptions, $configTableOptions);
 
 		return $connectionParams;
 	}
