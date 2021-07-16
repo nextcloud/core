@@ -42,6 +42,9 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
 use OCP\Security\ISecureRandom;
+use OCP\Util;
+use OCP\IURLGenerator;
+use OCP\IUserSession;
 
 class OauthApiController extends Controller {
 	/** @var AccessTokenMapper */
@@ -58,6 +61,10 @@ class OauthApiController extends Controller {
 	private $time;
 	/** @var Throttler */
 	private $throttler;
+	/** @var IUserSession */
+	private $userSession;
+	/** @var IUrlGenerator */
+	private $urlGenerator;
 
 	public function __construct(string $appName,
 								IRequest $request,
@@ -67,7 +74,9 @@ class OauthApiController extends Controller {
 								TokenProvider $tokenProvider,
 								ISecureRandom $secureRandom,
 								ITimeFactory $time,
-								Throttler $throttler) {
+								Throttler $throttler,
+								IUserSession $userSession,
+								IURLGenerator $urlGenerator) {
 		parent::__construct($appName, $request);
 		$this->crypto = $crypto;
 		$this->accessTokenMapper = $accessTokenMapper;
@@ -76,6 +85,8 @@ class OauthApiController extends Controller {
 		$this->secureRandom = $secureRandom;
 		$this->time = $time;
 		$this->throttler = $throttler;
+		$this->userSession = $userSession;
+		$this->urlGenerator = $urlGenerator;
 	}
 
 	/**
@@ -176,5 +187,36 @@ class OauthApiController extends Controller {
 				'user_id' => $appToken->getUID(),
 			]
 		);
+	}
+
+	 /**
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 *
+	 * @return JSONResponse
+	 */
+	public function discovery() {
+		$util = new Util();
+		return new JSONResponse([
+			'issuer' => $this->urlGenerator->linkToRouteAbsolute(''),
+			'authorization_endpoint' => $this->urlGenerator->linkToRouteAbsolute('oauth2.LoginRedirector.authorize'),
+			'token_endpoint' => $this->urlGenerator->linkToRouteAbsolute('oauth2.OauthApi.getToken'),
+			'userinfo_endpoint' => $this->urlGenerator->linkToRouteAbsolute('oauth2.OauthApi.getUserInfo')
+		]);
+	}
+
+	/**
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 *
+	 * @return JSONResponse
+	 */
+	public function getUserInfo() {
+		$user = $this->userSession->getUser();
+		return new JSONResponse([
+			'sub' => $user->getUID(),
+			'name' => $user->getDisplayName(),
+			'email' => $user->getEMailAddress()
+		]);
 	}
 }

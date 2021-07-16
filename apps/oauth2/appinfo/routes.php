@@ -43,5 +43,15 @@ return [
 			'url' => '/api/v1/token',
 			'verb' => 'POST'
 		],
+		[
+			'name' => 'OauthApi#discovery',
+			'url' => '/.well-known/openid-configuration',
+			'verb' => 'GET',
+		],
+		[
+			'name' => 'OauthApi#getUserInfo',
+			'url' => '/api/v1/userinfo',
+			'verb' => 'GET'
+		],
 	],
 ];
