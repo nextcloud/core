@@ -24,23 +24,27 @@
 </template>
 
 <script>
-import ItemPreview from './components/ItemPreview'
-import axios from '@nextcloud/axios'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
+import { loadState } from '@nextcloud/initial-state'
+import axios from '@nextcloud/axios'
+import ItemPreview from './components/ItemPreview'
+
+const availableConfig = loadState('accessibility', 'available-config')
+const userConfig = loadState('accessibility', 'user-config')
 
 export default {
 	name: 'Accessibility',
-	components: { ItemPreview },
-	props: {
-		availableConfig: {
-			type: Object,
-			required: true,
-		},
-		userConfig: {
-			type: Object,
-			required: true,
-		},
+	components: {
+		ItemPreview,
 	},
+
+	data() {
+		return {
+			availableConfig,
+			userConfig,
+		}
+	},
+
 	computed: {
 		themes() {
 			return this.availableConfig.themes

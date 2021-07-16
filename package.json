@@ -90,30 +90,16 @@
     "webdav": "^4.6.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.3",
-    "@babel/plugin-proposal-class-properties": "^7.14.5",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/preset-env": "^7.14.7",
     "@nextcloud/babel-config": "^1.0.0-beta.1",
     "@nextcloud/browserslist-config": "^2.1.0",
-    "@nextcloud/eslint-config": "^2.2.0",
-    "@nextcloud/eslint-plugin": "^1.5.0",
+    "@nextcloud/eslint-config": "^4.0.0",
+    "@nextcloud/stylelint-config": "^1.0.0-beta.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/user-event": "^13.1.9",
     "@testing-library/vue": "^5.6.2",
-    "babel-eslint": "^10.1.0",
-    "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
     "babel-loader-exclude-node-modules-except": "^1.1.2",
     "css-loader": "^5.2.6",
-    "eslint": "^6.8.0",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-loader": "^4.0.2",
-    "eslint-plugin-import": "^2.23.3",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.3.1",
-    "eslint-plugin-standard": "^4.1.0",
-    "eslint-plugin-vue": "^6.2.2",
     "exports-loader": "^1.1.1",
     "file-loader": "^6.2.0",
     "handlebars-loader": "^1.7.1",
@@ -135,7 +121,8 @@
     "extends @nextcloud/browserslist-config"
   ],
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=14.0.0",
+    "npm": ">=7.0.0"
   },
   "jest": {
     "moduleFileExtensions": [

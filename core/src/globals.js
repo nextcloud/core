@@ -83,7 +83,7 @@ const deprecate = (func, funcName, version) => {
 }
 
 const setDeprecatedProp = (global, cb, msg) => {
-	(Array.isArray(global) ? global : [global]).map(global => {
+	(Array.isArray(global) ? global : [global]).forEach(global => {
 		if (window[global] !== undefined) {
 			delete window[global]
 		}

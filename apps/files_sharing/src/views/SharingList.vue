@@ -80,6 +80,7 @@ export default {
 		 */
 		removeShare(share) {
 			const index = this.shares.findIndex(item => item === share)
+			// eslint-disable-next-line vue/no-mutating-props
 			this.shares.splice(index, 1)
 		},
 	},

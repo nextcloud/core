@@ -112,6 +112,7 @@ export default {
 		 * @param {Function} resolve a function to run after the share is added and its component initialized
 		 */
 		addShare(share, resolve) {
+			// eslint-disable-next-line vue/no-mutating-props
 			this.shares.unshift(share)
 			this.awaitForShare(share, resolve)
 		},
@@ -140,6 +141,7 @@ export default {
 		 */
 		removeShare(share) {
 			const index = this.shares.findIndex(item => item === share)
+			// eslint-disable-next-line vue/no-mutating-props
 			this.shares.splice(index, 1)
 		},
 	},

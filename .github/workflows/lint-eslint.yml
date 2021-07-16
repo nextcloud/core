@@ -3,7 +3,7 @@
 # https://github.com/nextcloud/.github
 # https://docs.github.com/en/actions/learn-github-actions/sharing-workflows-with-your-organization
 
-name: Node
+name: Lint
 
 on:
   pull_request:
@@ -13,10 +13,11 @@ on:
       - stable*
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
-    name: node
+    name: eslint
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -36,17 +37,8 @@ jobs:
       - name: Set up npm ${{ steps.versions.outputs.npmVersion }}
         run: npm i -g npm@"${{ steps.versions.outputs.npmVersion }}"
 
-      - name: Install dependencies & build
-        run: |
-          npm ci
-          npm run build --if-present
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Check webpack build changes
-        run: |
-          bash -c "[[ ! \"`git status --porcelain `\" ]] || exit 1"
-
-      - name: Show changes on failure
-        if: failure()
-        run: |
-          git status
-          git --no-pager diff
+      - name: Lint
+        run: npm run lint

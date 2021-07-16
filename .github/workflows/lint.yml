@@ -40,25 +40,3 @@ jobs:
         composer run cs:check -- --format=checkstyle | cs2pr
         composer run cs:check || ( echo 'Please run `composer run cs:fix` to format your code' && exit 1 )
       shell: bash
-
-  node:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [12.x]
-
-    name: eslint node${{ matrix.node-version }}
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up node ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint
-        run: npm run lint

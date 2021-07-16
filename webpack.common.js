@@ -1,8 +1,10 @@
 /* eslint-disable camelcase */
 const { merge } = require('webpack-merge')
 const { VueLoaderPlugin } = require('vue-loader')
-const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
 const path = require('path')
+
+const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except')
+const ESLintPlugin = require('eslint-webpack-plugin')
 
 const accessibility = require('./apps/accessibility/webpack')
 const comments = require('./apps/comments/webpack')
@@ -69,13 +71,6 @@ module.exports = []
 					use: ['style-loader', 'css-loader', 'sass-loader'],
 				},
 				{
-					test: /\.(js|vue)$/,
-					loader: 'eslint-loader',
-					// no checks against vendors, modules or handlebar compiled files
-					exclude: /node_modules|vendor|templates\.js/,
-					enforce: 'pre',
-				},
-				{
 					test: /\.vue$/,
 					loader: 'vue-loader',
 					exclude: BabelLoaderExcludeNodeModulesExcept([
@@ -123,7 +118,7 @@ module.exports = []
 
 			],
 		},
-		plugins: [new VueLoaderPlugin()],
+		plugins: [new VueLoaderPlugin(), new ESLintPlugin()],
 		resolve: {
 			alias: {
 				OC: path.resolve(__dirname, './core/src/OC'),
