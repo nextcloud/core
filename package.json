@@ -28,7 +28,7 @@
     "@chenfengyuan/vue-qrcode": "^1.0.2",
     "@nextcloud/auth": "^1.3.0",
     "@nextcloud/axios": "^1.3.3",
-    "@nextcloud/capabilities": "^1.0.2",
+    "@nextcloud/capabilities": "^1.0.4",
     "@nextcloud/dialogs": "^2.0.1",
     "@nextcloud/event-bus": "^1.2.0",
     "@nextcloud/files": "^1.1.0",
