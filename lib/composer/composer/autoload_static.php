@@ -1155,7 +1155,6 @@ class ComposerStaticInit53792487c5a8370acc0b06b1a864ff4c
         'OC\\Files\\Storage\\CommonTest' => __DIR__ . '/../../..' . '/lib/private/Files/Storage/CommonTest.php',
         'OC\\Files\\Storage\\DAV' => __DIR__ . '/../../..' . '/lib/private/Files/Storage/DAV.php',
         'OC\\Files\\Storage\\FailedStorage' => __DIR__ . '/../../..' . '/lib/private/Files/Storage/FailedStorage.php',
-        'OC\\Files\\Storage\\Flysystem' => __DIR__ . '/../../..' . '/lib/private/Files/Storage/Flysystem.php',
         'OC\\Files\\Storage\\Home' => __DIR__ . '/../../..' . '/lib/private/Files/Storage/Home.php',
         'OC\\Files\\Storage\\Local' => __DIR__ . '/../../..' . '/lib/private/Files/Storage/Local.php',
         'OC\\Files\\Storage\\LocalRootStorage' => __DIR__ . '/../../..' . '/lib/private/Files/Storage/LocalRootStorage.php',

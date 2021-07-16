@@ -1126,7 +1126,6 @@ return array(
     'OC\\Files\\Storage\\CommonTest' => $baseDir . '/lib/private/Files/Storage/CommonTest.php',
     'OC\\Files\\Storage\\DAV' => $baseDir . '/lib/private/Files/Storage/DAV.php',
     'OC\\Files\\Storage\\FailedStorage' => $baseDir . '/lib/private/Files/Storage/FailedStorage.php',
-    'OC\\Files\\Storage\\Flysystem' => $baseDir . '/lib/private/Files/Storage/Flysystem.php',
     'OC\\Files\\Storage\\Home' => $baseDir . '/lib/private/Files/Storage/Home.php',
     'OC\\Files\\Storage\\Local' => $baseDir . '/lib/private/Files/Storage/Local.php',
     'OC\\Files\\Storage\\LocalRootStorage' => $baseDir . '/lib/private/Files/Storage/LocalRootStorage.php',
