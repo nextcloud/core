@@ -35,6 +35,7 @@ use OCA\UserStatus\Exception\InvalidStatusTypeException;
 use OCA\UserStatus\Exception\StatusMessageTooLongException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IConfig;
 use OCP\UserStatus\IUserStatus;
 
 /**
@@ -83,22 +84,28 @@ class StatusService {
 	/** @var int */
 	public const MAXIMUM_MESSAGE_LENGTH = 80;
 
+	/** @var IConfig */
+	private $config;
+
 	/**
 	 * StatusService constructor.
 	 *
 	 * @param UserStatusMapper $mapper
 	 * @param ITimeFactory $timeFactory
-	 * @param PredefinedStatusService $defaultStatusService,
+	 * @param PredefinedStatusService $defaultStatusService
 	 * @param EmojiService $emojiService
+	 * @param IConfig $config
 	 */
 	public function __construct(UserStatusMapper $mapper,
 								ITimeFactory $timeFactory,
 								PredefinedStatusService $defaultStatusService,
-								EmojiService $emojiService) {
+								EmojiService $emojiService,
+								IConfig $config) {
 		$this->mapper = $mapper;
 		$this->timeFactory = $timeFactory;
 		$this->predefinedStatusService = $defaultStatusService;
 		$this->emojiService = $emojiService;
+		$this->config = $config;
 	}
 
 	/**
@@ -107,9 +114,10 @@ class StatusService {
 	 * @return UserStatus[]
 	 */
 	public function findAll(?int $limit = null, ?int $offset = null): array {
+		$allowEnumeration = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes') === 'yes';
 		return array_map(function ($status) {
 			return $this->processStatus($status);
-		}, $this->mapper->findAll($limit, $offset));
+		}, $allowEnumeration ? $this->mapper->findAll($limit, $offset) : []);
 	}
 
 	/**
@@ -118,9 +126,10 @@ class StatusService {
 	 * @return array
 	 */
 	public function findAllRecentStatusChanges(?int $limit = null, ?int $offset = null): array {
+		$allowEnumeration = $this->config->getAppValue('core', 'shareapi_allow_share_dialog_user_enumeration', 'yes') === 'yes';
 		return array_map(function ($status) {
 			return $this->processStatus($status);
-		}, $this->mapper->findAllRecent($limit, $offset));
+		}, $allowEnumeration ? $this->mapper->findAllRecent($limit, $offset) : []);
 	}
 
 	/**
