@@ -60,7 +60,7 @@ class UserAddedToGroupListener implements IEventListener {
 		}
 
 		// Get all group shares this user has access to now to filter later
-		$shares = $this->shareManager->getSharedWith($user->getUID(), IShare::TYPE_GROUP);
+		$shares = $this->shareManager->getSharedWith($user->getUID(), IShare::TYPE_GROUP, null, -1);
 
 		foreach ($shares as $share) {
 			// If this is not the new group we can skip it
